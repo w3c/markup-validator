@@ -1,11 +1,11 @@
-<!--#set var="revision" value="\$Id: help.html,v 1.8 2002-11-06 02:45:20 ot Exp $"
---><!--#set var="date" value="\$Date: 2002-11-06 02:45:20 $"
+<!--#set var="revision" value="\$Id: help.html,v 1.9 2002-11-07 03:25:24 ot Exp $"
+--><!--#set var="date" value="\$Date: 2002-11-07 03:25:24 $"
 --><!--#set var="title" value="Help for The W3C MarkUp Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
 
 <div id="toc">
-<h2>Table of contents</h2>
+<h2 id="TableOfContents">Table of contents</h2>
 <ul>
   <li>About the Markup Validator
   <ul>
@@ -16,10 +16,17 @@
 		<a href="#why-validate">Why validate?</a>
 	</li>
 	<li>
+		<a href="#who-does-validator">Who owns/maintain the Markup Validator?</a>
+	</li>
+	<li>
 		<a href="#others">What other validators are there?</a>
 	</li>
 	<li>
 		<a href="#how">How does The Validator work?</a>
+	</li>
+	<li>
+		<a href="#howto-feedback">How do I send feedback/bug reports 
+		about the Markup Validator?</a>
 	</li>
   </ul>
   </li>
@@ -29,7 +36,7 @@
 		<a href="#manual">How do I use the Markup validator?</a>
 	</li>	
 	<li>
-		<a href="#errors">What are these error messages?</a>
+		<a href="#errors">What is (are) this (these) error message(s)?</a>
 	</li>	
 	<li>
 		<a href="#munged-doctype">Many error messages? Don't panic.</a>
@@ -39,13 +46,17 @@
 	</li>
   </ul>
   </li>
-
+  <li>Miscellaneous (Very) Frequently Asked Questions
+  <ul>
+	<li>
+		<a href="#faq-ampersand">The validator complains about "&amp;" in my URLs!</a>
+	</li>
 </ul>
-
+</div>
 
 
 <div id="skip">
-<h2 id=#about">About the Markup Validator</h2>
+<h2 id="about">About the Markup Validator</h2>
       <h3 id="what-is-it">What is the Markup Validator and what does it do?</h3>
       <p>
 	The Markup Validator is a free tool and service that checks the 
@@ -77,7 +88,15 @@
         sure your pages are legal HTML. The best way to do that is by
         running your documents through one or more HTML validators. 
       </p>
-      
+     
+
+      <h3 id="who-does-validator">Who owns/maintain the Markup Validator?</h3>
+      <p>The Markup Validator is Maintained at <acronym
+	title="World Wide Web Consortium">W3C</acronym> by W3C staff and 
+	benevolent collaborators, who receive a lot of help from contributors. 
+	(Read the <a href="http://validator.w3.org:8001/about.html#credits">full credits</a>)
+      </p>
+
       <h3 id="others">What other validators are there?</h3>
 	<p>
 	We're doing our best to provide clear and reliable results as well as
@@ -106,6 +125,9 @@
         URL, passes it through <code>nsgmls</code>, and post-processes the
         resulting error list for easier reading. 
       </p>
+
+      <h3 id="howto-feedback">How do I send feedback/bug reports about the Markup Validator?</h3>
+      <p>Read the instructions on our <a href="../feedback.html">Feedback page</a>.</p>
 </div>
 
 
@@ -126,6 +148,11 @@
       </p>
 
       <h3 id="errors">What are these error messages?</h3>
+      <p>The output of the Markup Validator may be hard to decypher for
+	newcomers and experts alike, so we are maintaining a <a 
+	href="http://validator.w3.org:8001/docs/errors.html">list of error
+	messages and their interpretation</a>, which should help.
+     </p>
 
       <h3 id="munged-doctype">Many error messages? Don't panic.</h3>
       <p>
@@ -152,7 +179,19 @@
        <p>The Markup Validator can not do this for you. You may want to have a look
 	at tools such as <a href="http://tidy.sourceforge.net">HTML Tidy</a>.</p>
 
-    </div>
+</div>
+
+<div>
+<h2 id="very-faq">Miscellaneous (Very) Frequently Asked Questions</h2>
+<h3 id="faq-ampersand">The validator complains about "&amp;" in my URLs!</h3>
+<p>Most probably, you should read the <a 
+href="http://www.htmlhelp.com/tools/validator/problems.html#amp">ampersand section</a>
+of WDG's excellent 
+"<a href="http://www.htmlhelp.com/tools/validator/problems.html">common validation problem</a>"
+</p>
+
+</div>
+
 <!--#include virtual="../footer.html" -->
   </body>
 </html>
