@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.61 2000-02-01 23:17:01 gerald Exp $
+# $Id: check,v 1.62 2000-02-11 11:07:31 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -73,9 +73,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.61 $;
+$VERSION    =  q$Revision: 1.62 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2000-02-01 23:17:01 $;
+$DATE       =  q$Date: 2000-02-11 11:07:31 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -249,9 +249,10 @@ EOF
 #
 #  1. check if there's a doctype
 #  2. if there is a doctype, parse/validate against that DTD
-#  3. if no doctype, check for xml well-formedness
-#  4. if xml is well-formed, check and report xmlns= attribute (anything else?)
-#  5. if xml is not well-formed, report errors
+#  3. if no doctype, check for an xmlns= attribute on the first element
+#  4. if there is an xmlns= attribute, check for XML well-formedness
+#  5. if there is no xmlns= attribute, validate as HTML using the doctype
+#     inferred by the check_for_doctype function
 #
 
 #
@@ -261,9 +262,9 @@ if ($File->{Type} eq 'html' or $File->{Type} eq 'xhtml') {
 }
 
 #
-# Set document type to XHTML if the DOCTYPE was for XHTML. This happens when
-# a XHTML file is served as text/html (damn fool idea, if you ask me! -link).
-if ($doctype =~ /xhtml/i) {
+# Set document type to XHTML if the DOCTYPE was for XHTML.
+# This happens when a XHTML file is served as text/html
+if ($doctype =~ /xhtml/i && $guessed_doctype != 2) {
   $File->{Type} = 'xhtml';
 }
 
@@ -342,7 +343,7 @@ if ($File->{Type} eq 'xhtml') {
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'UTF-8';
   $decl                  = $xhtmldecl;
-} elsif ($guessed_doctype) {	# no doctype was present; parse as xml/xhtml
+} elsif ($guessed_doctype == 2) { # no doctype, with xmlns attr on 1st element
   $File->{Type} = 'xml';	# @@ probably a better way to do this
   $ENV{SGML_CATALOG_FILES} = $sgmlstuff . '/sp-1.3/pubtext/xml.soc';
   $ENV{SGML_SEARCH_PATH} = $sgmlstuff . '/sp-1.3/pubtext/';
@@ -362,6 +363,7 @@ my $command  = "$codeconv $sp -E0 $xmlflags $catalog $decl";
 open CHECKER, "|$command - >$temp.esis 2>$temp"
   or die "open(|$command - >$temp.esis 2>$temp) returned: $!\n";
 
+print CHECKER $doctype, "\n" if $guessed_doctype == 1;
 for (@{$File->{Content}}) {print CHECKER $_, "\n"}
 close CHECKER;
 
@@ -410,6 +412,10 @@ if ($File->{Type} eq 'xhtml') {
   if (length $doctype and not defined $fpi) {$fpi = $doctype};
 }
 $version = $pub_ids->{$fpi} || 'unknown';
+
+if ($guessed_doctype == 1) {
+    push( @fake_errors, "$sp:<OSFD>0:2:1:E: Missing DOCTYPE declaration at start of document (<a href=\"http://www.htmlhelp.org/tools/validator/doctype.html\">explanation...</a>)\n" );
+}
 
 print ' ' x 4, q(<li>Character encoding: ), $File->{Charset};
 if ($File->{HTTP_Charset} ne $File->{META_Charset}
@@ -476,7 +482,7 @@ EOHD
 
 }
 
-if ( $? ) {
+if ( $? || ($guessed_doctype == 1) ) {
     print "<ul>\n";
     for ((@fake_errors,@errors)) {
 	next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
@@ -507,6 +513,7 @@ if ( $? ) {
 	    &output_doctype_spiel;
 	    last;
 	}
+	$line-- if ( $guessed_doctype == 1 );
 	my $newline = $File->{Content}->[$line - 1];
 	
 	# make sure there are no ^P's or ^Q's in the file, since we need to use
@@ -859,6 +866,11 @@ if ( $q->param('ss') ) {
 EOF
 
     print "<pre>\n";
+    if ( $guessed_doctype == 1 ) {
+        my $gd = $doctype . "\n";
+	$gd =~ s/&/&amp;/go; $gd =~ s/</&lt;/go;
+	printf "%4d: %s", 0, $gd;
+    }
     $line = 1;
     for (@{$File->{Content}}) {
 	s/&/&amp;/go; s/</&lt;/go;
@@ -1090,9 +1102,15 @@ sub build_jump_links {
 }
 
 #
-# Check if the document has a doctype; if it doesn't, try to guess an
-# appropriate one given the elements used. Returns 2 values. First value is 0
-# if there was a DOCTYPE and 1 otherwise. The Second value is the doctype.
+# Check if the document has a doctype; if it doesn't, try to guess
+# an appropriate one given the elements used. Returns 2 values.
+# The first value is:
+#   0 if there was a DOCTYPE,
+#   1 if there was no doctype and no xmlns= attribute
+#       on the first element in the document, or
+#   2 if there was no doctype and there IS an xmlns= attribute
+#       on the first element
+# The Second value is the doctype or namespace, if any.
 sub check_for_doctype {
   my $file = shift; # a reference to @file, for efficiency
 
@@ -1100,7 +1118,12 @@ sub check_for_doctype {
     my $line = $file->[$count];
 
     # does an HTML element precede the doctype on the same line?
-    last if $line =~ /<[a-z].*<!doctype/i;
+    if ( $line =~ /<[a-z].*<!doctype/i ) {
+	if ( $line =~ /<[a-z]+ xmlns=['"]([^ '"]*)/i ) {# look for an xmlns attr
+	    return 2, $1;
+	}
+	last;
+    }
 
     if ($line =~ /<!doctype/i) { # found a doctype
       my $dttext = join '', @{$file}[$count .. $count + 5];
@@ -1112,16 +1135,16 @@ sub check_for_doctype {
     $line =~ s/<!(?:--(?:[^-]|-[^-])*--\s*)+>//go;
     # Strip comments, so the next line doesn't find commented-out markup etc.
     # (this doesn't handle multi-line comments, unfortunately)
-    last if $line =~ /<[a-z]/i; # found an element
+    if ( $line =~ /<[a-z]/i ) {	# found an element
+	if ( $line =~ /<[a-z]+ xmlns=['"]([^ '"]*)/i ) {# look for an xmlns attr
+	    return 2, $1;
+	}
+	last;
+    }
   }
 
   for (@{$file}[0 .. 20]) {
     return 1, $html40f_doctype if /<frame/i;
-  }
-  for (@{$file}) {
-    return 1, $html40t_doctype if /<(table|body )/i;
-    return 1, $html32_doctype  if /<center>/i;
-    return 1, $html32_doctype  if /<[h0-9p]*\s*align\s*=\s*center>/i;
   }
   return 1, $html40t_doctype; # no luck earlier; guess HTML 4.0 transitional
 }
