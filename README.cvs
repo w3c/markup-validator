@@ -14,17 +14,17 @@ code page</a>.
     bash$ <kbd>cvs login</kbd>
     (Logging in to anonymous@dev.w3.org)
     CVS password: <kbd>anonymous</kbd>
-    bash$ <kbd>cvs get -r validator-0_6_5 validator</kbd>
+    bash$ <kbd>cvs get -r validator-0_6_7-release validator</kbd>
     cvs server: Updating validator
     cvs server: Updating validator/htdocs
     U validator/htdocs/about.html
     ...
           </pre>
           <p>
-            This will get you the current beta version. For intermediate
-            updates, use the <code>validator-0_6_0-branch</code> branch tag
-            instead. This is <strong>really what you want if you wish to install
-	    a working version!</strong></p>
+            This will get you the current production version. To get this
+            version and the latest not yet released "stable" fixes for it
+            (if any), use the <code>validator-0_6_0-branch</code> branch tag
+            instead.</p>
 	  <p>
 	    Major new development is done in <code>HEAD</code> and
             the trunk is more or less guaranteed to be in a state of greater
