@@ -3,7 +3,6 @@ $|++;
 
 BEGIN {
     unshift@INC,('/usr/etc/apache/PerlLib');
-{
     package ParseLink;
     use HTML::Parser;
     use vars qw(@ISA);
@@ -12,27 +11,42 @@ BEGIN {
 	my $self=shift;
 	$self->{Line}++;
     }
-sub start {
-    my $self=shift;
-    my ($tag,$attr)=@_;
-    my $link;
-    $link=$attr->{href} if $tag eq "a";
-    $link=$attr->{src} if $tag eq "img";
-    if (defined $link){
-	$self->{Links}{$link}{$self->{Line}+1}++;
+    sub start {
+	my $self=shift;
+	my ($tag,$attr)=@_;
+	my $link;
+	$link=$attr->{href} if $tag eq "a";
+	$link=$attr->{src} if $tag eq "img";
+	if (defined $link){
+	    $self->{Links}{$link}{$self->{Line}+1}++;
+	}
     }
-}
+package UserAgent;
+use LWP::Parallel::UserAgent;
+use vars qw(@ISA);
+@ISA = qw(LWP::Parallel::UserAgent);
+sub on_return {
+    my $self = shift;
+    my ($request,$response,$content) = @_;
+    if($response->code == 301){
+	$main::URL{Redirect}{$request->url} = $response->headers->header('Location');
+	print $request->url." -> ".$response->headers->header('Location')."\n" if($main::VERBOSE);
+	unless(defined $main::URL{Registered}{$response->headers->header('Location')}){
+	    $self->register(HTTP::Request->new(HEAD => $response->headers->header('Location')),\&callback_check,undef,0);
+	    $main::URL{Registered}{$response->headers->header('Location')}="True";
+	}
+    }
 }
 }
 
 use CGI qw(:standard);
 #use CGI::Carp qw(fatalsToBrowser);
 use W3CDebugCGI;
-use LWP::Parallel::UserAgent;
 
-$VERSION= '$Id: checklink.pl,v 1.9 1998-09-04 16:12:23 renaudb Exp $ ';
+$VERSION= '$Id: checklink.pl,v 1.10 1998-09-05 00:19:26 renaudb Exp $ ';
 %ALLOWED_SCHEMES = ( "http" => 1 );
 %SCHEMES = (); # for report
+%URL = ();
 
 ###############################
 
@@ -94,7 +108,7 @@ sub callback_parse {
 sub callback_check {
     my ($content,$response,$protocol)=@_;
     if(length $content){
-	print "Checking '",$response->request->url,": ", $response->code,"\n" if($VERBOSE);
+	print "Checking '",$response->request->url,": ", length $content,"\n" if($VERBOSE);
 	return length $content;
     }
     return C_ENDCON;
@@ -103,12 +117,14 @@ sub callback_check {
 sub checklinks {
     my $url=URI::URL->new(shift);
     my $q = shift if($CGI);
-    my $ua = new LWP::Parallel::UserAgent;
+    #my $ua = new LWP::Parallel::UserAgent;
+    my $ua = new UserAgent;
     my $request = HTTP::Request->new(GET => $url);
     $p = ParseLink->new(); # we want the parser to be global, so we can call it from the callback function
 
     $ua->max_hosts(10);
     $ua->max_req(20);
+    $request->headers->user_agent('W3C/Checklink');
 
     # prepare the request
     # Request document and parse it as it arrives via callback
@@ -137,7 +153,7 @@ sub checklinks {
 		}
 		next if($URL{Registered}{$abso->abs}); # next if already registered
 		# register HTTP request
-		$ua->register(HTTP::Request->new(HEAD => $abso->abs),\&callback_check) if($ALLOWED_SCHEMES{$abso->abs->scheme});
+		$ua->register(HTTP::Request->new(HEAD => $abso->abs),\&callback_check,undef,0) if($ALLOWED_SCHEMES{$abso->abs->scheme});
 		$URL{Registered}{$abso->abs}="True";
 	    }
 	    $response = $ua->wait(10);
@@ -172,24 +188,23 @@ sub print_result{
     print $q->h2('Result for '.$q->a({href=>$url},$url)) if($CGI);
     print "<table border=\"1\"><TR ALIGN=\"center\"><TD>Lines</TD><TD>URI</TD><TD>Code</TD><TD>Extra</TD></TR>\n" if($CGI);
     foreach my $resp (map {$response->{$_}->response} keys %$response){
-	if($resp->code ne "200"){
+	unless($resp->code eq "200"){
 	    print "<TR><TD ALIGN=\"center\">" if ($CGI);
 	    print join(",",sort keys %{$URL{$resp->request->url}});
 	    print "</TD><TD BGCOLOR=\"yellow\"><B>".$q->a({href=>$resp->request->url},$resp->request->url)."</B></TD><TD ALIGN=\"center\">",$resp->code,"</TD><TD>" if($CGI);
 	    print " ",$resp->request->url, ": ",$resp->code," " if($VERBOSE);
-	    if($resp->code == 401){
-		print $resp->headers->www_authenticate;
-	    }
+	    print $resp->headers->www_authenticate if($resp->code == 401);
+	    print &recurse_redirect($resp->request->url) if($resp->code == 301 && $CGI);
 	    print "</TD></TR>\n" if($CGI);
+	    print "\n" if($VERBOSE);
 	} else {
 	    print "<TR><TD ALIGN=\"center\">".join(",",sort keys %{$URL{$resp->request->url}})."</TD><TD>".$q->a({href=>$resp->request->url},$resp->request->url)."</TD><TD ALIGN=\"center\">ok</TD><TD></TD></TR>\n" if($CGI);
 	}
     }
     print "</table>\n" if($CGI);
-    print "\n" if($VERBOSE);
 }
 
-# I'll add links to source, and Webmaster icons later
+# I'll add links to source later
 # actually, links to source should be for Team version only
 sub html_header {
     $q = shift;
@@ -198,4 +213,10 @@ sub html_header {
     print $query->a({href=>"http://www.w3.org"},$query->img({src=>"http://www.w3.org/Icons/w3c_home",alt=>"W3C",border=>"0"}));
     print $query->a({href=>"http://www.w3.org/Web"},$query->img({src=>"http://www.w3.org/Icons/WWW/web",border=>"0",alt=>"Web Team"}));
     print $q->h1($q->a({href=>$q->url},'Link Checker'));
+}
+
+sub recurse_redirect {
+    my $url = shift;
+    my $rec = $URL{Redirect}{$URL{Redirect}{$url}}? "<BR>".&recurse_redirect($URL{Redirect}{$url}):"";
+    return "-&gt;".$URL{Redirect}{$url}.$rec;
 }
