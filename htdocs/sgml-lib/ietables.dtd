@@ -1,0 +1,110 @@
+<!--	DTD for Internet Explorer 2.0 Tables
+
+	Beta Version 0.9	Date: 2/26/96
+
+	This markup is based on the tables markup
+	contained in the IETF March 1995 Draft HTML3 DTD.
+
+	Attributes have been added as noted.
+
+	Typical invocation:
+
+	<!ENTITY % ietables PUBLIC
+		"-//Microsoft//DTD Internet Explorer 2.0 Tables//EN" >
+
+-->
+
+<!ENTITY % attrs  -- common attributes for elements --
+        'id       ID      #IMPLIED -- as target for hrefs (link ends) --
+         lang     CDATA   "en.us"  -- ISO language, country code --
+         class    NAMES   #IMPLIED -- for subclassing elements --'>
+
+<!ENTITY % needs -- Attributes for controlling text flow. Used in headers
+                    and other elements to guarantee sufficient room --
+        'clear  CDATA "no"  -- (left|right|all|no) move down past figures --
+         needs  CDATA #IMPLIED -- minimum width needed in em"s or pixels --
+                                        -- e.g. "40 em" or "100 pixels"  --'>
+
+<!ENTITY % cell "TH | TD">
+<!ENTITY % horiz.align "left|center|right|justify">
+<!ENTITY % vert.align  "top|middle|bottom|baseline">
+<!ENTITY % block.align
+        "align  (bleedleft|left|center|right|bleedright|justify) center">
+
+
+<!ELEMENT TABLE - - (CAPTION?, TR*) -- mixed headers and data -->
+<!ATTLIST TABLE
+        %attrs;
+        %needs; -- for control of text flow --
+        border	NUMBER	#IMPLIED -- draw borders --
+        colspec	CDATA	#IMPLIED -- column widths and alignment.
+		Not supported by IE2 --
+        units	(en|pixels|relative) en -- units for column widths
+		Not supported by IE2 --
+        dp	CDATA	#IMPLIED -- decimal point e.g. dp="," 
+		Not supported by IE2 --
+        width	CDATA	#IMPLIED -- absolute or percentage width --
+        %block.align;  -- horizontal alignment --
+        valign	(%vert.align)  top  -- vertical alignment --
+        noflow	(noflow)	#IMPLIED -- noflow around table 
+		Not supported by IE2 --
+        nowrap	(nowrap)	#IMPLIED -- don't wrap words --
+
+	-- Added for IE2 --
+	bgcolor          CDATA	#IMPLIED -- Table background color --
+	bordercolor      CDATA	#IMPLIED -- table border color --
+	bordercolorlight CDATA	#IMPLIED -- 3D table border color --
+	bordercolordark  CDATA	#IMPLIED -- 3D table border color --
+	cellpadding	NUMBER	#IMPLIED -- cell padding. --
+	cellspacing	NUMBER	#IMPLIED -- cell spacing --
+        >
+
+<!ELEMENT TR - O (%cell)* -- row container -->
+<!ATTLIST TR
+        %attrs;
+        align  (%horiz.align) #IMPLIED -- horizontal alignment --
+        valign (%vert.align)  top  -- vertical alignment --
+        dp     CDATA     #IMPLIED  -- decimal point e.g. dp="," 
+		Not supported by IE2 --
+        nowrap (nowrap)  #IMPLIED  -- don't wrap words --
+
+	-- Added for IE2 --
+	bgcolor          CDATA    #IMPLIED  -- background color for cell --
+	bordercolor      CDATA    #IMPLIED  -- cell border color --
+	bordercolorlight CDATA    #IMPLIED  -- 3D cell border color --
+	bordercolordark  CDATA    #IMPLIED  -- 3D cell border color --
+        width	CDATA    #IMPLIED -- cell width --
+        >
+
+<!ELEMENT (%cell) - O %body.content>
+<!ATTLIST (%cell)
+        %attrs;
+        colspan NUMBER    1      -- columns spanned --
+        rowspan NUMBER    1      -- rows spanned --
+        align  (%horiz.align) #IMPLIED -- horizontal alignment --
+        valign (%vert.align) top -- vertical alignment --
+        dp      CDATA    #IMPLIED  -- decimal point e.g. dp="," 
+		Not supported by IE2 --
+        nowrap (nowrap)  #IMPLIED  -- don't wrap words --
+        axis CDATA #IMPLIED -- axis name, defaults to element content 
+		Not supported by IE2 --
+        axes CDATA #IMPLIED -- comma separated list of axis names 
+		Not supported by IE2 --
+
+	-- Added for IE2 --
+	bgcolor          CDATA    #IMPLIED  -- background color for cell --
+	bordercolor      CDATA    #IMPLIED  -- cell border color --
+	bordercolorlight CDATA    #IMPLIED  -- 3D cell border color --
+	bordercolordark  CDATA    #IMPLIED  -- 3D cell border color --
+        width	CDATA    #IMPLIED -- added for IE2 --
+      >
+
+<!--======================= Captions ======================================-->
+
+<!ELEMENT CAPTION - - (%text;)+ -- table or figure caption -->
+<!ATTLIST CAPTION
+        %attrs;
+        align	(left|right|center) #IMPLIED
+        valign	(top|bottom) #IMPLIED
+        >
+

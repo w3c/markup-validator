@@ -1,0 +1,8 @@
+<!ENTITY copy  "&#169;"       --copyright symbol-->
+<!ENTITY nbsp  SDATA "[nbsp]" --non-breakable space-->
+<!ENTITY trade "&#153;"       --trade mark sign -->
+<!ENTITY reg   SDATA "[reg ]" --registered sign -->
+<!ENTITY emsp  "   "          --em space-->
+<!ENTITY ensp  "  "           --en space (technically, 1/2-em) -->
+<!ENTITY mdash "---"          --em dash-->
+<!ENTITY ndash "--"           --en dash (1/2-em) -->

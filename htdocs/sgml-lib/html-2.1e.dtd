@@ -1,0 +1,344 @@
+<!--    html-2.1e.dtd
+
+        Document Type Definition for the HyperText Markup Language,
+        version 2.1E (HTML DTD)
+
+        Last revised: 95/09/25
+
+        Authors: Daniel W. Connolly <connolly@w3.org>
+                 Francois Yergeau <yergeau@alis.com>
+-->
+
+<!ENTITY % HTML.Version
+        "-//IETF//DTD HTML 2.1E//EN"
+
+        -- Typical usage:
+
+            <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.1E//EN">
+            <html>
+            ...
+            </html>
+        --
+        >
+
+
+<!--============ Feature Test Entities ========================-->
+
+<!ENTITY % HTML.Recommended "IGNORE"
+        -- Certain features of the language are necessary for
+           compatibility with widespread usage, but they may
+           compromise the structural integrity of a document.
+           This feature test entity enables a more prescriptive
+           document type definition that eliminates
+           those features.
+        -->
+
+<![ %HTML.Recommended [
+        <!ENTITY % HTML.Deprecated "IGNORE">
+]]>
+
+<!ENTITY % HTML.Deprecated "INCLUDE"
+        -- Certain features of the language are necessary for
+           compatibility with earlier versions of the specification,
+           but they tend to be used and implemented inconsistently,
+           and their use is deprecated. This feature test entity
+           enables a document type definition that eliminates
+           these features.
+        -->
+
+<!ENTITY % HTML.Highlighting "INCLUDE"
+        -- Use this feature test entity to validate that a
+           document uses no highlighting tags, which may be
+           ignored on minimal implementations.
+        -->
+
+<!ENTITY % HTML.Forms "INCLUDE"
+        -- Use this feature test entity to validate that a document
+           contains no forms, which may not be supported in minimal
+           implementations
+        -->
+
+<!--============== Imported Names ==============================-->
+
+<!ENTITY % Content-Type "CDATA"
+        -- meaning an internet media type
+           (aka MIME content type, as per RFC1521)
+        -->
+
+<!ENTITY % HTTP-Method "GET | POST"
+        -- as per HTTP specification, in progress
+        -->
+<!ENTITY % URI       "CDATA"    -- uniform resource identifier -->
+
+<!--========= DTD "Macros" =====================-->
+
+<!ENTITY % Length    "CDATA"    -- number followed by optional units -->
+
+<!ENTITY % heading "H1|H2|H3|H4|H5|H6">
+
+<!ENTITY % list " UL | OL | DIR | MENU " >
+
+<!ENTITY % attrs -- common attributes for elements --
+        'ID      ID         #IMPLIED   -- element identifier --
+         LANG    NAME       #IMPLIED   -- RFC 1766 language tag --
+         DIR     (ltr|rtl)  #IMPLIED   -- text directionality --'>
+
+<!ENTITY % size
+        'WIDTH   %Length    #IMPLIED   -- desired width in units --
+         HEIGHT  %Length    #IMPLIED   -- desired height in units --'>
+
+<!ENTITY % align.simple
+        'ALIGN   (top|middle|bottom) #IMPLIED  -- glyph alignment --'>
+
+<!ENTITY % align
+        'ALIGN   (top|middle|bottom|left|center|right)  #IMPLIED  -- float or glyph alignment --
+         HSPACE  %Length    #IMPLIED   -- text stays this far away horizontally --
+         VSPACE  %Length    #IMPLIED   -- text stays this far away vertically --
+         FLOWTO  NAME       #IMPLIED   -- flow text around float until this ID --'>
+
+<!ENTITY % just -- an attribute for text justification --
+         'ALIGN  (left|right|center|justify)  #IMPLIED'>
+
+<!--======= Character mnemonic entities =================-->
+
+<!ENTITY % ISOlat1 PUBLIC
+  "ISO 8879-1986//ENTITIES Added Latin 1//EN//HTML">
+%ISOlat1;
+
+<!--Entities for markup significant characters -->
+<!ENTITY amp CDATA "&#38;"     -- ampersand          -->
+<!ENTITY gt CDATA "&#62;"      -- greater than       -->
+<!ENTITY lt CDATA "&#60;"      -- less than          -->
+<!ENTITY quot CDATA "&#34;"    -- double quote       -->
+
+<!--Entities for language-dependent presentation (BIDI and contextual analysis) -->
+<!ENTITY zwnj CDATA "&#8204;"-- zero width non-joiner-->
+<!ENTITY zwj  CDATA "&#8205;"-- zero width joiner-->
+<!ENTITY lrm  CDATA "&#8206;"-- left-to-right mark-->
+<!ENTITY rlm  CDATA "&#8207;"-- right-to-left mark-->
+
+<!--========= SGML Document Access (SDA) Parameter Entities =====-->
+
+<!-- HTML 2.0 contains SGML Document Access (SDA) fixed attributes
+in support of easy transformation to the International Committee
+for Accessible Document Design (ICADD) DTD
+         "-//EC-USA-CDA/ICADD//DTD ICADD22//EN".
+ICADD applications are designed to support usable access to
+structured information by print-impaired individuals through
+Braille, large print and voice synthesis.  For more information on
+SDA & ICADD:  
+        - ISO 12083:1993, Annex A.8, Facilities for Braille,
+          large print and computer voice
+        - ICADD ListServ
+          <ICADD%ASUACAD.BITNET@ARIZVM1.ccit.arizona.edu>
+        - Usenet news group bit.listserv.easi
+        - Recording for the Blind, +1 800 221 4792
+-->
+
+<!ENTITY % SDAFORM  "SDAFORM  CDATA  #FIXED"
+          -- one to one mapping        -->
+<!ENTITY % SDARULE  "SDARULE  CDATA  #FIXED"
+          -- context-sensitive mapping -->
+<!ENTITY % SDAPREF  "SDAPREF  CDATA  #FIXED"
+          -- generated text prefix     -->
+<!ENTITY % SDASUFF  "SDASUFF  CDATA  #FIXED"
+          -- generated text suffix     -->
+<!ENTITY % SDASUSP  "SDASUSP  NAME   #FIXED"
+          -- suspend transform process -->
+
+<!--========== Text Markup =====================-->
+
+<![ %HTML.Highlighting [
+
+<!ENTITY % font " TT | B | I ">
+
+<!ENTITY % phrase "EM | STRONG | CODE | SAMP | KBD | VAR | CITE">
+
+<!ENTITY % text "#PCDATA|A|EMBED|IMG|BR|%phrase|%font|SPAN|Q|BDO|SUP|SUB">
+
+<!ELEMENT (%font;|%phrase) - - (%text)*>
+<!ATTLIST ( TT | CODE | SAMP | KBD | VAR )
+        %attrs;
+        %SDAFORM; "Lit"
+        >
+<!ATTLIST ( B | STRONG )
+        %attrs;
+        %SDAFORM; "B"
+        >
+<!ATTLIST ( I | EM | CITE )
+        %attrs;
+        %SDAFORM; "It"
+        >
+
+<!-- <TT>       Typewriter text                         -->
+<!-- <B>        Bold text                               -->
+<!-- <I>        Italic text                             -->
+<!-- <EM>       Emphasized phrase                       -->
+<!-- <STRONG>   Strong emphasis                         -->
+<!-- <CODE>     Source code phrase                      -->
+<!-- <SAMP>     Sample text or characters               -->
+<!-- <KBD>      Keyboard phrase, e.g. user input        -->
+<!-- <VAR>      Variable phrase or substituable         -->
+<!-- <CITE>     Name or title of cited work             -->
+
+<!ENTITY % pre.content "#PCDATA|A|HR|BR|%font|%phrase|SPAN|BDO">
+
+]]>
+
+<!ENTITY % text "#PCDATA|A|EMBED|IMG|BR|SPAN|Q|BDO|SUP|SUB">
+
+<!-- Should the BDO element have an SDAFORM attr.?  Which? -->
+<!ELEMENT BDO - - (%text)+>
+<!ATTLIST BDO
+        LANG   NAME      #IMPLIED
+        DIR    (ltr|rtl) #REQUIRED
+        >
+
+<!-- <BDO>     Control bidirectionnal text             -->
+
+<!ELEMENT BR    - O EMPTY>
+<!ATTLIST BR
+        %SDAPREF; "&#RE;"
+        >
+
+<!-- <BR>       Line break      -->
+
+<!-- Should the SPAN element have an SDAFORM attr.?  Which? -->
+<!ELEMENT SPAN - - (%text)*>
+<!ATTLIST SPAN
+        %attrs;
+>
+
+<!-- <SPAN>     Generic container        -->
+
+<!ELEMENT Q - - (%text)*>
+<!ATTLIST Q
+        %attrs;
+        %SDAFORM; "It"  -- to be verified --
+        >
+
+<!-- <Q>        Short quotation                         -->
+
+<!ELEMENT (SUP|SUB) - - (#PCDATA)>
+<!ATTLIST (SUP|SUB)
+        %attrs;
+        >
+
+<!-- <SUP>      Superscript              -->
+<!-- <SUB>      Subscript                -->
+
+<!--========= Link Markup ======================-->
+
+<!ENTITY % linkType "NAME">
+
+<!ENTITY % link.internal -- attributes for links with implicit presentation resource --
+        'SRC      %URI;      #REQUIRED  -- resource to retrieve --
+         PARAMS   CDATA      #IMPLIED   -- presentation specializer --'>
+
+<!ENTITY % link.metainfo  -- overall link metainfo  --
+        'TITLE    CDATA     #IMPLIED   -- overall title for resource --
+         URN      %URI      #IMPLIED   -- global entity name --
+         REL      %linkType #IMPLIED
+         REV      %linkType #IMPLIED  '>
+
+<!ENTITY % mime.constraints -- MIME typing constraints --
+        'ACCEPT           CDATA  "text/plain" -- applicable media type(s) --
+         ACCEPT-CHARSET   CDATA  "ISO-8859-1" -- applicable character encoding(s) --
+         ACCEPT-ENCODING  CDATA  "ISO-8859-1" -- applicable content transfer encoding(s) --'>
+
+<![ %HTML.Deprecated [
+        <!ENTITY % case.metainfo  -- link metainfo for specific variant --
+                '%mime.constraints;             -- type constraints --
+                 METHODS  NAMES     #IMPLIED    -- deprecated --'>
+]]>
+<!ENTITY % case.metainfo  -- link metainfo for specific variant --
+        '%mime.constraints;             -- type constraints --'>
+
+<![ %HTML.Recommended [
+        <!ENTITY % key.value -- key/value pair with typed value --
+                'NAME     NAME     #IMPLIED     -- keyword, usually required --
+                 VALUE    CDATA    #IMPLIED     -- default value --
+                 %mime.constraints;             -- type constraints for value --'>
+]]>
+<!ENTITY % key.value -- key/value pair with typed value --
+        'NAME     CDATA    #IMPLIED     -- keyword, usually required --
+         VALUE    CDATA    #IMPLIED     -- default value --
+         %mime.constraints;             -- type constraints for value --'>
+
+<!ENTITY % linkExtraAttributes
+        '%link.metainfo;
+         %case.metainfo;
+        '>
+
+<![ %HTML.Recommended [
+        <!ENTITY % A.content   "(%text)*"
+        -- <H1><a name="xxx">Heading</a></H1>
+                is preferred to
+           <a name="xxx"><H1>Heading</H1></a>
+        -->
+]]>
+
+<!ENTITY % A.content   "(%heading|%text)*">
+
+<!ELEMENT A     - - %A.content -(A)>
+<!ATTLIST A
+        %attrs;
+        HREF CDATA #IMPLIED
+        NAME CDATA #IMPLIED
+        %linkExtraAttributes;
+        %SDAPREF; "<Anchor: #AttList>"
+        >
+<!-- <A>                Anchor; source/destination of link      -->
+<!-- <A NAME="...">     Name of this anchor                     -->
+<!-- <A HREF="...">     Address of link destination             -->
+<!-- <A URN="...">      Permanent address of destination        -->
+<!-- <A REL=...>        Relationship to destination             -->
+<!-- <A REV=...>        Relationship of destination to this     -->
+<!-- <A TITLE="...">    Title of destination (advisory)         -->
+<!-- <A METHODS="...">  Operations on destination (advisory)    -->
+<!-- <A CHARSET="...">  Charset of destination (advisory)       -->
+
+
+<!--========== Embedded Objects and Images ==========================-->
+
+<!ELEMENT EMBED - - (PARAM*, CAPTION?, EMBED.BODY, CREDIT?)>
+<!ATTLIST EMBED
+        %attrs;
+        %link.internal;
+        %link.metainfo;
+        %case.metainfo;
+        %size;                      -- size of reserved area --
+        %align;                     -- alignment or float --
+        %SDAPREF; '<Fig><Xref IDRef="#AttVal(SRC)"><?SDATrans Embed: #AttList>'
+        %SDASUFF; '</Fig>'
+        >
+<!ELEMENT CAPTION - - (%text;)+ -- caption for floating element -->
+<!ATTLIST CAPTION
+        %attrs;
+        %align;                     -- side of rectangle where caption placed --
+        %SDAPREF; "Caption: "
+        >
+<!ELEMENT EMBED.BODY O O %A.content>
+<!ATTLIST EMBED.BODY
+        %attrs;
+        >
+<!ELEMENT CREDIT - - (%text;)* -- copyright/credit for embedded object  -->
+<!ATTLIST CREDIT
+        %attrs;
+        %SDAFORM; "Fn"
+        >
+
+<!ELEMENT PARAM - O EMPTY>
+<!ATTLIST PARAM
+        %attrs;
+        %key.value;
+        %SDAPREF; "<?SDATrans Param: #AttList>"
+        >
+
+<!ELEMENT IMG - O EMPTY>
+<!ATTLIST IMG
+        %attrs;
+        %link.internal;
+        %align.simple;
+        ALT        CDATA       #IMPLIED
+        ISMAP    

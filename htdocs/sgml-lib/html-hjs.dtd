@@ -1,0 +1,27 @@
+<!--	html-hjs.dtd
+
+        Document Type Definition for the HyperText Markup Language
+	with strict validation of the HotJava DTD.
+
+	Author: Daniel W. Connolly <connolly@w3.org>
+	Applet additions by: Mark Gaither (markg@hal.com) 24 Jul 95
+
+-->
+
+<!ENTITY % HTML.Version
+	"-//Sun Microsystems Corp.//DTD HotJava Strict HTML//EN"
+
+        -- Typical usage:
+
+            <!DOCTYPE HTML PUBLIC "-//Sun Microsystems Corp.//DTD HotJava HTML//EN">
+	    <html>
+	    ...
+	    </html>
+	--
+	>
+
+<!-- Feature Test Entities -->
+<!ENTITY % HTML.Recommended "INCLUDE">
+
+<!ENTITY % html PUBLIC 	"-//Sun Microsystems Corp.//DTD HotJava HTML//EN">
+%html;

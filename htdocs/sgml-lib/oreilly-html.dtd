@@ -1,0 +1,240 @@
+<!-- ======================================================================
+        oreilly-html.dtd
+
+        The O'Reilly HTML Extended DTD is an extension of the
+        "recommended" interpretation of the HTML 2.0 DTD as defined in
+        RFC 1866.  The extensions add the following popular features:
+
+        + Tables
+
+          The table model from the now defunct HTML 3.0 DTD has been
+          used with the following modifications: the content model of
+          <TD> has been extended to include text (non-block) elements
+          and the type of the BORDER attribute has been changed to
+          NUMBER in order to support changes to the border width.
+
+          Note: In SGML, the validity of <TABLE BORDER> and 
+          <TABLE BORDER=value> are mutually exclusive.  In order to support
+          <TABLE BORDER=value> in this DTD, it is necessary to make
+          <TABLE BORDER> invalid.  This makes the O'Reilly HTML
+          Extended DTD backwards-incompatible with HTML 2.0.
+
+
+        + Modification of browser background and colors through attributes
+          on the <BODY> element.
+        + Support for WIDTH and ALIGN attributes on HR.
+        + Support for HEIGHT, WIDTH, BORDER, ALIGN=left and ALIGN=right on IMG.
+        + Support for CLEAR attribute on BR.
+        + Support for an ALIGN attribute on P.
+        + Support for an ALIGN attribute on headings.
+        + Support for the <FONT> element.
+        + Support for the <CENTER> element.
+        + Support for the additional entities: &copy; and &nbsp;.
+
+        We use the following DOCTYPE to identify this DTD:
+
+            <!DOCTYPE HTML PUBLIC "-//O'Reilly and Associates//DTD HTML Extended 1.0//EN">
+
+        In addition, four external entities (files) are referenced by
+        this DTD:
+
+        1. PUBLIC "-//O'Reilly and Associates//DTD HTML 2.0//EN"
+
+          The HTML DTD from RFC 1866 with a few slight modifications.
+
+        2. PUBLIC "ISO 8879-1986//ENTITIES Added Latin 1//EN//HTML"
+
+          The ISO Latin1 entities (referenced by the RFC 1866 DTD).
+
+        3. PUBLIC "-//O'Reilly and Associates//ELEMENTS Table Fragment 1.0//EN"
+
+          The table elements, extracted from the now defunct HTML 3.0 DTD,
+          with the modifications noted above.
+
+        4. PUBLIC "-//O'Reilly and Associates//ENTITIES Additional HTML 1.0//EN"
+
+          Additional entity definitions.
+
+        An appropriate SGML Open catalog file for this DTD is:
+
+            PUBLIC "-//O'Reilly and Associates//DTD HTML 2.0//EN"
+              /local/path/on/your/system/to/oreilly-rfc1866.dtd
+
+            PUBLIC "-//O'Reilly and Associates//DTD HTML Extended 1.0//EN"
+              /local/path/on/your/system/to/oreilly-html.dtd
+
+            PUBLIC "-//O'Reilly and Associates//ELEMENTS Table Fragment 1.0//EN"
+              /local/path/on/your/system/to/oreilly-table.elements
+
+            PUBLIC "-//O'Reilly and Associates//ENTITIES Additional HTML 1.0//EN"
+              /local/path/on/your/system/to/oreilly-additional.entities
+
+            PUBLIC "ISO 8879-1986//ENTITIES Added Latin 1//EN//HTML"
+              /local/path/on/your/system/to/ISOlatin1
+
+        If you have questions or comments about this DTD, please send
+        them to:
+
+        Norman Walsh <norm@ora.com>
+        Technical Director, Online Publishing
+        O'Reilly & Associates, Inc.
+        90 Sherman Street
+        Cambridge, MA 02140
+        (617) 354-5800/661-1116 FAX
+====================================================================== -->
+
+<!ENTITY % HTML.Recommended "INCLUDE">
+
+<!-- ==================== FONT Extension ==================== -->
+<!--                                                          -->
+
+<!ENTITY % font " TT | B | I | FONT">
+
+<!ENTITY % phrase "EM | STRONG | CODE | SAMP | KBD | VAR | CITE ">
+
+<!ENTITY % text "#PCDATA | A | IMG | BR | CENTER | %phrase | %font">
+
+<!ATTLIST FONT
+	SIZE CDATA #REQUIRED
+        >
+
+<!--                                                          -->
+<!-- ==================== /FONT Extension =================== -->
+
+<!-- ==================== Tables Extensions ================= -->
+<!--                                                          -->
+
+<!-- Begin by allowing TABLE in block content, modification   -->
+<!-- continues below ...                                      -->
+<!ENTITY % block.forms "BLOCKQUOTE | TABLE | FORM | ISINDEX">
+
+<!--                                                          -->
+<!-- ==================== Attribute Extensions ============== -->
+
+<!-- Unfortunately, these modifications require changes to the
+     base DTD to comment out the otherwise conflicting attribute
+     definitions.  Hence "oreilly-rfc1866.dtd" and not the
+     actually, official HTML DTD.                             -->
+
+<!ATTLIST HR
+        SDAPREF  CDATA               #FIXED   "&#RE;&#RE;"
+	WIDTH    CDATA               #IMPLIED
+	ALIGN    (left|right|center) #IMPLIED
+        >
+
+<!ATTLIST IMG
+        SRC      CDATA   #REQUIRED
+        ALT      CDATA   #IMPLIED
+        ALIGN    (top|middle|bottom|left|right) #IMPLIED
+        ISMAP    (ISMAP) #IMPLIED
+        HEIGHT   CDATA   #IMPLIED
+        WIDTH    CDATA   #IMPLIED
+        BORDER   CDATA   #IMPLIED
+        SDAPREF  CDATA   #FIXED     "<Fig><?SDATrans Img: #AttList>#AttVal(Alt)</Fig>"
+        >
+
+<!ATTLIST BR
+        SDAPREF  CDATA  #FIXED "&#RE;"
+        CLEAR (CLEAR) #IMPLIED -- clear text flow around images --
+        >
+
+<!ATTLIST P
+        SDAFORM  CDATA  #FIXED "Para"
+	ALIGN    (left|right|center) #IMPLIED
+        >
+
+<!ATTLIST H1
+        SDAFORM  CDATA  #FIXED "H1"
+        ALIGN    (left|right|center) #IMPLIED
+        >
+<!ATTLIST H2
+        SDAFORM  CDATA  #FIXED "H2"
+        ALIGN    (left|right|center) #IMPLIED
+        >
+<!ATTLIST H3
+        SDAFORM  CDATA  #FIXED "H3"
+        ALIGN    (left|right|center) #IMPLIED
+        >
+<!ATTLIST H4
+        SDAFORM  CDATA  #FIXED "H4"
+        ALIGN    (left|right|center) #IMPLIED
+        >
+<!ATTLIST H5
+        SDAFORM  CDATA  #FIXED "H5"
+        ALIGN    (left|right|center) #IMPLIED
+        >
+<!ATTLIST H6
+        SDAFORM  CDATA  #FIXED "H6"
+        ALIGN    (left|right|center) #IMPLIED
+        >
+
+<!-- ==================== /Attribute Extensions ============= -->
+
+<!-- ==================== BODY Extension ==================== -->
+<!--                                                          -->
+
+<!ENTITY % URI "CDATA"
+        -- The term URI means a CDATA attribute
+           whose value is a Uniform Resource Identifier,
+           as defined by 
+	"Universal Resource Identifiers" by Tim Berners-Lee
+	aka http://info.cern.ch/hypertext/WWW/Addressing/URL/URI_Overview.html
+	aka RFC 1630
+
+	Note that CDATA attributes are limited by the LITLEN
+	capacity (1024 in the current version of html.decl),
+	so that URIs in HTML have a bounded length.
+        -->
+
+<!ATTLIST BODY
+        BACKGROUND %URI; #IMPLIED  
+        BGCOLOR    CDATA #IMPLIED
+	TEXT       CDATA #IMPLIED
+	LINK       CDATA #IMPLIED
+	VLINK      CDATA #IMPLIED
+	ALINK	   CDATA #IMPLIED
+	>
+
+<!--                                                          -->
+<!-- ==================== /BODY Extension =================== -->
+
+<!-- ==================== IETF DTD ========================== -->
+<!--                                                          -->
+
+<!ENTITY % IETF.HTML.DTD PUBLIC "-//O'Reilly and Associates//DTD HTML 2.0//EN">
+%IETF.HTML.DTD;
+
+<!-- ==================== /IETF DTD ========================= -->
+
+<!-- ==================== CENTER Element ==================== -->
+<!--                                                          -->
+
+<!ELEMENT CENTER - - ((%block | %text)+)>
+
+<!--                                                          -->
+<!-- ==================== /CENTER Element =================== -->
+
+<!-- ==================== Tables Extension ================== -->
+<!--                                                          -->
+
+<!ENTITY % attrs  -- common attributes for elements --
+        'id       ID      #IMPLIED -- as target for hrefs (link ends) --
+         lang     CDATA   "en.us"  -- ISO language, country code --'>
+
+<!ENTITY % needs -- Attributes for controlling text flow. Used in headers
+                    and other elements to guarantee sufficient room --
+        'clear  CDATA #IMPLIED'>
+
+<!ENTITY % OReilly.Table.Fragment 
+         PUBLIC "-//O'Reilly and Associates//ELEMENTS Table Fragment 1.0//EN">
+%OReilly.Table.Fragment;
+
+<!ENTITY % OReilly.Additional.HTML.Entities
+         PUBLIC "-//O'Reilly and Associates//ENTITIES Additional HTML 1.0//EN">
+%OReilly.Additional.HTML.Entities;
+
+<!--                                                          -->
+<!-- ==================== /Tables Extension ================= -->
+
+<!-- EOF -->
+

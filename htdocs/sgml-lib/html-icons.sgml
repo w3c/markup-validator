@@ -1,0 +1,8 @@
+<!--
+     HTMLicons fake entity declarations to get the html-3.dtd to work
+-->
+
+<!ENTITY folder   SDATA "[folder   ]" -- folder icon -->
+<!-- should have a bunch more icons, like the internal icons =
+
+     in Mosaic and Netscape -->

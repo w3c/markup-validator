@@ -1,0 +1,23 @@
+<!--	html-s.dtd
+
+    Document Type Definition for strict HTML that works with Internet Explorer.
+-->
+
+<!ENTITY % HTML.Version
+	"-//Microsoft//DTD Internet Explorer 3.0 HTML Strict//EN"
+
+        -- Typical usage:
+
+            <!DOCTYPE HTML PUBLIC
+		"-//Microsoft//DTD Internet Explorer 3.0 HTML Strict//EN">
+	    <html>
+	    ...
+	    </html>
+	--
+	>
+
+<!-- Feature Test Entities -->
+<!ENTITY % HTML.Recommended "INCLUDE">
+
+<!ENTITY % html PUBLIC "-//Microsoft//DTD Internet Explorer 3.0 HTML//EN">
+%html;

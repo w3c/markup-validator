@@ -1,0 +1,24 @@
+<!--
+        html3s.dtd
+
+        Document Type Definition for the HyperText Markup Language (HTML DTD)
+	with strict validation.
+
+-->
+
+<!ENTITY % HTML.Version
+        "-//W3O//DTD W3 HTML Strict 3.0//EN//"
+
+	-- Typical usage:
+
+            <!DOCTYPE HTML PUBLIC "-//W3O//DTD W3 HTML Strict 3.0//EN//">
+            <html>
+            ...
+            </html>
+        --
+        >
+
+<!ENTITY % HTML.Recommended "INCLUDE">
+
+<!ENTITY % html PUBLIC "-//W3O//DTD W3 HTML 3.0//EN//">
+%html;
