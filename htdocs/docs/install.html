@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.3 2004-07-21 15:07:10 link Exp $"
---><!--#set var="date" value="\$Date: 2004-07-21 15:07:10 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.4 2004-07-21 23:43:21 link Exp $"
+--><!--#set var="date" value="\$Date: 2004-07-21 23:43:21 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -83,12 +83,12 @@
         The canonical list of Perl modules we use can be found in the source
         for the "check" CGI script. There is a bunch of lines that of the form
         "use Foo::Bar" where each "Foo::Bar" represents a module. Most modules
-        can be found on <a href="http://www.cpan.org/">CPAN</a> (minimum
-        versions in parenthesis after the name). The following
+        can be found on <a href="http://www.cpan.org/"><acronym
+            title="Comprehensive Perl Archive Network">CPAN</acronym></a>
+        (minimum versions in parenthesis after the name). The following
         list was complete when CVS spit out:
-        <code>$Date: 2004-07-21 15:07:10 $</code>. <tt>:-)</tt>
+        <code>$Date: 2004-07-21 23:43:21 $</code>. <tt>:-)</tt>
       </p>
-
      <p>
        One easy - and strongly recommended - way to take care of all these
        Perl module dependencies is to install
@@ -253,7 +253,7 @@
              Make changes to reflect where files are in your installation.</p>
             This file is well commented and this should be relatively straightforward. </li>
     </ol>
-    <h4>Check the installation</h4>
+    <h4><a id="install-check" name="install-check"></a>Check the installation</h4>
     <ol>
         <li><p>Point your browser at the new site.</p></li> 
         <li><p>Check the error log of the Web server to get clues on what may be wrong 

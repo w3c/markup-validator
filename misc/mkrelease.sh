@@ -4,7 +4,7 @@
 #   mkdir foo
 #   cd foo
 #   export CVSROOT=:pserver:anonymous@dev.w3.org:/sources/public
-#   cvs -z3 export -r validator-0_6_6-release validator
+#   cvs -z3 export -r validator-0_6_7-release validator
 #   cd validator
 #   misc/mkrelease.sh 0.6.7
 
