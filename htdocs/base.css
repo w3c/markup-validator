@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.3 2002-11-30 21:54:52 link Exp $
+   $Id: base.css,v 1.26.2.4 2002-12-02 12:14:44 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -16,10 +16,7 @@ body {
   color:           black;
   background:      white;
   font-weight:     normal;
-  word-spacing:    normal;
-  letter-spacing:  normal;
-  text-transform:  none;
-  font-family:     "Luxi Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-family:     sans-serif;
   font-style:      normal;
   text-decoration: none;
 }
@@ -143,10 +140,6 @@ h1 {
   font-weight: bold;
   font-style: normal;
   text-decoration: none;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
-  /* color: #005A9C; */
   color: #053188
 }
 
@@ -157,9 +150,6 @@ h2 {
   font-weight: 500;
   font-style: normal;
   text-decoration: none;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
 }
 
 h3 {
@@ -169,9 +159,6 @@ h3 {
   font-weight: 500;
   font-style: italic;
   text-decoration: none;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
 }
 
 h4 {
@@ -181,9 +168,6 @@ h4 {
   font-weight: 500;
   font-style: normal;
   text-decoration: none;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
 }
 
 h5, dt {
@@ -193,9 +177,6 @@ h5, dt {
   font-weight: 500;
   font-style: normal;
   text-decoration: none;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
   margin-top: 1em;
 }
 		
@@ -206,9 +187,6 @@ h6 {
   font-weight: 500;
   font-style: normal;
   text-decoration: none;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
 }
 
 /* comma tools table */
