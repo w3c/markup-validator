@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.183 2001-09-14 04:13:13 gerald Exp $
+# $Id: check,v 1.184 2001-09-17 00:32:52 link Exp $
 
 #
 # We need Perl 5.004.
@@ -91,9 +91,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.183 $;
+$VERSION    =  q$Revision: 1.184 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-09-14 04:13:13 $;
+$DATE       =  q$Date: 2001-09-17 00:32:52 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -341,9 +341,11 @@ if (URI::eq("$File->{URI}", $q->param('uri'))) { # @@ Why do we need to stringif
   &add_table("File", $File->{URI});
 } else {
   &add_table("<a href='$uri_def_uri'>URI</a>",
-      '<a href="'. $q->param('uri'). '">'. $q->param('uri'). "</a>\n".
-      ' ' x 6 . '<span class="note">I was redirected to <a href="'.
-      $File->{URI}. '">'. $File->{URI}. '</a></span>');
+      "<input type='text' name='uri' size='50' value='$File->{URI}' />");
+  &add_warning('Note that the URI you gave me (&#171;<code>' .
+	       $q->param('uri') . '</code>&#187;) ' .
+	       'returned a redirect to a new URI ' .
+	       '(&#171;<code>' . $File->{URI} . '</code>&#187;).');
 }
 
 &add_table("Last Modified", $File->{Modified})  if $File->{Modified};
