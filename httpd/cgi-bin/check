@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.17 2002-12-03 01:54:33 link Exp $
+# $Id: check,v 1.305.2.18 2002-12-03 06:52:32 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.17 $;
+  $VERSION    =  q$Revision: 1.305.2.18 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -166,7 +166,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-12-03 01:54:33 $,
+                              Date => q$Date: 2002-12-03 06:52:32 $,
                              });
 
 #
@@ -985,6 +985,8 @@ EOF
 # Generate HTML for the "Jump to:" links in results.
 sub jump_links {
   my $links = '';
+  my $me = &uri_escape(&self_url_file($File));
+
   $links .= <<".EOF.";
       <p id="skip" class="jumpbar">
         Jump To: [<a title="Result of Validation" href="#result">Results</a>]
@@ -996,6 +998,8 @@ sub jump_links {
       if $File->{Opt}->{'Show Parsetree'};
     $links .= ' [<a title="Document Outline" href="#outline">Outline</a>]'
       if $File->{Opt}->{'Outline'};
+    $links .= qq( [<a class="comma" title="Go to a text version of the results." href="http://cgi.w3.org/cgi-bin/html2txt?url=$me">,text</a>]);
+    $links .= qq( [<a class="comma" title="Go to a version with tables linearized" href="http://jiggles.w3.org/servlet/tablin?url=$me&tableno=&cellSeparator=&headerSeparator=&valueSeparator=&orient=row&repeat=4&interact=0">,tablin</a>]);
   }
   $links .= "      </p>\n";
   return $links;
@@ -2050,7 +2054,7 @@ sub prepCGI {
 	exit;
       }
     } else {
-      my $thispage = &self_url($q);
+      my $thispage = &self_url_q($q);
       print redirect $thispage;
       exit;
     }
@@ -2112,7 +2116,7 @@ sub prepCGI {
 
   # Redirect to a GETable URL if method is POST without a file upload.
   if ($q->request_method eq 'POST' and not $File->{'Is Upload'}) {
-    my $thispage = &self_url($q);
+    my $thispage = &self_url_q($q);
     print redirect $thispage;
     exit;
   }
@@ -2852,8 +2856,8 @@ sub popup_charset {
 }
 
 #
-# Construct a self-referential URL.
-sub self_url {
+# Construct a self-referential URL from a CGI.pm $q object.
+sub self_url_q {
   my $q = shift;
   my $thispage = $File->{Env}->{'Self URI'};
      $thispage .= '?uri='       . uri_escape($q->param('uri'));
@@ -2872,3 +2876,22 @@ sub self_url {
   }
   return $thispage;
 }
+
+
+#
+# Construct a self-referential URL from a $File object.
+sub self_url_file {
+  my $File = shift;
+
+  my $thispage = $File->{Env}->{'Self URI'};
+  my $escaped_uri = uri_escape($File->{URI});
+  $thispage .= qq(?uri=$escaped_uri);
+  $thispage .= ';ss=1'      if $File->{Opt}->{'Show Source'};
+  $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
+  $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
+  $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
+  $thispage .= ';No200=1'   if $File->{Opt}->{'No200'};
+
+  return $thispage;
+}
+
