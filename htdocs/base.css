@@ -4,12 +4,14 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.27 2004-02-02 06:06:44 ot Exp $
+   $Id: base.css,v 1.26.2.28 2004-02-16 21:07:38 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
 @import url(navbar.css);  /* CSS for navigation menu. */
 @import url(tips.css);    /* CSS for Quality Tips. */
+@import url(docs.css);    /* CSS for the Documentation. */
+
 
 html, body {
   line-height:     120%;
@@ -25,37 +27,24 @@ html, body {
 }
 
 div#main {
-  /*padding-left: 2em;*/
   padding-top: 1em;
   margin-right: 7.6em;
 }
 
 div#main p, div#main dt {
-padding-left: 1em;
-padding-right: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 dt {
   margin-top: 1em;
 }
 
-dl.tip {
- margin-top: 2em;
-}
-
-
-div.doc h4, div.doc h5, div.doc p, div.doc pre, div.doc ul, div.doc dl, div.doc table {
- margin-left: 2em;
- margin-right: 20%;
-}
-
-div.doc div#toc ul, div.doc dd p{
-margin-left: 0; margin-right: 0}
-
 fieldset {
   margin-bottom: 3em;
-  max-width: 80%;                                                                     
-  margin-left: 1em;  }
+  max-width:     80%;
+  margin-left:   1em;
+}
 
 .intro {
   font-style: italic;
@@ -76,8 +65,8 @@ a:active {
   background-color: yellow;
 }
 
-acronym:hover, abbrev:hover {cursor: help}
-abbrev[title], acronym[title], span[title], strong[title] {
+acronym:hover, abbr:hover {cursor: help};
+abbr[title], acronym[title], span[title], strong[title] {
   border-bottom: thin dotted;
   cursor: help;
 }
@@ -89,7 +78,7 @@ pre, code, tt {
 }
 
 a:link img, a:visited img {border-style: none}
-a img {color: white} /* The only way to hide the border in NS 4.x */
+a img {color: black} /* The only way to hide the border in NS 4.x */
 
 ul.toc {
   list-style: none;
@@ -158,14 +147,10 @@ p.copyright {
 
 p.copyright a {
   color: #88f;
-}
-
-.nsnote {
-  display: none;
+  text-decoration: none;
 }
 
 .stb {clear: left}
-
 
 div.colophon {
   margin-left: 2em;
@@ -178,7 +163,7 @@ div.colophon em {
 
 /* Various header(ish) things. Definitions cribbed from the CORE Styles. */
 h1 {
-  font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-family: "Bitstream Vera Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
   font-size-adjust: .53;
   font-size: 2em;
   font-weight: bold;
@@ -210,7 +195,7 @@ h1#title em {
   color: red;
 }
 h2 {
-  font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-family: "Bitstream Vera Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
   font-size-adjust: .53;
   font-size: 1.5em;
   text-align: center;
@@ -223,7 +208,7 @@ h2 {
 }
 
 h3 {
-  font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-family: "Bitstream Vera Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
   font-size-adjust: .53;
   font-size: 1.3em;
   background-color: #eee;
@@ -236,7 +221,7 @@ h3 {
 }
 
 h4 {
-  font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-family: "Bitstream Vera Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
   font-size-adjust: .53;
   font-size: 1.1em;
   font-weight: 600;
@@ -245,7 +230,7 @@ h4 {
 }
 
 h5, dt {
-  font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-family: "Bitstream Vera Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
   font-size-adjust: .53;
   font-size: 1em;
   font-weight: bold;
@@ -255,10 +240,8 @@ h5, dt {
   margin:0;
 }
 
-
-
 h6 {
-  font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-family: "Bitstream Vera Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
   font-size-adjust: .53;
   color: #666;
   text-indent: 1em;
@@ -286,61 +269,6 @@ td.comma-tool {
   background: #e7e7ff;
   border: 1px solid black;
 }
-
-
-/* documentation - table of contents */
-#toc {
-  font-size: .8em;
-}
-
-/* documentation - error explanations */
-dl#expl dt code { /* headings for an error */
-  white-space: normal;
-  font-weight: bold;
-}
-
-dl#expl dt {
-  border-top: 1px dashed black;
-  margin-top: 2em;
-  margin-bottom: 1em;
-}
-
-dl#expl var { /* headings for an error */
-  color: #006;
-}
-
-dl#expl dd code.inline { /* a snippet of code used inline */
-  white-space: normal;
-  font-weight: bold;
-  color: #006;
-  display: inline;
-  padding-left: .2em;
-  padding-right: .2em;
-  border: 0;
-}
-
-dl#expl dd {
-  margin-right: 5em;
-}
-
-dl#expl dd code.block {
-  color: #006;
-  border: 1px solid black;
-  display: block;
-  padding: 1em;
-  background: #CCC;
-  white-space: nowrap;
-  font-weight: bold;
-  margin-top: 1em;
-  margin-bottom: 1em;
-}
-
-dl#expl dd code samp {
-  font-weight: normal;
-  color: black;
-  font-style: italic;
-}
-
 
 kbd {
   font-weight: bold;
