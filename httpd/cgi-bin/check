@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.131 2004-05-18 00:32:32 link Exp $
+# $Id: check,v 1.305.2.132 2004-05-18 00:38:13 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.131 $;
+  $VERSION    =  q$Revision: 1.305.2.132 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-18 00:32:32 $,
+                              Date => q$Date: 2004-05-18 00:38:13 $,
                              });
 
 #
@@ -1916,9 +1916,9 @@ EOHD
       print qq{<span class="msg">$msg</span></p>};
       print qq(<p><code class="input">$line</code></p>);
 
-      if ($err->{num} and $File->{Opt}->{Verbose}) {
+      if ($err->{num}) {
         my(undef, $num) = split /\./, $err->{num};
-        if (exists $Msgs{$num}) {
+        if (exists $Msgs{$num} and $File->{Opt}->{Verbose}) {
           print qq(\n    <div class="hidden mid-$num"></div>\n);
         } else {
           $Msgs{$num} = 1;
