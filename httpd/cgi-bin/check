@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.228 2002-09-01 03:32:28 duerst Exp $
+# $Id: check,v 1.229 2002-09-01 05:36:20 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.228 $;
+  $VERSION    =  q$Revision: 1.229 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-09-01 03:32:28 $,
+			      Date => q$Date: 2002-09-01 05:36:20 $,
 			     });
 
 #
@@ -2486,32 +2486,6 @@ sub find_xml_encoding {
   $File->{Charset}->{XML} = lc $3;
   return $File;
 }
-
-
-#### not used anymore
-#sub parse_xml_decl {
-#  my $f = shift;
-#  my $e = '';
-#  my $p =  HTML::Parser->new(api_version => 3);
-#
-#  my $pi = sub {
-#    return if $e;
-#    my $pi = shift;
-#    return unless $pi =~ m(<\?xml);
-#    $pi =~ m(<\?xml[^>]*\sencoding\s*=\s*([\"\'])([A-Za-z][-A-Za-z0-9._]*)\1)s;
-#    warn qq(\$1 == '$1' and \$2 == '$2'\n) if $DEBUG;
-#    $e = lc $2 if $2;
-#    warn "\$e inside == $e\n";
-#    $p->eof()  if $e;
-#  };
-#
-#  $p->xml_mode(TRUE);
-#  $p->handler(process => $pi, 'text');
-#  $p->parse($f->{Content});
-#  warn "$e\n" if $DEBUG;
-#  return $e;
-#}
-
 
 #
 # Abort with a message if an error was flagged at point.
