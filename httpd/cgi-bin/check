@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.346 2004-09-22 00:53:54 duerst Exp $
+# $Id: check,v 1.347 2004-10-10 15:12:18 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -153,6 +153,8 @@ Directory not readable (permission denied): @_r
 
   #
   # Check paths in config...
+  # @@@ This does not do a very good job error-message-wise if a path is
+  # @@@ missing...
   {
     my @dirs = ();
     push @dirs, $CFG->{Paths}->{Base};
@@ -225,7 +227,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.346 $;
+  $VERSION    =  q$Revision: 1.347 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
