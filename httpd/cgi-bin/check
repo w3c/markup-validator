@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.73 2000-10-21 10:35:01 gerald Exp $
+# $Id: check,v 1.74 2000-10-21 11:40:45 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -71,9 +71,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.73 $;
+$VERSION    =  q$Revision: 1.74 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2000-10-21 10:35:01 $;
+$DATE       =  q$Date: 2000-10-21 11:40:45 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -850,7 +850,7 @@ EOF
 	substr($headcont, 0, 1) = " ";
 	$headcont =~ s/\\n/ /g;
 	$heading .= $headcont;
-      } elsif ($line =~ /^AALT CDATA( .+)/) {
+      } elsif ($line =~ /^AALT CDATA( .+)/i) {
 	my $headcont = $1;
 	$headcont =~ s/\\n/ /g;
 	$heading .= $headcont;
