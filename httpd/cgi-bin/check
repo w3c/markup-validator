@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.190 2001-09-25 13:10:13 link Exp $
+# $Id: check,v 1.191 2001-09-28 20:38:25 connolly Exp $
 
 #
 # We need Perl 5.004.
@@ -24,8 +24,9 @@ use URI::Escape;
 use CGI::Carp;
 use CGI qw(:cgi -newstyle_urls -private_tempfiles);
 use Text::Wrap;
-use Text::Iconv;
+use Text::Iconv; # on debian: apt-get install libtext-iconv-perl 
 use HTML::Parser 3.25; # Need 3.25 for $p->ignore_elements.
+                       # DWC tweaks this in his local set-up.
 
 
 #############################################################################
@@ -65,6 +66,7 @@ $DEBUG += 1 unless $ENV{SERVER_PORT} == 80;
 my $base_path = $0;  # get full name of program
    $base_path =~ s#^(/([^/]*/)*)[^/]*/[^/]*/[^/]*$#$1#; # move two levels up
         # backtracking is somewhat inefficient, but nothing to worry
+# DWC tweak: my $base_path="/var/www/";
 
 my $html_path = $base_path . 'htdocs/';
 my $elem_db   = $html_path . 'config/eref.cfg';
@@ -73,12 +75,14 @@ my $frag_db   = $html_path . 'config/frag.cfg';
 my $type_db   = $html_path . 'config/type.cfg';
 my $dtds_db   = $html_path . 'config/doctypes.cfg';
 my $chst_db   = $html_path . 'config/charset.cfg';
+my $tips_db   = $html_path . 'config/tips.html';
 my $sgmlstuff = $html_path . 'sgml-lib';
 my $temp      = "/tmp/validate.$$"; # @@ Use POSIX/IO::File tmpfiles instead!
 
 #
 # Executables and binaries
 my $sp  = '/usr/local/bin/lq-nsgmls';
+# DWC tweak: my $sp  = '/usr/bin/nsgmls';
 my $osp = '/usr/local/bin/onsgmls';
 
 #
@@ -91,9 +95,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.190 $;
+$VERSION    =  q$Revision: 1.191 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-09-25 13:10:13 $;
+$DATE       =  q$Date: 2001-09-28 20:38:25 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -677,6 +681,8 @@ unless ($q->param('uploaded_file')) {
 
 print "<h2>Validation Results</h2>\n";
 
+&print_tip_of_the_day();
+
 if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 'svg' or $File->{Type} eq 'smil') {
   my $xmlvalid = ($File->{DOCTYPE} ? ' and validity' : '');
   print <<"EOHD";
@@ -1066,6 +1072,80 @@ sub output_css_validator_blurb {
     validity</a> using the W3C <a
     href="http://jigsaw.w3.org/css-validator/">CSS Validation Service</a>.
   </p>
+EOHD
+}
+
+
+sub print_tip_of_the_day{
+  my(%tips);
+  open TIPS, $tips_db
+    or &internal_error("open($tips_db) returned $!");
+
+  # quick-n-dirty XML parser...
+  local($/) = '>';
+  my(@stack, $line, $top, $name, $l, $addr, $slug);
+
+  @stack = ();
+  $line = 1;
+  $slug = '';
+
+  while(<TIPS>){
+    if(m,/>$,){ # empty element
+      $slug .= $_ if $slug;
+    }
+    elsif(m,</(\w+),){
+      my($content, $tag);
+      $content = $`;
+      $tag = $& . $';
+      $slug .= $content if $slug;
+
+      $name = $1;
+      $top = pop(@stack);
+      $l = pop(@stack);
+      if($name ne $top){
+	print STDERR "@stack \n";
+	die "found /$name expecting /$top $l";
+      }
+
+      if($name eq 'a'){
+	$tips{$addr} = $slug;
+	$slug = '';
+      }
+
+      $slug .= $tag if $slug;
+
+    }
+    elsif(m,<(\w+),){
+      $slug .= $_ if $slug;
+
+      $name = $1;
+      push(@stack, $line);
+      push(@stack, $name);
+      if($name eq 'a'){
+	if(m,href=\"([^\"]+)\",){
+	  $addr = $1;
+	  $slug = ' ';
+	}
+      }
+    }
+    
+    while(s/\n//){
+      $line++;
+    }
+  }
+
+  my @tipAddrs = keys %tips;
+  my $tipQty = $#tipAddrs + 1;
+  srand(time());
+  my $whichTip = rand($tipQty);
+  my $tipAddr = $tipAddrs[$whichTip];
+  my $tipSlug = $tips{$tipAddr};
+
+  print <<"EOHD";
+  <div class="tip" align="center" style="text-align: center; background-color: yellow">
+    <strong><a href="http://www.w3.org/2001/06tips/">TIP</a>:</strong>
+    <a href="$tipAddr">$tipSlug</a>
+  </div>
 EOHD
 }
 
