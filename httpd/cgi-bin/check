@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.295 2002-11-14 21:10:21 link Exp $
+# $Id: check,v 1.296 2002-11-15 02:40:34 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.295 $;
+  $VERSION    =  q$Revision: 1.296 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-14 21:10:21 $,
+                              Date => q$Date: 2002-11-15 02:40:34 $,
                              });
 
 #
@@ -222,7 +222,7 @@ $File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') ? $q->param('doctype')  
 $File->{Opt}->{'URI'}            = $q->param('uri')     ? $q->param('uri')       :     '';
 $File->{Opt}->{'Output'}         = $q->param('output')  ? $q->param('output')    : 'html';
 
-$DEBUG = $File->{Opt}->{Debug};
+$DEBUG ||= $File->{Opt}->{Debug};
 
 &abort_if_error_flagged($File, 0);
 
