@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.404 2005-02-25 00:25:04 ot Exp $
+# $Id: check,v 1.405 2005-03-01 19:04:53 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -220,7 +220,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.404 $;
+  $VERSION    =  q$Revision: 1.405 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -521,8 +521,6 @@ $File = &byte_error($File);
 if ($File->{Opt}->{DOCTYPE}
     and not $File->{Opt}->{DOCTYPE} =~ /(Inline|detect)/i) {
   $File = &override_doctype($File);
-  &add_warning('W05', {W05_dtd => $File->{Opt}->{DOCTYPE}});
-  $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
 }
 
 #
@@ -955,6 +953,7 @@ sub add_warning ($$) {
   $File->{T}->param($WID => TRUE, %{$params});
   $File->{T}->param(have_warnings => TRUE);
 }
+
 
 #
 # Proxy authentication requests.
