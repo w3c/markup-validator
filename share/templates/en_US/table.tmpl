@@ -10,14 +10,14 @@
 </TMPL_IF>
     </tr>
 <TMPL_IF NAME="opt_verbose">
-    <tr><th>Modified:</th><td colspan="2"><TMPL_VAR NAME="file_modified" ESCAPE="HTML"></td></tr>
-    <tr><th>Server:</th><td colspan="2"><TMPL_VAR NAME="file_server" ESCAPE="HTML"></td></tr>
-    <tr><th>Size:</th><td colspan="2"><TMPL_VAR NAME="file_size" ESCAPE="HTML"></td></tr>
-    <tr><th>Content-Type:</th><td colspan="2"><TMPL_VAR NAME="file_contenttype" ESCAPE="HTML"></td></tr>
+    <tr><th>Modified:</th><td colspan="2"><TMPL_VAR NAME="file_modified" ESCAPE="HTML" DEFAULT="(undefined)"></td></tr>
+    <tr><th>Server:</th><td colspan="2"><TMPL_VAR NAME="file_server" ESCAPE="HTML" DEFAULT="(undefined)"></td></tr>
+    <tr><th>Size:</th><td colspan="2"><TMPL_VAR NAME="file_size" ESCAPE="HTML" DEFAULT="(undefined)"></td></tr>
+    <tr><th>Content-Type:</th><td colspan="2"><TMPL_VAR NAME="file_contenttype" ESCAPE="HTML" DEFAULT="(undefined)"></td></tr>
 </TMPL_IF>
 <TMPL_IF NAME="opt_debug">
   <TMPL_LOOP NAME="debug">
-    <tr><th><TMPL_VAR NAME="name" ESCAPE="HTML">:</th><td colspan="2"><TMPL_VAR NAME="value" ESCAPE="HTML"></td></tr>
+    <tr><th><TMPL_VAR NAME="name" ESCAPE="HTML">:</th><td colspan="2"><TMPL_VAR NAME="value" ESCAPE="HTML" DEFAULT="(undefined)"></td></tr>
   </TMPL_LOOP>
 </TMPL_IF>
 <TMPL_IF NAME="is_upload">
