@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.172 2001-09-06 23:57:54 link Exp $
+# $Id: check,v 1.173 2001-09-07 00:19:39 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.172 $;
+$VERSION    =  q$Revision: 1.173 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-09-06 23:57:54 $;
+$DATE       =  q$Date: 2001-09-07 00:19:39 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1487,7 +1487,7 @@ sub weblint {
     <hr>
     <h2><a name="weblint">Weblint Doesnt Live Here Any More</a></h2>
     <p>
-      <a href="http://www.weblint.org/">Weblint</a> is no longer beeing
+      <a href="http://www.weblint.org/">Weblint</a> is no longer actively
       maintained and has become badly out of date with the current state
       of the web, and so this feature has been deprecated.
     </p>
