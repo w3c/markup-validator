@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.58 2003-07-05 05:33:14 link Exp $
+# $Id: check,v 1.305.2.59 2003-07-17 18:58:12 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -48,7 +48,10 @@ use HTML::Parser   3.25 qw(); # Need 3.25 for $p->ignore_elements.
 use HTTP::Request       qw();
 use IO::File            qw();
 use LWP::UserAgent 1.90 qw(); # Need 1.90 for protocols_(allowed|forbidden)
+use Net::hostent        qw(gethostbyname);
+use Net::IP             qw();
 use Set::IntSpan        qw();
+use Socket              qw(inet_ntoa);
 use Text::Iconv         qw();
 use Text::Wrap          qw(wrap);
 use URI                 qw();
@@ -120,7 +123,7 @@ BEGIN
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.58 $;
+  $VERSION    =  q$Revision: 1.305.2.59 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -192,7 +195,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-07-05 05:33:14 $,
+                              Date => q$Date: 2003-07-17 18:58:12 $,
                              });
 
 #
@@ -1244,11 +1247,6 @@ sub handle_uri {
   $ua->agent("W3C_Validator/$VERSION " . $ua->agent);
   $ua->parse_head(0);  # Parse the http-equiv stuff ourselves. @@ Why?
 
-  # @@@FIXME@@@:
-  #   Disable checking if the URI is local (or private) for security reasons,
-  #   or at least make it configurable to do so.
-  #   eg. /^(localhost(\.localdomain)?|127\..+)$/ (+ private networks)
-  #
   $ua->protocols_allowed($CFG->{'Allowed Protocols'} || ['http', 'https']);
 
   unless ($ua->is_protocol_supported($uri)) {
@@ -1256,6 +1254,23 @@ sub handle_uri {
     $File->{'Error Message'} = &uri_rejected($uri->scheme());
     return $File;
   }
+
+  my $addr = my $iptype = undef;
+  if (my $host = gethostbyname($uri->host())) {
+    $addr = inet_ntoa($host->addr()) if $host->addr();
+    if ($addr && (my $ip = Net::IP->new($addr))) {
+      $iptype = $ip->iptype();
+    }
+  }
+  $iptype = 'PUBLIC'
+    if ($iptype && $iptype eq 'PRIVATE' && $CFG->{'Allow Private IPs'});
+  if ($iptype && $iptype ne 'PUBLIC') {
+    $File->{'Error Flagged'} = TRUE;
+    $File->{'Error Message'} = &ip_rejected($uri->host(), $addr);
+    return $File;
+  }
+  undef $iptype;
+  undef $addr;
 
   my $req = new HTTP::Request(GET => $uri);
 
@@ -2325,6 +2340,24 @@ sub prepSSI {
   $ssi =~ s|<!--\#echo\s+var="relroot"\s+-->|./|g;
 
   return $ssi;
+}
+
+
+#
+# Output errors for a rejected IP address.
+sub ip_rejected {
+  my ($host, $ip) = @_;
+  my $msg = $host || 'undefined';
+  $msg = 'of ' . $msg if ($ip && $host ne $ip);
+  return sprintf(<<".EOF.", &ent($msg));
+    <div class="error">
+      <p>
+        Sorry, the IP address %s is not public.
+        For security reasons, validating resources located at non-public IP
+        addresses has been disabled in this service.
+      </p>
+    </div>
+.EOF.
 }
 
 

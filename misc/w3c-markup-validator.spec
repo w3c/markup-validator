@@ -1,5 +1,5 @@
 # RPM Spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.1.2.5 2003-07-04 13:51:56 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.1.2.6 2003-07-17 18:58:13 ville Exp $
 
 %{!?apxs: %{expand:   %%define apxs %{_sbindir}/apxs}}
 %define httpd_confdir %(test -d %{_sysconfdir}/httpd/conf.d && echo %{_sysconfdir}/httpd/conf.d || %{apxs} -q SYSCONFDIR)
@@ -10,7 +10,7 @@
 Summary:        W3C Markup Validator
 Name:           w3c-markup-validator
 Version:        0.6.2
-Release:        2w3c
+Release:        3w3c
 Epoch:          0
 URL:            http://validator.w3.org/
 License:        http://www.w3.org/Consortium/Legal/copyright-software
@@ -23,7 +23,7 @@ Requires:       httpd, %{name}-libs = %{epoch}:%{version}
 Requires:       perl >= 5.6, perl-HTML-Parser >= 3.25, perl-libwww-perl
 Requires:       perl-URI, perl-Text-Iconv, perl(CGI) >= 2.81, perl(Time::HiRes)
 Requires:       perl(Set::IntSpan), perl(Config::General) >= 2.06
-Requires:       opensp >= 1.5
+Requires:       perl(Net::IP), opensp >= 1.5
 Obsoletes:      w3c-validator
 BuildArch:      noarch
 
@@ -37,7 +37,7 @@ Group:          Applications/Text
 Obsoletes:      w3c-validator-libs
 # No need to require the main package
 
-%description libs
+%description    libs
 SGML and XML DTDs for the W3C Markup Validator.
 
 # -----------------------------------------------------------------------------
@@ -139,6 +139,9 @@ fi
 # -----------------------------------------------------------------------------
 
 %changelog
+* Thu Jul 17 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.2-3w3c
+- Requires perl(Net::IP).
+
 * Fri Jul  4 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.2-2w3c
 - Use aliasing instead of hardcoded docroot in httpd configuration.
 
