@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.75 2000-12-11 11:16:33 gerald Exp $
+# $Id: check,v 1.76 2001-02-20 09:41:29 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -60,7 +60,7 @@ my $temp      = "/tmp/validate.$$"; # @@ Use POSIX/IO::File tmpfiles instead!
 
 #
 # Executables and binaries
-my $sp      = '/usr/local/bin/nsgmls';
+my $sp      = '/usr/local/bin/lq-nsgmls';
 my $nkf     = '/usr/local/bin/nkf';
 my $weblint = '/usr/bin/weblint';
 
@@ -74,9 +74,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.75 $;
+$VERSION    =  q$Revision: 1.76 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2000-12-11 11:16:33 $;
+$DATE       =  q$Date: 2001-02-20 09:41:29 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -588,6 +588,10 @@ if ( $? || ($guessed_doctype == 1) ) {
 		}
 	    }
 	}
+
+	# temporarily strip curlies from lq-nsgmls output.
+	# @@ should link HTML elements using $elem_db instead.
+	$msg =~ s/[{}]//g;
 
 	# figure out the index into the %frag associative array for the
 	# "explanation..." links to the KGV FAQ.
