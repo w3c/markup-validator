@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: users.html,v 1.14 2002-11-25 01:12:44 ot Exp $"
---><!--#set var="date" value="\$Date: 2002-11-25 01:12:44 $"
+<!--#set var="revision" value="\$Id: users.html,v 1.15 2002-12-01 13:40:33 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-12-01 13:40:33 $"
 --><!--#set var="title" value="User Documentation for The W3C MarkUp Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -92,15 +92,15 @@
       <h2>Calling/Linking to the Validator</h2>
       <p>
         You can link directly to the Validator home page, or you can call the
-        Validator CGI program. The home page is &lt;URL:<a
+        Validator CGI program. The home page is &lt;<a
           href="http://validator.w3.org/">http://validator.w3.org/</a>&gt; at
         the moment (and for the foreseeable future) and the CGI program can be
-        reached at &lt;URL:<a
+        reached at &lt;<a
         href="http://validator.w3.org/check">http://validator.w3.org/check</a>&gt;.
       </p>
       <p>
         If you call the CGI program with extra path info matching "/referer"
-        (i.e. &lt;URL:<a href="http://validator.w3.org/check/referer">http://validator.w3.org/check/referer</a>&gt;)
+        (i.e. &lt;<a href="http://validator.w3.org/check/referer">http://validator.w3.org/check/referer</a>&gt;)
         it will fetch the refering document and validate that. This means that
         if you embed a link to that URL in your pages, following on that link
         will send you the validation results for that page.
@@ -108,7 +108,7 @@
       <p>
         You can also link to the validation results for a specific page. You do
         this by giving "check" an "uri" parameter pointing at the page you want
-        to validate. For example &lt;URL:<a href="http://validator.w3.org/check?uri=http://www.example.com/">http://validator.w3.org/check?uri=http://www.example.com/</a>&gt;
+        to validate. For example &lt;<a href="http://validator.w3.org/check?uri=http://www.example.com/">http://validator.w3.org/check?uri=http://www.example.com/</a>&gt;
         will validate the www.example.com home page.
       </p>
       <p>
@@ -116,7 +116,7 @@
         "<a href="#Options">The Options</a>" in parenthesis after the long
         name. To add options to your links directly, append the options
         separated by a semi-colon. For example
-        &lt;URL:<a href="http://validator.w3.org/check?uri=http://www.example.com/;ss=1;outline=1;sp=1">http://validator.w3.org/check?uri=http://www.example.com/;ss=1;outline=1;sp=1</a>&gt;
+        &lt;<a href="http://validator.w3.org/check?uri=http://www.example.com/;ss=1;outline=1;sp=1">http://validator.w3.org/check?uri=http://www.example.com/;ss=1;outline=1;sp=1</a>&gt;
         will validate the example.com home page with "Show Source", "Outline" and
         "Show Parse Tree" on, but "Exclude Attributes" off.
       </p>

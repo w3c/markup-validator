@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.307 2002-11-26 22:22:16 ville Exp $
+# $Id: check,v 1.308 2002-12-01 13:40:33 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -36,7 +36,12 @@ use warnings;
 # when loading modules to prevent non-OO or poorly written modules from
 # polluting our namespace.
 #
-use CGI             2.81 qw(-newstyle_urls -private_tempfiles); # 2.81: XHTML
+use CGI             2.81 qw(
+			    -newstyle_urls
+			    -private_tempfiles
+			    redirect
+			   ); # 2.81 for XHTML, and import redirect() function.
+
 use CGI::Carp            qw(carp croak);
 use Config::General 2.06 qw(); # Need 2.06 for -SplitPolicy
 use File::Spec           qw();
@@ -117,7 +122,9 @@ The error reported was: '$@'
   if (my $allowed = delete($CFG->{Allowed_Protocols})) {
     $CFG->{Allowed_Protocols} = [ split(/\s*,\s*/, $allowed) ];
   }
-
+  if (! -x $CFG->{'SGML_Parser'}) {
+    die("Configured SGML Parser '$CFG->{'SGML Parser'}' not executable!");
+  }
 
   #
   # Set debug flag.
@@ -125,7 +132,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.307 $;
+  $VERSION    =  q$Revision: 1.308 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 } # end of BEGIN block.
@@ -155,8 +162,8 @@ $File->{'Header'} = &prepSSI({
                               Revision => $VERSION,
                              });
 $File->{'Footer'} = &prepSSI({
-                              File => $CFG->{Footer},
-                              Date => q$Date: 2002-11-26 22:22:16 $,
+                              File => $CFG->{'Footer'},
+                              Date => q$Date: 2002-12-01 13:40:33 $,
                              });
 
 #
@@ -275,9 +282,7 @@ if ($File->{'Is Upload'}) {
     &add_table($File, qq(<label title="Address of Page to Validate (accesskey: 1)" for="uri">URI</label>),
                '<input accesskey="1" type="text" id="uri" name="uri" size="' . $size
              . '" value="' . $furi . '" />');
-    &add_warning($File, '<em>Note:</em> The URI you gave me, &#171;<code>' .
-    &ent($File->{Opt}->{URI}) . '</code>&#187;, ' . 'returned a redirect to ' .
-         '&#171;<code>' . $furi . '</code>&#187;.');
+    &add_warning($File, sprintf('<em>Note:</em> The URI you gave me, &lt;%s&gt;, returned a redirect to &lt;%s&gt;.', &ent($File->{Opt}->{URI}), $furi));
   }
 }
 
@@ -338,7 +343,7 @@ if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
 
 unless ($File->{Charset}->{Use}) {
   $File->{'Error Flagged'} = TRUE;
-  $File->{'Error Message'} = <<".EOF.";
+  $File->{'Error Message'} = <<".EOF." . iana_charset_blurb();
     <p>
       I was not able to extract a character encoding labeling from any of
       the valid sources for such information. Without encoding information it
@@ -360,6 +365,18 @@ unless ($File->{Charset}->{Use}) {
       character encoding in use.
     </p>
 .EOF.
+}
+
+sub iana_charset_blurb () {
+  return <<EOF;
+    <p>
+      <a href="http://www.iana.org/"><acronym
+      title="Internet Assigned Numbers Authority">IANA</acronym></a>
+      maintains the list of <a
+      href="http://www.iana.org/assignments/character-sets">official
+      names for character sets</a>.
+    </p>
+EOF
 }
 
 #
@@ -431,9 +448,10 @@ $File = &charset_conflicts($File);
 #
 # Add metadata iff asked for.
 if ($File->{Opt}->{Verbose}) {
-  &add_table($File, "Modified", &ent($File->{Modified})) if $File->{Modified};
-  &add_table($File, "Server",   &ent($File->{Server}))   if $File->{Server};
-  &add_table($File, "Size",     &ent($File->{Size}))     if $File->{Size};
+  &add_table($File, "Modified",     [1, 2, &ent($File->{Modified})   ]) if $File->{Modified};
+  &add_table($File, "Server",       [1, 2, &ent($File->{Server})     ]) if $File->{Server};
+  &add_table($File, "Size",         [1, 2, &ent($File->{Size})       ]) if $File->{Size};
+  &add_table($File, "Content-Type", [1, 2, &ent($File->{ContentType})]) if $File->{ContentType};
 }
 
 if ($File->{'Is Upload'}) {
@@ -550,14 +568,13 @@ while (<$spout>) {
   push @{$File->{'DEBUG'}->{ESIS}}, $_;
   $elements_found++ if /^\(/;
 
-  if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
-    if (/^Axmlns() \w+ (.*)/ or /^Axmlns:([^ ]+) \w+ (.*)/) {
-      if (not $File->{Namespace} and $elements_found == 0 and $1 eq "") {
-        $File->{Namespace} = $2;
-      }
-      $File->{Namespaces}->{$2}++;
+  if (/^Axmlns() \w+ (.*)/ or /^Axmlns:([^ ]+) \w+ (.*)/) {
+    if (not $File->{Namespace} and $elements_found == 0 and $1 eq "") {
+      $File->{Namespace} = $2;
     }
+    $File->{Namespaces}->{$2}++;
   }
+
   next if / IMPLIED$/;
   next if /^ASDAFORM CDATA /;
   next if /^ASDAPREF CDATA /;
@@ -618,16 +635,16 @@ if ($File->{'Is Upload'}) {
 }
 
 
-if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
+if (&is_xml($File->{Type}) and $File->{Namespace}) {
   my $rns = &ent($File->{Namespace});
-  if ($File->{Type} eq 'xhtml' and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
+  if (&is_xhtml($File->{Type}) and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
     &add_warning($File, "Unknown namespace (&#171;<code>$rns</code>&#187;) for text/html document!");
-  } elsif ($File->{Type} eq 'svg' and $File->{Namespace} ne 'http://www.w3.org/2000/svg') {
+  } elsif (&is_svg($File->{Type}) and $File->{Namespace} ne 'http://www.w3.org/2000/svg') {
     &add_warning($File, "Unknown namespace (&#171;<code>$rns</code>&#187;) for SVG document!");
   }
-  if ($File->{Namespace} ne '') {
-    &add_table($File, 'Root Namespace', qq(<a href="$rns">$rns</a>));
-  }
+
+  &add_table($File, 'Root Namespace', qq(<a href="$rns">$rns</a>))
+    if $File->{Opt}->{Verbose};
 
   if (scalar keys %{$File->{Namespaces}} > 1) {
     my $namespaces = '<ul>';
@@ -636,10 +653,10 @@ if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
       $namespaces .= qq(\t<li><a href="$ns">$ns</a></li>\n)
           unless $_ eq $File->{Namespace}; # Don't repeat Root Namespace.
     }
-    &add_table($File, 'Other Namespaces', $namespaces . '</ul>');
+    &add_table($File, 'Other Namespaces', $namespaces . '</ul>')
+      if $File->{Opt}->{Verbose};
   }
 }
-
 
 if (defined $File->{Tentative}) {
   my $class = '';
@@ -678,16 +695,39 @@ if ($File->{Opt}->{Output} eq 'xml') {
   print $File->{Results};
   print qq(    <div class="meat">\n);
 
-  if ($File->{'Is Valid'} and not $DEBUG) {
-    &report_valid($File);
-  } else {
-    $File->{Opt}->{'Show Source'} = TRUE;
-    print &jump_links($File);
+  print &jump_links($File);
+
+  if ($File->{Opt}->{Verbose} or not $File->{'Is Valid'}) {
     print qq(<div class="splash">\n);
     &print_table($File);
     &print_warnings($File);
     print qq(</div>\n);
+  } else {
+    if ($File->{'Is Valid'} and not $File->{'Is Upload'}) {
+      my $thispage = $File->{Env}->{'Self URI'};
+      my $escaped_uri = uri_escape($File->{URI});
+      $thispage .= qq(?uri=$escaped_uri);
+      $thispage .= ';ss=1'      if $File->{Opt}->{'Show Source'};
+      $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
+      $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
+      $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
+
+      &add_warning($File, <<".EOF.");
+<em>Note</em>: You can also view <a href="$thispage;verbose=1">verbose
+results</a> by setting the corresponding option on the <a
+  href="detailed.html">Extended Interface</a>.
+.EOF.
+    }
+  }
+
+  if ($File->{'Is Valid'}) {
+    &report_valid($File);
+  } else {
+    $File->{Opt}->{'Show Source'} = TRUE;
     &report_errors($File);
+  }
+
+  if (not $File->{'Is Valid'} or $File->{Opt}->{Verbose}) {
     &outline($File)     if $File->{Opt}->{'Outline'};
     &show_source($File) if $File->{Opt}->{'Show Source'};
     &parse_tree($File)  if $File->{Opt}->{'Show Parsetree'};
@@ -797,12 +837,15 @@ sub print_table {
            );
   add_table($Options, '',
             # Validate error pages?
-            [1, $File->{Table}->{Max},
              q(<label title="Validate also pages for which the HTTP status code indicates an error"><input type="checkbox" value="1" name="No200" ) .
              # @@@ accesskey missing
              ($File->{Opt}->{'No200'}         ? q(checked="checked" ) : '') .
-             q(/>Validate&nbsp;error&nbsp;pages</label>)
-            ]
+             q(/>Validate&nbsp;error&nbsp;pages</label>),
+            # Verbose output?
+             q(<label title="Show Verbose Output"><input type="checkbox" value="1" name="verbose" ) .
+             # @@@ accesskey missing
+             ($File->{Opt}->{'Verbose'}         ? q(checked="checked" ) : '') .
+             q(/>Verbose&nbsp;Output</label>)
            );
 
   add_table(
@@ -937,7 +980,7 @@ sub jump_links {
   my $links = '';
   $links .= <<".EOF.";
       <p id="skip" class="jumpbar">
-        Jump To: [<a title="Result of Validation" href="#results">Results</a>]
+        Jump To: [<a title="Result of Validation" href="#result">Results</a>]
 .EOF.
 
   $links .= ' [<a title="Listing of Source Input" href="#source">Source&nbsp;Listing</a>]'
@@ -975,7 +1018,7 @@ Content-Type: text/html; charset=utf-8
     <h1>Authorization Required</h1>
     <p>Sorry, I am not authorized to access the specified URI.</p>
     <p>
-      The URI you specified, <code><a href="$resource">$resource</a></code>,
+      The URI you specified, &lt;<a href="$resource">$resource</a>&gt;,
       returned a 401 "authorization required" response when I tried
       to download it.
     </p>
@@ -990,7 +1033,7 @@ Content-Type: text/html; charset=utf-8
       Of course, you may not want to trust me with this information,
       which is fine. I can tell you that I don't log it or do
       anything else nasty with it, and you can <a
-        href="$CFG->{Home_Page}source/">download the source for
+        href="http://validator.w3.org/source/">download the source for
       this service</a> to see what it does, but you have no guarantee
       that this is actually the code I'm using; you basically have to
       decide whether to trust me or not. :-)
@@ -1025,14 +1068,14 @@ EOF
 #
 # Complain about unknown HTTP responses.
 sub http_error {
-  my $uri = shift;
-  my $code = shift;
-  my $message = shift;
+  my $uri = &ent(shift);
+  my $code = &ent(shift);
+  my $message = &ent(shift);
 
-  print <<"EOF";
+  printf <<"EOF";
   <p>
     I got the following unexpected response when trying to
-    retrieve <code><a href="$uri">$uri</a></code>:
+    retrieve &lt;<a href="$uri">$uri</a>&gt;:
   </p>
 
   <blockquote>
@@ -1050,8 +1093,7 @@ EOF
 #
 # Print blurb advocating using the CSS Validator.
 sub output_css_validator_blurb {
-  my $uri = shift;
-  $uri = ent($uri);
+  my $uri = ent(uri_escape(shift));
 
   print <<"EOHD";
   <p>
@@ -1127,7 +1169,11 @@ sub handle_uri {
     exit;
   }
 
-  my($type, $ct, $charset) = &parse_content_type($File, $res->header('Content-Type'));
+  my($type, $ct, $charset) = &parse_content_type(
+						 $File,
+						 $res->header('Content-Type'),
+						 scalar($res->request->url),
+						);
 
   my $lastmod = undef;
   if ( $res->last_modified ) {
@@ -1201,6 +1247,7 @@ sub handle_frag {
 sub parse_content_type {
   my $File         = shift;
   my $Content_Type = shift;
+  my $url          = shift || '';
   my $charset      = '';
   my $type         = '';
 
@@ -1218,13 +1265,20 @@ sub parse_content_type {
   }
 
   if ($type =~ m(/)) {
-    $File->{'Error Flagged'} = TRUE;
-    $File->{'Error Message'} = sprintf(<<"    EOF", &ent($type));
+    if ($type =~ m(text/css) and defined $url) {
+      print redirect
+	'http://jigsaw.w3.org/css-validator/validator?uri='
+	  . uri_escape $url;
+      exit;
+    } else {
+      $File->{'Error Flagged'} = TRUE;
+      $File->{'Error Message'} = sprintf(<<"      EOF", &ent($type));
     <p class="error">
       Sorry, I am unable to validate this document because its content type is
       <code>%s</code>, which is not currently supported by this service.
     </p>
-    EOF
+      EOF
+    }
   }
 
   return $type, $ct, $charset;
@@ -1469,7 +1523,7 @@ sub report_errors ($) {
   my $File = shift;
 
   print <<"EOHD";
-    <h2 id="results" class="invalid">This page is <strong>not</strong> Valid $File->{Version}!</h2>
+    <h2 id="result" class="invalid">This page is <strong>not</strong> Valid $File->{Version}!</h2>
 EOHD
 
   if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 'svg' or $File->{Type} eq 'smil') {
@@ -1597,18 +1651,24 @@ sub report_valid {
     }
 
     if ($File->{Version}) {
-      print qq(<h2 id="skip" class="valid">This Page Is Valid $File->{Version}!</h2>\n);
+      print qq(<h2 id="result" class="valid">This Page Is Valid $File->{Version}!</h2>\n);
     } else {
-      print qq(<h2 id="skip" class="valid">This Page Is Valid!</h2>\n);
+      print qq(<h2 id="result" class="valid">This Page Is Valid!</h2>\n);
     }
 
-    print &daily_tip($File, $CFG->{Tips_DB});
-    &print_warnings($File);
+    print &daily_tip($File, $CFG->{'Tips DB'});
+    &print_warnings($File) unless $File->{Opt}->{Verbose};
+
+    my $source;
+    if ($File->{'Is Upload'}) {
+      $source = qq(The uploaded file);
+    } else {
+      $source = qq(The document located at &lt;<a href="$URI">$URI</a>&gt;);
+    }
 
     print <<".EOF.";
     <p>
-      The document located at
-      <code>&lt;URL:<a href="$URI">$URI</a>&gt;</code>
+      $source
       was checked and found to be valid $File->{Version}. This means that
       the resource in question identified itself as
       &ldquo;$File->{Version}&rdquo; and that we successfully performed a
@@ -1649,7 +1709,7 @@ sub report_valid {
     print <<".EOF.";
       <p>
         The document located at
-        <code>&lt;URL:<a href="$URI">$URI</a>&gt;</code>
+        &lt;<a href="$URI">$URI</a>&gt;
         was tentatively found to be Valid. That means it would validate
         as $File->{Version} if you updated the source document to match
         the options used (typically this message indicates that you used
@@ -1662,7 +1722,7 @@ sub report_valid {
     print <<".EOF.";
     <p>
       The document located at
-      &lt;URL:<a href="$URI">$URI</a>&gt; was checked and found
+      &lt;<a href="$URI">$URI</a>&gt; was checked and found
       to be valid $File->{Version}. This means that the resource in question
       identified itself as &ldquo;$File->{Version}&rdquo; and that we
       successfully performed a formal validation using an SGML or XML Parser
@@ -1679,16 +1739,17 @@ sub report_valid {
     $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
     $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
     $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
+    $thispage .= ';verbose=1' if $File->{Opt}->{'Verbose'};
 
-    &output_css_validator_blurb($URI);
+    &output_css_validator_blurb($File->{URI});
 
     print <<"EOHD";
   <p>
     If you would like to create a link to <em>this</em> page (i.e., this
     validation result) to make it easier to re-validate this page in the
     future or to allow others to validate your page, the URI is
-    <a href="$thispage">$thispage</a> (or you can just add the current page to
-    your bookmarks or hotlist.)</p>
+    &lt;<a href="$thispage">$thispage</a>&gt; (or you can just add the
+    current page to your bookmarks or hotlist).</p>
 EOHD
   }
 }
@@ -1977,7 +2038,7 @@ sub prepCGI {
       $q->param('uri', 'referer');
     } else {
       my $thispage = &self_url($q);
-      print $q->redirect($thispage);
+      print redirect $thispage;
       exit;
     }
   }
@@ -1992,7 +2053,7 @@ sub prepCGI {
 
   # Issue a redirect for uri=referer.
   if ($q->param('uri') and $q->param('uri') eq 'referer') {
-    print $q->redirect($q->url() . '?uri=' . uri_escape($q->referer));
+    print redirect $q->url() . '?uri=' . uri_escape($q->referer);
     exit;
   }
 
@@ -2011,7 +2072,7 @@ sub prepCGI {
   # Redirect to a GETable URL if method is POST without a file upload.
   if ($q->request_method eq 'POST' and not $File->{'Is Upload'}) {
     my $thispage = &self_url($q);
-    print $q->redirect($thispage);
+    print redirect $thispage;
     exit;
   }
 
@@ -2082,11 +2143,11 @@ sub uri_rejected {
 #
 # Utility subs to tell if type "is" something.
 sub is_xml    {shift =~ m(^[^+]+\+xml$)};
-sub is_svg    {shift =~ m(^svg)};
-sub is_smil   {shift =~ m(^smil)};
-sub is_html   {shift =~ m(^html$)};
-sub is_xhtml  {shift =~ m(^xhtml)};
-sub is_mathml {shift =~ m(^mathml)};
+sub is_svg    {shift =~ m(svg\+xml$)};
+sub is_smil   {shift =~ m(smil\+xml$)};
+sub is_html   {shift =~ m(html\+sgml$)};
+sub is_xhtml  {shift =~ m(xhtml\+xml$)};
+sub is_mathml {shift =~ m(mathml\+xml$)};
 
 
 #
@@ -2206,6 +2267,7 @@ sub transcode {
         look into supporting it in the future.
       </p>
 .EOF.
+    $File->{'Error Message'} .= iana_charset_blurb();
     return $File;
   }
 
@@ -2556,7 +2618,7 @@ X-W3C-Validator-Errors: $errs
 
 #
 # Autodetection as in Appendix F of the XML 1.0 Recommendation.
-# <URL:http://www.w3.org/TR/2000/REC-xml-20001006#sec-guessing>
+# <http://www.w3.org/TR/2000/REC-xml-20001006#sec-guessing>
 #
 # return values are: (base_encoding, BOMSize, Size, Pattern)
 sub find_base_encoding {
@@ -2760,6 +2822,7 @@ sub self_url {
      $thispage .= ';noatt=1'   if $q->param('noatt');
      $thispage .= ';outline=1' if $q->param('outline');
      $thispage .= ';No200=1'   if $q->param('No200');
+     $thispage .= ';verbose=1' if $q->param('verbose');
   if ($q->param('doctype')
       and not $q->param('doctype') =~ /(Inline|detect)/i) {
     $thispage .= ';doctype=' . uri_escape($q->param('doctype'));

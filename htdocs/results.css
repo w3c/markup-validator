@@ -1,8 +1,9 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13 2002-11-23 21:55:01 ot Exp $ */
+/* $Id: results.css,v 1.14 2002-12-01 13:40:32 link Exp $ */
 
 .markup {
   color: red;
+  background: white;
   font-weight: bolder;
 }
 
@@ -12,6 +13,7 @@
 }
 
 fieldset {
+  color: black;
   background-color: #eeeeee;
 }
 
@@ -21,16 +23,8 @@ ul#Warnings {
 }
 
 div.meat {
-/*  border: 1px solid red; */ /* Used for debugging */
   margin-right: 10em;
 }
-
-/*
-div.splash { 
-  border: 1px solid blue; /* Used for debugging */
-  background:  #eeeeee;
-}
-*/
 
 th {
   padding-right: .5em;
@@ -45,21 +39,25 @@ td {
 }
 
 .info {
+  color: black;
   background: white;
   border-color: gray;
 }
 
 .warning {
+  color: black;
   background: silver;
   border-color: gray;
 }
 
 .error {
+  color: black;
   background: yellow;
   border-color: black;
 }
 
 .fatal h2 {
+  color: black;
   background: red;
   border: solid black 1px;
 }
@@ -71,7 +69,7 @@ h2.valid {
 .valid {
   background:		#053188;
   color:		white;
-  font-family:		Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
+  font-family:		"Luxi Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
   font-size-adjust:	.53;
   font-size:		1.5em;
   font-weight:		500;
@@ -81,30 +79,38 @@ h2.valid {
   letter-spacing:	normal;
   text-transform:	none;
   border-color:		black;
-  padding-top:		.1em;
-  padding-bottom: 	.1em;
+  padding-top:		.5em;
+  padding-bottom: 	.5em;
 }
 
 .valid a {
-  color: yellow;
+  color:      yellow;
+  background: #053188;
 }
 
 .valid a:visited {
   color: silver;
+  background: #053188;
 }
 
 .valid a:hover {
   color: #053188;
+  background: #eee;
 }
 
 .valid a:active {
   color: red;
+  background: yellow;
+}
+
+h2.invalid {
+  text-align: center;
 }
 
 .invalid {
   background:		#880531;
   color:		white;
-  font-family:		Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
+  font-family:		"Luxi Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
   font-size-adjust:	.53;
   font-size:		1.5em;
   font-weight:		500;
@@ -114,8 +120,8 @@ h2.valid {
   letter-spacing:	normal;
   text-transform:	none;
   border-color: 	black;
-  padding-top:		.1em;
-  padding-bottom: 	.1em;
+  padding-top:		.5em;
+  padding-bottom: 	.5em;
 }
 
 .invalid a {
@@ -127,7 +133,8 @@ h2.valid {
 }
 
 .invalid a:hover {
-  color: blue;
+  color: #880531;
+  background: white;
 }
 
 .invalid a:active {
@@ -138,3 +145,9 @@ img.inline-badge {
   float: left;
 }
 
+
+
+div.mtb { /* "Medium Thematic Break" */
+  margin-top: 5em;
+  border-top: 1px solid black;
+}
