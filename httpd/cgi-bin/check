@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.82 2003-08-27 12:32:06 link Exp $
+# $Id: check,v 1.305.2.83 2003-10-14 18:19:57 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.82 $;
+  $VERSION    =  q$Revision: 1.305.2.83 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-08-27 12:32:06 $,
+                              Date => q$Date: 2003-10-14 18:19:57 $,
                              });
 
 #
@@ -2655,7 +2655,11 @@ sub charset_conflicts {
 sub transcode {
   my $File = shift;
 
-  my ($command, $result_charset) = split " ", $CFG->{Charsets}->{$File->{Charset}->{Use}}, 2;
+  my ($command, $result_charset) = ('', '');
+  if ($CFG->{Charsets}->{$File->{Charset}->{Use}}) {
+    ($command, $result_charset) =
+      split(" ", $CFG->{Charsets}->{$File->{Charset}->{Use}}, 2);
+  }
 
   $result_charset = exact_charset($File, $result_charset);
   if ($command eq 'I') {
