@@ -1,0 +1,12 @@
+    -- catalog for MathML 2.0 for use in W3C's validation service --
+    -- $Id: mathml.soc,v 1.1 2001-06-13 23:38:49 link Exp $ --
+
+OVERRIDE YES
+SGMLDECL "../sp-1.3/pubtext/xml.dcl"
+
+PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN"		"xhtml-math11-f.dtd"
+PUBLIC "-//W3C//DTD MathML 2.0//EN"				"mathml2.dtd"
+
+SYSTEM "http://www.w3.org/TR/MathML2/dtd/xhtml-math11-f.dtd"	"xhtml-math11-f.dtd"
+SYSTEM "http://www.w3.org/TR/MathML2/dtd/mathml2.dtd"		"mathml2.dtd"
+
