@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.113 2001-06-07 09:47:33 duerst Exp $
+# $Id: check,v 1.114 2001-06-07 09:59:06 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -74,9 +74,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.113 $;
+$VERSION    =  q$Revision: 1.114 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-07 09:47:33 $;
+$DATE       =  q$Date: 2001-06-07 09:59:06 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -376,28 +376,6 @@ EOHD
 print ' ' x 4, qq(</li>\n);
 
 
-my $xmlflags = '';
-my $catalog  = $sgmlstuff . '/catalog';
-
-if ($File->{Type} eq 'xhtml') {
-  $catalog               = $sgmlstuff . '/REC-xhtml1-20000126/xhtml.soc';
-  $ENV{SP_CHARSET_FIXED} = 'YES';
-  $ENV{SP_ENCODING}      = 'UTF-8';
-  $xmlflags              = '-wxml';
-} elsif ($File->{Type} eq 'mathml') {
-  $catalog               = $sgmlstuff . '/CR-MathML2-20001113/catalog';
-  $ENV{SP_CHARSET_FIXED} = 'YES';
-  $ENV{SP_ENCODING}      = 'XML';
-  $xmlflags              = '-wxml ';
-} elsif ($File->{Type} eq 'xml') {
-  # no doctype, with xmlns attr on 1st element
-  $File->{Type} = 'xml'; # @@ probably a better way to do this
-  $catalog               = $sgmlstuff . '/sp-1.3/pubtext/xml.soc';
-  $ENV{SP_CHARSET_FIXED} = 'YES';
-  $ENV{SP_ENCODING}      = 'XML';
-  $xmlflags              = '-wxml';
-}
-
 unless ($File->{Charset} eq 'utf-8' or $File->{Charset} eq 'unknown') {
   # workaround for windows-nnnn charsets missing from glibc<2.2
   my $temp_charset = $File->{Charset};
@@ -420,6 +398,7 @@ unless ($File->{Charset} eq 'utf-8' or $File->{Charset} eq 'unknown') {
       my $lines = $#lines ? "lines " : "line ";
       $lines .= join ", ", @lines;
       print <<"EOF";
+      </ul>
       <p class="error">
         Sorry, I am unable to validate this document because on
         <strong>$lines</strong> it contained
@@ -435,6 +414,28 @@ EOF
     &print_charset_error($@, $File->{Charset});
     &clean_up_and_exit;
   }
+}
+
+my $xmlflags = '';
+my $catalog  = $sgmlstuff . '/catalog';
+
+if ($File->{Type} eq 'xhtml') {
+  $catalog               = $sgmlstuff . '/REC-xhtml1-20000126/xhtml.soc';
+  $ENV{SP_CHARSET_FIXED} = 'YES';
+  $ENV{SP_ENCODING}      = 'UTF-8';
+  $xmlflags              = '-wxml';
+} elsif ($File->{Type} eq 'mathml') {
+  $catalog               = $sgmlstuff . '/CR-MathML2-20001113/catalog';
+  $ENV{SP_CHARSET_FIXED} = 'YES';
+  $ENV{SP_ENCODING}      = 'XML';
+  $xmlflags              = '-wxml ';
+} elsif ($File->{Type} eq 'xml') {
+  # no doctype, with xmlns attr on 1st element
+  $File->{Type} = 'xml'; # @@ probably a better way to do this
+  $catalog               = $sgmlstuff . '/sp-1.3/pubtext/xml.soc';
+  $ENV{SP_CHARSET_FIXED} = 'YES';
+  $ENV{SP_ENCODING}      = 'XML';
+  $xmlflags              = '-wxml';
 }
 
 my $command  = "$sp -f$temp -E0 $xmlflags -c $catalog";
