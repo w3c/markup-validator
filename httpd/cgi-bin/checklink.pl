@@ -5,7 +5,7 @@
 # (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.19 2003-09-15 18:31:20 ville Exp $
+# $Id: checklink.pl,v 3.6.2.20 2003-10-20 20:19:52 ville Exp $
 #
 # This program is licensed under the W3C(r) Software License:
 #       http://www.w3.org/Consortium/Legal/copyright-software
@@ -87,7 +87,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.19 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.20 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
 
@@ -1612,15 +1612,18 @@ sub code_shown ($$)
 # Checks whether we're allowed to retrieve the document based on it's IP
 # address.  Takes an URI object and returns a HTTP::Response containing the
 # appropriate status and error message if the IP was disallowed, undef
-# otherwise.  URIs without hostname or IP address are always allowed.
+# otherwise.  URIs without hostname or IP address are always allowed,
+# including schemes where those make no sense (eg. data:, often javascript:).
 #
 sub ip_allowed ($)
 {
   my ($uri) = @_;
-  return undef unless $uri->host();
+  my $hostname = undef;
+  eval { $hostname = $uri->host() }; # Not all URIs implement host()...
+  return undef unless $hostname;
 
   my $addr = my $iptype = my $resp = undef;
-  if (my $host = gethostbyname($uri->host())) {
+  if (my $host = gethostbyname($hostname)) {
     $addr = inet_ntoa($host->addr()) if $host->addr();
     if ($addr && (my $ip = Net::IP->new($addr))) {
       $iptype = $ip->iptype();
