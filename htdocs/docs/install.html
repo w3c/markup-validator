@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.1.2.7 2004-05-02 13:23:35 ville Exp $"
---><!--#set var="date" value="\$Date: 2004-05-02 13:23:35 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.1.2.8 2004-05-06 05:42:10 ot Exp $"
+--><!--#set var="date" value="\$Date: 2004-05-06 05:42:10 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -12,8 +12,16 @@
     <div id="toc">
       <ul>
             <li><a href="#otherguides">This guide, and other guides</a></li>
-            <li><a href="#install-package">Packaged systems</a></li>
-            <li><a href="#install-fromsource">Install from source</a></li>
+            <li><a href="#install-package">(Installing from) Packaged systems</a></li>
+            <li><a href="#install-fromsource">Install from source</a> (generic case)
+	     <ul>
+		<li><a href="#install-download">Download</a></li>
+		<li><a href="#install-prereq">Prerequisites</a></li>
+		<li><a href="#install-components">Install components</a></li>
+		<li><a href="#install-configure">Configure</a></li>
+		<li><a href="#install-check">Check the installation</a></li>
+	     </ul>
+	    </li>
             <li><a href="#install-troubleshoot">Installation troubleshooting</a></li>
             <li><a href="#credits">Credits and Acknowledgments</a></li>
       </ul>
@@ -24,6 +32,7 @@
     <a name="skip" id="skip"> </a>
 
     <h3 id="otherguides">This guide, and other guides</h3>    
+    <h4>Other installation guides</h4>
     <p>The installation guide we provide here is a rather generic set of instructions, 
     which should work on most systems. To our knowledge, the following platform-specific 
     guides are also available and can be of interest :</p>
@@ -33,7 +42,12 @@
         <li><a href="http://lists.w3.org/Archives/Public/www-validator/2003Dec/0023.html">Linux (Slackware)</a>
         by Nick Talbot</li>
     </ul>
-    
+    <h4>Related documentation</h4>
+    <p>This installation guides presumes knowledge of the <a href="../source/">Source availability</a> for the
+    Markup Validator.</p>
+    <p>We recommend that <a href="devel.html">developers</a> wishing to contribute on the Markup Validator or modify it
+    go through this installation procedure once, to get familiar with the system.</p>
+
     <h3 id="install-package">Installing on packaged systems</h3>
     
     <p>The easiest way to install released versions of the Markup Validator is to use the packages created
@@ -42,15 +56,75 @@
     
     <h3 id="install-fromsource">Installing from source (generic case)</h3>
     <p>These instructions are strongly inspired from Nick Talbott's guide for Linux Slackware. Thanks Nick!</p>
-    <h4>Download</h4>
+    <h4 id="install-download" name="install-download">Download</h4>
         <p>Download the <a href="http://validator.w3.org/validator.tar.gz">Validator's Tar Ball</a>
         and the <a href="http://validator.w3.org/sgml-lib.tar.gz">DTD library</a> from our site.</p>
         <p>Alternatively, if you want to work on the latest development version, you can download 
         both from our CVS repository, but you should be aware that this version may not work at all.</p>
         <p>(<a href="../source/">Read more</a> about retrieving the source)</p>
 
+    <h4 id="install-prereq" name="install-prereq">Prerequisites</h4>
 
-    <h4>Install the various necessary components:</h4>
+     <p>
+        Apart from a properly configured Web server, the Validator needs a
+        SGML parser -- that does all the hard work -- and several Perl
+        modules used by the "check" CGI script.
+      </p>
+     <h5>SGML Parser: Open SP</h5>
+      <p>
+        The SGML parser we're currently using is <code>OpenSP 1.5</code>,
+        which can be found on the
+        <a href="http://openjade.sourceforge.net/">OpenJade home page</a>.
+      </p>
+
+      <h5>Perl Modules</h5>
+      <p>
+        The canonical list of Perl modules we use can be found in the source
+        for the "check" CGI script. There is a bunch of lines that of the form
+        "use Foo::Bar" where each "Foo::Bar" represents a module. Most modules
+        can be found on <a href="http://www.cpan.org/">CPAN</a> (minimum
+        versions in parenthesis after the name). The following
+        list was complete when CVS spit out:
+        <code>$Date: 2004-05-06 05:42:10 $</code>. <tt>:-)</tt>
+      </p>
+
+     <p>One easy - and strongly recommended - way to take care of all these perl modules dependencies is to 
+     install the <a href="http://search.cpan.org/search?query=Bundle-W3C-Validator&mode=dist">bundle available through CPAN</a>
+     as Bundle-W3C-Validator.</p>
+
+     <h5>List of required Perl modules</h5>
+
+      <dl>
+        <dt><code>CGI (2.81)</code></dt>
+        <dd>
+          The all-singing, all-dancing,
+          everything-<em>and</em>-the-kitchen-sink, Perl CGI library. This
+          takes care of all those niggly little bits of CGI for us and make
+          options parsing and file upload a breeze.
+        </dd>
+        <dt><code>CGI::Carp</code></dt>
+        <dd>CGI-aware warn()/die()</dd>
+        <dt><code>File::Spec</code></dt><dd>Portable filespecs.</dd>
+        <dt><code>HTML::Parser (3.25)</code></dt>
+        <dd>Minimal HTML Parser used for preparse and finding metadata.</dd>
+        <dt><code>LWP::UserAgent (1.90)</code></dt>
+        <dd>
+          Gisle Aas' most excellent WWW library for Perl. This is where our
+          support for downloading pages off the net comes from.
+        </dd>
+        <dt><code>Set::IntSpan</code></dt><dd>Efficient Set operations.</dd>
+        <dt><code>Text::Iconv</code></dt>
+        <dd>
+          Perl-native interface to the (g)libc iconv(3) library. Handles
+          charset conversion issues.
+        </dd>
+        <dt><code>Text::Wrap</code></dt>
+        <dd>Wrap text to a sane width. Needed for source output in results.</dd>
+        <dt><code>URI::Escape</code></dt>
+        <dd>Module to handle escaping special characters in URIs.</dd>
+      </dl>
+
+    <h4 id="install-components" name="install-components">Install the various necessary components:</h4>
         <ol>
             <li><p>The installation guide assumes that you have a working Web server. We suggest
             the popular Apache server, which is used for the W3C Markup Validation service. 
@@ -58,11 +132,7 @@
             we can not guarantee that it will. You will also need a working installation 
             of the Perl language (standard on most Web servers).</p></li>
                 
-            <li><p>Proceed with the  <a href="../source/#prereq">Prerequisites</a> : Install OpenSP and 
-            the listed Perl libraries. This can be made by using your Operating System's packaging 
-            mechanism, the <a href="http://search.cpan.org/~jhi/perl-5.8.0/lib/CPAN.pm">CPAN installation 
-            mechanism</a>, or simply download the modules and follow 
-            their embedded installation instructions.</p></li>
+            <li><p>Proceed with the  Prerequisites, as detailed above.</p></li>
                 
             <li><p>Create a directory for the validator's installation. On Unix-based systems, 
             the default will be <code>/usr/local/validator</code>.This directory
@@ -74,7 +144,55 @@
             (if you used CVS, the latter is actually in the <code>htdocs</code> subdirectory, 
             but that is not really important).</p></li>
         </ol>
-    <h4>Configure</h4>
+    <h4 id="install-configure" name="install-configure">Configure</h4>
+	<h5>Configuration files</h5>
+
+      <p>
+	For reference, here is an overview of all the configuration files for
+	the Markup Validator.
+      </p>
+
+      <p>
+        The validator uses a number of configuration files -- most of which
+        are really mapping tables of some form -- to avoid having to check in
+        a new version of the code every time a new version of HTML comes out.
+        All configuration files can be found in
+        <code>$CVSROOT/validator/htdocs/config/</code>.
+      </p>
+      <p>
+        To really understand what each does you should read the source, but
+        here is a short description to get you started.
+      </p>
+      <dl>
+        <dt>eref.cfg</dt>
+        <dd>
+          Contains the mappings from element names to an URI fragment
+          (relative to a configurable URI) for their definitions. Used
+          in output when the "Show Source Input" option is enabled.
+        </dd>
+        <dt>fpis.cfg</dt>
+        <dd>
+          Maps FPIs to plain text version strings.
+        </dd>
+        <dt>frag.cfg</dt>
+        <dd>
+          Maps error messages to an URI fragment identifier where an
+          explanation of that error can be found.
+        </dd>
+        <dt>type.cfg</dt>
+        <dd>
+          Maps MIME/HTTP Content-Types to an internal "document type" which
+          is used for treating HTML, XML, and XHTML in different ways.
+        </dd>
+        <dt>validator.conf</dt>
+        <dd>
+          Main configuration file. Gives various parameters (such as the
+          address of the maintainer and the URL for the "Home Page") and
+          the locations of the other configuration files and mapping tables.
+        </dd>
+       </dl>
+
+
 
 	<h5>Configure the Web server</h5>
 	<p>The following instructions are for the Apache Web server, and should be adapted 
