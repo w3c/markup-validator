@@ -5,11 +5,11 @@
   <head>
     <title>W3C HTML Validation Error Messages</title>
     <link rev="made" href="mailto:gerald@w3.org" />
-    <link rel="stylesheet" type="text/css" href="/base.css" />
+    <link rel="stylesheet" type="text/css" href="../base.css" />
     <meta name="keywords" content="HTML, Hypertext Markup Language, Validation, W3C HTML Validation Service" />
     <meta name="description" content="W3C's easy-to-use HTML validation service, based on an SGML parser." />
-    <meta name="revision" content="$Id: errors.html,v 1.10 2001-08-27 01:13:46 duerst Exp $" />
-    <meta name="modified" content="$Date: 2001-08-27 01:13:46 $" />
+    <meta name="revision" content="$Id: errors.html,v 1.11 2001-09-04 22:42:42 gerald Exp $" />
+    <meta name="modified" content="$Date: 2001-09-04 22:42:42 $" />
   </head>
 
   <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
@@ -62,7 +62,7 @@
           &lt;!-- This is the second one &gt;
         </pre>
         <p>
-          The Validator (correctly) interprets the `<code>--</code>' in the
+          The validator (correctly) interprets the `<code>--</code>' in the
           second comment as terminating the first comment, and then interprets
           the text of the second comment as text between comments, which is not
           allowed.
@@ -72,7 +72,7 @@
       <dd>
         <p>
           Most likely an invalid comment of the form <code>&lt;!invalid
-          comment&gt;</code>; The Validator is (correctly) attempting to
+          comment&gt;</code>; the validator is (correctly) attempting to
           interpret it as an <a href="sgml.html#sgml">SGML</a> markup
           declaration.
         </p>
@@ -90,7 +90,7 @@
       <dt><a id="attr-char" name="attr-char">"character `X' not allowed in attribute specification list"</a></dt>
       <dd>
         <p>
-          The Validator has found a character inside an HTML tag that isn't
+          The validator has found a character inside an HTML tag that isn't
           allowed there. This usually means you didn't put an attribute value in
           quotes when necessary. It also probably means that the character in
           question is not allowed in the value of the attribute at all, or you
@@ -106,7 +106,7 @@
           &lt;IMG SRC="http://foo.com/joe.gif&gt;
         </pre>
         <p>
-          The Validator will (correctly) interpret this as a SRC value of
+          The validator will (correctly) interpret this as a SRC value of
           <code>"http://foo.com/fred.gif&gt; &lt;IMG SRC="</code>, and then
           choke on the following `:'. In this case, the position indicator in
           the error message may be several lines below the line with the missing
@@ -215,7 +215,7 @@
           </li>
         </ul>
         <p>
-          The Validator has inserted a BAR start tag where it thinks there needs
+          The validator has inserted a BAR start tag where it thinks there needs
           to be one; it will probably complain later on that <a href="#no-end-tag">the
           corresponding end tag is also missing</a>.
         </p>
@@ -252,7 +252,7 @@
           &lt;IMG SRC="fred.gif&gt; &lt;IMG SRC="joe.gif&gt;
         </pre>
         <p>
-          The Validator will (correctly) see a SRC attribute of
+          The validator will (correctly) see a SRC attribute of
           <code>"fred.gif&gt; &lt;IMG SRC="</code>, and then try to interpret
           JOE.GIF as an attribute of <code>&lt;IMG&gt;</code>.
         </p>
@@ -290,7 +290,7 @@
           of <code>&lt;IMG ISMAP=ISMAP&gt;</code>. (Technically, this also means
           that e.g. <code>&lt;P ALIGN=CENTER&gt;</code> could be abbreviated to
           <code>&lt;P CENTER&gt;</code>, but it is unlikely that current
-          browsers will get this right.) The Validator has found something that
+          browsers will get this right.) The validator has found something that
           looks like an abbreviated attribute but doesn't match the value of any
           attribute for this element. For instance, a typo like <code>&lt;IMG
           ISNAP&gt;</code> would produce this error.
@@ -320,7 +320,7 @@
           You forgot to close something. FOO is the element you forgot to close
           (and the next message, `start tag was here' points to the particular
           instance of FOO in question); the positional indicator points to where
-          The Validator expected you to close the element. There are a few
+          the validator expected you to close the element. There are a few
           common ways that this can happen:
         </p>
         <ul>
@@ -328,8 +328,8 @@
             You've put something inside the FOO element that isn't allowed
             there. For instance, <code>&lt;UL&gt;&lt;LI&gt;&lt;H4&gt;fake font
             change&lt;/H4&gt;&lt;/UL&gt;</code> will cause this error, since
-            headers aren't allowed inside <code>&lt;UL&gt;</code>'s; The
-            Validator assumes that you meant to close the
+            headers aren't allowed inside <code>&lt;UL&gt;</code>'s; the
+            validator assumes that you meant to close the
             <code>&lt;UL&gt;</code> before opening the <code>&lt;H4&gt;</code>.
           </li>
           <li>
@@ -349,18 +349,18 @@
             <code>&lt;A&gt;</code>.
           </li>
           <li>
-            Having unadorned text where The Validator was expecting a
+            Having unadorned text where the validator was expecting a
             sub-element of FOO. For instance, <code>&lt;DL&gt;fake
             indent&lt;/DL&gt;</code> will produce this error, since inside a
-            <code>&lt;DL&gt;</code>, The Validator only expects to see
+            <code>&lt;DL&gt;</code>, the validator only expects to see
             <code>&lt;DT&gt;</code>'s and <code>&lt;DD&gt;</code>'s.
           </li>
           <li>
             A tag of the form <code>&lt;TABLE WIDTH=100%&gt;</code>. The
             previous error should have been that the `%' was <a
             href="#attr-char">"not allowed in attribute specification list"</a>.
-            What's happening here is that, in trying to get past the `%', The
-            Validator has become confused and thinks the `%' is <em>inside</em>
+            What's happening here is that, in trying to get past the `%', the
+            validator has become confused and thinks the `%' is <em>inside</em>
             the <code>&lt;TABLE&gt;...&lt;/TABLE&gt;</code>, thus triggering the
             error message for the previous reason. This error will likely be
             followed by mistaken complaints that your <code>&lt;TR&gt;</code>'s
@@ -378,10 +378,10 @@
       <dt><a id="floating-close" name="floating-close">"end tag for element "FOO" which is not open"</a></dt>
       <dd>
         <p>
-          The Validator found an end tag, represented here by FOO, without a
+          The validator found an end tag, represented here by FOO, without a
           corresponding start tag. This frequently occurs in conjunction with
           the <a href="#no-end-tag">previous error</a>. For instance, given
-          <code>&lt;B&gt;&lt;I&gt;nope&lt;/B&gt;&lt;/I&gt;</code>, The Validator
+          <code>&lt;B&gt;&lt;I&gt;nope&lt;/B&gt;&lt;/I&gt;</code>, the validator
           will insert a <code>&lt;/I&gt;</code> before the
           <code>&lt;/B&gt;</code>, and then will find the
           <code>&lt;/I&gt;</code> after the <code>&lt;/B&gt;</code> and will
@@ -391,7 +391,7 @@
           A subtle variation of this is <code>&lt;P&gt;&lt;H4&gt;fake font
           change&lt;/H4&gt;&lt;/P&gt;</code>. <code>&lt;H4&gt;</code>'s aren't
           allowed inside <code>&lt;P&gt;</code>'s, but since HTML allows you to
-          omit the <code>&lt;/P&gt;</code> end tag for paragraphs, The Validator
+          omit the <code>&lt;/P&gt;</code> end tag for paragraphs, the validator
           assumes that you meant <code>&lt;P&gt;&lt;/P&gt;&lt;H4&gt;fake font
           change&lt;/H4&gt;&lt;/P&gt;</code>, in which case the final
           <code>&lt;/P&gt;</code> is indeed superfluous.
@@ -413,7 +413,7 @@
       <dt><a id="no-start-tag" name="no-start-tag">"start tag for `FOO' omitted, but its declaration does not permit this"</a></dt>
       <dd>
         <p>
-          The Validator expected you to start a FOO element at the indicated
+          The validator expected you to start a FOO element at the indicated
           point. This probably means you've put unadorned text somewhere it
           isn't allowed; for instance, <code>&lt;UL&gt;fake
           indent&lt;/UL&gt;</code> will cause this error.
@@ -422,31 +422,32 @@
       <dt><a id="bad-entity" name="bad-entity">"general entity `FOO' not defined and no default entity"</a></dt>
       <dd>
         <p>
-          The Validator has found an entity (something like
+          The validator has found an entity (something like
           <code>&amp;this;</code>) that it doesn't recognize. There are a few
           possibilities:
         </p>
         <ul>
           <li>
-            The entity <code>&amp;quot;</code> in conjunction with the HTML 3.2
-            <code>DOCTYPE</code>. This entity was <a
-            href="http://lists.w3.org/Archives/Public/www-html/msg00636.html">accidentally
-            omitted</a> from the most recent version of the HTML 3.2 DTD. You
-            should be able to ignore this error safely, though if you wish, you
-            can replace <code>&amp;quot;</code> with the equivalent character
-            entity <code>&amp;#34;</code>.
-          </li>
-          <li>
-            The entity <code>&amp;nbsp;</code> in conjunction with the Mozilla
-            <code>DOCTYPE</code>. WebTechs' Mozilla DTD, which The Validator
-            uses, inexplicably does not define this entity. This error message
-            should not cause a problem, though you may wish to switch to the
-            equivalent but more widely handled character entity
-            <code>&amp;#160;</code>.
+            <p>
+	      A reference to a URI that uses <code>&amp;</code> as a separator
+	      between parameters, such as
+	      "<code>http://example.org/prog?x=1&amp;y=2</code>".
+	    </p>
+            <p>
+	      To solve this problem, simply replace all the <code>&amp;</code>'s
+	      in attribute values with <code>&amp;amp;</code> (user agents will
+	      convert them back before following the links.)
+            </p>
+	    <p>
+              Another way to get around this problem is for the author of the CGI
+	      program to allow a different value to be used between arguments,
+              like ';' or '|', which would allow the link to be coded as e.g.
+              <code>&lt;a href="http://example.org/prog?x=1;y=2"&gt;</code>
+            </p>
           </li>
           <li>
             An unterminated entity; for instance, <code>this&amp;ampthat</code>
-            for "this&amp;that", which The Validator (correctly) interprets as a
+            for "this&amp;that", which the validator (correctly) interprets as a
             request for the entity <code>&amp;ampthat;</code>. Technically, any
             non-alphanumeric character (such as a space) will suffice to
             terminate the entity, but some browsers get this wrong; the safest
@@ -454,30 +455,13 @@
             our example into <code>this&amp;amp;that</code>.
           </li>
           <li>
-            <p>
-              A URL for a CGI program that uses `&amp;' as a separator, such as
-              "<code>http://host/prog?x=1&amp;y=2</code>". This is a common
-              problem: the inventors of CGI didn't think things through very
-              carefully when they decided to use the '&amp;' character as a
-              separator between CGI arguments, because '&amp;' has special
-              status in HTML. One way to get around this is for the author
-              of the CGI program to use a different value between arguments,
-              like ';' or '|', which would allow the link to be coded as
-              <code>&lt;img src="http://site/cgi?opt1=val1;opt2=val2"&gt;</code>
-              or whatever.
-            </p>
-            <p>
-              Please contact the maintainer of the CGI program you are linking
-              to, and ask them to use a different character for their separator.
-              (Normally this is extremely easy to add to the CGI program;
-              multiple characters can also be used so existing links using the
-              '&amp;' character will still work.)
-            </p>
-            <p>
-              There is also a simple workaround described at &lt;URL:<a
-              href="http://www.htmlhelp.com/tools/validator/problems.html#amp">http://www.htmlhelp.com/tools/validator/problems.html#amp</a>&gt;.
-              Simply encode all your &amp;'s as &amp;amp; in attribute values.
-            </p>
+            The entity <code>&amp;quot;</code> in conjunction with the HTML 3.2
+            <code>DOCTYPE</code>. This entity was <a
+            href="http://lists.w3.org/Archives/Public/www-html/1997Mar/0003.html">accidentally
+            omitted</a> from the most recent version of the HTML 3.2 DTD. You
+            should be able to ignore this error safely, though if you wish, you
+            can replace <code>&amp;quot;</code> with the equivalent character
+            entity <code>&amp;#34;</code>.
           </li>
         </ul>
       </dd>
@@ -486,8 +470,8 @@
         <p>
           You've used an illegal character in your text. HTML uses the standard
           ISO8859-1 character encoding, and ISO8859-1 leaves undefined 65
-          character codes (0 to 31 inclusive and 127 to 159 inclusive); The
-          Validator has found one of these undefined characters in your
+          character codes (0 to 31 inclusive and 127 to 159 inclusive); the
+          validator has found one of these undefined characters in your
           document. The character may appear on your browser as a curly quote,
           or a trademark symbol, or some other fancy glyph; on a different
           computer, however, it will likely appear as a completely different
@@ -520,7 +504,7 @@
           for instance, the entity <code>&amp;trade;</code> is defined as the
           character entity <code>&amp;#8482;</code>, which is the Unicode
           trademark character. Unfortunately, the <code>nsgmls</code> executable
-          used by The Validator does not appear to have 16-bit character support
+          used by the validator does not appear to have 16-bit character support
           compiled in, and so it chokes on these 16-bit character entities.
         </p>
         <p>
@@ -533,14 +517,14 @@
       <dd>
         <p>
           Your <code>DOCTYPE</code> declaration contains a public identifier
-          that The Validator doesn't recognize. See the <a
+          that the validator doesn't recognize. See the <a
           href="sgml.html#doctype">discussion of <code>DOCTYPE</code></a> for an
-          explanation of what's happening, and what public identifiers The
-          Validator recognizes.
+          explanation of what's happening, and what public identifiers the
+          validator recognizes.
         </p>
         <p>
           Note that all of the rest of the errors you received are meaningless;
-          The Validator was unable to find a <a href="sgml.html#dtd">DTD</a> to
+          the validator was unable to find a <a href="sgml.html#dtd">DTD</a> to
           work from, and thus could not validate your document.
         </p>
       </dd>
@@ -581,7 +565,7 @@
 	 src="http://validator.w3.org/images/vxhtml10" height="31" width="88"
 	 align="right" border="0" alt="Valid XHTML 1.0!" /></a>
       <a href="/feedback.html">Webmaster</a><br />
-	 $Date: 2001-08-27 01:13:46 $
+	 $Date: 2001-09-04 22:42:42 $
     </address>
 
   </body>
