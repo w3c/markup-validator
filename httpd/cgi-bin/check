@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.268 2002-10-26 02:21:12 link Exp $
+# $Id: check,v 1.269 2002-10-27 08:00:55 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.268 $;
+  $VERSION    =  q$Revision: 1.269 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-26 02:21:12 $,
+			      Date => q$Date: 2002-10-27 08:00:55 $,
 			     });
 
 #
@@ -256,6 +256,30 @@ untie *STDIN;
 #### Output validation results. ###############################################
 ###############################################################################
 
+#
+# Print different things if we got redirected or had a file upload.
+if ($File->{'Is Upload'}) {
+  &add_table($File, 'File', &ent($File->{URI}));
+} else {
+  my $size = (length($File->{Opt}->{URI}) || 38) + 2;
+  $size = 70 if $size > 70;
+
+  if (URI::eq("$File->{Opt}->{URI}", $File->{URI})) {
+    &add_table($File, qq(<label title="Address of Page to Validate (accesskey: 1)" for="uri">Address</label>),
+	       [1, 2, '<input accesskey="1" type="text" id="uri" name="uri" size="' . $size
+	       . '" value="' . &ent($File->{Opt}->{URI}) . '" />']);
+  } else {
+    my $furi = &ent($File->{URI});
+    &add_table($File, qq(<label title="Address of Page to Validate (accesskey: 1)" for="uri">URI</label>),
+	       '<input accesskey="1" type="text" id="uri" name="uri" size="' . $size
+	       . '" value="' . $furi . '" />');
+    &add_warning($File, '<em>Note:</em> The URI you gave me, &#171;<code>' .
+		 &ent($File->{Opt}->{URI}) . '</code>&#187;, ' .
+		 'returned a redirect to ' .
+		 '&#171;<code>' . $furi . '</code>&#187;.');
+  }
+}
+
 
 $File = &find_xml_encoding ($File);
 
@@ -339,7 +363,7 @@ unless ($File->{Charset}->{Use}) {
 
 #
 # Abort if an error was flagged while finding the encoding.
-&abort_if_error_flagged($File, 0);
+&abort_if_error_flagged($File, O_CHARSET|O_DOCTYPE);
 
 
 #
@@ -404,32 +428,8 @@ $File->{Type} = 'mathml+xml' if $File->{DOCTYPE} =~ /mathml/i;
 # Sanity check Charset information and add any warnings necessary.
 $File = &charset_conflicts($File);
 
-
 #
-# Print different things if we got redirected or had a file upload.
-if ($File->{'Is Upload'}) {
-  &add_table($File, 'File', &ent($File->{URI}));
-} else {
-  my $size = (length($File->{Opt}->{URI}) || 38) + 2;
-  $size = 70 if $size > 70;
-
-  if (URI::eq("$File->{Opt}->{URI}", $File->{URI})) {
-    &add_table($File, qq(<label title="Address of Page to Validate (accesskey: 1)" for="uri">Address</label>),
-	       [1, 2, '<input accesskey="1" type="text" id="uri" name="uri" size="' . $size
-	       . '" value="' . &ent($File->{Opt}->{URI}) . '" />']);
-  } else {
-    my $furi = &ent($File->{URI});
-    &add_table($File, qq(<label title="Address of Page to Validate (accesskey: 1)" for="uri">URI</label>),
-	       '<input accesskey="1" type="text" id="uri" name="uri" size="' . $size
-	       . '" value="' . $furi . '" />');
-    &add_warning($File, '<em>Note:</em> The URI you gave me, &#171;<code>' .
-		 &ent($File->{Opt}->{URI}) . '</code>&#187;, ' .
-		 'returned a redirect to ' .
-		 '&#171;<code>' . $furi . '</code>&#187;.');
-  }
-}
-
-
+# Add metadata iff asked for.
 if ($File->{Opt}->{Verbose}) {
   &add_table($File, "Modified", &ent($File->{Modified})) if $File->{Modified};
   &add_table($File, "Server",   &ent($File->{Server}))   if $File->{Server};
@@ -441,50 +441,7 @@ if ($File->{'Is Upload'}) {
 } else {
   &add_table($File,
 	     qq(<label accesskey="2" title="Character Encoding (accesskey: 2)" for="charset">Encoding</label>),
-	     &ent($File->{Charset}->{Use}),
-	     &CGI::popup_menu(
-			      -name      => 'charset',
-			      -id        => 'charset',
-			      -values => [
-					  '(detect automatically)',
-					  'utf-8 (Unicode, worldwide)',
-					  'utf-16 (Unicode, worldwide)',
-					  'iso-8859-1 (Western Europe)',
-					  'iso-8859-2 (Central Europe)',
-					  'iso-8859-3 (Maltese)',
-					  'iso-8859-4 (Baltic Rim)',
-					  'iso-8859-5 (Cyrillic)',
-					  'iso-8859-6-i (Arabic)',
-					  'iso-8859-7 (Greek)',
-					  'iso-8859-8-i (Hebrew)',
-					  'iso-8859-9 (Turkish)',
-					  'iso-8859-10 (Latin 6)',
-					  'iso-8859-13 (Latin 7)',
-					  'iso-8859-14 (Celtic)',
-					  'iso-8859-15 (Latin 9)',
-					  'us-ascii (basic English)',
-					  'euc-jp (Japanese, Unix)',
-					  'shift_jis (Japanese, Win/Mac)',
-					  'iso-2022-jp (Japanese, email)',
-					  'euc-kr (Korean)',
-					  'gb2312 (Chinese, simplified)',
-					  'gb18030 (Chinese, simplified)',
-					  'big5 (Chinese, traditional)',
-					  'tis-620 (Thai)',
-					  'koi8-r (Russian)',
-					  'koi8-u (Ukrainian)',
-					  'macintosh (MacRoman)',
-					  'windows-1250 (Central Europe)',
-					  'windows-1251 (Cyrillic)',
-					  'windows-1252 (Western Europe)',
-					  'windows-1253 (Greek)',
-					  'windows-1254 (Turkish)',
-					  'windows-1255 (Hebrew)',
-					  'windows-1256 (Arabic)',
-					  'windows-1257 (Baltic Rim)',
-					 ],
-			   )
-	    );
+	     &ent($File->{Charset}->{Use}), &popup_charset);
 }
 
 
@@ -653,23 +610,7 @@ if ($File->{'Is Upload'}) {
   &add_table($File, 'Doctype', $File->{Version});
 } else {
   &add_table($File, qq(<label accesskey="3" for="doctype" title="Document Type (accesskey: 3)">Doctype</label>),
-	     $File->{Version},
-	     &CGI::popup_menu(
-			      -name => 'doctype',
-			      -id => 'doctype',
-			      -values => [
-					  '(detect automatically)',
-					  'XHTML 1.0 Strict',
-					  'XHTML 1.0 Transitional',
-					  'XHTML 1.0 Frameset',
-					  'HTML 4.01 Strict',
-					  'HTML 4.01 Transitional',
-					  'HTML 4.01 Frameset',
-					  'HTML 3.2',
-					  'HTML 2.0',
-					 ],
-			     )
-	    );
+	     $File->{Version}, &popup_doctype);
 }
 
 
@@ -806,8 +747,9 @@ sub add_table {
 sub print_table {
   my $File = shift;
 
-  unless ($File->{'Is Valid'}) {
-    &add_table($File, 'Errors', scalar(@{$File->{Errors}}));
+  # @@@FIXME@@@: This is a *hack*! ;D
+  unless ($File->{'Is Valid'} or scalar @{$File->{Errors} || []} == 0) {
+    &add_table($File, 'Errors', scalar @{$File->{Errors}});
   }
 
   print qq(  <form id="form" method="get" action="check">\n)
@@ -1463,7 +1405,7 @@ sub parse_errors ($$) {
     }
 
 
-    &abort_if_error_flagged($File, O_SOURCE);
+    &abort_if_error_flagged($File, O_DOCTYPE);
     push @{$File->{Errors}}, $err;
   }
   undef $fh;
@@ -2589,6 +2531,24 @@ sub abort_if_error_flagged {
   my $Flags = shift;
   if ($File->{'Error Flagged'}) {
     print $File->{'Results'};
+
+    #
+    # "Manually" add DOCTYPE popup to table if requested.
+    if ($Flags & O_DOCTYPE) {
+      &add_table($File, qq(<label accesskey="3" for="doctype" title="Document Type (accesskey: 3)">Doctype</label>),
+		 $File->{Version}, &popup_doctype);
+    }
+
+    #
+    # "Manually" add charset popup to table if requested.
+    if ($Flags & O_CHARSET) {
+      &add_table($File,
+		 qq(<label accesskey="2" title="Character Encoding (accesskey: 2)" for="charset">Encoding</label>),
+		 &ent($File->{Charset}->{Use}), &popup_charset);
+    }
+
+
+    &print_table($File);
     print $File->{'Error Message'};
     if ($File->{Opt}->{'Show Source'} and $Flags & O_SOURCE) {
       &show_source($File);
@@ -2605,4 +2565,73 @@ sub conflict {
   my $encodingA = shift;
   my $encodingB = shift;
   return $encodingA && $encodingB && ($encodingA ne $encodingB);
+}
+
+#
+# Return a text string suitable for inclusion in the result table.
+sub popup_doctype {
+  return &CGI::popup_menu(
+			  -name => 'doctype',
+			  -id => 'doctype',
+			  -values => [
+				      '(detect automatically)',
+				      'XHTML 1.1',
+				      'XHTML Basic 1.0',
+				      'XHTML 1.0 Strict',
+				      'XHTML 1.0 Transitional',
+				      'XHTML 1.0 Frameset',
+				      'HTML 4.01 Strict',
+				      'HTML 4.01 Transitional',
+				      'HTML 4.01 Frameset',
+				      'HTML 3.2',
+				      'HTML 2.0',
+				     ],
+			 );
+}
+
+#
+# Return a text string suitable for inclusion in the result table.
+sub popup_charset {
+  return &CGI::popup_menu(
+			  -name      => 'charset',
+			  -id        => 'charset',
+			  -values => [
+				      '(detect automatically)',
+				      'utf-8 (Unicode, worldwide)',
+				      'utf-16 (Unicode, worldwide)',
+				      'iso-8859-1 (Western Europe)',
+				      'iso-8859-2 (Central Europe)',
+				      'iso-8859-3 (Southern Europe)',
+				      'iso-8859-4 (Baltic Rim)',
+				      'iso-8859-5 (Cyrillic)',
+				      'iso-8859-6-i (Arabic)',
+				      'iso-8859-7 (Greek)',
+				      'iso-8859-8-i (Hebrew)',
+				      'iso-8859-9 (Turkish)',
+				      'iso-8859-10 (Latin 6)',
+				      'iso-8859-13 (Latin 7)',
+				      'iso-8859-14 (Celtic)',
+				      'iso-8859-15 (Latin 9)',
+				      'us-ascii (basic English)',
+				      'euc-jp (Japanese, Unix)',
+				      'shift_jis (Japanese, Win/Mac)',
+				      'iso-2022-jp (Japanese, email)',
+				      'euc-kr (Korean)',
+				      'gb2312 (Chinese, simplified)',
+				      'gb18030 (Chinese, simplified)',
+				      'big5 (Chinese, traditional)',
+				      'tis-620 (Thai)',
+				      'koi8-r (Russian)',
+				      'koi8-u (Ukrainian)',
+				      'macintosh (MacRoman)',
+				      'windows-1250 (Central Europe)',
+				      'windows-1251 (Cyrillic)',
+				      'windows-1252 (Western Europe)',
+				      'windows-1253 (Greek)',
+				      'windows-1254 (Turkish)',
+				      'windows-1255 (Hebrew)',
+				      'windows-1256 (Arabic)',
+				      'windows-1257 (Baltic Rim)',
+				     ],
+			 );
 }
