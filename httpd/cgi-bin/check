@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.284 2002-11-03 14:39:40 link Exp $
+# $Id: check,v 1.285 2002-11-03 15:04:20 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.284 $;
+  $VERSION    =  q$Revision: 1.285 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-11-03 14:39:40 $,
+			      Date => q$Date: 2002-11-03 15:04:20 $,
 			     });
 
 #
@@ -2260,7 +2260,7 @@ X-W3C-Validator-Status: $valid
 X-W3C-Validator-Errors: $errs
 
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/css" href="xml-results.css"?>
+<?xml-stylesheet type="text/xsl" href="xml-results.xsl"?>
 <!DOCTYPE result [
   <!ELEMENT result (meta, warnings?, messages?)>
   <!ATTLIST result
