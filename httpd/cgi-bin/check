@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.42 2002-06-16 02:55:29 link Exp $
+# $Id: check,v 1.200.2.43 2002-06-16 19:12:30 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -17,7 +17,7 @@ $| = 1;
 
 #
 # We need Perl 5.005_03. (no access to 5.004 testing box any more)
-require 5.005_3;
+require 5.005_03;
 
 ###############################################################################
 #### Load modules. ############################################################
@@ -78,7 +78,7 @@ $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.42 $;
+$VERSION    =  q$Revision: 1.200.2.43 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 #
@@ -107,7 +107,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-06-16 02:55:29 $,
+			      Date => q$Date: 2002-06-16 19:12:30 $,
 			     });
 
 #
