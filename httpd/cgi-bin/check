@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.180 2001-09-14 01:26:36 link Exp $
+# $Id: check,v 1.181 2001-09-14 02:31:27 link Exp $
 
 #
 # We need Perl 5.004.
@@ -91,9 +91,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.180 $;
+$VERSION    =  q$Revision: 1.181 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-09-14 01:26:36 $;
+$DATE       =  q$Date: 2001-09-14 02:31:27 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1278,6 +1278,7 @@ sub parse_errors ($$) {
 #
 # Generate a HTML report of detected errors.
 sub report_errors ($) {
+  print '<ul>';
   my $File = shift;
   foreach my $err (@{$File->{Errors}}) {
 
