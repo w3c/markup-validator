@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.79 2003-08-25 00:44:32 link Exp $
+# $Id: check,v 1.305.2.80 2003-08-26 06:42:33 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.79 $;
+  $VERSION    =  q$Revision: 1.305.2.80 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-08-25 00:44:32 $,
+                              Date => q$Date: 2003-08-26 06:42:33 $,
                              });
 
 #
@@ -2045,7 +2045,7 @@ sub report_valid {
     </p>
     <pre>
     &lt;p&gt;
-      &lt;a href="$CFG->{'Home Page'}check/referer"&gt;&lt;img$gifborder
+      &lt;a href="$CFG->{'Home Page'}check?uri=referer"&gt;&lt;img$gifborder
           src="$image_uri"
           alt="$alttext"$gifhw$xhtmlendtag&gt;&lt;/a&gt;
     &lt;/p&gt;

@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.20 2003-08-20 21:20:41 ot Exp $
+   $Id: base.css,v 1.26.2.21 2003-08-26 06:42:33 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -118,6 +118,11 @@ h1#title {
   border-bottom: 1px solid black;
   padding: .25em;
   margin: 0;
+}
+
+/* Used for beta releases. */
+h1#title em {
+  color: red;
 }
 
 /* done vs. tbc for the TODO list */
