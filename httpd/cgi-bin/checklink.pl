@@ -2,10 +2,10 @@
 #
 # W3C Link Checker
 # by Hugo Haas <hugo@w3.org>
-# (c) 1999-2003 World Wide Web Consortium
+# (c) 1999-2004 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.25 2003-11-25 20:46:46 ville Exp $
+# $Id: checklink.pl,v 3.6.2.26 2004-02-01 11:07:06 ville Exp $
 #
 # This program is licensed under the W3C(r) Software License:
 #       http://www.w3.org/Consortium/Legal/copyright-software
@@ -87,9 +87,9 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.25 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.26 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
-  $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
+  $REVISION      = sprintf('version %s (c) 1999-2004 W3C', $CVS_VERSION);
 
   # Pull in mod_perl modules if applicable.
   if ($ENV{MOD_PERL}) {
