@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.99 2001-05-21 05:54:34 duerst Exp $
+# $Id: check,v 1.100 2001-05-22 23:59:58 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -75,9 +75,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.99 $;
+$VERSION    =  q$Revision: 1.100 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-05-21 05:54:34 $;
+$DATE       =  q$Date: 2001-05-22 23:59:58 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1427,12 +1427,11 @@ sub parse_content_type {
 }
 
 #
-# Normalize newlines of form CRLF or CR to LF.
+# Normalize newline forms (CRLF/CR/LF) to native newline.
 sub normalize_newlines {
   my $file = shift;
 
-  $file =~ s(\015\012){\n}g; # Turn ASCII CRLF into native newline.
-  $file =~ s(\015)    {\n}g; # Turn ASCII CR   into native newline.
+  $file =~ s(\015\012?|\012){\n}g; # Turn ASCII CRLF into native newline.
 
   return [split /\n/, $file];
 }
