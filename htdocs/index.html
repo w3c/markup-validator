@@ -1,4 +1,5 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 
 <head>
@@ -33,19 +34,11 @@
   </p>
 
   <p>
-    To use the <a
-    href="http://www.w3.org/TR/REC-html40/">W3C HTML 4.0 Recommendation</a>,
-    start your document with one of the following doctype declarations:
+    You can also check your <a
+    href="http://www.w3.org/Style/css/">Cascading Style Sheets</a> using
+    W3C's <a
+    href="http://jigsaw.w3.org/css-validator/">CSS Validation Service</a>.
   </p>
-
-  <pre>
-    &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
-            "http://www.w3.org/TR/REC-html40/strict.dtd"&gt;
-    &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
-            "http://www.w3.org/TR/REC-html40/loose.dtd"&gt;
-    &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"
-            "http://www.w3.org/TR/REC-html40/frameset.dtd"&gt;
-  </pre>
 
   <hr>
   <h2><a name="byURI">Validate Documents by URI</a></h2>
@@ -55,20 +48,46 @@
   </p>
 
   <form method=GET action="/check">
-    Location: <input name="uri" size=50><br>
-    <input name="weblint" type=checkbox value="">Include <a
-    href="http://www.cre.canon.co.uk/~neilb/weblint/">Weblint</a>
-    results
-    <input name="pw" type=checkbox value="">run Weblint
-    in "pedantic" mode<br>
-    <input name="ss" type=checkbox value="">Show source input
-    <input name="outline" type=checkbox value="">Show an outline of this
-    document<br>
-    <input name="sp" type=checkbox value="">Show parse tree
-    <input name="noatt" type=checkbox value="">don't show
-    attributes in the parse tree<br>
-    <input type="submit" value="Submit this URI for validation">
-    <input type="reset" value="Reset this form">
+    Location: <input name="uri" size=50>
+    <table cellpadding=0 cellspacing=0>
+    <tr>
+      <td>
+        <input name="weblint" type=checkbox value=""> Include <a
+        href="http://www.cre.canon.co.uk/~neilb/weblint/">Weblint</a>
+        results
+      </td>
+      <td>
+        <input name="pw" type=checkbox value=""> run Weblint
+        in "pedantic" mode
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <input name="ss" type=checkbox value=""> Show source input
+      </td>
+      <td>
+        <input name="outline" type=checkbox value=""> Show an outline of this
+        document<br>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <input name="sp" type=checkbox value=""> Show parse tree
+      </td>
+      <td>
+        <input name="noatt" type=checkbox value=""> exclude
+        attributes from the parse tree<br>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <input type="submit" value="Validate this URI">
+      </td>
+      <td>
+        <input type="reset" value="Reset this form">
+      </td>
+    </tr>
+    </table>
   </form>
 
   <hr>
@@ -137,7 +156,7 @@
      src="http://validator.w3.org/images/vh40.gif" height=31 width=88
      align=right border=0 alt="Valid HTML 4.0!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</A><br>
-     $Date: 1998-12-16 11:44:47 $
+     $Date: 1999-01-28 23:28:05 $
 </address>
 
 </body>
