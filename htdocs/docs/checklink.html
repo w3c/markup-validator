@@ -1,0 +1,196 @@
+<!--#set var="revision" value="\$Id: checklink.html,v 1.1 2002-10-22 21:30:47 ville Exp $"
+--><!--#set var="date" value="\$Date: 2002-10-22 21:30:47 $"
+--><!--#set var="title" value="W3C Link Checker documentation"
+--><!--#set var="relroot" value="../"
+--><!--#include virtual="../header.html" -->
+
+    <h1 id="skip">W3C Link Checker documentation</h1>
+
+    <ul>
+      <li><a href="#about">About this service</a></li>
+      <li><a href="#what">What it does</a></li>
+      <li><a href="#online">Use it online</a></li>
+      <li><a href="#install">Install it locally</a></li>
+      <li><a href="#csb">Comments, suggestions and bugs</a></li>
+    </ul>
+
+    <h2><a name="about" id="about">About this service</a></h2>
+
+    <p>
+      In order to check the validity of the technical reports that W3C
+      publishes, the Systems Team has developed a link checker.
+    </p>
+
+    <p>
+      A first version was developed in August 1998 by
+      <a href="http://www.w3.org/People/Renaud/">Renaud Bruyeron</a>.
+      Since it was lacking some functionalities,
+      <a href="http://www.w3.org/People/Hugo/">Hugo Haas</a>
+      rewrote it more or less from scratch in November 1999.
+    </p>
+
+    <p>
+      The source code is available publicly under the
+      <a href="http://www.w3.org/Consortium/Legal/copyright-software">W3C IPR
+      software notice</a> from
+      <a href="http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/checklink.pl">CVS</a>.
+    </p>
+
+    <h2><a name="what" id="what">What it does</a></h2>
+
+    <p>
+      The link checker reads an HTML or XHTML document and extracts a list
+      of anchors and links.
+    </p>
+
+    <p>
+      It checks that no anchor is defined twice.
+    </p>
+
+    <p>
+      It then checks that all the links are dereferenceable, including
+      the fragments. It warns about HTTP redirects, including directory
+      redirects.
+    </p>
+
+    <p>
+      It can check recursively a part of a Web site.
+    </p>
+
+    <p>
+      There is a command-line version and a CGI version. They both
+      support HTTP basic authentication. This is achieved in the CGI version
+      by passing through the authorization information from the user browser
+      to the site tested.
+    </p>
+
+    <p>
+      The current version has proven to be stable. It could however be
+      improved:
+    </p>
+
+    <ul id="todo">
+      <li>
+	Currently, the URIs are extracted from a defined set of
+	elements and attributes, whereas the right thing to do would be to
+	parse the DTD and get the list elements and attributes to extract from
+	from the DTD.
+      </li>
+      <li>
+	The program doesn't follow the
+	<a href="http://www.robotstxt.org/">Robot Exclusion Standard</a>.
+      </li>
+      <li>
+	HTTPS could be supported without much code change.
+      </li>
+      <li>
+	It would be cool to show the source where the error like the HTML
+	validator does instead of just giving the line.
+      </li>
+      <li>
+	The link checker should do a GET request when the server replies
+	501 to a HEAD request.
+      </li>
+      <li>
+	A <code>Referer</code> header should be sent out.
+      </li>
+      <li>
+	Use an HTTP/1.1 library (such as the
+	<a href="http://www.w3.org/Jigsaw/">Jigsaw</a> client library)
+        for efficiency reasons.
+      </li>
+      <li>
+        Add XML and <a href="http://www.w3.org/XML/Linking">XLink</a> support.
+      </li>
+      <li>
+        Produce a report in <a href="http://www.w3.org/RDF/">RDF</a>.
+      </li>
+      <li>
+	Post annotations to the
+	<a href="http://www.w3.org/2001/Annotea/">Annotea</a>: when
+	the document was checked, tag links that are broken, etc.
+      </li>
+      <li>
+	Display an error when both the name and id attributes are used and
+	their values are different.
+      </li>
+      <li>
+	Probably other things that I haven't thought about.
+      </li>
+    </ul>
+
+    <p>
+      If you are interested in making the link checker understand XML,
+      please <a href="mailto:hugo@w3.org">contact me</a>.
+    </p>
+
+    <h2><a name="online" id="online">Use it online</a></h2>
+
+    <p>
+      There is an
+      <a href="<!--#echo var="relroot" -->checklink">online version</a>
+      of the link checker.
+    </p>
+
+    <p>
+      The number of documents that can be checked recursively is limited
+      and there is a delay between each document checked to avoid abuses.
+    </p>
+
+    <h2><a name="install" id="install">Install it locally</a></h2>
+
+    <p>
+      The link checker is written in Perl. It is one single file, but it
+      requires some CPAN modules.
+    </p>
+
+    <p>In order to install it:</p>
+
+    <ol>
+      <li>
+	Install <a href="http://www.perl.com/">Perl</a>.
+      </li>
+      <li>
+	You will need the following <a href="http://www.cpan.org/">CPAN</a>
+	distributions, as well as the distributions they possibly depend on.
+	Depending on your Perl version, you might already have some of
+	these installed.  For an introduction to installing Perl modules,
+	see <a href="http://www.cpan.org/misc/cpan-faq.html#How_install_Perl_modules">The CPAN FAQ</a>.
+	<ul>
+	  <li><a href="http://search.cpan.org/dist/libwww-perl/">libwww-perl</a></li>
+	  <li><a href="http://search.cpan.org/dist/HTML-Parser/">HTML-Parser</a> (version 3.00 or newer)</li>
+	  <li><a href="http://search.cpan.org/dist/CGI.pm/">CGI.pm</a></li>
+	  <li><a href="http://search.cpan.org/dist/URI/">URI</a></li>
+	  <li><a href="http://search.cpan.org/dist/Time-HiRes/">Time-HiRes</a></li>
+	</ul>
+      </li>
+      <li>
+	Download the link checker from
+	<a href="http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/checklink.pl">CVS</a>.
+      </li>
+    </ol>
+
+    <p>
+      Calling <code>checklink.pl</code> without any arguments runs the
+      CGI version, and running <code>checklink.pl --help</code> shows how to
+      use the command-line version.
+    </p>
+
+    <p>
+      If you want to enable the authentication capabilities with Apache,
+      have a look at
+      <a href="http://lists.w3.org/Archives/Public/www-validator/1999JulSep/0140.html">Steven Drake's hack</a>.
+    </p>
+
+    <h2><a name="csb" id="csb">Comments, suggestions and bugs</a></h2>
+
+    <p>
+      Please send comments, suggestions and bugs about the link checker
+      to the <a href="mailto:www-validator@w3.org?subject=checklink%3A%20">www-validator mailing list</a>
+      (<a href="http://lists.w3.org/Archives/Public/www-validator/">archives</a>),
+      with 'checklink' in the subject.
+    </p>
+
+<!--#include virtual="../footer.html" -->
+  </body>
+</html>
