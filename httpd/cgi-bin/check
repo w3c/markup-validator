@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.351 2004-11-06 11:46:44 ville Exp $
+# $Id: check,v 1.352 2004-11-12 07:43:02 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -227,7 +227,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.351 $;
+  $VERSION    =  q$Revision: 1.352 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1151,7 +1151,11 @@ sub http_error {
   my $uri = &ent(shift);
   my $code = &ent(shift);
   my $message = &ent(shift);
-
+  my $suggestion = 'Please make sure you have entered the URL correctly.';
+  if ($code eq "500")
+  { 
+    $suggestion = $suggestion.'If you made recent changes to your domain name (DNS) configuration, you may also want to <a href="http://www.squish.net/dnscheck/">check that your domain records are correct, or ask your hosting company to do so.'
+  }
   return <<"EOF";
   <p>
     I got the following unexpected response when trying to
@@ -1163,7 +1167,7 @@ sub http_error {
   </blockquote>
 
   <p>
-    Please make sure you have entered the URL correctly.
+    $suggestion
   </p>
 
 EOF
