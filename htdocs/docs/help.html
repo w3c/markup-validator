@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: help.html,v 1.12.2.4 2003-07-28 07:34:11 ot Exp $"
---><!--#set var="date" value="\$Date: 2003-07-28 07:34:11 $"
+<!--#set var="revision" value="\$Id: help.html,v 1.12.2.5 2003-07-28 08:37:39 ot Exp $"
+--><!--#set var="date" value="\$Date: 2003-07-28 08:37:39 $"
 --><!--#set var="title" value="Help for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -249,10 +249,23 @@
 a character encoding</q></h4>
 
 <p>An HTML document should be served along with its character encoding.</p>
-<p>WDG has some good documentation on 
+
+<p> Specifying a character encoding is normally done in the web server
+      configuration file or administration program. The <a
+        href="http://www.w3.org/"><abbr
+          title="World Wide Web Consortium">W3C</abbr></a> <a
+        href="http://www.w3.org/International/"><abbr
+          title="Internationalization">I18N</abbr> Activity</a> has collected
+        <a href="http://www.w3.org/International/O-HTTP-charset"
+           title="A Few Tips On How To Specify The Character Encoding">a few
+          tips on how to do this</a> in popular web server implementations.
+</p>
+<p>WDG also has some good documentation on 
 <a href="http://www.htmlhelp.com/tools/validator/charset.html">using
 character encodings</a> that will help you fix your document or the way it is served
 by adding the proper character encoding information.</p>
+
+
 
 <h4 id="faq-ampersand">The validator complains about "&amp;" in my URLs!</h4>
 <p>Most probably, you should read the <a 
