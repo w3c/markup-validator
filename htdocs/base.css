@@ -1,10 +1,10 @@
 /*
-   Base Style Sheet for the W3C MarkUp Validation Service.
+   Base Style Sheet for the W3C Markup Validation Service.
 
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.6 2003-01-04 02:59:08 ot Exp $
+   $Id: base.css,v 1.26.2.7 2003-02-24 23:14:27 ville Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */

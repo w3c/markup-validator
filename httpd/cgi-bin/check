@@ -1,7 +1,7 @@
 #!/usr/bin/perl -T
 #
-# W3C MarkUp Validation Service
-# A CGI script to retrieve and validate a MarkUp file
+# W3C Markup Validation Service
+# A CGI script to retrieve and validate a markup file
 #
 # Copyright 1995-2002 Gerald Oskoboiny <gerald@w3.org>
 # for additional contributors, see http://dev.w3.org/cvsweb/validator/
@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.26 2003-02-05 20:18:54 ville Exp $
+# $Id: check,v 1.305.2.27 2003-02-24 23:14:30 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.26 $;
+  $VERSION    =  q$Revision: 1.305.2.27 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -166,7 +166,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-02-05 20:18:54 $,
+                              Date => q$Date: 2003-02-24 23:14:30 $,
                              });
 
 #
