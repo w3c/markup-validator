@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.76 2003-08-23 19:04:19 ville Exp $
+# $Id: check,v 1.305.2.77 2003-08-23 19:27:54 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.76 $;
+  $VERSION    =  q$Revision: 1.305.2.77 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-08-23 19:04:19 $,
+                              Date => q$Date: 2003-08-23 19:27:54 $,
                              });
 
 #
@@ -3145,6 +3145,7 @@ sub popup_doctype {
                                     'XHTML 1.0 Strict',
                                     'XHTML 1.0 Transitional',
                                     'XHTML 1.0 Frameset',
+                                    'ISO/IEC 15445:2000 (ISO-HTML)',
                                     'HTML 4.01 Strict',
                                     'HTML 4.01 Transitional',
                                     'HTML 4.01 Frameset',
