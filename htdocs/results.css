@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.5 2002-12-03 06:53:24 link Exp $ */
+/* $Id: results.css,v 1.13.2.6 2002-12-04 10:39:53 link Exp $ */
 
 .markup {
   color: red;
@@ -15,6 +15,13 @@
 fieldset {
   color: black;
   background-color: #eeeeee;
+}
+
+fieldset legend {
+  background-color: #eee;
+  border-right: 1px solid grey;
+  border-bottom: 1px solid grey;
+  font-weight: bold;
 }
 
 ul#Warnings {
