@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.65 2002-08-17 14:33:47 link Exp $
+# $Id: check,v 1.200.2.66 2002-08-17 14:35:56 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.200.2.65 $;
+  $VERSION    =  q$Revision: 1.200.2.66 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-17 14:33:47 $,
+			      Date => q$Date: 2002-08-17 14:35:56 $,
 			     });
 
 #
@@ -1575,12 +1575,13 @@ sub report_valid {
       that validates. Here is the HTML you could use to add this icon
       to your Web page:
     </p>
-    <pre>
+    <code>
     &lt;p&gt;
       &lt;a href="$CFG->{'Home Page'}check/referer"&gt;&lt;img$gifborder
           src="$image_uri"
           alt="$alttext"$gifhw$xhtmlendtag&gt;&lt;/a&gt;
-    &lt;/p&gt;</pre>
+    &lt;/p&gt;
+    </code>
     <p>
       If you like, you can download a copy of this image (in <a
       href="${image_uri}.png">PNG</a> or <a href="${image_uri}.gif">GIF</a>
@@ -1651,10 +1652,9 @@ sub report_valid {
   <p>
     If you would like to create a link to <em>this</em> page (i.e., this
     validation result) to make it easier to re-validate this page in the
-    future or to allow others to validate your page, the URI is:
-  </p>
-  <p><code><a href="$thispage">$thispage</a></code></p>
-  <p>(Or, you can just add the current page to your bookmarks or hotlist.)</p>
+    future or to allow others to validate your page, the URI is
+    <a href="$thispage">$thispage</a> (or you can just add the current page to
+    your bookmarks or hotlist.)</p>
 EOHD
   }
 }
