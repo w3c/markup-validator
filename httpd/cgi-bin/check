@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.105 2001-05-27 11:36:30 link Exp $
+# $Id: check,v 1.106 2001-05-27 11:47:51 link Exp $
 
 #
 # We need Perl 5.004.
@@ -56,7 +56,6 @@ my $type_db   = $html_path . 'config/type.cfg';
 my $dtds_db   = $html_path . 'config/doctypes.cfg';
 my $sgmlstuff = $html_path . 'sgml-lib';
 my $sgmldecl  = $sgmlstuff . '/REC-html401-19991224/HTML4.decl';
-my $xhtmldecl = $sgmlstuff . '/REC-xhtml1-20000126/xhtml1.dcl';
 my $xmldecl   = $sgmlstuff . '/sp-1.3/pubtext/xml.dcl';
 my $temp      = "/tmp/validate.$$"; # @@ Use POSIX/IO::File tmpfiles instead!
 
@@ -75,9 +74,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.105 $;
+$VERSION    =  q$Revision: 1.106 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-05-27 11:36:30 $;
+$DATE       =  q$Date: 2001-05-27 11:47:51 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -360,7 +359,7 @@ print(' ' x 4, q(<li>Content length: ), $File->{Size},     qq(</li>\n))
 
 
 my $xmlflags = '';
-my $decl     = '';
+my $decl     = $xmldecl;
 my $catalog  = $sgmlstuff . '/catalog';
 my $path     = $sgmlstuff;
 
@@ -372,12 +371,10 @@ if ($File->{Type} eq 'xhtml') {
   if ( $guessed_doctype != 0 ) {	# if no doctype, don't validate
     $xmlflags            .= '-wno-valid ';
   }
-  $decl                  = $xhtmldecl;
 } elsif ($File->{Type} eq 'mathml') {
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'XML';
   $xmlflags              = '-wxml ';
-  $decl                  = $xmldecl;
 } elsif ($File->{Type} eq 'xml' or $guessed_doctype == 2) {
   # no doctype, with xmlns attr on 1st element
   $File->{Type} = 'xml'; # @@ probably a better way to do this
@@ -386,7 +383,6 @@ if ($File->{Type} eq 'xhtml') {
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'XML';
   $xmlflags              = '-wxml -wno-valid ';
-  $decl                  = $xmldecl;
 } else { # must be HTML (for now)
   $decl = $sgmldecl;
 }
