@@ -1,411 +1,786 @@
-#!/usr/local/bin/perl
+#! /usr/bin/perl -w
 #
-# Link Checker
-# Renaud Bruyeron, September 1998
+# W3C Link Checker
+# by Hugo Haas
+# (c) 1999 World Wide Web Consortium
+# based on Renaud Bruyeron's checklin.pl
 #
-# requires libwww-perl
-# and LWP::Parallel::UserAgent
-# and HTML::Parser
-# and URI::URL
+# $Id: checklink.pl,v 2.1 1999-11-24 22:04:35 hugo Exp $
+#
+# This program is licensed under the W3C License.
 
-use strict;
-$|++;
+package W3C::CheckLink;
+require HTML::Parser;
+@W3C::CheckLink::ISA = qw(HTML::Parser);
+package W3C::UserAgent;
+require LWP::UserAgent;
+@W3C::UserAgent::ISA = qw(LWP::UserAgent);
 
-package ParseLink;
-use HTML::Parser;
-use vars qw(@ISA);
-@ISA = qw(HTML::Parser);
-sub new_line {
-    my $self=shift;
-    $self->{Line}++;
-}
-# called by HTML::Parser::parse
-# overriden to count lines
-# I looked at getting text from links for the output
-# but I don't see why it would be of interest
-# plus, need to remove markup within <a></a>
-# probably not worth it
-sub start {
-    my $self=shift;
-    my ($tag,$attr)=@_;
-    my $link;
-    $link=$attr->{href} if $tag eq "a";
-    $link=$attr->{src} if $tag eq "img";
-    if (defined $link){
-	# recording the line number for that particular link
-	$self->{Links}{$link}{$self->{Line}+1}++;
+# Autoflush
+$| = 1;
+
+# Version info
+my $PROGRAM = 'W3C checklink';
+my $VERSION = '$Revision: 2.1 $ (c) 1999 W3C';
+
+# State of the program
+my $_cl;
+my $_quiet = 0;
+my $_summary = 0;
+my $_verbose = 0;
+my $_progress = 0;
+my $_html = 0;
+my $_timeout = 60;
+my $_redirects = 1;
+my $_user;
+my $_password;
+my $query;
+
+if ($#ARGV >= 0) {
+    $_cl = 1;
+# Parse command line
+    my @uris = &parse_arguments();
+    if ($_user && (! $_password)) {
+        &ask_password();
     }
-}
-
-package UserAgent;
-use LWP::Parallel::UserAgent;
-use vars qw(@ISA);
-@ISA = qw(LWP::Parallel::UserAgent);
-# function overload to handle 301s and build
-# redirect chain
-# it now handles 401s too
-# The password comes from the ENV variable HTTP_AUTHORIZATION
-# passed down to CGIs by Apache.
-# Apache needs to be compiled with -DSECURITY_HOLE_PASS_AUTHORIZATION
-# I make sure the passwod is not aired out of w3.org
-# See in the function checklink how I get the
-# HTTP_AUTHORIZATION header
-sub on_return {
-    my $self = shift;
-    my ($request,$response,$content) = @_;
-    if($self->{DoAuth}){
-	if($response->code == 301 || $response->code == 302){
-	    $self->{URL}{Redirect}{$request->url} = $response->headers->header('Location');
-	    unless(defined $self->{URL}{Registered}{$response->headers->header('Location')}){
-		$self->register(HTTP::Request->new(HEAD => $response->headers->header('Location')),\&callback_check,undef,0);
-		$self->{URL}{Registered}{$response->headers->header('Location')}="True";	    
-	    }
-	}
-	if($response->code == 401 && !defined($self->{Auth}{$response->request->url})){
-	    if($response->request->url->netloc =~ /\.w3\.org$/){
-		# we got a 401, let's create a new request object
-		my $newreq = HTTP::Request->new(HEAD => $response->request->url);
-		# send the Authorization header as is (we never deal with passwords)
-		$newreq->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
-		# make sure we don't loop if the password fails
-		$self->{Auth}{$response->request->url} = 1;
-		$self->register($newreq,\&callback_check,undef,0);
-	    }	    
-	}
+    foreach $uri (@uris) {
+	if (! $_summary) {
+            printf("%s %s\n", $PROGRAM ,$VERSION);
+        } else {
+            $_verbose = 0;
+            $_progress = 0;
+        }
+        $uri = urize($uri);
+        &check_uri($uri);
     }
-}
-
-use CGI;
-
-###############
-# Global Variables
-
-my $VERSION= '$Id: checklink.pl,v 1.30 2000-01-13 17:32:17 hugo Exp $ ';
-my $CVSINFO= 'http://dev.w3.org/cgi-bin/cvsweb/validator/httpd/cgi-bin/checklink.pl';
-my $CVSSERVER= 'http://dev.w3.org/';
-my %ALLOWED_SCHEMES = ( "http" => 1 );
-my %SCHEMES = (); # for report
-my %URL = ();
-my %COLORS = ( 200 => '', 300 => ' BGCOLOR="magenta"', 301 => ' BGCOLOR="yellow"', 302 => ' BGCOLOR="yellow"', 400 => ' BGCOLOR="red"', 404 => ' BGCOLOR="red"' , 403 => ' BGCOLOR="red"' , 401 => ' BGCOLOR="aqua"' , 407 => ' BGCOLOR="aqua"' , 500 => ' BGCOLOR="red"');
-my %HTTP_CODES = ( 200 => 'ok' , 
-		  201 => '201',
-		  300 => 'Multiple Choice' ,
-		  301 => 'redirect' , 
-		  302 => 'redirect' , 
-		  400 => 'Bad Request',
-		  401 => 'unauthorized' , 
-		  403 => 'forbidden',
-		  404 => 'not found' ,
-		  405 => 'Method not allowed', 
-		  407 => 'Proxy Authentication Required',
-		  408 => 'Request Timeout',
-		  415 => 'Unsupported Media Type',
-		  500 => 'Internal Server Error',
-		  501 => 'Not Implemented',
-		  503 => 'Service Unavailable');
-my %TODO = ( 200 => 'nothing !',
-	     300 => 'it usually means that there is a typo in a link that triggers <strong>mod_speling</strong> action',
-	     301 => 'usually nothing, unless the end point of the redirect is broken (in which case, the <B>Code</B> column is RED)',
-	     302 => 'usually nothing, unless the end point of the redirect is broken (in which case, the <B>Code</B> column is RED)',
-	     400 => 'Usually the sign of a malformed URL that cannot be parsed by the server',
-	     401 => 'The link is not public. The <B>Extra</B> column gives the Realm',
-	     403 => 'The link is forbidden ! This needs fixing. Usual suspect: a missing Overview.html or index.html',
-	     404 => 'The link is broken. Fix it <B>NOW</B>',
-	     405 => 'The server does not allow HEAD requests. How liberal. Go ask the guys who run this server why.',
-	     407 => 'The link is a proxy, but requires Authentication',
-	     408 => 'The request timed out',
-	     415 => 'The media type is not supported (this should not happen on a HEAD request)',
-	     500 => 'The server failed. It is a server side problem',
-	     501 => 'HEAD is not implemented on this server...What kind of server is that ?',
-	     503 => 'The server cannot service the request, for some unknown reason');
-my $VERBOSE = 0;
-my $CGI = 0;
-my $p = ParseLink->new(); # we want the parser to be global, so we can call it from callback_parse
-
-###############################
-
-if ($#ARGV == 0){
-    $VERBOSE = 1;
-    &checklinks($ARGV[0]);
 } else {
-    $CGI = 1;
-    my $query = new CGI;
-    &doit($query);
-}
- 
-sub doit {
-    my $q=shift;
-    
-    if(defined $q->param('url')){
-	&checklinks($q);
+    use CGI;
+    $query = new CGI;
+    $_cl = 0;
+    $_progress = 0;
+    my $uri;
+    if ($query->param('uri')) {
+        $uri = $query->param('uri');
     } else {
-	&html_header($q);
-	print "<form action=\"".$q->self_url()."\" method=\"get\">";
-	print "Enter a URL ",$q->textfield(-name=>'url',-size=>'50'),$q->br;
-	print $q->submit('','Check the Links !');
-	print $q->endform;
+        &print_form($query);
     }
-    print $q->hr,$q->i($VERSION),$q->br;
-    print $q->a({href => $CVSINFO},'Version Information')," available from the ";
-    print $q->a({href => $CVSSERVER},'W3C public CVS server');
-    print $q->end_html;
+    if ($uri =~ m/^file:/) {
+        &file_uri($uri);
+    } elsif (!($uri =~ m/:/)) {
+        $uri = 'http://'.$uri;
+    }
+    &check_uri($uri);
 }
 
-
+###############################################################################
 
 ################################
+# Command line and usage stuff #
+################################
 
-sub callback_parse {
-    my ($content,$response,$protocol)=@_;
-
-    if(length $content){
-	print "Fetching content from '", $response->request->url,"': ", length($content), " bytes, code ",$response->code,"\n" if($VERBOSE);
-	# adding content
-	$response->add_content($content);
-	# waiting for rest of it
-	return length $content;
+sub parse_arguments() {
+    my @uris;
+    my $uris = 0;
+    while (@ARGV) {
+        $_ = shift(@ARGV);
+        if ($uris) {
+            push(@uris, $_);
+        } elsif (m/^--$/) {
+            $uris = 1;
+        } elsif (m/^-[^-up]/) {
+            if (m/q/) {
+                $_quiet = 1;
+            }
+            if (m/s/) {
+                $_summary = 1;
+            }
+            if (m/b/) {
+                $_redirects = 0;
+            }
+            if (m/v/) {
+                $_verbose = 1;
+            }
+            if (m/i/) {
+                $_progress = 1;
+            }
+            if (m/h/) {
+                $_html = 1;
+            }
+        } elsif (m/^--help$/) {
+            &usage();
+        } elsif (m/^--quiet$/) {
+            $_quiet = 1;
+        } elsif (m/^--summary$/) {
+            $_summary = 1;
+        } elsif (m/^--broken$/) {
+            $_redirects = 0;
+        } elsif (m/^--verbose$/) {
+            $_verbose = 1;
+        } elsif (m/^--indicator$/) {
+            $_progress = 1;
+        } elsif (m/^--html$/) {
+            $_html = 1;
+        } elsif (m/^-u|--user$/) {
+            $_user = shift(@ARGV);
+        } elsif (m/^-p|--password$/) {
+            $_password = shift(@ARGV);
+        } elsif (m/^-t|--timeout$/) {
+            $_timeout = shift(@ARGV);
+        } else {
+            push(@uris, $_);
+        }
     }
-    # we got everything
-    print "Total length: ",length $response->content,"\n" if($VERBOSE);
-    # let's parse it
-    for(split /(\n)/,$response->content){
-	$p->parse($_);
-	$p->new_line() if $_ eq "\n";
-    }
-    $p->parse(undef);
-    # housekeeping
-    $response->content("");
-    # close connection
-    return $LWP::Parallel::UserAgent::C_ENDCON;
+    return(@uris);
 }
 
-sub callback_check {
-    my ($content,$response,$protocol)=@_;
-    if(length $content){
-	print "Checking '",$response->request->url,": ", length $content,"\n" if($VERBOSE);
-	return length $content;
-    }
-    return $UserAgent::C_ENDCON;
+sub usage() {
+    print STDERR "$PROGRAM $VERSION
+Usage: LinkCheck.pl <options> <uris>
+Options:
+	-s/--summary		Result summary only.
+	-b/--broken		Show only the broken links, not the redirects.
+	-q/--quiet		No output if no errors are found.
+	-v/--verbose		Verbose mode.
+	-i/--indicator		Show progress while parsing.
+	-u/--user username	Specify a username for authentication.
+	-p/--password password	Specify a password.
+	-t/--timeout value	Timeout for the HTTP requests.
+	-h/--html		HTML output.
+	--help			Show this message.
+";
+    exit(0);
 }
 
-sub checklinks {
-    my $q;
-    my $url;
-    $url=URI::URL->new(shift) if($VERBOSE);
-    if($CGI){
-	$q = shift;
-	$url = URI::URL->new($q->param('url'));
+sub ask_password() {
+    print(STDERR 'Enter your password: ');
+    system('stty -echo');
+    chomp($_password = <STDIN>);
+    system('stty echo');
+    print(STDERR "ok.\n");
+}
+
+###############################################################################
+
+###########################################
+# Transform foo into file://localhost/foo #
+###########################################
+
+sub urize() {
+    use URI;
+    $_ = $_[0];
+    my $base;
+    my $res = $_;
+    if (m/:/) {
+        $base = URI->new($_);
+    } elsif (m/^\//) {
+        $base = URI->new('file://localhost');
+    } else {
+        my $pwd;
+        chop($pwd = `pwd`);
+        $base = URI->new('file://localhost'.$pwd.'/');
     }
-    my $ua = new UserAgent;
-    my $request = HTTP::Request->new(GET => $url);
+    $u = URI->new($res);
+    $result = $u->abs($base);
+    return($result->as_string());
+}
 
-    $ua->max_hosts(10);
-    $ua->max_req(20);
-    $request->headers->user_agent('W3C/Checklink');
+#######################
+# Do the job on a URI #
+#######################
 
-    # prepare the request
-    # Request document and parse it as it arrives via callback
-    # Then get the UA ready for the requests in the foreach loop
-    if($CGI){
-	# if we got a Authorization header from the client, it means
-	# that the client is back at it after being prompted for
-	# a password: let's insert the header as is in the outgoing request
-	if($ENV{HTTP_AUTHORIZATION}){
-	    $request->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
-	}
+sub check_uri() {
+    my $uri = $_[0];
+    my $start;
+    if (! $_summary) {
+        $start = &get_timestamp();
+        printf("\nProcessing\t%s\n", $uri);
     }
-
-    $ua->register($request, \&callback_parse);
-    my $res = $ua->wait(10);
-    $ua->initialize;
-    $ua->{URL}= \%URL;
-    $ua->{DoAuth} = 1;
-
-    foreach my $r (map {$res->{$_}->response} keys %$res){
-	if ($r->is_success && $r->content_type =~ /text\/html/i){
-	    # if the request is a success
-	    # prepare HEAD requests for all the links in the document
-	    my $base = $r->base;
-	    for my $link (keys %{$p->{Links}}) {
-		my $abso = new URI::URL($link,$base);
-		$abso->frag(undef); # remove fragments
-		$SCHEMES{$abso->abs->scheme}++; # for report
-		for my $line (keys %{$p->{Links}{$link}}){
-		    $URL{$abso->abs}{$line}++; # save lines in structure indexed by abs path
-		}
-		next if($URL{Registered}{$abso->abs}); # next if already registered
-		# register HTTP request
-		my $request = HTTP::Request->new(HEAD => $abso->abs);
-		$ua->register($request,\&callback_check,undef,0) if($ALLOWED_SCHEMES{$abso->abs->scheme});
-		$URL{Registered}{$abso->abs}="True";
-		print $abso->abs,"\n" if($VERBOSE);
-	    }
-	    print "==============\n" if($VERBOSE);
-	    my $response = $ua->wait(10);
-	    &print_result($url,$response,$q);
-	} else {
-	    # error handling if error on fetching document to be checklink-ed
-	    # I need to add a command-line mode here
-	    if($r->code == 401){
-		if($CGI){
-		    $r->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
-		    my $realm = $1;
-		    my $resource = $r->request->url;
-		    my $authHeader = $r->headers->www_authenticate;
-		    my $authResponse = <<EOF
-Status: 401 Authorization Required
-WWW-Authenticate: $authHeader
-Connection: close
-Content-Type: text/html
-
-<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">
-<HTML><HEAD>
-<TITLE>401 Authorization Required</TITLE>
-</HEAD><BODY>
-<H1>Authorization Required</H1>
-<P>You need $realm access to $resource to perform Link Checking.
-<P>Return to the <a href="checklink.pl">Link Checker</A>.
-
-EOF
-    ;
-		    if(0){ # I keep the old code around...
-			&html_header($q);
-			print $q->h3($r->request->url);
-			print "<PRE>",$authResponse;
-			print "</PRE>\n";
-			print $q->h2('Authentication Required To Fetch '.$q->a({href=>$url},$url));
-			print $q->startform('POST',$q->url);
-			print $q->textfield(-name=>'url',-size=>'50',-value=>$url),$q->br;
-			print $q->textfield(-name=>'username',-size=>'10'),"Username for Realm ",$realm,$q->br;
-			print $q->password_field(-name=>'password',-size=>'10'),"Password",$q->br;
-			print $q->submit('Proceed');
-			print $q->endform;
-		    } else { # this makes the client browser prompt for a password
-			print $authResponse;
-		    }
-		} elsif($VERBOSE){
-		    print "Need authentication: ".$r->headers->www_authenticate,"\n";
-		}
-	    } else {
-		&html_header($q);
-		print $q->h2('Error '.$r->code." ".$r->content_type) if($CGI);
-	    }
-	}
+    # Get the document
+    my $response = &get_uri('GET', $uri);
+    if (! $response->is_success()) {
+        printf("Error: %d %s\n", $response->code(), $response->message());
+        if ($response->code() == 401) {
+            &authentication($response);
+        }
+        exit(-1);
+    }
+    my %redirects;
+    &record_redirects(\%redirects, $response->{Redirects});
+    # Parse the document
+    if (! ($response->header('Content-type') =~ m/text\/html/)) {
+        printf("Can't check link: Content-type is '%s'.\n",
+               $response->header('Content-type'));
+        return(-1);
+    }
+    my $base_uri = URI->new($response->base());
+    my $uri_uri = URI->new($uri);
+    my $absolute_base = $base_uri->abs($uri_uri);
+    my $p = &parse_document($absolute_base->as_string(), $response->content(), 1);
+    my $base = URI->new($p->{base});
+    # Check anchors
+    if (! $_summary) {
+        print("Checking anchors:\n");
+    }
+    my %errors;
+    foreach $anchor (keys %{$p->{Anchors}}) {
+        my @lines = keys %{$p->{Anchors}{$anchor}};
+        my $times = $#lines + 1;
+        if ($times > 1) {
+            $errors{$anchor} = 1;
+        }
+    }
+    if (! $_summary) {
+        print(" done.\n");
+    }
+    # Check links
+    my %links;
+    foreach $link (keys %{$p->{Links}}) {
+        my $link_uri = URI->new($link);
+        my $abs_link_uri = URI->new_abs($link_uri, $base);
+        foreach $lines (keys %{$p->{Links}{$link}}) {
+            my $canonical = URI->new($abs_link_uri->canonical());
+            my $url = $canonical->scheme().':'.$canonical->opaque();
+            my $fragment = $canonical->fragment() ? $canonical->fragment() : $url;
+            $links{$url}{$fragment}{$lines} = 1;
+        }
+    }
+    for $url (keys %links) {
+        if (!defined($links{$url}{$url})) {
+            $links{$url}{$url}{-1} = 1;
+        }
+    }
+    my %results;
+    my %broken;
+    foreach $u (keys %links) {
+        # Don't check mailto: URI's
+        next if ($u =~ m/^mailto:/);
+        if (! $_summary) {
+            printf("Checking link %s\n", $u);
+        }
+        &check_validity($uri, $u, \%links, \%results, \%redirects, $p->{Anchors});
+        if ($_verbose) {
+            printf("\tReturn code: %s\n", $results{$u}{$u}{code});
+        }
+        if ($results{$u}{$u}{success}) {
+            foreach $fragment (keys %{$links{$u}}) {
+                next if ($fragment eq $u);
+                if ($_versbose) {
+                    printf("\t\t%s %s - Lines: %s\n",
+                           $fragment,
+                           ($results{$u}{$fragment}?'OK':'Not found'),
+                           join(',', keys %{$links{$u}{$fragment}}));
+                }
+                if ($results{$u}{$fragment} == 0) {
+                    $broken{$u}{$fragment} = 1;
+                }
+            }
+        } else {
+            $broken{$u}{$u} = 1;
+            foreach $fragment (keys %{$links{$u}}) {
+                $broken{$u}{$fragment} = 1;
+            }
+        }
+    }
+    if (! $_summary) {
+        my $stop = &get_timestamp();
+        printf("Processed in %ss.\n", &time_diff($start, $stop));
+    }
+    # Display results
+    if ($_html) {
+        &html_header($uri);
+    } else {
+        print "\n";
+    }
+    &anchors_summary($p->{Anchors}, \%errors);
+    &links_summary(\%links, \%results, \%broken, \%redirects);
+    if ($_html) {
+        &html_footer();
     }
 }
 
-# this is quite ugly, but I have both command-line and CGI modes here
-# I should add different levels of verbosity I guess
-# currently, CGI is more verbose than command-line (command-line
-# does not show 200s)
-# sorting by something is tricky. I'll look at it later. A nasty map-sort-map should do it
-sub print_result{
-    my $url = shift;
-    my $response = shift;
-    my $q = shift;
+############################
+# Get the content of a URI #
+############################
 
-    # this is to handle 401s and see what's behind them
-    # I need to watch this carefully, I might be wrong about these tests
-    # we also generate sumary for the legend
-    foreach my $resp (map {$response->{$_}->response} keys %$response){
-	$URL{Responses}{$resp->request->url} = $resp unless($URL{Responses}{$resp->request->url} && $resp->code == 200);
-	$URL{Codes}{$resp->request->url} = $resp->code unless($URL{Codes}{$resp->request->url} && $resp->code == 401);
-	$URL{Legend}{$resp->code}++ if(keys %{$URL{$resp->request->url}});
-    }
-    # first a sumary, which also acts as a legend
-    if($CGI){
-	&html_header($q);
-	print $q->h2('Summary and Legend');
-	print "<TABLE BORDER=\"1\"><TR ALIGN=\"center\"><TD>Return Code</TD><TD>Occurrences</TD><TD>Meaning and color</TD><TD>What to do</TD></TR>\n";
-	foreach(sort keys %{$URL{Legend}}){
-	    print "<TR ALIGN=\"center\"><TD>$_</TD><TD>".$URL{Legend}{$_}."</TD><TD".$COLORS{$_}.">".$HTTP_CODES{$_}."</TD><TD>".$TODO{$_}."</TD></TR>\n";
-	}
-	print "</TABLE>\n";
+sub W3C::UserAgent::redirect_ok {
+    my ($self, $request) = @_;
+    
+    if (! $_summary) {
+        printf("\n%s %s ", $request->method(), $request->uri());
     }
 
-    # then the bulk of responses
-    print $q->h2('Detailed Results for '.$q->a({href=>$url},$url)) if($CGI);
-    print "<table border=\"1\"><TR ALIGN=\"center\"><TD>Lines</TD><TD>URI</TD><TD>Code</TD><TD>Extra</TD></TR>\n" if($CGI);
-    # loop that selects through all the responses to the HEADs to the links
-    # sorting can happen here
-    # currently, sorting alphabetically on the full URIs
-    foreach my $resp (map {$URL{Responses}{$_}} sort keys %{$URL{Responses}}){
-	# we pass links for which we don't have a line number
-	# (which means they are responses from 301/302 or 401 handling)
-	if(keys %{$URL{$resp->request->url}}){
-	    unless($resp->code eq "200"){
-		print "<TR><TD ALIGN=\"center\">" if ($CGI);
-		print join(", ",sort {$a <=> $b} keys %{$URL{$resp->request->url}});
-		if ($CGI){
-		    print "</TD><TD".$COLORS{$resp->code}.">";
-		    print "<B>".$q->a({href=>$resp->request->url},$resp->request->url)."</B>";
-		    if($URL{Codes}{$resp->request->url} == 301 || $URL{Codes}{$resp->request->url} == 302){
-			print $q->br.&recurse_redirect($resp->request->url,$q);
-		    } else {
-			print "</TD><TD ALIGN=\"center\"".$COLORS{$URL{Codes}{$resp->request->url}}.">".$HTTP_CODES{$URL{Codes}{$resp->request->url}}."</TD><TD>";
-		    }
-		}
-		print " ",$resp->request->url, ": ",$URL{Codes}{$resp->request->url}," " if($VERBOSE);
-		print $resp->headers->www_authenticate if($resp->code == 401);
-		print "</TD></TR>\n" if($CGI);
-		print "\n" if($VERBOSE);
-	    } else {
-		if($CGI){
-		    print "<TR><TD ALIGN=\"center\">".join(", ",sort keys %{$URL{$resp->request->url}})."</TD>";
-		    print "<TD>".$q->a({href=>$resp->request->url},$resp->request->url)."</TD>";
-		    print "<TD ALIGN=\"center\">ok</TD><TD></TD></TR>\n";
-		}
-	    }
-	}
-    }
-    print "</table>\n" if($CGI);
+    $self->{Redirects}{$self->{fetching}} = $request->uri();
+    $self->{fetching} = $request->uri();
+
+    return 0 if $request->method() eq "POST";
+    return 1;
 }
 
-# I'll add links to source later
-# actually, links to source should be for Team version only
-sub html_header {
-    my $q = shift;
-    print $q->header;
-    print "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">
+sub get_uri() {
+    my ($method, $uri) = @_;
+    my $start = &get_timestamp();
+    my $ua = new W3C::UserAgent;
+    $ua->timeout($_timeout);
+    $ua->agent($PROGRAM.' '.$VERSION);
+    $ua->{uri} = $uri;
+    $ua->{fetching} = $uri;
+    my $count = 0;
+    my $response;
+    if (! $_summary) {
+        printf("%s %s ", $method, $uri);
+    }
+    my $request = new HTTP::Request($method, $uri);
+    $response = $ua->request($request);
+    $response->{Redirects} = $ua->{Redirects};
+    my $stop = &get_timestamp();
+    if (! $_summary) {
+        printf(" fetched in %ss\n", &time_diff($start,$stop));
+    }
+    return $response;
+}
+
+####################
+# Parse a document #
+####################
+
+sub parse_document() {
+    my ($uri, $document, $links) = @_;
+
+    my $start;
+    my $p = W3C::CheckLink->new();
+    if (! $_summary) {
+        $start = &get_timestamp();
+        print("Parsing...\n");
+    }
+    $p->{base} = $uri;
+    $p->{Line} = 1;
+    if (!$_summary || $_progress) {
+        $p->{Total} = ($document =~ tr/\n//);
+    }
+    $p->{extract_links} = $links;
+    $p->parse($document);
+    if (! $_summary) {
+        my $stop = &get_timestamp();
+        if ($_progress) {
+            print "\r";
+        }
+        printf(" done (%d lines in %ss).\n",
+               $p->{Total},
+               &time_diff($start, $stop));
+    }
+    return $p;
+}
+
+#######################################
+# Count the number of lines in a file #
+#######################################
+
+sub W3C::CheckLink::new_line() {
+    my ($self, $string) = @_;
+    my $count = ($string =~ tr/\n//);
+    $self->{Line} = $self->{Line} + $count;
+    if ($_progress) {
+        printf("\r%4d%%", int($self->{Line}/$self->{Total}*100));
+    }
+}
+
+#######################################
+# start function used by HTML::Parser #
+#######################################
+
+sub W3C::CheckLink::start() {
+    my ($self, $tag, $attr, $text) = @_;
+    my $anchor;
+    # Links
+    if ($self->{extract_links}) {
+        my $link;
+        if ($tag eq 'a') {
+            $link = $attr->{href};
+            $anchor = $attr->{name};
+        } elsif ($tag eq 'img') {
+            $link = $attr->{src};
+        } elsif (($tag eq 'frame') || ($tag eq 'link')) {
+            $link = $attr->{href};
+        }
+        if (defined($link)) {
+            $self->{Links}{$link}{$self->{Line}}++;
+        }
+    # Just anchors
+    } else {
+        if ($tag eq 'a') {
+            $anchor = $attr->{name};
+        }
+    }
+    if (defined($anchor)) {
+        $self->{Anchors}{$anchor}{$self->{Line}}++;
+    }
+    # Line counting
+    if ($text =~ m/\n/) {
+        $self->new_line($text);
+    }
+}
+
+#####################################################
+# text and end functions for line counting purposes #
+#####################################################
+
+sub W3C::CheckLink::text() {
+    my ($self, $text) = @_;
+    if (!$_progress) {
+        return unless $self->{extract_links};
+    }
+    if ($text =~ /\n/) {
+        $self->new_line($text);
+    }
+}
+
+sub W3C::CheckLink::end() {
+    my $self = shift;
+    return unless $self->{extract_links};
+    shift;
+    my $text = shift;
+    $self->text($self, $text);
+}
+
+################################
+# Check the validity of a link #
+################################
+
+sub check_validity($, $, \%, \%, \%, \%) {
+    use HTTP::Status;
+    my ($testing, $uri, $links, $results, $redirects, $anchors) = @_;
+    # Checking file: URI's is not allowed with a CGI
+    if ($testing ne $uri) {
+        if ((! $_cl) && (!($testing =~ m/^file:/)) && ($uri =~ m/^file:/)) {
+            $results->{$uri}{$uri}{code} = $RC_BAD_REQUEST;
+            $results->{$uri}{$uri}{success} = 0;
+            $results->{$uri}{$uri}{message} = 'Error: \'file:\' URI not allowed';
+            if ($_verbose) {
+                printf("Error: %d %s\n",
+                       $results->{$uri}{$uri}{code},
+                       $results->{$uri}{$uri}{message});
+            }
+            return;
+        }
+    }
+    # Get the document with the appropriate method
+    my $method;
+    my @fragments = keys %{$links->{$uri}};
+    if ($testing eq $uri) {
+        $method = 'Already have';
+    } elsif ($#fragments == 0) {
+        $method = 'HEAD';
+    } else {
+        $method = 'GET';
+    }
+    my $response;
+    if ($testing eq $uri) {
+        # Mimic an HTTP::Response object
+        $results->{$uri}{$uri}{code} = 600;
+        $results->{$uri}{$uri}{success} = 1;
+    } else {
+        $response = &get_uri($method, $uri);
+        # Record the redirects
+        &record_redirects($redirects, $response->{Redirects});
+        # Parse the document if necessary and possible
+        $results->{$uri}{$uri}{code} = $response->code();
+        $results->{$uri}{$uri}{success} = $response->is_success();
+        if (! $results->{$uri}{$uri}{success}) {
+            $results->{$uri}{$uri}{message} = $response->message();
+            if ($_verbose) {
+                printf("Error: %d %s\n",
+                       $results->{$uri}{$uri}{code},
+                       $results->{$uri}{$uri}{message});
+            }
+            return;
+        }
+    }
+    if ($#fragments == 0) {
+        return;
+    }
+    my $p;
+    if ($testing ne $uri) {
+        if (!(($results->{$uri}{$uri}{type} = $response->header('Content-type')) =~ m/text\/html/i)) {
+            if ($_verbose) {
+                printf("Can't check content: Content-type is '%s'.\n",
+                       $response->header('Content-type'));
+            }
+            return;
+        }
+        $p = &parse_document($response->base(), $response->as_string(), 0);
+    } else {
+        $p->{Anchors} = $anchors;
+    }
+    # Check that the fragments exist
+    foreach $fragment (keys %{$links->{$uri}}) {
+        next if ($fragment eq $uri);
+        if (defined($p->{Anchors}{$fragment})
+            || &escape_match($fragment, $p->{Anchors})) {
+            $results->{$uri}{$fragment} = 1;
+        } else {
+            $results->{$uri}{$fragment} = 0;
+        }
+    }
+}
+
+sub escape_match($, \%) {
+    use URI::Escape;
+    my ($a, $hash) = (uri_unescape($_[0]), $_[1]);
+    foreach $b (keys %$hash) {
+        if ($a eq uri_unescape($b)) {
+            return(1);
+        }
+    }
+    return(0);
+}
+
+##########################
+# Ask for authentication #
+##########################
+
+sub authentication() {
+    my $r = $_[0];
+    $r->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
+    my $realm = $1;
+    if ($_cl) {
+        printf(STDERR "Authentication is required for %s.\n", $r->request->url);
+        printf(STDERR "The realm is %s.\n", $realm);
+        print(STDERR "Use the -u and -p options to specify a username and password.\n");
+    } else {
+    }
+}
+
+##################
+# Get statistics #
+##################
+
+sub get_timestamp() {
+    require 'sys/syscall.ph';
+    my $timestamp = pack('LL', ());
+    syscall(&SYS_gettimeofday, $timestamp, 0) != -1 or $timestamp = 0;
+    return($timestamp);
+}
+
+sub time_diff() {
+    my @start = unpack('LL', $_[0]);
+    my @stop = unpack('LL', $_[1]);
+    for ($start[1], $stop[1]) {
+        $_ /= 1_000_000;
+    }
+    return(sprintf("%.2f", ($stop[0]+$stop[1])-($start[0]+$start[1])));
+}
+
+########################
+# Handle the redirects #
+########################
+
+sub record_redirects(\%, \%) {
+    my ($redirects, $sub) = @_;
+    foreach $r (keys %$sub) {
+        $redirects->{$r} = $sub->{$r};
+    }
+}
+
+sub is_redirected($, %) {
+    my ($uri, %redirects) = @_;
+    return(defined($redirects{$uri}));
+}
+
+sub get_redirects($, %) {
+    my ($uri, %redirects) = @_;
+    my @history = ($uri);
+    my $origin = $uri;
+    my %seen;
+    while ($redirects{$uri}) {
+        $uri = $redirects{$uri};
+        push(@history, $uri);
+        last if ($uri eq $origin);
+    }
+    return(@history);
+}
+
+#####################
+# Print the results #
+#####################
+
+sub anchors_summary(\%, \%) {
+    my ($anchors, $errors) = @_;
+    # Number of anchors found.
+    if (! $_quiet) {
+        if ($_html) {
+            print('<p>');
+        }
+        my @anchors = keys %{$anchors};
+        printf("Found %d anchors.", $#anchors+1);
+        if ($_html) {
+            print('</p>');
+        }
+        print("\n");
+    }
+    # List of the duplicates, if any.
+    @errors = keys %{$errors};
+    return if ($#errors < 0);
+    if ($_html) {
+        print('<p>');
+    }
+    print('List of duplicate anchors:');
+    if ($_html) {
+        print("</p>\n<table border=\"1\">\n<tr><td><b>Anchors</b></td><td><b>Lines</b></td></tr>");
+    }
+    print("\n");
+    foreach $anchor (@errors) {
+        my $format;
+        if ($_html) {
+            $format = "<tr><td>%s</td><td>%s</td></tr>\n";
+        } else {
+            $format = "\t%s\tLines: %s\n";
+        }
+        printf($format, $anchor, join(', ', keys %{$anchors->{$anchor}}));
+    }
+    if ($_html) {
+        print("</table>\n");
+    }
+}
+
+sub links_summary(\%,\%,\%) {
+    my ($links, $results, $broken, $redirects) = @_;
+    if (! $_quiet) {
+        if ($_html) {
+            print("\n<hr>\n\n<p>");
+        }
+        my @links = keys %$links;
+        my $n_fragments = 0;
+        my $n_total = 0;
+        foreach $u (@links) {
+            my @fragments = keys %{$links->{$u}};
+            $n_fragments += $#fragments + 1;
+            foreach $f (@fragments) {
+                my @lines = keys %{$links->{$u}{$f}};
+                foreach $l (@lines) {
+                    $n_total += $links->{$u}{$f}{$l};
+                }
+            }
+        }
+        printf("Found %d locations for %d URI's (%d total).",
+               $#links+1,
+               $n_fragments,
+               $n_total);
+        if ($_html) {
+            print('</p>');
+        }
+        print("\n");
+    }
+    # List of the broken links
+    @urls = keys %{$broken};
+    return if ($#urls < 0);
+    if ($_html) {
+        print('<p>');
+    }
+    printf('List of broken %slinks:', $_redirects ? 'and redirected ' : '');
+    if ($_html) {
+        print("</p>\n<table border=\"1\">\n<tr><td><b>Location</b></td><td><b>Code</b></td><td><b>Fragment</b></td><td><b>Lines</b></td></tr>");
+    }
+    print("\n");
+    if ($_redirects) {
+        for $l (keys %$redirects) {
+            next unless (defined($results->{$l})
+                         && !defined($broken->{$l}));
+            push(@urls, $l);
+        }
+    }
+    foreach $u (@urls) {
+        my @fragments = keys %{$broken->{$u}};
+        my $n_fragments = $#fragments+1;
+        my $redirected = &is_redirected($u, %$redirects);
+        my $lines_list = defined($links->{$u}{$u}{-1}) ?
+            '' : join(', ', keys %{$links->{$u}{$u}});
+        if ($_html) {
+            printf("<tr><th rowspan=\"%d\">%s</th><th rowspan=\"%d\">%d</th><td>%s</td><td>%s</td></tr>\n",
+                   $n_fragments,
+                   $redirected ? join('<br>-&gt; ',
+                                      &get_redirects($u, %$redirects)) : $u,
+                   $n_fragments,
+                   $results->{$u}{$u}{code},
+                   '',
+                   $lines_list);
+        } else {
+            printf("%s\tLines: %s\tCode: %d\n",
+                   $redirected ? join("\n-> ",
+                                      &get_redirects($u, %$redirects)) : $u,
+                   $lines_list,
+                   $results->{$u}{$u}{code});
+        }
+        foreach $f (@fragments) {
+            next if ($f eq $u);
+            my $format;
+            if ($_html) {
+                $format = "<tr><td>%s</td><td>%s</td></tr>\n";
+            } else {
+                $format = "\t%s\tLines: %s\n";
+            }
+            printf($format,
+                   $f,
+                   join(', ', keys %{$links->{$u}{$f}}));
+        }
+    }
+    if ($_html) {
+        print("</table>\n");
+    }
+}
+
+###############################################################################
+
+##################
+# HTML interface #
+##################
+
+sub html_header() {
+    my $uri = HTML::Entities::encode($_[0]);
+    print "Content-type: text/html
+
+<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\">
 <html>
 <head>
-<title>W3C Link Ckecker: ".(defined($q->param('url'))?'Checking '.$q->param('url'):'W3C\'s Link Checker')."</title>
+<title>W3C Link Ckecker: $uri</title>
 <style type=\"text/css\">
-
-BODY {
-  font-family: sans-serif;
-  color: black;
-  background: white;
-}
-
-A:link, A:active {
-  color: #00E;
-  background: transparent;
-}
-
-A:visited {
-  color: #529;
-  background: transparent;
-}
-
-PRE {
-  font-family: monospace
-}
-
 </style>
 </head>
 <body>
+<h1>W3C Link Checker: $uri</h1>
 \n";
-    
-    print $q->a({href=>"http://www.w3.org"},$q->img({src=>"http://www.w3.org/Icons/w3c_home",alt=>"W3C",border=>"0"}));
-    print $q->h1('The W3C Link Checker');
-    print "<P>This tool lets you check the validity of the links in a URL. It was developped as an internal tool at W3C.</P>\n";
-    print "<P>Please go to the ".$q->a({href=>$q->url},"input form")." to check a new URL.</P>\n";
 }
 
-sub recurse_redirect {
-    my $url = shift;
-    my $q = shift;
-    my $rec = $URL{Redirect}{$URL{Redirect}{$url}}? "<BR>".&recurse_redirect($URL{Redirect}{$url},$q):"</TD><TD ALIGN=\"center\"".$COLORS{$URL{Codes}{$URL{Redirect}{$url}}}.">".$HTTP_CODES{$URL{Codes}{$URL{Redirect}{$url}}}."</TD><TD>";
-    return "-&gt; ".$q->a({href=>$URL{Redirect}{$url}},$URL{Redirect}{$url}).$rec;
+sub html_footer() {
+    print "
+<hr>
+<address>
+$PROGRAM $VERSION<br>
+Report bugs to <a href=\"hugo\@w3.org\">Hugo Haas</a>
+</address>
+</body>
+</html>
+";
+}
+
+sub file_uri() {
+    my $uri = $_[0];
+    &html_header($uri);
+    print "<h2>Forbidden</h2>
+<p>You cannot check such a URI (<code>$uri</code>).</p>
+";
+    &html_footer();
+    exit;
+}
+
+sub print_form() {
+    my ($q) = @_;
+    &html_header($VERSION);
+    print "<form action=\"".$q->self_url()."\" method=\"get\">
+<p>Enter the URI that you want to check:</p>
+<input type=\"text\" name=\"uri\">
+<input type=\"submit\" name=\"submit\" value=\"Check\">
+</form>
+";
+    &html_footer();
+    exit;
 }
