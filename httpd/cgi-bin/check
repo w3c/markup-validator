@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.301 2002-11-19 15:34:04 link Exp $
+# $Id: check,v 1.302 2002-11-19 16:19:23 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.301 $;
+  $VERSION    =  q$Revision: 1.302 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-19 15:34:04 $,
+                              Date => q$Date: 2002-11-19 16:19:23 $,
                              });
 
 #
@@ -1290,7 +1290,7 @@ sub truncate_line {
       for (1..$diff) {
         $end++ if ($end + 1 <= length $line);
       }
-    } elsif ($end == 80) { # Hit end of line, maybe grab more at beginning.
+    } elsif ($end == length $line) { # Hit end of line, maybe grab more at beginning.
       my $diff = 80 - $col;
       for (1..$diff) {
         $start-- if ($start - 1 >= 0);
@@ -1298,13 +1298,16 @@ sub truncate_line {
     }
   }
 
+  #
+  # Add elipsis at end if necessary.
+  unless ($end   == length $line) {substr $line, -3, 3, '...'};
+
   $col = $col - $start; # New offset is diff from $col to $start.
   $line = substr $line, $start, $end - $start; # Truncate.
 
   #
-  # Add elipsis at start and end as necessary.
+  # Add elipsis at start if necessary.
   unless ($start == 0)            {substr $line,  0, 3, '...'};
-  unless ($end   == length $line) {substr $line, -3, 3, '...'};
 
   return $line, $col;
 }
@@ -1364,6 +1367,7 @@ sub parse_errors ($$) {
       $err->{msg}  = $errors[5];
     } elsif ($err->{type} eq 'W') {
       &add_warning($File, "Line $err->{line}, column $err->{char}: $errors[5]");
+      $err->{msg}  = $errors[5];
     } else {
       $err->{type} = 'I';
       $err->{msg}  = $errors[4];
