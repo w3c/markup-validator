@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.2 2002-11-26 22:21:03 ville Exp $
+# $Id: check,v 1.305.2.3 2002-11-27 08:00:06 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.2 $;
+  $VERSION    =  q$Revision: 1.305.2.3 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-26 22:21:03 $,
+                              Date => q$Date: 2002-11-27 08:00:06 $,
                              });
 
 #
@@ -551,7 +551,7 @@ while (<$spout>) {
   push @{$File->{'DEBUG'}->{ESIS}}, $_;
   $elements_found++ if /^\(/;
 
-  if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
+  if (&is_xml($File)) {
     if (/^Axmlns() \w+ (.*)/ or /^Axmlns:([^ ]+) \w+ (.*)/) {
       if (not $File->{Namespace} and $elements_found == 0 and $1 eq "") {
         $File->{Namespace} = $2;
@@ -619,16 +619,16 @@ if ($File->{'Is Upload'}) {
 }
 
 
-if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
+if (&is_xml($File->{Type}) and $File->{Namespace}) {
   my $rns = &ent($File->{Namespace});
-  if ($File->{Type} eq 'xhtml' and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
+  if (&is_xhtml($File->{Type}) and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
     &add_warning($File, "Unknown namespace (&#171;<code>$rns</code>&#187;) for text/html document!");
-  } elsif ($File->{Type} eq 'svg' and $File->{Namespace} ne 'http://www.w3.org/2000/svg') {
+  } elsif (&is_svg($File->{Type}) and $File->{Namespace} ne 'http://www.w3.org/2000/svg') {
     &add_warning($File, "Unknown namespace (&#171;<code>$rns</code>&#187;) for SVG document!");
   }
-  if ($File->{Namespace} ne '') {
-    &add_table($File, 'Root Namespace', qq(<a href="$rns">$rns</a>));
-  }
+
+  &add_table($File, 'Root Namespace', qq(<a href="$rns">$rns</a>))
+    if $File->{Opt}->{Verbose};
 
   if (scalar keys %{$File->{Namespaces}} > 1) {
     my $namespaces = '<ul>';
@@ -637,8 +637,11 @@ if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
       $namespaces .= qq(\t<li><a href="$ns">$ns</a></li>\n)
           unless $_ eq $File->{Namespace}; # Don't repeat Root Namespace.
     }
-    &add_table($File, 'Other Namespaces', $namespaces . '</ul>');
+    &add_table($File, 'Other Namespaces', $namespaces . '</ul>')
+      if $File->{Opt}->{Verbose};
   }
+} else {
+  &add_warning($File, $File->{Namespace} . $File->{Type})
 }
 
 
@@ -2083,11 +2086,11 @@ sub uri_rejected {
 #
 # Utility subs to tell if type "is" something.
 sub is_xml    {shift =~ m(^[^+]+\+xml$)};
-sub is_svg    {shift =~ m(^svg)};
-sub is_smil   {shift =~ m(^smil)};
-sub is_html   {shift =~ m(^html$)};
-sub is_xhtml  {shift =~ m(^xhtml)};
-sub is_mathml {shift =~ m(^mathml)};
+sub is_svg    {shift =~ m(svg\+xml$)};
+sub is_smil   {shift =~ m(smil\+xml$)};
+sub is_html   {shift =~ m(html\+sgml$)};
+sub is_xhtml  {shift =~ m(xhtml\+xml$)};
+sub is_mathml {shift =~ m(mathml\+xml$)};
 
 
 #
