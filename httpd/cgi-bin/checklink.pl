@@ -5,7 +5,7 @@
 # (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.15 2003-07-26 19:20:51 ville Exp $
+# $Id: checklink.pl,v 3.6.2.16 2003-07-27 15:38:16 ville Exp $
 #
 # This program is licensed under the W3C(r) Software License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -72,6 +72,9 @@ use HTML::Entities       qw();
 use HTML::Parser    3.00 qw();
 use HTTP::Request        qw();
 use HTTP::Response       qw();
+use Net::hostent         qw(gethostbyname);
+use Net::IP              qw();
+use Socket               qw(inet_ntoa);
 use Time::HiRes          qw();
 use URI                  qw();
 use URI::Escape          qw();
@@ -85,7 +88,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.15 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.16 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
 
@@ -136,9 +139,9 @@ $@
 $| = 1;
 
 # Different options specified by the user
+my $cmdline = ! ($ENV{GATEWAY_INTERFACE} && $ENV{GATEWAY_INTERFACE} =~ /^CGI/);
 my %Opts =
-  ( Command_Line      =>
-    ! ($ENV{GATEWAY_INTERFACE} && $ENV{GATEWAY_INTERFACE} =~ /^CGI/),
+  ( Command_Line      => $cmdline,
     Quiet             => 0,
     Summary_Only      => 0,
     Verbose           => 0,
@@ -161,7 +164,10 @@ my %Opts =
     Masquerade_From   => '',
     Masquerade_To     => '',
     Trusted           => $Cfg{Trusted},
+    Allow_Private_IPs => defined($Cfg{Allow_Private_IPs}) ?
+                         $Cfg{Allow_Private_IPs} : $cmdline,
   );
+undef $cmdline;
 
 # Global variables
 # What is our query?
@@ -814,8 +820,12 @@ sub get_uri ($$;$\%$$$$)
   # Tell the user agent if we want progress reports (in redirects) or not.
   $ua->{Checklink_verbose_progress} = $verbose_progress;
 
+  # Check if the IP address is allowed.
+  my $response = &ip_allowed($request->uri());
+  return $response if $response;
+
   # Do the query
-  my $response = $ua->request($request);
+  $response = $ua->request($request);
 
   # Get the results
   # Record the very first response
@@ -1572,6 +1582,35 @@ sub code_shown ($$)
   }
 }
 
+#
+# Checks whether we're allowed to retrieve the document based on it's IP
+# address.  Takes an URI object and returns a HTTP::Response containing the
+# appropriate status and error message if the IP was disallowed, undef
+# otherwise.
+#
+sub ip_allowed ($)
+{
+  my ($uri) = @_;
+  my $addr = my $iptype = my $resp = undef;
+  if (my $host = gethostbyname($uri->host())) {
+    $addr = inet_ntoa($host->addr()) if $host->addr();
+    if ($addr && (my $ip = Net::IP->new($addr))) {
+      $iptype = $ip->iptype();
+    }
+  }
+  $iptype = 'PUBLIC'
+    if ($iptype && $iptype eq 'PRIVATE' && $Opts{Allow_Private_IPs});
+  if ($iptype && $iptype ne 'PUBLIC') {
+    my $code = 403;
+    my $msg =
+      'Checking non-public IP address disallowed by service configuration';
+    $resp = HTTP::Response->new($code, $msg);
+    $resp->{OriginalCode} = $code;
+    $resp->{OriginalMessage} = $msg;
+  }
+  return $resp;
+}
+
 sub links_summary (\%\%\%\%)
 {
   # Advices to fix the problems
@@ -2085,12 +2124,19 @@ HTML output.
 The main configuration file.  You can use the L<W3C_CHECKLINK_CFG> environment
 variable to override the default location.
 
-Currently the only configurable option is a regular expression for
+C<Trusted> specifies a regular expression for
 matching trusted domains (ie. domains where HTTP basic authentication, if
 any, will be sent).  For example, the following configures only the w3.org
 domain as trusted:
 
     Trusted = \.w3\.org$
+
+C<Allow_Private_IPs> is a boolean flag indicating whether checking links
+on non-public IP addresses is allowed.  The default is true in command line
+mode and false when run as a CGI script.  For example, to disallow checking
+non-public IP addresses, regardless of the mode, use:
+
+   Allow_Private_IPs = 0
 
 =back
 
@@ -2113,7 +2159,7 @@ If set, overrides the path to the configuration file.
 The documentation for this program is available on the web at
 L<http://www.w3.org/2000/07/checklink>.
 
-LWP(3), L<Net::FTP(3)>, L<Net::NNTP(3)>.
+LWP(3), L<Net::FTP(3)>, L<Net::NNTP(3)>, L<Net::IP>.
 
 =head1 AUTHOR
 
