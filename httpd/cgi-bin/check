@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.116 2001-06-18 02:25:55 link Exp $
+# $Id: check,v 1.117 2001-06-18 10:26:53 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -40,7 +40,8 @@ use constant DEBUG => 0;
 #
 # Define global variables
 use vars qw($VERSION $DATE $MAINTAINER $NOTICE);               # Strings.
-use vars qw($frag $pub_ids $element_uri $file_type $doctypes); # Cfg hashes.
+use vars qw($frag $pub_ids $element_uri $file_type $doctypes $charsets);
+                                                               # Cfg hashes.
 use vars qw($DEBUG);
 
 $DEBUG += 1 unless $ENV{SERVER_PORT} == 80;
@@ -56,6 +57,7 @@ my $fpis_db   = $html_path . 'config/fpis.cfg';
 my $frag_db   = $html_path . 'config/frag.cfg';
 my $type_db   = $html_path . 'config/type.cfg';
 my $dtds_db   = $html_path . 'config/doctypes.cfg';
+my $chst_db   = $html_path . 'config/charset.cfg';
 my $sgmlstuff = $html_path . 'sgml-lib';
 my $temp      = "/tmp/validate.$$"; # @@ Use POSIX/IO::File tmpfiles instead!
 
@@ -74,9 +76,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.116 $;
+$VERSION    =  q$Revision: 1.117 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-18 02:25:55 $;
+$DATE       =  q$Date: 2001-06-18 10:26:53 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -95,6 +97,7 @@ $pub_ids     = &read_cfg($fpis_db); # Errors  -> fragment identifier
 $element_uri = &read_cfg($elem_db); # Element -> URI fragment
 $file_type   = &read_cfg($type_db); # Content -> File -type
 $doctypes    = &read_cfg($dtds_db); # Name    -> doctype
+$charsets    = &read_cfg($chst_db); # charset -> iconv parameter
 
 #
 # Set up signal handlers.
@@ -375,43 +378,65 @@ EOHD
 }
 print ' ' x 4, qq(</li>\n);
 
-
-unless ($File->{Charset} eq 'utf-8' or $File->{Charset} eq 'unknown') {
-  # workaround for windows-nnnn charsets missing from glibc<2.2
-  my $temp_charset = $File->{Charset};
-  $temp_charset =~ s/^windows-(\d+)$/CP$1/i;
-  # workaround for iso-8859-8-i charset and Windows 3.1 cruft.
-  $temp_charset = 'iso-8859-8'   if $temp_charset =~ m(iso-8859-8-i)i;
-  $temp_charset = 'windows-1252' if $temp_charset =~ m(iso-8859-1-Windows-3.1-Latin-1)i;
-  eval {my $c = Text::Iconv->new($temp_charset, 'utf-8')};
-  if (not $@) {
-    my $c = Text::Iconv->new($temp_charset, 'utf-8');
+{  # block for character conversion and checking
+  my @lines;
+  unless ($File->{Charset} eq 'utf-8' or $File->{Charset} eq 'unknown') {
+    my ($command, $result_charset) = split " ", $charsets->{$File->{Charset}}, 2;
+    # workaround for Windows 3.1 cruft:
+    #iso-8859-1-Windows-3.1-Latin-1	I cp1252
+    if ($command eq 'I') {
+      eval {my $c = Text::Iconv->new($result_charset, 'utf-8')};
+      $command = '' if ($@);
+    }
+    elsif ($command eq 'X') {
+      $@ = "$File->{Charset} undefined; replace by $result_charset";
+    }
+    if ($command ne 'I') {
+      &print_charset_error($@, $File->{Charset});
+      &clean_up_and_exit;
+    }
+    my $c = Text::Iconv->new($result_charset, 'utf-8');
     my $line = 0;
-    my @lines;
     for (@{$File->{Content}}) {
       my $in = $_;
       $line++;
       $_ = $c->convert($_); # $_ is local!!
       push @lines, $line if ($in ne "" and $_ eq "");
     }
-    if (@lines) {
-      my $lines = $#lines ? "lines " : "line ";
-      $lines .= join ", ", @lines;
-      print <<"EOF";
-      </ul>
-      <p class="error">
-        Sorry, I am unable to validate this document because on
-        <strong>$lines</strong> it contained
-        some byte(s) that I cannot interpret as
-        <code>$File->{Charset}</code>.
-        Please check both the content of the file
-        and the character encoding indication.
-      </p>
-EOF
-      &clean_up_and_exit;
+  }
+  # check correctness of UTF-8 both for UTF-8 input and for conversion results
+  unless ($File->{Charset} eq 'unknown') {
+    my $line = 0;
+    for (@{$File->{Content}}) {
+      $line++;
+      push @lines, $line unless (m/
+        ^(
+        [\x00-\x7F]                             # ASCII
+        | [\xC2-\xDF]        [\x80-\xBF]        # non-overlong 2-byte sequences
+        |  \xE0[\xA0-\xBF]   [\x80-\xBF]        # excluding overlongs
+        | [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}     # straight 3-byte sequences
+        |  \xED[\x80-\x9F]   [\x80-\xBF]        # excluding surrogates
+        |  \xF0[\x90-\xBF]   [\x80-\xBF]{2}     # planes 1-3
+        | [\xF1-\xF3]        [\x80-\xBF]{3}     # planes 4-15
+        |  \xF4[\x80-\x8F][\x80-\xBF]{2}        # plane 16
+        )*$
+        /x);
     }
-  } else {
-    &print_charset_error($@, $File->{Charset});
+  }
+  if(@lines) {
+    my $lines = $#lines ? "lines " : "line ";
+    $lines .= join ", ", @lines;
+    print <<"EOF";
+    </ul>
+    <p class="error">
+      Sorry, I am unable to validate this document because on
+      <strong>$lines</strong> it contained
+      some byte(s) that I cannot interpret as
+      <code>$File->{Charset}</code>.
+      Please check both the content of the file
+      and the character encoding indication.
+    </p>
+EOF
     &clean_up_and_exit;
   }
 }
