@@ -4,7 +4,7 @@
    Copyright 2000-2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.35 2005-01-04 08:37:53 ot Exp $
+   $Id: base.css,v 1.36 2005-01-07 05:44:54 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -22,13 +22,15 @@ html {
 
 body {  
     margin: auto auto;
+    padding-left: 5%;
+    padding-right: 5%;
     background-image: url(http://www.w3.org/Icons/logo-WMVS.png);
     background-attachment: fixed;
     background-position: 0 20px;
     background-repeat: no-repeat;
     color: #33333E;
     font-family: Helvetica, Arial, sans-serif;
-    font-size: 12px;
+    font-size: 1em; /* setting base font to user's prefered size */
 }
 
 /*                                                   
@@ -42,12 +44,11 @@ body {
     background-attachment: scroll;
     background-position: top right;
     padding: 0;
-    margin-top: 20px;
-    margin-left: 72px;
-    margin-right: 0;
-    margin-bottom: 0;
     height: 50px;
-    width: 780px;
+    margin-bottom: 0;
+    margin-top: 20px;
+    margin-left: 42px;
+/*    width: 780px; */
     border-bottom: 0;
     border-top: 1px solid #053188;
     border-left: 1px solid #053188;
@@ -57,15 +58,16 @@ body {
 #banner h1 { 
     height: 50px;
     vertical-align: middle;
-    font-size: 20px;
+    font-size: 1.5em;
     display: inline;
 }
 
 #main, address { 
     margin: 0;
-    margin-left: 72px;
-    width: 750px;
+    margin-left: 42px;
     padding: 15px;
+    padding-left: 5%;
+    padding-right: 5%;
     background: white;
     border: 1px solid #053188;
 }
@@ -103,7 +105,6 @@ h1 {
     font-weight: bold;
     font-style: normal;
     text-decoration: none;
-    font-size: 18px;
 }
 
 h2 { 
@@ -112,14 +113,14 @@ h2 {
     padding-bottom: 5px;
     margin-top: 20px;
     margin-bottom: 20px;
-    font-size: 14px;
-    margin-left: -10px;
+    font-size: 1.1em;
+    margin-left: -5%;
     text-decoration: none;
 }
 
 h3 {
     color: #C65831;
-    font-size: 12px;
+    font-size: 1em;
     text-decoration: none;
 } 
 
@@ -128,7 +129,7 @@ h4 {
     font-weight: 600;
     font-style: normal;
     text-decoration: underline;
-    font-size: 10px;
+    font-size: 0.9em;
 }
 
 /* 
@@ -199,7 +200,7 @@ ul.toc {
 p.copyright {
   margin-top:     20px;
   width: 500px;
-  font-size:      9px;
+  font-size:      x-small;
   text-align:     justify;
   text-transform: uppercase;
   margin-left:    222px;

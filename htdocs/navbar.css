@@ -4,21 +4,21 @@
    Copyright 2000-2004 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: navbar.css,v 1.11 2005-01-04 08:37:53 ot Exp $
+   $Id: navbar.css,v 1.12 2005-01-07 05:44:54 ot Exp $
 */
 
 
 #menu {
         background-color: #053188;
         background-image:url(images/bg2.gif);
-        width: 780px;
         margin: 0;
         padding: 0;
-        margin-left: 72px;
+        margin-left: 42px;
         padding-top:8px;
+        padding-bottom: 8px;
+        line-height: 140%;
         vertical-align: bottom;
-        font-size: 10px;
-        height: 20px;
+        font-size: 0.9em;
         list-style-type: none;
         border-left: 1px solid #053188;
         border-right: 1px solid #053188;
@@ -51,7 +51,7 @@
     border-left:     1px solid black;
     border-bottom:    1px solid black;
     margin-top:       -15px; 
-    font-size: 10px;
+    font-size: 0.9em;
     font-weight:      bold;
 }
 
@@ -81,7 +81,6 @@ div.jumpbar li a:hover {
   width: 8em;
   padding: 2px 0px;
   margin: 0;
-  font-size: smaller;
   border-top: dotted 1px #053188;
 }
 
