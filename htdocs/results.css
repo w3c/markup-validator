@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.8.2.9 2002-06-27 04:10:47 link Exp $ */
+/* $Id: results.css,v 1.8.2.10 2002-07-05 20:43:57 link Exp $ */
 
 .markup {
   color: red;
@@ -12,8 +12,7 @@
 }
 
 table.header {
-/*  float: left; */
-  width: 100%;
+/*  width: 100%; */
   background-color: #eeeeee;
 }
 
@@ -22,13 +21,13 @@ ul#Warnings {
   padding-top: 1ex;
 }
 
-div.meat { 
-/*  border: 1px solid red; */
+div.meat {
+/*  border: 1px solid red; */ /* Used for debugging */
   margin-right: 10em;
 }
 
 div.splash { 
-/*  border: 1px solid red; */
+  border: 1px solid blue; /* Used for debugging */
   background:  #eeeeee;
 }
 
@@ -86,6 +85,10 @@ td {
   color: yellow;
 }
 
+.valid a:hover {
+  color: #053188;
+}
+
 .invalid {
 /*  clear: both; */
   background:		#880531;
@@ -105,3 +108,4 @@ td {
 .invalid a {
   color: yellow;
 }
+
