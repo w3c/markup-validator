@@ -80,7 +80,7 @@ use CGI;
 ###############
 # Global Variables
 
-my $VERSION= '$Id: checklink.pl,v 1.28 1999-05-05 06:43:34 renaudb Exp $ ';
+my $VERSION= '$Id: checklink.pl,v 1.29 2000-01-13 17:27:29 hugo Exp $ ';
 my $CVSINFO= 'http://dev.w3.org/cgi-bin/cvsweb/validator/httpd/cgi-bin/checklink.pl';
 my $CVSSERVER= 'http://dev.w3.org/';
 my %ALLOWED_SCHEMES = ( "http" => 1 );
@@ -140,7 +140,7 @@ sub doit {
 	&checklinks($q);
     } else {
 	&html_header($q);
-	print $q->startform($q->url);
+	print "<form action=\"".$q->self_url()."\" method=\"get\">";
 	print "Enter a URL ",$q->textfield(-name=>'url',-size=>'50'),$q->br;
 	print $q->submit('','Check the Links !');
 	print $q->endform;
