@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: errors.html,v 1.18 2002-08-20 01:51:24 link Exp $"
---><!--#set var="date" value="\$Date: 2002-08-20 01:51:24 $"
+<!--#set var="revision" value="\$Id: errors.html,v 1.19 2002-09-08 19:37:42 ville Exp $"
+--><!--#set var="date" value="\$Date: 2002-09-08 19:37:42 $"
 --><!--#set var="title" value="Error Explanations for The W3C HTML Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -20,7 +20,7 @@
           as case-sensitive, they must still be case-insensitive unique in the
           document. See
           <a href="http://www.w3.org/TR/html4/struct/links.html#h-12.2.1">Section
-          12.2.1 Syntax of anchor names</a> in the HTML 4.01 Reccomendation
+          12.2.1 Syntax of anchor names</a> in the HTML 4.01 Recommendation
           for further information.
         </p>
       </dd>
@@ -64,7 +64,7 @@
           You have an attribute whose value needs to be in quotes. If an
           attribute value contains any character other than letters, digits,
           hyphens and periods, it must be enclosed in double quotes (single
-          quotes would also be okay from an <a href="sgml.html#sgml">SGML</a>
+          quotes would also be OK from an <a href="sgml.html#sgml">SGML</a>
           standpoint, but some browsers don't recognize them).
         </p>
       </dd>
@@ -290,7 +290,7 @@
           You left off a required attribute of the indicated element. The most
           common such omitted attribute is the <code>ALT</code> attribute of the
           <code>AREA</code> or <code>IMG</code> element; browsers will typically
-          use these to build a menu equivalent to your client-side imagemap if
+          use these to build a menu equivalent to your client-side image map if
           the user has disabled image loading, so you'll want to use a
           meaningful value here.
         </p>
@@ -529,7 +529,7 @@
         <p>
           The document contained an UTF-8 encoded Unicode Byte Order Mark (BOM)
           as the first character and we have removed it before parsing.
-          Many XML Processors fail to recognize it (allthough it's perfectly
+          Many XML Processors fail to recognize it (although it's perfectly
 	  valid). To be on the safe side you may want to avoid using the
           BOM in UTF-8 encoded documents until browsers are updated to support it.
         </p>
@@ -557,7 +557,7 @@
         <p>
           An attribute was specified to contain one of a set of predefined
           values and you have used a value that is not in that set. The error
-          message tells which attribute value was unknonw and the possible
+          message tells which attribute value was unknown and the possible
           legal values for this attribute.
         </p>
       </dd>
@@ -611,7 +611,7 @@
           The referenced element &lsquo;<var>FOO</var>&rsquo; isn't allowed in the context it occurs
           in, but it would be if it was wrapped in a &lsquo;<var>BAR</var>&rsquo; element. The
           Validator has assumed that you have forgotten to add a &lsquo;<var>BAR</var>&rsquo;
-          starttag and continued validation as if it was there. You should
+          start tag and continued validation as if it was there. You should
           check if this is the case and insert the proper tag.
         </p>
       </dd>
