@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.22.2.15 2003-09-10 19:00:26 ville Exp $"
---><!--#set var="date" value="\$Date: 2003-09-10 19:00:26 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.22.2.16 2003-09-18 16:52:51 ville Exp $"
+--><!--#set var="date" value="\$Date: 2003-09-18 16:52:51 $"
 --><!--#set var="title" value="Source Code Availability for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -37,19 +37,20 @@
           </p>
           <p>
             The most interesting files are currently
-            <a href="http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/check">a
+            <a href="http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/check?only_with_tag=validator-0_6_0-branch">a
               CGI script called "check"</a> that does pretty much everything,
             and possibly also <a
-              href="http://dev.w3.org/cvsweb/validator/httpd/conf/httpd.conf">the
-              httpd.conf</a>. (Select the topmost revision numbers on these
-            pages to see the most recent revision of each file.)
+              href="http://dev.w3.org/cvsweb/validator/httpd/conf/httpd.conf?only_with_tag=validator-0_6_0-branch">the
+              httpd.conf configuration file snippet for Apache</a>.
+            Select the topmost revision numbers on these
+            pages to see the most recent revision of each file.
           </p>
         </li>
         <li>
           <p>
             If you want a copy of all the files that make up the service, you
             can download a tarball of <a href="../validator.tar.gz">the code</a>
-	    (~161kB) and the <a href="../sgml-lib.tar.gz">the <acronym
+	    (~161kB) and <a href="../sgml-lib.tar.gz">the <acronym
               title="Document Type Definitions">DTDs</acronym></a> (~2.6MB).
           </p>
         </li>
@@ -99,10 +100,10 @@
             needed.
           </p>
           <p>
-            If you are using the Debian Unstable distribution, the package
-            is already included in the offical archive and you can directly
-            use the <kbd>apt-get</kbd> command if your /etc/apt/sources.list
-            file is correctly configured.
+            If you are using the Debian Testing or Unstable distribution, the
+            package is already included in the offical archive and you can
+            directly use the <kbd>apt-get</kbd> command if your
+            /etc/apt/sources.list file is correctly configured.
           </p>
         </li>
         <li id="CVS">
