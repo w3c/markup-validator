@@ -1,0 +1,549 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+  <head>
+    <title>W3C HTML Validation Error Messages</title>
+    <link rev="made" href="mailto:gerald@w3.org" />
+    <link rel="stylesheet" type="text/css" href="/base.css" />
+    <meta name="keywords" content="HTML, Hypertext Markup Language, Validation, W3C HTML Validation Service" />
+    <meta name="description" content="W3C's easy-to-use HTML validation service, based on an SGML parser." />
+    <meta name="revision" content="$Id: errors.html,v 1.1 2001-02-23 09:06:49 link Exp $" />
+    <meta name="modified" content="$Date: 2001-02-23 09:06:49 $" />
+  </head>
+
+  <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
+    <h1><a href="http://www.w3.org/"><img align="left"
+          src="http://www.w3.org/Icons/WWW/w3c_home" height="48" border="0"
+          alt="W3C" /></a> HTML Validator Error Messages</h1>
+    <p align="right" class="navbar">
+      <a href="about.html">About this service</a> |
+      <a href="whatsnew.html">What's new</a> |
+      <a href="source/">Source code</a> |
+      <a href="feedback.html">Feedback</a><br clear="right"/>
+      <a href="file-upload.html">Upload files</a> |
+      <a href="http://lists.w3.org/Archives/Public/www-validator/">www-validator archives</a> |
+      <a href="http://jigsaw.w3.org/css-validator/">CSS validator</a> |
+      <a href="checklink">Link checker</a><br clear="right"/>
+      <a href="http://www.w3.org/People/Raggett/tidy/">HTML Tidy</a> |
+      <a href="http://www.w3.org/MarkUp/">HTML home</a> |
+      <a href="http://www.w3.org/TR/html401/">HTML 4.01</a> |
+      <a href="http://www.w3.org/TR/xhtml1/">XHTML 1.0</a>
+      <br clear="all" />
+    </p>
+
+    <dl>
+      <dt id="unterm-comment-1">"entity end not allowed in comment"</dt>
+      <dd>
+        <p>
+          Unterminated comment. The position indicator points to the very end of
+          the file, where the problem was detected; to find the beginning of the
+          comment, try searching for the last occurrence of
+          `<code>&lt;!--</code>' in the document.
+        </p>
+      </dd>
+      <dt id="unterm-comment-2">"name start character invalid: only s and comment allowed in comment declaration"</dt>
+      <dd>
+        <p>
+          Unterminated comments again. This time, you have a case like:
+        </p>
+        <pre>
+          &lt;!-- This is the first unterminated comment &gt;
+          &lt;!-- This is the second one &gt;
+        </pre>
+        <p>
+          The Validator (correctly) interprets the `<code>--</code>' in the
+          second comment as terminating the first comment, and then interprets
+          the text of the second comment as text between comments, which is not
+          allowed.
+        </p>
+      </dd>
+      <dt id="bad-comment">"unknown declaration type `FOO'"</dt>
+      <dd>
+        <p>
+          Most likely an invalid comment of the form <code>&lt;!invalid
+          comment&gt;</code>; The Validator is (correctly) attempting to
+          interpret it as an <a href="sgml.html#sgml">SGML</a> markup
+          declaration.
+        </p>
+      </dd>
+      <dt id="attr-quoted">"an attribute value must be a literal unless it contains only name characters"</dt>
+      <dd>
+        <p>
+          You have an attribute whose value needs to be in quotes. If an
+          attribute value contains any character other than letters, digits,
+          hyphens and periods, it must be enclosed in double quotes (single
+          quotes would also be okay from an <a href="sgml.html#sgml">SGML</a>
+          standpoint, but some browsers don't recognize them).
+        </p>
+      </dd>
+      <dt id="attr-char">"character `X' not allowed in attribute specification list"</dt>
+      <dd>
+        <p>
+          The Validator has found a character inside an HTML tag that isn't
+          allowed there. This usually means you didn't put an attribute value in
+          quotes when necessary. It also probably means that the character in
+          question is not allowed in the value of the attribute at all, or you
+          would have received the <a href="#attr-quoted">previous error</a>
+          instead. See <a href="#bad-attr-char">below</a> for more information.
+        </p>
+        <p>
+          You can also get in trouble by forgetting the closing quote on an
+          attribute. For instance:
+        </p>
+        <pre>
+          &lt;IMG SRC="http://foo.com/fred.gif&gt;
+          &lt;IMG SRC="http://foo.com/joe.gif&gt;
+        </pre>
+        <p>
+          The Validator will (correctly) interpret this as a SRC value of
+          <code>"http://foo.com/fred.gif&gt; &lt;IMG SRC="</code>, and then
+          choke on the following `:'. In this case, the position indicator in
+          the error message may be several lines below the line with the missing
+          quote.
+        </p>
+      </dd>
+      <dt id="name-length">"length of attribute value must not exceed LITLEN less NORMSEP (1022)"</dt>
+      <dd>
+        <p>
+          This usually occurs in conjunction with the
+          <a href="#attr-char">previous error</a>. It almost always means that
+          you've forgotten a closing quote on an attribute value. For instance,
+          in:
+        </p>
+        <pre>
+          &lt;IMG SRC="fred.gif&gt;
+          &lt;!-- 50 lines of stuff --&gt;
+          &lt;IMG SRC="joe.gif"&gt;
+        </pre>
+        <p>
+          The SRC value for the first <code>&lt;IMG&gt;</code> is the entire
+          fifty lines of stuff up to the next double quote, which probably
+          exceeds the <a href="sgml.html#sgml">SGML</a>-defined length limit for
+          HTML string literals. Note that the position indicator in the error
+          message points to where the attribute value <em>ended</em> &mdash; in
+          this case, the <code>"joe.gif"</code> line.
+        </p>
+      </dd>
+      <dt id="undef-tag">"element `FOO' undefined"</dt>
+      <dd>
+        <p>
+          You've used an unknown tag (represented here by FOO). Make sure the
+          DTD indicated by your DOCTYPE actually includes this element.
+        </p>
+        <p>
+          If the tag in question is a frame-related tag you must use the
+          "Frameset" DTD, and if you use (deprecated) physical markup ("FONT"
+          and friends) you must use the "Transitional" DTD.
+        </p>
+      </dd>
+      <dt id="not-allowed">"document type does not allow element "FOO" here"</dt>
+      <dd>
+        <p>
+          Straightforward, but not terribly informative. There are a
+          <em>lot</em> of different errors that will generate this error
+          message:
+        </p>
+        <ul>
+          <li>
+            Using an unknown tag. In this case, the next error will be
+            <a href="#undef-tag">"element `FOO' undefined"</a>.
+          </li>
+          <li>
+            Using a tag in the wrong place. For instance,
+            <code>&lt;TABLE&gt;&lt;TD&gt;blah&lt;/TABLE&gt;</code> will cause
+            this error. The trick here is that <code>&lt;TABLE&gt;</code> cannot
+            <em>directly</em> contain <code>&lt;TD&gt;</code>'s; it contains
+            <code>&lt;TR&gt;</code>'s which contain <code>&lt;TD&gt;</code>'s.
+            The above example should be
+            <code>&lt;TABLE&gt;&lt;TR&gt;&lt;TD&gt;blah&lt;/TABLE&gt;</code>.
+          </li>
+        </ul>
+      </dd>
+      <dt id="not-contained">document type does not allow element "FOO" here; assuming missing "BAR" start-tag</dt>
+      <dd>
+        <p>
+          Similar to the <a href="#not-allowed">previous error</a>, but more
+          specific: in this case, you have a FOO element that is not contained
+          in a BAR element when FOO is not allowed outside of BAR. Some of the
+          most common causes of this error are:
+        </p>
+        <ul>
+          <li>
+            Using the <code>DD</code> element as a fake paragraph indent.
+            <code>DD</code> is not allowed outside of a <code>DL</code> element.
+          </li>
+          <li>
+            Improper construction of a nested list. An inner UL or OL in a
+            nested list may not appear directly within an outer UL/OL, but only
+            within an LI of the outer UL/OL, as in the following example:
+            <pre>
+        &lt;OL&gt;
+          &lt;LI&gt;Obtain the following items:
+            &lt;UL&gt;
+              &lt;LI&gt;Ham&lt;/LI&gt;
+              &lt;LI&gt;Bread; one of:
+                &lt;UL&gt;
+                  &lt;LI&gt;White&lt;/LI&gt;
+                  &lt;LI&gt;Rye&lt;/LI&gt;
+                  &lt;LI&gt;Whole wheat&lt;/LI&gt;
+                &lt;/UL&gt;
+              &lt;/LI&gt;  &lt;!-- End of the "Bread" &lt;LI&gt; --&gt;
+              &lt;LI&gt;Cheese&lt;/LI&gt;
+            &lt;/UL&gt;
+          &lt;/LI&gt;  &lt;!-- End of the "Obtain" &lt;LI&gt; --&gt;
+          &lt;LI&gt;Place ham and cheese between two slices of bread&lt;/LI&gt;
+          &lt;LI&gt;Consume the resulting ham-and-cheese sandwich&lt;/LI&gt;
+        &lt;/OL&gt;
+            </pre>
+            <p>
+              The <code>&lt;/LI&gt;</code> end tags are optional and are only
+              included above to emphasize how the structure of the nested list
+              is arranged; if you omit them, the parser will infer their
+              presence in the locations shown above. 
+            </p>
+          </li>
+        </ul>
+        <p>
+          The Validator has inserted a BAR start tag where it thinks there needs
+          to be one; it will probably complain later on that <a href="#no-end-tag">the
+          corresponding end tag is also missing</a>.
+        </p>
+      </dd>
+      <dt id="not-allowed-contained">"document type does not allow element "FOO" here; assuming missing "BAR" start-tag"</dt>
+      <dd>
+        <p>
+          Similar to the <a href="#not-allowed">previous error</a>, but more
+          specific: in this case, you have a FOO element that is not contained
+          in a BAR element when FOO is not allowed outside of BAR. Probably the
+          most common cause of this error is the use of the <code>DD</code>
+          element as a fake paragraph indent; <code>DD</code> is not allowed
+          outside of a <code>DL</code> element.
+        </p>
+        <p>
+          The Validator has inserted a BAR start tag where it thinks there needs
+          to be one; it will probably complain later on that <a
+          href="#no-end-tag">the corresponding end tag is also missing</a>.
+        </p>
+      </dd>
+      <dt id="undef-attr">"there is no attribute `FOO'"</dt>
+      <dd>
+        <p>
+          You have used an attribute with an element that is defined not to have
+          that attribute. This is most commonly caused by using
+          vendor-specific attributes without setting the document type
+          appropriately.
+        </p>
+      </dd>
+      <dt id="undef-attr-val">"`FOO' is not a member of the group specified in the declared value of this attribute"</dt>
+      <dd>
+        <p>
+          Similar to the <a href="#undef-attr">previous error</a>; this time,
+          you're using an attribute that is defined for the element, but with a
+          value that isn't defined for the attribute. For instance, the Netscape
+          extension <code>&lt;IMG ALIGN=ABSMIDDLE&gt;</code> will cause this
+          error; ABSMIDDLE isn't one of the allowed values for the ALIGN
+          attribute of <code>&lt;IMG&gt;</code> (unless, of course, you provided
+          a Netscape document type).
+        </p>
+        <p>
+          If you're using the Netscape document type, the BORDER attribute of
+          <code>&lt;TABLE&gt;</code> can cause this error.
+        </p>
+        <p>
+          This error can also be caused, oddly enough, by missing close quotes
+          on attribute values. For instance, given:
+        </p>
+        <pre>
+          &lt;IMG SRC="fred.gif&gt; &lt;IMG SRC="joe.gif&gt;
+        </pre>
+        <p>
+          The Validator will (correctly) see a SRC attribute of
+          <code>"fred.gif&gt; &lt;IMG SRC="</code>, and then try to interpret
+          JOE.GIF as an attribute of <code>&lt;IMG&gt;</code>.
+        </p>
+      </dd>
+      <dt id="bad-attr-char">"syntax of attribute value does not conform to declared value"</dt>
+      <dd>
+        <p>
+          Yet another attribute error; this time, the attribute in question was
+          defined to take a numeric value, or an <a
+          href="sgml.html#sgml">SGML</a> identifier value, and you used a
+          character that doesn't match what it was expecting.
+        </p>
+        <p>
+          One potentially annoying source of this error is the <code>TD
+          WIDTH</code> attribute. Whether intentionally or by oversight, the
+          HTML 3.2 DTD defines this attribute to have a value type of NUMBER,
+          which means that <code>&lt;TD WIDTH="50%"&gt;</code> is not allowed.
+        </p>
+      </dd>
+      <dt id="bad-name-attr">"value of attribute "FOO" invalid: "#" cannot start a name"</dt>
+      <dd>
+      	<p>
+	        A special case of <a href="#bad-attr-char">the previous error</a>; the
+	        attribute in question is defined to take as value an SGML name token,
+	        which must begin with a letter.
+				</p>
+      </dd>
+      <dt id="bad-abbrev-attr">"`FOO' is not a member of a group specified for any attribute"</dt>
+      <dd>
+        <p>
+          Another attribute error, this time referring to an "abbreviated"
+          attribute. <a href="sgml.html#sgml">SGML</a> allows you to omit the
+          name of an attribute if the attribute value is unambiguous. For
+          instance, <code>&lt;IMG ISMAP&gt;</code> is actually an abbreviation
+          of <code>&lt;IMG ISMAP=ISMAP&gt;</code>. (Technically, this also means
+          that e.g. <code>&lt;P ALIGN=CENTER&gt;</code> could be abbreviated to
+          <code>&lt;P CENTER&gt;</code>, but it is unlikely that current
+          browsers will get this right.) The Validator has found something that
+          looks like an abbreviated attribute but doesn't match the value of any
+          attribute for this element. For instance, a typo like <code>&lt;IMG
+          ISNAP&gt;</code> would produce this error.
+        </p>
+        <p>
+          A missing close quote on a previous attribute value can also trigger
+          this error if the next quote it finds is followed by something that
+          looks like an abbreviated attribute; for instance, <code>&lt;IMG
+          SRC="fred.gif&gt;&lt;IMG SRC="joe.gif&gt;</code> would produce this
+          error, referring to the "attribute value" <code>JOE.GIF</code>.
+        </p>
+      </dd>
+      <dt id="missing-attr">"required attribute `FOO' not specified"</dt>
+      <dd>
+        <p>
+          You left off a required attribute of the indicated element. The most
+          common such omitted attribute is the <code>ALT</code> attribute of the
+          <code>AREA</code> element; browsers will typically use these to build
+          a menu equivalent to your client-side imagemap if the user has
+          disabled image loading, so you'll want to use a meaningful value here.
+        </p>
+      </dd>
+      <dt id="no-end-tag">"end tag for `FOO' omitted, but its declaration does not permit this"</dt>
+      <dd>
+        <p>
+          You forgot to close something. FOO is the element you forgot to close
+          (and the next message, `start tag was here' points to the particular
+          instance of FOO in question); the positional indicator points to where
+          The Validator expected you to close the element. There are a few
+          common ways that this can happen:
+        </p>
+        <ul>
+          <li>
+            You've put something inside the FOO element that isn't allowed
+            there. For instance, <code>&lt;UL&gt;&lt;LI&gt;&lt;H4&gt;fake font
+            change&lt;/H4&gt;&lt;/UL&gt;</code> will cause this error, since
+            headers aren't allowed inside <code>&lt;UL&gt;</code>'s; The
+            Validator assumes that you meant to close the
+            <code>&lt;UL&gt;</code> before opening the <code>&lt;H4&gt;</code>.
+          </li>
+          <li>
+            Interlocked elements. For instance,
+            <code>&lt;B&gt;&lt;I&gt;nope&lt;/B&gt;&lt;/I&gt;</code> will cause
+            this error. HTML requires that you close elements ``inside-out'' ---
+            that is, the last element you opened is the first element you should
+            close. In this example, you'd have to close the
+            <code>&lt;I&gt;</code> before the <code>&lt;B&gt;</code>.
+          </li>
+          <li>
+            Unclosed <code>&lt;A&gt;</code> tags. Yes, even <code>&lt;A
+            NAME="foo"&gt;</code> has to have a corresponding
+            <code>&lt;/A&gt;</code>. Note that an empty <code>&lt;A
+            NAME&gt;</code> element won't be recognized by some browsers; be
+            sure to put at least a word or two inside the
+            <code>&lt;A&gt;</code>.
+          </li>
+          <li>
+            Having unadorned text where The Validator was expecting a
+            sub-element of FOO. For instance, <code>&lt;DL&gt;fake
+            indent&lt;/DL&gt;</code> will produce this error, since inside a
+            <code>&lt;DL&gt;</code>, The Validator only expects to see
+            <code>&lt;DT&gt;</code>'s and <code>&lt;DD&gt;</code>'s.
+          </li>
+          <li>
+            A tag of the form <code>&lt;TABLE WIDTH=100%&gt;</code>. The
+            previous error should have been that the `%' was <a
+            href="#attr-char">"not allowed in attribute specification list"</a>.
+            What's happening here is that, in trying to get past the `%', The
+            Validator has become confused and thinks the `%' is <em>inside</em>
+            the <code>&lt;TABLE&gt;...&lt;/TABLE&gt;</code>, thus triggering the
+            error message for the previous reason. This error will likely be
+            followed by mistaken complaints that your <code>&lt;TR&gt;</code>'s
+            are <a href="#not-allowed">"not allowed here"</a>, plus a complaint
+            about your <code>&lt;/TABLE&gt;</code> end tag. The solution is to
+            put the attribute value in quotes; ie. <code>&lt;TABLE
+            WIDTH="100%"&gt;</code>.
+          </li>
+        </ul>
+        <p>
+        	In general, you should always explicitly close all elements and
+        	quote all attribute values.
+        </p>
+      </dd>
+      <dt id="floating-close">"end tag for element "FOO" which is not open"</dt>
+      <dd>
+        <p>
+          The Validator found an end tag, represented here by FOO, without a
+          corresponding start tag. This frequently occurs in conjunction with
+          the <a href="#no-end-tag">previous error</a>. For instance, given
+          <code>&lt;B&gt;&lt;I&gt;nope&lt;/B&gt;&lt;/I&gt;</code>, The Validator
+          will insert a <code>&lt;/I&gt;</code> before the
+          <code>&lt;/B&gt;</code>, and then will find the
+          <code>&lt;/I&gt;</code> after the <code>&lt;/B&gt;</code> and will
+          have nothing to match it with.
+        </p>
+        <p>
+          A subtle variation of this is <code>&lt;P&gt;&lt;H4&gt;fake font
+          change&lt;/H4&gt;&lt;/P&gt;</code>. <code>&lt;H4&gt;</code>'s aren't
+          allowed inside <code>&lt;P&gt;</code>'s, but since HTML allows you to
+          omit the <code>&lt;/P&gt;</code> end tag for paragraphs, The Validator
+          assumes that you meant <code>&lt;P&gt;&lt;/P&gt;&lt;H4&gt;fake font
+          change&lt;/H4&gt;&lt;/P&gt;</code>, in which case the final
+          <code>&lt;/P&gt;</code> is indeed superfluous.
+        </p>
+        <p>
+          This error can also be caused by incorrectly supplying an end tag for
+          "empty" elements like <code>&lt;HR&gt;</code>, <code>&lt;BR&gt;</code>
+          or <code>&lt;IMG&gt;</code>.
+        </p>
+      </dd>
+      <dt id="omitted-content">"end tag for `FOO' which is not finished"</dt>
+      <dd>
+        <p>
+          You have a FOO element, but you have omitted some required sub-element
+          of it. For instance, a <code>TABLE</code> with no <code>TR</code>'s
+          would cause this error.
+        </p>
+      </dd>
+      <dt id="no-start-tag">"start tag for `FOO' omitted, but its declaration does not permit this"</dt>
+      <dd>
+        <p>
+          The Validator expected you to start a FOO element at the indicated
+          point. This probably means you've put unadorned text somewhere it
+          isn't allowed; for instance, <code>&lt;UL&gt;fake
+          indent&lt;/UL&gt;</code> will cause this error.
+        </p>
+      </dd>
+      <dt id="bad-entity">"general entity `FOO' not defined and no default entity"</dt>
+      <dd>
+        <p>
+          The Validator has found an entity (something like
+          <code>&amp;this;</code>) that it doesn't recognize. There are a few
+          possibilities:
+        </p>
+        <ul>
+          <li>
+            The entity <code>&amp;quot;</code> in conjunction with the HTML 3.2
+            <code>DOCTYPE</code>. This entity was <a
+            href="http://lists.w3.org/Archives/Public/www-html/msg00636.html">accidentally
+            omitted</a> from the most recent version of the HTML 3.2 DTD. You
+            should be able to ignore this error safely, though if you wish, you
+            can replace <code>&amp;quot;</code> with the equivalent character
+            entity <code>&amp;#34;</code>.
+          </li>
+          <li>
+            The entity <code>&amp;nbsp;</code> in conjunction with the Mozilla
+            <code>DOCTYPE</code>. WebTechs' Mozilla DTD, which The Validator
+            uses, inexplicably does not define this entity. This error message
+            should not cause a problem, though you may wish to switch to the
+            equivalent but more widely handled character entity
+            <code>&amp;#160;</code>.
+          </li>
+          <li>
+            An unterminated entity; for instance, <code>this&amp;ampthat</code>
+            for "this&amp;that", which The Validator (correctly) interprets as a
+            request for the entity <code>&amp;ampthat;</code>. Technically, any
+            non-alphanumeric character (such as a space) will suffice to
+            terminate the entity, but some browsers get this wrong; the safest
+            thing to do is to terminate all entities with a semicolon, turning
+            our example into <code>this&amp;amp;that</code>.
+          </li>
+          <li>
+            <p>
+              A URL for a CGI program that uses `&amp;' as a separator, such as
+              "<code>http://host/prog?x=1&amp;y=2</code>". This is a common
+              problem: the inventors of CGI didn't think things through very
+              carefully when they decided to use the '&amp;' character as a
+              separator between CGI arguments, because '&amp;' has special
+              status in HTML. The only way to get around this is for the author
+              of the CGI program to use a different value between arguments,
+              like ';' or '|', which would allow the link to be coded as
+              <code>&lt;img src="http://site/cgi?opt1=val1;opt2=val2"&gt;</code>
+              or whatever.
+            </p>
+            <p>
+              Please contact the maintainer of the CGI program you are linking
+              to, and ask them to use a different character for their separator.
+              (Normally this is extremely easy to add to the CGI program;
+              multiple characters can also be used so existing links using the
+              '&amp;' character will still work.)
+            </p>
+          </li>
+        </ul>
+      </dd>
+      <dt id="bad-char">"non SGML character number ###"</dt>
+      <dd>
+        <p>
+          You've used an illegal character in your text. HTML uses the standard
+          ISO8859-1 character encoding, and ISO8859-1 leaves undefined 65
+          character codes (0 to 31 inclusive and 127 to 159 inclusive); The
+          Validator has found one of these undefined characters in your
+          document. The character may appear on your browser as a curly quote,
+          or a trademark symbol, or some other fancy glyph; on a different
+          computer, however, it will likely appear as a completely different
+          character, or nothing at all.
+        </p>
+        <p>
+          Your best bet is to replace the character with the nearest equivalent
+          ASCII character, or to use an appropriate <a
+          href="http://www.w3.org/hypertext/WWW/MarkUp/html3/latin1.html">character
+          entity</a>. For more information on ISO8859-1, see <a
+          href="http://ppewww.ph.gla.ac.uk/%7Eflavell/aflavell.html">Alan
+          Flavell</a>'s excellent <a
+          href="http://ppewww.ph.gla.ac.uk/%7Eflavell/iso8859/">ISO8859-1/HTML
+          reference</a>.
+        </p>
+        <p>
+          This error can also be triggered by formatting characters embedded in
+          documents by some word processors. If you use a word processor to edit
+          your HTML documents, be sure to use the "Save as ASCII" or similar
+          command to save the document without formatting information.
+        </p>
+      </dd>
+      <dt id="unicode-char">"`####' is not a valid character number"</dt>
+      <dd>
+        <p>
+          You'll get several occurrences of this error if you use the Cougar
+          DTD. Cougar uses the 16-bit UCS-4 (a.k.a. "Unicode") character set
+          instead of the 8-bit ISO8859-1 character set used by HTML 2.0 and HTML
+          3.2. It also defines mnemonic entities for various Unicode characters;
+          for instance, the entity <code>&amp;trade;</code> is defined as the
+          character entity <code>&amp;#8482;</code>, which is the Unicode
+          trademark character. Unfortunately, the <code>nsgmls</code> executable
+          used by The Validator does not appear to have 16-bit character support
+          compiled in, and so it chokes on these 16-bit character entities.
+        </p>
+        <p>
+          These errors are not produced by anything in your document and should
+          not otherwise affect the validation of your document, so you can
+          pretty much ignore them.
+        </p>
+      </dd>
+      <dt id="bad-pub-id">"cannot generate system identifier for entity `HTML'"</dt>
+      <dd>
+        <p>
+          Your <code>DOCTYPE</code> declaration contains a public identifier
+          that The Validator doesn't recognize. See the <a
+          href="sgml.html#doctype">discussion of <code>DOCTYPE</code></a> for an
+          explanation of what's happening, and what public identifiers The
+          Validator recognizes.
+        </p>
+        <p>
+          Note that all of the rest of the errors you received are meaningless;
+          The Validator was unable to find a <a href="sgml.html#dtd">DTD</a> to
+          work from, and thus could not validate your document.
+        </p>
+      </dd>
+    </dl>
+  </body>
+</html>

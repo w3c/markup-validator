@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+  <head>
+    <title>W3C HTML Validation Service Developers Manual</title>
+    <link rev="made" href="mailto:gerald@w3.org" />
+    <link rel="stylesheet" type="text/css" href="/base.css" />
+    <meta name="keywords" content="HTML, Hypertext Markup Language, Validation, W3C HTML Validation Service" />
+    <meta name="description" content="W3C's easy-to-use HTML validation service, based on an SGML parser." />
+    <meta name="revision" content="$Id: devel.html,v 1.1 2001-02-23 09:06:49 link Exp $" />
+    <meta name="modified" content="$Date: 2001-02-23 09:06:49 $" />
+  </head>
+
+  <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
+    <h1><a href="http://www.w3.org/"><img align="left"
+          src="http://www.w3.org/Icons/WWW/w3c_home" height="48" border="0"
+          alt="W3C" /></a> HTML Validator Developers Manual</h1>
+    <p align="right" class="navbar">
+      <a href="about.html">About this service</a> |
+      <a href="whatsnew.html">What's new</a> |
+      <a href="source/">Source code</a> |
+      <a href="feedback.html">Feedback</a><br clear="right"/>
+      <a href="file-upload.html">Upload files</a> |
+      <a href="http://lists.w3.org/Archives/Public/www-validator/">www-validator archives</a> |
+      <a href="http://jigsaw.w3.org/css-validator/">CSS validator</a> |
+      <a href="checklink">Link checker</a><br clear="right"/>
+      <a href="http://www.w3.org/People/Raggett/tidy/">HTML Tidy</a> |
+      <a href="http://www.w3.org/MarkUp/">HTML home</a> |
+      <a href="http://www.w3.org/TR/html401/">HTML 4.01</a> |
+      <a href="http://www.w3.org/TR/xhtml1/">XHTML 1.0</a>
+      <br clear="all" />
+    </p>
+
+    <p>
+      The W3C HTML Validation Service consists of an SGML Parser, an SGML
+      catalog, a CGI program and it's configuration files. In addition it
+      relies on a moderately large set of Perl modules for it's operation.
+    </p>
+    <p>
+      This document tries to draw a roadmap of the prerequisits and what the
+      different parts of the system do. It is intended for system
+      administrators and people interested in helping developing the validator.
+      This is not end user documentation. See the
+      <a href="users.html">User Manual</a> for usage instructions.
+    </p>
+
+    <div id="prereq" class="stb">
+      <h2>Prerequisites</h2>
+      <p>
+        Apart from a properly configured web server, the Validator needs a
+        SGML parser -- that does all the heard work -- and several Perl
+        modules used by the "check" CGI script.
+      </p>
+      <p>
+        The SGML parser we're currently using is "lq-nsgmls", which is <a
+        href="http://www.jclark.com/">James Clark</a>'s
+        <a href="http://www.jclark.com/sp/">SP</a> with patches from Liam Quinn.
+      </p>
+      <p>
+        In the future we may switch to a different parser to improve error
+        reporting and XML support.
+        <a href="http://OpenJade.sourceforge.net/">OpenSP</a> from the OpenJade
+        team springs to mind.
+      </p>
+      <p>
+        The canonical list of Perl modules we use can be found in the source
+        for the "check" CGI script. There is a bunch of lines that of the form
+        "use Foo::Bar" where each "Foo::Bar" represents a module. Most modules
+        can be found on <a href="http://www.cpan.org/">CPAN</a>. The following
+        list was complete when CVS spit out: <code>$Date: 2001-02-23 09:06:49 $</code>. <tt>:-)</tt>
+      </p>
+      <dl>
+        <dt><code>LWP::UserAgent</code></dt>
+        <dd>
+          Gisle Aas« most excellent WWW library for Perl. This is where our
+          support for downloading pages off the net comes from.
+        </dd>
+        <dt><code>URI::Escape</code></dt>
+        <dd>Module to handle escaping special characters in URIs</dd>
+        <dt><code>CGI::Carp</code></dt>
+        <dd>CGI-aware warn()/die()</dd>
+        <dt><code>CGI</code></dt>
+        <dd>
+          The all-singing, all-dancing,
+          everything-<em>and</em>-the-kitchen-sink, Perl CGI library. This
+          takes care of all those niggly little bits of CGI for us and make
+          options parsing and file upload a breeze.
+        </dd>
+        <dt><code>Text::Wrap</code></dt>
+        <dd>Wrap text to a sane width. Needed for source output in results.</dd>
+        <dt><code>Text::Iconv</code></dt>
+        <dd>
+          Perl-native interface to the (g)libc iconv(3) library. Handles
+          charset conversion issues.
+        </dd>
+      </dl>
+    </div>
+    <div id="config" class="stb">
+      <h2>Configuration Files</h2>
+      <p>
+        The validator uses a number of configuration files -- most of which
+        are really mapping tables of some form -- to avoid having to check in
+        a new version of the code every time a new version of HTML comes out.
+        All configuration files can be found in
+        <code>$CVSROOT/validator/htdocs/config/</code>.
+      </p>
+      <p>
+        To really understand what each does you should read the source, but
+        here is a short description to get you started.
+      </p>
+      <dl>
+        <dt>eref.cfg</dt>
+        <dd>
+          Contains the mappings from element names to an URI fragment
+          (relative to a configurable URI) for their definitions. Used
+          in output when the "Show Source Input" option is enabled.
+        </dd>
+        <dt>fpis.cfg</dt>
+        <dd>
+          Maps FPIs to plain text version strings.
+        </dd>
+        <dt>frag.cfg</dt>
+        <dd>
+          Maps error messages to an URI fragment identifier where an
+          explanation of that error can be found. Currently not used and may
+          be phased out in the future (to be replaced with a more robust
+          system).
+        </dd>
+        <dt>type.cfg</dt>
+        <dd>
+          Maps MIME/HTTP Content-Types to an internal "document type" which
+          is used for treating HTML, XML, and XHTML in different ways.
+        </dd>
+        <dt>"check.cfg"</dt>
+        <dd>
+          We don't have one yet, but we intend to. Maybe you'll write the
+          support for us? <tt>:-)</tt>
+        </dd>
+       </dl>
+    </div>
+    <div id="todo" class="stb">
+      <h2>TODO</h2>
+      <p>
+        The TODO list for the Validator is online at
+        &lt;URL:<a href="/todo.html">http://validator.w3.org/todo.html</a>&gt;.
+ 	      This is probably the best place to start.
+ 	    </p>
+      <p>
+        However this list is by no means comprehensive. Feel free to suggest
+        other features that should be on this list or send patches for your
+        favourite feature.
+      </p>
+      <p>
+        Keep in mind that features should be of general utility and that the
+        point if the validator is that it does an <em>objective</em>
+        validation instead of just what some random developer happens to
+        think is a Good Idea&reg;. While extra features are nice, they
+        shouldn't dilute the value of the validator as an objective check.
+      </p>
+    </div>
+  </body>
+</html>

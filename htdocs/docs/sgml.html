@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+  <head>
+    <title>W3C HTML Validator SGML Intro</title>
+    <link rev="made" href="mailto:gerald@w3.org" />
+    <link rel="stylesheet" type="text/css" href="/base.css" />
+    <meta name="keywords" content="HTML, Hypertext Markup Language, Validation, W3C HTML Validation Service" />
+    <meta name="description" content="W3C's easy-to-use HTML validation service, based on an SGML parser." />
+    <meta name="revision" content="$Id: sgml.html,v 1.1 2001-02-23 09:06:49 link Exp $" />
+    <meta name="modified" content="$Date: 2001-02-23 09:06:49 $" />
+  </head>
+
+  <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
+    <h1><a href="http://www.w3.org/"><img align="left"
+          src="http://www.w3.org/Icons/WWW/w3c_home" height="48" border="0"
+          alt="W3C" /></a> HTML Validator SGML Intro</h1>
+    <p align="right" class="navbar">
+      <a href="about.html">About this service</a> |
+      <a href="whatsnew.html">What's new</a> |
+      <a href="source/">Source code</a> |
+      <a href="feedback.html">Feedback</a><br clear="right"/>
+      <a href="file-upload.html">Upload files</a> |
+      <a href="http://lists.w3.org/Archives/Public/www-validator/">www-validator archives</a> |
+      <a href="http://jigsaw.w3.org/css-validator/">CSS validator</a> |
+      <a href="checklink">Link checker</a><br clear="right"/>
+      <a href="http://www.w3.org/People/Raggett/tidy/">HTML Tidy</a> |
+      <a href="http://www.w3.org/MarkUp/">HTML home</a> |
+      <a href="http://www.w3.org/TR/html401/">HTML 4.01</a> |
+      <a href="http://www.w3.org/TR/xhtml1/">XHTML 1.0</a>
+      <br clear="all" />
+    </p>
+
+    <div>
+      <h2 id="sgml">What is SGML?</h2>
+      <p>
+        SGML stands for Standard Generalized Markup Language. This is
+        actually a slight misnomer, since SGML is actually a
+        <em>meta-language</em> &mdash; that is, a language for writing markup
+        languages.  HTML is a markup language written in SGML &mdash; an "SGML
+        application", to use the terminology.
+      </p>
+      <p>
+        You don't actually have to know much about SGML to use The Validator
+        successfully. If you're interested, though, I recommend TEI's
+        <a href="http://etext.virginia.edu/tei-tocs1.html">"A Gentle
+        Introduction to SGML"</a> as a good starting point. An additional SGML
+        resource can be found on
+        <a href="http://www.oasis-open.org/cover/sgml-xml.html">SIL's SGML
+        Web Page</a>.
+      </p>
+    </div>
+
+    <div>
+      <h2 id="dtd">What is a DTD?</h2>
+      <p>
+        For our purposes, a DTD, or Document Type Definition, is simply a file
+        that defines the syntax of a <a href="#sgml">SGML</a>-based language.
+        The DTD's for
+        <a href="http://w3.org/MarkUp/html-spec/">HTML 2.0</a>
+        and <a href="http://w3.org/TR/REC-html32">HTML 3.2</a>
+        were written by the HTML Working Group of the
+        <a href="http://www.ietf.org/"><abbr title="Internet Engineering Task Force">IETF</abbr></a>,
+        in collaboration with the <a href="http://w3.org"><abbr title="World Wide Web Consortium">W3C</abbr></a>.
+        From <a href="http://w3.org/TR/html4">HTML 4.0</a> on (this includes
+        <a href="http://w3.org/TR/xhtml1">XHTML</a>), the standards (both
+        prose and DTDs) have been written by the
+        <a href="http://w3.org"><abbr title="World Wide Web Consortium">W3C</abbr></a>.
+      </p>
+    </div>
+
+    <div>
+      <h2 id="doctype">What is this <code>DOCTYPE</code> thing The Validator
+        keeps pestering me for?</h2>
+
+      <p>
+        A <code>DOCTYPE</code> is a <a href="#sgml">SGML</a> document type
+        declaration. Its purpose is to tell an SGML parser what
+        <a href="#dtd">DTD</a> it should use to parse the document. It appears
+        as the first line of the document, and has the form:
+        <code>&lt;!DOCTYPE html PUBLIC "quoted string"&gt;</code>
+      </p>
+      <p>
+        The quoted string is called a <dfn>public identifier</dfn>; it refers
+        to the desired DTD by a "well-known" name, usually defined by an
+        associated standard.
+      </p>
+      <p>
+        Most Web browsers don't actually use an SGML parser (in fact, none
+        that I'm aware of do), and so they don't need a <code>DOCTYPE</code>
+        declaration, and will ignore it if present. The Validator, however,
+        does use an SGML parser, and therefore needs a <code>DOCTYPE</code>
+        declaration. The Validator is more insistent on this point than
+        WebTechs was, which would insert a <code>DOCTYPE</code> on the fly
+        for you; The Validator requires that your <code>DOCTYPE</code> already
+        be in the document.
+      </p>
+      <p>
+        So now you're preparing to add a <code>DOCTYPE</code> to your document.
+        Be sure that the syntax is as described above, and that you use the
+        correct public identifier; otherwise, The Validator will use the wrong
+        DTD, or will be unable to find a DTD at all, and will produce a huge
+        list of absolutely meaningless errors. The Validator's
+        <a href="catalog">public identifier catalog</a> lists all the public
+        identifiers The Validator recognizes for various types of HTML; of
+        those, the following public identifiers are most likely to be widely
+        recognized:
+      </p>
+      <dl>
+        <dt><code>For HTML 2.0...</code></dt><dd>...use "-//IETF//DTD HTML 2.0//EN"</dd>
+        <dt><code>For HTML 4.0...</code></dt><dd>...use "-//W3C//DTD HTML 4.0//EN"</dd>
+        <dt><code>For HTML 4.0 Transitional...</code></dt><dd>...use "-//W3C//DTD HTML 4.0 Transitional//EN"</dd>
+        <dt><code>For HTML 4.0 Frameset...</code></dt><dd>...use "-//W3C//DTD HTML 4.0 Framset//EN"</dd>
+      </dl>
+      <p>Note that the string must appear exactly as shown, including case.</p>
+      <p class="warning">
+        <strong>WARNING:</strong></a> Some HTML editors will insert a
+        <code>DOCTYPE</code> declaration for you. Unfortunately, this
+        pre-inserted <code>DOCTYPE</code> will sometimes confuse
+        The Validator. This usually occurs when the inserted
+        <code>DOCTYPE</code> does not correspond to the generated HTML.
+        If your editor adds a <code>DOCTYPE</code> to your page, you may
+        need to correct it as described above before running your page through
+        The Validator.
+      </p>
+    </div>
+  </body>
+</html>
+
