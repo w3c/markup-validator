@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.17 2002-03-31 07:04:07 link Exp $
+# $Id: check,v 1.200.2.18 2002-04-04 17:04:37 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -70,7 +70,7 @@ $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.17 $;
+$VERSION    =  q$Revision: 1.200.2.18 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 #
@@ -87,7 +87,7 @@ delete $ENV{PATH};
 my $q = new CGI;
 
 #
-# The datastructure that will hold all session data.
+# The data structure that will hold all session data.
 my $File;
 
 #
@@ -99,8 +99,12 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-03-31 07:04:07 $,
+			      Date => q$Date: 2002-04-04 17:04:37 $,
 			     });
+
+#
+# SSI Footer for static pages does not include closing tags for body & html.
+$File->{'Footer'} .= qq(  </body>\n</html>\n);
 
 #
 # Prepare standard HTML preamble for output.
@@ -117,6 +121,13 @@ $File->{'Results'} .= $File->{'Header'};
 # The URL to this CGI Script.
 $File->{Env}->{'Self URI'} = $q->url(-query => 0);
 
+#
+# Initialize parameters we'll need (and override) later.
+$File->{Charset}->{HTTP} = ''; # Set to "ISO-8859-1" to use HTTP defaulting rules.
+$File->{Charset}->{META} = '';
+$File->{Charset}->{XML}  = '';
+$File->{Charset}->{Use}  = ''; # The charset used for validation.
+
 
 #########################################
 # Populate $File->{Opt} -- CGI Options. #
@@ -128,16 +139,15 @@ $q = &prepCGI($File, $q);
 
 #
 # Set session switches.
-$File->{Opt}->{'Weblint'}        = $q->param('weblint') ? TRUE : FALSE;
-$File->{Opt}->{'Outline'}        = $q->param('outline') ? TRUE : FALSE;
-$File->{Opt}->{'Show Source'}    = $q->param('ss')      ? TRUE : FALSE;
-$File->{Opt}->{'Show Parsetree'} = $q->param('sp')      ? TRUE : FALSE;
-$File->{Opt}->{'No Attributes'}  = $q->param('noatt')   ? TRUE : FALSE;
-$File->{Opt}->{'Show ESIS'}      = $q->param('esis')    ? TRUE : FALSE;
-$File->{Opt}->{'Show Errors'}    = $q->param('errors')  ? TRUE : FALSE;
-$File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') if $q->param('doctype');
-$File->{Opt}->{'Charset'}        = $q->param('charset') if $q->param('charset');
-$File->{Opt}->{'URI'}            = $q->param('uri')     if $q->param('uri');
+$File->{Opt}->{'Outline'}        = $q->param('outline') ? TRUE                 : FALSE;
+$File->{Opt}->{'Show Source'}    = $q->param('ss')      ? TRUE                 : FALSE;
+$File->{Opt}->{'Show Parsetree'} = $q->param('sp')      ? TRUE                 : FALSE;
+$File->{Opt}->{'No Attributes'}  = $q->param('noatt')   ? TRUE                 : FALSE;
+$File->{Opt}->{'Show ESIS'}      = $q->param('esis')    ? TRUE                 : FALSE;
+$File->{Opt}->{'Show Errors'}    = $q->param('errors')  ? TRUE                 : FALSE;
+$File->{Opt}->{'Charset'}        = $q->param('charset') ? $q->param('charset') :    '';
+$File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') ? $q->param('doctype') :    '';
+$File->{Opt}->{'URI'}            = $q->param('uri')     ? $q->param('uri')     :    '';
 
 
 #
@@ -165,32 +175,18 @@ undef $q;
 # by Apache::Registry's idiotic interference under mod_perl.
 untie *STDIN;
 
+
 ###############################################################################
 #### Output validation results. ###############################################
 ###############################################################################
 
 #
-# Abort if there was no document type mapping for this Content-Type, in which
-# case the document type will be equal to the content type (contains a "/").
-if ($File->{'Type'} =~ m(/) and not $q->param('uploaded_file')) {
-  print $File->{Results};
-  print <<"EOF";
-    <p class="error">
-      Sorry, I am unable to validate this document because its returned
-      content-type was <code>$File->{Type}</code>, which is not
-      currently supported by this service.
-    </p>
-EOF
-  print $File->{'Footer'};
-  exit;
-}
-
-#
-# Abort if an error is flagged. (only from &uri_rejected() so far).
+# Abort if an error was flagged during initialization.
 if ($File->{'Error Flagged'}) {
   print $File->{'Results'};
   print $File->{'Error Message'};
   print $File->{'Footer'};
+  undef $File;
   exit;
 }
 
@@ -219,7 +215,7 @@ $File->{Content}[0] =~ s/^\xEF\xBB\xBF//
 
 #
 # Override DOCTYPE if user asked for it.
-if (defined $File->{Opt}->{DOCTYPE}
+if ($File->{Opt}->{DOCTYPE}
     and not $File->{Opt}->{DOCTYPE} =~ /(Inline|detect)/i) {
   $File->{Content} = &supress_doctype($File->{Content});
   unshift @{$File->{Content}}, $CFG->{'Doctypes'}->{$File->{Opt}->{DOCTYPE}};
@@ -242,66 +238,53 @@ $File = &preparse($File);
 # Set document type to XHTML if the DOCTYPE was for XHTML.
 # Set document type to MathML if the DOCTYPE was for MathML.
 # This happens when the file is served as text/html
-$File->{Type} = 'xhtml'  if $File->{DOCTYPE} =~ /xhtml/i;
-$File->{Type} = 'mathml' if $File->{DOCTYPE} =~ /mathml/i;
+$File->{Type} = 'xhtml+xml'  if $File->{DOCTYPE} =~ /xhtml/i;
+$File->{Type} = 'mathml+xml' if $File->{DOCTYPE} =~ /mathml/i;
 
 
 #
 # Figure out which charset was detected.
-if    ($File->{HTTP_Charset}) {$File->{Charset} = $File->{HTTP_Charset}}
-elsif ($File->{XML_Charset})  {$File->{Charset} = $File->{XML_Charset}}
-elsif ($File->{META_Charset}) {$File->{Charset} = $File->{META_Charset}}
-else  {                        $File->{Charset} = 'unknown'}
+$File->{Charset}->{Use} = $File->{Charset}->{HTTP} if $File->{Charset}->{HTTP};
+$File->{Charset}->{Use} = $File->{Charset}->{META} if $File->{Charset}->{META};
+$File->{Charset}->{Use} = $File->{Charset}->{XML}  if $File->{Charset}->{XML};
 
-# If we have a charset field in the request, we use it
-if ($File->{Opt}->{Charset} and $File->{Opt}->{Charset} ne 'unknown'
-               and $File->{Opt}->{Charset} ne '(detect automatically)') {
-  $File->{Opt}->{Charset} =~ /^([^ ]*)/;
-  $File->{Use_Charset} = lc $1;
-}
-else { $File->{Use_Charset} = $File->{Charset}; }
 
 #
-# Setup SP environment for the charset.
-if ($File->{Use_Charset} ne 'unknown') {
-  $ENV{SP_CHARSET_FIXED} = 'YES';
-  $ENV{SP_ENCODING}      = 'utf-8';
-}
-
-#
-# Print header.
-print $File->{Results};
+# Sanity check Chrset information and add any warnings necessary.
+$File = &validate_charset($File);
 
 
 #
 # Print different things if we got redirected or had a file upload.
-#if (URI::eq("$File->{Opt}->{URI}", $q->param('uri'))) { # @@@FIXME@@@: Temorarily Broken. :-)
-if (TRUE) { # @@ Need to stringify here?
-  &add_table($File, qq(<label title="Address of Page to Validate" for="uri">Address</label>),
-	     '<input type="text" id="uri" name="uri" size="'
-	     . (length($File->{Opt}->{URI}) + 2)
-	     . '" value="' . $File->{Opt}->{URI} . '" />');
-} elsif ($q->param('uploaded_file')) {
-  &add_table($File, "File", $File->{Opt}->{URI});
+if ($File->{'Is Upload'}) {
+  &add_table($File, "File", $File->{URI});
 } else {
-  &add_table($File, qq(<label title="Address of Page to Validate" for="uri"><a href="http://www.w3.org/Addressing/#terms">URI</a></label>),
-	     '<input type="text" id="uri" name="uri" size="'
-	     . (length($File->{Opt}->{URI}) + 2)
-	     . '" value="' . $File->{Opt}->{URI} . '" />'
-             . ' [<a href="' . $File->{Opt}->{URI} . '">Go to URI</a>]');
-  &add_warning($File, '<em>Note:</em> The URI you gave me, &#171;<code>' .
-	       $q->param('uri') . '</code>&#187;, ' .
-	       'returned a redirect to ' .
-	       '&#171;<code>' . $File->{Opt}->{URI} . '</code>&#187;.');
+  my $size = (length($File->{Opt}->{URI}) || 38) + 2;
+  $size = 70 if $size > 70;
+
+  if (URI::eq("$File->{Opt}->{URI}", $File->{URI})) {
+    &add_table($File, qq(<label title="Address of Page to Validate" for="uri">Address</label>),
+	       '<input type="text" id="uri" name="uri" size="' . $size
+	       . '" value="' . $File->{Opt}->{URI} . '" />');
+  } else {
+    &add_table($File, qq(<label title="Address of Page to Validate" for="uri">URI</label>),
+	       '<input type="text" id="uri" name="uri" size="' . $size
+	       . '" value="' . $File->{URI} . '" />');
+    &add_warning($File, '<em>Note:</em> The URI you gave me, &#171;<code>' .
+		 $File->{Opt}->{URI} . '</code>&#187;, ' .
+		 'returned a redirect to ' .
+		 '&#171;<code>' . $File->{URI} . '</code>&#187;.');
+  }
 }
+
 
 &add_table($File, "Modified", $File->{Modified})  if $File->{Modified};
 &add_table($File, "Server", $File->{Server})  if $File->{Server};
 &add_table($File, "Size", $File->{Size})  if $File->{Size};
 unless ($File->{Opt}->{'Is Upload'}) {
   &add_table($File,
-	     qq(<label title="Character Encoding" for="charset">Character&nbsp;Encoding</label>),
-	     $File->{Use_Charset} . ' ' .
+	     qq(<label title="Character Encoding" for="charset">Encoding</label>),
+	     $File->{Charset}->{Use} . ' ' .
 	     &CGI::popup_menu(-name => 'charset', -id => 'charset',
 			    -values => [
 					'(detect automatically)',
@@ -343,153 +326,64 @@ unless ($File->{Opt}->{'Is Upload'}) {
 	    );
 }
 
-if ($File->{META_Charset} and $File->{HTTP_Charset} ne $File->{META_Charset}) {
-  &add_warning($File, <<"EOHD");
-      <strong>Character Encoding mismatch!</strong>
-      The character encoding specified in the HTTP header
-      (&#171;<code>$File->{HTTP_Charset}</code>&#187;) is different from the
-      one specified in the META element
-      (&#171;<code>$File->{META_Charset}</code>&#187;).
-      I will use &#171;<code>$File->{Charset}</code>&#187; for this validation.
-EOHD
-} elsif ($File->{XML_Charset} and $File->{HTTP_Charset} ne $File->{XML_Charset}) {
-  &add_warning($File, <<"EOHD");
-      <strong>Character Encoding mismatch!</strong>
-      The character encoding specified in the HTTP header
-      (&#171;<code>$File->{HTTP_Charset}</code>&#187;) is different from the
-      one specified in the XML declaration
-      (&#171;<code>$File->{XML_Charset}</code>&#187;).
-      I will use &#171;<code>$File->{Charset}</code>&#187; for this validation.
-EOHD
-}
-if ($File->{Use_Charset} ne $File->{Charset}) {
-  &add_warning($File, <<"EOHD");
-      <strong>Character Encoding Override in effect!</strong>
-      The detected character encoding
-      (&#171;<code>$File->{Charset}</code>&#187;) has been supressed and the
-      character encoding (&#171;<code>$File->{Use_Charset}</code>&#187;)
-      used instead.
-EOHD
-  $File->{Tentative} |= T_ERROR;
-}
-if ($File->{Use_Charset} eq 'unknown') {
-  &add_warning($File, <<"EOHD");
-      <strong>No Character Encoding detected!</strong>
-      To assure correct validation, processing, and display,
-      it is important that the character encoding is properly
-      labeled.
-      <a href='http://www.w3.org/International/O-charset.html'>Further
-      explanations</a>.
-EOHD
-  $File->{Tentative} |= T_CHARSET_KLUDGE; # WOuld be T_WARN, but the complaints...
-}
-## special warning because of iconv bug
-if ( $File->{Use_Charset} eq 'macintosh' ) {
-  &add_warning($File, "'macintosh' <code>charset</code> not completely supported, sorry (might get errors saying 'illegal character number 0').");
+
+#
+# Check Encoding and transliterate.
+$File = &validate_encoding($File);
+
+#
+# Abort if an error was flagged during Encoding Validation.
+if ($File->{'Error Flagged'}) {
+  print $File->{'Results'};
+  print $File->{'Error Message'};
+  print $File->{'Footer'};
+  undef $File;
+  exit;
 }
 
-{  # block for character conversion and checking
-  my @lines;
-  unless ($File->{Use_Charset} eq 'utf-8' or $File->{Use_Charset} eq 'unknown') {
-    my ($command, $result_charset) = split " ", $CFG->{'Charsets'}->{$File->{Use_Charset}}, 2;
-    if ($command eq 'I') {
-      eval {my $c = Text::Iconv->new($result_charset, 'utf-8')};
-      $command = '' if ($@);
-    }
-    elsif ($command eq 'X') {
-      $@ = "$File->{Use_Charset} undefined; replace by $result_charset";
-    }
-    if ($command ne 'I') {
-      &print_table($File);
-      &print_warnings($File);
-      &print_charset_error($@, $File->{Use_Charset});
-      print $File->{'Footer'};
-      exit;
-    }
-    my $c = Text::Iconv->new($result_charset, 'utf-8');
-    my $line = 0;
-    for (@{$File->{Content}}) {
-      my $in = $_;
-      $line++;
-      $_ = $c->convert($_); # $_ is local!!
-      push @lines, $line if ($in ne "" and $_ eq "");
-    }
-  }
-  # check correctness of UTF-8 both for UTF-8 input and for conversion results
-  unless ($File->{Use_Charset} eq 'unknown') {
-    for (my $i = 0; $i < $#{$File->{Content}}; $i++) {
-      # substitution needed for very long lines (>32K),
-      # to avoid backtrack stack overflow
-      local $_ = $File->{Content}->[$i];
-      s/  [\x00-\x7F]                           # ASCII
-        | [\xC2-\xDF]        [\x80-\xBF]        # non-overlong 2-byte sequences
-        |  \xE0[\xA0-\xBF]   [\x80-\xBF]        # excluding overlongs
-        | [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}     # straight 3-byte sequences
-        |  \xED[\x80-\x9F]   [\x80-\xBF]        # excluding surrogates
-        |  \xF0[\x90-\xBF]   [\x80-\xBF]{2}     # planes 1-3
-        | [\xF1-\xF3]        [\x80-\xBF]{3}     # planes 4-15
-        |  \xF4[\x80-\x8F][\x80-\xBF]{2}        # plane 16
-       //xg;
-      push @lines, $i if length;
-    }
-  }
-  if(@lines) {
-    my $lines = $#lines ? "lines " : "line ";
-    $lines .= join ", ", @lines;
-    &print_table($File);
-    &print_warnings($File);
-    print <<"EOF";
-    <p class="error">
-      Sorry, I am unable to validate this document because on
-      <strong>$lines</strong> it contained
-      some byte(s) that I cannot interpret as
-      <code>$File->{Use_Charset}</code>.
-      Please check both the content of the file
-      and the character encoding indication.
-    </p>
-EOF
-    print $File->{'Footer'};
-    exit;
-  }
+
+
+#
+# Default XML/SGML Catalog and XML Flags for SP.
+my $catalog  = qq($CFG->{'SGML Library'}/xml.soc);
+my @xmlflags = '-wxml';
+
+
+#
+# Defaults for SP; turn off fixed charset mode and enable XML semantics for
+# detecting the input charset. Only way to set this is through %ENV.
+$ENV{SP_CHARSET_FIXED} = 'NO';
+$ENV{SP_ENCODING}      = 'XML';
+
+#
+# Generic XML with Root Namespace.
+if (&is_xml($File->{Type}) or $File->{Namespace}) {
+  push(@xmlflags, '-wno-valid') unless $File->{DOCTYPE};
 }
 
-my @xmlflags = '-wnon-sgml-char-ref';
-my $catalog  = $CFG->{'SGML Library'} . '/catalog';
+#
+# SVG and SMIL.
+$catalog = qq($CFG->{'SGML Library'}/svg.soc)    if &is_svg($File->{Type});
+$catalog = qq($CFG->{'SGML Library'}/smil.soc)   if &is_smil($File->{Type});
 
-if ($File->{Type} eq 'xhtml') {
-  $catalog               = $CFG->{'SGML Library'} . '/xhtml.soc';
+#
+# HTML. Turn back to SGML semantics.
+if (&is_html($File->{Type})) {
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'UTF-8';
-  @xmlflags              = '-wxml';
-} elsif ($File->{Type} eq 'svg') {
-  $catalog               = $CFG->{'SGML Library'} . '/svg.soc';
-  $ENV{SP_CHARSET_FIXED} = 'YES';
-  $ENV{SP_ENCODING}      = 'UTF-8';
-  @xmlflags              = '-wxml';
-} elsif ($File->{Type} eq 'smil') {
-  $catalog               = $CFG->{'SGML Library'} . '/smil.soc';
-  $ENV{SP_CHARSET_FIXED} = 'YES';
-  $ENV{SP_ENCODING}      = 'UTF-8';
-  @xmlflags              = '-wxml';
-} elsif ($File->{Type} eq 'mathml') {
-  $catalog               = $CFG->{'SGML Library'} . '/mathml.soc';
-  $ENV{SP_CHARSET_FIXED} = 'NO';
-  $ENV{SP_ENCODING}      = 'XML';
-  @xmlflags              = '-wxml';
-} elsif ($File->{Type} eq 'xml' or $File->{Namespace}) {
-  # no doctype, with xmlns attr on 1st element
-  $File->{Type} = 'xml'; # @@ probably a better way to do this
-  $catalog               = $CFG->{'SGML Library'} . '/sp-1.3/pubtext/xml.soc';
-  $ENV{SP_CHARSET_FIXED} = 'YES';
-  $ENV{SP_ENCODING}      = 'XML';
-  @xmlflags              = '-wxml';
-  unless ($File->{DOCTYPE}) {
-    push @xmlflags, '-wno-valid';
-  }
+  $catalog  = qq($CFG->{'SGML Library'}/catalog);
+  @xmlflags = '-wnon-sgml-char-ref';
 }
+
+#
+# MathML and XHTML. Must be here because they're usually serverd as text/html
+# to deal with braindead browsers. IOW, these override the check for &is_html.
+$catalog = qq($CFG->{'SGML Library'}/xhtml.soc)  if &is_xhtml($File->{Type});
+$catalog = qq($CFG->{'SGML Library'}/mathml.soc) if &is_mathml($File->{Type});
+
 
 my @cmd = ($CFG->{'SGML Parser'}, '-c', $catalog, '-E0', @xmlflags);
-&add_table($File, "commandline", "<code>@cmd</code>") if $DEBUG;
+&add_table($File, 'Command', "<code>@cmd</code>") if $DEBUG;
 
 #
 # Temporary filehandles.
@@ -545,31 +439,48 @@ while (<$spout>) {
 }
 undef $spout;
 
-if ($File->{'DEBUG'}->{ESIS}->[-1] =~ m(^C$)) {
+if ($File->{ESIS}->[-1] =~ /^C$/) {
+  undef $File->{ESIS}->[-1];
   $File->{'Is Valid'} = TRUE;
 } else {
   $File->{'Is Valid'} = FALSE;
 }
 
 
-my $fpi;
-$File->{Version} = 'unknown';
-if ($File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 'svg' or $File->{Type} eq 'smil') {
-  $fpi = $File->{DOCTYPE};
-} elsif ($File->{Type} eq 'xml') {
-  $fpi = 'XML';
-} else {
-  for (@{$File->{ESIS}}) {
-    next unless /^AVERSION CDATA (.*)/;
-    $fpi = $1;
-    last;
-  }
-  # Needed for HTML4 Strict, which has no version attribute on the HTML element
-  if (length $File->{DOCTYPE} and not defined $fpi) {$fpi = $File->{DOCTYPE}};
-}
-$File->{Version} = $CFG->{'FPI to Text'}->{$fpi} || 'unknown';
+#
+# Set Version to be the FPI initially.
+$File->{Version} = $File->{DOCTYPE};
 
-&add_table($File, "Document Type",
+#
+# Extract any version attribute from the ESIS.
+for (@{$File->{ESIS}}) {
+  next unless /^AVERSION CDATA (.*)/;
+  $File->{Version} = $1;
+  last;
+}
+
+#
+# Force "XML" if type is an XML type and an FPI was not found.
+# Otherwise set the type to be the FPI.
+if (&is_xml($File->{Type}) and not $File->{DOCTYPE}) {
+  $File->{Version} = 'XML';
+} else {
+  $File->{Version} = $File->{DOCTYPE} unless $File->{Version};
+}
+
+
+#$File->{Version} = $File->{DOCTYPE} if &is_xhtml($File->{Type});
+#$File->{Version} = $File->{DOCTYPE} if &is_mathml($File->{Type});
+#$File->{Version} = $File->{DOCTYPE} if &is_svg($File->{Type});
+#$File->{Version} = $File->{DOCTYPE} if &is_smil($File->{Type});
+
+#
+# Get the pretty text version of the FPI if a mapping exists.
+$File->{Version} = $CFG->{'FPI to Text'}->{$File->{Version}} || $File->{Version};
+
+
+
+&add_table($File, qq(<label for="doctype">Doctype</label>),
 	   $File->{Version} . ' ' .
 	   &CGI::popup_menu(
 			    -name => 'doctype',
@@ -594,56 +505,43 @@ if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
     &add_warning($File, "Unknown namespace (&#171;<code>$File->{Namespace}</code>&#187;) for text/html document!");
     if ($File->{Namespace} ne '') {
       &add_table($File, "Root Namespace",
-	"<a href='$File->{Namespace}'>$File->{Namespace}</a>");
+	qq(<a href="$File->{Namespace}">$File->{Namespace}</a>));
     }
   } elsif ($File->{Type} eq 'svg' and $File->{Namespace} ne 'http://www.w3.org/2000/svg') {
     &add_warning($File, "Unknown namespace (&#171;<code>$File->{Namespace}</code>&#187;) for SVG document!");
     if ($File->{Namespace} ne '') {
       &add_table($File, "Root Namespace",
-	"<a href='$File->{Namespace}'>$File->{Namespace}</a>");
+	qq(<a href="$File->{Namespace}">$File->{Namespace}</a>));
     }
   } else {
     if ($File->{Namespace} ne '') {
       &add_table($File, "Root Namespace",
-	"<a href='$File->{Namespace}'>$File->{Namespace}</a>");
+	qq(<a href="$File->{Namespace}">$File->{Namespace}</a>));
     }
   }
 
   if (scalar keys %{$File->{Namespaces}} > 1) {
     my $namespaces = "<ul>";
     for (keys %{$File->{Namespaces}}) {
-      $namespaces .= "\t<li><a href='$_'>$_</a></li>\n"
+      $namespaces .= qq(\t<li><a href="$_">$_</a></li>\n)
           unless $_ eq $File->{Namespace}; # Don't repeat Root Namespace.
     }
     &add_table($File, "Other Namespaces", $namespaces . "</ul>");
   }
 }
 
+
+
+
+#
+# Print header.
+print $File->{Results};
+
+print qq(<div class="meat">\n);
+print qq(<div class="splash">\n);
 &print_table($File);
-&print_jump_links($File);
-&print_tip_of_the_day($File, $CFG->{'Tips DB'});
 &print_warnings($File);
-
-print qq(<h2 class="stb">Validation Results</h2>\n);
-
-if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 'svg' or $File->{Type} eq 'smil') {
-  my $xmlvalid = ($File->{DOCTYPE} ? ' and validity' : '');
-  print <<"EOHD";
-  <p>
-    Below are the results of checking this document for <a
-    href="http://www.w3.org/TR/REC-xml#sec-conformance">XML
-    well-formedness</a>$xmlvalid.
-  </p>
-
-EOHD
-} else {
-  print <<"EOHD";
-  <p>
-    Below are the results of attempting to parse this document with
-    an SGML parser.
-  </p>
-EOHD
-}
+print qq(</div>\n);
 
 if (defined $File->{Tentative}) {
   my $class = '';
@@ -678,14 +576,15 @@ if ($File->{'Is Valid'}) {
   &report_errors($File);
 }
 
-&weblint()          if $File->{Opt}->{'Weblint'};
 &outline($File)     if $File->{Opt}->{'Outline'};
 &show_source($File) if $File->{Opt}->{'Show Source'};
 &parse_tree($File)  if $File->{Opt}->{'Show Parsetree'};
 &show_esis($File)   if $File->{Opt}->{'Show ESIS'};
 &show_errors($File) if $File->{Opt}->{'Show Errors'};
 
+print qq(</div>\n); # End of "Meat".
 print $File->{'Footer'};
+undef $File;
 exit;
 
 
@@ -702,29 +601,36 @@ sub add_table {push @{shift->{Table}}, { Head => $_[0], Tail => $_[1]}};
 sub print_table {
   my $File = shift;
   my $tableEntry;
-  unless ($File->{Opt}->{URI} =~ m(^upload://)) {
+  unless ($File->{'Is Upload'}) {
     add_table($File, '<input type="submit" value="Revalidate" />',
-	      '         <label title="Show Page Source"><input type="checkbox" value="" name="ss"' .
-	      ($File->{Opt}->{'Show Source'}      ? 'checked="checked"' : '') . " />Show Source</label>\n" .
+	      qq(\n         <label title="Show Page Source"><input type="checkbox" value="" name="ss") .
+	      ($File->{Opt}->{'Show Source'}      ? 'checked="checked"' : '') . " />Show Source</label></td><td>\n" .
 	      '         <label title="Show an Outline of the document"><input type="checkbox" value="" name="outline"' .
-	      ($File->{Opt}->{'Outline'} ? 'checked="checked"' : '') . " />Outline</label>\n" .
+	      ($File->{Opt}->{'Outline'} ? 'checked="checked"' : '') . " />Outline</label></td></tr><tr><td>\n" .
 	      '         <label title="Show Parse Tree"><input type="checkbox" value="" name="sp"' .
-	      ($File->{Opt}->{'Show Parsetree'}      ? 'checked="checked"' : '') . " />Parse Tree</label>\n" .
+	      ($File->{Opt}->{'Show Parsetree'}      ? 'checked="checked"' : '') . " />Parse Tree</label></td><td>\n" .
 	      '         <label title="Exclude Attributes from Parse Tree"><input type="checkbox" value="" name="noatt"' .
 	      ($File->{Opt}->{'No Attributes'}   ? 'checked="checked"' : '') . " />...no attributes</label>\n"
 	     );
   }
-  print '  <form method="get" action="/check">'
-    unless $File->{Opt}->{URI} =~ m(^upload://);
+  print '  <form method="get" action="/check">' unless $File->{'Is Upload'};
   print qq(<table class="header">\n);
   unless ($File->{'Is Valid'}) {
-    &add_table($File, 'Errors', scalar(@{$File->{Errors}}) . ' (aproximate)');
+    &add_table($File, 'Errors', scalar(@{$File->{Errors}}) . ' (approximate)');
   }
+
   for $tableEntry (@{$File->{Table}}) {
-    print "    <tr>\n";
-    print ' ' x 6, "<th>", $$tableEntry{Head}, ": </th>\n";
-    print ' ' x 6, "<td>", $$tableEntry{Tail}, "</td>\n";
-    print "    </tr>\n";
+    if ($$tableEntry{Head} =~ m(Revalidate)) {
+      print "    <tr>\n";
+      print ' ' x 6, qq(<th rowspan="2">), $$tableEntry{Head}, ": </th>\n";
+      print ' ' x 6, "<td>", $$tableEntry{Tail}, "      </td>\n";
+      print "    </tr>\n";
+    } else {
+      print "    <tr>\n";
+      print ' ' x 6, "<th>", $$tableEntry{Head}, ": </th>\n";
+      print ' ' x 6, qq(<td colspan="2">), $$tableEntry{Tail}, "</td>\n";
+      print "    </tr>\n";
+    }
   }
   print "  </table></form>\n";
 }
@@ -737,15 +643,10 @@ sub add_warning {push @{shift->{Warnings}}, shift};
 # Print out a list of warnings.
 sub print_warnings {
   my $File = shift;
-  if ($File->{'Is Valid'}) {
-    print qq(<p class="valid">This Page Is Valid $File->{Version}!</p>\n);
-  } else {
-    print qq(<p class="invalid">This Page Is <strong>NOT</strong> Valid $File->{Version}!</p>\n);
-  }
   return unless defined @{$File->{Warnings}};
-  print qq(  <div id="skip"><h2>Notes &amp; Warnings</h2>\n  <ul>\n);
+  print qq(  <ul id="Warnings">\n);
   print qq(    <li>$_</li>\n) for @{$File->{Warnings}};
-  print "  </ul></div>\n";
+  print "  </ul>\n";
 }
 
 #
@@ -759,7 +660,7 @@ sub output_doctype_spiel {
     </p>
 
     <pre>
-      &lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN"&gt;
+      &lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"&gt;
       &lt;html&gt;
 	&lt;head&gt;
 	  &lt;title&gt;Title&lt;/title&gt;
@@ -780,7 +681,7 @@ sub internal_error {
   my $File = shift;
   my ($dieMessage) = shift;
   print <<"EOF";
-    <hr>
+    <hr />
     <strong class="error">Internal server error ($dieMessage).</strong>
     Please contact <a href="mailto:$CFG->{Maintainer}">maintainer</a>.
 EOF
@@ -798,7 +699,6 @@ sub print_jump_links {
 
   $count++ if $File->{Opt}->{'Show Source'};
   $count++ if $File->{Opt}->{'Show Parsetree'};
-  $count++ if $File->{Opt}->{'Weblint'};
   $count++ if $File->{Opt}->{'Outline'};
 
   if ($count) {
@@ -836,7 +736,7 @@ Content-Type: text/html; charset=utf-8
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
   "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
-<html>
+<html lang="en" xml:lang="en">
   <head><title>401 Authorization Required</title></head>
   <body>
     <h1>Authorization Required</h1>
@@ -911,29 +811,6 @@ sub print_unknown_http_error_message {
   </p>
 
 EOF
-}
-
-
-#
-# Complain about strange charsets.
-sub print_charset_error {
-  my $error   = shift;
-  my $charset = shift;
-
-  print <<".EOF.";
-  <p>Sorry!
-    A fatal error occurred when attempting to transcode the character encoding
-    of the document. Either we do not support this character encoding yet, or you 
-    have specified a non-existent character encoding (often a misspelling).
-  </p>
-  <p>The detected character encoding was "$charset".</p>
-  <p>The error was "$error".</p>
-  <p>
-    If you believe the character encoding to be valid you can submit a request for
-    that character encoding (see the <a href="/feedback.html">feedback page</a>
-    for details) and we will look into supporting it in the future.
-  </p>
-.EOF.
 }
 
 
@@ -1028,20 +905,21 @@ sub handle_uri {
     exit;
   }
 
-  my($type, $charset) = &parse_content_type($res->header('Content-Type'));
+  my($type, $charset) = &parse_content_type($File, $res->header('Content-Type'));
 
   my $lastmod = undef;
   if ( $res->last_modified ) {
     $lastmod = scalar(gmtime($res->last_modified));
   }
 
-  $File->{Content}      = &normalize_newlines($res->content);
-  $File->{Type}         = $type;
-  $File->{HTTP_Charset} = $charset;
-  $File->{Modified}     = $lastmod;
-  $File->{Server}       = scalar($res->server);
-  $File->{Size}         = scalar($res->content_length);
-  $File->{Opt}->{URI}          = scalar($res->request->url);
+  $File->{Content}         = &normalize_newlines($res->content);
+  $File->{Type}            = $type;
+  $File->{Charset}->{HTTP} = $charset;
+  $File->{Modified}        = $lastmod;
+  $File->{Server}          = scalar $res->server;
+  $File->{Size}            = scalar $res->content_length;
+  $File->{URI}             = scalar $res->request->url;
+  $File->{'Is Upload'}     = FALSE;
 
   return $File;
 
@@ -1058,15 +936,16 @@ sub handle_file {
   my $file;
 
   while (not eof $f) {$file .= <$f>};
-  my($type, $charset) = &parse_content_type($h->{'Content-Type'});
+  my($type, $charset) = &parse_content_type($File, $h->{'Content-Type'});
 
-  $File->{Content}      = &normalize_newlines($file);
-  $File->{Type}         = $type;
-  $File->{HTTP_Charset} = $charset;
-  $File->{Modified}     = $h->{'Last-Modified'};
-  $File->{Server}       = $h->{'Server'};
-  $File->{Size}         = $h->{'Content-Length'};
-  $File->{Opt}->{URI}          = $q->param('uploaded_file');
+  $File->{Content}         = &normalize_newlines($file);
+  $File->{Type}            = $type;
+  $File->{Charset}->{HTTP} = $charset;
+  $File->{Modified}        = $h->{'Last-Modified'};
+  $File->{Server}          = $h->{'Server'};
+  $File->{Size}            = $h->{'Content-Length'};
+  $File->{URI}             = $q->param('uploaded_file');
+  $File->{'Is Upload'}     = TRUE;
 
   return $File;
 }
@@ -1077,13 +956,13 @@ sub handle_frag {
   my $q    = shift; # The CGI object.
   my $File = shift; # The master datastructure.
 
-  $File->{Content}      = &normalize_newlines(shift->param('fragment'));
-  $File->{Type}         = 'html';
-  $File->{HTTP_Charset} = '';
-  $File->{Modified}     = '';
-  $File->{Server}       = '';
-  $File->{Size}         = '';
-  $File->{Opt}->{URI}          = 'upload://Form Submission';
+  $File->{Content}     = &normalize_newlines(shift->param('fragment'));
+  $File->{Type}        = 'html';
+  $File->{Modified}    = '';
+  $File->{Server}      = '';
+  $File->{Size}        = '';
+  $File->{URI}         = 'upload://Form Submission';
+  $File->{'Is Upload'} = TRUE;
 
   return $File;
 }
@@ -1092,6 +971,7 @@ sub handle_frag {
 #
 # Parse a Content-Type and parameters. Return document type and charset.
 sub parse_content_type {
+  my $File         = shift;
   my $Content_Type = shift;
   my $charset      = '';
   my $type         = '';
@@ -1107,6 +987,17 @@ sub parse_content_type {
       $charset = lc $2;
       last;
     }
+  }
+
+  if ($type =~ m(/)) {
+    $File->{'Error Flagged'} = TRUE;
+    $File->{'Error Message'} = <<"    EOF";
+    <p class="error">
+      Sorry, I am unable to validate this document because its returned
+      content-type was <code>$type</code>, which is not currently supported
+      by this service.
+    </p>
+    EOF
   }
 
   return $type, $charset;
@@ -1233,8 +1124,31 @@ sub parse_errors ($$) {
 #
 # Generate a HTML report of detected errors.
 sub report_errors ($) {
-  print '<ul>';
   my $File = shift;
+
+  print <<"EOHD";
+    <h2 class="invalid">This Page Is <strong>NOT</strong> Valid $File->{Version}!</h2>
+EOHD
+
+  if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 'svg' or $File->{Type} eq 'smil') {
+    my $xmlvalid = ($File->{DOCTYPE} ? ' and validity' : '');
+    print <<"EOHD";
+    <p>
+      Below are the results of checking this document for <a
+      href="http://www.w3.org/TR/REC-xml#sec-conformance">XML
+      well-formedness</a>$xmlvalid.
+    </p>
+EOHD
+  } else {
+    print <<"EOHD";
+  <p>
+    Below are the results of attempting to parse this document with
+    an SGML parser.
+  </p>
+  <ul>
+EOHD
+  }
+
   foreach my $err (@{$File->{Errors}}) {
 
     # An unknown FPI and no SI.
@@ -1315,14 +1229,14 @@ sub report_errors ($) {
     print qq(<span class="markup">^</span></pre>\n);
   }
   print "</ul>\n";
-  print "<hr>\n";
+  print "<hr />\n";
   if ($File->{Version} eq 'unknown') {
     print "<p>Sorry, I can't validate this document.</p>";
   } elsif ($File->{Type} eq 'xml') {
     print "<p>Sorry, this document is not well-formed XML.</p>";
   } else {
     print "<p>Sorry, this document does not validate as $File->{Version}.</p>";
-    &output_css_validator_blurb($File->{Opt}->{URI});
+    &output_css_validator_blurb($File->{URI});
   }
 }
 
@@ -1330,12 +1244,10 @@ sub report_errors ($) {
 #
 # Output "This page is Valid" report.
 sub report_valid {
-  my $File = shift;
+  my $File   = shift;
   my $gifborder   = ' border="0"';
   my $xhtmlendtag = '';
   my($image_uri, $alttext, $gifhw);
-
-  print "\n  <p><code>No errors found!</code></p>\n";
 
   unless ($File->{Version} eq 'unknown' or defined $File->{Tentative}) {
     if ($File->{Version} =~ /^HTML 2\.0$/) {
@@ -1394,55 +1306,57 @@ sub report_valid {
     }
 
     if (defined $image_uri) {
-      print <<"EOHD";
-  <p>
-    <img src="$image_uri" alt="$alttext"$gifhw> Congratulations, this
-    document validates as $File->{Version}!
-  </p>
+      print <<".EOF.";
+    <h2 class="valid"><img src="$image_uri" alt="$alttext"$gifhw />
+                      This Page Is Valid $File->{Version}!</h2>
+.EOF.
+      &print_jump_links($File);
+      &print_tip_of_the_day($File, $CFG->{'Tips DB'});
 
-  <p>
-    To show your readers that you have taken the care to create an
-    interoperable Web page, you may display this icon on any page
-    that validates. Here is the HTML you could use to add this icon
-    to your Web page:
-  </p>
-  <pre>
-  &lt;p&gt;
-    &lt;a href="$CFG->{'Home Page'}check/referer"&gt;&lt;img$gifborder
-        src="$image_uri"
-        alt="$alttext"$gifhw$xhtmlendtag&gt;&lt;/a&gt;
-  &lt;/p&gt;</pre>
-  <p>
-    If you like, you can download a copy of this image (in <a
-    href="${image_uri}.png">PNG</a> or <a href="${image_uri}.gif">GIF</a>
-    format) to keep in your local web directory, and change the HTML fragment
-    above to reference your local image rather than the one on this server.
-  </p>
-
-EOHD
+      print <<".EOF.";
+    <p>
+      To show your readers that you have taken the care to create an
+      interoperable Web page, you may display this icon on any page
+      that validates. Here is the HTML you could use to add this icon
+      to your Web page:
+    </p>
+    <pre>
+    &lt;p&gt;
+      &lt;a href="$CFG->{'Home Page'}check/referer"&gt;&lt;img$gifborder
+          src="$image_uri"
+          alt="$alttext"$gifhw$xhtmlendtag&gt;&lt;/a&gt;
+    &lt;/p&gt;</pre>
+    <p>
+      If you like, you can download a copy of this image (in <a
+      href="${image_uri}.png">PNG</a> or <a href="${image_uri}.gif">GIF</a>
+      format) to keep in your local web directory, and change the HTML fragment
+      above to reference your local image rather than the one on this server.
+    </p>
+.EOF.
     }
   }
-  if ($File->{Type} eq 'xml' and not $File->{DOCTYPE}) {
-    print "  <p>Congratulations, this document is well-formed XML.</p>\n";
+  if (&is_xml($File->{Type}) and not $File->{DOCTYPE}) {
+    print qq(  <h2 class="valid">This document is well-formed XML.</h2>\n);
   } elsif (defined $File->{Tentative}) {
+    print qq(<h2 class="valid">This Page Is Valid $File->{Version}!</h2>);
     if ($File->{Tentative} == T_CHARSET_KLUDGE) {
       print "  <p>\n    This document would validate as $File->{Version} if you updated it to specify the Character Encoding used.\n  </p>\n";
     } else {
       print "  <p>\n    This document would validate as $File->{Version} if you updated it to match the Options used.\n  </p>\n";
     }
   } elsif ($File->{Version} eq 'unknown' or not defined $image_uri) {
-    print "  <p>\n    Congratulations, this document validates as the document type specified! (I don't have an icon for this one yet, sorry.)\n  </p>\n";
+    print qq(  <h2 class="valid">This document validates as the document type specified! (I don't have an icon for this one yet, sorry.)\n  </h2>\n);
   }
 
-  unless ($File->{Opt}->{URI} =~ m(upload://)) {
+  unless ($File->{'Is Upload'}) {
     my $thispage = $File->{Env}->{'Self URI'};
-    $thispage .= qq(?uri=$File->{Opt}->{URI});
+    $thispage .= qq(?uri=$File->{URI});
     $thispage .= ';ss=1'      if $File->{Opt}->{'Show Source'};
     $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
     $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
     $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
 
-    &output_css_validator_blurb($File->{Opt}->{URI});
+    &output_css_validator_blurb($File->{URI});
 
     print <<"EOHD";
   <p>
@@ -1470,7 +1384,7 @@ sub outline {
 
   print <<'EOF';
   <div id="outline" class="mtb">
-    <hr>
+    <hr />
     <h2><a name="outline">Outline</a></h2>
     <p>
       Below is an outline for this document, automatically generated from the
@@ -1538,7 +1452,7 @@ sub show_source {
 
   print <<'EOF';
   <div id="source" class="mtb">
-    <hr>
+    <hr />
     <h2><a name="source">Source Listing</a></h2>
 
     <p>Below is the source input I used for this validation:</p>
@@ -1560,7 +1474,7 @@ sub parse_tree {
 
   print <<'EOF';
   <div id="parse" class="mtb">
-    <hr>
+    <hr />
     <h2><a name="parse">Parse Tree</a></h2>
 EOF
   if ($File->{Opt}->{'No Attributes'}) {
@@ -1641,12 +1555,12 @@ sub preparse {
     ($File->{Root}, $File->{DOCTYPE}) = shift =~  m(<!DOCTYPE\s+(\w+)\s+PUBLIC\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
   };
   my $pi = sub {
-    return if $File->{XML_Charset};
+    return if $File->{Charset}->{XML};
     my $pi = shift;
     return unless $pi =~ m(<\?xml);
     $pi =~ m(<\?xml[^>]*\sencoding\s*=\s*([\"\'])([A-Za-z][-A-Za-z0-9._]*)\1)s;
     warn qq("$1" - "$2"\n);
-    $File->{XML_Charset} = lc $2;
+    $File->{Charset}->{XML} = lc $2;
   };
   my $start = sub {
     my $tag  = shift;
@@ -1657,7 +1571,7 @@ sub preparse {
       if (lc $tag eq 'meta') {
 	if (lc $attr{'http-equiv'} eq 'content-type') {
 	  if ($attr{content} =~ m(charset\s*=[\s\"\']*([^\s;\"\'>]*))si) {
-	    $File->{META_Charset} = lc $1;
+	    $File->{Charset}->{META} = lc $1;
           }
 	}
       }
@@ -1687,7 +1601,7 @@ sub preparse {
 sub show_esis ($) {
   print <<'EOF';
   <div id="raw_esis" class="mtb">
-    <hr>
+    <hr />
     <h2><a name="raw_esis">Raw ESIS Output</a></h2>
     <pre>
 EOF
@@ -1704,7 +1618,7 @@ EOF
 sub show_errors ($) {
   print <<'EOF';
   <div id="raw_errors" class="mtb">
-    <hr>
+    <hr />
     <h2><a name="raw_errors">Raw Error Output</a></h2>
     <pre>
 EOF
@@ -1739,7 +1653,7 @@ sub prepCGI {
   # Supercede URI with an uploaded file.
   if ($q->param('uploaded_file')) {
     $q->param('uri', 'upload://' . $q->param('uploaded_file'));
-    $File->{Opt}->{'Is Upload'} = TRUE; # Tag it for later use.
+    $File->{'Is Upload'} = TRUE; # Tag it for later use.
   }
 
   # Supercede URI with an uploaded fragment.
@@ -1826,4 +1740,178 @@ sub uri_rejected {
 EOF
   return $ret;
   }
+}
+
+
+#
+# Utility subs to tell if type "is" something.
+sub is_xml    {shift =~ m(^[^+]+\+xml$)};
+sub is_svg    {shift =~ m(^svg)};
+sub is_smil   {shift =~ m(^smil)};
+sub is_html   {shift =~ m(^html$)};
+sub is_xhtml  {shift =~ m(^xhtml)};
+sub is_mathml {shift =~ m(^mathml)};
+
+
+#
+# Sanity check charset info and add any warnings necessary.
+sub validate_charset {
+  my $File = shift;
+  #
+  # Handle the case where there was no charset to be found.
+  # (This is a different issue from whether an override was given!)
+  unless ($File->{Charset}->{Use}) {
+    if (&is_xml($File->{Type})) {
+      $File->{Charset}->{Use} = 'UTF-8'; # @@@TODO@@@: Should detect UTF-8 vs. UTF-16!
+    } else {
+      &add_warning($File, <<"      .EOF.");
+      <strong>No Character Encoding detected!</strong>
+      To ensure correct validation, processing, and display,
+      it is important that the character encoding is properly
+      labeled.
+      <a href="http://www.w3.org/International/O-charset.html">More
+      information...</a>
+      .EOF.
+      $File->{Tentative} |= T_CHARSET_KLUDGE; # Would be T_WARN, but the complaints...
+    }
+  }
+
+  #
+  # If we have a charset field in the request, we use it
+  if ($File->{Opt}->{Charset}) {
+    if ($File->{Opt}->{Charset} =~ m(detect automatically)i) {
+      $File->{Opt}->{Charset} = '';
+    } else {
+      $File->{Opt}->{Charset} =~ /^(\w+)/;
+      $File->{Opt}->{Charset} = lc $1;
+
+      &add_warning($File, <<"      .EOF.");
+      <strong>Character Encoding Override in effect!</strong>
+      The detected character encoding,
+      &#171;<code>$File->{Charset}->{Use}</code>&#187;, has been supressed and the
+      character encoding &#171;<code>$File->{Opt}->{Charset}</code>&#187;
+      used instead.
+      .EOF.
+      $File->{Tentative} |= T_ERROR;
+      $File->{Charset}->{Use} = $File->{Opt}->{Charset};
+    }
+  }
+
+  #
+  # Add a warning if there was charset info in the HTTP header, but it was
+  # later overridden by a META element or XML Declaration.
+  if ($File->{Charset}->{HTTP}) {
+    if ($File->{Charset}->{META}) {
+      unless ($File->{Charset}->{META} eq $File->{Charset}->{HTTP}) {
+	&add_warning($File, <<"        .EOF.");
+      <strong>Character Encoding mismatch!</strong>
+      The character encoding specified in the HTTP header,
+      &#171;<code>$File->{Charset}->{HTTP}</code>&#187;, is different from the
+      value &#171;<code>$File->{Charset}->{META}</code>&#187; in the META element.
+      I will use &#171;<code>$File->{Charset}->{Use}</code>&#187; for this validation.
+        .EOF.
+      }
+    } elsif ($File->{Charset}->{XML}) {
+      unless ($File->{Charset}->{XML} eq $File->{Charset}->{HTTP}) {
+	&add_warning($File, <<"        .EOF.");
+      <strong>Character Encoding mismatch!</strong>
+      The character encoding specified in the HTTP header,
+      &#171;<code>$File->{Charset}->{HTTP}</code>&#187;, is different from the
+      one value &#171;<code>$File->{Charset}->{XML}</code>&#187; in the XML
+      declaration I will use &#171;<code>$File->{Charset}->{Use}</code>&#187;
+      for this validation.
+        .EOF.
+      }
+    }
+  }
+
+  return $File;
+}
+
+
+#
+# Check Encoding and Transliterate.
+sub validate_encoding {
+  my $File = shift;
+
+  my @lines;
+
+  unless ($File->{Charset}->{Use} =~ m(utf-8)i) {
+    my ($command, $result_charset) = split " ", $CFG->{Charsets}->{$File->{Charset}->{Use}}, 2;
+
+    if ($command eq 'I') {
+      eval {my $c = Text::Iconv->new($result_charset, 'utf-8')};
+      $command = '' if $@;
+    } elsif ($command eq 'X') {
+      $@ = "$File->{Charset}->{Use} undefined; replace by $result_charset";
+    }
+
+    if ($command ne 'I') {
+      $File->{'Error Flagged'} = TRUE;
+      $File->{'Error Message'} = <<"      .EOF.";
+        <p>Sorry!
+          A fatal error occurred when attempting to transcode the character encoding
+          of the document. Either we do not support this character encoding yet, or you 
+          have specified a non-existent character encoding (often a misspelling).
+        </p>
+        <p>The detected character encoding was "$File->{Charset}->{Use}".</p>
+        <p>The error was "$@".</p>
+        <p>The command was "$command".</p>
+        <p>The Result Charset was "$result_charset".</p>
+        <p>The Use Charset was "$File->{Charset}->{Use}".</p>
+        <p>
+          If you believe the character encoding to be valid you can submit a request for
+          that character encoding (see the <a href="/feedback.html">feedback page</a>
+          for details) and we will look into supporting it in the future.
+        </p>
+      .EOF.
+      return $File;
+    }
+
+    my $c = Text::Iconv->new($result_charset, 'utf-8');
+    my $line = 0;
+    for (@{$File->{Content}}) {
+      my $in = $_;
+      $line++;
+      $_ = $c->convert($_); # $_ is local!!
+      push @lines, $line if ($in ne "" and $_ eq "");
+    }
+  }
+
+  # check correctness of UTF-8 both for UTF-8 input and for conversion results
+  if ($File->{Charset}->{Use}) {
+    for (my $i = 0; $i < $#{$File->{Content}}; $i++) {
+      # substitution needed for very long lines (>32K),
+      # to avoid backtrack stack overflow
+      local $_ = $File->{Content}->[$i];
+      s/  [\x00-\x7F]                           # ASCII
+        | [\xC2-\xDF]        [\x80-\xBF]        # non-overlong 2-byte sequences
+        |  \xE0[\xA0-\xBF]   [\x80-\xBF]        # excluding overlongs
+        | [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}     # straight 3-byte sequences
+        |  \xED[\x80-\x9F]   [\x80-\xBF]        # excluding surrogates
+        |  \xF0[\x90-\xBF]   [\x80-\xBF]{2}     # planes 1-3
+        | [\xF1-\xF3]        [\x80-\xBF]{3}     # planes 4-15
+        |  \xF4[\x80-\x8F][\x80-\xBF]{2}        # plane 16
+       //xg;
+      push @lines, $i if length;
+    }
+  }
+
+  if (scalar @lines) {
+    $File->{'Error Flagged'} = TRUE;
+    my $s = $#lines ? 's' : '';
+    my $lines = join ', ', @lines;
+    $File->{'Error Message'} = <<"    .EOF.";
+      <p class="error">
+        Sorry, I am unable to validate this document because on
+        <strong>line$s $lines</strong> it contained
+        some byte$s that I cannot interpret as
+        <code>$File->{Charset}->{Use}</code>.
+        Please check both the content of the file
+        and the character encoding indication.
+      </p>
+    .EOF.
+    return $File;
+  }
+  return $File;
 }

@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.8.2.3 2002-03-31 07:04:07 link Exp $ */
+/* $Id: results.css,v 1.8.2.4 2002-04-04 17:04:36 link Exp $ */
 
 .markup {
   color: red;
@@ -11,15 +11,32 @@
   background-color: #eeeeee; /* light grey */
 }
 
+table.header {
+/*  float: left; */
+  background-color: #eeeeee;
+}
+
+ul#Warnings {
+  clear: left;
+  padding-top: 1ex;
+}
+
+div.meat { 
+  border: 1px solid red;
+  margin-right: 16ex;
+}
+
 dl.tip {
-  float: left;
-  margin-top: 0em;
-  max-width: 20em;
-  background: #eeeeee;
-  border-top: 3px solid #eeeeee;
-  border-left: 3px solid #eeeeee;
+  float: right;
+  clear: left;
+  text-align: justify;
+  max-width: 25ex;
+  margin-top:    0em;
+  background:    #eeeeee;
+  border-top:    3px solid #eeeeee;
+  border-left:   3px solid #eeeeee;
   border-bottom: 3px solid silver;
-  border-right: 3px solid silver;
+  border-right:  3px solid silver;
 }
 
 dl.tip dt a {
@@ -53,16 +70,14 @@ dl.tip dd a {
   padding: .1em .25em;
   text-decoration: none;
   margin:  .5em;
-}
-
-table.header {
-  background-color: #eeeeee;
+  display: block;
 }
 
 th {
   padding-right: .5em;
   text-align: right;
   vertical-align: middle;
+  white-space: nowrap;
 }
 
 td {
@@ -91,8 +106,8 @@ td {
 }
 
 .valid {
-  clear: both;
-  background:		blue;
+  clear: left;
+  background:		#005A9C;
   color:		white;
   font-family:		Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
   font-size-adjust:	.53;
