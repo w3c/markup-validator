@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.18 2002-12-03 06:52:32 link Exp $
+# $Id: check,v 1.305.2.19 2002-12-03 07:22:18 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.18 $;
+  $VERSION    =  q$Revision: 1.305.2.19 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -166,7 +166,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-12-03 06:52:32 $,
+                              Date => q$Date: 2002-12-03 07:22:18 $,
                              });
 
 #
@@ -1680,11 +1680,10 @@ sub report_valid {
     print <<".EOF.";
     <p>
       $source
-      was checked and found to be valid $File->{Version}. This means that
-      the resource in question identified itself as
-      &ldquo;$File->{Version}&rdquo; and that we successfully performed a
-      formal validation using an SGML or XML Parser (depending on the
-      markup language used).
+      was checked and found to be valid $File->{Version}. This means that the
+      resource in question identified itself as "$File->{Version}" and that we
+      successfully performed a formal validation using an SGML or XML Parser
+      (depending on the markup language used).
     </p>
 .EOF.
       if (defined $image_uri) {
@@ -1732,12 +1731,11 @@ sub report_valid {
     print qq(  <h2 class="valid">This document validates as the document type specified!</h2>\n);
     print <<".EOF.";
     <p>
-      The document located at
-      &lt;<a href="$URI">$URI</a>&gt; was checked and found
-      to be valid $File->{Version}. This means that the resource in question
-      identified itself as &ldquo;$File->{Version}&rdquo; and that we
-      successfully performed a formal validation using an SGML or XML Parser
-      (depending on the markup language used).
+      The document located at &lt;<a href="$URI">$URI</a>&gt; was checked and
+      found to be valid $File->{Version}. This means that the resource in
+      question identified itself as "$File->{Version}" and that we successfully
+      performed a formal validation using an SGML or XML Parser (depending on
+      the markup language used).
     </p>
 .EOF.
   }
