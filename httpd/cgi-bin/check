@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.382 2005-02-04 19:00:59 link Exp $
+# $Id: check,v 1.383 2005-02-04 19:25:20 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -239,7 +239,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.382 $;
+  $VERSION    =  q$Revision: 1.383 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1425,16 +1425,15 @@ sub parse_content_type {
     }
   }
 
-  if ($mode =~ m(/)) {
-    my $type = $mode; # $mode is the MIME media type.
-    if ($type =~ m(text/css) and defined $url) {
+  if ($mode == MODE_TBD) {
+    if ($ct =~ m(text/css) and defined $url) {
       print redirect
         'http://jigsaw.w3.org/css-validator/validator?uri='
           . uri_escape $url;
       exit;
     } else {
       $File->{'Error Flagged'} = TRUE;
-      $File->{'Error Message'} = sprintf(<<"      EOF", &ent($type));
+      $File->{'Error Message'} = sprintf(<<"      EOF", &ent($ct));
     <div class="error">
       <p>
         Sorry, I am unable to validate this document because its content type
