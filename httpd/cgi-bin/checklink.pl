@@ -5,7 +5,7 @@
 # (c) 1999-2002 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.99 2002-10-26 21:49:16 ville Exp $
+# $Id: checklink.pl,v 3.0 2002-10-26 22:43:22 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -25,10 +25,12 @@
 
 use strict;
 
+# -----------------------------------------------------------------------------
+
 package W3C::UserAgent;
 
 use LWP::UserAgent      qw();
-# @@@ Needs also W3C::CheckLink but can't use() it here...
+# @@@ Needs also W3C::CheckLink but can't use() it here.
 
 @W3C::UserAgent::ISA =  qw(LWP::UserAgent);
 
@@ -73,6 +75,7 @@ use Time::HiRes         qw();
 use URI                 qw();
 use URI::Escape         qw();
 use URI::file           qw();
+# @@@ Needs also W3C::UserAgent but can't use() it here.
 
 @W3C::CheckLink::ISA =  qw(HTML::Parser);
 
@@ -80,7 +83,7 @@ BEGIN
 {
   # Version info
   $PROGRAM  = 'W3C checklink';
-  $REVISION = q$Revision: 2.99 $ . '(c) 1999-2002 W3C';
+  $REVISION = q$Revision: 3.0 $ . '(c) 1999-2002 W3C';
   $VERSION  = sprintf('%d.%02d', $REVISION =~ /(\d+)\.(\d+)/);
 
   eval "use Term::ReadKey 2.00 qw(ReadMode)";
@@ -711,8 +714,10 @@ sub get_uri ($$;$\%$$$$)
   if (! defined($start)) {
     $start = &get_timestamp();
   }
+
   # Prepare the query
-  my $ua = new W3C::UserAgent;
+  my %lwpargs = ($LWP::VERSION >= 5.6) ? (keep_alive => 1) : ();
+  my $ua = W3C::UserAgent->new(%lwpargs);
   $ua->timeout($_timeout);
   $ua->agent(sprintf('W3C-checklink/%s %s', $VERSION, $ua->agent()));
   $ua->env_proxy();
