@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.166 2001-07-29 07:05:06 link Exp $
+# $Id: check,v 1.167 2001-07-29 07:15:08 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.166 $;
+$VERSION    =  q$Revision: 1.167 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-29 07:05:06 $;
+$DATE       =  q$Date: 2001-07-29 07:15:08 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -568,6 +568,12 @@ if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
   &add_table("Document Type", $version);
   if ($File->{Type} eq 'xhtml' and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
     &add_warning ("Unknown namespace (&#171;<code>$File->{Namespace}</code>&#187;) for text/html document!");
+    if ($File->{Namespace} ne '') {
+      &add_table("Root Namespace",
+	"<a href='$File->{Namespace}'>$File->{Namespace}</a>");
+    }
+  } elsif ($File->{Type} eq 'svg' and $File->{Namespace} ne 'http://www.w3.org/2000/svg') {
+    &add_warning ("Unknown namespace (&#171;<code>$File->{Namespace}</code>&#187;) for SVG document!");
     if ($File->{Namespace} ne '') {
       &add_table("Root Namespace",
 	"<a href='$File->{Namespace}'>$File->{Namespace}</a>");
