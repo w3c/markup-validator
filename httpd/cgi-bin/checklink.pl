@@ -2,7 +2,7 @@
 
 $|++;
 
-$VERSION= '$Id: checklink.pl,v 1.5 1998-09-02 00:05:31 renaudb Exp $ ';
+$VERSION= '$Id: checklink.pl,v 1.6 1998-09-03 00:20:23 renaudb Exp $ ';
 
 BEGIN {
     unshift@INC,('/usr/etc/apache/PerlLib');
@@ -99,9 +99,10 @@ sub callback_check {
 }
 
 sub checklinks {
-    my $url=shift;
+    my $url=URI::URL->new(shift);
     my $q = shift if($CGI);
     my $ua = new LWP::Parallel::UserAgent;
+    my $request = HTTP::Request->new(GET => $url);
     $p = ParseLink->new(); # we want the parser to be global, so we can call it from the callback function
 
     $ua->max_hosts(10);
@@ -110,13 +111,14 @@ sub checklinks {
     # prepare the request
     # Request document and parse it as it arrives via callback
     # Then get the UA ready for the requests in the foreach loop
-    $ua->credentials(URI::URL->new($url)->netloc,"W3C-Team","XXXXX","XXXXX");
-    $ua->register(HTTP::Request->new(GET => $url), \&callback_parse);
+    if($q->param('username')){
+	$request->headers->authorization_basic($q->param('username'),$q->param('password'));
+    }
+    
+    $ua->register($request, \&callback_parse);
     $res = $ua->wait(10);
     $ua->initialize;
 
-    # foreach not necessary since processing only one request
-    # but we might be willing to checklink several pages
     foreach my $r (map {$res->{$_}->response} keys %$res){
 	if ($r->is_success && $r->content_type =~ /text\/html/i){
 	    # if the request is a success
@@ -138,8 +140,20 @@ sub checklinks {
 	    &print_result();
 	} else {
 	    # error handling if error on fetching document to be checklink-ed
-	    print "Output meaningful message\n";
-	    print $r->headers_as_string,"\n";
+	    if($r->code == 401){
+		$r->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
+		my $realm = $1;
+		print $q->h2('Authentication Required To Fetch '.$q->a({href=>$url},$url));
+		print $q->startform('GET',$q->url);
+		print $q->textfield(-name=>'url',-size=>'50',-value=>$url),$q->br;
+		print $q->textfield(-name=>'username',-size=>'10'),"Username for Realm ",$realm,$q->br;
+		print $q->password_field(-name=>'password',-size=>'10'),"Password",$q->br;
+		print $q->hidden('realm',$realm);
+		print $q->submit('Proceed');
+		print $q->endform;
+	    } else {
+		print $q->h2('Error '.$r->code);
+	    }
 	}
     }
 }
@@ -155,7 +169,7 @@ sub print_result{
     foreach my $resp (map {$response->{$_}->response} keys %$response){
 	if($resp->code ne "200"){
 	    print "<TR><TD ALIGN=\"center\">" if ($CGI);
-	    print join(",",keys %{$URL{$resp->request->url}});
+	    print join(",",sort keys %{$URL{$resp->request->url}});
 	    print "</TD><TD BGCOLOR=\"yellow\"><B>".$q->a({href=>$resp->request->url},$resp->request->url)."</B></TD><TD>",$resp->code,"</TD><TD>" if($CGI);
 	    print " ",$resp->request->url, ": ",$resp->code," " if($VERBOSE);
 	    if($resp->code == 401){
@@ -163,7 +177,7 @@ sub print_result{
 	    }
 	    print "</TD></TR>\n" if($CGI);
 	} else {
-	    print "<TR><TD ALIGN=\"center\">".join(",",keys %{$URL{$resp->request->url}})."</TD><TD>".$q->a({href=>$resp->request->url},$resp->request->url)."</TD><TD>",$resp->code,"</TD><TD></TD></TR>\n" if($CGI);
+	    print "<TR><TD ALIGN=\"center\">".join(",",sort keys %{$URL{$resp->request->url}})."</TD><TD>".$q->a({href=>$resp->request->url},$resp->request->url)."</TD><TD>",$resp->code,"</TD><TD></TD></TR>\n" if($CGI);
 	}
     }
     print "</table>\n" if($CGI);
@@ -176,4 +190,6 @@ sub html_header {
     $q = shift;
     print $q->header;
     print $q->start_html(-title=>'W3C\'s Link Checker',-BGCOLOR=>'white');
+    print $query->a({href=>"http://www.w3.org"},$query->img({src=>"http://www.w3.org/Icons/w3c_home",alt=>"W3C",border=>"0"}));
+    print $query->a({href=>"http://www.w3.org/Web"},$query->img({src=>"http://www.w3.org/Icons/WWW/web",border=>"0",alt=>"Web Team"}));
 }
