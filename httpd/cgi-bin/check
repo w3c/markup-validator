@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl -Tw
 #
 # W3C HTML Validation Service
 # A CGI script to retrieve and validate an HTML file
@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.1 2002-03-03 22:08:16 link Exp $
+# $Id: check,v 1.200.2.2 2002-03-16 16:23:03 link Exp $
 
 #
 # We need Perl 5.004.
@@ -55,11 +55,10 @@ use constant T_CHARSET_KLUDGE => 128; # 1000 0000
 
 #
 # Define global variables
+use vars qw($DEBUG); # Switch to turn debugging on and off.
 use vars qw($VERSION $DATE $MAINTAINER $NOTICE);               # Strings.
 use vars qw($frag $pub_ids $element_uri $file_type $doctypes $charsets);
                                                                # Cfg hashes.
-use vars qw($DEBUG); # Switch to turn debugging on and off.
-use vars qw($File);  # Global var to hold all metadata for this validation.
 
 $DEBUG += 1 unless $ENV{SERVER_PORT} == 80;
 
@@ -79,27 +78,20 @@ my $dtds_db   = $html_path . 'config/doctypes.cfg';
 my $chst_db   = $html_path . 'config/charset.cfg';
 my $tips_db   = $html_path . 'config/tips.html';
 my $sgmlstuff = $html_path . 'sgml-lib';
-my $temp      = "/tmp/validate.$$"; # @@ Use POSIX/IO::File tmpfiles instead!
 
 #
 # Executables and binaries
-my $sp  = '/usr/local/bin/lq-nsgmls';
-# DWC tweak: my $sp  = '/usr/bin/nsgmls';
-my $osp = '/usr/local/bin/onsgmls';
+my $sp = '/usr/local/bin/onsgmls';
 
 #
 # URIs and fragments
-my $abs_svc_uri	= 'http://validator.w3.org/';
 my $uri_def_uri	= 'http://www.w3.org/Addressing/#terms';
-my $faqloc	= '/docs/';
-my $faqerrloc	= $faqloc . 'errors.html';
-my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.1 $;
+$VERSION    =  q$Revision: 1.200.2.2 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2002-03-03 22:08:16 $;
+$DATE       =  q$Date: 2002-03-16 16:23:03 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -121,71 +113,78 @@ $doctypes    = &read_cfg($dtds_db); # Name    -> doctype
 $charsets    = &read_cfg($chst_db); # charset -> iconv parameter
 
 #
-# delete() the, possibly tainted, $PATH.
+# Get rid of (possibly insecure) $PATH.
 delete $ENV{PATH};
 
 
-#############################################################################
-# Process CGI variables
-#############################################################################
+################################################################################
+#### Process CGI variables and initialize. #####################################
+################################################################################
 
 #
 # Create a new CGI object.
 my $q = new CGI;
 
 #
-# Backwards compatibility; see
-# http://lists.w3.org/Archives/Public/www-validator/1999JulSep/0197
-# http://lists.w3.org/Archives/Public/www-validator/1999JulSep/0212
-if (scalar $q->param) {
-  foreach my $param ($q->param) {
-    next if $param eq 'uploaded_file';
-    $q->param($param, TRUE) unless $q->param($param);
-  }
-}
+# The datastructure that will hold all session data.
+my $File;
+
+##############################################
+# Populate $File->{Env} -- Session Metadata. #
+##############################################
 
 #
-# Futz the URI so "/referer" works.
-if ($q->path_info eq '/referer') {
-  $q->param('uri', $q->referer);
-}
+# The URL to this CGI Script.
+$File->{Env}->{'Self URI'} = $q->url(-query => 0);
+
+
+################################################
+# Populate $File->{Cfg} -- Configuration Data. #
+################################################
 
 #
-# USe HTTP Referer if uri=referer.
-if ($q->param('uri') =~ m(referer)i) {
-  $q->param('uri', $q->referer);
-}
+# The URI to various things.
+$File->{Cfg}->{'Home Page'}       = 'http://validator.w3.org/';
+$File->{Cfg}->{'Msg FAQ URI'}     = 'http://validator.w3.org/docs/errors.html';
+$File->{Cfg}->{'Element Ref URI'} = 'http://www.htmlhelp.com/reference/html40/';
+
+
+#########################################
+# Populate $File->{Opt} -- CGI Options. #
+#########################################
 
 #
-# Use "url" unless a "uri" was also given.
-if ($q->param('url') and not $q->param('uri')) {
-  $q->param('uri', $q->param('url'));
-}
+# Preprocess the CGI parameters.
+$q = &prepCGI($File, $q);
 
 #
-# Supercede URI with an uploaded file.
-if ($q->param('uploaded_file')) {
-  &redirect_to_home_page unless length($q->param('uploaded_file')); # Must have filename.
-  $q->param('uri', 'upload://' . $q->param('uploaded_file'));
-}
+# Set session switches.
+$File->{Opt}->{'Weblint'}        = $q->param('weblint') ? TRUE : FALSE;
+$File->{Opt}->{'Outline'}        = $q->param('outline') ? TRUE : FALSE;
+$File->{Opt}->{'Show Source'}    = $q->param('ss')      ? TRUE : FALSE;
+$File->{Opt}->{'Show Parsetree'} = $q->param('sp')      ? TRUE : FALSE;
+$File->{Opt}->{'No Attributes'}  = $q->param('noatt')   ? TRUE : FALSE;
+$File->{Opt}->{'Show ESIS'}      = $q->param('esis')    ? TRUE : FALSE;
+$File->{Opt}->{'Show Errors'}    = $q->param('errors')  ? TRUE : FALSE;
+$File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') if $q->param('doctype');
+$File->{Opt}->{'Charset'}        = $q->param('charset') if $q->param('charset');
+$File->{Opt}->{'URI'}            = $q->param('uri')     if $q->param('uri');
+
 
 #
-# Supercede URI with an uploaded fragment.
-if ($q->param('fragment')) {$q->param('uri', 'upload://Form Submission')};
+# Get the file and metadata.
+if    ($q->param('uploaded_file')) {$File = &handle_file($q, $File)}
+elsif ($q->param('fragment'))      {$File = &handle_frag($q, $File)}
+elsif ($q->param('uri'))           {$File = &handle_uri( $q, $File)};
 
 #
-# Send them to the homepage unless we can extract a URI from either of the
-# acceptable sources: uri, url or /referer.
-&redirect_to_home_page unless length($q->param('uri')) > 5;
-
-#
-# Munge the URI to include commonly omitted prefix.
-$q->param('uri', 'http://' . $q->param('uri')) if $q->param('uri') =~ m(^www)i;
+# Get rid of the CGI object.
+undef $q;
 
 
-#############################################################################
-# Output validation results
-#############################################################################
+################################################################################
+#### Output validation results. ################################################
+################################################################################
 
 #
 # A string containing the HTML header for validation results.
@@ -234,7 +233,7 @@ EOF
 #
 # Punt if we don't recognize this URI scheme.
 # @@ LWP does a whole bunch more: transparently!
-unless ($q->param('uri') =~ m(^(http|upload)://)) {
+unless ($File->{Opt}->{URI} =~ m(^(http|upload)://)) {
   print $File->{Results};
   print <<"EOF";
   <p>
@@ -245,21 +244,16 @@ unless ($q->param('uri') =~ m(^(http|upload)://)) {
     URIs should be in the form:
   </p>
   <blockquote>
-    <code>$abs_svc_uri</code>
+    <code>$File->{Cfg}->{'Home Page'}</code>
   </blockquote>
   <p>
     (There are other types of URIs, too, but only <code>http://</code> URIs
     are currently supported by this service.)
   </p>
 EOF
-  &clean_up_and_exit;
+  &clean_up_and_exit($File);
 }
 
-#
-# Get the file and metadata.
-if    ($q->param('uploaded_file')) {$File = &handle_file($q, $File)}
-elsif ($q->param('fragment'))      {$File = &handle_frag($q, $File)}
-elsif ($q->param('uri'))           {$File = &handle_uri( $q, $File)};
 
 #
 # Abort if there was no document type mapping for this Content-Type, in which
@@ -273,7 +267,7 @@ if ($File->{'Type'} =~ m(/) and not $q->param('uploaded_file')) {
       currently supported by this service.
     </p>
 EOF
-  &clean_up_and_exit;
+  &clean_up_and_exit($File);
 }
 
 #
@@ -291,21 +285,21 @@ EOF
 #
 # Detect and remove a UTF-8 BOM.
 $File->{Content}[0] =~ s/^\xEF\xBB\xBF//
-  and &add_warning(<<".EOF.");
+  and &add_warning($File, <<".EOF.");
      <em>Note:</em> UTF-8 'BOM' detected and removed. (This message is
      informational. See the
-     <a href="$faqerrloc#utf8-bom">explanation</a> for details.)
+     <a href="$File->{Cfg}->{'Msg FAQ URI'}#utf8-bom">explanation</a> for details.)
 .EOF.
 
 
 #
 # Override DOCTYPE if user asked for it.
-if (defined $q->param('doctype')
-    and not $q->param('doctype') =~ /(Inline|detect)/i) {
+if (defined $File->{Opt}->{DOCTYPE}
+    and not $File->{Opt}->{DOCTYPE} =~ /(Inline|detect)/i) {
   $File->{Content} = &supress_doctype($File->{Content});
-  unshift @{$File->{Content}}, $doctypes->{$q->param('doctype')};
-  my $dtd = ent($q->param('doctype'));
-  &add_warning(<<".EOF.");
+  unshift @{$File->{Content}}, $doctypes->{$File->{Opt}->{DOCTYPE}};
+  my $dtd = ent($File->{Opt}->{DOCTYPE});
+  &add_warning($File, <<".EOF.");
   <strong>DOCTYPE Override in effect!</strong> Any DOCTYPE Declaration in the
   document has been supressed and the DOCTYPE for &#171;<code>$dtd</code>&#187;
   inserted instead. The document will not be Valid until you alter the source
@@ -335,9 +329,9 @@ elsif ($File->{META_Charset}) {$File->{Charset} = $File->{META_Charset}}
 else  {                        $File->{Charset} = 'unknown'}
 
 # If we have a charset field in the request, we use it
-if ($q->param('charset') and $q->param('charset') ne 'unknown'
-               and $q->param('charset') ne '(detect automatically)') {
-  $q->param('charset') =~ /^([^ ]*)/;
+if ($File->{Opt}->{Charset} and $File->{Opt}->{Charset} ne 'unknown'
+               and $File->{Opt}->{Charset} ne '(detect automatically)') {
+  $File->{Opt}->{Charset} =~ /^([^ ]*)/;
   $File->{Use_Charset} = lc $1;
 }
 else { $File->{Use_Charset} = $File->{Charset}; }
@@ -351,85 +345,83 @@ if ($File->{Use_Charset} ne 'unknown') {
 
 #
 # Print header and jump links.
-print $File->{Results}, &build_jump_links;
+print $File->{Results}, &build_jump_links($File);
 
 
 #
 # Print different things if we got redirected or had a file upload.
-if (URI::eq("$File->{URI}", $q->param('uri'))) { # @@ Need to stringify here?
-  &add_table(qq(<label title="Address of Page to Validate" for="uri">Address</label>),
+#if (URI::eq("$File->{Opt}->{URI}", $q->param('uri'))) { # @@@FIXME@@@: Temorarily Broken. :-)
+if (TRUE) { # @@ Need to stringify here?
+  &add_table($File, qq(<label title="Address of Page to Validate" for="uri">Address</label>),
 	     '<input type="text" id="uri" name="uri" size="'
-	     . (length($File->{URI}) + 2)
-	     . '" value="' . $File->{URI} . '" />'
-             . ' [<a title="Go to the entered URI" href="' . $File->{URI} . '">Go to...</a>]');
+	     . (length($File->{Opt}->{URI}) + 2)
+	     . '" value="' . $File->{Opt}->{URI} . '" />'
+             . ' [<a title="Go to the entered URI" href="' . $File->{Opt}->{URI} . '">Go to...</a>]');
 } elsif ($q->param('uploaded_file')) {
-  &add_table("File", $File->{URI});
+  &add_table($File, "File", $File->{Opt}->{URI});
 } else {
-  &add_table(qq(<label title="Address of Page to Validate" for="uri"><a href="$uri_def_uri">URI</a></label>),
+  &add_table($File, qq(<label title="Address of Page to Validate" for="uri"><a href="$uri_def_uri">URI</a></label>),
 	     '<input type="text" id="uri" name="uri" size="'
-	     . (length($File->{URI}) + 2)
-	     . '" value="' . $File->{URI} . '" />'
-             . ' [<a href="' . $File->{URI} . '">Go to URI</a>]');
-  &add_warning('<em>Note:</em> The URI you gave me, &#171;<code>' .
+	     . (length($File->{Opt}->{URI}) + 2)
+	     . '" value="' . $File->{Opt}->{URI} . '" />'
+             . ' [<a href="' . $File->{Opt}->{URI} . '">Go to URI</a>]');
+  &add_warning($File, '<em>Note:</em> The URI you gave me, &#171;<code>' .
 	       $q->param('uri') . '</code>&#187;, ' .
 	       'returned a redirect to ' .
-	       '&#171;<code>' . $File->{URI} . '</code>&#187;.');
+	       '&#171;<code>' . $File->{Opt}->{URI} . '</code>&#187;.');
 }
 
-&add_table("Last Modified", $File->{Modified})  if $File->{Modified};
-&add_table("Server", $File->{Server})  if $File->{Server};
-&add_table("Content Length", $File->{Size})  if $File->{Size};
-&add_table("Detected Character Encoding", "<code>$File->{Charset}</code>");
-&add_table("Used Character Encoding", "<code>$File->{Use_Charset}</code>")
+&add_table($File, "Last Modified", $File->{Modified})  if $File->{Modified};
+&add_table($File, "Server", $File->{Server})  if $File->{Server};
+&add_table($File, "Content Length", $File->{Size})  if $File->{Size};
+&add_table($File, "Detected Character Encoding", "<code>$File->{Charset}</code>");
+&add_table($File, "Used Character Encoding", "<code>$File->{Use_Charset}</code>")
     unless $File->{Charset} eq $File->{Use_Charset};
-unless ($q->param('uploaded_file')) {
-  &add_table(qq(<label title="Select Character Encoding" for="charset">Select Character Encoding</label>),
-	     $q->popup_menu(-name => 'charset', -id => 'charset',
-			    -values => [
-					'(detect automatically)',
-					'utf-8 (Unicode, worldwide)',
-					'iso-8859-1 (Western Europe)',
-					'iso-8859-2 (Central Europe)',
-					'iso-8859-3 (Maltese)',
-					'iso-8859-4 (Baltic Rim)',
-					'iso-8859-5 (Cyrillic)',
-					'iso-8859-6-i (Arabic)',
-					'iso-8859-7 (Greek)',
-					'iso-8859-8-i (Hebrew)',
-					'iso-8859-9 (Turkish)',
-					'iso-8859-10 (Latin 6)',
-					'iso-8859-13 (Latin 7)',
-					'iso-8859-14 (Celtic)',
-					'iso-8859-15 (Latin 9)',
-					'us-ascii (basic English)',
-					'euc-jp (Japanese, Unix)',
-					'shift_jis (Japanese, Win/Mac)',
-					'iso-2022-jp (Japanese, email)',
-					'euc-kr (Korean)',
-					'gb2312 (Chinese, simplified)',
-					'big5 (Chinese, traditional)',
-					'tis-620 (Thai)',
-					'koi8-r (Russian)',
-					'koi8-u (Ukrainian)',
-					'macintosh (MacRoman)',
-					'windows-1250 (Central Europe)',
-					'windows-1251 (Cyrillic)',
-					'windows-1252 (Western Europe)',
-					'windows-1253 (Greek)',
-					'windows-1254 (Turkish)',
-					'windows-1255 (Hebrew)',
-					'windows-1256 (Arabic)',
-					'windows-1257 (Baltic Rim)',
-				       ],
-			   )
-	    );
+unless ($File->{Opt}->{'Is Upload'}) { # @@@FIXME@@@: Temporarily Broken.
+#  &add_table($File, qq(<label title="Select Character Encoding" for="charset">Select Character Encoding</label>),
+#	     $q->popup_menu(-name => 'charset', -id => 'charset',
+#			    -values => [
+#					'(detect automatically)',
+#					'utf-8 (Unicode, worldwide)',
+#					'iso-8859-1 (Western Europe)',
+#					'iso-8859-2 (Central Europe)',
+#					'iso-8859-3 (Maltese)',
+#					'iso-8859-4 (Baltic Rim)',
+#					'iso-8859-5 (Cyrillic)',
+#					'iso-8859-6-i (Arabic)',
+#					'iso-8859-7 (Greek)',
+#					'iso-8859-8-i (Hebrew)',
+#					'iso-8859-9 (Turkish)',
+#					'iso-8859-10 (Latin 6)',
+#					'iso-8859-13 (Latin 7)',
+#					'iso-8859-14 (Celtic)',
+#					'iso-8859-15 (Latin 9)',
+#					'us-ascii (basic English)',
+#					'euc-jp (Japanese, Unix)',
+#					'shift_jis (Japanese, Win/Mac)',
+#					'iso-2022-jp (Japanese, email)',
+#					'euc-kr (Korean)',
+#					'gb2312 (Chinese, simplified)',
+#					'big5 (Chinese, traditional)',
+#					'tis-620 (Thai)',
+#					'koi8-r (Russian)',
+#					'koi8-u (Ukrainian)',
+#					'macintosh (MacRoman)',
+#					'windows-1250 (Central Europe)',
+#					'windows-1251 (Cyrillic)',
+#					'windows-1252 (Western Europe)',
+#					'windows-1253 (Greek)',
+#					'windows-1254 (Turkish)',
+#					'windows-1255 (Hebrew)',
+#					'windows-1256 (Arabic)',
+#					'windows-1257 (Baltic Rim)',
+#				       ],
+#			   )
+#	    );
 }
 
-if ($File->{HTTP_Charset} ne $File->{META_Charset}
-    and $File->{HTTP_Charset} ne ''
-    and $File->{META_Charset} ne ''
-    and $File->{Charset} ne 'unknown') {
-  &add_warning(<<"EOHD");
+if ($File->{HTTP_Charset} ne $File->{META_Charset}) {
+  &add_warning($File, <<"EOHD");
       <strong>Character Encoding mismatch!</strong>
       The character encoding specified in the HTTP header
       (&#171;<code>$File->{HTTP_Charset}</code>&#187;) is different from the
@@ -437,11 +429,8 @@ if ($File->{HTTP_Charset} ne $File->{META_Charset}
       (&#171;<code>$File->{META_Charset}</code>&#187;).
       I will use &#171;<code>$File->{Charset}</code>&#187; for this validation.
 EOHD
-} elsif ($File->{HTTP_Charset} ne $File->{XML_Charset}
-    and $File->{HTTP_Charset} ne ''
-    and $File->{XML_Charset} ne ''
-    and $File->{Charset} ne 'unknown') {
-  &add_warning(<<"EOHD");
+} elsif ($File->{HTTP_Charset} ne $File->{XML_Charset}) {
+  &add_warning($File, <<"EOHD");
       <strong>Character Encoding mismatch!</strong>
       The character encoding specified in the HTTP header
       (&#171;<code>$File->{HTTP_Charset}</code>&#187;) is different from the
@@ -451,7 +440,7 @@ EOHD
 EOHD
 }
 if ($File->{Use_Charset} ne $File->{Charset}) {
-  &add_warning(<<"EOHD");
+  &add_warning($File, <<"EOHD");
       <strong>Character Encoding Override in effect!</strong>
       The detected character encoding
       (&#171;<code>$File->{Charset}</code>&#187;) has been supressed and the
@@ -461,7 +450,7 @@ EOHD
   $File->{Tentative} |= T_ERROR;
 }
 if ($File->{Use_Charset} eq 'unknown') {
-  &add_warning(<<"EOHD");
+  &add_warning($File, <<"EOHD");
       <strong>No Character Encoding detected!</strong>
       To assure correct validation, processing, and display,
       it is important that the character encoding is properly
@@ -473,7 +462,7 @@ EOHD
 }
 ## special warning because of iconv bug
 if ( $File->{Use_Charset} eq 'macintosh' ) {
-  &add_warning("'macintosh' <code>charset</code> not completely supported, sorry (might get errors saying 'illegal character number 0').");
+  &add_warning($File, "'macintosh' <code>charset</code> not completely supported, sorry (might get errors saying 'illegal character number 0').");
 }
 
 {  # block for character conversion and checking
@@ -488,10 +477,10 @@ if ( $File->{Use_Charset} eq 'macintosh' ) {
       $@ = "$File->{Use_Charset} undefined; replace by $result_charset";
     }
     if ($command ne 'I') {
-      &print_table;
-      &print_warnings;
+      &print_table($File);
+      &print_warnings($File);
       &print_charset_error($@, $File->{Use_Charset});
-      &clean_up_and_exit;
+      &clean_up_and_exit($File);
     }
     my $c = Text::Iconv->new($result_charset, 'utf-8');
     my $line = 0;
@@ -523,8 +512,8 @@ if ( $File->{Use_Charset} eq 'macintosh' ) {
   if(@lines) {
     my $lines = $#lines ? "lines " : "line ";
     $lines .= join ", ", @lines;
-    &print_table;
-    &print_warnings;
+    &print_table($File);
+    &print_warnings($File);
     print <<"EOF";
     <p class="error">
       Sorry, I am unable to validate this document because on
@@ -535,7 +524,7 @@ if ( $File->{Use_Charset} eq 'macintosh' ) {
       and the character encoding indication.
     </p>
 EOF
-    &clean_up_and_exit;
+    &clean_up_and_exit($File);
   }
 }
 
@@ -562,7 +551,6 @@ if ($File->{Type} eq 'xhtml') {
   $ENV{SP_CHARSET_FIXED} = 'NO';
   $ENV{SP_ENCODING}      = 'XML';
   $xmlflags              = '-wxml ';
-  $sp = $osp; # *WARNING* *WARNING* Danger Will Robinson! :-)
 } elsif ($File->{Type} eq 'xml' or $File->{Namespace}) {
   # no doctype, with xmlns attr on 1st element
   $File->{Type} = 'xml'; # @@ probably a better way to do this
@@ -574,14 +562,15 @@ if ($File->{Type} eq 'xhtml') {
 }
 
 my $cmd = "$sp -c $catalog -E0 $xmlflags";
-&add_table("commandline", "<code>$cmd</code>") if $DEBUG;
+&add_table($File, "commandline", "<code>$cmd</code>") if $DEBUG;
 
 my $spin  = IO::File->new;
 my $spout = IO::File->new_tmpfile;
 my $sperr = IO::File->new_tmpfile;
 
 my $pid = do {
-  local(*SPOUT, *SPERR) = ($spout, $sperr);
+  local(*SPOUT, *SPERR);
+  (*SPOUT, *SPERR) = ($spout, $sperr);
   open3($spin, ">&SPOUT", ">&SPERR", $cmd);
 };
 
@@ -616,7 +605,7 @@ undef $spout;
 
 
 my $fpi;
-my $version = 'unknown';
+$File->{Version} = 'unknown';
 if ($File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 'svg' or $File->{Type} eq 'smil') {
   $fpi = $File->{DOCTYPE};
 } elsif ($File->{Type} eq 'xml') {
@@ -630,25 +619,25 @@ if ($File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 's
   # Needed for HTML4 Strict, which has no version attribute on the HTML element
   if (length $File->{DOCTYPE} and not defined $fpi) {$fpi = $File->{DOCTYPE}};
 }
-$version = $pub_ids->{$fpi} || 'unknown';
+$File->{Version} = $pub_ids->{$fpi} || 'unknown';
 
 if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
-  &add_table("Document Type", $version);
+  &add_table($File, "Document Type", $File->{Version});
   if ($File->{Type} eq 'xhtml' and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
-    &add_warning ("Unknown namespace (&#171;<code>$File->{Namespace}</code>&#187;) for text/html document!");
+    &add_warning($File, "Unknown namespace (&#171;<code>$File->{Namespace}</code>&#187;) for text/html document!");
     if ($File->{Namespace} ne '') {
-      &add_table("Root Namespace",
+      &add_table($File, "Root Namespace",
 	"<a href='$File->{Namespace}'>$File->{Namespace}</a>");
     }
   } elsif ($File->{Type} eq 'svg' and $File->{Namespace} ne 'http://www.w3.org/2000/svg') {
-    &add_warning ("Unknown namespace (&#171;<code>$File->{Namespace}</code>&#187;) for SVG document!");
+    &add_warning($File, "Unknown namespace (&#171;<code>$File->{Namespace}</code>&#187;) for SVG document!");
     if ($File->{Namespace} ne '') {
-      &add_table("Root Namespace",
+      &add_table($File, "Root Namespace",
 	"<a href='$File->{Namespace}'>$File->{Namespace}</a>");
     }
   } else {
     if ($File->{Namespace} ne '') {
-      &add_table("Root Namespace",
+      &add_table($File, "Root Namespace",
 	"<a href='$File->{Namespace}'>$File->{Namespace}</a>");
     }
   }
@@ -659,34 +648,34 @@ if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
       $namespaces .= "\t<li><a href='$_'>$_</a></li>\n"
           unless $_ eq $File->{Namespace}; # Don't repeat Root Namespace.
     }
-    &add_table("Other Namespaces", $namespaces . "</ul>");
+    &add_table($File, "Other Namespaces", $namespaces . "</ul>");
   }
 } else {
-  &add_table("Current Doctype", $version); # is this current or detected???
+  &add_table($File, "Current Doctype", $File->{Version}); # is this current or detected???
 }
 
-unless ($q->param('uploaded_file')) {
-  &add_table(qq(<label title="Select Doctype" for="doctype">Select Doctype</label>),
-	     $q->popup_menu(-name => 'doctype', -id => 'doctype',
-			    -values => [
-					'(detect automatically)',
-					'XHTML 1.0 Strict',
-					'XHTML 1.0 Transitional',
-					'XHTML 1.0 Frameset',
-					'HTML 4.01 Strict',
-					'HTML 4.01 Transitional',
-					'HTML 4.01 Frameset',
-					'HTML 3.2',
-					'HTML 2.0',
-				       ],
-			    -default => $q->param('doctype'),
-			   )
-	    );
+unless ($File->{Opt}->{'Is Upload'}) { # @@@FIXME@@@: Temporarily Broken.
+#  &add_table($File, qq(<label title="Select Doctype" for="doctype">Select Doctype</label>),
+#	     $q->popup_menu(-name => 'doctype', -id => 'doctype',
+#			    -values => [
+#					'(detect automatically)',
+#					'XHTML 1.0 Strict',
+#					'XHTML 1.0 Transitional',
+#					'XHTML 1.0 Frameset',
+#					'HTML 4.01 Strict',
+#					'HTML 4.01 Transitional',
+#					'HTML 4.01 Frameset',
+#					'HTML 3.2',
+#					'HTML 2.0',
+#				       ],
+#			    -default => $File->{Opt}->{DOCTYPE},
+#			   )
+#	    );
 }
 
-&print_table;
-&print_tip_of_the_day;
-&print_warnings;
+&print_table($File);
+&print_tip_of_the_day($File, $tips_db);
+&print_warnings($File);
 
 print "<h2>Validation Results</h2>\n";
 
@@ -736,20 +725,20 @@ if (defined $File->{Tentative}) {
 }
 
 if (scalar @{$File->{Errors}}) {
-  $q->param('ss', TRUE);
+  $File->{Opt}->{'Show Source'} = TRUE;
   &report_errors($File)
 } else {
   &report_valid($File)
 }
 
-&weblint()          if $q->param('weblint');
-&outline($File)     if $q->param('outline');
-&show_source($File) if $q->param('ss');
-&parse_tree($File)  if $q->param('sp');
-&show_esis($File)   if $q->param('esis');
-&show_errors($File) if $q->param('errors');
+&weblint()          if $File->{Opt}->{'Weblint'};
+&outline($File)     if $File->{Opt}->{'Outline'};
+&show_source($File) if $File->{Opt}->{'Show Source'};
+&parse_tree($File)  if $File->{Opt}->{'Show Parsetree'};
+&show_esis($File)   if $File->{Opt}->{'Show ESIS'};
+&show_errors($File) if $File->{Opt}->{'Show Errors'};
 
-&clean_up_and_exit;
+&clean_up_and_exit($File);
 
 
 #############################################################################
@@ -758,26 +747,27 @@ if (scalar @{$File->{Errors}}) {
 
 #
 # Add info to the metadata table datastructure.
-sub add_table {push @{$File->{Table}}, { Head => $_[0], Tail => $_[1]}};
+sub add_table {push @{shift->{Table}}, { Head => $_[0], Tail => $_[1]}};
 
 #
 # Print the table containing the metadata about the Document Entity.
 sub print_table {
+  my $File = shift;
   my $tableEntry;
-  unless ($q->param('uploaded_file')) {
-    add_table("Options",
+  unless ($File->{Opt}->{URI} =~ m(^upload://)) {
+    add_table($File, "Options",
 	      '         <label title="Show Page Source"><input type="checkbox" value="" name="ss"' .
-	      ($q->param('ss')      ? 'checked="checked"' : '') . " />Show Source</label>\n" .
+	      ($File->{Opt}->{'Show Source'}      ? 'checked="checked"' : '') . " />Show Source</label>\n" .
 	      '         <label title="Show an Outline of the document"><input type="checkbox" value="" name="outline"' .
-	      ($q->param('outline') ? 'checked="checked"' : '') . " />Outline</label>\n" .
+	      ($File->{Opt}->{'Outline'} ? 'checked="checked"' : '') . " />Outline</label>\n" .
 	      '         <label title="Show Parse Tree"><input type="checkbox" value="" name="sp"' .
-	      ($q->param('sp')      ? 'checked="checked"' : '') . " />Parse Tree</label>\n" .
+	      ($File->{Opt}->{'Show Parsetree'}      ? 'checked="checked"' : '') . " />Parse Tree</label>\n" .
 	      '         <label title="Exclude Attributes from Parse Tree"><input type="checkbox" value="" name="noatt"' .
-	      ($q->param('noatt')   ? 'checked="checked"' : '') . " />...no attributes</label>\n"
+	      ($File->{Opt}->{'No Attributes'}   ? 'checked="checked"' : '') . " />...no attributes</label>\n"
 	     );
   }
   print '  <form method="get" action="/check">'
-    unless $q->param('uploaded_file');
+    unless $File->{Opt}->{URI} =~ m(^upload://);
   print qq(<table class="header">\n);
   for $tableEntry (@{$File->{Table}}) {
     print "    <tr>\n";
@@ -786,17 +776,18 @@ sub print_table {
     print "    </tr>\n";
   }
   print qq(    <tr><th><input type="submit" value="Revalidate" /></th><td>&nbsp;</td>\n)
-    unless $q->param('uploaded_file');
+    unless $File->{Opt}->{URI} =~ m(^upload://);
   print "  </table></form>\n";
 }
 
 #
 # Add a waring message to the output.
-sub add_warning {push @{$File->{Warnings}}, shift};
+sub add_warning {push @{shift->{Warnings}}, shift};
 
 #
 # Print out a list of warnings.
 sub print_warnings {
+  my $File = shift;
   return unless defined @{$File->{Warnings}};
   print qq(  <div id="skip"><h2>Notes &amp; Warnings</h2>\n  <ul>\n);
   print qq(    <li>$_</li>\n) for @{$File->{Warnings}};
@@ -831,9 +822,10 @@ EOF
 #
 # Spit out some closing HTML at the end of output.
 sub output_closing {
+  my $File = shift;
   print <<"EOF";
 <address>
-  <a href="${abs_svc_uri}check/referer"><img
+  <a href="$File->{Env}->{'Self URI'}/referer"><img
      src="http://www.w3.org/Icons/valid-html401" height="31" width="88"
      align=right border="0" alt="Valid HTML 4.01!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</a><br>
@@ -850,13 +842,14 @@ EOF
 #
 # Leave a message and then die (use for internal errors only)
 sub internal_error {
+  my $File = shift;
   my ($dieMessage) = shift;
   print <<"EOF";
     <hr>
     <strong class="error">Internal server error ($dieMessage).</strong>
     Please contact <a href="mailto:$MAINTAINER">maintainer</a>.
 EOF
-  &output_closing;
+  &output_closing($File);
   die "$dieMessage\n";
 }
 
@@ -864,7 +857,8 @@ EOF
 #
 # Clean up and exit... :-)
 sub clean_up_and_exit {
-  &output_closing;
+  my $File = shift;
+  &output_closing($File);
   exit;
 }
 
@@ -872,62 +866,63 @@ sub clean_up_and_exit {
 #
 # Redirect them to the home page. Simplistic error handling.
 sub redirect_to_home_page {
+  my $File = shift;
   print <<".EOF.";
 Status: 301 Moved Permanently
 Content-Type: text/html
-Location: $abs_svc_uri
+Location: $File->{Cfg}->{'Home Page'}
 
 <title>Moved!</title>
-<p>Please see <a href="$abs_svc_uri">the home page.</a></p>
+<p>Please see <a href="$File->{Cfg}->{'Home Page'}">the home page.</a></p>
 .EOF.
-  &clean_up_and_exit;
+  &clean_up_and_exit($File);
 }
 
 #
 # Generate HTML for the "Jump to:" links in results.
 sub build_jump_links {
+  my $File = shift;
+  my $text  = '';
+  my $count = 0;
 
-    my $text  = '';
-    my $count = 0;
+  $count++ if $File->{Opt}->{'Show Source'};
+  $count++ if $File->{Opt}->{'Show Parsetree'};
+  $count++ if $File->{Opt}->{'Weblint'};
+  $count++ if $File->{Opt}->{'Outline'};
 
-    $count++ if $q->param('ss');
-    $count++ if $q->param('sp');
-    $count++ if $q->param('weblint');
-    $count++ if $q->param('outline');
-
-    if ( $count ) {
-	$text .= "  <p>\n    Jump to: ";
-	if ( $q->param('weblint') ) {
-	    $text .= "<a\n      href=\"#weblint\">Weblint Results</a>";
-	    $count--;
-	    $text .= " or " if ( $count == 1 );
-	    $text .= ", "   if ( $count >  1 );
-	}
-	if ( $q->param('outline') ) {
-	    $text .= "<a\n      href=\"#outline\">Outline</a>";
-	    $count--;
-	    $text .= " or " if ( $count == 1 );
-	    $text .= ", "   if ( $count >  1 );
-	}
-	if ( $q->param('ss') ) {
-	    $text .= "<a\n      href=\"#source\">Source Listing</a>";
-	    $count--;
-	    $text .= " or " if ( $count == 1 );
-	    $text .= ", "   if ( $count >  1 );
-	}
-	if ( $q->param('sp') ) {
-	    $text .= "<a\n      href=\"#parse\">Parse Tree</a>";
-	}
-	$text .= ".\n  </p>\n\n";
+  if ($count) {
+    $text .= "  <p>\n    Jump to: ";
+    if ($File->{Opt}->{'Weblint'}) {
+      $text .= "<a\n      href=\"#weblint\">Weblint Results</a>";
+      $count--;
+      $text .= " or " if ( $count == 1 );
+      $text .= ", "   if ( $count >  1 );
     }
-    return $text;
-
+    if ($File->{Opt}->{'Outline'}) {
+      $text .= "<a\n      href=\"#outline\">Outline</a>";
+      $count--;
+      $text .= " or " if ( $count == 1 );
+      $text .= ", "   if ( $count >  1 );
+    }
+    if ($File->{Opt}->{'Show Source'}) {
+      $text .= "<a\n      href=\"#source\">Source Listing</a>";
+      $count--;
+      $text .= " or " if ( $count == 1 );
+      $text .= ", "   if ( $count >  1 );
+    }
+    if ($File->{Opt}->{'Show Parsetree'}) {
+      $text .= "<a\n      href=\"#parse\">Parse Tree</a>";
+    }
+    $text .= ".\n  </p>\n\n";
+  }
+  return $text;
 }
 
 
 #
 # Proxy authentication requests.
 sub authenticate {
+  my $File       = shift;
   my $resource   = shift;
   my $authHeader = shift;
   my $realm = $resource;
@@ -974,7 +969,7 @@ Content-Type: text/html
   Of course, you may not want to trust me with this information,
   which is fine. I can tell you that I don't log it or do
   anything else nasty with it, and you can <a
-  href="${abs_svc_uri}source/">download the source for
+  href="$File->{Cfg}->{'Home Page'}source/">download the source for
   this service</a> to see what it does, but you have no guarantee
   that this is actually the code I'm using; you basically have to
   decide whether to trust me or not. :-)
@@ -1076,9 +1071,11 @@ EOHD
 
 
 sub print_tip_of_the_day{
+  my $File    = shift;
+  my $tips_db = shift;
   my(%tips);
   open TIPS, $tips_db
-    or &internal_error("open($tips_db) returned $!");
+    or &internal_error($File, "open($tips_db) returned $!");
 
   # quick-n-dirty XML parser...
   local($/) = '>';
@@ -1190,12 +1187,12 @@ sub handle_uri {
 
   unless ($res->code == 200) {
     if ($res->code == 401) {
-      &authenticate($res->request->url, $res->www_authenticate);
+      &authenticate($File, $res->request->url, $res->www_authenticate);
     } else {
       print $File->{Results};
       &print_unknown_http_error_message($uri, $res->code, $res->message);
     }
-    &clean_up_and_exit;
+    &clean_up_and_exit($File);
   }
 
   my($type, $charset) = &parse_content_type($res->header('Content-Type'));
@@ -1211,7 +1208,7 @@ sub handle_uri {
   $File->{Modified}     = $lastmod;
   $File->{Server}       = scalar($res->server);
   $File->{Size}         = scalar($res->content_length);
-  $File->{URI}          = scalar($res->request->url);
+  $File->{Opt}->{URI}          = scalar($res->request->url);
 
   return $File;
 
@@ -1236,7 +1233,7 @@ sub handle_file {
   $File->{Modified}     = $h->{'Last-Modified'};
   $File->{Server}       = $h->{'Server'};
   $File->{Size}         = $h->{'Content-Length'};
-  $File->{URI}          = $q->param('uploaded_file');
+  $File->{Opt}->{URI}          = $q->param('uploaded_file');
 
   return $File;
 }
@@ -1253,7 +1250,7 @@ sub handle_frag {
   $File->{Modified}     = '';
   $File->{Server}       = '';
   $File->{Size}         = '';
-  $File->{URI}          = 'upload://Form Submission';
+  $File->{Opt}->{URI}          = 'upload://Form Submission';
 
   return $File;
 }
@@ -1457,7 +1454,7 @@ sub report_errors ($) {
     print qq{<span class="msg">$err->{msg}</span>};
 
     if (defined $frag->{$err->{idx}}) {
-      print qq{ (<a href="$faqerrloc#$frag->{$err->{idx}}">explanation...</a>)};
+      print qq{ (<a href="$File->{Cfg}->{'Msg FAQ URI'}#$frag->{$err->{idx}}">explanation...</a>)};
     } elsif (DEBUG) {
       print qq{ (<code style="background: red">"$err->{idx}"</code>)};
     }
@@ -1469,13 +1466,13 @@ sub report_errors ($) {
   }
   print "</ul>\n";
   print "<hr>\n";
-  if ($version eq 'unknown') {
+  if ($File->{Version} eq 'unknown') {
     print "<p>Sorry, I can't validate this document.</p>";
   } elsif ($File->{Type} eq 'xml') {
     print "<p>Sorry, this document is not well-formed XML.</p>";
   } else {
-    print "<p>Sorry, this document does not validate as $version.</p>";
-    &output_css_validator_blurb($q->param('uri'));
+    print "<p>Sorry, this document does not validate as $File->{Version}.</p>";
+    &output_css_validator_blurb($File->{Opt}->{URI});
   }
 }
 
@@ -1495,59 +1492,59 @@ sub report_valid {
     print "\n  <pre>\n    No errors found!</pre>\n\n";
   }
 
-  unless ($version eq 'unknown' or defined $File->{Tentative}) {
-    if ($version =~ /^HTML 2\.0$/) {
-      $image_uri = "${abs_svc_uri}images/vh20";
+  unless ($File->{Version} eq 'unknown' or defined $File->{Tentative}) {
+    if ($File->{Version} =~ /^HTML 2\.0$/) {
+      $image_uri = "$File->{Cfg}->{'Home Page'}images/vh20";
       $alttext = "Valid HTML 2.0!";
       $gifborder = "";
-    } elsif ($version =~ /HTML 3\.2</) {
+    } elsif ($File->{Version} =~ /HTML 3\.2</) {
       $image_uri = "http://www.w3.org/Icons/valid-html32";
       $alttext = "Valid HTML 3.2!";
       $gifhw   = ' height="31" width="88"';
-    } elsif ($version =~ /HTML 4\.0<\/a> Strict$/) {
+    } elsif ($File->{Version} =~ /HTML 4\.0<\/a> Strict$/) {
       $image_uri = "http://www.w3.org/Icons/valid-html40";
       $alttext = "Valid HTML 4.0!";
       $gifborder = "";
       $gifhw   = ' height="31" width="88"';
-    } elsif ($version =~ /HTML 4\.0<\/a> /) {
+    } elsif ($File->{Version} =~ /HTML 4\.0<\/a> /) {
       $image_uri = "http://www.w3.org/Icons/valid-html40";
       $alttext = "Valid HTML 4.0!";
       $gifhw   = ' height="31" width="88"';
-    } elsif ($version =~ /HTML 4\.01<\/a> Strict$/) {
+    } elsif ($File->{Version} =~ /HTML 4\.01<\/a> Strict$/) {
       $image_uri = "http://www.w3.org/Icons/valid-html401";
       $alttext = "Valid HTML 4.01!";
       $gifborder = "";
       $gifhw   = ' height="31" width="88"';
-    } elsif ($version =~ /HTML 4\.01<\/a> /) {
+    } elsif ($File->{Version} =~ /HTML 4\.01<\/a> /) {
       $image_uri = "http://www.w3.org/Icons/valid-html401";
       $alttext = "Valid HTML 4.01!";
       $gifhw   = ' height="31" width="88"';
-    } elsif ($version =~ /XHTML 1\.0<\/a> /) {
+    } elsif ($File->{Version} =~ /XHTML 1\.0<\/a> /) {
       $image_uri = "http://www.w3.org/Icons/valid-xhtml10";
       $alttext = "Valid XHTML 1.0!";
       $gifborder = "";
       $gifhw   = ' height="31" width="88"';
       $xhtmlendtag = " /";
-#    } elsif ($version =~ /XHTML Basic 1.0/) {
-#      $image_uri = "${abs_svc_uri}/images/vxhtml-basic10";
+#    } elsif ($File->{Version} =~ /XHTML Basic 1.0/) {
+#      $image_uri = "$File->{Cfg}->{'Home Page'}/images/vxhtml-basic10";
 #      $alttext = "Valid XHTML Basic 1.0!";
 #      $gifborder = "";
 #      $gifhw   = ' height="31" width="88"';
 #      $xhtmlendtag = " /";
-    } elsif ($version =~ /XHTML 1.1/) {
+    } elsif ($File->{Version} =~ /XHTML 1.1/) {
       $image_uri = "http://www.w3.org/Icons/valid-xhtml11";
       $alttext = "Valid XHTML 1.1!";
       $gifborder = "";
       $gifhw   = ' height="31" width="88"';
       $xhtmlendtag = " /";
-    } elsif ($version =~ /HTML 3\.0/) {
-      $image_uri = "${abs_svc_uri}images/vh30";
+    } elsif ($File->{Version} =~ /HTML 3\.0/) {
+      $image_uri = "$File->{Cfg}->{'Home Page'}images/vh30";
       $alttext = "Valid HTML 3.0!";
-    } elsif ($version =~ /Netscape/) {
-      $image_uri = "${abs_svc_uri}images/vhns";
+    } elsif ($File->{Version} =~ /Netscape/) {
+      $image_uri = "$File->{Cfg}->{'Home Page'}images/vhns";
       $alttext = "Valid Netscape-HTML!";
-    } elsif ($version =~ /Hotjava/) {
-      $image_uri = "${abs_svc_uri}images/vhhj";
+    } elsif ($File->{Version} =~ /Hotjava/) {
+      $image_uri = "$File->{Cfg}->{'Home Page'}images/vhhj";
       $alttext = "Valid Hotjava-HTML!";
     }
 
@@ -1555,7 +1552,7 @@ sub report_valid {
       print <<"EOHD";
   <p>
     <img src="$image_uri" alt="$alttext"> Congratulations, this
-    document validates as $version!
+    document validates as $File->{Version}!
   </p>
 
   <p>
@@ -1566,7 +1563,7 @@ sub report_valid {
   </p>
   <pre>
   &lt;p&gt;
-    &lt;a href="${abs_svc_uri}check/referer"&gt;&lt;img$gifborder
+    &lt;a href="$File->{Cfg}->{'Home Page'}check/referer"&gt;&lt;img$gifborder
         src="$image_uri"
         alt="$alttext"$gifhw$xhtmlendtag&gt;&lt;/a&gt;
   &lt;/p&gt;</pre>
@@ -1588,19 +1585,19 @@ EOHD
     } else {
       print "  <p>\n    This document would validate as the document type specified if you updated it to match the Options used.\n  </p>\n";
     }
-  } elsif ($version eq 'unknown' or not defined $image_uri) {
+  } elsif ($File->{Version} eq 'unknown' or not defined $image_uri) {
     print "  <p>\n    Congratulations, this document validates as the document type specified! (I don't have an icon for this one yet, sorry.)\n  </p>\n";
   }
 
-  unless ($q->param('uploaded_file')) {
-    my $thispage = $q->url(-query => 0);
-    $thispage .= qq(?uri=$File->{URI});
-    $thispage .= ';ss=1'      if $q->param('ss');
-    $thispage .= ';sp=1'      if $q->param('sp');
-    $thispage .= ';noatt=1'   if $q->param('noatt');
-    $thispage .= ';outline=1' if $q->param('outline');
+  unless ($File->{Opt}->{URI} =~ m(upload://)) {
+    my $thispage = $File->{Env}->{'Self URI'};
+    $thispage .= qq(?uri=$File->{Opt}->{URI});
+    $thispage .= ';ss=1'      if $File->{Opt}->{'Show Source'};
+    $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
+    $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
+    $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
 
-    &output_css_validator_blurb($q->param('uri'));
+    &output_css_validator_blurb($File->{Opt}->{URI});
 
     print <<"EOHD";
   <p>
@@ -1627,35 +1624,6 @@ EOHD
       </p>
 	    };
   }
-}
-
-
-#
-# Legacy support. Print blurb to clarify status of weblint support.
-sub weblint {
-  print <<"EOF";
-  <div class="mtb">
-    <hr>
-    <h2><a name="weblint">Weblint Doesnt Live Here Any More</a></h2>
-    <p>
-      <a href="http://www.weblint.org/">Weblint</a> is no longer actively
-      maintained and has become badly out of date with the current state
-      of the web, and so this feature has been deprecated.
-    </p>
-    <p>
-      If you want to get the Weblint results you can use one of the web
-      frontends referenced from the
-      <a href="http://www.weblint.org/">Weblint</a> home page or install
-      a copy of it locally.
-    </p>
-    <p>
-      We are currently investigating alternative methods to replace the
-      Weblint feature in the Validator.
-      <a href="http://www.w3.org/People/Raggett/tidy/">Tidy</a> appears
-      to be a likely candidate at this point.
-    </p>
-  </div>
-EOF
 }
 
 
@@ -1759,7 +1727,7 @@ sub parse_tree {
     <hr>
     <h2><a name="parse">Parse Tree</a></h2>
 EOF
-  if ($q->param('noatt')) {
+  if ($File->{Opt}->{'No Attributes'}) {
     print <<'EOF';
     <p class="note">
       I am excluding the attributes, as you requested.
@@ -1779,7 +1747,7 @@ EOF
 
   print "<pre>\n";
   foreach my $line (@{$File->{ESIS}}) {
-    if ($q->param('noatt')) {	# don't show attributes
+    if ($File->{Opt}->{'No Attributes'}) { # don't show attributes
       next if $line =~ /^A/;
       next if $line =~ /^\(A$/;
       next if $line =~ /^\)A$/;
@@ -1813,7 +1781,7 @@ EOF
 		 { my $close = '';
 		      $close = "/" if $1 eq ")";	# ")" -> close-tag
 		   "&lt;" . $close . "<a href=\"" .
-		   $element_ref . $element_uri->{lc($2)} .
+		   $File->{Cfg}->{'Element Ref URI'} . $element_uri->{lc($2)} .
 		   "\">$2<\/a>&gt;"
 		 }egx;
     $printme =~ s,^A,  A,;	# indent attributes a bit
@@ -1904,4 +1872,44 @@ sub show_errors ($) {
 EOF
   for (@{shift->{'DEBUG'}->{Errors}}) {print ent $_};
   print "    </pre>\n  </div>";
+}
+
+
+#
+# Preprocess CGI parameters.
+sub prepCGI {
+  my $File = shift;
+  my    $q = shift;
+
+  # Avoid CGI.pm's "exists but undef" behaviour.
+  if (scalar $q->param) {
+    foreach my $param ($q->param) {
+      next if $param eq 'uploaded_file'; # 'uploaded_file' contains data.
+      $q->param($param, TRUE) unless $q->param($param);
+    }
+  }
+
+  # Futz the URI so "/referer" works.
+  $q->param('uri', $q->referer) if $q->path_info eq '/referer';
+
+  # USe HTTP Referer if uri=referer.
+  $q->param('uri', $q->referer) if $q->param('uri') =~ m(referer)i;
+
+  # Use "url" unless a "uri" was also given.
+  $q->param('uri', $q->param('url')) if $q->param('url') and not $q->param('uri');
+
+  # Supercede URI with an uploaded file.
+  if ($q->param('uploaded_file')) {
+    &redirect_to_home_page($File) unless length($q->param('uploaded_file')); # Must have filename.
+    $q->param('uri', 'upload://' . $q->param('uploaded_file'));
+    $File->{Opt}->{'Is Upload'} = TRUE; # Tag it for later use.
+  }
+
+  # Supercede URI with an uploaded fragment.
+  if ($q->param('fragment')) {$q->param('uri', 'upload://Form Submission')};
+
+  # Munge the URI to include commonly omitted prefix.
+  $q->param('uri', 'http://' . $q->param('uri')) if $q->param('uri') =~ m(^www)i;
+
+  return $q;
 }
