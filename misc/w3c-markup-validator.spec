@@ -1,8 +1,8 @@
 # RPM spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.1.2.18 2004-05-06 19:33:05 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.1.2.19 2004-05-20 18:18:31 ville Exp $
 
 Name:           w3c-markup-validator
-Version:        0.6.5
+Version:        0.6.6
 Release:        1
 Epoch:          0
 Summary:        W3C Markup Validator
@@ -10,8 +10,8 @@ Summary:        W3C Markup Validator
 Group:          Applications/Internet
 License:        W3C Software License
 URL:            http://validator.w3.org/
-Source0:        http://validator.w3.org/validator-0_6_5.tar.gz
-Source1:        http://validator.w3.org/sgml-lib-0_6_5.tar.gz
+Source0:        http://validator.w3.org/validator-0_6_6.tar.gz
+Source1:        http://validator.w3.org/sgml-lib-0_6_6.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -50,16 +50,10 @@ perl -pi -e \
   httpd/conf/httpd.conf
 
 # Cleanup of unused files
-rm -rf htdocs/source htdocs/config/verbosemsg.rc
+rm -rf htdocs/config/verbosemsg.rc
 
 # Move config out of the way
 mv htdocs/config __config
-
-# Point to http://validator.w3.org/source/ for source code
-perl -pi -e \
-  's|href=".*?\bsource/|href="http://validator.w3.org/source/|' \
-  htdocs/about.html htdocs/whatsnew.html htdocs/docs/devel.html \
-  htdocs/docs/index.html htdocs/docs/install.html httpd/cgi-bin/check
 
 # Fixup permissions
 find . -type d | xargs chmod 755
@@ -135,6 +129,10 @@ done
 
 
 %changelog
+* Thu May 20 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.6-1
+- Update to 0.6.6.
+- Include local source/index.html in the package.
+
 * Thu May  6 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.5-1
 - Update to 0.6.5.
 
