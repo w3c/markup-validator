@@ -19,8 +19,12 @@
   </dl>
 </TMPL_IF>
   <p>
+<TMPL_IF NAME="is_upload">
+    The uploaded document "<TMPL_VAR NAME="file_uri">"
+<TMPL_ELSE>
     The document located at
     &lt;<a href="<TMPL_VAR NAME="file_uri">"><TMPL_VAR NAME="file_uri"></a>&gt;
+</TMPL_IF>
     was checked and found to be valid <TMPL_VAR NAME="file_version">.
     This means that the resource in question identified itself as
     "<TMPL_VAR NAME="file_version">" and that we successfully performed a
@@ -56,10 +60,16 @@
 </TMPL_IF>
   <p>
     If you use <a href="http://www.w3.org/Style/CSS/">CSS</a> in your document,
-    you should also <a title="Validate CSS at the W3C CSS Validator"
+    you should also
+<TMPL_IF NAME="is_upload">
+    check it for validity
+<TMPL_ELSE>
+    <a title="Validate CSS at the W3C CSS Validator"
     href="http://jigsaw.w3.org/css-validator/validator?uri=<TMPL_VAR NAME="file_uri">">check
-    it for validity</a> using the W3C <a
-    href="http://jigsaw.w3.org/css-validator/">CSS Validation Service</a>.
+    it for validity</a>
+</TMPL_IF>
+    using the W3C
+    <a href="http://jigsaw.w3.org/css-validator/">CSS Validation Service</a>.
   </p>
 <TMPL_UNLESS NAME="is_upload">
   <p>
