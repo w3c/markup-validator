@@ -80,33 +80,39 @@ use CGI;
 ###############
 # Global Variables
 
-my $VERSION= '$Id: checklink.pl,v 1.26 1999-03-08 22:34:24 renaudb Exp $ ';
+my $VERSION= '$Id: checklink.pl,v 1.27 1999-04-28 19:31:03 renaudb Exp $ ';
 my $CVSINFO= 'http://dev.w3.org/cgi-bin/cvsweb/validator/httpd/cgi-bin/checklink.pl';
 my $CVSSERVER= 'http://dev.w3.org/';
 my %ALLOWED_SCHEMES = ( "http" => 1 );
 my %SCHEMES = (); # for report
 my %URL = ();
-my %COLORS = ( 200 => '', 301 => ' BGCOLOR="yellow"', 302 => ' BGCOLOR="yellow"', 404 => ' BGCOLOR="red"' , 403 => ' BGCOLOR="red"' , 401 => ' BGCOLOR="aqua"' , 500 => ' BGCOLOR="red"');
+my %COLORS = ( 200 => '', 300 => ' BGCOLOR="magenta"', 301 => ' BGCOLOR="yellow"', 302 => ' BGCOLOR="yellow"', 400 => ' BGCOLOR="red"', 404 => ' BGCOLOR="red"' , 403 => ' BGCOLOR="red"' , 401 => ' BGCOLOR="aqua"' , 407 => ' BGCOLOR="aqua"' , 500 => ' BGCOLOR="red"');
 my %HTTP_CODES = ( 200 => 'ok' , 
 		  201 => '201',
+		  300 => 'Multiple Choice' ,
 		  301 => 'redirect' , 
 		  302 => 'redirect' , 
+		  400 => 'Bad Request',
 		  401 => 'unauthorized' , 
 		  403 => 'forbidden',
 		  404 => 'not found' ,
-		  405 => '405', 
-		  408 => '408',
-		  415 => '415',
-		  500 => '500',
-		  501 => '501',
-		  503 => '503');
+		  405 => 'Method not allowed', 
+		  407 => 'Proxy Authentication Required',
+		  408 => 'Request Timeout',
+		  415 => 'Unsupported Media Type',
+		  500 => 'Internal Server Error',
+		  501 => 'Not Implemented',
+		  503 => 'Service Unavailable');
 my %TODO = ( 200 => 'nothing !',
+	     300 => 'it usually means that there is a typo in a link that triggers <strong>mod_speling</strong> action',
 	     301 => 'usually nothing, unless the end point of the redirect is broken (in which case, the <B>Code</B> column is RED)',
 	     302 => 'usually nothing, unless the end point of the redirect is broken (in which case, the <B>Code</B> column is RED)',
+	     400 => 'Usually the sign of a malformed URL that cannot be parsed by the server',
 	     401 => 'The link is not public. The <B>Extra</B> column gives the Realm',
 	     403 => 'The link is forbidden ! This needs fixing. Usual suspect: a missing Overview.html or index.html',
 	     404 => 'The link is broken. Fix it <B>NOW</B>',
 	     405 => 'The server does not allow HEAD requests. How liberal. Go ask the guys who run this server why.',
+	     407 => 'The link is a proxy, but requires Authentication',
 	     408 => 'The request timed out',
 	     415 => 'The media type is not supported (this should not happen on a HEAD request)',
 	     500 => 'The server failed. It is a server side problem',
