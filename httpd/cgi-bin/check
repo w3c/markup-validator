@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.209 2002-08-25 17:38:59 link Exp $
+# $Id: check,v 1.210 2002-08-26 08:59:04 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.209 $;
+  $VERSION    =  q$Revision: 1.210 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-25 17:38:59 $,
+			      Date => q$Date: 2002-08-26 08:59:04 $,
 			     });
 
 #
@@ -218,7 +218,6 @@ if ($q->param('uploaded_file')) {
 } elsif ($q->param('uri')) {
   $File = &handle_uri($q, $File);
 }
-$File->{Content} = &normalize_newlines($File->{Content}); # FIXME: Breaks on non-ascii compatible.
 
 
 #
@@ -233,7 +232,7 @@ untie *STDIN;
 
 #
 # Abort if an error was flagged during initialization.
-&abort_if_error_flagged($File);
+&abort_if_error_flagged($File);   #### ToDo: inhibit source output here ####
 
 
 ###############################################################################
@@ -263,19 +262,70 @@ untie *STDIN;
 
 
 #
-# Find Encoding in use.
+# Find encoding in document according to XML rules
 # Only meaningfull if file contains a BOM, or for well-formed XML!
-$File->{Charset}->{Auto} = &find_encoding($File);
+{
+  my $preSize, $postSize;
+
+  ($File->{Charset}->{Auto}, $File->{BOM}, $preSize, $postSize)
+    = &find_base_encoding($File->{Bytes});
+  my $charSize = $preSize + $postSize + 1;
+  my $initSize = $charSize * 100;  # 100 arbitrary, but enough in any case
+  my $someBytes = substr $File->{Bytes}, $File->{BOM}, $initSize;
+  my $someText = '';
+
+  # translate from guessed encoding to ascii-compatible
+  if ($File->{Charset}->{Auto} eq 'EBCDIC') {
+    # special treatment for EBCDIC, maybe use tr///
+    # work on this later
+  }
+  elsif (($preSize + $postSize) == 0) {
+    $someText = $someBytes; # efficiency shortcut
+  }
+  else { # generic code for UTF-16/UCS-4
+    my $i, $j;
+   LABEL:
+    for ($i=0; $i<=$initSize-$charSize; ) {
+      for ($j=0; $j<$preSize; $i++, $j++) {
+        if ((substr $someBytes, $i, 1) != '\x00') {
+          last LABEL;
+        }
+      }
+      $someText .= substr someBytes, $i++, 1;
+      for ($j=0; $j<$postSize; $i++, $j++) {
+        if ((substr $someBytes, $i, 1) != '\x00') {
+          substr $someText, -1, 1 = ''; # remove last character
+          last LABEL;
+        }
+      }
+    }
+  }
+  # try to find encoding pseudo-attribute
+  $someText =~ m("^<\?xml[ \t\n\r]+version[ \t\n\r]?=[ \t\n\r]?([\'\"])[-._:a-zA-Z0-9]+\1[
+\t\n\r]+encoding[ \t\n\r]?=[ \t\n\r]?([\'\"])([A-Za-z][-._A-Za-z0-9]*)\2);
+
+  $File->{Charset}->{XML} = $3;
+
+  # if (!$File->{Charset}->{XML}) {   # handle XML default cases
+  #                                   # problem: defaults shouldn't generate the same errors
+  #   if ($File->{BOM} == 2 && $File->{Charset}->{Auto} =~ m"^UTF-16") {
+  #     $File->{Charset}->{XML} = $File->{Charset}->{Auto};
+  #   }
+  #   elsif (($File->{BOM}==3 || $File->{BOM}==0) && $File->{Charset}->{Auto} eq "UTF-8") {
+  #     $File->{Charset}->{XML} = "UTF-8";
+  # }
+}
 
 #
 # Abort if an error was flagged by charset autodetect.
-&abort_if_error_flagged($File);
+# &abort_if_error_flagged($File); #### no errors up to here ?!
 
 #
-# Decide on a charset to use.
+# Decide on a charset to use (first part)
+#
 if ($File->{Charset}->{HTTP}) {
   $File->{Charset}->{Use} = $File->{Charset}->{HTTP}; # HTTP, if given, is authorative.
-} elsif ($File->{Type} =~ m(text/\w+\+xml)) {
+} elsif ($File->{Type} =~ m(^text/\w+\+xml$)) {
   $File->{Charset}->{Use} = 'us-ascii'; # Act as if $http_charset was 'us-ascii'. (MIME rules)
       &add_warning($File, <<"      .EOF.");
       <em>Note:</em>
@@ -283,34 +333,35 @@ if ($File->{Charset}->{HTTP}) {
       but the Content-Type was one of the XML text/* sub-types. The relevant
       standards specify a strong default of "us-ascii" for such documents so
       we will use this value regardless of any encoding you may have indicated
-      elsewhere.If you would like to use a different encoding, you should
+      elsewhere. If you would like to use a different encoding, you should
       arrange to have your server send this new encoding information.
       .EOF.
-} else {
-  if ($File->{Charset}->{Auto}) {
-    $File->{Charset}->{Use} = $File->{Charset}->{Auto}; # Trust it, transcode, validate...
-      &add_warning($File, <<"      .EOF.");
-      <strong>No Character Encoding detected!</strong>
-      To ensure correct validation, processing, and display,
-      it is important that the character encoding is properly
-      labeled.
-      <a href="http://www.w3.org/International/O-charset.html">More
-      information...</a>
-      .EOF.
-      $File->{Tentative} |= T_CHARSET_KLUDGE; # Would be T_WARN, but the complaints...
-  } else { # Autodetect failed... Assume ASCII/UTF-8 compatible.
+} elsif ($File->{Charset}->{XML}) {
+  $File->{Charset}->{Use} = $File->{Charset}->{XML};
+} elsif ($File->{Charset}->{Auto} =~ "^UTF-16" && $File->{BOM} == 2) {
+  $File->{Charset}->{Use} = $File->{Charset}->{Auto};
+} elsif ($File->{Charset}->{Auto} eq "UTF-8"   && $File->{BOM} == 3) {
+  $File->{Charset}->{Use} = "UTF-8";
+} elsif ($File->{Type} =~ m(^application/\w+\+xml$)) {
+  $File->{Charset}->{Use} = "UTF-8";
+} 
 
-    #
-    # Try to extract DOCTYPE, xmlns. and charset.
-    $File = &preparse($File);
+$File->{Content} = &normalize_newlines($File->{Bytes}, $File->{Charset}->{Use});
+substr $File->{Content}->[0], 0, $File->{BOM} = ''; # remove BOM
 
-    if ($File->{Charset}->{XML}) {
-      $File->{Charset}->{Use} = $File->{Charset}->{XML};
-    } elsif ($File->{Charset}->{META}) {
-      $File->{Charset}->{Use} = $File->{Charset}->{META};
-    } else {
-      $File->{'Error Flagged'} = TRUE;
-      $File->{'Error Message'} = <<".EOF.";
+
+#
+# Decide on a charset to use (continue)
+#
+if (!$File->{Charset}->{Use}) {
+  #
+  # Try to extract META charset.
+  $File = &preparse($File);
+  if ($File->{Charset}->{META}) {
+    $File->{Charset}->{Use} = $File->{Charset}->{META};
+  } else {
+    $File->{'Error Flagged'} = TRUE;
+    $File->{'Error Message'} = <<".EOF.";
     <p>
       I was not able to extract a character encoding labelling from either of
       the valid sources for such information. Without encoding information it
@@ -1151,7 +1202,7 @@ sub handle_uri {
     $lastmod = scalar(gmtime($res->last_modified));
   }
 
-  $File->{Content}         = $res->content;
+  $File->{Bytes}           = $res->content;
   $File->{Type}            = $type;
   $File->{Charset}->{HTTP} = $charset;
   $File->{Modified}        = $lastmod;
@@ -1179,7 +1230,7 @@ sub handle_file {
                                       ### changing the line delimiter
   my($type, $charset) = &parse_content_type($File, $h->{'Content-Type'});
 
-  $File->{Content}         = $file;
+  $File->{Bytes}           = $file;
   $File->{Type}            = $type;
   $File->{Charset}->{HTTP} = $charset;
   $File->{Modified}        = $h->{'Last-Modified'};
@@ -1197,7 +1248,7 @@ sub handle_frag {
   my $q    = shift; # The CGI object.
   my $File = shift; # The master datastructure.
 
-  $File->{Content}     = $q->param('fragment');
+  $File->{Bytes}       = $q->param('fragment');
   $File->{Type}        = 'html';
   $File->{Modified}    = '';
   $File->{Server}      = '';
@@ -1249,10 +1300,17 @@ sub parse_content_type {
 # Normalize newline forms (CRLF/CR/LF) to native newline.
 sub normalize_newlines {
   my $file = shift;
+  my $_ = shift;  #charset
+  my $pattern = '';
 
-  $file =~ s(\015\012?|\012){\n}g; # Turn ASCII CRLF into native newline.
+  $pattern = '\x00\015(\x00\012)?|\x00\012' if /^UTF-16BE$/i;
+  $pattern = '\015\x00(\012\x00)?|\012\x00' if /^UTF-16LE$/i;
+  $pattern = '\x00\x00\x00\015(\x00\x00\x00\012)?|\x00\x00\x00\012' if /^UCS-4BE$/i;
+  $pattern = '\015\x00\x00\x00(\012\x00\x00\x00)?|\012\x00\x00\x00' if /^UCS-4LE$/i;
+  # insert other special cases here
+  $pattern = '\015\012?|\012' if !$pattern;    # all other cases
 
-  return [split /\n/, $file];
+  return [split /$pattern/, $file];
 }
 
 
@@ -1834,14 +1892,14 @@ sub preparse {
     return if $File->{Root};
     ($File->{Root}, $File->{DOCTYPE}) = shift =~  m(<!DOCTYPE\s+(\w+)\s+PUBLIC\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
   };
-  my $pi = sub {
-    return if $File->{Charset}->{XML};
-    my $pi = shift;
-    return unless $pi =~ m(<\?xml);
-    $pi =~ m(<\?xml[^>]*\sencoding\s*=\s*([\"\'])([A-Za-z][-A-Za-z0-9._]*)\1)s;
-    warn qq('$1' - '$2'\n) if $DEBUG;
-    $File->{Charset}->{XML} = lc $2;
-  };
+  # my $pi = sub {
+  #   return if $File->{Charset}->{XML};
+  #   my $pi = shift;
+  #   return unless $pi =~ m(<\?xml);
+  #   $pi =~ m(<\?xml[^>]*\sencoding\s*=\s*([\"\'])([A-Za-z][-A-Za-z0-9._]*)\1)s;
+  #   warn qq('$1' - '$2'\n) if $DEBUG;
+  #   $File->{Charset}->{XML} = lc $2;
+  # };
   my $start = sub {
     my $tag  = shift;
     my $attr = shift;
@@ -1867,7 +1925,7 @@ sub preparse {
   $p->ignore_elements('BODY');
   $p->ignore_elements('body');
   $p->handler(declaration => $dtd, 'text');
-  $p->handler(process => $pi, 'text');
+  # $p->handler(process => $pi, 'text');
   $p->handler(start => $start, 'tag,attr');
   $p->parse(join "\n", @{$File->{Content}});
 
@@ -2456,40 +2514,40 @@ X-W3C-Validator-Errors: $errs
 #
 # Find the encoding in use in a document instance.
 #
-# Implements the autodetection algorithm from Appendix F of the
+# Implements autodetection as in Appendix F of the
 # XML 1.0 Reccomendation.
 # <URL:http://www.w3.org/TR/2000/REC-xml-20001006#sec-guessing>
-sub find_encoding {
-  my $File = shift;
-  #
-  # With a Byte Order Mark:
-  return 'UCS-4BE'   if $File->{Content}[0] =~ m/^\x00\x00\xFE\xFF/; # UCS-4, big-endian machine (1234 order).
-  return 'UCS-4LE'   if $File->{Content}[0] =~ m/^\xFF\xFE\x00\x00/; # UCS-4, little-endian machine (4321 order).
-  return 'UCS-4'     if $File->{Content}[0] =~ m/^\x00\x00\xFF\xFE/; # UCS-4, unusual octet order (2143 order).
-  return 'UCS-4'     if $File->{Content}[0] =~ m/^\xFE\xFF\x00\x00/; # UCS-4, unusual octet order (3412 order).
-  return 'UTF-16BE'  if $File->{Content}[0] =~         m/^\xFE\xFF/; # UTF-16, big-endian.
-  return 'UTF-16LE'  if $File->{Content}[0] =~         m/^\xFF\xFE/; # UTF-16, little-endian.
-  return 'UTF-8'     if $File->{Content}[0] =~     m/^\xEF\xBB\xBF/; # UTF-8.
+#
+# return values are: (base_encoding, BOMSize, preSize, postSize)
+sub find_base_encoding {
+  my $_ = shift;
 
-  #
+  # With a Byte Order Mark:
+  return ('UCS-4BE',  4, 3, 0)
+    if /^\x00\x00\xFE\xFF/; # UCS-4, big-endian machine (1234)
+  return ('UCS-4LE',  4, 0, 3)
+    if /^\xFF\xFE\x00\x00/; # UCS-4, little-endian machine (4321)
+  return ('UTF-16BE', 2, 1, 0)
+    if /^\xFE\xFF/;         # UTF-16, big-endian.
+  return ('UTF-16LE', 2, 0, 1)
+    if /^\xFF\xFE/;         # UTF-16, little-endian.
+  return ('UTF-8',    3, 0, 0)
+    if /^\xEF\xBB\xBF/; # UTF-8.
+
   # Without a Byte Order Mark:
-  if      ($File->{Content}[0] =~ m/^\x00\x00\x00\x3C/) { # UCS-4 or 32bit; big-endian machine (1234 order).
-    return 'UCS-4BE'; # Assume UCS-4
-  } elsif ($File->{Content}[0] =~ m/^\x3C\x00\x00\x00/) { # UCS-4 or 32bit; little-endian machine (4321 order).
-    return 'UCS-4BE'; # Assume UCS-4
-  } elsif ($File->{Content}[0] =~ m/^\x00\x00\x3C\x00/) { # UCS-4 or 32bit; unusual octet order (2143).
-    return 'UCS-4BE'; # Assume UCS-4
-  } elsif ($File->{Content}[0] =~ m/^\x00\x3C\x00\x00/) { # UCS-4 or 32bit; unusual octet order (3412).
-    return 'UCS-4BE'; # Assume UCS-4
-  } elsif ($File->{Content}[0] =~ m/^\x00\x3C\x00\x3F/) { # UCS-2, UTF-16, or 16bit; big-endian.
-    return 'UTF-16BE'; # Assume UTF-16BE.
-  } elsif ($File->{Content}[0] =~ m/^\x3C\x00\x3F\x00/) { # UCS-2, UTF-16, or 16bit; little-endian.
-    return 'UTF-16LE'; # Assume UTF-16LE.
-  } elsif ($File->{Content}[0] =~ m/^\x3C\x3F\x78\x6D/) { # UTF-8, ISO-646, ASCII, ISO-8859-*, Shift-JIS, EUC, etc.
-    return 'UTF-8';
-  } elsif ($File->{Content}[0] =~ m/^\x4C\x6F\xA7\x94/) { # EBCDIC
-    return 'EBCDIC';
-  }
+  return ('UCS-4BE',  0, 3, 0)
+    if /^\x00\x00\x00\x3C/; # UCS-4 or 32bit; big-endian machine (1234 order).
+  return ('UCS-4LE',  0, 0, 3)
+    if /^\x3C\x00\x00\x00/; # UCS-4 or 32bit; little-endian machine (4321 order).
+  return ('UTF-16BE', 0, 1, 0)
+    if /^\x00\x3C\x00\x3F/; # UCS-2, UTF-16, or 16bit; big-endian.
+  return ('UTF-16LE', 0, 0, 1)
+    if /^\x3C\x00\x3F\x00/; # UCS-2, UTF-16, or 16bit; little-endian.
+  return ('UTF-8',    0, 0, 0)
+    if /^\x3C\x3F\x78\x6D/; # UTF-8, ISO-646, ASCII, ISO-8859-*, Shift-JIS, EUC, etc.
+  return ('EBCDIC',   0, 0, 0)
+    if /^\x4C\x6F\xA7\x94/; # EBCDIC
+  return ('',         0, 0, 0);
 }
 
 
