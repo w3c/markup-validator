@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.292 2002-11-14 17:16:51 link Exp $
+# $Id: check,v 1.293 2002-11-14 17:42:29 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.292 $;
+  $VERSION    =  q$Revision: 1.293 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-14 17:16:51 $,
+                              Date => q$Date: 2002-11-14 17:42:29 $,
                              });
 
 #
@@ -451,7 +451,6 @@ my @xmlflags = qw(
                   -wvalid
                   -wnon-sgml-char-ref
                   -wno-duplicate
-                  -wunclosed
                  );
 
 #
