@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.114 2001-06-07 09:59:06 duerst Exp $
+# $Id: check,v 1.115 2001-06-13 19:12:39 link Exp $
 
 #
 # We need Perl 5.004.
@@ -74,9 +74,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.114 $;
+$VERSION    =  q$Revision: 1.115 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-07 09:59:06 $;
+$DATE       =  q$Date: 2001-06-13 19:12:39 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -448,11 +448,11 @@ open CHECKER, "|$command - >$temp.esis"
 for (@{$File->{Content}}) {print CHECKER $_, "\n"};
 close CHECKER;
 
-open ERRORS, "<$temp"   or die  "open($temp) returned: $!\n";
-my @errors = <ERRORS>;
-close ERRORS            or warn "close($temp) returned: $!\n";
+open ERRORS, "<$temp" or die  "open($temp) returned: $!\n";
+$File->{Errors} = [<ERRORS>];
+close ERRORS          or warn "close($temp) returned: $!\n";
 
-my @esis;
+$File->{ESIS} = [];
 my $elements_found = 0;
 my $root_namespace;
 my %other_namespaces;
@@ -473,7 +473,7 @@ while (<ESIS>) {
     next if /^ASDAFORM CDATA /;
     next if /^ASDAPREF CDATA /;
     chomp; # Removes trailing newlines
-    push @esis, $_;
+    push @{$File->{ESIS}}, $_;
 }
 close ESIS              or warn "close($temp.esis) returned: $!";
 
@@ -484,7 +484,7 @@ if (($File->{Type} eq 'xhtml') || ($File->{Type} eq 'mathml')) {
 } elsif ($File->{Type} eq 'xml') {
   $fpi = 'XML';
 } else {
-  for (@esis) {
+  for (@{$File->{ESIS}}) {
     next unless /^AVERSION CDATA (.*)/;
     $fpi = $1;
     last;
@@ -540,467 +540,13 @@ EOHD
 EOHD
 }
 
-if ($?) {
-  my($line, $col, $type, $msg);
-    print "<ul>\n";
-    for (@errors) {
-	next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
-	next if / numbers exceeding 65535 not supported$/;
-	next if /^$sp:\(invalid location\):W: URL Redirected to/;
-	s/^$sp:<OSFD>//g;
-	if ( ! (($line, $col, $type, $msg)=(/^[^:]*:([0-9]+):([0-9]+):([A-Z]?):? (.*)/))) {
-	    print "Uh oh! I got the following unknown error:\n\n   $_\n\n";
-	    print "Please make sure you specified the DOCTYPE properly!\n\n";
-	    &output_doctype_spiel;
-	    last;
-	}
-	if ( $msg =~ /^cannot generate system identifier for entity / ) {
-	    print "<p><b>Fatal error</b>! $msg\n\n";
-	    print "<p>I couldn't parse this document, because it " .
-		  "uses a public\n    identifier that's not in my <a\n " .
-		  "    href=\"sgml-lib/catalog\">catalog</a>!\n  </p>\n";
-	    &output_doctype_spiel;
-	    last;
-	}
-        if ( $msg =~ /unrecognized ({{)?DOCTYPE(}})?/i ) {
-	    print "<p><b>Fatal error</b>! $msg\n\n";
-	    print "<p>I couldn't parse this document, because it " .
-		  "uses a public\n    identifier that's not in my <a\n " .
-		  "    href=\"sgml-lib/catalog\">catalog</a>!\n  </p>\n";
-	    &output_doctype_spiel;
-	    last;
-	}
-	if ( $msg =~ /^cannot open / ) {
-	    print "<p>Fatal error! $msg\n\n";
-	    print "<p>I couldn't parse this document, because it " .
-		  "makes reference to\n    a system-specific file instead of " .
-		  "using a well-known public identifier\n    to specify the " .
-		  "level of HTML being used.\n  </p>\n";
-	    &output_doctype_spiel;
-	    last;
-	}
-	if ( $msg =~ /^cannot find / ) {
-	    print "<p>Fatal error! $msg\n\n";
-	    print "<p>I couldn't parse this document, because it " .
-		  "makes reference to\n    a system-specific file instead of " .
-		  "using a well-known public identifier\n    to specify the " .
-		  "level of HTML being used.\n  </p>\n";
-	    &output_doctype_spiel;
-	    last;
-	}
+if   ($?) {&process_errors($File)}
+else      {&report_valid($File)};
 
-	my $newline = $File->{Content}->[$line - 1];
-	
-	# make sure there are no ^P's or ^Q's in the file, since we need to use
-	# them to represent '<' and '>' temporarily. We'll just change them to
-	# literal P's and Q's for a lack of anything better to do with them.
-	my $lt = "\020";
-	my $gt = "\021";
-	$newline =~ s/\020/P/go; $newline =~ s/\021/Q/g;
-
-	my $orig_col = $col;
-        ($newline, $col) = &truncate_line($newline, $col);
-
-
-	# temporarily strip curlies from lq-nsgmls output.
-	# @@ should link HTML elements using $elem_db instead.
-	$msg =~ s/[{}]//g;
-
-	# figure out the index into the %frag associative array for the
-	# "explanation..." links to the KGV FAQ.
-	my $msgindex = $msg;
-	$msgindex =~ s/"[^\"]+"/FOO/g;
-	$msgindex =~ s/[^A-Za-z ]//g;
-
-	$newline =~ s/&/&amp;/go; $newline =~ s/</&lt;/go;
-	$newline =~ s/${lt}/</g; $newline =~ s/${gt}/>/g;
-	$newline =~ s/\t/ /g;
-	$newline =~ s///g;
-
-	print "  <li>";
-	print qq{<a href="#line-$line">}	if $q->param('ss');
-	print "Line $line";
-	print "</a>"				if $q->param('ss');
-	print ", column $orig_col:\n";
-
-	print "<pre>  <code class=input>$newline</code>\n";
-	print " " x ($col+2);	# 2 is the number of spaces before <code> above
-	print " " x 4 if $col != $orig_col;	# only for truncated lines
-	print "<span class=markup>^</span></pre>\n";
-	print "<p>\n";
-
-        print qq{<span class=error>Error: $msg</span>};
-
-	if (defined $frag->{$msgindex}) {
-	  print qq{ (<a href="$faqerrloc#$frag->{$msgindex}">explanation...</a>)};
-	}
-
-	print "</p>\n";
-
-    }
-    print "</ul>\n";
-    print "<hr>\n";
-    if ( $version eq "unknown" ) {
-	print "\n  <p>\n    Sorry, I can't validate this document.\n  </p>\n";
-    }
-    elsif ( $File->{Type} eq 'xml' ) {
-	print "\n  <p>\n    Sorry, this document is not well-formed XML.\n  </p>\n";
-    }
-    else {
-	print "\n  <p>\n    Sorry, this document does not validate as $version.\n  </p>\n\n";
-	&output_css_validator_blurb( $q->param('uri') );
-    }
-} else {
-    my $gifborder   = ' border="0"';
-    my $xhtmlendtag = '';
-    my $image_uri;
-    my $alttext;
-    my $gifhw;
-
-    if (($File->{Type} eq 'xml') || ($File->{Type} eq 'xhtml')) {
-	print "\n  <pre>\n    No errors found! ";
-	print "<a href=\"#sp-lim\">*</a></pre>\n\n";
-    }
-    else {
-	print "\n  <pre>\n    No errors found!</pre>\n\n";
-    }
-    if ( $version ne "unknown" ) {
-	if ( $version =~ /^HTML 2\.0$/ ) {
-	    $image_uri = "${abs_svc_uri}images/vh20";
-	    $alttext = "Valid HTML 2.0!";
-            $gifborder = "";
-	}
-	elsif ( $version =~ /HTML 3\.2</ ) {
-	    $image_uri = "http://www.w3.org/Icons/valid-html32";
-	    $alttext = "Valid HTML 3.2!";
-            $gifhw   = ' height="31" width="88"';
-	}
-	elsif ( $version =~ /HTML 4\.0<\/a> Strict$/ ) {
-	    $image_uri = "http://www.w3.org/Icons/valid-html40";
-	    $alttext = "Valid HTML 4.0!";
-            $gifborder = "";
-            $gifhw   = ' height="31" width="88"';
-	}
-	elsif ( $version =~ /HTML 4\.0<\/a> / ) {
-	    $image_uri = "http://www.w3.org/Icons/valid-html40";
-	    $alttext = "Valid HTML 4.0!";
-            $gifhw   = ' height="31" width="88"';
-	}
-	elsif ( $version =~ /HTML 4\.01<\/a> Strict$/ ) {
-	    $image_uri = "http://www.w3.org/Icons/valid-html401";
-	    $alttext = "Valid HTML 4.01!";
-            $gifborder = "";
-            $gifhw   = ' height="31" width="88"';
-	}
-	elsif ( $version =~ /HTML 4\.01<\/a> / ) {
-	    $image_uri = "http://www.w3.org/Icons/valid-html401";
-	    $alttext = "Valid HTML 4.01!";
-            $gifhw   = ' height="31" width="88"';
-	}
-	elsif ( $version =~ /XHTML 1\.0<\/a> / ) {
-	    $image_uri = "http://www.w3.org/Icons/valid-xhtml10";
-	    $alttext = "Valid XHTML 1.0!";
-            $gifborder = "";
-            $gifhw   = ' height="31" width="88"';
-	    $xhtmlendtag = " /";
-	}
-	elsif ( $version =~ /HTML 3\.0/ ) {
-	    $image_uri = "${abs_svc_uri}images/vh30";
-	    $alttext = "Valid HTML 3.0!";
-	}
-	elsif ( $version =~ /Netscape/ ) {
-	    $image_uri = "${abs_svc_uri}images/vhns";
-	    $alttext = "Valid Netscape-HTML!";
-	}
-	elsif ( $version =~ /Hotjava/ ) {
-	    $image_uri = "${abs_svc_uri}images/vhhj";
-	    $alttext = "Valid Hotjava-HTML!";
-	}
-	if ( defined $image_uri ) {
-	    print <<"EOHD";
-  <p>
-    <img src="$image_uri" alt="$alttext"> Congratulations, this
-    document validates as $version!
-  </p>
-
-  <p>
-    To show your readers that you have taken the care to create an
-    interoperable Web page, you may display this icon on any page
-    that validates. Here is the HTML you could use to add this icon
-    to your Web page:
-  </p>
-  <pre>
-  &lt;p&gt;
-    &lt;a href="${abs_svc_uri}check/referer"&gt;&lt;img$gifborder
-        src="$image_uri"
-        alt="$alttext"$gifhw$xhtmlendtag&gt;&lt;/a&gt;
-  &lt;/p&gt;</pre>
-  <p>
-    If you like, you can download a copy of this image (in <a
-    href="${image_uri}.png">PNG</a> or <a href="${image_uri}.gif">GIF</a>
-    format) to keep in your local web directory, and change the HTML fragment
-    above to reference your local image rather than the one on this server.
-  </p>
-
-EOHD
-	}
-    }
-    if ($version eq 'unknown' or not defined $image_uri) {
-      print "  <p>\n    Congratulations, this document validates as the document type specified! (I don't have an icon for this one yet, sorry.)\n  </p>\n";
-    }
-
-    unless ($q->param('uploaded_file')) {
-      my $thispage = $q->url(-query => 1);
-
-      &output_css_validator_blurb($q->param('uri'));
-
-      print <<"EOHD";
-  <p>
-    If you would like to create a link to <em>this</em> page (i.e., this
-    validation result) to make it easier to re-validate this page in the
-    future or to allow others to validate your page, the URI is:
-  </p>
-
-  <blockquote>
-    <code><a href="$thispage">$thispage</a></code>
-  </blockquote>
-
-  <p>
-    (Or, you can just add the current page to your bookmarks or hotlist.)
-  </p>
-EOHD
-    }
-    if (($File->{Type} eq 'xml') || ($File->{Type} eq 'xhtml')) {
-      print qq{    <h2><a name="sp-lim">Caveat</a></h2>
-      <p>
-	This validator is based on SP, which has <a
-	href="http://www.jclark.com/sp/xml.htm">some limitations
-	in its support for XML</a>.
-      </p>
-      };
-    }
-}
-
-if ( $q->param('weblint') ) {
-  my $pedanticflags;
-  my $pedantic_blurb;
-
-    if ( $q->param('pw') ) {
-	$pedanticflags  = '-pedantic -e mailto-link';
-	$pedantic_blurb = ' (in "pedantic" mode)';
-    }
-    else {
-	$pedanticflags = '';
-    }
-
-    print <<"EOF";
-  <hr>
-  <h2><a name="weblint">Weblint Results</a></h2>
-
-  <p>
-    Below are the results of running <a
-    href="http://www.weblint.org/">Weblint</a>
-    on this document$pedantic_blurb:
-  </p>
-
-  <p>
-    <strong>Note</strong>:
-    Weblint is a useful HTML syntax and style checker, but does
-    not do true HTML validation.
-    Also, the version of weblint used by this service has not
-    been updated for some time, so some of the messages below may
-    be misleading or inaccurate.
-  </p>
-EOF
-
-    open WEBLINT, "|$weblint -s $pedanticflags - 2>&1 >$temp.weblint"
-      or die "open($weblint) returned: $!\n";
-    for (@{$File->{Content}}) {print WEBLINT $_, "\n"};
-    close WEBLINT;
-
-    print "\n\n";
-    if ( $? ) {
-	print "  <ul>\n";
-
-	    open( WEBLINTOUT, "$temp.weblint" )
-		|| die "couldn't open weblint results in $temp: $!";
-
-	    while (<WEBLINTOUT>) {
-		s/ \(use "-x <extension>" to allow this\)\.$/./go;
-		s/&/&amp;/go;
-		s/</&lt;/go;
-		s/>/&gt;/go;
-		print "    <li>$_";
-	    }
-
-	    close( WEBLINTOUT ) || die "couldn't close weblint results: $!";
-	    print "  </ul>\n";
-    }
-    else {
-	print "\n  <blockquote>\n    Looks good to me!\n  </blockquote>\n";
-    }
-    print "\n\n";
-}
-
-if ($q->param('outline')) {
-  print <<'EOF';
-  <div id="outline" class="mtb">
-    <hr>
-    <h2><a name="outline">Outline</a></h2>
-    <p>
-      Below is an outline for this document, automatically generated from the
-      heading tags (<code>&lt;H1&gt;</code> through <code>&lt;H6&gt;</code>.)
-    </p>
-EOF
-
-  my $prevlevel = 0;
-  my $indent    = 0;
-  my $level     = 0;
-  for (1 .. $#esis) {
-    my $line = $esis[$_];
-    next unless $line =~ /^\(H([1-6])$/i;
-    $prevlevel = $level;
-    $level     = $1;
-
-    print "    </ul>\n" x ($prevlevel - $level); # perl is so cool.
-    if ($level - $prevlevel == 1) {
-      print "    <ul>\n";
-    }
-    foreach my $i (($prevlevel + 1) .. ($level - 1)) {
-      print qq(  <ul>\n    <li class="warning">A level $i heading is missing!\n);
-    }
-    if ($level - $prevlevel > 1) {
-      print "    <ul>\n";
-    }
-
-    $line       = '';
-    my $heading = '';
-    until (substr($line, 0, 3) =~ /^\)H$level/i) {
-      $line = $esis[$_++];
-      $line =~ s/\\011/ /g;
-      $line =~ s/\\012/ /g;
-      if ($line =~ /^-/) {
-	my $headcont = $line;
-	substr($headcont, 0, 1) = " ";
-	$headcont =~ s/\\n/ /g;
-	$heading .= $headcont;
-      } elsif ($line =~ /^AALT CDATA( .+)/i) {
-	my $headcont = $1;
-	$headcont =~ s/\\n/ /g;
-	$heading .= $headcont;
-      }
-    }
-
-    $heading = substr($heading, 1); # chop the leading '-' or ' '.
-    $heading =~ s/&/&amp;/go; $heading =~ s/</&lt;/go;
-    print "    <li>$heading\n";
-  }
-  print "    </ul>\n" x $level;
-  print <<'EOF';
-    <p>
-      If this does not look like a real outline, it is likely that the
-      heading tags are not being used properly. (Headings should reflect
-      the logical structure of the document; they should not be used simply
-      to add emphasis, or to change the font size.)
-    </p>
-    </div>
-EOF
-}
-
-if ($q->param('ss')) {
-  my $line = 1;
-
-  print <<'EOF';
-  <div id="source" class="mtb">
-    <hr>
-    <h2><a name="source">Source Listing</a></h2>
-
-    <p>Below is the source input I used for this validation:</p>
-    <pre>
-EOF
-
-  for (@{$File->{Content}}) {
-    s/&/&amp;/go; s/</&lt;/go;
-    printf "<a name=\"line-%s\">%4d</a>: %s\n", $line, $line, $_;
-    $line++;
-  }
-  print "    </pre>\n  </div>";
-}
-
-if ($q->param('sp')) {
-  print <<'EOF';
-  <div id="parse" class="mtb">
-    <hr>
-    <h2><a name="parse">Parse Tree</a></h2>
-EOF
-    if ($q->param('noatt')) {
-      print <<'EOF';
-    <p class="note">
-      I am excluding the attributes, as you requested.
-    </p>
-EOF
-    } else {
-      print <<'EOF';
-    <p class="note">
-      You can also view this parse tree without attributes by selecting the
-      appropriate option on <a href="./#byURI">the form</a>.
-    </p>
-EOF
-    }
-
-  my $indent   = 0;
-  my $prevdata = '';
-
-  print "<pre>\n";
-  foreach my $line (@esis) {
-    if ($q->param('noatt')) {	# don't show attributes
-      next if $line =~ /^A/;
-      next if $line =~ /^\(A$/;
-      next if $line =~ /^\)A$/;
-    }
-
-    $line =~ s/\\n/ /g;
-    $line =~ s/\\011/ /g;
-    $line =~ s/\\012/ /g;
-    $line =~ s/\s+/ /g;
-    next if $line =~ /^-\s*$/;
-
-    if ($line =~ /^-/) {
-      substr($line, 0, 1) = ' ';
-      $prevdata .= $line;
-      next;
-    } elsif ($prevdata) {
-      $prevdata =~ s/&/&amp;/go;
-      $prevdata =~ s/</&lt;/go;
-      $prevdata =~ s/\s+/ /go;
-      print wrap(' ' x $indent, ' ' x $indent, $prevdata), "\n";
-      undef $prevdata;
-    }
-
-    $line =~ s/&/&amp;/go;
-    $line =~ s/</&lt;/go;
-    if ($line =~ /^\)/) {
-      $indent -= 2;
-    }
-
-    my $printme;
-    chomp($printme = $line);
-    $printme =~ s{^([()])(.*)}	# reformat and add links on HTML elements
-		 { my $close = '';
-		      $close = "/" if $1 eq ")";	# ")" -> close-tag
-		   "&lt;" . $close . "<a href=\"" .
-		   $element_ref . $element_uri->{lc($2)} .
-		   "\">$2<\/a>&gt;"
-		 }egx;
-    $printme =~ s,^A,  A,;	# indent attributes a bit
-    print ' ' x $indent, $printme, "\n";
-    if ($line =~ /^\(/) {
-      $indent += 2;
-    }
-  }
-  print "</pre>\n";
-  print "</div>\n";
-}
+&weblint($File)     if $q->param('weblint');
+&outline($File)     if $q->param('outline');
+&show_source($File) if $q->param('ss');
+&parse_tree($File)  if $q->param('sp');
 
 &clean_up_and_exit;
 
@@ -1437,3 +983,471 @@ sub get_doctype {
   $dtd =~ s(<!DOCTYPE\s+\w+\s+PUBLIC\s+"([^\"]+)".*>){$1}si;
   return $dtd;
 }
+
+#
+# @@FIXME@@ Add description.
+sub process_errors {
+  my $File = shift;
+  my($line, $col, $type, $msg);
+  print "<ul>\n";
+  for (@{$File->{Errors}}) {
+    next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
+    next if / numbers exceeding 65535 not supported$/;
+    next if /^$sp:\(invalid location\):W: URL Redirected to/;
+    s/^$sp:<OSFD>//g;
+    unless (($line, $col, $type, $msg) = (/^[^:]*:([0-9]+):([0-9]+):([A-Z]?):? (.*)/)) {
+      print "Uh oh! I got the following unknown error:\n\n   $_\n\n";
+      print "Please make sure you specified the DOCTYPE properly!\n\n";
+      &output_doctype_spiel;
+      last;
+    }
+    if ($msg =~ /^cannot generate system identifier for entity /) {
+      print "<p><b>Fatal error</b>! $msg\n\n";
+      print "<p>I couldn't parse this document, because it " .
+	"uses a public\n    identifier that's not in my <a\n " .
+	  "    href=\"sgml-lib/catalog\">catalog</a>!\n  </p>\n";
+      &output_doctype_spiel;
+      last;
+    }
+    if ($msg =~ /unrecognized ({{)?DOCTYPE(}})?/i) {
+      print "<p><b>Fatal error</b>! $msg\n\n";
+      print "<p>I couldn't parse this document, because it " .
+	"uses a public\n    identifier that's not in my <a\n " .
+	  "    href=\"sgml-lib/catalog\">catalog</a>!\n  </p>\n";
+      &output_doctype_spiel;
+      last;
+    }
+    if ($msg =~ /^cannot open /) {
+      print "<p>Fatal error! $msg\n\n";
+      print "<p>I couldn't parse this document, because it " .
+	"makes reference to\n    a system-specific file instead of " .
+	  "using a well-known public identifier\n    to specify the " .
+	    "level of HTML being used.\n  </p>\n";
+      &output_doctype_spiel;
+      last;
+    }
+    if ($msg =~ /^cannot find /) {
+      print "<p>Fatal error! $msg\n\n";
+      print "<p>I couldn't parse this document, because it " .
+	"makes reference to\n    a system-specific file instead of " .
+	  "using a well-known public identifier\n    to specify the " .
+	    "level of HTML being used.\n  </p>\n";
+      &output_doctype_spiel;
+      last;
+    }
+
+    my $newline = $File->{Content}->[$line - 1];
+
+    # make sure there are no ^P's or ^Q's in the file, since we need to use
+    # them to represent '<' and '>' temporarily. We'll just change them to
+    # literal P's and Q's for a lack of anything better to do with them.
+    my $lt = "\020";
+    my $gt = "\021";
+    $newline =~ s/\020/P/go;
+    $newline =~ s/\021/Q/g;
+
+    my $orig_col = $col;
+    ($newline, $col) = &truncate_line($newline, $col);
+
+
+    # temporarily strip curlies from lq-nsgmls output.
+    # @@ should link HTML elements using $elem_db instead.
+    $msg =~ s/[{}]//g;
+
+    # figure out the index into the %frag associative array for the
+    # "explanation..." links to the KGV FAQ.
+    my $msgindex = $msg;
+    $msgindex =~ s/"[^\"]+"/FOO/g;
+    $msgindex =~ s/[^A-Za-z ]//g;
+
+    $newline =~ s/&/&amp;/go;
+    $newline =~ s/</&lt;/go;
+    $newline =~ s/$lt/</g;
+    $newline =~ s/$gt/>/g;
+    $newline =~ s/\t/ /g;
+    $newline =~ s/\r//g;
+
+    print "  <li>";
+    print qq{<a href="#line-$line">} if $q->param('ss');
+    print "Line $line";
+    print "</a>"		     if $q->param('ss');
+    print ", column $orig_col:\n";
+
+    print "<pre>  <code class=input>$newline</code>\n";
+    print " " x ($col + 2);	        # 2 is the number of spaces before <code> above
+    print " " x 4 if $col != $orig_col;	# only for truncated lines
+    print "<span class=markup>^</span></pre>\n";
+    print "<p>\n";
+
+    print qq{<span class=error>Error: $msg</span>};
+
+    if (defined $frag->{$msgindex}) {
+      print qq{ (<a href="$faqerrloc#$frag->{$msgindex}">explanation...</a>)};
+    }
+
+    print "</p>\n";
+
+  }
+  print "</ul>\n";
+  print "<hr>\n";
+  if ($version eq 'unknown') {
+    print "\n  <p>\n    Sorry, I can't validate this document.\n  </p>\n";
+  } elsif ($File->{Type} eq 'xml') {
+    print "\n  <p>\n    Sorry, this document is not well-formed XML.\n  </p>\n";
+  } else {
+    print "\n  <p>\n    Sorry, this document does not validate as $version.\n  </p>\n\n";
+    &output_css_validator_blurb($q->param('uri'));
+  }
+}
+
+#
+# @@FIXME@@ Add description.
+sub report_valid {
+  my $File = shift;
+  my $gifborder   = ' border="0"';
+  my $xhtmlendtag = '';
+  my($image_uri, $alttext, $gifhw);
+
+  if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
+    print "\n  <pre>\n    No errors found! ";
+    print "<a href=\"#sp-lim\">*</a></pre>\n\n";
+  } else {
+    print "\n  <pre>\n    No errors found!</pre>\n\n";
+  }
+  unless ($version eq 'unknown') {
+    if ($version =~ /^HTML 2\.0$/) {
+      $image_uri = "${abs_svc_uri}images/vh20";
+      $alttext = "Valid HTML 2.0!";
+      $gifborder = "";
+    } elsif ($version =~ /HTML 3\.2</) {
+      $image_uri = "http://www.w3.org/Icons/valid-html32";
+      $alttext = "Valid HTML 3.2!";
+      $gifhw   = ' height="31" width="88"';
+    } elsif ($version =~ /HTML 4\.0<\/a> Strict$/) {
+      $image_uri = "http://www.w3.org/Icons/valid-html40";
+      $alttext = "Valid HTML 4.0!";
+      $gifborder = "";
+      $gifhw   = ' height="31" width="88"';
+    } elsif ($version =~ /HTML 4\.0<\/a> /) {
+      $image_uri = "http://www.w3.org/Icons/valid-html40";
+      $alttext = "Valid HTML 4.0!";
+      $gifhw   = ' height="31" width="88"';
+    } elsif ($version =~ /HTML 4\.01<\/a> Strict$/) {
+      $image_uri = "http://www.w3.org/Icons/valid-html401";
+      $alttext = "Valid HTML 4.01!";
+      $gifborder = "";
+      $gifhw   = ' height="31" width="88"';
+    } elsif ($version =~ /HTML 4\.01<\/a> /) {
+      $image_uri = "http://www.w3.org/Icons/valid-html401";
+      $alttext = "Valid HTML 4.01!";
+      $gifhw   = ' height="31" width="88"';
+    } elsif ($version =~ /XHTML 1\.0<\/a> /) {
+      $image_uri = "http://www.w3.org/Icons/valid-xhtml10";
+      $alttext = "Valid XHTML 1.0!";
+      $gifborder = "";
+      $gifhw   = ' height="31" width="88"';
+      $xhtmlendtag = " /";
+    } elsif ($version =~ /HTML 3\.0/) {
+      $image_uri = "${abs_svc_uri}images/vh30";
+      $alttext = "Valid HTML 3.0!";
+    } elsif ($version =~ /Netscape/) {
+      $image_uri = "${abs_svc_uri}images/vhns";
+      $alttext = "Valid Netscape-HTML!";
+    } elsif ($version =~ /Hotjava/) {
+      $image_uri = "${abs_svc_uri}images/vhhj";
+      $alttext = "Valid Hotjava-HTML!";
+    }
+    if (defined $image_uri) {
+      print <<"EOHD";
+  <p>
+    <img src="$image_uri" alt="$alttext"> Congratulations, this
+    document validates as $version!
+  </p>
+
+  <p>
+    To show your readers that you have taken the care to create an
+    interoperable Web page, you may display this icon on any page
+    that validates. Here is the HTML you could use to add this icon
+    to your Web page:
+  </p>
+  <pre>
+  &lt;p&gt;
+    &lt;a href="${abs_svc_uri}check/referer"&gt;&lt;img$gifborder
+        src="$image_uri"
+        alt="$alttext"$gifhw$xhtmlendtag&gt;&lt;/a&gt;
+  &lt;/p&gt;</pre>
+  <p>
+    If you like, you can download a copy of this image (in <a
+    href="${image_uri}.png">PNG</a> or <a href="${image_uri}.gif">GIF</a>
+    format) to keep in your local web directory, and change the HTML fragment
+    above to reference your local image rather than the one on this server.
+  </p>
+
+EOHD
+    }
+  }
+  if ($version eq 'unknown' or not defined $image_uri) {
+    print "  <p>\n    Congratulations, this document validates as the document type specified! (I don't have an icon for this one yet, sorry.)\n  </p>\n";
+  }
+
+  unless ($q->param('uploaded_file')) {
+    my $thispage = $q->url(-query => 1);
+
+    &output_css_validator_blurb($q->param('uri'));
+
+    print <<"EOHD";
+  <p>
+    If you would like to create a link to <em>this</em> page (i.e., this
+    validation result) to make it easier to re-validate this page in the
+    future or to allow others to validate your page, the URI is:
+  </p>
+
+  <blockquote>
+    <code><a href="$thispage">$thispage</a></code>
+  </blockquote>
+
+  <p>
+    (Or, you can just add the current page to your bookmarks or hotlist.)
+  </p>
+EOHD
+  }
+  if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
+    print qq{    <h2><a name="sp-lim">Caveat</a></h2>
+      <p>
+	This validator is based on SP, which has <a
+	href="http://www.jclark.com/sp/xml.htm">some limitations
+	in its support for XML</a>.
+      </p>
+	    };
+  }
+}
+
+#
+# @@FIXME@@ Add description.
+sub weblint {
+  my $File = shift;
+  my $pedanticflags;
+  my $pedantic_blurb;
+
+  if ($q->param('pw')) {
+    $pedanticflags  = '-pedantic -e mailto-link';
+    $pedantic_blurb = ' (in "pedantic" mode)';
+  } else {
+    $pedanticflags = '';
+  }
+
+  print <<"EOF";
+  <hr>
+  <h2><a name="weblint">Weblint Results</a></h2>
+
+  <p>
+    Below are the results of running <a
+    href="http://www.weblint.org/">Weblint</a>
+    on this document$pedantic_blurb:
+  </p>
+
+  <p>
+    <strong>Note</strong>:
+    Weblint is a useful HTML syntax and style checker, but does
+    not do true HTML validation.
+    Also, the version of weblint used by this service has not
+    been updated for some time, so some of the messages below may
+    be misleading or inaccurate.
+  </p>
+EOF
+
+  open WEBLINT, "|$weblint -s $pedanticflags - 2>&1 >$temp.weblint"
+    or die "open($weblint) returned: $!\n";
+  for (@{$File->{Content}}) {print WEBLINT $_, "\n"};
+  close WEBLINT;
+
+  print "\n\n";
+  if ($?) {
+    print "  <ul>\n";
+    open WEBLINTOUT, "$temp.weblint"
+      or die "open($temp.weblint) returned: $!\n";
+
+    while (<WEBLINTOUT>) {
+      s/ \(use "-x <extension>" to allow this\)\.$/./go;
+      s/&/&amp;/go;
+      s/</&lt;/go;
+      s/>/&gt;/go;
+      print "    <li>$_";
+    }
+
+    close WEBLINTOUT or die "close($temp.weblint) returned: $!\n";
+    print "  </ul>\n";
+  } else {
+    print "\n  <blockquote>\n    Looks good to me!\n  </blockquote>\n";
+  }
+  print "\n\n";
+}
+
+#
+# @@FIXME@@ Add description.
+sub outline {
+  my $File = shift;
+
+  print <<'EOF';
+  <div id="outline" class="mtb">
+    <hr>
+    <h2><a name="outline">Outline</a></h2>
+    <p>
+      Below is an outline for this document, automatically generated from the
+      heading tags (<code>&lt;H1&gt;</code> through <code>&lt;H6&gt;</code>.)
+    </p>
+EOF
+
+  my $prevlevel = 0;
+  my $indent    = 0;
+  my $level     = 0;
+
+  for (1 .. $#{$File->{ESIS}}) {
+    my $line = $File->{ESIS}->[$_];
+    next unless $line =~ /^\(H([1-6])$/i;
+    $prevlevel = $level;
+    $level     = $1;
+
+    print "    </ul>\n" x ($prevlevel - $level); # perl is so cool.
+    if ($level - $prevlevel == 1) {print "    <ul>\n"};
+    foreach my $i (($prevlevel + 1) .. ($level - 1)) {
+      print qq(  <ul>\n    <li class="warning">A level $i heading is missing!\n);
+    }
+    if ($level - $prevlevel > 1) {print "    <ul>\n"};
+
+    $line       = '';
+    my $heading = '';
+    until (substr($line, 0, 3) =~ /^\)H$level/i) {
+      $line = $File->{ESIS}->[$_++];
+      $line =~ s/\\011/ /g;
+      $line =~ s/\\012/ /g;
+      if ($line =~ /^-/) {
+	my $headcont = $line;
+	substr($headcont, 0, 1) = " ";
+	$headcont =~ s/\\n/ /g;
+	$heading .= $headcont;
+      } elsif ($line =~ /^AALT CDATA( .+)/i) {
+	my $headcont = $1;
+	$headcont =~ s/\\n/ /g;
+	$heading .= $headcont;
+      }
+    }
+
+    $heading = substr($heading, 1); # chop the leading '-' or ' '.
+    $heading =~ s/&/&amp;/go; $heading =~ s/</&lt;/go;
+    print "    <li>$heading\n";
+  }
+  print "    </ul>\n" x $level;
+  print <<'EOF';
+    <p>
+      If this does not look like a real outline, it is likely that the
+      heading tags are not being used properly. (Headings should reflect
+      the logical structure of the document; they should not be used simply
+      to add emphasis, or to change the font size.)
+    </p>
+    </div>
+EOF
+}
+
+#
+# @@FIXME@@ Add description.
+sub show_source {
+  my $File = shift;
+  my $line = 1;
+
+  print <<'EOF';
+  <div id="source" class="mtb">
+    <hr>
+    <h2><a name="source">Source Listing</a></h2>
+
+    <p>Below is the source input I used for this validation:</p>
+    <pre>
+EOF
+
+  for (@{$File->{Content}}) {
+    s/&/&amp;/go; s/</&lt;/go;
+    printf "<a name=\"line-%s\">%4d</a>: %s\n", $line, $line, $_;
+    $line++;
+  }
+  print "    </pre>\n  </div>";
+}
+
+#
+# @@FIXME@@ Add description.
+sub parse_tree {
+  my $File = shift;
+
+  print <<'EOF';
+  <div id="parse" class="mtb">
+    <hr>
+    <h2><a name="parse">Parse Tree</a></h2>
+EOF
+  if ($q->param('noatt')) {
+    print <<'EOF';
+    <p class="note">
+      I am excluding the attributes, as you requested.
+    </p>
+EOF
+  } else {
+    print <<'EOF';
+    <p class="note">
+      You can also view this parse tree without attributes by selecting the
+      appropriate option on <a href="./#byURI">the form</a>.
+    </p>
+EOF
+  }
+
+  my $indent   = 0;
+  my $prevdata = '';
+
+  print "<pre>\n";
+  foreach my $line (@{$File->{ESIS}}) {
+    if ($q->param('noatt')) {	# don't show attributes
+      next if $line =~ /^A/;
+      next if $line =~ /^\(A$/;
+      next if $line =~ /^\)A$/;
+    }
+
+    $line =~ s/\\n/ /g;
+    $line =~ s/\\011/ /g;
+    $line =~ s/\\012/ /g;
+    $line =~ s/\s+/ /g;
+    next if $line =~ /^-\s*$/;
+
+    if ($line =~ /^-/) {
+      substr($line, 0, 1) = ' ';
+      $prevdata .= $line;
+      next;
+    } elsif ($prevdata) {
+      $prevdata =~ s/&/&amp;/go;
+      $prevdata =~ s/</&lt;/go;
+      $prevdata =~ s/\s+/ /go;
+      print wrap(' ' x $indent, ' ' x $indent, $prevdata), "\n";
+      undef $prevdata;
+    }
+
+    $line =~ s/&/&amp;/go;
+    $line =~ s/</&lt;/go;
+    if ($line =~ /^\)/) {
+      $indent -= 2;
+    }
+
+    my $printme;
+    chomp($printme = $line);
+    $printme =~ s{^([()])(.*)}	# reformat and add links on HTML elements
+		 { my $close = '';
+		      $close = "/" if $1 eq ")";	# ")" -> close-tag
+		   "&lt;" . $close . "<a href=\"" .
+		   $element_ref . $element_uri->{lc($2)} .
+		   "\">$2<\/a>&gt;"
+		 }egx;
+    $printme =~ s,^A,  A,;	# indent attributes a bit
+    print ' ' x $indent, $printme, "\n";
+    if ($line =~ /^\(/) {
+      $indent += 2;
+    }
+  }
+  print "</pre>\n";
+  print "</div>\n";
+}
+
