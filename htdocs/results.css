@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.3 2002-11-30 20:14:19 link Exp $ */
+/* $Id: results.css,v 1.13.2.4 2002-11-30 23:52:02 link Exp $ */
 
 .markup {
   color: red;
@@ -79,8 +79,8 @@ h2.valid {
   letter-spacing:	normal;
   text-transform:	none;
   border-color:		black;
-  padding-top:		.1em;
-  padding-bottom: 	.1em;
+  padding-top:		.5em;
+  padding-bottom: 	.5em;
 }
 
 .valid a {
@@ -103,6 +103,10 @@ h2.valid {
   background: yellow;
 }
 
+h2.invalid {
+  text-align: center;
+}
+
 .invalid {
   background:		#880531;
   color:		white;
@@ -116,8 +120,8 @@ h2.valid {
   letter-spacing:	normal;
   text-transform:	none;
   border-color: 	black;
-  padding-top:		.1em;
-  padding-bottom: 	.1em;
+  padding-top:		.5em;
+  padding-bottom: 	.5em;
 }
 
 .invalid a {
@@ -129,7 +133,8 @@ h2.valid {
 }
 
 .invalid a:hover {
-  color: blue;
+  color: #880531;
+  background: white;
 }
 
 .invalid a:active {
