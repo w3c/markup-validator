@@ -4,22 +4,19 @@ OVERRIDE YES
 PUBLIC "-//W3C//DTD Specification V2.0//EN" "http://www.w3.org/XML/1998/06/xmlspec-v20.dtd"
 SYSTEM "spec.dtd" "http://www.w3.org/XML/1998/06/xmlspec-v20.dtd"
 
--- MathML 2.0 Catalog Data File --
--- MathML 2.0 DTD driver --
+-- MathML --
+
+PUBLIC "-//W3C//DTD MathML 2.0//EN"
+       "REC-MathML2-20031021/mathml2.dtd"
+SYSTEM "http://www.w3.org/Math/DTD/mathml2/mathml2.dtd"
+       "REC-MathML2-20031021/mathml2.dtd"
 
 PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN"
-       "UPD-MathML2-20030620/xhtml-math11-f.dtd"
-PUBLIC "-//W3C//DTD MathML 2.0//EN"
-       "UPD-MathML2-20030620/mathml2.dtd"
-
-SYSTEM "http://www.w3.org/TR/MathML2/dtd/xhtml-math11-f.dtd"
-       "UPD-MathML2-20030620/xhtml-math11-f.dtd"
-SYSTEM "http://www.w3.org/TR/MathML2/dtd/mathml2.dtd"
-       "UPD-MathML2-20030620/mathml2.dtd"
-
--- XHTML + MathML + SVG --
+       "REC-MathML2-20031021/xhtml-math11-f.dtd"
 PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
-       "xhtml-math-svg-flat-20020809.dtd"
+       "REC-MathML2-20031021/xhtml-math11-f.dtd"
+SYSTEM "http://www.w3.org/Math/DTD/mathml2/xhtml-math11-f.dtd"
+       "REC-MathML2-20031021/xhtml-math11-f.dtd"
 
 PUBLIC "-//W3C//DTD SVG 1.0//EN"	REC-SVG-20010904/svg10.dtd
 PUBLIC "-//W3C//DTD SVG 1.1//EN"	REC-SVG11-20030114/svg11-flat.dtd
