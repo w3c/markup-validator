@@ -21,8 +21,9 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
 =head1 CONTENTS
 
  CGI 2.81
- Config::General
+ Config::General 2.19
  HTML::Parser 3.25
+ HTML::Template 2.6
  LWP::UserAgent 1.90
  Net::IP
  Set::IntSpan

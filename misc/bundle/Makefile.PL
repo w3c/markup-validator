@@ -8,8 +8,9 @@ WriteMakefile(
     VERSION_FROM  => 'lib/Bundle/W3C/Validator.pm',
     PREREQ_PM     => {
                       CGI             => 2.81,
-                      Config::General => 0,
+                      Config::General => 2.19,
                       HTML::Parser    => 3.25,
+                      HTML::Template  => 2.6,
                       LWP::UserAgent  => 1.90,
                       Net::IP         => 0,
                       Set::IntSpan    => 0,
