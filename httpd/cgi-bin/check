@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.195 2001-11-14 08:02:03 duerst Exp $
+# $Id: check,v 1.196 2002-01-08 07:18:36 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -95,9 +95,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.195 $;
+$VERSION    =  q$Revision: 1.196 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-11-14 08:02:03 $;
+$DATE       =  q$Date: 2002-01-08 07:18:36 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -474,6 +474,10 @@ if ($File->{Use_Charset} eq 'unknown') {
       explanations</a>.
 EOHD
   $File->{Tentative} |= T_DEBUG; # WOuld be T_WARN, but the complaints...
+}
+## special warning because of iconv bug
+if ( $File->{Use_Charset} eq 'macintosh' ) {
+  &add_warning("Charset not completely supported, sorry.");
 }
 
 {  # block for character conversion and checking
