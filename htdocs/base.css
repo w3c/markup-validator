@@ -4,15 +4,12 @@
   Copyright © 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
   See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-  $Id: base.css,v 1.4 2001-07-16 00:47:17 link Exp $
+  $Id: base.css,v 1.5 2001-07-24 11:38:37 link Exp $
 */
 
-/* Import the W3C Base Stylesheet */
-@import {url('http://w3.org/StyleSheets/base.css')}
-
 body {
-	background: white;
-	color: black;
+	color:          black;
+	background:     white;
 	font-size:	1em;
 	font-weight:	normal;
 	word-spacing:	normal;
@@ -25,7 +22,47 @@ a         {color: #0000ee}
 a:visited {color: #551a8b}
 a:hover   {color: #ee0000}
 
+h1 img#logo {vertical-align: middle}
+
+pre {
+  font-family: monospace
+}
+
+a:link img, a:visited img {
+   border-style: none
+}
+
+a img {
+  color: white;		/* The only way to hide the border in NS 4.x */
+}
+
+ul.toc {
+  list-style: disc;
+  list-style: none;
+}
+
+ol li {
+	width: 75ex;
+	padding: .1em;
+}
+
+div.issue {
+  padding: 0.5em;
+  border: none;
+  margin-right: 5%;
+}
+
+.hideme { display: none }
+
 dt a {color: black}
+
+address img {float: right}
+address {
+	padding-top: 1em;
+	margin-top:  3em;
+	border-top-style: solid;
+	border-top-color: black;
+}
 
 /* Various header(ish) things. Definitions cribbed from the CORE Styles. */
 H1	{	

@@ -1,231 +1,224 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-<head>
-  <title>W3C HTML Validation Service: To Do List</title>
-  <link rev="made" href="mailto:gerald@w3.org">
-  <meta name="keywords" content="HTML, Hypertext Markup Language, Validation,
-    W3C HTML Validation Service, To Do List">
-  <meta name="description" content="To Do List for W3C's Validation Service.">
-  <meta name="revision"
-    content="$Id: todo.html,v 1.43 2001-06-23 05:33:10 link Exp $">
-</head>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+  <head>
+    <title>W3C HTML Validation Service: To Do List</title>
+    <link rev="made" href="mailto:gerald@w3.org" />
+    <link rel="stylesheet" type="text/css" href="base.css" />
+    <meta name="keywords" content="HTML, Hypertext Markup Language, Validation,
+      W3C HTML Validation Service, To Do List" />
+    <meta name="description" content="To Do List for W3C's Validation Service." />
+    <meta name="revision"
+      content="$Id: todo.html,v 1.44 2001-07-24 11:38:37 link Exp $" />
+  </head>
+  <body>
+    <h1><a href="http://www.w3.org/"><img id="logo"
+     src="http://www.w3.org/Icons/WWW/w3c_home" height="48"
+     alt="W3C" /></a> HTML Validation Service: To Do List</h1>
+    <p class="intro">
+      This page has the to-do list for the <a href="/">W3C HTML Validation
+      Service</a>, including bugs that need fixing and general wishlist items.
+      See also the
+      <a href="http://lists.w3.org/Archives/Public/www-validator/">www-validator
+        mailing list archives</a> for recent discussion that may not be
+      reflected on this page.
+    </p>
+    <p>
+      These items are roughly in prioritized order; i.e. the items near the
+      top are those which I consider most important.
+    </p>
 
-<body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
+    <ol>
+      <li>Finish up the textarea for testing short HTML fragments.</li>
+      <li>
+        Add a "fix my HTML for me" option using <a
+        href="http://www.w3.org/People/Raggett/tidy/">Tidy</a>.
+      </li>
+      <li>
+        Finish adding support for XML validation (see also:
+        <a href="dev/tests/#xml">test cases</a>, or
+        <a href="http://www.hcrc.ed.ac.uk/~richard/xml-check.html">an
+        existing service</a>).
+      </li>
+      <li>
+        Update <a href="/sgml-lib.tar.gz">sgml-lib.tar.gz</a>;
+        automate the updates.
+      </li>
+      <li>
+        Make lists of "most frequently validated invalid pages"
+        and "most frequently validated (non-W3C?) valid pages"
+        (need to start logging stuff first, including IPs to compare
+        uniqueness).
+      </li>
+      <li>Create a stylesheet and link to it from every page.</li>
+      <li>
+        Add a section to the report on
+        <a href="http://www.mnot.net/cacheability/">document cacheability</a>?
+        (or just link to it?)
+      </li>
+      <li>
+        Put the explanations in a database (flat files are probably okay),
+        and offer an option to display them inline with the errors.
+      </li>
+      <li>
+        Install and play with HTML::Validator, link to it from somewhere:
+        <a href="http://www.hut.fi/~samzait/HTML-Validator/">http://www.hut.fi/~samzait/HTML-Validator/</a>
+        <a href="http://www.cpan.org/modules/by-authors/id/S/SA/SAIT/">http://www.cpan.org/modules/by-authors/id/S/SA/SAIT/</a>
+      </li>
+      <li>
+        Write documentation, describing each feature and option of the
+        validator and answering questions like "What's the difference between
+        an SGML parser and Weblint?", "Which DOCTYPE should I use?",
+        content negotiation, ...
+      </li>
+      <li>Incorporate CSS validation directly into this service.</li>
+      <li>
+        Make e.g. <code>http://validator.w3.org/check/referer;imgonly</code>
+        return only an image showing the validation status of the referring
+        page.
+      </li>
+      <li>
+        Add link validation using Hugo's
+        <a href="http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/checklink.pl">checklink
+        code</a> (or other code with similar functionality).
+      </li>
+      <li>
+        Give errors/warnings related to markup that is technically valid SGML,
+        but error prone, such as things found in
+        <a href="http://www.w3.org/TR/REC-html40/appendix/notes.html#h-B.3">"B.3
+        SGML implementation notes"</a> in the
+        <a href="http://www.w3.org/TR/REC-html40/">HTML 4.0 spec</a>.
+        (these things really belong in something like
+        <a href="http://www.weblint.org/">weblint</a>).
+      </li>
+      <li>
+        Make an "elements found" section a la Webtechs, with links from each
+        element to the appropriate place in either the DTD tree listing
+        produced with dtd2html (after running dtd2html with all DTDs in the
+        catalog), or the HTML 3.2/4.0 specs, or htmlhelp.com stuff, ...
+      </li>
+      <li>
+        Add a "document meta-information" section to the report, to encourage
+        people to use META tags appropriately?
+      </li>
+      <li>
+        Add a "recommend a DTD for me" feature (check a document against all
+        available DTDs, report which one has the fewest errors)
+      </li>
+      <li>
+        Start caching validation results locally and doing an If-Modified-Since
+        HTTP request to only download and re-validate URLs if they actually
+        changed since their last validation
+      </li>
+      <li>
+        Site walker/validator: need to add a "registered user" feature first,
+        because this feature could be abused (many requests on a server in a
+        short period of time)?
+      </li>
+      <li>
+        URL-minder service: "remind me if this page or set of pages ever
+        ceases to validate"
+        <ul>
+          <li>
+            "registered user" feature is also necessary for this (to prevent
+            unwanted e-mail)
+          </li>
+          <li>
+            "registered users" could have a list of URLs they're interested in,
+            and whenever they return to the service they can modify this list,
+            and e-mail can be sent whenever any of them cease to validate
+          </li>
+          <li>
+            Right now someone could probably use the existing URL-minder
+            service instead of writing a new one (tell it to "mind" the URL
+            that points to the validation result for a page?) But I'm not sure
+            how regularly URL-minder checks for changes; it seemed to be
+            weekly or something, which isn't frequent enough, IMO. Doing an
+            If-Modified-Since GET every day doesn't cost much if pages don't
+            change. Some of these features should only be enabled if the page
+            consistently returns a Last-Modified header, maybe.
+          </li>
+        </ul>
+      </li>
+      <li>
+        Add an HTML pretty-printer feature, using
+        <a href="http://www.w3.org/People/Raggett/tidy/">tidy</a>?
+      </li>
+      <li>Provide messages in different languages?</li>
+      <li>
+        Add a graphical representation of the document's structure,
+        using GIFs-mixed-with-text, or an entire GIF?
+      </li>
+      <li>Add a section with PICS info?</li>
+      <li>
+        Issue PICS labels for documents that do/don't conform?
+        Or for editing tools that don't conform?
+      </li>
+      <li>Add support for https:// (TLS/SSL).</li>
+      <li>
+        Figure out what's going on with <a href="http://lists.w3.org/Archives/Public/www-validator/2001JanMar/0150.html">this</a>.
+	(Thanks to <a href="mailto:marie@voyager.atc.fhda.edu">Marie
+          Taylor-Harper</a> for catching this!).
+      </li>
+      <li>
+        Pay attention to Accept-Charset (cf. <a href="http://lists.w3.org/Archives/Public/www-validator/2001JanMar/0255.html">this</a>
+	message from "brewhaha").
+      </li>
+      <li>
+        Clarify the wording regarding valid characters in
+        <a href="docs/errors.html#bad-char">errors.html</a> (cf.
+        <a href="http://lists.w3.org/Archives/Public/www-validator/2001AprJun/0049.html">this</a>
+	message from <a href="mailto:clemens.radl@uni-tuebingen.de">Clemens Radl</a>.
+        Thanks Clemens!)
+      </li>
+      <li>
+        Fixup all pages to XHTML 1.0 Strict; perhaps take the opportunity to
+        redesign layout and look?
+      </li>
+      <li>
+        Double check that all output is valid! In particular, use style rules
+        to specify heigth/width on suggested links.
+      </li>
+      <li>
+        Write documentation for the SGML catalog, point out good DOCTYPEs to use,
+        and make it easy to find if your editor won't insert them for you.
+      </li>
+      <li>
+        Investigate validation of <a href="http://www.openhealth.org/RDDL/">RDDL</a>.
+      </li>
+      <li>
+        Add catalogue of online tools and other validators. In particular, link to
+        the WDG tools and Nick Kew's most excellent *Valet tools.
+      </li>
+      <li>Add count of errors found in page?</li>
+      <li>
+        Fix directories differing only in name case in
+        sgml-lib/pro/usr/local/lib/sgml/. We have both "ietf" and "IETF" in there.
+      </li>
+      <li>
+        Add system requirements for NT/W2K. Bug Bjoern about his "Installing the
+        Validator on NT" doc. Link to ActiveState Text::Iconv and friends.
+      </li>
+      <li>Add docs on editing DTDs.</li>
+      <li>
+        Link to Jukka's pages; both in general and to specific pages.
+        Ask him about mirroring some of the stuff on validator.w3.org.
+      </li>
+      <li>
+        Do a great big update of the various badges; the details of size,
+        transparency, naming, and how they are linked to (v.w3.org vs. w3.org).
+      </li>
+      <li>Make sure we output sane "text/html; charset=foo".</li>
+      <li>Document how to add new DOCTYPEs to the Validator.</li>
+    </ol>
 
-<p>
-  <a href="http://www.w3.org/"><img
-     src="http://www.w3.org/Icons/WWW/w3c_home" height=48 border=0
-     alt="W3C"></a>
-</p>
-
-<h1>W3C HTML Validation Service: To Do List</h1>
-
-<p>
-  This page has the to-do list for the <a href="/">W3C
-  HTML Validation Service</a>, including bugs that need fixing and general
-  wishlist items.
-</p>
-
-<p>
-  See also: <a
-  href="http://lists.w3.org/Archives/Public/www-validator/">www-validator
-  mailing list archives</a> for recent discussion that may not be reflected
-  on this page.
-</p>
-
-<p>
-  These items are roughly in prioritized order; i.e. the items near the
-  top are those which I consider most important.
-</p>
-
-<ol>
-  <li>Finish up the textarea for testing short HTML fragments.</li>
-
-  <li> add a "fix my HTML for me" option using <a
-    href="http://www.w3.org/People/Raggett/tidy/">tidy</a>.
-
-  <li> finish adding support for XML validation (see also: <a
-    href="dev/tests/#xml">test cases</a>, or <a
-    href="http://www.hcrc.ed.ac.uk/~richard/xml-check.html">an
-    existing service</a>)
-
-  <li> update <a
-    href="http://validator.w3.org/sgml-lib.tar.gz">sgml-lib.tar.gz</a>;
-    automate the updates
-
-  <li> always display source code if there are errors?
-    (or maybe just show a few lines of context for each error?)
-    Or add a "show source iff errors" option?
-
-  <li> make lists of "most frequently validated invalid pages"
-    and "most frequently validated (non-W3C?) valid pages"
-    (need to start logging stuff first, including IPs to compare
-    uniqueness)
-
-  <li> create a stylesheet and link to it from every page
-
-  <li> add a section to the report on <a
-  href="http://www.mnot.net/cacheability/">document
-  cacheability</a>? (or just link to it?)
-
-  <li> put the explanations in a database (flat files are probably okay),
-    offer an option to display them inline with the errors
-
-  <li> install and play with HTML::Validator, link to it from somewhere:
-    <a href="http://www.hut.fi/~samzait/HTML-Validator/">http://www.hut.fi/~samzait/HTML-Validator/</a> 
-    <a href="http://www.cpan.org/modules/by-authors/id/S/SA/SAIT/">http://www.cpan.org/modules/by-authors/id/S/SA/SAIT/</a>
-
-  <li> write documentation, describing each
-    feature and option of the validator and answering questions like
-    "What's the difference between an SGML parser and Weblint?",
-    "Which DOCTYPE should I use?",
-    content negotiation,
-    ...
-
-  <li> upgrade <a href="http://www.weblint.org/">weblint</a> to
-  the most recent version
-
-  <li> incorporate CSS validation directly into this service
-
-  <li> make e.g.
-    <code>http://validator.w3.org/check/referer;imgonly</code>
-    return only an image showing the validation status of the referring page
-
-  <li> add link validation using Hugo's <a
-  href="http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/checklink.pl">checklink
-  code</a>
-  (or other code with similar functionality)
-
-  <li> give errors/warnings related to markup that is technically
-  valid SGML, but error prone, such as things found in <a
-  href="http://www.w3.org/TR/REC-html40/appendix/notes.html#h-B.3">"B.3
-  SGML implementation notes"</a> in the <a
-  href="http://www.w3.org/TR/REC-html40/">HTML 4.0 spec</a>.
-  (these things really belong in <a
-  href="http://www.weblint.org/">weblint</a>; does it handle
-  any/all of them?)
-
-  <li> make an "elements found" section a la Webtechs, with links from each
-    element to the appropriate place in either the DTD tree listing produced
-    with dtd2html (after running dtd2html with all DTDs in the catalog),
-    or the HTML 3.2/4.0 specs, or htmlhelp.com stuff, ...
-    Similarly, put links on each element in the parse tree.
-
-  <li> add a "document meta-information" section to the report, to encourage
-    people to use META tags appropriately?
-
-  <li> add a "recommend a DTD for me" feature (check a document against all
-    available DTDs, report which one has the fewest errors)
-
-  <li> start caching validation results locally and doing an If-Modified-Since
-    HTTP request to only download and re-validate URLs if they actually
-    changed since their last validation
-
-  <li> site walker/validator:
-    need to add a "registered user" feature first, because this feature
-    could be abused (many requests on a server in a short period of time)?
-
-  <li> URL-minder service: "remind me if this page or set of pages ever
-      ceases to validate"
-  <ul>
-    <li> "registered user" feature is also necessary for this (to prevent
-      unwanted e-mail)
-    <li> "registered users" could have a list of URLs they're interested in,
-      and whenever they return to the service they can modify this list,
-      and e-mail can be sent whenever any of them cease to validate
-    <li> right now someone could probably use the existing URL-minder service
-      instead of writing a new one (tell it to "mind" the URL that points to the
-      validation result for a page?) But I'm not sure how regularly URL-minder
-      checks for changes; it seemed to be weekly or something, which isn't
-      frequent enough, IMO. Doing an If-Modified-Since GET every day doesn't
-      cost much if pages don't change. Some of these features should only
-      be enabled if the page consistently returns a Last-Modified header, maybe.
-  </ul>
-
-  <li> add an HTML pretty-printer feature, using <a
-    href="http://www.w3.org/People/Raggett/tidy/">tidy</a>?
-
-  <li> provide messages in different languages?
-
-  <li> add a graphical representation of the document's structure,
-    using GIFs-mixed-with-text, or an entire GIF?
-
-  <li> add a section with PICS info?
-
-  <li> issue PICS labels for documents that do/don't conform?
-    or for editing tools that don't conform?
-
-  <li>Add support for https:// (TLS/SSL).</li>
-
-  <li>Figure out what's going on with <a href="http://lists.w3.org/Archives/Public/www-validator/2001JanMar/0150.html">this</a>.
-	(Thanks to <a href="mailto:marie@voyager.atc.fhda.edu">Marie Taylor-Harper</a> for catching this!)</li>
-
-  <li>Pay attention to Accept-Charset (cf. <a href="http://lists.w3.org/Archives/Public/www-validator/2001JanMar/0255.html">this</a>
-	message from "brewhaha").</li>
-
-  <li>Clarify the wording regarding valid characters in <a href="docs/errors.html#bad-char">errors.html</a> (cf. <a href="http://lists.w3.org/Archives/Public/www-validator/2001AprJun/0049.html">this</a>
-	message from <a href="mailto:clemens.radl@uni-tuebingen.de">Clemens Radl</a>. Thanks Clemens!)</li>
-  <li>
-    Fixup all pages to XHTML 1.0 Strict; perhaps take the opportunity to
-    redesign layout and look?
-  </li>
-  <li>
-    Double check that all output is valid! In particular, use style rules
-    to specify heigth/width on suggested links.
-  </li>
-  <li>
-    Write documentation for the SGML catalog, point out good DOCTYPEs to use,
-    and make it easy to find if your editor won't insert them for you.
-  </li>
-  <li>
-    Investigate validation of <a href="http://www.openhealth.org/RDDL/">RDDL</a>.
-  </li>
-  <li>
-    Add catalogue of online tools and other validators. In particular, link to
-    the WDG tools and Nick Kew's most excellent *Valet tools.
-  </li>
-  <li>
-    Add count of errors found in page?
-  </li>
-  <li>
-    Fix directories differing only in name case in
-    sgml-lib/pro/usr/local/lib/sgml/. We have both "ietf" and "IETF" in there.
-  </li>
-  <li>
-    Add system requirements for NT/W2K. Bug Bjoern about his "Installing the
-    Validator on NT" doc. Link to ActiveState Text::Iconv and friends.
-  </li>
-  <li>
-    Add docs on editing DTDs.
-  </li>
-  <li>
-    Link to Jukka's pages; both in general and to specific pages.
-    Ask him about mirroring some of the stuff on validator.w3.org.
-  </li>
-  <li>
-    Do a great big update of the various badges; the details of size,
-    transparency, naming, and how they are linked to (v.w3.org vs. w3.org).
-  </li>
-  <li>
-    Make sure we output sane "text/html; charset=foo".
-  </li>
-  <li>
-    Document how to add new DOCTYPEs to the Validator.
-  </li>
-</ol>
-
-<hr>
-
-<address>
-  <a href="http://validator.w3.org/check/referer"><img
-     src="http://validator.w3.org/images/vh40" height=31 width=88
-     align=right border=0 alt="Valid W3C HTML 4.0!"></a>
-  <a href="/feedback.html">Gerald Oskoboiny</A><br>
-     $Date: 2001-06-23 05:33:10 $
-</address>
-
-</body>
-
+    <address>
+      <a href="/check/referer"><img src="/images/vxhtml10.png"
+        height="31" width="88" alt="Valid XHTML 1.0!" /></a>
+      <a href="/feedback.html">Gerald Oskoboiny</a><br />
+      $Date: 2001-07-24 11:38:37 $
+    </address>
+  </body>
 </html>
 
