@@ -5,27 +5,24 @@
 <h2>How to Provide Feedback For the W3C Markup Validator</h2>
 
 <h3>Quick feedback guide</h3>
-<div id="toc">
 <p>There are many ways to send feedback or discuss the Markup Validator:</p>
+
 <ul>
-  <li>If you need help on validation or Web authoring, it is very likely the answer is already present in a 
+  <li><strong>If you need help</strong> on validation or Web authoring, it is very likely the answer is already present in a 
   <acronym title="Frequently Asked Questions">FAQ</acronym> or in a forum. Check our <a href="#needhelp>list
   of links</a>,</li>
-  <li>If you would like to send a suggestion on a validation error message, see our <a href="#errormsg">instructions 
+  <li>If you would like to send a <strong>suggestion on a validation error message</strong>, see our <a href="#errormsg">instructions 
   for feedback on error messages</a>,</li>
-  <li>If you want to help, participate or discuss a validator-related topic, <a href="#mailinglist">we have a mailing-list</a>
+  <li>If you want to <strong>help, participate or discuss</strong> a validator-related topic, <a href="#mailinglist">we have a mailing-list</a>
   just for that,</li>
-  <li>If you have found a bug, follow the <a href="#bugreport">instructions to search and contribute to our bug database</a>.</li> 
+  <li>If you have found a <strong>bug</strong>, follow the <a href="#bugreport">instructions to search and contribute to our bug database</a>.</li> 
 </ul>
-</div><!-- toc -->
 
 <h3>Sending feedback, participating in the discussions, and reporting bugs</h3>
-<dl>
-  <dt id="needhelp">Your page doesn't validate, and you don't know why, or
-      you have a question about <acronym title="HyperText Markup Language">HTML</acronym>, 
-      stylesheets or validation?
-  </dt>
-  <dd>
+<h4 id="needhelp">Finding help</h4>
+    <p>Your page doesn't validate, and you don't know why, or
+    you have a question about <acronym title="HyperText Markup Language">HTML</acronym>, 
+    stylesheets or validation?</p>
     <p>
       <strong>First, check our <a href="docs/help.html">Help and <acronym title="Frequently Asked Questions">FAQ</acronym> document</a>, as well as the
       <a href="http://www.htmlhelp.com/faq/">Web authoring <acronym title="Frequently Asked Questions">FAQ</acronym></a>
@@ -60,21 +57,26 @@
 		<acronym title="Universal Resource Locator">URL</acronym>
 		when you ask your question!
   </p>
-  </dd>
-  <dt id="errormsg">If you think the error messages in the Markup Validator's result pages could be improved, or are not comprehensible, you can send questions and suggestions to our mailing-list.</dt>
-  <dd>
+
+
+<h4> id="errormsg">Error Message feedback</h4>
+      <p>If you think the error messages in the Markup Validator's result pages could be improved, or are not comprehensible, 
+      you can send questions and suggestions to our mailing-list.</p>
+
   <TMPL_IF NAME="errmsg_id">
     <p>Judging from the link you followed, you probably want to send feedback on error message [<TMPL_VAR NAME="errmsg_id" ESCAPE="HTML">]: "<TMPL_VAR NAME="explanation" ESCAPE="HTML">".</p> 
   </TMPL_IF>    
+
     <p>Before you send any feedback on error messages, we encourage you to search the archives for existing messages</a> on this error 
       in case your feedback has already been sent, or answers to 
       your query have already been given. </p>
+
   <TMPL_IF NAME="errmsg_id">
      <p>Below is a pre-filled search box that you can use. Or you can just <a href="http://www.w3.org/Search/Mail/Public/search?type-index=www-validator&amp;index-type=t&amp;keywords=%5BVE%5D%5B<TMPL_VAR NAME="errmsg_id" ESCAPE="URL">%5D&amp;search=Search">follow this link</a></p>
   </TMPL_IF>
 
       <form method="get" action="http://www.w3.org/Search/Mail/Public/search">
-      <p>Search the archives of the www-validator mailing-list:
+      <p>Search the archives of the www-validator mailing-list:<br />
         <input id="type-index" name="type-index" type="hidden" value="www-validator" />
         <input id="index-type" name="index-type" type="hidden" value="t" />
   <TMPL_IF NAME="errmsg_id">
@@ -86,19 +88,29 @@
       </p>
       </form>
 
-  <p>Once you have checked that your suggestion has not been given yet, you can send you your message. To write an efficient message:</p>
+  <p>Once you have checked that your suggestion has not been given yet, you can send your message. To write an efficient message:</p>
   <ul>
-    <li>Add a meaningful subject. Keep the [VE][XX] at the beginning, as it will be useful, but also add a handful of words on what you are sending</li>
+    <li>Add a meaningful subject.  but also add a handful of words on what you are sending</li>
+    <li>If our system added [VE][XX] at the beginning of the mail subject, keep it. 
+    Otherwise, please precise which error message you are sending feedback about.</li>
     <li>Always give a URL: knowing what page you were validating will help us diagnose issues much quicker.</li>
     <li>explain your suggestion, or question, in a clear and informative manner.</li>
   </ul>
     
-  <p> mailto:www-validator@w3.org?Subject=[VE][82]
-  </dd>
-  <dt id="mailinglist">If you are interested in helping to improve this
-    service, by writing code or just providing ideas. you should feel fee to join or send a message to our mailing-list.</dt>
+  <p>Messages can be sent to the
+    <TMPL_IF NAME="errmsg_id">
+      <a href="mailto:www-validator@w3.org?Subject=[VE][82]%20Error%0Message%20Feedback">www-validator</a>
+    <TMPL_ELSE>
+      <a href="mailto:www-validator@w3.org?Subject=Error%0Message%20Feedback">www-validator</a>
+    </TMPL_IF>
+    public mailing-list.
+   </p>
+   
+<h4 id="mailinglist">Discuss and participate</h4>
 
-  <dd>
+<p>If you are interested in helping to improve this
+    service, by writing code or just providing ideas. you should feel fee to join or send a message to our mailing-list.</p>
+
     <p>
       The <strong>public</strong> mailing-list to discuss the Markup Validator, Link checker and other tools is 
       <a href="http://lists.w3.org/Archives/Public/www-validator/"><code>www-validator</code></a>.
@@ -115,9 +127,7 @@
      search engine</a></strong> first to check for existing message on a given topic.
     </p>
     
-  </dd>
-  <dt id="#bugreport">If you want to report a bug or log a feature request:</dt>
-  <dd>
+<h4 id="#bugreport">Bug reports</h4>
     <p>
       The W3C maintains a public bug tracking database known as <a
         href="http://www.w3.org/Bugs/Public/">Bugzilla</a> where developers
@@ -138,8 +148,6 @@
       <li><a href="http://www.w3.org/Bugs/Public/enter_bug.cgi?product=Validator">New Markup Validator issue</a></li>
 
     </ul>
-  </dd>
-</dl>
 </div>
 
 
