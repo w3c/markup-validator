@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.143 2004-06-18 23:17:44 bjoern Exp $
+# $Id: check,v 1.305.2.144 2004-06-20 16:48:38 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.143 $;
+  $VERSION    =  q$Revision: 1.305.2.144 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-06-18 23:17:44 $,
+                              Date => q$Date: 2004-06-20 16:48:38 $,
                              });
 
 #
@@ -1210,6 +1210,7 @@ sub authenticate {
   my $realm = $resource;
   $realm =~ s([^\w\d.-]*){}g;
   $authHeader =~ s( realm=([\'\"])?([^\1]+)\1){ realm="$realm-$2"};
+  $resource = &ent($resource);
 
     print <<"EOF";
 Status: 401 Authorization Required
