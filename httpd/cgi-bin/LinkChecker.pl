@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: LinkChecker.pl,v 1.18 2000-01-20 22:01:03 hugo Exp $
+# $Id: LinkChecker.pl,v 1.19 2000-01-20 22:48:52 hugo Exp $
 #
 # This program is licensed under the W3C License.
 
@@ -21,7 +21,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C LinkChecker';
-my $VERSION = q$Revision: 1.18 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 1.19 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -858,7 +858,9 @@ sub links_summary(\%,\%,\%) {
         # Print a summary
         my %code_summary;
         foreach $u (keys %$links) {
-            $code_summary{$results->{$u}{$u}{orig}}++;
+            if (defined($results->{$u}{$u}{orig}))  {
+                $code_summary{$results->{$u}{$u}{orig}}++;
+            }
         }
         print "<table border=\"1\">\n<tr><td><b>Code</b></td><td><b>Occurences</b></td><td><b>What to do</b></td></tr>\n";
         foreach $code (sort(keys(%code_summary))) {
