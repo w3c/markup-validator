@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.226 2002-08-31 04:04:02 duerst Exp $
+# $Id: check,v 1.227 2002-08-31 07:14:45 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.226 $;
+  $VERSION    =  q$Revision: 1.227 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-31 04:04:02 $,
+			      Date => q$Date: 2002-08-31 07:14:45 $,
 			     });
 
 #
@@ -1238,13 +1238,13 @@ sub normalize_newlines {
   local $_ = shift;  #charset
   my $pattern = '';
 
-  # patterns are not allowed to have parentheses
-  $pattern = '\x00\015\x00\012|\x00\015|\x00\012' if /^utf-16be$/;
-  $pattern = '\015\x00\012\x00|\015\x00|\012\x00' if /^utf-16le$/;
-  $pattern = '\x00\x00\x00\015\x00\x00\x00\012|\x00\x00\x00\015|\x00\x00\x00\012' if /^UCS-4be$/;
-  $pattern = '\015\x00\x00\x00\012\x00\x00\x00|\015\x00\x00\x00|\012\x00\x00\x00' if /^UCS-4le$/;
+  # don't use backreference parentheses!
+  $pattern = '\0\xD(?:\0\xA)?|\0\xA' if /^utf-16be$/;
+  $pattern = '\xD\0(?:\xA\0)?|\xA\0' if /^utf-16le$/;
+  $pattern = '\0\0\0\xD(?:\0\0\0\xA)?|\0\0\0\xA' if /^UCS-4be$/;
+  $pattern = '\xD\0\0\0(?:\xA\0\0\0)?|\xA\0\0\0' if /^UCS-4le$/;
   # insert other special cases here, such as EBCDIC
-  $pattern = '\015\012|\015|\012' if !$pattern;    # all other cases
+  $pattern = '\xD(?:\xA)?|\xA' if !$pattern;    # all other cases
 
   return [split /$pattern/, $file];
 }
@@ -2422,25 +2422,25 @@ sub find_base_encoding {
   local $_ = shift;
 
   # With a Byte Order Mark:
-  return ('ucs-4be',  4, 4, '\x00\x00\x00(.)')
+  return ('ucs-4be',  4, 4, '\0\0\0(.)')
     if /^\x00\x00\xFE\xFF/; # UCS-4, big-endian machine (1234)
-  return ('ucs-4le',  4, 4, '(.)\x00\x00\x00')
+  return ('ucs-4le',  4, 4, '(.)\0\0\0')
     if /^\xFF\xFE\x00\x00/; # UCS-4, little-endian machine (4321)
-  return ('utf-16be', 2, 2, '\x00(.)')
+  return ('utf-16be', 2, 2, '\0(.)')
     if /^\xFE\xFF/;         # UTF-16, big-endian.
-  return ('utf-16le', 2, 2, '(.)\x00')
+  return ('utf-16le', 2, 2, '(.)\0')
     if /^\xFF\xFE/;         # UTF-16, little-endian.
   return ('utf-8',    3, 1, '')
     if /^\xEF\xBB\xBF/; # UTF-8.
 
   # Without a Byte Order Mark:
-  return ('ucs-4be',  0, 4, '\x00\x00\x00(.)')
+  return ('ucs-4be',  0, 4, '\0\0\0(.)')
     if /^\x00\x00\x00\x3C/; # UCS-4 or 32bit; big-endian machine (1234 order).
-  return ('ucs-4le',  0, 4, '(.)\x00\x00\x00')
+  return ('ucs-4le',  0, 4, '(.)\0\0\0')
     if /^\x3C\x00\x00\x00/; # UCS-4 or 32bit; little-endian machine (4321 order).
-  return ('utf-16be', 0, 2, '\x00(.)')
+  return ('utf-16be', 0, 2, '\0(.)')
     if /^\x00\x3C\x00\x3F/; # UCS-2, UTF-16, or 16bit; big-endian.
-  return ('utf-16le', 0, 2, '(.)\x00')
+  return ('utf-16le', 0, 2, '(.)\0')
     if /^\x3C\x00\x3F\x00/; # UCS-2, UTF-16, or 16bit; little-endian.
   return ('utf-8',    0, 1, '')
     if /^\x3C\x3F\x78\x6D/; # UTF-8, ISO-646, ASCII, ISO-8859-*, Shift-JIS, EUC, etc.
@@ -2472,14 +2472,16 @@ sub find_xml_encoding {
     $someText = $someBytes; # efficiency shortcut
   }
   else { # generic code for UTF-16/UCS-4
-    $someBytes =~ /^(($Pattern)*)/;
+    $someBytes =~ /^(($Pattern)*)/s;
     $someText = $1;       # get initial piece without chars >255
-    $someText = s/$Pattern/$1/g;    # select the relevant bytes
+    $someText = s/$Pattern/$1/sg;    # select the relevant bytes
   }
 
   # try to find encoding pseudo-attribute
-  $someText =~ m("^<\?xml[ \t\n\r]+version[ \t\n\r]?=[ \t\n\r]?([\'\"])[-._:a-zA-Z0-9]+\1[
-\t\n\r]+encoding[ \t\n\r]?=[ \t\n\r]?([\'\"])([A-Za-z][-._A-Za-z0-9]*)\2);
+  my $s = '[\ \t\n\r]';
+  $someText =~ m(^<\?xml $s+ version $s? = $s? ([\'\"]) [-._:a-zA-Z0-9]+ \1 $s+
+                  encoding $s? = $s? ([\'\"]) ([A-Za-z][-._A-Za-z0-9]*) \2
+                )xso;
 
   $File->{Charset}->{XML} = lc $3;
   return $File;
