@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.407 2005-03-24 02:41:12 ot Exp $
+# $Id: check,v 1.408 2005-03-24 08:37:26 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -220,7 +220,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.407 $;
+  $VERSION    =  q$Revision: 1.408 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -454,29 +454,40 @@ if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
   my ($override, undef) = split(/\s/, $File->{Opt}->{Charset}, 2);
   $File->{Charset}->{Override} = lc($override);
 
-  if ($File->{Opt}->{FB}->{Charset}) {
+  if ($File->{Opt}->{FB}->{Charset}) { # charset fallback mode
     unless ($File->{Charset}->{Use}) {
       &add_warning('W02', {W02_charset => $File->{Charset}->{Override}});
 
       $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
       $File->{Charset}->{Use} = $File->{Charset}->{Override};
     }
-  } else {
-    # Warn about Override unless it's the same as the real charset...
-    unless ($File->{Charset}->{Override} eq $File->{Charset}->{Use}) {
-      &add_warning('W03', {
-        W03_use => $File->{Charset}->{Use},
-        W03_opt => $File->{Charset}->{Override},
-      });
-
+  } else { # charset "hard override" mode
+    if (! $File->{Charset}->{Use}) { # overriding "nothing"
+      &add_warning('W04', {W04_charset => $File->{Charset}->{Override}, W04_override => TRUE});
       $File->{Tentative} |= T_ERROR;
       $File->{Charset}->{Use} = $File->{Charset}->{Override};
+     }
+     else { #actually overriding something 
+      # Warn about Override unless it's the same as the real charset...
+    
+      unless ($File->{Charset}->{Override} eq $File->{Charset}->{Use}) {
+        &add_warning('W03', {
+          W03_use => $File->{Charset}->{Use},
+          W03_opt => $File->{Charset}->{Override},
+        });
+
+        $File->{Tentative} |= T_ERROR;
+        $File->{Charset}->{Use} = $File->{Charset}->{Override};
+      } 
     }
+    
+    
+    
   }
 }
 
 unless ($File->{Charset}->{Use}) { # No charset given...
-  &add_warning('W04', {});
+  &add_warning('W04', {W04_charset => 'UTF-8'});
   $File->{Tentative} |= T_ERROR; # Can never be valid.
   $File->{Charset}->{Use} = 'utf-8';
 }

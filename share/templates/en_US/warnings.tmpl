@@ -48,15 +48,31 @@
 </TMPL_IF>
 <TMPL_IF NAME="W04">
   <dt id="W04">No Character Encoding Found!
-    Falling back to <code>UTF-8</code>.</dt>
+    <TMPL_IF NAME="W04_override">
+      Using
+    <TMPL_ELSE>
+      Falling back to 
+    </TMPL_IF>
+    <code><TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF></code>.
+  </dt>
   <dd>
+  <TMPL_IF NAME="W04_override">
+    <p>I was not able to extract a character encoding labeling from any of
+      the valid sources for such information. I will use the character 
+      encoding <code><TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF></code>,
+      which you have chosen via the <code>Encoding</code> override option, for 
+      tentative validation. 
+    </p>
+  <TMPL_ELSE>
     <p>
       I was not able to extract a character encoding labeling from any of
       the valid sources for such information. Without encoding information
       it is impossible to reliably validate the document. I'm falling back
-      to the "UTF-8" encoding and will attempt to perform the validation,
+      to the "<code><TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF></code>" 
+      encoding and will attempt to perform the validation,
       but this is likely to fail for all non-trivial documents.
     </p>
+  </TMPL_IF>
   <TMPL_IF NAME="opt_verbose">
     <p>The sources I tried to find encoding information include:</p>
     <ul>
