@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.192 2001-10-20 10:47:01 link Exp $
+# $Id: check,v 1.193 2001-10-20 10:56:04 link Exp $
 
 #
 # We need Perl 5.004.
@@ -95,9 +95,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.192 $;
+$VERSION    =  q$Revision: 1.193 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-10-20 10:47:01 $;
+$DATE       =  q$Date: 2001-10-20 10:56:04 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -677,11 +677,10 @@ unless ($q->param('uploaded_file')) {
 }
 
 &print_table;
+&print_tip_of_the_day;
 &print_warnings;
 
 print "<h2>Validation Results</h2>\n";
-
-&print_tip_of_the_day();
 
 if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 'svg' or $File->{Type} eq 'smil') {
   my $xmlvalid = ($File->{DOCTYPE} ? ' and validity' : '');
