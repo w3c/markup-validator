@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.12 2002-10-26 01:15:19 link Exp $ */
+/* $Id: results.css,v 1.13 2002-11-23 21:55:01 ot Exp $ */
 
 .markup {
   color: red;
@@ -81,6 +81,8 @@ h2.valid {
   letter-spacing:	normal;
   text-transform:	none;
   border-color:		black;
+  padding-top:		.1em;
+  padding-bottom: 	.1em;
 }
 
 .valid a {
@@ -112,6 +114,8 @@ h2.valid {
   letter-spacing:	normal;
   text-transform:	none;
   border-color: 	black;
+  padding-top:		.1em;
+  padding-bottom: 	.1em;
 }
 
 .invalid a {
