@@ -67,14 +67,12 @@ sub on_return {
     }
 }
 
-#use CGI qw(:standard);
 use CGI;
-#use W3CDebugCGI;
 
 ###############
 # Global Variables
 
-my $VERSION= '$Id: checklink.pl,v 1.16 1998-09-11 23:05:50 renaudb Exp $ ';
+my $VERSION= '$Id: checklink.pl,v 1.17 1998-09-24 00:24:40 renaudb Exp $ ';
 my %ALLOWED_SCHEMES = ( "http" => 1 );
 my %SCHEMES = (); # for report
 my %URL = ();
@@ -91,6 +89,17 @@ my %HTTP_CODES = ( 200 => 'ok' ,
 		  500 => '500',
 		  501 => '501',
 		  503 => '503');
+my %TODO = ( 200 => 'nothing !',
+	     301 => 'usually nothing, unless the end point of the redirect is broken (in which case, the <B>Code</B> column is RED',
+	     302 => 'usually nothing, unless the end point of the redirect is broken (in which case, the <B>Code</B> column is RED',
+	     401 => 'The link is not public. The <B>Extra</B> column gives the Realm',
+	     404 => 'The link is broken. Fix it <B>NOW</B>',
+	     405 => 'The server does not allow HEAD requests. How liberal. Go ask the guys who run this server why.',
+	     408 => 'The request timed out',
+	     415 => 'The media type is not supported (this should not happen on a HEAD request)',
+	     500 => 'The server failed. It is a server side problem',
+	     501 => 'HEAD is not implemented on this server...What kind of server is that ?',
+	     503 => 'The server cannot service the request, for some unknown reason');
 my $VERBOSE = 0;
 my $CGI = 0;
 my $p = ParseLink->new(); # we want the parser to be global, so we can call it from callback_parse
@@ -243,16 +252,30 @@ sub print_result{
     my $response = shift;
     my $q = shift;
 
-    print $q->h2('Result for '.$q->a({href=>$url},$url)) if($CGI);
-    print "<table border=\"1\"><TR ALIGN=\"center\"><TD>Lines</TD><TD>URI</TD><TD>Code</TD><TD>Extra</TD></TR>\n" if($CGI);
     # this is to handle 401s and see what's behind them
     # I need to watch this carefully, I might be wrong about these tests
+    # we also generate sumary for the legend
     foreach my $resp (map {$response->{$_}->response} keys %$response){
 	$URL{Responses}{$resp->request->url} = $resp unless($URL{Responses}{$resp->request->url} && $resp->code == 200);
 	$URL{Codes}{$resp->request->url} = $resp->code unless($URL{Codes}{$resp->request->url} && $resp->code == 401);
+	$URL{Legend}{$resp->code}++ if(keys %{$URL{$resp->request->url}});
     }
+    # first a sumary, which also acts as a legend
+    if($CGI){
+	print $q->h2('Sumary and Legend');
+	print "<TABLE BORDER=\"1\"><TR ALIGN=\"center\"><TD>Return Code</TD><TD>Occurrences</TD><TD>Meaning and color</TD><TD>What to do</TD></TR>\n";
+	foreach(sort keys %{$URL{Legend}}){
+	    print "<TR ALIGN=\"center\"><TD>$_</TD><TD>".$URL{Legend}{$_}."</TD><TD".$COLORS{$_}.">".$HTTP_CODES{$_}."</TD><TD>".$TODO{$_}."</TD></TR>\n";
+	}
+	print "</TABLE>\n";
+    }
+
+    # then the bulk of responses
+    print $q->h2('Detailed Results for '.$q->a({href=>$url},$url)) if($CGI);
+    print "<table border=\"1\"><TR ALIGN=\"center\"><TD>Lines</TD><TD>URI</TD><TD>Code</TD><TD>Extra</TD></TR>\n" if($CGI);
     # loop that selects through all the responses to the HEADs to the links
     # sorting can happen here
+    # currently, sorting alphabetically on the full URIs
     foreach my $resp (map {$URL{Responses}{$_}} sort keys %{$URL{Responses}}){
 	# we pass links for which we don't have a line number
 	# (which means they are responses from 301/302 or 401 handling)
