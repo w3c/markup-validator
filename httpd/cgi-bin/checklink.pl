@@ -5,7 +5,7 @@
 # (c) 1999-2002 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.1 2002-10-27 10:55:14 ville Exp $
+# $Id: checklink.pl,v 3.2 2002-10-27 12:08:42 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -64,7 +64,7 @@ sub redirect_ok
 
 package W3C::CheckLink;
 
-use vars qw($PROGRAM $VERSION $REVISION
+use vars qw($PROGRAM $VERSION $CVS_VERSION $REVISION
             $Have_ReadKey $DocType);
 
 use HTML::Entities      qw();
@@ -82,9 +82,10 @@ use URI::file           qw();
 BEGIN
 {
   # Version info
-  $PROGRAM  = 'W3C checklink';
-  $VERSION  = sprintf('%d.%02d', q$Revision: 3.1 $ =~ /(\d+)\.(\d+)/);
-  $REVISION = sprintf('version %s (c) 1999-2002 W3C', $VERSION);
+  $PROGRAM       = 'W3C checklink';
+  ($CVS_VERSION) = q$Revision: 3.2 $ =~ /(\d+[\d\.]*\.\d+)/;
+  $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
+  $REVISION      = sprintf('version %s (c) 1999-2002 W3C', $VERSION);
 
   eval "use Term::ReadKey 2.00 qw(ReadMode)";
   $Have_ReadKey = !$@;
@@ -1775,7 +1776,7 @@ mailing list</a>
 Check out the
 <a href=\"http://www.w3.org/2000/07/checklink\">documentation</a>.
 Download the
-<a href=\"http://dev.w3.org/cvsweb/~checkout~/validator/httpd/cgi-bin/checklink.pl?rev=$VERSION&amp;content-type=text/plain\">source
+<a href=\"http://dev.w3.org/cvsweb/~checkout~/validator/httpd/cgi-bin/checklink.pl?rev=$CVS_VERSION&amp;content-type=text/plain\">source
 code</a> from
 <a href=\"http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/checklink.pl\">CVS</a>.
 </address>
