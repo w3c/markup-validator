@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.107 2001-05-27 11:58:52 link Exp $
+# $Id: check,v 1.108 2001-05-27 15:45:02 link Exp $
 
 #
 # We need Perl 5.004.
@@ -57,8 +57,6 @@ my $frag_db   = $html_path . 'config/frag.cfg';
 my $type_db   = $html_path . 'config/type.cfg';
 my $dtds_db   = $html_path . 'config/doctypes.cfg';
 my $sgmlstuff = $html_path . 'sgml-lib';
-my $sgmldecl  = $sgmlstuff . '/REC-html401-19991224/HTML4.decl';
-my $xmldecl   = $sgmlstuff . '/sp-1.3/pubtext/xml.dcl';
 my $temp      = "/tmp/validate.$$"; # @@ Use POSIX/IO::File tmpfiles instead!
 
 #
@@ -76,9 +74,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.107 $;
+$VERSION    =  q$Revision: 1.108 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-05-27 11:58:52 $;
+$DATE       =  q$Date: 2001-05-27 15:45:02 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -361,12 +359,10 @@ print(' ' x 4, q(<li>Content length: ), $File->{Size},     qq(</li>\n))
 
 
 my $xmlflags = '';
-my $decl     = $xmldecl;
 my $catalog  = $sgmlstuff . '/catalog';
-my $path     = $sgmlstuff;
 
 if ($File->{Type} eq 'xhtml') {
-  $path                  = $sgmlstuff . '/REC-xhtml1-20000126/';
+  $catalog               = $sgmlstuff . '/REC-xhtml1-20000126/xhtml.soc';
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'UTF-8';
   $xmlflags              = '-wxml ';
@@ -374,6 +370,7 @@ if ($File->{Type} eq 'xhtml') {
     $xmlflags            .= '-wno-valid ';
   }
 } elsif ($File->{Type} eq 'mathml') {
+  $catalog               = $sgmlstuff . '/CR-MathML2-20001113/catalog';
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'XML';
   $xmlflags              = '-wxml ';
@@ -381,15 +378,12 @@ if ($File->{Type} eq 'xhtml') {
   # no doctype, with xmlns attr on 1st element
   $File->{Type} = 'xml'; # @@ probably a better way to do this
   $catalog               = $sgmlstuff . '/sp-1.3/pubtext/xml.soc';
-  $path                  = $sgmlstuff . '/sp-1.3/pubtext/';
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'XML';
   $xmlflags              = '-wxml -wno-valid ';
-} else { # must be HTML (for now)
-  $decl = $sgmldecl;
 }
 
-my $command  = "$sp -f$temp -E0 $xmlflags -c $catalog -D $path $decl";
+my $command  = "$sp -f$temp -E0 $xmlflags -c $catalog";
 
 print "\t<li>nsgmls command line: <code>$command</code>\n" if $DEBUG;
 
