@@ -4,7 +4,7 @@
    Copyright 2000-2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.36 2005-01-07 05:44:54 ot Exp $
+   $Id: base.css,v 1.37 2005-01-07 05:59:38 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -199,7 +199,7 @@ ul.toc {
                                                             
 p.copyright {
   margin-top:     20px;
-  width: 500px;
+  width: 50%;
   font-size:      x-small;
   text-align:     justify;
   text-transform: uppercase;
