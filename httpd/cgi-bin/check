@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.132 2001-06-25 19:03:57 link Exp $
+# $Id: check,v 1.133 2001-06-27 08:42:25 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -79,9 +79,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.132 $;
+$VERSION    =  q$Revision: 1.133 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-25 19:03:57 $;
+$DATE       =  q$Date: 2001-06-27 08:42:25 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -783,18 +783,17 @@ sub print_charset_error {
 
   print <<".EOF.";
   </ul>
-  <p>
-    A fatal error occurred when attempting to transliterate the document
-    charset. Either we do not support this character encoding yet, or you have
-    specified a non-existent character encoding (typically a misspelling such as
-    "iso8859-1" for "iso-8859-1").
+  <p>Sorry!
+    A fatal error occurred when attempting to transcode the character encoding
+    of the document. Either we do not support this character encoding yet, or you 
+    have specified a non-existent character encoding (often a misspelling).
   </p>
-  <p>The detected charset was "$charset".</p>
+  <p>The detected character encoding was "$charset".</p>
   <p>The error was "$error".</p>
   <p>
-    If you believe the charset to be valid you can submit a request for that
-    character encoding (see the <a href="/feedback.html">feedback page</a> for
-    details) and we will look into supporting it in the future.
+    If you believe the character encoding to be valid you can submit a request for
+    that character encoding (see the <a href="/feedback.html">feedback page</a>
+    for details) and we will look into supporting it in the future.
   </p>
 .EOF.
 }
