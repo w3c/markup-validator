@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.262 2002-10-25 17:39:09 link Exp $
+# $Id: check,v 1.263 2002-10-25 18:41:46 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.262 $;
+  $VERSION    =  q$Revision: 1.263 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-25 17:39:09 $,
+			      Date => q$Date: 2002-10-25 18:41:46 $,
 			     });
 
 #
@@ -927,7 +927,7 @@ sub doctype_spiel {
     <pre>
       &lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
-      &lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"&gt;
+      &lt;html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"&gt;
 	      &lt;head&gt;
 	        &lt;title&gt;Title&lt;/title&gt;
 	      &lt;/head&gt;
