@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.39 2003-04-23 04:47:04 link Exp $
+# $Id: check,v 1.305.2.40 2003-05-04 01:08:49 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.39 $;
+  $VERSION    =  q$Revision: 1.305.2.40 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -130,9 +130,15 @@ open($file) returned: $!
       my($k, $v) = split /\t+/, $_, 2;
       $v = '' unless defined $v;
 
-      if    ($v =~ s(^file://){}) {$cfg{$k} = &read_cfg($v)  }
-      elsif ($v =~ /,/)           {$cfg{$k} = [split /,/, $v]}
-      else                        {$cfg{$k} = $v             }
+      if ($v =~ s(^file://){}) {
+        $cfg{$k} = &read_cfg($v);
+      } elsif ($v =~ /,/) {
+        $cfg{$k} = [split /,/, $v];
+      } else {
+        # Launder data for Perl 5.8+ taint mode, trusting the config...
+        $v =~ /^(.*)$/;
+        $cfg{$k} = $1;
+      }
     }
     undef $fh;
     return \%cfg;
@@ -166,7 +172,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-04-23 04:47:04 $,
+                              Date => q$Date: 2003-05-04 01:08:49 $,
                              });
 
 #
@@ -319,7 +325,9 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
       The HTTP Content-Type header $_source[0] ($_source[1]) did not contain
       a "charset" parameter, but the Content-Type was one of the XML text/*
       sub-types (<code>$File->{ContentType}</code>). The relevant
-      specification (RFC 3023) specifies a strong default of "us-ascii" for
+      specification
+      (<a href="http://www.ietf.org/rfc/rfc3023.txt">RFC 3023</a>)
+      specifies a strong default of "us-ascii" for
       such documents so we will use this value regardless of any encoding you
       may have indicated elsewhere. If you would like to use a different
       encoding, you should arrange to have your $_source[2] this new encoding
@@ -930,7 +938,8 @@ sub serialize_table {
       if ($tr->{Tail}->[$i]->[1] > 1) {
         $opts .= qq( colspan="$tr->{Tail}->[$i]->[1]");
       }
-      push @table, qq(    <td$opts>) . $tr->{Tail}->[$i]->[2] . "</td>\n";
+      push @table, sprintf("    <td%s>%s</td>\n",
+                           $opts, ($tr->{Tail}->[$i]->[2] || ''));
     }
     push @table, "  </tr>\n";
   }
@@ -949,7 +958,7 @@ sub add_warning {push @{shift->{Warnings}}, shift};
 # Print out a list of warnings.
 sub print_warnings {
   my $File = shift;
-  return unless defined @{$File->{Warnings}};
+  return unless (defined $File->{Warnings} and scalar @{$File->{Warnings}});
   print qq(  <ul id="Warnings">\n);
   print qq(    <li>$_</li>\n) for @{$File->{Warnings}};
   print "  </ul>\n";
@@ -1719,11 +1728,8 @@ sub report_valid {
       $gifborder = "";
     }
 
-    if ($File->{Version}) {
-      print qq(<h2 id="result" class="valid">This Page Is Valid $File->{Version}!</h2>\n);
-    } else {
-      print qq(<h2 id="result" class="valid">This Page Is Valid!</h2>\n);
-    }
+    printf qq(<h2 id="result" class="valid">This Page Is Valid%s!</h2>\n),
+      $File->{Version} ? " $File->{Version}" : '';
 
     print &daily_tip($File, $CFG->{'Tips DB'});
     &print_warnings($File) unless $File->{Opt}->{Verbose};
@@ -2944,3 +2950,6 @@ sub self_url_file {
   return $thispage;
 }
 
+# Local variables:
+# indent-tabs-mode: nil
+# End:
