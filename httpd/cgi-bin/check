@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.197 2002-01-17 08:15:11 duerst Exp $
+# $Id: check,v 1.198 2002-01-17 08:58:38 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -95,9 +95,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.197 $;
+$VERSION    =  q$Revision: 1.198 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2002-01-17 08:15:11 $;
+$DATE       =  q$Date: 2002-01-17 08:58:38 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1394,6 +1394,11 @@ sub parse_errors ($$) {
 	or $err->{type} eq 'Q'
        ) {
       $err->{msg}  = $errors[5];
+      # get rid of non-BMP related error messages
+      # (pretending SP understands characters beyond the BMP)
+      if ($errors[5] =~ m/"(\d*)" is not a character number in the document character set/) {
+	next if $1 >= 65536 && $1 <= 1114110;
+      }
     } else {
       $err->{type} = 'I';
       $err->{msg}  = $errors[4];
