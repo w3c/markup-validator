@@ -5,7 +5,7 @@
 # (c) 1999-2002 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.95 2002-10-23 20:31:46 ville Exp $
+# $Id: checklink.pl,v 2.96 2002-10-26 18:29:06 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -33,12 +33,20 @@ package W3C::CheckLink;
 use HTML::Parser 3;
 @W3C::CheckLink::ISA = qw(HTML::Parser);
 
+use vars qw($Have_ReadKey);
+
+BEGIN
+{
+  eval "use Term::ReadKey 2.00 qw(ReadMode)";
+  $Have_ReadKey = !$@;
+}
+
 # Autoflush
 $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.95 $ . '(c) 1999-2002 W3C';
+my $VERSION = q$Revision: 2.96 $ . '(c) 1999-2002 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -276,11 +284,10 @@ Please send bug reports and comments to the www-validator mailing list:
 
 sub ask_password ()
 {
-    print(STDERR 'Enter the password for user '.$_user.': ');
-    # Will only work on Unix... Term::ReadKey from CPAN would be better.
-    system('stty -echo');
+    printf(STDERR 'Enter the password for user %s: ', $_user);
+    $Have_ReadKey ? ReadMode('noecho',  *STDIN) : system('stty -echo');
     chomp($_password = <STDIN>);
-    system('stty echo');
+    $Have_ReadKey ? ReadMode('restore', *STDIN) : system('stty echo');
     print(STDERR "ok.\n");
 }
 
@@ -293,21 +300,11 @@ sub ask_password ()
 sub urize ($)
 {
     use URI ();
-    $_ = URI::Escape::uri_unescape($_[0]);
-    my $base;
-    my $res = $_;
-    if (m/:/) {
-        $base = URI->new($_);
-    } elsif (m|^/|) {
-        $base = URI->new('file://localhost');
-    } else {
-        my $pwd;
-        chop($pwd = `pwd`);
-        $base = URI->new('file://localhost'.$pwd.'/');
-    }
-    my $u = URI->new($res);
-    my $result = $u->abs($base);
-    return($result->as_string());
+    use URI::Escape qw(uri_unescape);
+    use URI::file ();
+
+    my $u = URI->new_abs(uri_unescape($_[0]), URI::file->cwd());
+    return $u->as_string();
 }
 
 ########################################
