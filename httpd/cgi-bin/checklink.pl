@@ -30,7 +30,7 @@ use CGI qw(:standard);
 use W3CDebugCGI;
 use LWP::Parallel::UserAgent;
 
-$VERSION= '$Id: checklink.pl,v 1.8 1998-09-04 01:21:39 renaudb Exp $ ';
+$VERSION= '$Id: checklink.pl,v 1.9 1998-09-04 16:12:23 renaudb Exp $ ';
 %ALLOWED_SCHEMES = ( "http" => 1 );
 %SCHEMES = (); # for report
 
@@ -148,11 +148,10 @@ sub checklinks {
 		$r->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
 		my $realm = $1;
 		print $q->h2('Authentication Required To Fetch '.$q->a({href=>$url},$url));
-		print $q->startform('GET',$q->url);
+		print $q->startform('POST',$q->url);
 		print $q->textfield(-name=>'url',-size=>'50',-value=>$url),$q->br;
 		print $q->textfield(-name=>'username',-size=>'10'),"Username for Realm ",$realm,$q->br;
 		print $q->password_field(-name=>'password',-size=>'10'),"Password",$q->br;
-		print $q->hidden('realm',$realm);
 		print $q->submit('Proceed');
 		print $q->endform;
 	    } else {
@@ -198,5 +197,5 @@ sub html_header {
     print $q->start_html(-title=>(defined $q->param('url')?'Checking '.$q->param('url'):'W3C\'s Link Checker'),-BGCOLOR=>'white');
     print $query->a({href=>"http://www.w3.org"},$query->img({src=>"http://www.w3.org/Icons/w3c_home",alt=>"W3C",border=>"0"}));
     print $query->a({href=>"http://www.w3.org/Web"},$query->img({src=>"http://www.w3.org/Icons/WWW/web",border=>"0",alt=>"Web Team"}));
-    print $q->h1('Link Checker');
+    print $q->h1($q->a({href=>$q->url},'Link Checker'));
 }
