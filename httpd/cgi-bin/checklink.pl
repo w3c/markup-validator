@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.55 2000-07-10 15:21:37 hugo Exp $
+# $Id: checklink.pl,v 2.56 2000-07-12 19:14:31 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -31,7 +31,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.55 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.56 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -523,13 +523,21 @@ sub get_document() {
     $response->{absolute_uri} = $base_uri->abs($request_uri);
 
     # Parse the document
-    if (! ($response->header('Content-type') =~ m/text\/html/)) {
+    my $failed_reason;
+    if (! ($response->header('Content-Type') =~ m/text\/html/)) {
+        $failed_reason = "Content-Type is '".
+            $response->header('Content-Type')."'";
+    } elsif ($response->header('Content-Encoding')) {
+        $failed_reason = "Content-Encoding is '".
+            $response->header('Content-encoding')."'";
+    }
+    if ($failed_reason) {
         if (! $in_recursion) {
             if ($_html) {
                 &html_header($uri);
             }
-            &hprintf("Can't check link: Content-type is '%s'.\n",
-                     $response->header('Content-type'));
+            &hprintf("Can't check links: %s.\n",
+                     $failed_reason);
         }
         $response->{Stop} = 1;
     }
