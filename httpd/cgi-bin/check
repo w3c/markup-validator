@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.312 2002-12-05 03:11:08 link Exp $
+# $Id: check,v 1.313 2002-12-05 03:34:45 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -133,7 +133,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.312 $;
+  $VERSION    =  q$Revision: 1.313 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 } # end of BEGIN block.
@@ -177,8 +177,10 @@ $File->{Charset}->{Override} = ''; # From CGI/user override.
 $File->{Offsets}->[0] = [0, 0]; # The first item isn't used...
 
 #
-# List to hold line numbers for encoding errors
-$File->{Lines} = [];
+# Initialize datastructures.
+$File->{Lines}              = []; # Line numbers for encoding errors.
+$File->{Warnings}           = []; # Warnings...
+$File->{'Other Namespaces'} = []; # Other (non-root) Namespaces.
 
 
 #########################################
