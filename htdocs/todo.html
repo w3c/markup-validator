@@ -8,7 +8,7 @@
     W3C HTML Validation Service, To Do List">
   <meta name="description" content="To Do List for W3C's Validation Service.">
   <meta name="revision"
-    content="$Id: todo.html,v 1.22 2000-09-29 09:19:50 gerald Exp $">
+    content="$Id: todo.html,v 1.23 2000-10-21 11:32:33 gerald Exp $">
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
@@ -41,12 +41,17 @@
 
 <ol>
 
-  <li> fix transparency problems in icons
-
-  <li> add some docs on content negotiation
-
   <li> put error explanations online, re-link them from validator
     output
+
+  <li> don't output a bazillion errors for documents with bogus
+    FPIs (see <a
+    href="/check?uri=http://validator.w3.org/dev/tests/bogus-fpi.html">a
+    sample</a>)
+
+  <li> add a doctype-overriding option
+
+  <li> add a textarea for testing short HTML fragments
 
   <li> add a "fix my HTML for me" option using <a
     href="http://www.w3.org/People/Raggett/tidy/">tidy</a>.
@@ -55,14 +60,6 @@
     href="dev/tests/#xml">test cases</a>, or <a
     href="http://www.hcrc.ed.ac.uk/~richard/xml-check.html">an
     existing service</a>)
-
-  <li> bug fix: escape '&amp;' to '&amp;amp;' in URI: item in
-    validator results (<a
-    href="/check?uri=http://validator.w3.org/check?uri=http%3A%2F%2Fvalidator.w3.org%2Fcheck%3Furi%3Dhttp%253A%252F%252Fvalidator.w3.org%252F%26ss%3D">sample</a>)
-
-  <li> bug fix: column counts are off in <a
-    href="/check?uri=http://www.xml.org/xmlorg_catalog.htm;ss">this
-    report</a>
 
   <li> update <a
     href="http://validator.w3.org/sgml-lib.tar.gz">sgml-lib.tar.gz</a>;
@@ -74,16 +71,12 @@
 
   <li> allow twiddling of options from the results page
 
-  <li> make a "most frequently validated invalid pages" list
+  <li> make lists of "most frequently validated invalid pages"
+    and "most frequently validated (non-W3C?) valid pages"
     (need to start logging stuff first, including IPs to compare
     uniqueness)
 
   <li> create a stylesheet and link to it from every page
-
-  <li> don't output a bazillion errors for documents with bogus
-  FPIs (see <a
-  href="/check?uri=http://validator.w3.org/dev/tests/bogus-fpi.html">a
-  sample</a>)
 
   <li> add a section to the report on <a
   href="http://www.mnot.net/cacheability/">document
@@ -91,10 +84,6 @@
 
   <li> put the explanations in a database (flat files are probably okay),
     offer an option to display them inline with the errors
-
-  <li> add a textarea for testing short HTML fragments
-
-  <li> add a doctype-overriding option
 
   <li> add support for more character encodings
 
@@ -105,7 +94,9 @@
   <li> write documentation, describing each
     feature and option of the validator and answering questions like
     "What's the difference between an SGML parser and Weblint?",
-    "Which DOCTYPE should I use?", ...
+    "Which DOCTYPE should I use?",
+    content negotiation,
+    ...
 
   <li> upgrade <a href="http://www.weblint.org/">weblint</a> to
   the most recent version
@@ -123,7 +114,7 @@
   <li> bug fix: fix the heading-based "outline" feature to include ALT text
     if it appears in the headings.
 
-  <li> add link validation using Renaud's <a
+  <li> add link validation using Hugo's <a
   href="http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/checklink.pl">checklink
   code</a>
   (or other code with similar functionality)
@@ -196,7 +187,7 @@
      src="http://validator.w3.org/images/vh40" height=31 width=88
      align=right border=0 alt="Valid W3C HTML 4.0!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</A><br>
-     $Date: 2000-09-29 09:19:50 $
+     $Date: 2000-10-21 11:32:33 $
 </address>
 
 </body>
