@@ -1,6 +1,8 @@
 #!/usr/local/bin/perl
 
-$VERSION= '$Id: checklink.pl,v 1.2 1998-08-31 15:55:22 renaudb Exp $';
+$|++;
+
+$VERSION= '$Id: checklink.pl,v 1.3 1998-08-31 16:16:33 renaudb Exp $ ';
 
 BEGIN {
     unshift@INC,('/usr/etc/apache/PerlLib');
@@ -9,14 +11,11 @@ BEGIN {
 use CGI qw(:standard);
 #use CGI::Carp qw(fatalsToBrowser);
 use W3CDebugCGI;
-#use URI::URL;
 require LWP::Parallel::UserAgent;
 require HTML::LinkExtor;
 
 %ALLOWED_SCHEMES = ( "http" => 1 );
 %SCHEMES = (); # for report
-
-#print $ALLOWED_SCHEMES{"http"},"\n";
 
 ###############################
 
