@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.64 2000-02-24 22:00:48 gerald Exp $
+# $Id: check,v 1.65 2000-05-10 20:24:03 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -43,7 +43,7 @@ use vars qw($frag $pub_ids $element_uri $file_type); # Cfg hashes.
 #
 # Paths and file locations
 my $logfile   = '/var/log/httpd/val-svc';
-my $base_path = '/usr/local/src/validator/';
+my $base_path = '/usr/local/validator/';
 my $html_path = $base_path . 'htdocs/';
 my $elem_db   = $html_path . 'config/eref.cfg';
 my $fpis_db   = $html_path . 'config/fpis.cfg';
@@ -73,9 +73,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.64 $;
+$VERSION    =  q$Revision: 1.65 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2000-02-24 22:00:48 $;
+$DATE       =  q$Date: 2000-05-10 20:24:03 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -359,7 +359,9 @@ if ($File->{Type} eq 'xhtml') {
 
 my $command  = "$codeconv $sp -E0 $xmlflags $catalog $decl";
 
-# print "    <li>nsgmls command line: <code>$command</code>\n";
+if ( $ENV{SERVER_PORT} eq "8000" ) {
+    print "    <li>nsgmls command line: <code>$command</code>\n";
+}
 
 open CHECKER, "|$command - >$temp.esis 2>$temp"
   or die "open(|$command - >$temp.esis 2>$temp) returned: $!\n";
