@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.250 2002-10-12 10:12:24 link Exp $
+# $Id: check,v 1.251 2002-10-12 12:55:23 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.250 $;
+  $VERSION    =  q$Revision: 1.251 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-12 10:12:24 $,
+			      Date => q$Date: 2002-10-12 12:55:23 $,
 			     });
 
 #
@@ -258,7 +258,7 @@ $File = &find_xml_encoding ($File);
 #
 if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
   $File->{Charset}->{Use} = $File->{Charset}->{HTTP};
-} elsif ($File->{Type} =~ m(^text/\w+\+xml$)) {
+} elsif ($File->{ContentType} =~ m(^text/([-.a-zA-Z0-9]\+)?xml$)) {
   # Act as if $http_charset was 'us-ascii'. (MIME rules)
   $File->{Charset}->{Use} = 'us-ascii';
   &add_warning($File, <<".EOF.");
@@ -275,7 +275,7 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
   $File->{Charset}->{Use} = $File->{Charset}->{XML};
 } elsif ($File->{Charset}->{Auto} =~ /^utf-16[bl]e$/ && $File->{BOM} == 2) {
   $File->{Charset}->{Use} = 'utf-16';
-} elsif ($File->{Type} =~ m(^application/\w+\+xml$)) {
+} elsif ($File->{ContentType} =~ m(^application/([-.a-zA-Z0-9]+\+)?xml$)) {
   $File->{Charset}->{Use} = "utf-8";
 }
 
@@ -1135,7 +1135,7 @@ sub handle_uri {
     exit;
   }
 
-  my($type, $charset) = &parse_content_type($File, $res->header('Content-Type'));
+  my($type, $ct, $charset) = &parse_content_type($File, $res->header('Content-Type'));
 
   my $lastmod = undef;
   if ( $res->last_modified ) {
@@ -1144,6 +1144,7 @@ sub handle_uri {
 
   $File->{Bytes}           = $res->content;
   $File->{Type}            = $type;
+  $File->{ContentType}     = $ct;
   $File->{Charset}->{HTTP} = lc $charset;
   $File->{Modified}        = $lastmod;
   $File->{Server}          = scalar $res->server;
@@ -1168,10 +1169,11 @@ sub handle_file {
   local $/ = undef; # set line delimiter so that <> reads rest of file
   $file = <$f>;
 
-  my($type, $charset) = &parse_content_type($File, $h->{'Content-Type'});
+  my($type, $ct, $charset) = &parse_content_type($File, $h->{'Content-Type'});
 
   $File->{Bytes}           = $file;
   $File->{Type}            = $type;
+  $File->{ContentType}     = $ct;
   $File->{Charset}->{HTTP} = lc $charset;
   $File->{Modified}        = $h->{'Last-Modified'};
   $File->{Server}          = $h->{'Server'};
@@ -1234,7 +1236,7 @@ sub parse_content_type {
     EOF
   }
 
-  return $type, $charset;
+  return $type, $ct, $charset;
 }
 
 
