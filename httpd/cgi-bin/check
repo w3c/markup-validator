@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.89 2001-03-08 00:49:44 link Exp $
+# $Id: check,v 1.90 2001-03-08 01:21:09 link Exp $
 
 #
 # We need Perl 5.004.
@@ -73,9 +73,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.89 $;
+$VERSION    =  q$Revision: 1.90 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-03-08 00:49:44 $;
+$DATE       =  q$Date: 2001-03-08 01:21:09 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -586,7 +586,9 @@ if ( $? || ($guessed_doctype == 1) ) {
 	# make sure there are no ^P's or ^Q's in the file, since we need to use
 	# them to represent '<' and '>' temporarily. We'll just change them to
 	# literal P's and Q's for a lack of anything better to do with them.
-	$newline =~ s/${lt}/P/go; $newline =~ s/${gt}/Q/g;
+	my $lt = "\020";
+	my $gt = "\021";
+	$newline =~ s/\020/P/go; $newline =~ s/\021/Q/g;
 
 	my $orig_col = $col;
         ($newline, $col) = &truncate_line($newline, $col);
