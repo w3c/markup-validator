@@ -4,11 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-<<<<<<< base.css
-   $Id: base.css,v 1.26.2.18 2003-07-28 13:36:04 ot Exp $
-=======
-   $Id: base.css,v 1.26.2.18 2003-07-28 13:36:04 ot Exp $
->>>>>>> 1.26.2.14
+   $Id: base.css,v 1.26.2.19 2003-07-30 01:35:10 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
