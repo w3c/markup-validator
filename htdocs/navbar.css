@@ -4,15 +4,10 @@
    Copyright 2000-2004 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: navbar.css,v 1.8 2004-07-21 15:06:55 link Exp $
+   $Id: navbar.css,v 1.9 2004-09-01 21:57:23 link Exp $
 */
 
-html {
-/*  min-width: 55em; */
-}
-
 #menu {
-/*  min-width: 63em; */
   list-style-type: none;
   padding: 0;
   margin: 0;
