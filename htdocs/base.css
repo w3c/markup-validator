@@ -4,13 +4,25 @@
    Copyright 2000-2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.38 2005-01-19 08:33:12 ot Exp $
+   $Id: base.css,v 1.39 2005-02-04 23:31:03 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
 @import url(navbar.css);  /* CSS for navigation menu. */
 @import url(tips.css);    /* CSS for Quality Tips. */
 @import url(docs.css);    /* CSS for the Documentation. */
+
+
+/* Special Notices */
+p#msie { /* msie-bug note for text/plain */
+  float: right;
+  border: 1px solid black;
+  background: white;
+  width: 15em;
+  padding: 1em;
+  text-align: justify;
+  font-size: smaller;
+}
 
 
 /*                 

@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.388 2005-02-04 21:12:51 link Exp $
+# $Id: check,v 1.389 2005-02-04 23:31:04 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -239,7 +239,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.388 $;
+  $VERSION    =  q$Revision: 1.389 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1442,13 +1442,13 @@ sub parse_content_type {
 
       <p id="msie">
         <strong>Note:</strong>
-        a bug in the version of Microsoft's Internet Explorer that comes with
-        Windows XP's Service Pack 2 causes it to mislabel uploaded files as
-        "<code>text/plain</code>". If this is the browser you are using you
-        can work around this problem by using a different browser &mdash;
-        such as <a href="http://getfirefox.com/">Firefox</a> &mdash; for
-        validating uploaded files; or by publishing the page in question
-        and validating it by URL instead.
+        a bug in the version of Microsoft Internet Explorer that comes with
+        Windows XP Service Pack 2 causes it to mislabel uploaded files as
+        "<code>text/plain</code>". You can work around this problem by using a
+        different browser, such as <a
+          href="http://getfirefox.com/">Firefox</a>, for validating
+        uploaded files; or by publishing the page in question and validating it
+        by URL instead.
       </p>
 .EOF.
       }
