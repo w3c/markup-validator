@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.144 2004-06-20 16:48:38 ville Exp $
+# $Id: check,v 1.305.2.145 2004-06-20 19:33:45 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -47,6 +47,7 @@ use Config::General      qw();
 use File::Spec           qw();
 use HTML::Parser    3.25 qw(); # Need 3.25 for $p->ignore_elements.
 use HTTP::Request        qw();
+use HTTP::Headers::Auth  qw(); # Needs to be imported after other HTTP::*.
 use IO::File             qw();
 use LWP::UserAgent  1.90 qw(); # Need 1.90 for protocols_(allowed|forbidden)
 use Net::hostent         qw(gethostbyname);
@@ -143,7 +144,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.144 $;
+  $VERSION    =  q$Revision: 1.305.2.145 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +219,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-06-20 16:48:38 $,
+                              Date => q$Date: 2004-06-20 19:33:45 $,
                              });
 
 #
@@ -1203,20 +1204,30 @@ sub jump_links {
 
 #
 # Proxy authentication requests.
+# Note: expects the third argument to be a hash ref (see HTTP::Headers::Auth).
 sub authenticate {
   my $File       = shift;
   my $resource   = shift;
-  my $authHeader = shift;
+  my $authHeader = shift || {};
+
   my $realm = $resource;
   $realm =~ s([^\w\d.-]*){}g;
-  $authHeader =~ s( realm=([\'\"])?([^\1]+)\1){ realm="$realm-$2"};
   $resource = &ent($resource);
 
-    print <<"EOF";
+  for my $scheme (keys(%$authHeader)) {
+    my $origrealm = $authHeader->{$scheme}->{realm};
+    next unless defined($origrealm);
+    $authHeader->{$scheme}->{realm} = "$realm-$origrealm";
+  }
+
+  my $headers = HTTP::Headers->new(Connection => 'close');
+  $headers->content_type('text/html; charset=utf-8');
+  $headers->www_authenticate(%$authHeader);
+  $headers = $headers->as_string();
+
+  print <<"EOF";
 Status: 401 Authorization Required
-WWW-Authenticate: $authHeader
-Connection: close
-Content-Type: text/html; charset=utf-8
+$headers
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
   "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
@@ -1379,7 +1390,8 @@ sub handle_uri {
 
   unless ($res->code == 200 || $File->{Opt}->{'No200'}) {
     if ($res->code == 401) {
-      &authenticate($File, $res->request->url, $res->www_authenticate);
+      my %auth = $res->www_authenticate(); # HTTP::Headers::Auth
+      &authenticate($File, $res->request->url, \%auth);
     } else {
       print $File->{Results};
       &http_error($uri->as_string, $res->code, $res->message);
