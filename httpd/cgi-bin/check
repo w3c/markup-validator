@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.117 2001-06-18 10:26:53 duerst Exp $
+# $Id: check,v 1.118 2001-06-19 10:05:06 link Exp $
 
 #
 # We need Perl 5.004.
@@ -76,9 +76,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.117 $;
+$VERSION    =  q$Revision: 1.118 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-18 10:26:53 $;
+$DATE       =  q$Date: 2001-06-19 10:05:06 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -263,18 +263,17 @@ if (defined $q->param('doctype') and not $q->param('doctype') =~ /Inline/i) {
 
 #
 # Try to extract or guess the DOCTYPE for HTML and XHTML files.
-my $doctype;
 if ($File->{Type} eq 'html' or $File->{Type} eq 'xhtml'
     or $q->param('uploaded_file') ) {
-  $doctype = &get_doctype($File->{Content});
+  $File->{DOCTYPE} = &get_doctype($File->{Content});
 }
 
 #
 # Set document type to XHTML if the DOCTYPE was for XHTML.
 # Set document type to MathML if the DOCTYPE was for MathML.
 # This happens when the file is served as text/html
-$File->{Type} = 'xhtml'  if $doctype =~ /xhtml/i;
-$File->{Type} = 'mathml' if $doctype =~ /mathml/i;
+$File->{Type} = 'xhtml'  if $File->{DOCTYPE} =~ /xhtml/i;
+$File->{Type} = 'mathml' if $File->{DOCTYPE} =~ /mathml/i;
 
 
 #
@@ -505,7 +504,7 @@ close ESIS              or warn "close($temp.esis) returned: $!";
 my $fpi;
 my $version = 'unknown';
 if (($File->{Type} eq 'xhtml') || ($File->{Type} eq 'mathml')) {
-  $fpi = $doctype;
+  $fpi = $File->{DOCTYPE};
 } elsif ($File->{Type} eq 'xml') {
   $fpi = 'XML';
 } else {
@@ -515,7 +514,7 @@ if (($File->{Type} eq 'xhtml') || ($File->{Type} eq 'mathml')) {
     last;
   }
   # Needed for HTML4 Strict, which has no version attribute on the HTML element
-  if (length $doctype and not defined $fpi) {$fpi = $doctype};
+  if (length $File->{DOCTYPE} and not defined $fpi) {$fpi = $File->{DOCTYPE}};
 }
 $version = $pub_ids->{$fpi} || 'unknown';
 
