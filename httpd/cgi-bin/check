@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.148 2001-07-18 11:47:14 link Exp $
+# $Id: check,v 1.149 2001-07-18 20:41:43 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.148 $;
+$VERSION    =  q$Revision: 1.149 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-18 11:47:14 $;
+$DATE       =  q$Date: 2001-07-18 20:41:43 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1133,20 +1133,25 @@ sub parse_errors ($$) {
   open ERRORS, "<$file" or &internal_error("open($file) returned: $!");
   for (<ERRORS>) {
     push @{$File->{'DEBUG'}->{Errors}}, $_;
-    my $err;
+    my($err, @errors);
     next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
     next if /numbers exceeding 65535 not supported/;
     next if /URL Redirected to/;
-    my @errs = split /:/;
-    $err->{src}  = $errs[1];
-    $err->{line} = $errs[2];
-    $err->{char} = $errs[3];
-    $err->{type} = $errs[4];
+    my(@_err) = split /:/;
+    if ($_err[1] =~ m(^<URL>)) {
+      @errors = ($_err[0], join(':', $_err[1], $_err[2]), @_err[3..$#_err]);
+    } else {
+      @errors = @_err;
+    }
+    $err->{src}  = $errors[1];
+    $err->{line} = $errors[2];
+    $err->{char} = $errors[3];
+    $err->{type} = $errors[4];
     if ($err->{type} eq 'W' or $err->{type} eq 'E') {
-      $err->{msg}  = $errs[5];
+      $err->{msg}  = $errors[5];
     } else {
       $err->{type} = 'I';
-      $err->{msg}  = $errs[4];
+      $err->{msg}  = $errors[4];
     }
     push @{$File->{Errors}}, $err;
   }
