@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.92 2004-04-30 09:00:57 ot Exp $
+# $Id: check,v 1.305.2.93 2004-05-01 10:19:17 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.92 $;
+  $VERSION    =  q$Revision: 1.305.2.93 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-04-30 09:00:57 $,
+                              Date => q$Date: 2004-05-01 10:19:17 $,
                              });
 
 #
@@ -2814,7 +2814,8 @@ X-W3C-Validator-Errors: $errs
 
   if (defined $File->{Warnings} and scalar @{$File->{Warnings}}) {
     print qq(  <warnings>\n);
-    printf qq(    <warning>%s</warning>\n), &ent($_) for @{$File->{Warnings}};
+    printf qq(    <warning>%s</warning>\n),
+      &ent($_->{Message}) for @{$File->{Warnings}};
     print qq(  </warnings>\n);
   }
 
