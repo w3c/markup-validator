@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.119 2001-06-20 10:07:44 link Exp $
+# $Id: check,v 1.120 2001-06-22 02:01:04 link Exp $
 
 #
 # We need Perl 5.004.
@@ -76,9 +76,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.119 $;
+$VERSION    =  q$Revision: 1.120 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-20 10:07:44 $;
+$DATE       =  q$Date: 2001-06-22 02:01:04 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1010,7 +1010,7 @@ sub get_doctype {
 }
 
 #
-# @@FIXME@@ Add description.
+# Process errors reported by SP and produce a report.
 sub process_errors {
   my $File = shift;
   my($line, $col, $type, $msg);
@@ -1126,7 +1126,7 @@ sub process_errors {
 }
 
 #
-# @@FIXME@@ Add description.
+# Output "This page is Valid" report.
 sub report_valid {
   my $File = shift;
   my $gifborder   = ' border="0"';
@@ -1248,7 +1248,7 @@ EOHD
 }
 
 #
-# @@FIXME@@ Add description.
+# Run file through Neil Bower's "weblint". Legacy support. Deprecated!
 sub weblint {
   my $File = shift;
   my $pedanticflags;
@@ -1309,7 +1309,7 @@ EOF
 }
 
 #
-# @@FIXME@@ Add description.
+# Produce an outline of the document based on Hn elements from the ESIS.
 sub outline {
   my $File = shift;
 
@@ -1375,7 +1375,7 @@ EOF
 }
 
 #
-# @@FIXME@@ Add description.
+# Create a HTML representation of the document.
 sub show_source {
   my $File = shift;
   my $line = 1;
@@ -1397,7 +1397,7 @@ EOF
 }
 
 #
-# @@FIXME@@ Add description.
+# Create a HTML Parse Tree of the document for validation report.
 sub parse_tree {
   my $File = shift;
 
