@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.175 2001-09-09 15:17:34 link Exp $
+# $Id: check,v 1.176 2001-09-09 15:20:45 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.175 $;
+$VERSION    =  q$Revision: 1.176 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-09-09 15:17:34 $;
+$DATE       =  q$Date: 2001-09-09 15:20:45 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -267,7 +267,8 @@ $File->{Content}[0] =~ s/^\xEF\xBB\xBF//
 
 #
 # Override DOCTYPE if user asked for it.
-if (defined $q->param('doctype') and not $q->param('doctype') =~ /Inline/i) {
+if (defined $q->param('doctype')
+    and not $q->param('doctype') =~ /(Inline|detect)/i) {
   $File->{Content} = &supress_doctype($File->{Content});
   unshift @{$File->{Content}}, $doctypes->{$q->param('doctype')};
   my $dtd = ent($q->param('doctype'));
