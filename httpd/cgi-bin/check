@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.187 2001-09-24 10:26:58 link Exp $
+# $Id: check,v 1.188 2001-09-25 01:15:28 link Exp $
 
 #
 # We need Perl 5.004.
@@ -91,9 +91,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.187 $;
+$VERSION    =  q$Revision: 1.188 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-09-24 10:26:58 $;
+$DATE       =  q$Date: 2001-09-25 01:15:28 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1359,6 +1359,8 @@ sub report_errors ($) {
     $err->{idx} =  $err->{msg};
     $err->{idx} =~ s/"[^\"]+"/FOO/g;
     $err->{idx} =~ s/[^A-Za-z ]//g;
+    $err->{idx} =~ s/\s+/ /g; # Collapse spaces
+    $err->{idx} =~ s/(^\s|\s$)//g; # Remove leading and trailing spaces.
 
     $line = &ent($line); # Entity encode.
     $line =~ s/\t/ /g;   # Collapse TABs.
@@ -1368,6 +1370,8 @@ sub report_errors ($) {
 
     if (defined $frag->{$err->{idx}}) {
       print qq{ (<a href="$faqerrloc#$frag->{$err->{idx}}">explanation...</a>)};
+    } elsif (DEBUG) {
+      print qq{ (<code style="background: red">"$err->{idx}"</code>)};
     }
 
     print "\n<pre>  <code class=input>$line</code>\n";
