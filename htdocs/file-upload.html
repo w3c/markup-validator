@@ -1,49 +1,89 @@
-<!--#set var="revision" value="\$Id: file-upload.html,v 1.5 2001-09-19 08:52:08 link Exp $" -->
-<!--#set var="date" value="\$Date: 2001-09-19 08:52:08 $" -->
+<!--#set var="revision" value="\$Id: file-upload.html,v 1.6 2001-09-19 09:31:03 link Exp $" -->
+<!--#set var="date" value="\$Date: 2001-09-19 09:31:03 $" -->
 <!--#include virtual="/header.html" -->
 
   <p>
     This form allows you to upload files from your computer and have
     them validated.
   </p>
-
-  <form method="post" enctype="multipart/form-data" action="/check">
-    File: <input type="file" name="uploaded_file" size="50" /><br />
-    Document type:
-	<select name="doctype">
-	  <option value="Inline">(specified inline)</option>
-	  <option>XHTML 1.0 Strict</option>
-	  <option>XHTML 1.0 Transitional</option>
-	  <option>XHTML 1.0 Frameset</option>
-	  <option>HTML 4.01 Strict</option>
-	  <option>HTML 4.01 Transitional</option>
-	  <option>HTML 4.01 Frameset</option>
-	  <option>HTML 3.2</option>
-	  <option>HTML 2.0</option>
-	</select>
-    <table cellpadding="0" cellspacing="0">
-    <tr>
-      <td>
-        <input name="ss" type="checkbox" value="" /> Show source input
-      </td>
-      <td>
-        <input name="outline" type="checkbox" value="" /> Show an outline of this
-        document<br />
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <input name="sp" type="checkbox" value="" /> Show parse tree
-      </td>
-      <td>
-        <input name="noatt" type="checkbox" value="" /> exclude
-        attributes from the parse tree<br />
-      </td>
-    </tr>
-    </table>
-      <input type="submit" value="Validate this document" />
-      <input type="reset" value="Reset this form" />
-  </form>
+    <div>
+      <h2>Validate Uploaded File</h2>
+      <form method="post" enctype="multipart/form-data" action="/check">
+        <table>
+          <tr><th><label for="uri">Address:</label></th><td colspan="2"><input id="uri" name="uri" size="50" /></td></tr>
+          <tr>
+            <th><label for="charset">Character Encoding:</label></th>
+            <td colspan="2">
+              <select id="charset" name="charset">
+                <option value="(detect automatically)">(detect automatically)</option>
+                <option value="utf-8 (Unicode, worldwide)">utf-8 (Unicode, worldwide)</option>
+                <option value="iso-8859-1 (Western Europe)">iso-8859-1 (Western Europe)</option>
+                <option value="iso-8859-2 (Central Europe)">iso-8859-2 (Central Europe)</option>
+                <option value="iso-8859-3 (Maltese)">iso-8859-3 (Maltese)</option>
+                <option value="iso-8859-4 (Baltic Rim)">iso-8859-4 (Baltic Rim)</option>
+                <option value="iso-8859-5 (Cyrillic)">iso-8859-5 (Cyrillic)</option>
+                <option value="iso-8859-6-i (Arabic)">iso-8859-6-i (Arabic)</option>
+                <option value="iso-8859-7 (Greek)">iso-8859-7 (Greek)</option>
+                <option value="iso-8859-8-i (Hebrew)">iso-8859-8-i (Hebrew)</option>
+                <option value="iso-8859-9 (Turkish)">iso-8859-9 (Turkish)</option>
+                <option value="iso-8859-10 (Latin 6)">iso-8859-10 (Latin 6)</option>
+                <option value="iso-8859-13 (Latin 7)">iso-8859-13 (Latin 7)</option>
+                <option value="iso-8859-14 (Celtic)">iso-8859-14 (Celtic)</option>
+                <option value="iso-8859-15 (Latin 9)">iso-8859-15 (Latin 9)</option>
+                <option value="us-ascii (basic English)">us-ascii (basic English)</option>
+                <option value="euc-jp (Japanese, Unix)">euc-jp (Japanese, Unix)</option>
+                <option value="shift_jis (Japanese, Win/Mac)">shift_jis (Japanese, Win/Mac)</option>
+                <option value="iso-2022-jp (Japanese, email)">iso-2022-jp (Japanese, email)</option>
+                <option value="euc-kr (Korean)">euc-kr (Korean)</option>
+                <option value="gb2312 (Chinese, simplified)">gb2312 (Chinese, simplified)</option>
+                <option value="big5 (Chinese, traditional)">big5 (Chinese, traditional)</option>
+                <option value="tis-620 (Thai)">tis-620 (Thai)</option>
+                <option value="koi8-r (Russian)">koi8-r (Russian)</option>
+                <option value="koi8-u (Ukrainian)">koi8-u (Ukrainian)</option>
+                <option value="macintosh (MacRoman)">macintosh (MacRoman)</option>
+                <option value="windows-1250 (Central Europe)">windows-1250 (Central Europe)</option>
+                <option value="windows-1251 (Cyrillic)">windows-1251 (Cyrillic)</option>
+                <option value="windows-1252 (Western Europe)">windows-1252 (Western Europe)</option>
+                <option value="windows-1253 (Greek)">windows-1253 (Greek)</option>
+                <option value="windows-1254 (Turkish)">windows-1254 (Turkish)</option>
+                <option value="windows-1255 (Hebrew)">windows-1255 (Hebrew)</option>
+                <option value="windows-1256 (Arabic)">windows-1256 (Arabic)</option>
+                <option value="windows-1257 (Baltic Rim)">windows-1257 (Baltic Rim)</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th><label for="doctype">Document Type:</label></th>
+            <td colspan="2">
+              <select id="doctype" name="doctype">
+                <option value="Inline">(detect automatically)</option>
+                <option>XHTML 1.0 Strict</option>
+                <option>XHTML 1.0 Transitional</option>
+                <option>XHTML 1.0 Frameset</option>
+                <option>HTML 4.01 Strict</option>
+                <option>HTML 4.01 Transitional</option>
+                <option>HTML 4.01 Frameset</option>
+                <option>HTML 3.2</option>
+                <option>HTML 2.0</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th rowspan="2">Options:</th>
+            <td><label><input name="ss" type="checkbox" value="" /> Show Source</label></td>
+            <td><label><input name="sp" type="checkbox" value="" /> Show Parse Tree</label></td>
+          </tr>
+          <tr>
+            <td><label><input name="outline" type="checkbox" value="" /> Show Outline</label></td>
+            <td><label><input name="noatt" type="checkbox" value="" /> ...exclude attributes</label></td>
+          </tr>
+          <tr><td />
+            <td><input type="submit" value="Validate this page" /></td>
+	    <td />
+          </tr>
+        </table>
+      </form>
+    </div>
 
   <p>
     If your document is on the Web, you can validate

@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.14 2001-09-19 07:43:39 link Exp $" -->
-<!--#set var="date" value="\$Date: 2001-09-19 07:43:39 $" -->
+<!--#set var="revision" value="\$Id: index.html,v 1.15 2001-09-19 09:31:03 link Exp $" -->
+<!--#set var="date" value="\$Date: 2001-09-19 09:31:03 $" -->
 <!--#include virtual="/header.html" -->
 
 <p>
@@ -38,11 +38,12 @@
   httpd.conf</a>. (select the topmost revision numbers on these pages to see
   the most recent revision of each file.)
   </p>
+  </li>
 
   <li><p>If you want a copy of all the files that make up the
   service, you can <a href="../validator.tar.gz">grab a tar
   ball</a> (~2.0M, updated hourly.)
-  </p>
+  </p></li>
 
   <li><p><a name="CVS">If you intend to actively mirror the code</a>
   and/or contribute
@@ -58,24 +59,25 @@
 
   <p>
   Our CVS base is available read-only, using CVS pserver authentication
-  a la:
+  a la:</p>
 
-  <blockquote><samp>
+  <blockquote><p><samp>
     bash$ <kbd><b>export
-      CVSROOT=":pserver:anonymous@dev.w3.org:/sources/public"</b></kbd><br>
-    bash$ <kbd><b>cvs login</b></kbd><br>
-    (Logging in to anonymous@dev.w3.org)<br>
-    CVS password: <kbd><b>anonymous</b></kbd><br>
-    bash$ <kbd><b>cvs get validator</b></kbd><br>
-    cvs server: Updating validator<br>
-    cvs server: Updating validator/htdocs<br>
-    U validator/htdocs/about.html<br>
+      CVSROOT=":pserver:anonymous@dev.w3.org:/sources/public"</b></kbd><br />
+    bash$ <kbd><b>cvs login</b></kbd><br />
+    (Logging in to anonymous@dev.w3.org)<br />
+    CVS password: <kbd><b>anonymous</b></kbd><br />
+    bash$ <kbd><b>cvs get validator</b></kbd><br />
+    cvs server: Updating validator<br />
+    cvs server: Updating validator/htdocs<br />
+    U validator/htdocs/about.html<br />
     ...
-  </samp></blockquote>
+  </samp></p></blockquote>
 
   <!-- using <b> above is evil, but the default kbd style in Netscape is
    goofy, and having that text boldfaced is ever so much clearer. - Gerald
     -->
+  </li>
 
 </ul>
 
@@ -93,32 +95,32 @@
   Solaris, FreeBSD, HP-UX, and Digital UNIX. If you try it on other
   systems and get it to work, please <a href="../feedback.html">let
   us know</a> (and <a href="../feedback.html">send us patches</a>, if
-  they are needed to get it to work eleswhere.)
+  they are needed to get it to work eleswhere.)</li>
 
   <li><a href="http://www.jclark.com/sp/">SP version 1.2.1 or higher</a>.
   SP is the SGML parser used by the service. More recent versions than
-  1.2.1 will also work; we are currently using version 1.3.4.
+  1.2.1 will also work; we are currently using version 1.3.4.</li>
 
   <li><a href="../sgml-lib.tar.gz">A collection of DTDs and other SGML
   files</a> to validate against. You don't strictly <em>need</em> these
   on your system since SP will retrieve them off the Web if you use URIs
   in your doctypes, but you probably want them to be local for efficiency.
   (You don't need to download this tar ball if you mirror everything
-  using <a href="#CVS">CVS</a>.)
+  using <a href="#CVS">CVS</a>.)</li>
 
-  <li>The <a href="http://www.linpro.no/lwp/">LWP Perl module</a>
+  <li>The <a href="http://www.linpro.no/lwp/">LWP Perl module</a></li>
   
   <li>A web server: we are currently running <a
   href="httpd://www.apache.org/">Apache</a> version 1.3.12, but likely any
-  version will work, and other web servers may work as well.
+  version will work, and other web servers may work as well.</li>
 
   <li><a href="http://www.perl.com/">Perl</a>: the <a
   href="http://dev.w3.org/cgi-bin/cvsweb/validator/httpd/cgi-bin/check">main
-  CGI script</a> that does everything is written in Perl.
+  CGI script</a> that does everything is written in Perl.</li>
 
   <li><a href="http://www.weblint.org/">weblint</a> (optional):
   the service provides an option to run weblint on the page being
-  validated. Currently this services uses version 1.017.
+  validated. Currently this services uses version 1.017.</li>
 
 </ul>
 
