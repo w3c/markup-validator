@@ -8,6 +8,171 @@
         <TMPL_INCLUDE NAME="table.tmpl">
       </div><!-- end of "head" -->
 <TMPL_VAR NAME="error_message">
+
+<TMPL_IF NAME="fatal_transcode_error">
+      <p>
+        A fatal error occurred when attempting to transcode the character
+        encoding of the document. Either we do not support this character
+        encoding ("<TMPL_VAR NAME="fatal_transcode_charset" ESCAPE="HTML">")
+        yet, or you have specified a non-existent character encoding (often
+        a misspelling).
+      </p>
+      <p>The error was: "<TMPL_VAR NAME="fatal_transcode_errmsg">".</p>
+      <p>
+        If you believe the character encoding to be valid you can submit a
+        request for that character encoding (see the
+        <a href="feedback.html">feedback page</a> for details) and we will
+        look into supporting it in the future.
+      </p>
+  <TMPL_INCLUDE NAME="iana_charset_blurb.tmpl">
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_byte_error">
+      <p>
+        Sorry, I am unable to validate this document because on line
+        <strong><TMPL_VAR NAME="fatal_byte_lines"></strong>
+        it contained one or more bytes that I cannot interpret as
+        <code><TMPL_VAR NAME="fatal_transcode_charset" ESCAPE="HTML"></code>
+        (in other words, the bytes found are not valid values in the specified
+        Character Encoding). Please check both the content of the file and the
+        character encoding indication.
+      </p>
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_uri_error">
+      <p>
+        Sorry, this type of
+        <a href="http://www.w3.org/Addressing/">URL</a>
+        <a href="http://www.iana.org/assignments/uri-schemes">scheme</a>
+        (<q><TMPL_VAR NAME="fatal_uri_scheme" ESCAPE="HTML"></q>) is not
+        supported by this service. Please check that you entered the URL correctly.
+      </p>
+      <p>URLs should be in the form: <code>http://validator.w3.org/</code></p>
+      <p>
+        If you entered a valid URL using a scheme that we should support,
+        please let us know as outlined on our
+        <a href="feedback.html">Feedback page</a>. Make sure to include the
+        specific URL you would like us to support, and if possible provide a
+        reference to the relevant standards document describing the URL scheme
+        in question.
+      </p>
+      <p class="tip">
+        Remember that you can always save the page to disk and Validate it
+        using the File Upload interface.
+      </p>
+      <p>
+        Incomplete support for <abbr title="Secure Sockets Layer">SSL</abbr>
+        and <abbr title="Transport Layer Security">TLS</abbr> is a known
+        limitation and is being tracked as
+        <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=77">Issue #77</a>.
+      </p>
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_ip_error">
+  return sprintf(<<".EOF.", &ent($msg));
+      <p>
+        Sorry, the IP address <TMPL_IF NAME="fatal_ip_hostname">of</TMPL_IF>
+        <TMPL_VAR NAME="fatal_ip_host"> is not public.
+        For security reasons, validating resources located at non-public IP
+        addresses has been disabled in this service.
+      </p>
+</TMPL_IF>
+
+
+<TMPL_IF NAME="fatal_http_error">
+  <p>
+    I got the following unexpected response when trying to
+    retrieve &lt;<a href="<TMPL_VAR NAME="fatal_http_uri" ESCAPE="HTML">"><TMPL_VAR NAME="fatal_http_uri" ESCAPE="HTML"></a>&gt;:
+  </p>
+  <blockquote>
+    <p><code><TMPL_VAR NAME="fatal_http_code" ESCAPE="HTML"> <TMPL_VAR NAME="fatal_http_msg" ESCAPE="HTML"></code></p>
+  </blockquote>
+  <TMPL_IF NAME="fatal_http_dns">
+  <p>
+    If you made recent changes to your domain name (DNS) configuration, you may
+    also want to <a href="http://www.squish.net/dnscheck/">check that your
+    domain records are correct</a>, or ask your hosting company to do so.
+  </p>
+  </TMPL_IF>
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_mime_error">
+      <p>
+        Sorry, I am unable to validate this document because its content type
+        is <code><TMPL_VAR NAME="fatal_mime_ct" ESCAPE="HTML"></code>, which is
+        not currently supported by this service.
+      </p>
+      <p>
+        The Content-Type field is sent by your web server (or web browser if
+        you use the file upload interface) and depends on its configuration.
+        Commonly, web servers will have a mapping of filename extensions
+        (such as ".html") to <abbr
+          title="Multipurpose Internet Mail Extensions">MIME</abbr>
+        <code>Content-Type</code> values (such as <code>text/html</code>).
+      </p>
+      <p>
+        That you received this message can mean that your server is
+        not configured correctly, that your file does not have the correct
+        filename extension, or that you are attempting to validate a file
+        type that we do not support yet. In the latter case you should let
+        us know that you need us to support that content type (please include
+        all relevant details, including the URL to the standards document
+        defining the content type) using the instructions on the
+        <a href="feedback.html">Feedback Page</a>.
+      </p>
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_parse_extid_error">
+      <h2>Fatal Error: <TMPL_VAR NAME="fatal_parse_extid_msg" ESCAPE="HTML"></h2>
+      <p>
+        I could not parse this document, because it makes reference to a
+        system-specific file instead of using a well-known public identifier
+        to specify the type of markup being used.
+      </p>
+      <TMPL_INCLUDE NAME="doctype_spiel.tmpl">
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_referer_error">
+        <h2><strong>No Referer header found!</strong></h2>
+        <p>
+          You have requested we check the referring page, but your browser did
+          not send the HTTP "Referer" header field. This can be for several
+          reasons, but most commonly it is because your browser does not
+          know about this header, has been configured not to send one, or is
+          behind a proxy or firewall that strips it out of the request before
+          it reaches us.
+        </p>
+        <p>This is <em>not</em> an error in the referring page!</p>
+        <p>
+          Please use the form interface on the
+          <a href="<TMPL_VAR NAME="fatal_referer_url">">Validator Home Page</a> (or the
+          <a href="<TMPL_VAR NAME="fatal_referer_url">/detailed.html">Extended Interface</a>) to check the
+          page by URL.
+        </p>
+</TMPL_IF>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     </div><!-- end of "main" -->
 
 <TMPL_INCLUDE NAME="footer.tmpl">

@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.396 2005-02-09 10:29:18 link Exp $
+# $Id: check,v 1.397 2005-02-13 15:27:29 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -224,7 +224,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.396 $;
+  $VERSION    =  q$Revision: 1.397 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -310,6 +310,9 @@ my $E = HTML::Template->new(
                                            $lang, 'fatal-error.tmpl'),
   die_on_bad_params => FALSE,
 );
+
+$File->{T} = $T;
+$File->{E} = $E;
 
 
 # Read friendly error message file
@@ -547,6 +550,9 @@ unless ($File->{Charset}->{Use}) { # No charset given...
   $File->{Charset}->{Use} = 'utf-8';
 }
 
+
+#
+# @@FIXME: This should be dead code when &add_warning gets templatified.;
 sub iana_charset_blurb () {
   return <<".EOF.";
     <p>
@@ -1083,39 +1089,6 @@ sub add_warning ($$$$) {
   }
 }
 
-
-#
-# Print HTML explaining why/how to use a DOCTYPE Declaration.
-sub doctype_spiel {
-  return <<".EOF.";
-    <p>
-      You should place a DOCTYPE declaration as the very first thing in your
-      HTML document. For example, for a typical <a
-      href="http://www.w3.org/TR/xhtml1/">XHTML 1.0</a> document:
-    </p>
-    <pre>
-      &lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
-      &lt;html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"&gt;
-        &lt;head&gt;
-          &lt;title&gt;Title&lt;/title&gt;
-        &lt;/head&gt;
-
-        &lt;body&gt;
-          &lt;!-- ... body of document ... --&gt;
-        &lt;/body&gt;
-      &lt;/html&gt;
-    </pre>
-    <p>
-      For XML documents, you may also wish to include an "XML Declaration"
-      even before the DOCTYPE Declaration, but this is not well supported
-      in older browsers. More information about this can be found in the
-      <a href="http://www.w3.org/TR/xhtml1/">XHTML 1.0</a> Recommendation.
-    </p>
-.EOF.
-}
-
-
 #
 # Proxy authentication requests.
 # Note: expects the third argument to be a hash ref (see HTTP::Headers::Auth).
@@ -1208,34 +1181,6 @@ EOF
 
 
 #
-# Complain about unknown HTTP responses.
-sub http_error {
-  my $uri = &ent(shift);
-  my $code = &ent(shift);
-  my $message = &ent(shift);
-  my $suggestion = 'Please make sure you have entered the URL correctly.';
-  if ($code eq "500")
-  {
-    $suggestion .= ' If you made recent changes to your domain name (DNS) configuration, you may also want to <a href="http://www.squish.net/dnscheck/">check that your domain records are correct</a>, or ask your hosting company to do so.'
-  }
-  return <<"EOF";
-  <p>
-    I got the following unexpected response when trying to
-    retrieve &lt;<a href="$uri">$uri</a>&gt;:
-  </p>
-
-  <blockquote>
-    <p><code>$code $message</code></p>
-  </blockquote>
-
-  <p>
-    $suggestion
-  </p>
-
-EOF
-}
-
-#
 # Fetch an URL and return the content and selected meta-info.
 sub handle_uri {
   my $q    = shift; # The CGI object.
@@ -1253,7 +1198,8 @@ sub handle_uri {
 
   unless ($ua->is_protocol_supported($uri)) {
     $File->{'Error Flagged'} = TRUE;
-    $File->{'Error Message'} = &uri_rejected($uri->scheme());
+    $File->{E}->param(fatal_uri_error  => TRUE);
+    $File->{E}->param(fatal_uri_scheme => $uri->scheme());
     return $File;
   }
 
@@ -1267,7 +1213,10 @@ sub handle_uri {
     }
     if ($iptype && $iptype ne 'PUBLIC') {
       $File->{'Error Flagged'} = TRUE;
-      $File->{'Error Message'} = &ip_rejected($uri->host(), $addr);
+      $File->{E}->param(fatal_ip_error    => TRUE);
+      $File->{E}->param(fatal_ip_hostname => TRUE)
+        if $addr and $uri->host() ne $addr;
+      $File->{E}->param(fatal_ip_host => ($uri->host() || 'undefined'));
       return $File;
     }
   }
@@ -1282,13 +1231,18 @@ sub handle_uri {
 
   my $res = $ua->request($req);
 
-  unless ($res->code == 200 || $File->{Opt}->{'No200'}) {
+  unless ($res->code == 200 or $File->{Opt}->{'No200'}) {
     if ($res->code == 401) {
       my %auth = $res->www_authenticate(); # HTTP::Headers::Auth
       &authenticate($File, $res->request->uri, \%auth);
     } else {
       $File->{'Error Flagged'} = TRUE;
-      $File->{'Error Message'} = &http_error($uri->as_string, $res->code, $res->message);
+
+      $File->{E}->param(fatal_http_error => TRUE);
+      $File->{E}->param(fatal_http_uri   => $uri->as_string);
+      $File->{E}->param(fatal_http_code  => $res->code);
+      $File->{E}->param(fatal_http_msg   => $res->message);
+      $File->{E}->param(fatal_http_dns   => TRUE) if $res->code == 500;
     }
     return $File;
   }
@@ -1406,32 +1360,8 @@ sub parse_content_type {
       exit;
     } else {
       $File->{'Error Flagged'} = TRUE;
-      $File->{'Error Message'} = sprintf(<<"      EOF", &ent($ct));
-    <div class="error">
-      <p>
-        Sorry, I am unable to validate this document because its content type
-        is <code>%s</code>, which is not currently supported by this service.
-      </p>
-      <p>
-        The Content-Type field is sent by your web server (or web browser if
-        you use the file upload interface) and depends on its configuration.
-        Commonly, web servers will have a mapping of filename extensions
-        (such as ".html") to <abbr
-          title="Multipurpose Internet Mail Extensions">MIME</abbr>
-        <code>Content-Type</code> values (such as <code>text/html</code>).
-      </p>
-      <p>
-        That you received this message can mean that your server is
-        not configured correctly, that your file does not have the correct
-        filename extension, or that you are attempting to validate a file
-        type that we do not support yet. In the latter case you should let
-        us know that you need us to support that content type (please include
-        all relevant details, including the URL to the standards document
-        defining the content type) using the instructions on the
-        <a href="feedback.html">Feedback Page</a>.
-      </p>
-    </div>
-      EOF
+      $File->{E}->param(fatal_mime_error => TRUE);
+      $File->{E}->param(fatal_mime_ct    => $ct);
     }
   }
 
@@ -1685,17 +1615,8 @@ sub parse_errors ($$) {
     # No or unknown FPI and a relative SI.
     if ($err->{msg} =~ m(cannot (open|find))) {
       $File->{'Error Flagged'} = TRUE;
-      $File->{'Error Message'} = <<".EOF.";
-    <div class="fatal">
-      <h2>Fatal Error: $err->{msg}</h2>
-      <p>
-        I could not parse this document, because it makes reference to a
-        system-specific file instead of using a well-known public identifier
-        to specify the type of markup being used.
-      </p>
-.EOF.
-      $File->{'Error Message'} .= &doctype_spiel();
-      $File->{'Error Message'} .= "    </div>\n";
+      $File->{E}->param(fatal_parse_extid_error => TRUE);
+      $File->{E}->param(fatal_parse_extid_msg   => $err->{msg});
     }
 
     # No DOCTYPE.
@@ -1714,7 +1635,9 @@ sub parse_errors ($$) {
       </p>
 .EOF.
       if ($File->{Opt}->{Verbose}) {
-        $message .= &doctype_spiel();
+        #@@FIXME: This is borked until warnings get templateified.
+        # $message .= &doctype_spiel();
+        #@@FIXME;
         $message .= <<".EOF.";
       <p>
         The W3C QA Activity maintains a <a
@@ -2158,27 +2081,9 @@ sub prepCGI {
       # the browser didn't send a Referer header, or the request was
       # for /check?uri=referer but no Referer header was found.
       $File->{'Error Flagged'} = TRUE;
-      $File->{'Error Message'} = <<".EOF.";
-      <div class="error">
-        <a id="skip" name="skip"></a>
-        <h2><strong>No Referer header found!</strong></h2>
-        <p>
-          You have requested we check the referring page, but your browser did
-          not send the HTTP "Referer" header field. This can be for several
-          reasons, but most commonly it is because your browser does not
-          know about this header, has been configured not to send one, or is
-          behind a proxy or firewall that strips it out of the request before
-          it reaches us.
-        </p>
-        <p>This is <em>not</em> an error in the referring page!</p>
-        <p>
-          Please use the form interface on the
-          <a href="$CFG->{'Home Page'}">Validator Home Page</a> (or the
-          <a href="detailed.html">Extended Interface</a>) to check the
-          page by URL.
-        </p>
-      </div>
-.EOF.
+      
+      $File->{E}->param(fatal_referer_error => TRUE);
+      $File->{E}->param(fatal_referer_uri   => $CFG->{'Home Page'});
     }
   }
 
@@ -2205,7 +2110,8 @@ sub prepCGI {
   # Flag an error if we didn't get a file to validate.
   unless ($q->param('uri')) {
     $File->{'Error Flagged'} = TRUE;
-    $File->{'Error Message'} = &uri_rejected();
+    $File->{E}->param(fatal_uri_error  => TRUE);
+    $File->{E}->param(fatal_uri_scheme => 'undefined');
   }
 
   return $q;
@@ -2234,64 +2140,6 @@ sub prepSSI {
   $ssi =~ s|<!--\#echo\s+var="relroot"\s+-->|./|g;
 
   return $ssi;
-}
-
-
-#
-# Output errors for a rejected IP address.
-sub ip_rejected {
-  my ($host, $ip) = @_;
-  my $msg = $host || 'undefined';
-  $msg = 'of ' . $msg if ($ip && $host ne $ip);
-  return sprintf(<<".EOF.", &ent($msg));
-    <div class="error">
-      <a id="skip" name="skip"></a>
-      <p>
-        Sorry, the IP address %s is not public.
-        For security reasons, validating resources located at non-public IP
-        addresses has been disabled in this service.
-      </p>
-    </div>
-.EOF.
-}
-
-
-#
-# Output errors for a rejected URL.
-sub uri_rejected {
-  my $scheme = shift || 'undefined';
-
-  return sprintf(<<".EOF.", &ent($scheme));
-    <div class="error">
-      <a id="skip" name="skip"></a>
-      <p>
-        Sorry, this type of
-        <a href="http://www.w3.org/Addressing/">URL</a>
-        <a href="http://www.iana.org/assignments/uri-schemes">scheme</a>
-        (<q>%s</q>) is not supported by this service. Please check
-        that you entered the URL correctly.
-      </p>
-      <p>URLs should be in the form: <code>http://validator.w3.org/</code></p>
-      <p>
-        If you entered a valid URL using a scheme that we should support,
-        please let us know as outlined on our
-        <a href="feedback.html">Feedback page</a>. Make sure to include the
-        specific URL you would like us to support, and if possible provide a
-        reference to the relevant standards document describing the URL scheme
-        in question.
-      </p>
-      <p class="tip">
-        Remember that you can always save the page to disk and Validate it
-        using the File Upload interface.
-      </p>
-      <p>
-        Incomplete support for <abbr title="Secure Sockets Layer">SSL</abbr>
-        and <abbr title="Transport Layer Security">TLS</abbr> is a known
-        limitation and is being tracked as
-        <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=77">Issue #77</a>.
-      </p>
-    </div>
-.EOF.
 }
 
 
@@ -2417,24 +2265,10 @@ sub transcode {
   }
 
   if ($command ne 'I') {
-    my $error = $@ ? sprintf('<p>The error was: "%s".</p>', &ent($@)) : '';
     $File->{'Error Flagged'} = TRUE;
-    $File->{'Error Message'} = sprintf(<<".EOF.", &ent($cs), $error);
-      <p>Sorry!
-        A fatal error occurred when attempting to transcode the character
-        encoding of the document. Either we do not support this character
-        encoding ("%s") yet, or you have specified a non-existent character
-        encoding (often a misspelling).
-      </p>
-      %s
-      <p>
-        If you believe the character encoding to be valid you can submit a
-        request for that character encoding (see the
-        <a href="feedback.html">feedback page</a> for details) and we will
-        look into supporting it in the future.
-      </p>
-.EOF.
-    $File->{'Error Message'} .= &iana_charset_blurb();
+    $File->{E}->param(fatal_transcode_error   => TRUE);
+    $File->{E}->param(fatal_transcode_charset => $cs);
+    $File->{E}->param(fatal_transcode_errmsg  => ($@ || ''));
     return $File;
   }
 
@@ -2512,20 +2346,10 @@ sub byte_error {
   my @lines = @{$File->{Lines}};
   if (scalar @lines) {
     $File->{'Error Flagged'} = TRUE;
-    my $s = $#lines ? 's' : '';
     my $lines = join ', ', split ',', Set::IntSpan->new(\@lines)->run_list;
-    my $cs = &ent($File->{Charset}->{Use});
-    $File->{'Error Message'} = <<".EOF.";
-      <p class="error">
-        Sorry, I am unable to validate this document because on line$s
-        <strong>$lines</strong>
-        it contained one or more bytes that I cannot interpret as
-        <code>$cs</code> (in other words, the bytes
-        found are not valid values in the specified Character Encoding).
-        Please check both the content of the file and the character
-        encoding indication.
-      </p>
-.EOF.
+    $File->{E}->param(fatal_byte_error   => TRUE);
+    $File->{E}->param(fatal_byte_lines   => $lines);
+    $File->{E}->param(fatal_byte_charset => $File->{Charset}->{Use});
   }
   return $File;
 }
@@ -2884,7 +2708,7 @@ sub abort_if_error_flagged {
   my $Flags = shift;
 
   return unless $File->{'Error Flagged'};
-  return if $File->{'Error Message'} eq ''; # Previous error, keep going.
+  return if     $File->{'Error Handled'}; # Previous error, keep going.
 
   if ($File->{Opt}->{Output} eq 'html') {
     &prep_template($File, $E);
@@ -2901,6 +2725,7 @@ retry this operation in interactive mode using the web interface to see the
 actual error message.
 .EOF.
     $File->{'Error Message'} = '';
+    $File->{'Error Handled'} = TRUE;
   }
 }
 
