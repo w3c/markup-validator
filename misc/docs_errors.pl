@@ -2,7 +2,7 @@
 ##
 ## Generates HTML documentation of error messages and explanations
 ## for W3C Markup Validation Service
-## $Id: docs_errors.pl,v 1.1 2005-03-17 06:30:13 ot Exp $
+## $Id: docs_errors.pl,v 1.2 2005-03-18 06:37:30 ot Exp $
 
 ## Pragmas.
 use strict;
@@ -77,10 +77,11 @@ our $T = HTML::Template->new(
   die_on_bad_params => FALSE,
 );
 
-$T->param(list_errors => &list_errors($RSRC));
+$T->param(list_errors => &list_errors_hasverbose($RSRC));
+$T->param(list_errors => &list_errors_noverbose($RSRC));
 print $T->output;
 
-sub list_errors{
+sub list_errors_hasverbose{
     my $RSRC = shift;
     my $errors = [];
     my $error_id;
@@ -90,12 +91,44 @@ sub list_errors{
 	my %single_error;
 	if ($RSRC->{msg}->{$error_id})
 	{
-	    my $original = $RSRC->{msg}->{$error_id}->{original};
-	    $original = &de_template_explanation($original);
-	    $single_error{original} = $original;
-	    $single_error{verbose} = $RSRC->{msg}->{$error_id}->{verbose};
-	    $single_error{id} = $error_id;
-	    push @{$errors}, \%single_error;
+	    my $verbose = $RSRC->{msg}->{$error_id}->{verbose};
+	    if ($verbose)
+	    {
+		my $original = $RSRC->{msg}->{$error_id}->{original};
+		$original = &de_template_explanation($original);
+		$single_error{original} = $original;
+		$single_error{id} = $error_id;
+		$single_error{verbose} = $RSRC->{msg}->{$error_id}->{verbose};
+		push @{$errors}, \%single_error;
+	    }
+
+	}
+    }
+    print $errors;
+    return  $errors;
+}
+
+sub list_errors_noverbose{
+    my $RSRC = shift;
+    my $errors = [];
+    my $error_id;
+    my $max_error_id=500; # where to stop
+    for ($error_id=0;$error_id<$max_error_id;$error_id++)
+    {
+	my %single_error;
+	if ($RSRC->{msg}->{$error_id})
+	{
+	    my $verbose = $RSRC->{msg}->{$error_id}->{verbose};
+	    if (! $verbose)
+	    {
+		my $original = $RSRC->{msg}->{$error_id}->{original};
+		$original = &de_template_explanation($original);
+		$single_error{original} = $original;
+		$single_error{id} = $error_id;
+		$single_error{verbose} = $RSRC->{msg}->{$error_id}->{verbose};
+		push @{$errors}, \%single_error;
+	    }
+
 	}
     }
     print $errors;

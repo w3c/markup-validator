@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: docs_errors.tmpl,v 1.1 2005-03-17 06:30:13 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-03-17 06:30:13 $"
+<!--#set var="revision" value="\$Id: docs_errors.tmpl,v 1.2 2005-03-18 06:37:30 ot Exp $"
+--><!--#set var="date" value="\$Date: 2005-03-18 06:37:30 $"
 --><!--#set var="title" value="Error Explanations for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -18,14 +18,35 @@
   </div>
 
   <div>
-    <h3>Listing of errors and their explanation</h3>
+    <h3 id="hasverbose">List of Validator errors and their explanation</h3>
+    <p>Below are all the validator's error messages for which we have an "explanation".</p>
+
       <dl>
-      <TMPL_LOOP NAME="list_errors">
-        <dt><TMPL_VAR NAME="id"> <TMPL_VAR NAME="original"></dt>
-        <dd><TMPL_VAR NAME="verbose"></dd>  
+      <TMPL_LOOP NAME="list_errors_hasverbose">
+        <dt><TMPL_VAR NAME="id">: <TMPL_VAR NAME="original"></dt>
+        <dd><TMPL_VAR NAME="verbose">
+	<p>
+	  <a href="feedback.html?errmsg_id=<TMPL_VAR NAME="id">#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
       </TMPL_LOOP>
       </dl>
-    </div>
+
+    <h3 id="noverbose">Errors without explanation</h3>
+    <p>The following validation errors do not have an explanation yet. We invite you to use the 
+    <a href="../feedback.html#errormsg">feedback channels</a> to send your suggestions.</p>
+    <ul>
+	<TMPL_LOOP NAME="list_errors_noverbose">
+        <li><p><TMPL_VAR NAME="id">: <TMPL_VAR NAME="original"></p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=<TMPL_VAR NAME="id">#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      </TMPL_LOOP>
+    </ul>
+  </div>
 <!--#include virtual="../footer.html" -->
   </body>
 </html>
