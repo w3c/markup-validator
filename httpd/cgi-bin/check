@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.313 2002-12-05 03:34:45 link Exp $
+# $Id: check,v 1.314 2002-12-05 03:43:56 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -133,7 +133,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.313 $;
+  $VERSION    =  q$Revision: 1.314 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 } # end of BEGIN block.
@@ -519,7 +519,7 @@ while (<$spout>) {
     if (not $File->{Namespace} and $elements_found == 0 and $1 eq "") {
       $File->{Namespace} = $2;
     }
-    $File->{Namespaces}->{$2}++;
+    $File->{Namespaces}->{$2}++ unless $2 eq $File->{Namespace};
   }
 
   next if / IMPLIED$/;
