@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.13 2002-12-02 13:12:49 link Exp $
+# $Id: check,v 1.305.2.14 2002-12-02 13:25:45 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -103,7 +103,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.13 $;
+  $VERSION    =  q$Revision: 1.305.2.14 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -165,7 +165,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-12-02 13:12:49 $,
+                              Date => q$Date: 2002-12-02 13:25:45 $,
                              });
 
 #
@@ -322,6 +322,8 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
   $File->{Charset}->{Use} = 'utf-16';
 } elsif ($File->{ContentType} =~ m(^application/([-.a-zA-Z0-9]+\+)?xml$)) {
   $File->{Charset}->{Use} = "utf-8";
+} elsif (&is_xml($File->{Type}) and $File->{Charset}->{Auto} eq 'utf-8') {
+  $File->{Charset}->{Use} = $File->{Charset}->{Auto}; # UTF-8 (image/svg+xml etc.)
 }
 
 $File->{Content} = &normalize_newlines($File->{Bytes},
