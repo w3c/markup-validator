@@ -1,35 +1,13 @@
 	-- SGML catalog for the W3C Markup Validation Service --
-	-- $Id: sgml.soc,v 1.8 2004-09-12 20:30:46 link Exp $ --
+	-- $Id: sgml.soc,v 1.9 2004-09-12 20:37:27 link Exp $ --
 
 OVERRIDE YES	-- prefer public identifiers to system identifiers --
 SGMLDECL sgml.dcl
 
 	-- ISO latin 1 entity set for HTML --
-PUBLIC	"-//IETF//ENTITIES Added Latin 1 for HTML//EN"	html-latin.sgml
+PUBLIC	"-//IETF//ENTITIES Added Latin 1 for HTML//EN"	  html-latin.sgml
 PUBLIC  "ISO 8879-1986//ENTITIES Added Latin 1//EN//HTML" ISOlat1.ent
-PUBLIC  "ISO 8879-1986//ENTITIES Added Latin 1//EN" ISOlat1.ent
-
-        -- fake HTMLicons reference --
-PUBLIC	"-//IETF//ENTITIES icons for HTML//EN"          html-icons.sgml
-
-        -- fake HTMLmath reference --
-PUBLIC  "-//IETF//ENTITIES Math and Greek for HTML//EN"  html-math.sgml
-
-	-- Ways to refer to Level 3: most general to most specific --
-PUBLIC  "-//IETF//DTD HTML//EN//3.0"		html-3.dtd
-PUBLIC  "-//W3O//DTD W3 HTML 3.0//EN//"         html-3.dtd
-PUBLIC  "-//W3O//DTD W3 HTML 3.0//EN"           html-3.dtd
-PUBLIC  "-//W3C//DTD HTML 3 1995-03-24//EN"	html-3.dtd
-PUBLIC  "-//IETF//DTD HTML 3.0//EN"             html-3.dtd
-PUBLIC  "-//IETF//DTD HTML 3.0//EN//"           html-3.dtd
-PUBLIC  "-//IETF//DTD HTML Level 3//EN"		html-3.dtd
-PUBLIC  "-//IETF//DTD HTML Level 3//EN//3.0"	html-3.dtd
-
-	-- Ways to refer to strict Level 3: most general to most specific --
-PUBLIC  "-//IETF//DTD HTML Strict//EN//3.0"		html-3s.dtd
-PUBLIC  "-//W3O//DTD W3 HTML Strict 3.0//EN//" 		html-3s.dtd
-PUBLIC  "-//IETF//DTD HTML Strict Level 3//EN"		html-3s.dtd
-PUBLIC  "-//IETF//DTD HTML Strict Level 3//EN//3.0"	html-3s.dtd
+PUBLIC  "ISO 8879-1986//ENTITIES Added Latin 1//EN"       ISOlat1.ent
 
 	-- Ways to refer to Level 2: most general to most specific --
 PUBLIC  "HTML"                                  IETF/HTML-2_0.dtd
@@ -69,12 +47,6 @@ PUBLIC  "-//IETF//DTD HTML Strict Level 0//EN//2.0"	html-0s.dtd
 	-- Ways to refer to HTML 2.1 variants --
 PUBLIC "-//IETF//DTD HTML 2.1E//EN"			html-2.1e.dtd
 
-	-- "HTML Pro" --
-PUBLIC "ISO 8879-1986//ENTITIES Added Latin 2//EN"	pro/usr/local/lib/sgml/iso_8879-1986/entities/added_latin_2
-PUBLIC "ISO 8879-1986//ENTITIES Publishing//EN"		pro/usr/local/lib/sgml/iso_8879-1986/entities/publishing
-PUBLIC "ISO 8879-1986//ENTITIES General Technical//EN"	pro/usr/local/lib/sgml/iso_8879-1986/entities/general_technical
-PUBLIC "ISO 8879-1986//ENTITIES Numeric and Special Graphic//EN"	pro/usr/local/lib/sgml/iso_8879-1986/entities/numeric_and_special_graphic
-
 	-- HTML 3.2 --
 PUBLIC "-//W3C//DTD HTML 3.2//EN"			html-3.2.dtd
 PUBLIC "-//W3C//DTD HTML 3.2 Final//EN"			html-3.2.dtd
@@ -93,7 +65,6 @@ PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"	REC-html40-19980424/frameset.dtd
 PUBLIC "-//W3C//DTD HTML 4.01//EN"		REC-html401-19991224/strict.dtd
 PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"	REC-html401-19991224/loose.dtd
 PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"	REC-html401-19991224/frameset.dtd
-PUBLIC "-//W3C//ENTITIES Latin1//EN//HTML"	REC-html401-19991224/HTMLlat1.ent
 PUBLIC "-//W3C//ENTITIES Latin 1//EN//HTML"	REC-html401-19991224/HTMLlat1.ent
 PUBLIC "-//W3C//ENTITIES Special//EN//HTML"	REC-html401-19991224/HTMLspecial.ent
 PUBLIC "-//W3C//ENTITIES Symbols//EN//HTML"	REC-html401-19991224/HTMLsymbol.ent
