@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.4 1998-07-25 00:36:59 gerald Exp $
+# $Id: check,v 1.5 1998-07-25 00:59:15 gerald Exp $
 
 #############################################################################
 # Constant definitions
@@ -567,7 +567,7 @@ if ( $? || $no_doctype ) {
 	    print "   <b>Fatal error</b>! $msg\n";
 	    print "</pre>\n<p>I couldn't parse this document, because it " .
 		  "uses a public\n    identifier that's not in my <a\n " .
-		  "    href=\"lib/catalog\">catalog</a>!\n  </p>\n";
+		  "    href=\"sgml-lib/catalog\">catalog</a>!\n  </p>\n";
 	    &output_doctype_spiel;
 	    print "<pre>";	# so the </pre> we print later gets re-started
 	    last;
@@ -1124,7 +1124,7 @@ $notice
     <li><a href="whatsnew.html">Recent changes to this service</a></li>
     <li><a href="news:comp.infosystems.www.authoring.html">The HTML
       authoring newsgroup</a> (for help with HTML)
-    <li><a href="lib/catalog">DTDs (document types) supported by this
+    <li><a href="sgml-lib/catalog">DTDs (document types) supported by this
       service</a> (the SGML catalog)</li>
     <li>The <a href="http://www.w3.org/TR/REC-html40/">W3C HTML 4.0
       Recommendation</a>
@@ -1203,7 +1203,7 @@ sub output_closing {
      align=right border=0 alt="Valid HTML 4.0!"></a>
   <a href="http://www.w3.org/People/Gerald/">Gerald Oskoboiny</A><br><A
      href="http://www.w3.org/Help/Webmaster">Webmaster</A><br>
-     \$Date: 1998-07-25 00:36:59 $ \
+     \$Date: 1998-07-25 00:59:15 $ \
 </address>
 
 </body>
