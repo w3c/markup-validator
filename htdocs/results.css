@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.7 2003-05-31 01:26:24 link Exp $ */
+/* $Id: results.css,v 1.13.2.8 2003-05-31 01:31:24 link Exp $ */
 
 .markup {
   color: red;
@@ -42,6 +42,9 @@ dl#Warnings dd.fatal {
   padding: .5em 1em;
 }
 
+dl#Warnings dd.fatal p:first-child {
+  font-weight: bold;
+}
 
 
 div.meat {
