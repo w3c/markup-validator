@@ -85,7 +85,8 @@ PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Timing//EN"			PR-smil20-20010605/SMIL-timing.m
 PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Transition//EN"		PR-smil20-20010605/SMIL-transition.mod
 PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Integration//EN"		PR-smil20-20010605/SMIL-integrate.mod
 
+        -- Do not prefer document type name over a SYSTEM Identifier. --
+OVERRIDE NO
 
         -- Fallback if no FPI is given. --
 DOCTYPE html "REC-xhtml1-20020801/xhtml1-transitional.dtd"
-
