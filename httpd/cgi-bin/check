@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.253 2002-10-16 17:23:52 link Exp $
+# $Id: check,v 1.254 2002-10-23 21:51:22 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.253 $;
+  $VERSION    =  q$Revision: 1.254 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -156,7 +156,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-16 17:23:52 $,
+			      Date => q$Date: 2002-10-23 21:51:22 $,
 			     });
 
 #
@@ -2330,7 +2330,7 @@ X-W3C-Validator-Errors: $errs
   unless ($File->{'Is Valid'}) {
     printf <<".EOF.", &ent($File->{URI});
   <asserts>
-   <Assertion>
+   <Assertion rdf:ID="result">
     <subject rdf:resource="%s" />
     <result rdf:resource="http://www.w3.org/2001/03/earl/1.00#fails" />
     <testCase rdf:resource="http://www.w3.org/HTML/" />
@@ -2339,8 +2339,10 @@ X-W3C-Validator-Errors: $errs
   </asserts>
 .EOF.
 
+    my $errnum = 0 ;
     foreach my $err (@{$File->{Errors}}) {
       # Strip curlies from lq-nsgmls output.
+      ++$errnum ;
       $err->{msg} =~ s/[{}]//g;
       chomp $err->{msg};
 
@@ -2360,8 +2362,9 @@ X-W3C-Validator-Errors: $errs
 		    );
       printf <<".EOF.", &ent($File->{URI}), &ent($err->{msg});
     <asserts>
-      <Assertion rdf:about="%s">
+      <Assertion rdf:ID="err$errnum">
         <subject rdf:parseType="Resource">
+	  <reprOf rdf:resource="%s"/>
           <val:line>$err->{line}</val:line>
           <val:column>$err->{char}</val:column>
           <val:offset>@offsets</val:offset>
