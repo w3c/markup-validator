@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.20.2.11 2002-05-12 22:53:17 link Exp $
+   $Id: base.css,v 1.20.2.12 2002-05-13 22:36:42 link Exp $
 */
 
 @import url(/results.css); /* CSS for validation results. */
@@ -130,7 +130,8 @@ h1 {
   word-spacing: normal;
   letter-spacing: normal;
   text-transform: none;
-  color: #005A9C;
+  /* color: #005A9C; */
+  color: #053188
 }
 
 h2 {

@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.8.2.7 2002-05-12 22:53:17 link Exp $ */
+/* $Id: results.css,v 1.8.2.8 2002-05-13 22:36:42 link Exp $ */
 
 .markup {
   color: red;
@@ -67,8 +67,8 @@ td {
 }
 
 .valid {
-  clear: left;
-  background:		#005A9C;
+/*  clear: left; */
+  background:		#053188;
   color:		white;
   font-family:		Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
   font-size-adjust:	.53;
@@ -87,8 +87,8 @@ td {
 }
 
 .invalid {
-  clear: both;
-  background:		red;
+/*  clear: both; */
+  background:		#880531;
   color:		white;
   font-family:		Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
   font-size-adjust:	.53;
@@ -103,5 +103,5 @@ td {
 }
 
 .invalid a {
-  color: blue;
+  color: yellow;
 }
