@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: devel.html,v 1.10.2.7 2003-12-17 05:33:49 ot Exp $"
---><!--#set var="date" value="\$Date: 2003-12-17 05:33:49 $"
+<!--#set var="revision" value="\$Id: devel.html,v 1.10.2.8 2003-12-17 05:41:45 ot Exp $"
+--><!--#set var="date" value="\$Date: 2003-12-17 05:41:45 $"
 --><!--#set var="title" value="Developer Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -16,11 +16,11 @@
         <li><a href="#install">Installation Guide</a>
           <ul>
             <li><a href="#install-package">Packaged systems</a></li>
-            <li><a href="install-fromsource">Install from source</a></li>
+            <li><a href="#install-fromsource">Install from source</a></li>
           </ul>
         </li>
         <li><a href="#todo">TODO</a></li>
-        <li><a hre="#bugzilla">Bugs and Issue Tracking</a></li>
+        <li><a href="#bugzilla">Bugs and Issue Tracking</a></li>
       </ul>
     </div>
     
@@ -56,7 +56,7 @@
         can be found on <a href="http://www.cpan.org/">CPAN</a> (minimum
         versions in parenthesis after the name). The following
         list was complete when CVS spit out:
-        <code>$Date: 2003-12-17 05:33:49 $</code>. <tt>:-)</tt>
+        <code>$Date: 2003-12-17 05:41:45 $</code>. <tt>:-)</tt>
       </p>
       <dl>
         <dt><code>CGI (2.81)</code></dt>
@@ -151,13 +151,9 @@
     <h4 id="install-package">Packaged systems</h4>
     
     <p>The easiest way to install released versions of the Markup Validator is to use the packages created
-    for some platforms by contributors:</p>
+    for some platforms by contributors: Debian GNU/Linux and Linux Redhat packages are 
+    <a href="../source/">available</a> .</p>
     
-    <ul>
-      <li>Debian GNU/Linux packages are made available by Frederic Schultz. Simply download (or apt-get) the package
-      @@???@@</li>
-      <li>Linux Redhat packages are made available and distributed by Ville Skytta. @@ where?@@</li>
-    </ul>
     <h4 id="install-fromsource">Install from source</h4>
     <p>These instructions are strongly inspired from Nick Talbott's guide for Linux Slackware. Thanks Nick!</p>
     <h5>Download</h5>
@@ -220,7 +216,7 @@
             <li><p>Now restart the web server to activate the updated configuration. For Apache
             this is done by typing into a shell, as System Administrator: 
             <code>apachectl graceful</code> (or, for older versions of Apache 
-            <code>apachectl configtest</code> then <code>apachectl restart</code>)</li>
+            <code>apachectl configtest</code> then <code>apachectl restart</code>)</p></li>
             
             <li><p>Create the directory <code>/etc/w3c</code> and create a file called 
             <code>validator.conf</code> using the file 
@@ -232,9 +228,7 @@
     <ol>
         <li><p>Point your browser at the new site.<p></li> 
         <li><p>Check the error log of the webserver to get clues on what may be wrong 
-        if you get any server errors.</p>
-    </li>
-
+        if you get any server errors.</p></li>
    </ol>
 
     <p><strong>Help us</strong> improve this installation guide by sending us your feedback
