@@ -5,10 +5,14 @@
   <title>test HTML 4.0 Frameset document</title>
   <link rev="made" href="mailto:gerald@w3.org">
   <meta name="revision"
-    content="$Id: html40-frameset.html,v 1.1 1999-09-17 08:31:25 gerald Exp $">
+    content="$Id: html40-frameset.html,v 1.2 1999-09-17 08:45:42 gerald Exp $">
 </head>
 
-<body>
+<frameset>
+
+<frame src="html40-strict.html">
+
+<noframes>
 
 <p>
 This is a test HTML 4.0 Frameset document.
@@ -23,10 +27,12 @@ See: <a href="./">W3C HTML Validation Service: Tests</a>
 <address>
   <a href="http://validator.w3.org/check/referer">valid HTML</a><br>
   <a href="/feedback.html">Gerald Oskoboiny</A><br>
-     $Date: 1999-09-17 08:31:25 $
+     $Date: 1999-09-17 08:45:42 $
 </address>
 
-</body>
+</noframes>
+
+</frameset>
 
 </html>
 
