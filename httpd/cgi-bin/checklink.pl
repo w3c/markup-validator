@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.17 2000-01-20 21:59:30 hugo Exp $
+# $Id: checklink.pl,v 2.18 2000-01-20 22:01:03 hugo Exp $
 #
 # This program is licensed under the W3C License.
 
@@ -21,7 +21,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.17 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.18 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -75,6 +75,8 @@ if ($#ARGV >= 0) {
     my $uri;
     if ($query->param('uri')) {
         $uri = $query->param('uri');
+    } elsif ($query->param('url')) {
+        $uri = $query->param('url');
     } else {
         &print_form($query);
     }
