@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.6 2002-11-30 16:45:33 ville Exp $
+# $Id: check,v 1.305.2.7 2002-11-30 17:09:59 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -100,7 +100,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.6 $;
+  $VERSION    =  q$Revision: 1.305.2.7 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -162,7 +162,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-30 16:45:33 $,
+                              Date => q$Date: 2002-11-30 17:09:59 $,
                              });
 
 #
@@ -1058,11 +1058,11 @@ EOF
 #
 # Complain about unknown HTTP responses.
 sub http_error {
-  my $uri = shift;
-  my $code = shift;
-  my $message = shift;
+  my $uri = &ent(shift);
+  my $code = &ent(shift);
+  my $message = &ent(shift);
 
-  print <<"EOF";
+  printf <<"EOF";
   <p>
     I got the following unexpected response when trying to
     retrieve &lt;<a href="$uri">$uri</a>&gt;:
@@ -1083,8 +1083,7 @@ EOF
 #
 # Print blurb advocating using the CSS Validator.
 sub output_css_validator_blurb {
-  my $uri = shift;
-  $uri = ent($uri);
+  my $uri = ent(uri_escape(shift));
 
   print <<"EOHD";
   <p>
@@ -1725,7 +1724,7 @@ sub report_valid {
     $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
     $thispage .= ';verbose=1' if $File->{Opt}->{'Verbose'};
 
-    &output_css_validator_blurb($URI);
+    &output_css_validator_blurb($File->{URI});
 
     print <<"EOHD";
   <p>
