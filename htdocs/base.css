@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.20.2.6 2002-04-04 17:04:36 link Exp $
+   $Id: base.css,v 1.20.2.7 2002-04-30 16:41:46 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -107,6 +107,7 @@ p.jumpbar {
   text-decoration: none;
   margin: 0em 1em .5em 0em;
   padding: 1ex;
+  width: 12ex;
   background-color: #eee;
   border:1px dashed #999;
 }
@@ -125,9 +126,9 @@ p.jumpbar a:hover {
 
 .stb {clear: left}
 
-p {
+/* p {
   max-width: 75ex;
-}
+} */
 
 
 div.colophon {

@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.8.2.4 2002-04-04 17:04:36 link Exp $ */
+/* $Id: results.css,v 1.8.2.5 2002-04-30 16:41:46 link Exp $ */
 
 .markup {
   color: red;
@@ -13,6 +13,7 @@
 
 table.header {
 /*  float: left; */
+  width: 100%;
   background-color: #eeeeee;
 }
 
@@ -26,11 +27,16 @@ div.meat {
   margin-right: 16ex;
 }
 
+div.splash { 
+  border: 1px solid red;
+  background:  #eeeeee;
+}
+
 dl.tip {
   float: right;
   clear: left;
   text-align: justify;
-  max-width: 25ex;
+  width: 25ex;
   margin-top:    0em;
   background:    #eeeeee;
   border-top:    3px solid #eeeeee;
