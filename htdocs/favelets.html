@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: favelets.html,v 1.1.2.7 2003-02-24 23:14:27 ville Exp $"
---><!--#set var="date" value="\$Date: 2003-02-24 23:14:27 $"
+<!--#set var="revision" value="\$Id: favelets.html,v 1.1.2.8 2003-04-11 08:59:52 ville Exp $"
+--><!--#set var="date" value="\$Date: 2003-04-11 08:59:52 $"
 --><!--#set var="title" value="Favelets For The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -28,10 +28,10 @@
           xmlhttp=false
         }
       }
-      if (xmlhttp && location.hash && location.hash.substr) {
-        var hsh=location.hash.substr(1)
+      if (xmlhttp && window.location.hash && window.location.hash.substr) {
+        var hsh=window.location.hash.substr(1)
         if (hsh.indexOf('http://')==0) {
-          url="http://validator.w3.org/check?uri="+hsh+";output=xml";
+          url="http://validator.w3.org/check?uri="+escape(hsh)+";output=xml";
           xmlhttp.open("HEAD",url,true);
           xmlhttp.onreadystatechange=function() {
           if (xmlhttp.readyState==4) {
@@ -93,21 +93,21 @@
       </div>
       <div>
         <dl>
-          <dt>"<a href="javascript:void(location='http://validator.w3.org/check?uri='+location)"
+          <dt>"<a href="javascript:void(window.location='http://validator.w3.org/check?uri='+escape(window.location))"
                  title="Validate This Page">Validate <em>This</em> Page</a>"</dt>
           <dd>
             This is the basic "Validate This Page" <a href="http://favelets.com/">Favelet</a>.
             It simply submits the URL for the currently viewed page to the
             Validator for processing. Results appear in the same window.
           </dd>
-          <dt>"<a href="javascript:window.open('http://validator.w3.org/check?uri='+location);void%200"
+          <dt>"<a href="javascript:window.open('http://validator.w3.org/check?uri='+escape(window.location));void%200"
                  title="Validate This Page In New Window">Validate <em>This</em> Page In New Window</a>"</dt>
           <dd>
             Like the last <a href="http://favelets.com/">Favelet</a>, this also
             submits the URL of the current page to the Validator for processing,
             but this version will show the results in a new window.
           </dd>
-          <dt>"<a href="javascript:void(q=prompt('Validate Page:',''));if(q)void(location='http://validator.w3.org/check?uri='+escape(q))"
+          <dt>"<a href="javascript:void(q=prompt('Validate Page:',''));if(q)void(window.location='http://validator.w3.org/check?uri='+escape(q))"
                  title="Validate Page...">Validate Page...</a>"</dt>
           <dd>
             Puts up a dialog with a text entry field where you can type in the
@@ -117,7 +117,7 @@
           <dt>"<a href="javascript:void(q=prompt('Validate Page:',''));if(q)window.open('http://validator.w3.org/check?uri='+escape(q));void%200"
                  title="Validate Page In New Window...">Validate Page In New Window...</a>"</dt>
           <dd>Same as above but shows results in a new window.</dd>
-          <dt>"<a href="javascript:_is=document.createElement('iframe');_is.setAttribute('src','http://validator.w3.org/favlets.html#'+location.href);_is.setAttribute('height','0');_is.setAttribute('width','0');_is.setAttribute('style','border:0;');document.body.appendChild(_is);void 0"
+          <dt>"<a href="javascript:_is=document.createElement('iframe');_is.setAttribute('src','http://validator.w3.org/favelets.html#'+window.location.href);_is.setAttribute('height','0');_is.setAttribute('width','0');_is.setAttribute('style','border:0;');document.body.appendChild(_is);void 0"
                  title="Is This Page Valid?">Is <em>This</em> Page Valid?</a>"</dt>
           <dd>
             From the Head Of The "JavaScript Juju" Department,
