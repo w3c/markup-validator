@@ -4,7 +4,7 @@
     <p>Below is the source input I used for this validation:</p>
     <ol class="source">
 <TMPL_LOOP NAME="file_source">
-      <li id="line-<TMPL_VAR NAME="file_source_i">"><TMPL_VAR NAME="file_source_line"></li>
+      <li id="line-<TMPL_VAR NAME="__counter__">"><TMPL_VAR NAME="file_source_line" ESCAPE="HTML"></li>
 </TMPL_LOOP> 
     </ol>
   </div>

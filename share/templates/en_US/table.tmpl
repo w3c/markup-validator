@@ -3,31 +3,31 @@
   <table class="header">
     <tr>
 <TMPL_IF NAME="is_upload">
-      <th>File:</th><td colspan="2"><TMPL_VAR NAME="file_uri"></td>
+      <th>File:</th><td colspan="2"><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></td>
 <TMPL_ELSE>
       <th><label title="Address of Page to Validate (accesskey: 1)" for="uri">Address</label>:</th>
-      <td colspan="2"><input accesskey="1" type="text" id="uri" name="uri" value="<TMPL_VAR NAME="file_uri">" /></td>
+      <td colspan="2"><input accesskey="1" type="text" id="uri" name="uri" value="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">" /></td>
 </TMPL_IF>
     </tr>
 <TMPL_IF NAME="opt_verbose">
-    <tr><th>Modified:</th><td colspan="2"><TMPL_VAR NAME="file_modified"></td></tr>
-    <tr><th>Server:</th><td colspan="2"><TMPL_VAR NAME="file_server"></td></tr>
-    <tr><th>Size:</th><td colspan="2"><TMPL_VAR NAME="file_size"></td></tr>
-    <tr><th>Content-Type:</th><td colspan="2"><TMPL_VAR NAME="file_contenttype"></td></tr>
+    <tr><th>Modified:</th><td colspan="2"><TMPL_VAR NAME="file_modified" ESCAPE="HTML"></td></tr>
+    <tr><th>Server:</th><td colspan="2"><TMPL_VAR NAME="file_server" ESCAPE="HTML"></td></tr>
+    <tr><th>Size:</th><td colspan="2"><TMPL_VAR NAME="file_size" ESCAPE="HTML"></td></tr>
+    <tr><th>Content-Type:</th><td colspan="2"><TMPL_VAR NAME="file_contenttype" ESCAPE="HTML"></td></tr>
 </TMPL_IF>
 <TMPL_IF NAME="opt_debug">
   <TMPL_LOOP NAME="debug">
-    <tr><th><TMPL_VAR NAME="name">:</th><td colspan="2"><TMPL_VAR NAME="value"></td></tr>
+    <tr><th><TMPL_VAR NAME="name" ESCAPE="HTML">:</th><td colspan="2"><TMPL_VAR NAME="value" ESCAPE="HTML"></td></tr>
   </TMPL_LOOP>
 </TMPL_IF>
 <TMPL_IF NAME="is_upload">
-    <tr><th>Encoding:</th><td colspan="2"><TMPL_VAR NAME="file_charset"></td></tr>
-    <tr><th>Doctype:</th><td colspan="2"><TMPL_VAR NAME="file_version"></td></tr>
+    <tr><th>Encoding:</th><td colspan="2"><TMPL_VAR NAME="file_charset" ESCAPE="HTML"></td></tr>
+    <tr><th>Doctype:</th><td colspan="2"><TMPL_VAR NAME="file_version" ESCAPE="HTML"></td></tr>
 <TMPL_ELSE>
   <TMPL_IF NAME="file_charset">
     <tr>
       <th><label accesskey="2" title="Character Encoding (accesskey: 2)" for="charset">Encoding</label>:</th>
-      <td><TMPL_VAR NAME="file_charset"></td><td><TMPL_INCLUDE NAME="popup_charset.tmpl"></td>
+      <td><TMPL_VAR NAME="file_charset" ESCAPE="HTML"></td><td><TMPL_INCLUDE NAME="popup_charset.tmpl"></td>
     </tr>
   <TMPL_ELSE>
     <tr><th>Encoding:</th><td colspan="2"><TMPL_INCLUDE NAME="popup_charset.tmpl"></td></tr>
@@ -35,7 +35,7 @@
   <TMPL_IF NAME="file_version">
     <tr>
       <th><label accesskey="3" for="doctype" title="Document Type (accesskey: 3)">Doctype</label>:</th>
-      <td><TMPL_VAR NAME="file_version"></td><td><TMPL_INCLUDE NAME="popup_doctype.tmpl"></td>
+      <td><TMPL_VAR NAME="file_version" ESCAPE="HTML"></td><td><TMPL_INCLUDE NAME="popup_doctype.tmpl"></td>
     </tr>
   <TMPL_ELSE>
     <tr><th>Doctype:</th><td colspan="2"><TMPL_INCLUDE NAME="popup_doctype.tmpl"></td></tr>
@@ -44,7 +44,7 @@
 <TMPL_IF NAME="file_namespace">
     <tr>
       <th>Root Namespace:</th>
-      <td colspan="2"><a href="<TMPL_VAR NAME="file_namespace">"><TMPL_VAR NAME="file_namespace"></a></td>
+      <td colspan="2"><a href="<TMPL_VAR NAME="file_namespace" ESCAPE="HTML">"><TMPL_VAR NAME="file_namespace" ESCAPE="HTML"></a></td>
     </tr>
 </TMPL_IF>
 <TMPL_IF NAME="file_namespaces">
@@ -52,7 +52,7 @@
       <th>Other Namespaces</th>
       <td colspan="2">
         <ul>
-          <TMPL_LOOP NAME="file_namespaces"><li><a href="<TMPL_VAR NAME="uri">"><TMPL_VAR NAME="uri"></a></li></TMPL_LOOP>
+          <TMPL_LOOP NAME="file_namespaces"><li><a href="<TMPL_VAR NAME="uri" ESCAPE="HTML">"><TMPL_VAR NAME="uri" ESCAPE="HTML"></a></li></TMPL_LOOP>
         </ul>
       </td>
     </tr>

@@ -1,9 +1,9 @@
   <div id="result">
-    <h2 id="results" class="invalid">This page is <strong>not</strong> Valid <TMPL_VAR NAME="file_version">!</h2>
+    <h2 id="results" class="invalid">This page is <strong>not</strong> Valid <TMPL_VAR NAME="file_version" ESCAPE="HTML">!</h2>
 <TMPL_IF NAME="file_warnings">
     <dl id="warnings">
 <TMPL_LOOP NAME="file_warnings">
-      <dt><TMPL_VAR NAME="Title"></dt>
+      <dt><TMPL_VAR NAME="Title" ESCAPE="HTML"></dt>
         <dd>
           <TMPL_VAR NAME="Message">
         </dd>
@@ -25,10 +25,10 @@
     <ol>
 <TMPL_LOOP NAME="file_errors">
       <li>
-        <em>Line <a href="#line-<TMPL_VAR NAME="line">"><TMPL_VAR NAME="line"></a>,
-            column <TMPL_VAR NAME="char"></em>:
-        <span class="msg"><TMPL_VAR NAME="msg"></span>
-<TMPL_IF NAME="uri">(<a href="<TMPL_VAR NAME="uri">">explain...</a>)</TMPL_IF>.
+        <em>Line <a href="#line-<TMPL_VAR NAME="line" ESCAPE="HTML">"><TMPL_VAR NAME="line" ESCAPE="HTML"></a>,
+            column <TMPL_VAR NAME="char" ESCAPE="HTML"></em>:
+        <span class="msg"><TMPL_VAR NAME="msg" ESCAPE="HTML"></span>
+<TMPL_IF NAME="uri">(<a href="<TMPL_VAR NAME="uri" ESCAPE="HTML">">explain...</a>)</TMPL_IF>.
 <pre><code class="input"><TMPL_VAR NAME="src"></code></pre>
 <TMPL_IF NAME="expl"><TMPL_VAR NAME="expl"></TMPL_IF>
       </li>

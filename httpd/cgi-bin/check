@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.372 2005-01-09 20:40:33 ville Exp $
+# $Id: check,v 1.373 2005-01-15 15:20:39 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -222,7 +222,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.372 $;
+  $VERSION    =  q$Revision: 1.373 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -303,6 +303,7 @@ my $T = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                            $lang, 'result.tmpl'),
   die_on_bad_params => FALSE,
+  loop_context_vars => TRUE,
 );
 my $E = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
@@ -415,15 +416,15 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
   $File->{Charset}->{Use} = 'us-ascii';
   my @_source;
   if ($File->{'Is Upload'}) {
-    @_source = ('sent by your web browser', ($File->{Server}||'unknown'), 'browser send');
+    @_source = ('sent by your web browser', &ent($File->{Server}||'unknown'), 'browser send');
   } else {
-    @_source = ('returned by your web server', ($File->{Server}||'unknown'), 'server return');
+    @_source = ('returned by your web server', &ent($File->{Server}||'unknown'), 'server return');
   }
+  my $ct = &ent($File->{ContentType});
   &add_warning($File, 'note', 'Note:', <<".EOF.");
       The HTTP Content-Type header $_source[0] ($_source[1]) did not contain
       a "charset" parameter, but the Content-Type was one of the XML text/*
-      sub-types (<code>$File->{ContentType}</code>). The relevant
-      specification
+      sub-types (<code>$ct</code>). The relevant specification
       (<a href="http://www.ietf.org/rfc/rfc3023.txt">RFC 3023</a>)
       specifies a strong default of "us-ascii" for
       such documents so we will use this value regardless of any encoding you
@@ -695,15 +696,15 @@ sub parse (\$) {
   #
   # Set debug info for HTML report.
   $T->param(opt_debug => $DEBUG);
-  $T->param(
-            debug => [
-                      {name => 'Command',          value => &ent("@cmd")},
-                      {name => 'SP_CHARSET_FIXED', value => &ent($ENV{SP_CHARSET_FIXED})},
-                      {name => 'SP_ENCODING',      value => &ent($ENV{SP_ENCODING})},
-                      {name => 'SP_BCTF',          value => &ent($ENV{SP_BCTF})},
-                      {name => 'Content-Encoding', value => &ent($File->{ContentEnc})},
-                      {name => 'Transfer-Encoding',value => &ent($File->{TransferEnc})},
-                     ],
+  $T->param(debug =>
+            [
+             {name => 'Command',           value => "@cmd"},
+             {name => 'SP_CHARSET_FIXED',  value => $ENV{SP_CHARSET_FIXED}},
+             {name => 'SP_ENCODING',       value => $ENV{SP_ENCODING}},
+             {name => 'SP_BCTF',           value => $ENV{SP_BCTF}},
+             {name => 'Content-Encoding',  value => $File->{ContentEnc}},
+             {name => 'Transfer-Encoding', value => $File->{TransferEnc}},
+            ],
            );
 
   #FIXME: This needs a UI and testing!
@@ -836,8 +837,6 @@ if (&is_xml($File) and not $File->{DOCTYPE}) {
 # Get the pretty text version of the FPI if a mapping exists.
 if (my $prettyver = $CFG->{Types}->{$File->{Version}}->{Display}) {
   $File->{Version} = $prettyver;
-} else {
-  $File->{Version} = &ent($File->{Version});
 }
 
 #
@@ -937,7 +936,7 @@ sub prep_template ($$) {
 
   #
   # The URI...
-  $T->param(file_uri => &ent($File->{URI}));
+  $T->param(file_uri => $File->{URI});
   $T->param(file_uri_param => uri_escape($File->{URI}));
 
   #
@@ -965,7 +964,7 @@ sub prep_template ($$) {
 
   #
   # Namespaces...
-  $T->param(file_namespace  => &ent($File->{Namespace}));
+  $T->param(file_namespace  => $File->{Namespace});
 #  $T->param(file_namespaces => $File->{Namespaces})
 #    if $File->{Namespaces};
 }
@@ -1255,7 +1254,7 @@ sub handle_uri {
   $File->{TransferEnc}     = $res->header('Client-Transfer-Encoding');
   $File->{Charset}->{HTTP} = lc $charset;
   $File->{Modified}        = $lastmod;
-  $File->{Server}          = &ent(scalar $res->server);
+  $File->{Server}          = scalar $res->server;
   $File->{Size}            = scalar $res->content_length;
   $File->{URI}             = scalar $res->request->uri->canonical;
   $File->{'Is Upload'}     = FALSE;
@@ -1284,7 +1283,7 @@ sub handle_file {
   $File->{ContentType}     = $ct;
   $File->{Charset}->{HTTP} = lc $charset;
   $File->{Modified}        = $h->{'Last-Modified'};
-  $File->{Server}          = &ent($h->{'User-Agent'}); # Fake a "server". :-)
+  $File->{Server}          = $h->{'User-Agent'}; # Fake a "server". :-)
   $File->{Size}            = $h->{'Content-Length'};
   $File->{URI}             = "$f"; # Need to stringify because we want ref
                                    # to return false later in add_table.  This
@@ -1865,17 +1864,12 @@ sub outline {
 # Create a HTML representation of the document.
 sub source {
   my $File = shift;
-  my $line = 1;
-  my @source = ();
 
   # Remove any BOM since we're not at BOT anymore...
   $File->{Content}->[0] =
     substr $File->{Content}->[0], ($File->{BOM} ? 3 : 0); # remove BOM
 
-  for (@{$File->{Content}}) {
-    push @source, {file_source_i => $line, file_source_line => ent $_};
-    $line++;
-  }
+  my @source = map({file_source_line => $_}, @{$File->{Content}});
   return \@source;
 }
 
@@ -2500,7 +2494,7 @@ X-W3C-Validator-Errors: $errs
   <meta>
     <uri>), &ent($File->{URI}), qq(</uri>
     <modified>), &ent($File->{Modified}), qq(</modified>
-    <server>), $File->{Server}, qq(</server>
+    <server>), &ent($File->{Server}), qq(</server>
     <size>), &ent($File->{Size}), qq(</size>
     <encoding>), &ent($File->{Charset}->{Use}), qq(</encoding>
     <doctype>), &ent($File->{DOCTYPE}), qq(</doctype>

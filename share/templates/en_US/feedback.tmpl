@@ -23,9 +23,9 @@
 
 
       <TMPL_IF NAME="errmsg_id">
-        <p>You are sending feedback on error message [<TMPL_VAR NAME="errmsg_id">]: "<TMPL_VAR NAME="explanation">".</p>      
+        <p>You are sending feedback on error message [<TMPL_VAR NAME="errmsg_id" ESCAPE="HTML">]: "<TMPL_VAR NAME="explanation" ESCAPE="HTML">".</p>      
       <p>Before you send this message, we encourage you to 
-      <a href="http://www.w3.org/Search/Mail/Public/search?type-index=www-validator&index-type=t&keywords=%5BVE%5D%5B<TMPL_VAR NAME="errmsg_id">%5D&search=Search">search the archives for existing messages</a> on this error 
+      <a href="http://www.w3.org/Search/Mail/Public/search?type-index=www-validator&amp;index-type=t&amp;keywords=%5BVE%5D%5B<TMPL_VAR NAME="errmsg_id" ESCAPE="URL">%5D&amp;search=Search">search the archives for existing messages</a> on this error 
       in case your feedback has already been sent, or answers to 
       your query have already been given. </p>
       <TMPL_ELSE>
