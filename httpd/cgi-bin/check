@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.37 2003-04-23 01:35:15 link Exp $
+# $Id: check,v 1.305.2.38 2003-04-23 02:47:24 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.37 $;
+  $VERSION    =  q$Revision: 1.305.2.38 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -166,7 +166,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-04-23 01:35:15 $,
+                              Date => q$Date: 2003-04-23 02:47:24 $,
                              });
 
 #
@@ -353,13 +353,16 @@ if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
 }
 
 unless ($File->{Charset}->{Use}) { # No charset given...
-  if ($File->{Opt}->{FB}->{Encoding}) {
+  if ($File->{Opt}->{FB}->{Encoding}
+      and     $File->{Opt}->{Charset}
+      and not $File->{Opt}->{Charset} =~ m|(detect automatically)|) {
+
       &add_warning($File, <<".EOF.");
   <strong>No Character Encoding Found!</strong>
-  Falling back to $File->{Opt}->{FB}->{Encoding} (<a href="docs/errors.html#fbenc">explain...</a>).
+  Falling back to "$File->{Opt}->{Charset}" (<a href="docs/errors.html#fbc">explain...</a>).
 .EOF.
       $File->{Tentative}     |= T_ERROR; # Tag it as Invalid.
-      $File->{Charset}->{Use} = $File->{Opt}->{FB}->{Encoding};
+      $File->{Charset}->{Use} = $File->{Opt}->{Charset};
   } else {
     $File->{'Error Flagged'} = TRUE;
     $File->{'Error Message'} = <<".EOF." . &iana_charset_blurb();
