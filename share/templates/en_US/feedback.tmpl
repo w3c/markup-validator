@@ -1,0 +1,86 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+
+    <div id="main">
+      <h2>Validator Results Feedback / Call for help</h2>
+
+      <TMPL_IF NAME="ack_ok">
+        <p class="ackmessage">Thank you. Your message will be reviewed and should appear in the
+        <a href="http://lists.w3.org/Archives/Public/www-validator/">www-validator</a> list archives
+        very soon. If your message requires any kind of answer, participants of the www-validator list
+        and the validator team will try to get back to you as soon as possible.</p>
+      </TMPL_IF>
+
+
+
+      <p>In order to make it easier to interpret the Markup Validator's
+      error messages and help you fix your Web documents, we provide you
+      with this feedback / help form. Messages sent through this form will
+      be sent to W3C's <strong>publicly archived</strong> mailing-list 
+<a href="http://lists.w3.org/Archives/Public/www-validator/">www-validator</a>.
+      </p>
+
+      <TMPL_IF NAME="errmsg_id">
+        <p>You are sending feedback on error message [<TMPL_VAR NAME="errmsg_id">]: "<TMPL_VAR NAME="explanation">".</p>      
+      <p>Before you send this message, we encourage you to 
+      <a href="http://www.w3.org/Search/Mail/Public/search?type-index=www-validator&index-type=t&keywords=%5BVE%5D%5B<TMPL_VAR NAME="errmsg_id">%5D&search=Search">search the archives for existing messages</a> on this error 
+      in case your feedback has already been sent, or answers to 
+      your query have already been given. </p>
+	
+      <TMPL_ELSE>
+      <p>Before you send this message, we encourage you to 
+      search the archives for www-validator
+      in case your feedback has already been sent, or answers to 
+      your query have already been given. </p>
+      <form method="get" action="http://www.w3.org/Search/Mail/Public/search">
+        <p>
+        <input id="type-index" name="type-index" type="hidden" value="www-validator" />
+        <input id="index-type" name="index-type" type="hidden" value="t" /> 
+        <label>Search: <input name="keywords" type="text" size=
+        "42" maxlength="100" value="" accesskey="f" /></label>
+        <input type="submit" name="search" value="Search" />
+        </p>
+      </form>
+	  
+      </TMPL_IF>
+
+
+      <form method="post" action="sendfeedback">
+      <p>
+      <select id="feedbacktype" name="feedbacktype" >
+        <option value="suggest">Send a suggestion on error message and/or explanation</option>
+        <option value="help">Ask for help on this validation error</option>
+      </select>
+      </p>
+
+
+      <p>
+     <label for="errmsg_id">Error message:</label>
+     <select id="errmsg_id" name="errmsg_id">
+       <option selected="selected"><TMPL_VAR NAME="errlist"></option>
+     </select>
+      </p>
+
+      <p>
+      <label for="uri">URL of document validated</label>
+      <TMPL_IF NAME="validated_uri">
+      <input id="uri" name="uri" type="text" value="<TMPL_VAR NAME="validated_uri">" size ="40" />
+      <TMPL_ELSE>
+          <input id="uri" name="uri" type="text" value="" size ="40" />
+      </TMPL_IF>
+      </p>
+
+      <p>
+
+      <label for="msg">Write down your message here. 
+      Include as many details as possible</label>
+      <textarea id="msg" name="msg" size="4"></textarea>
+      </p>
+      
+      <p><input type="hidden" id="send" name="send" value="yes" /><input value="Send Feedback" type="submit" />
+      &nbsp;|&nbsp;<input value="Reset" type="reset" />
+      </p>
+      </form>
+
+    </div><!-- end of "main" -->
+
+<TMPL_INCLUDE NAME="footer.tmpl">
