@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: todo.html,v 1.49.2.7 2002-03-18 00:41:12 link Exp $"
---><!--#set var="date" value="\$Date: 2002-03-18 00:41:12 $"
+<!--#set var="revision" value="\$Id: todo.html,v 1.49.2.8 2002-05-10 18:14:09 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-05-10 18:14:09 $"
 --><!--#set var="title" value="TODO List for The W3C HTML Validation Service"
 --><!--#include virtual="/header.html" -->
     <p class="intro">
@@ -27,57 +27,110 @@
     </p>
     <div id="validator-0_6_0">
       <h2>Validator v0.6.0</h2>
-      <ol>
+      <ul>
         <li>
           Fix up all absolute URIs to be relative (to aid local installations).
           Thanks to Alex Holst.
         </li>
-        <li>
+        <li class="done">
           Fix up Validators temp file handling to use secure temporary files.
           Thanks to Alex Holst for the prod... <code>:-)</code>
         </li>
-        <li>
+        <li class="done">
           Fix up Validator to be "-T" clean.
           Thanks (again) to Alex Holst for the prod... <code>:-)</code>
         </li>
-        <li><del>Try to make it run under mod_perl?</del> (deferred to 0.7.0)</li>
-        <li>Apply Ville Skytt&auml;'s
-          <a href="http://cachalot.ods.org/patches/w3c-validator/">patches</a>.</li>
+        <li class="done">Make it run under mod_perl.</li>
         <li>
+          Apply Ville Skytt&auml;'s
+          <a href="http://cachalot.ods.org/patches/w3c-validator/">patches</a>.
+        </li>
+        <li class="done">
           Move entirely to OpenSP instead of a custom hacked version of
           Liam Quinn's lq-nsgmls (OpenSP includes Liam's patches).
         </li>
-        <li>Add "check.cfg" configuration file to avoid path hacking (replace mjd's regex ;D).</li>
-        <li>Figure out <em>some</em> way to avoid inlining so much static HTML!</li>
-      </ol>
+        <li class="done">
+	  Add "check.cfg" configuration file to avoid path hacking (replace
+	  mjd's regex ;D).
+        </li>
+        <li class="done">Add first cut at XML output!</li>
+        <li class="done">Add count of errors found in page.</li>
+      </ul>
     </div>
     <div id="validator-0_7_0">
       <h2>Validator v0.7.0 (tentative)</h2>
-      <ol>
+      <div id="validator-0_7_0-core">
+        <h3>Core Changes</h3>
+        <ul>
+          <li>
+            Investigate how, if, and when, to use Nick Kew's most excellent
+            XMLMessageReporter patch to OpenSP.
+          </li>
+          <li>Figure out <em>some</em> way to avoid inlining so much static HTML!</li>
+          <li>Finish up the textarea for testing short HTML fragments.</li>
         <li>
-          Investigate how, if, and when, to use Nick Kew's most excellent
-          XMLMessageReporter patch to OpenSP.
+          Add an HTML pretty-printer feature, using
+          <a href="http://www.w3.org/People/Raggett/tidy/">tidy</a> and/or Enscript?
+        </li>
+        <li>Add support for https:// (TLS/SSL) using Ville's patches.</li>
+        <li>
+          Pay attention to Accept-Charset (cf. <a href="http://lists.w3.org/Archives/Public/www-validator/2001JanMar/0255.html">this</a>
+          message from "brewhaha").
         </li>
         <li>
-          <del>
-            Move entirely to OpenSP instead of a custom hacked version of
-            Liam Quinn's lq-nsgmls.
-          </del>
-          (moved up to 0.6.0)
+          Double check that all output is valid! In particular, use style rules
+          to specify heigth/width on suggested links.
         </li>
-        <li>Try to make it run under mod_perl.</li>
-      </ol>
+        <li>
+          Do a great big update of the various badges; the details of size,
+          transparency, naming, and how they are linked to (v.w3.org vs. w3.org).
+        </li>
+        <li>Make sure we output sane "text/html; charset=foo".</li>
+        </ul>
+      </div>
+      <div id="validator-0_7_0-docs">
+        <h3>Documentation Changes</h3>
+        <ul>
+        <li>
+          Clarify the wording regarding valid characters in
+          <a href="docs/errors.html#bad-char">errors.html</a> (cf.
+          <a href="http://lists.w3.org/Archives/Public/www-validator/2001AprJun/0049.html">this</a>
+          message from <a href="mailto:clemens.radl@uni-tuebingen.de">Clemens Radl</a>.
+          Thanks Clemens!)
+        </li>
+        <li>
+          Write documentation for the SGML catalog, point out good DOCTYPEs to use,
+          and make it easy to find if your editor won't insert them for you.
+        </li>
+        <li>
+          Add system requirements for NT/W2K. Bug Bjoern about his "Installing the
+          Validator on NT" doc. Link to ActiveState Text::Iconv and friends.
+        </li>
+        <li>Add docs on editing DTDs.</li>
+        <li>Document how to add new DOCTYPEs to the Validator.</li>
+        <li>Write documentation for Content Negotiation of Badges</li>
+        </ul>
+      </div>
+      <div id="validator-0_7_0-site">
+        <h3>Website Changes</h3>
+        <ul>
+        <li>
+          Add catalogue of online tools and other validators. In particular, link to
+          the WDG tools and Nick Kew's most excellent *Valet tools.
+        </li>
+        <li>
+          Link to Jukka's pages; both in general and to specific pages.
+          Ask him about mirroring some of the stuff on validator.w3.org.
+        </li>
+        <li>Include some Bookmarklets for the Validator</li>
+        </ul>
+      </div>
     </div>
-
-    <div id="future">
-      <h2>Various Unclassified Stuff</h2>
-      <p>
-        These items are roughly in prioritized order; i.e. the items near the
-        top are those which I consider most important.
-      </p>
-  
-      <ol>
-        <li>Finish up the textarea for testing short HTML fragments.</li>
+    <div id="validator-1_0_0">
+      <h2>Validator v1.0.0 (tentative)</h2>
+      <div id="validator-1_0_0-core">
+        <h3>Core Changes</h3>
+        <ul>
         <li>
           Add a "fix my HTML for me" option using <a
           href="http://www.w3.org/People/Raggett/tidy/">Tidy</a>.
@@ -89,16 +142,6 @@
           existing service</a>).
         </li>
         <li>
-          Update <a href="/sgml-lib.tar.gz">sgml-lib.tar.gz</a>;
-          automate the updates.
-        </li>
-        <li>
-          Make lists of "most frequently validated invalid pages"
-          and "most frequently validated (non-W3C?) valid pages"
-          (need to start logging stuff first, including IPs to compare
-          uniqueness).
-        </li>
-        <li>
           Add a section to the report on
           <a href="http://www.mnot.net/cacheability/">document cacheability</a>?
           (or just link to it?)
@@ -108,17 +151,10 @@
           and offer an option to display them inline with the errors.
         </li>
         <li>
-          Install and play with HTML::Validator, link to it from somewhere:
-          <a href="http://www.hut.fi/~samzait/HTML-Validator/">http://www.hut.fi/~samzait/HTML-Validator/</a>
-          <a href="http://www.cpan.org/modules/by-authors/id/S/SA/SAIT/">http://www.cpan.org/modules/by-authors/id/S/SA/SAIT/</a>
-        </li>
-        <li>
-          Write documentation, describing each feature and option of the
-          validator and answering questions like "What's the difference between
-          an SGML parser and Weblint?", "Which DOCTYPE should I use?",
-          content negotiation, ...
-        </li>
-        <li>Incorporate CSS validation directly into this service.</li>
+          Incorporate CSS validation directly into this service; either
+          directly or by some form of linking to the existing service on
+          Jigsaw.
+	</li>
         <li>
           Make e.g. <code>http://validator.w3.org/check/referer;imgonly</code>
           return only an image showing the validation status of the referring
@@ -128,6 +164,65 @@
           Add link validation using Hugo's
           <a href="http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/checklink.pl">checklink
           code</a> (or other code with similar functionality).
+        </li>
+        <li>
+          Add a "document meta-information" section to the report, to encourage
+          people to use META tags appropriately?
+        </li>
+        <li>
+          Figure out what's going on with <a href="http://lists.w3.org/Archives/Public/www-validator/2001JanMar/0150.html">this</a>.
+          (Thanks to <a href="mailto:marie@voyager.atc.fhda.edu">Marie
+          Taylor-Harper</a> for catching this!).
+        </li>
+        <li>
+          Investigate validation of <a href="http://www.openhealth.org/RDDL/">RDDL</a>.
+        </li>
+        <li>
+          Fix directories differing only in name case in
+          sgml-lib/pro/usr/local/lib/sgml/. We have both "ietf" and "IETF" in there.
+        </li>
+        </ul>
+      </div>
+      <div id="validator-1_0_0-docs">
+        <h3>Documentation Changes</h3>
+        <ul>
+        <li>
+          Write documentation, describing each feature and option of the
+          validator and answering questions like "What's the difference between
+          an SGML parser and Weblint?", "Which DOCTYPE should I use?",
+          content negotiation, ...
+        </li>
+        </ul>
+      </div>
+      <div id="validator-1_0_0-site">
+        <h3>Website Changes</h3>
+        <ul>
+        <li>
+          Update <a href="/sgml-lib.tar.gz">sgml-lib.tar.gz</a>;
+          automate the updates.
+        </li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="future">
+      <h2>Various Unclassified Stuff</h2>
+      <p>
+        These items are roughly in prioritized order; i.e. the items near the
+        top are those which I consider most important.
+      </p>
+  
+      <ol>
+        <li>
+          Make lists of "most frequently validated invalid pages"
+          and "most frequently validated (non-W3C?) valid pages"
+          (need to start logging stuff first, including IPs to compare
+          uniqueness).
+        </li>
+        <li>
+          Install and play with HTML::Validator, link to it from somewhere:
+          <a href="http://www.hut.fi/~samzait/HTML-Validator/">http://www.hut.fi/~samzait/HTML-Validator/</a>
+          <a href="http://www.cpan.org/modules/by-authors/id/S/SA/SAIT/">http://www.cpan.org/modules/by-authors/id/S/SA/SAIT/</a>
         </li>
         <li>
           Give errors/warnings related to markup that is technically valid SGML,
@@ -143,10 +238,6 @@
           element to the appropriate place in either the DTD tree listing
           produced with dtd2html (after running dtd2html with all DTDs in the
           catalog), or the HTML 3.2/4.0 specs, or htmlhelp.com stuff, ...
-        </li>
-        <li>
-          Add a "document meta-information" section to the report, to encourage
-          people to use META tags appropriately?
         </li>
         <li>
           Add a "recommend a DTD for me" feature (check a document against all
@@ -187,10 +278,6 @@
             </li>
           </ul>
         </li>
-        <li>
-          Add an HTML pretty-printer feature, using
-          <a href="http://www.w3.org/People/Raggett/tidy/">tidy</a>?
-        </li>
         <li>Provide messages in different languages?</li>
         <li>
           Add a graphical representation of the document's structure,
@@ -201,60 +288,6 @@
           Issue PICS labels for documents that do/don't conform?
           Or for editing tools that don't conform?
         </li>
-        <li>Add support for https:// (TLS/SSL).</li>
-        <li>
-          Figure out what's going on with <a href="http://lists.w3.org/Archives/Public/www-validator/2001JanMar/0150.html">this</a>.
-    (Thanks to <a href="mailto:marie@voyager.atc.fhda.edu">Marie
-            Taylor-Harper</a> for catching this!).
-        </li>
-        <li>
-          Pay attention to Accept-Charset (cf. <a href="http://lists.w3.org/Archives/Public/www-validator/2001JanMar/0255.html">this</a>
-    message from "brewhaha").
-        </li>
-        <li>
-          Clarify the wording regarding valid characters in
-          <a href="docs/errors.html#bad-char">errors.html</a> (cf.
-          <a href="http://lists.w3.org/Archives/Public/www-validator/2001AprJun/0049.html">this</a>
-    message from <a href="mailto:clemens.radl@uni-tuebingen.de">Clemens Radl</a>.
-          Thanks Clemens!)
-        </li>
-        <li>
-          Double check that all output is valid! In particular, use style rules
-          to specify heigth/width on suggested links.
-        </li>
-        <li>
-          Write documentation for the SGML catalog, point out good DOCTYPEs to use,
-          and make it easy to find if your editor won't insert them for you.
-        </li>
-        <li>
-          Investigate validation of <a href="http://www.openhealth.org/RDDL/">RDDL</a>.
-        </li>
-        <li>
-          Add catalogue of online tools and other validators. In particular, link to
-          the WDG tools and Nick Kew's most excellent *Valet tools.
-        </li>
-        <li>Add count of errors found in page?</li>
-        <li>
-          Fix directories differing only in name case in
-          sgml-lib/pro/usr/local/lib/sgml/. We have both "ietf" and "IETF" in there.
-        </li>
-        <li>
-          Add system requirements for NT/W2K. Bug Bjoern about his "Installing the
-          Validator on NT" doc. Link to ActiveState Text::Iconv and friends.
-        </li>
-        <li>Add docs on editing DTDs.</li>
-        <li>
-          Link to Jukka's pages; both in general and to specific pages.
-          Ask him about mirroring some of the stuff on validator.w3.org.
-        </li>
-        <li>
-          Do a great big update of the various badges; the details of size,
-          transparency, naming, and how they are linked to (v.w3.org vs. w3.org).
-        </li>
-        <li>Make sure we output sane "text/html; charset=foo".</li>
-        <li>Document how to add new DOCTYPEs to the Validator.</li>
-        <li>Write documentation for Content Negotiation of Badges</li>
-        <li>Include some Bookmarklets for the Validator</li>
       </ol>
     </div>
 <!--#include virtual="/footer.html" -->

@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.20.2.8 2002-05-01 20:00:22 link Exp $
+   $Id: base.css,v 1.20.2.9 2002-05-10 18:14:09 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -65,6 +65,9 @@ h1#title {
 /*  border-left: 1px solid black; */
   padding: .25em;
 }
+
+/* done vs. tbc for the TODO list */
+.done { text-decoration: line-through; }
 
 address img {float: right}
 address {
