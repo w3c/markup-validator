@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.23 2003-09-01 16:10:20 ot Exp $
+   $Id: base.css,v 1.26.2.24 2003-11-24 21:11:55 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -58,6 +58,10 @@ fieldset {
 .intro {
   font-style: italic;
   text-align: justify;
+}
+
+a:link, a:visited {
+  color: blue;
 }
 
 a:hover {
