@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.21 2002-05-13 22:38:05 link Exp $
+# $Id: check,v 1.200.2.22 2002-05-23 18:11:59 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -70,7 +70,7 @@ $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.21 $;
+$VERSION    =  q$Revision: 1.200.2.22 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 #
@@ -99,7 +99,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-05-13 22:38:05 $,
+			      Date => q$Date: 2002-05-23 18:11:59 $,
 			     });
 
 #
@@ -351,14 +351,13 @@ if ($File->{'Error Flagged'}) {
 #
 # Default XML/SGML Catalog and XML Flags for SP.
 my $catalog  = qq($CFG->{'SGML Library'}/xml.soc);
-#my @xmlflags = '-wxml --include=MATHML.prefixed';
 my @xmlflags = '-wxml';
 
 #
 # Defaults for SP; turn off fixed charset mode and enable XML semantics for
 # detecting the input charset. Only way to set this is through %ENV.
-$ENV{SP_CHARSET_FIXED} = 'NO';
-$ENV{SP_ENCODING}      = 'XML';
+$ENV{SP_CHARSET_FIXED} = 'YES';
+$ENV{SP_ENCODING}      = 'UTF-8';
 
 #
 # Generic XML with Root Namespace.
@@ -381,7 +380,7 @@ if (&is_html($File->{Type})) {
 }
 
 #
-# MathML and XHTML. Must be here because they're usually serverd as text/html
+# MathML and XHTML. Must be here because they're usually served as text/html
 # to deal with braindead browsers. IOW, these override the check for &is_html.
 $catalog = qq($CFG->{'SGML Library'}/xhtml.soc)  if &is_xhtml($File->{Type});
 $catalog = qq($CFG->{'SGML Library'}/mathml.soc) if &is_mathml($File->{Type});
@@ -1354,7 +1353,7 @@ sub report_valid {
       print "  <p>\n    This document would validate as $File->{Version} if you updated it to match the Options used.\n  </p>\n";
     }
   } elsif ($File->{Version} eq 'unknown' or not defined $image_uri) {
-    print qq(  <h2 class="valid">This document validates as the document type specified! (I don't have an icon for this one yet, sorry.)\n  </h2>\n);
+    print qq(  <h2 class="valid">This document validates as the document type specified! (I don't have an icon for this one yet, sorry.)\n  </h2>\n); #')); # Fool cperl syntax highlighting! :-(
   }
 
   unless ($File->{'Is Upload'}) {
@@ -1952,7 +1951,7 @@ Content-Type: application/xml; charset=UTF-8
   </meta>
   <warnings></warnings>
   <messages>
-    <error><line></line><column</column><offset></offset><msg></msg></error>
+    <error><line></line><column></column><offset></offset><msg></msg></error>
   </messages>
 </results>
 .EOF.
