@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.138 2001-07-08 10:03:55 duerst Exp $
+# $Id: check,v 1.139 2001-07-08 11:59:50 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.138 $;
+$VERSION    =  q$Revision: 1.139 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-08 10:03:55 $;
+$DATE       =  q$Date: 2001-07-08 11:59:50 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -632,6 +632,17 @@ sub add_table {
 
 sub print_table {
   my $tableEntry;
+  add_table("Options",
+      "<input type='hidden' name='uri' value='$File->{URI}'>\n" .
+      '         <input type="checkbox" value="" name="ss"' .
+      ($q->param('ss')      ? 'checked="checked"' : '') . " />Show Source\n" .
+      '         <input type="checkbox" value="" name="outline"' .
+      ($q->param('outline') ? 'checked="checked"' : '') . " />Outline\n" .
+      '         <input type="checkbox" value="" name="sp"' .
+      ($q->param('sp')      ? 'checked="checked"' : '') . " />Parse Tree\n" .
+      '         <input type="checkbox" value="" name="noatt"' .
+      ($q->param('noatt')   ? 'checked="checked"' : '') . " />...no attributes\n"
+    );
   print "  <form method='get' action='/check'><table class='header'>\n";
   for $tableEntry (@{$File->{Table}}) {
     print "    <tr>\n";
@@ -639,24 +650,7 @@ sub print_table {
     print ' ' x 6, "<td>", $$tableEntry{Tail}, "</td>\n";
     print "    </tr>\n";
   }
-  print <<".EOF.";
-  <tr id="controls"><th>Options: </th>
-    <td>
-      <input type="hidden" name="uri" value="$File->{URI}">
-.EOF.
-  print " " x 8, '<input type="checkbox" value="" name="ss"',
-    ($q->param('ss')      ? 'checked="checked"' : ''), " />Show Source\n";
-  print " " x 8, '<input type="checkbox" value="" name="outline"',
-    ($q->param('outline') ? 'checked="checked"' : ''), " />Outline\n";
-  print " " x 8, '<input type="checkbox" value="" name="sp"',
-    ($q->param('sp')      ? 'checked="checked"' : ''), " />Parse Tree\n";
-  print " " x 8, '<input type="checkbox" value="" name="noatt"',
-    ($q->param('noatt')   ? 'checked="checked"' : ''), " />...no attributes\n";
-  print <<".EOF.";
-        <input type="submit" value="Revalidate" />
-    </td></tr>
-.EOF.
-
+  print "    <tr><th><input type='submit' value='Revalidate' /></th><td>&nbsp;</td>\n";
   print "  </table></form>\n";
 }
 
