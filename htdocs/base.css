@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.22 2003-09-01 01:48:49 link Exp $
+   $Id: base.css,v 1.26.2.23 2003-09-01 16:10:20 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -52,7 +52,8 @@ margin-left: 0; margin-right: 0}
 
 fieldset {
   margin-bottom: 3em;
-}
+  max-width: 80%;                                                                     
+  margin-left: 1em;  }
 
 .intro {
   font-style: italic;
