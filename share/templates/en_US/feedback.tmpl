@@ -11,13 +11,16 @@
       </TMPL_IF>
 
 
+      <p>We hope that the W3C Markup Validation service is reasonably accurate and easy to use.
+      If, however, you have found a bug in this tool, wish to suggest improvements to the validation errors and explanations,
+      would like to request some help in using the validator or would just like to send some general feedback, 
+      this form is for you.</p>
+      
 
-      <p>In order to make it easier to interpret the Markup Validator's
-      error messages and help you fix your Web documents, we provide you
-      with this feedback / help form. Messages sent through this form will
-      be sent to W3C's <strong>publicly archived</strong> mailing-list 
-<a href="http://lists.w3.org/Archives/Public/www-validator/">www-validator</a>.
+      <p>Please note that messages written through this form are sent to W3C's <strong>publicly archived</strong> 
+      mailing-list <a href="http://lists.w3.org/Archives/Public/www-validator/">www-validator</a>.
       </p>
+
 
       <TMPL_IF NAME="errmsg_id">
         <p>You are sending feedback on error message [<TMPL_VAR NAME="errmsg_id">]: "<TMPL_VAR NAME="explanation">".</p>      
@@ -25,38 +28,62 @@
       <a href="http://www.w3.org/Search/Mail/Public/search?type-index=www-validator&index-type=t&keywords=%5BVE%5D%5B<TMPL_VAR NAME="errmsg_id">%5D&search=Search">search the archives for existing messages</a> on this error 
       in case your feedback has already been sent, or answers to 
       your query have already been given. </p>
-	
       <TMPL_ELSE>
       <form method="get" action="http://www.w3.org/Search/Mail/Public/search">
-      <p>Before you send this message, we encourage you to 
-      search the archives for www-validator
-      in case your feedback has already been sent, or answers to 
-      your query have already been given.
+      <p>Before you send this message, we encourage you to first search the archives of the www-validator mailing-list
+      in case your feedback has already been sent, or answers to your query have already been given:
         <input id="type-index" name="type-index" type="hidden" value="www-validator" />
-        <input id="index-type" name="index-type" type="hidden" value="t" /> 
-        <label>Search: <input name="keywords" type="text" size=
-        "42" maxlength="100" value="" accesskey="f" /></label>
+        <input id="index-type" name="index-type" type="hidden" value="t" />
+        <input name="keywords" type="text" size="33" maxlength="100" value="" accesskey="f" />
         <input type="submit" name="search" value="Search Mail Archives" />
-      </form></p>
+      </p>
+      </form>
       </TMPL_IF>
 
-      
       <div id="feedbackfrombox" style="border: 2px solid black"><!-- FIXME -->
 
-      <form method="post" action="sendfeedback">
+      <form method="post" id="feedbackform" action="sendfeedback">
+
       <p>
-      <label for="feedbacktype">Type of feedback you wish to send:</label>
-      <select id="feedbacktype" name="feedbacktype" >
-        <option value="suggest">Send a suggestion on error message and/or explanation</option>
-        <option value="help">Ask for help on this validation error</option>
-      </select>
+	<label for="name">Your name</label><input id="name" name="name" type="text" size="20"></input>
+	<label for="email">E-mail address (required)</label><input id="email" name="email" type="text" size="20"></input>
+      </p>
+      <p>What type of message to you wish to send?<br />
+
+        <input id="feedbacktype_general" name="feedbacktype" type="radio" value="general" 
+	onclick="document.feedbackform.errmsg_id.disabled=true" checked="checked">
+        <span onclick="document.feedbackform.feedbacktype_general.checked=true;
+	document.feedbackform.errmsg_id.disabled=true">I want to send some general feedback
+        on the validator</span></input><br />
+
+        <input id="feedbacktype_bug" name="feedbacktype" type="radio" value="bugreport" 
+	onclick="document.feedbackform.errmsg_id.disabled=true">
+        <span onclick="document.feedbackform.feedbacktype_bug.checked=true;
+	document.feedbackform.errmsg_id.disabled=true">I want to submit a Bug report (Please check our
+        <a href="http://www.w3.org/Bugs/Public/buglist.cgi?bug_status=__open__;product=Validator">Bugs database</a> 
+	first and consider using it for bug reporting)</span>
+        </input><br />
+
+        <input id="feedbacktype_suggest" name="feedbacktype" type="radio" value="suggest" 
+	onclick="document.feedbackform.errmsg_id.disabled=false">
+        <span onclick="document.feedbackform.feedbacktype_suggest.checked=true;
+	document.feedbackform.errmsg_id.disabled=false">I want to suggest a better
+        error message and/or explanation (select error below)</span>
+        </input><br />
+
+        <input id="feedbacktype_help" name="feedbacktype" type="radio" value="help">
+        <span onclick="document.feedbackform.feedbacktype_help.checked=true;
+	document.feedbackform.errmsg_id.disabled=false">I need help on a validation error (select error below)</span>
+        </input>
+
       </p>
 
-
       <p>
-     <label for="errmsg_id">Error message: </label>
-     <select id="errmsg_id" name="errmsg_id">
-       <option selected="selected"><TMPL_VAR NAME="errlist"></option>
+	<label for="errmsg_id">Error message number: </label>
+	<select title="Select the error message you wish to send feedback on. 
+This selection is only available for specific feedback types" id="errmsg_id" name="errmsg_id">
+	<option value=""></option>
+	<TMPL_VAR NAME="errlist">
      </select>
       </p>
 
@@ -70,8 +97,8 @@
       </p>
 
       <p>
-      <label for="msg">Write down your message here. 
-      Include as many details as possible.</label><br />
+      <label for="msg">Write down your message here. Include as many details as possible, 
+	especially if asking for help, as this will increase your chances of getting an answer</label><br />
       <textarea id="msg" name="msg" rows="10" cols="80"></textarea>
       </p>
       
