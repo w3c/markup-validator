@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.37 2004-04-30 04:05:40 ot Exp $
+   $Id: base.css,v 1.26.2.38 2004-05-06 04:03:23 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -124,7 +124,7 @@ h3 a {color: black} /* These are usually targets and not links */
 
 img {vertical-align: middle}
 
-
+a.formoptions {text-decoration: none; color: black; border-bottom: 1px dotted #0000DD}
 
 /* done vs. tbc for the TODO list */
 .done { text-decoration: line-through; }
