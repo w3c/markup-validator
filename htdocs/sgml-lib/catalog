@@ -1,6 +1,6 @@
 
 	-- SGML catalog for the W3C HTML Validation Service --
-	-- $Id: catalog,v 1.17 2001-06-23 16:42:50 link Exp $ --
+	-- $Id: catalog,v 1.18 2001-09-06 23:59:17 link Exp $ --
 
 OVERRIDE YES	-- prefer public identifiers to system identifiers --
 SGMLDECL REC-html401-19991224/HTML4.decl
@@ -149,4 +149,5 @@ PUBLIC "-//W3C//ENTITIES Full Latin 1//EN//HTML"	REC-html401-19991224/HTMLlat1.e
 PUBLIC "-//W3C//ENTITIES Symbolic//EN//HTML"	REC-html401-19991224/HTMLsymbol.ent
 
 PUBLIC "-//bebop.net//DTD HTML Apple Help 1.0//EN"	AppleHelp1.0.dtd
+
 
