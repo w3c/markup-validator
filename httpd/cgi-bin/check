@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.84 2003-11-13 13:11:54 ville Exp $
+# $Id: check,v 1.305.2.85 2004-03-15 21:33:18 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.84 $;
+  $VERSION    =  q$Revision: 1.305.2.85 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-11-13 13:11:54 $,
+                              Date => q$Date: 2004-03-15 21:33:18 $,
                              });
 
 #
@@ -1103,7 +1103,7 @@ sub add_warning ($$$$) {
 sub print_warnings {
   my $File = shift;
   return unless (defined $File->{Warnings} and scalar @{$File->{Warnings}});
-  print qq(  <div id="Warnings">\n);
+  print qq(  <div class="Warnings">\n);
   for (@{$File->{Warnings}}) {
     if ($_->{Class} eq 'fake' and not $File->{'Is Valid'}) {
       next; # Don't report twice if file is invalid.

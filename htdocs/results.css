@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.24 2004-02-16 21:16:05 link Exp $ */
+/* $Id: results.css,v 1.13.2.25 2004-03-15 21:33:17 ot Exp $ */
 
 .input {
   color: black;
@@ -122,14 +122,14 @@ fieldset legend {
 /*
 */
 
-div#Warnings {
+div.Warnings {
   clear: left;
   padding: 0;
   margin-right: 8em;
 }
 
 /* "Fatal" warnings... */
-div#Warnings div.fatal h3 {
+div.Warnings div.fatal h3 {
   background: #FCC;
   border-top: 1px solid black;
   border-right: 1px solid black;
@@ -142,26 +142,26 @@ div#Warnings div.fatal h3 {
   font-weight: bolder;
 }
 
-div#Warnings div.fatal {
+div.Warnings div.fatal {
   margin: 0 0 1ex 0;
   padding: 0;
   clear: left;
 }
 
-div#Warnings div.fatal div {
+div.Warnings div.fatal div {
   border: 5px solid #FCC;
   margin: 0 0 0 1em;
   padding: .5em 1em;
 }
 
-div#Warnings div.fatal p:first-child {
+div.Warnings div.fatal p:first-child {
   font-weight: bold;
 /*  font-size: normal; */
   clear: left;
 }
 
 /* "note" warnings... */
-div#Warnings div.note h3 {
+div.Warnings div.note h3 {
   background: #053188;
   color: white;
   border-top: 1px solid black;
@@ -176,19 +176,19 @@ div#Warnings div.note h3 {
   font-weight: bolder;
 }
 
-div#Warnings div.note {
+div.Warnings div.note {
   margin: 0 0 1ex 0;
   padding: 0;
   clear: left;
 }
 
-div#Warnings div.note div {
+div.Warnings div.note div {
   margin: 0 0 0 1em;
   padding: .5em 1em;
 }
 /* Not all warnings have a "p", but if they
    do, the first one should be emphasized. */
-div#Warnings div.note p:first-child {
+div.Warnings div.note p:first-child {
   font-weight: bold;
 /*  font-size: normal; */
   clear:       left;
