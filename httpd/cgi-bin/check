@@ -8,14 +8,14 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.15 1999-03-04 10:41:01 gerald Exp $
+# $Id: check,v 1.16 1999-03-04 16:04:53 gerald Exp $
 
 #############################################################################
 # Constant definitions
 #############################################################################
 
-$cvsrevision	= '$Revision: 1.15 $';
-$cvsdate	= '$Date: 1999-03-04 10:41:01 $';
+$cvsrevision	= '$Revision: 1.16 $';
+$cvsdate	= '$Date: 1999-03-04 16:04:53 $';
 
 $logfile	= "/var/log/httpd/val-svc";
 $reflogfile	= "/var/log/httpd/val-svc-referers";
@@ -34,7 +34,7 @@ $tidy		= "/usr/local/bin/tidy";
 $nkf		= "/usr/local/bin/nkf";
 
 $sgmldecl	= "$sgmlstuff/REC-html40-971218/HTML4.decl";
-$xhtmldecl	= "$sgmlstuff/WD-html-in-xml-19990224/xhtml1.dcl";
+$xhtmldecl	= "$sgmlstuff/WD-html-in-xml-19990304/DTD/xhtml1.dcl";
 
 $revision	= $cvsrevision;
 $revision	=~ s/^\$Revision: //;
@@ -450,8 +450,8 @@ if ( defined $lastmod ) {
 # }
 
 if ( $xhtml ) {
-    $ENV{SP_CATALOG_FILES} = "$sgmlstuff/WD-html-in-xml-19990224/xhtml.soc";
-    $ENV{SGML_SEARCH_PATH} = "$sgmlstuff/WD-html-in-xml-19990224";
+    $ENV{SP_CATALOG_FILES} = "$sgmlstuff/WD-html-in-xml-19990304/DTD/xhtml.soc";
+    $ENV{SGML_SEARCH_PATH} = "$sgmlstuff/WD-html-in-xml-19990304/";
     $ENV{SP_CHARSET_FIXED}="YES";
     $ENV{SP_ENCODING}="XML";
     $xmlflags = "-wxml ";
