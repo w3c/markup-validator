@@ -1,6 +1,6 @@
           <tr>
             <th><label for="charset">Encoding:</label></th>
-            <td colspan="2">
+            <td>
               <select id="charset" name="charset">
                 <option value="(detect automatically)">(detect automatically)</option>
                 <option value="utf-8 (Unicode, worldwide)">utf-8 (Unicode, worldwide)</option>
@@ -40,10 +40,11 @@
                 <option value="windows-1257 (Baltic Rim)">windows-1257 (Baltic Rim)</option>
               </select>
             </td>
+            <td><label for="fbc"><input id="fbc" name="fbc" type="checkbox" value="1" /> Use Fallback instead of Override.</label></td>
           </tr>
           <tr>
             <th><label for="doctype">Type:</label></th>
-            <td colspan="2">
+            <td>
               <select id="doctype" name="doctype">
                 <option value="Inline">(detect automatically)</option>
                 <option>XHTML 1.1</option>
@@ -58,6 +59,7 @@
                 <option>HTML 2.0</option>
               </select>
             </td>
+            <td><label for="fbd"><input id="fbd" name="fbd" type="checkbox" value="1" /> Use Fallback instead of Override.</label></td>
           </tr>
           <tr>
             <th rowspan="3">Options:</th>

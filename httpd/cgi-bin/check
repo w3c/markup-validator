@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.36 2003-04-23 01:27:42 link Exp $
+# $Id: check,v 1.305.2.37 2003-04-23 01:35:15 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.36 $;
+  $VERSION    =  q$Revision: 1.305.2.37 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -166,7 +166,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-04-23 01:27:42 $,
+                              Date => q$Date: 2003-04-23 01:35:15 $,
                              });
 
 #
@@ -230,6 +230,14 @@ $File->{Opt}->{'Charset'}        = $q->param('charset') ? lc $q->param('charset'
 $File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') ? $q->param('doctype')   :     '';
 $File->{Opt}->{'URI'}            = $q->param('uri')     ? $q->param('uri')       :     '';
 $File->{Opt}->{'Output'}         = $q->param('output')  ? $q->param('output')    : 'html';
+
+#
+# "Fallback" info for Character Encoding (fbc), Content-Type (fbt),
+# and DOCTYPE (fbd). If TRUE, the Override values are treated as
+# Fallbacks instead of Overrides.
+$File->{Opt}->{FB}->{Encoding} = $q->param('fbc') ? TRUE : FALSE;
+$File->{Opt}->{FB}->{Type}     = $q->param('fbt') ? TRUE : FALSE;
+$File->{Opt}->{FB}->{DTD}      = $q->param('fbd') ? TRUE : FALSE;
 
 #
 # If ";debug" was given, let it overrule the value from the config file,
@@ -344,9 +352,17 @@ if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
   # message about 'charset override' in effect comes later
 }
 
-unless ($File->{Charset}->{Use}) {
-  $File->{'Error Flagged'} = TRUE;
-  $File->{'Error Message'} = <<".EOF." . &iana_charset_blurb();
+unless ($File->{Charset}->{Use}) { # No charset given...
+  if ($File->{Opt}->{FB}->{Encoding}) {
+      &add_warning($File, <<".EOF.");
+  <strong>No Character Encoding Found!</strong>
+  Falling back to $File->{Opt}->{FB}->{Encoding} (<a href="docs/errors.html#fbenc">explain...</a>).
+.EOF.
+      $File->{Tentative}     |= T_ERROR; # Tag it as Invalid.
+      $File->{Charset}->{Use} = $File->{Opt}->{FB}->{Encoding};
+  } else {
+    $File->{'Error Flagged'} = TRUE;
+    $File->{'Error Message'} = <<".EOF." . &iana_charset_blurb();
     <p>
       I was not able to extract a character encoding labeling from any of
       the valid sources for such information. Without encoding information it
@@ -368,6 +384,7 @@ unless ($File->{Charset}->{Use}) {
       character encoding in use.
     </p>
 .EOF.
+  }
 }
 
 sub iana_charset_blurb () {
@@ -1460,11 +1477,16 @@ sub parse_errors ($$) {
     }
 
     # An unknown FPI and no SI.
-    if ($err->{msg} =~ m(cannot generate system identifier for entity)
-     or $err->{msg} =~ m(unrecognized DOCTYPE)i
-     or $err->{msg} =~ m(no document type declaration)i) {
-      $File->{'Error Flagged'} = TRUE;
-      $File->{'Error Message'} = <<".EOF.";
+    if ($err->{msg} =~ m(unrecognized DOCTYPE)i or $err->{msg} =~ m(no document type declaration)i) {
+      if ($File->{Opt}->{FB}->{DTD}) {
+	&add_warning($File, <<".EOF.");
+<strong>No DOCTYPE Found!</strong>
+Falling back to HTML 4.01 Transitional. (<a href="docs/errors.html#fbd">explain...</a>)
+.EOF.
+	$File->{Tentative} |= T_ERROR;
+      } else {
+	$File->{'Error Flagged'} = TRUE;
+	$File->{'Error Message'} = <<".EOF.";
      <div class="fatal">
        <h2>Fatal Error: $err->{msg}</h2>
        <p>
@@ -1472,8 +1494,9 @@ sub parse_errors ($$) {
          that is not in my catalog.
        </p>
 .EOF.
-      $File->{'Error Message'} .= &doctype_spiel();
-      $File->{'Error Message'} .= "    </div>\n";
+	$File->{'Error Message'} .= &doctype_spiel();
+	$File->{'Error Message'} .= "    </div>\n";
+      }
     }
 
     # No or unknown FPI and a relative SI.
@@ -1494,8 +1517,15 @@ sub parse_errors ($$) {
 
     # No DOCTYPE.
     if ($err->{msg} =~ m(prolog can\'t be omitted)) {
-      $File->{'Error Flagged'} = TRUE;
-      $File->{'Error Message'} = <<".EOF.";
+      if ($File->{Opt}->{FB}->{DTD}) {
+	&add_warning($File, <<".EOF.");
+<strong>No DOCTYPE Found!</strong>
+Falling back to HTML 4.01 Transitional. (<a href="docs/errors.html#fbd">explain...</a>)
+.EOF.
+	$File->{Tentative} |= T_ERROR;
+      } else {
+	$File->{'Error Flagged'} = TRUE;
+	$File->{'Error Message'} = <<".EOF.";
     <div class="fatal">
       <h2>Fatal Error: No DOCTYPE specified!</h2>
       <p>
@@ -1505,8 +1535,8 @@ sub parse_errors ($$) {
         impossible to validate this document.
       </p>
 .EOF.
-      $File->{'Error Message'} .= &doctype_spiel();
-      $File->{'Error Message'} .= <<".EOF.";
+	$File->{'Error Message'} .= &doctype_spiel();
+	$File->{'Error Message'} .= <<".EOF.";
       <p>
         The W3C QA Activity maintains a <a
           href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">List of
@@ -1516,7 +1546,8 @@ sub parse_errors ($$) {
            a DOCTYPE</a>".
       </p>
 .EOF.
-      $File->{'Error Message'} .= "    </div>\n";
+	$File->{'Error Message'} .= "    </div>\n";
+      }
     }
 
 
