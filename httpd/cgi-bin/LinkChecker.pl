@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: LinkChecker.pl,v 1.21 2000-01-26 21:45:00 hugo Exp $
+# $Id: LinkChecker.pl,v 1.22 2000-01-26 22:24:26 hugo Exp $
 #
 # This program is licensed under the W3C License.
 
@@ -21,7 +21,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C LinkChecker';
-my $VERSION = q$Revision: 1.21 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 1.22 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -218,7 +218,11 @@ sub urize() {
 
 sub check_uri() {
     my $uri = $_[0];
-    $first = 1;
+    if ($_html) {
+        $first = 1;
+    } else {
+        $first = 0;
+    }
     my $start;
     if (! $_summary) {
         $start = &get_timestamp();
@@ -236,7 +240,8 @@ sub check_uri() {
             if ($_html) {
                 &html_header($uri);
             }
-            printf("Error: %d %s\n", $response->code(), $response->message());
+            &hprintf("Error: %d %s\n",
+                     $response->code(), $response->message());
             if ($_html) {
                 &html_footer();
             }
@@ -253,8 +258,8 @@ sub check_uri() {
     &record_redirects(\%redirects, $response->{Redirects});
     # Parse the document
     if (! ($response->header('Content-type') =~ m/text\/html/)) {
-        printf("Can't check link: Content-type is '%s'.\n",
-               $response->header('Content-type'));
+        &hprintf("Can't check link: Content-type is '%s'.\n",
+                 $response->header('Content-type'));
         return(-1);
     }
     my $base_uri = URI->new($response->base());
@@ -307,20 +312,20 @@ sub check_uri() {
         # Don't check mailto: URI's
         next if ($u =~ m/^mailto:/);
         if (! $_summary) {
-            printf("Checking link %s\n", $u);
+            &hprintf("Checking link %s\n", $u);
         }
         &check_validity($uri, $u, \%links, \%results, \%redirects, $p->{Anchors}, $response->code());
         if ($_verbose) {
-            printf("\tReturn code: %s\n", $results{$u}{$u}{code});
+            &hprintf("\tReturn code: %s\n", $results{$u}{$u}{code});
         }
         if ($results{$u}{$u}{success}) {
             foreach $fragment (keys %{$links{$u}}) {
                 next if ($fragment eq $u);
                 if ($_versbose) {
-                    printf("\t\t%s %s - Lines: %s\n",
-                           $fragment,
-                           ($results{$u}{$fragment}?'OK':'Not found'),
-                           join(',', keys %{$links{$u}{$fragment}}));
+                    &hprintf("\t\t%s %s - Lines: %s\n",
+                             $fragment,
+                             ($results{$u}{$fragment}?'OK':'Not found'),
+                             join(',', keys %{$links{$u}{$fragment}}));
                 }
                 if ($results{$u}{$fragment} == 0) {
                     $broken{$u}{$fragment} += 2;
@@ -335,7 +340,7 @@ sub check_uri() {
     }
     if (! $_summary) {
         my $stop = &get_timestamp();
-        printf("Processed in %ss.\n", &time_diff($start, $stop));
+        &hprintf("Processed in %ss.\n", &time_diff($start, $stop));
     }
     # Display results
     if ($_html) {
@@ -369,7 +374,7 @@ sub W3C::UserAgent::redirect_ok {
     my ($self, $request) = @_;
     
     if (! ($_summary || $first)) {
-        printf("\n%s %s ", $request->method(), $request->uri());
+        &hprintf("\n%s %s ", $request->method(), $request->uri());
     }
 
     $self->{Redirects}{$self->{fetching}} = $request->uri();
@@ -401,7 +406,7 @@ sub get_uri() {
     my $count = 0;
     my $response;
     if (! ($_summary || $first)) {
-        printf("%s %s ", $method, $uri);
+        &hprintf("%s %s ", $method, $uri);
     }
     my $request = new HTTP::Request($method, $uri);
     # Are we providing authentication info?
@@ -445,7 +450,7 @@ sub get_uri() {
     $response->{Redirects} = $ua->{Redirects};
     my $stop = &get_timestamp();
     if (! ($_summary || $first)) {
-        printf(" fetched in %ss\n", &time_diff($start,$stop));
+        &hprintf(" fetched in %ss\n", &time_diff($start,$stop));
     }
     $response->{OriginalCode} = $code;
     $response->{OriginalMessage} = $message;
@@ -486,9 +491,8 @@ sub parse_document() {
         if ($_progress) {
             print "\r";
         }
-        printf(" done (%d lines in %ss).\n",
-               $p->{Total},
-               &time_diff($start, $stop));
+        &hprintf(" done (%d lines in %ss).\n",
+                 $p->{Total}, &time_diff($start, $stop));
     }
     return $p;
 }
@@ -592,9 +596,9 @@ sub check_validity($, $, \%, \%, \%, \%, $) {
             $results->{$uri}{$uri}{success} = 0;
             $results->{$uri}{$uri}{message} = 'Error: \'file:\' URI not allowed';
             if ($_verbose) {
-                printf("Error: %d %s\n",
-                       $results->{$uri}{$uri}{code},
-                       $results->{$uri}{$uri}{message});
+                &hprintf("Error: %d %s\n",
+                         $results->{$uri}{$uri}{code},
+                         $results->{$uri}{$uri}{message});
             }
             return;
         }
@@ -637,9 +641,9 @@ sub check_validity($, $, \%, \%, \%, \%, $) {
         if (! $results->{$uri}{$uri}{success}) {
             $results->{$uri}{$uri}{message} = $response->message();
             if ($_verbose) {
-                printf("Error: %d %s\n",
-                       $results->{$uri}{$uri}{code},
-                       $results->{$uri}{$uri}{message});
+                &hprintf("Error: %d %s\n",
+                         $results->{$uri}{$uri}{code},
+                         $results->{$uri}{$uri}{message});
             }
             return;
         }
@@ -651,8 +655,8 @@ sub check_validity($, $, \%, \%, \%, \%, $) {
     if ($testing ne $uri) {
         if (!(($results->{$uri}{$uri}{type} = $response->header('Content-type')) =~ m/text\/html/i)) {
             if ($_verbose) {
-                printf("Can't check content: Content-type is '%s'.\n",
-                       $response->header('Content-type'));
+                &hprintf("Can't check content: Content-type is '%s'.\n",
+                         $response->header('Content-type'));
             }
             return;
         }
@@ -773,7 +777,7 @@ sub anchors_summary(\%, \%) {
             print('<p>');
         }
         my @anchors = keys %{$anchors};
-        printf("Found %d anchors.", $#anchors+1);
+        &hprintf("Found %d anchors.", $#anchors+1);
         if ($_html) {
             print('</p>');
         }
@@ -847,10 +851,8 @@ sub links_summary(\%,\%,\%) {
                 }
             }
         }
-        printf("Found %d locations for %d URI's (%d total).",
-               $#links+1,
-               $n_fragments,
-               $n_total);
+        &hprintf("Found %d locations for %d URI's (%d total).",
+                 $#links+1, $n_fragments, $n_total);
         if ($_html) {
             print('</p>');
         }
@@ -931,16 +933,16 @@ sub links_summary(\%,\%,\%) {
                    &bgcolor($results->{$u}{$u}{orig}),
                    $results->{$u}{$u}{orig},
                    ($results->{$u}{$u}{code} != $results->{$u}{$u}{orig})
-                   ? '-&gt; '.$results->{$u}{$u}{code}
+                   ? '-&gt; '.HTML::Entities::encode($results->{$u}{$u}{code})
                    : '',
                    defined($results->{$u}{$u}{realm})
-                   ? '<br>Realm: '.$results->{$u}{$u}{realm}
+                   ? '<br>Realm: '.HTML::Entities::encode($results->{$u}{$u}{realm})
                    : '',
                    defined($results->{$u}{$u}{orig_message})
-                   ? '<br>'.$results->{$u}{$u}{orig_message}.' -&gt;' 
+                   ? '<br>'.HTML::Entities::encode($results->{$u}{$u}{orig_message}).' -&gt;' 
                    : '',
                    $results->{$u}{$u}{message}
-                   ? '<br>'.$results->{$u}{$u}{message}
+                   ? '<br>'.HTML::Entities::encode($results->{$u}{$u}{message})
                    : '',
                    '',
                    &bgcolor($results->{$u}{$u}{code}),
@@ -1054,7 +1056,7 @@ sub show_url() {
     if (defined($fragment)) {
         $url .= '#'.$fragment;
     }
-    return('<a href="'.$url.'">'.(defined($fragment) ? $fragment : $url).'</a>');
+    return('<a href="'.$url.'">'.HTML::Entities::encode(defined($fragment) ? $fragment : $url).'</a>');
 }
 
 sub html_footer() {
@@ -1096,4 +1098,12 @@ sub print_form() {
 ";
     &html_footer();
     exit;
+}
+
+sub hprintf() {
+    if (! $_html) {
+        printf(@_);
+    } else {
+        print HTML::Entities::encode(sprintf($_[0], @_[1..@_-1]));
+    }
 }
