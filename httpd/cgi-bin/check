@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.344 2004-09-22 00:46:12 duerst Exp $
+# $Id: check,v 1.345 2004-09-22 00:48:37 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -225,7 +225,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.344 $;
+  $VERSION    =  q$Revision: 1.345 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1930,59 +1930,6 @@ sub preparse_doctype {
 }
 
 #
-# Do an initial parse of the Document Entity to extract charset from HTML <meta>.
-# (still also extracts FPI)
-sub preparse_meta {
-  my $File = shift;
-
-  #
-  # Reset DOCTYPE, Root, and Charset (for second invocation).
-  $File->{Charset}->{META} = '';
-  $File->{DOCTYPE}         = '';
-  $File->{Root}            = '';
-
-  my $dtd = sub {
-    return if $File->{Root};
-    ($File->{Root}, $File->{DOCTYPE}) = shift =~  m(<!DOCTYPE\s+(\w+)\s+PUBLIC\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
-  };
-
-  my $start = sub {
-    my $tag  = shift;
-    my $attr = shift;
-    my %attr = map {lc($_) => $attr->{$_}} keys %{$attr};
-
-    if ($File->{Root}) {
-      if (lc $tag eq 'meta') {
-        if (lc $attr{'http-equiv'} eq 'content-type') {
-          if ($attr{content} =~ m(charset\s*=[\s\"\']*([^\s;\"\'>]*))si) {
-            $File->{Charset}->{META} = lc $1;
-          }
-        }
-      }
-      return unless $tag eq $File->{Root};
-    } else {
-      $File->{Root} = $tag;
-    }
-    if ($attr->{xmlns}) {$File->{Namespace} = $attr->{xmlns}};
-  };
-
-  my $p = HTML::Parser->new(api_version => 3);
-  $p->xml_mode(TRUE);
-  $p->ignore_elements('BODY');
-  $p->ignore_elements('body');
-  $p->handler(declaration => $dtd, 'text');
-  $p->handler(start => $start, 'tag,attr');
-  $p->parse(join "\n", @{$File->{Content}});
-
-  $File->{DOCTYPE} = '' unless defined $File->{DOCTYPE};
-  $File->{DOCTYPE} =~ s(^\s+){ }g;
-  $File->{DOCTYPE} =~ s(\s+$){ }g;
-  $File->{DOCTYPE} =~ s(\s+) { }g;
-
-  return $File;
-}
-
-#
 # Print out the raw ESIS output for debugging.
 sub show_esis ($) {
   print <<'EOF';
@@ -2218,6 +2165,59 @@ sub is_html   {shift->{Type} =~ m(html\+sgml$)};
 sub is_xhtml  {shift->{Type} =~ m(xhtml\+xml$)};
 sub is_mathml {shift->{Type} =~ m(mathml\+xml$)};
 
+
+#
+# Do an initial parse of the Document Entity to extract charset from HTML <meta>.
+# (still also extracts FPI)
+sub preparse_meta {
+  my $File = shift;
+
+  #
+  # Reset DOCTYPE, Root, and Charset (for second invocation).
+  $File->{Charset}->{META} = '';
+  $File->{DOCTYPE}         = '';
+  $File->{Root}            = '';
+
+  my $dtd = sub {
+    return if $File->{Root};
+    ($File->{Root}, $File->{DOCTYPE}) = shift =~  m(<!DOCTYPE\s+(\w+)\s+PUBLIC\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
+  };
+
+  my $start = sub {
+    my $tag  = shift;
+    my $attr = shift;
+    my %attr = map {lc($_) => $attr->{$_}} keys %{$attr};
+
+    if ($File->{Root}) {
+      if (lc $tag eq 'meta') {
+        if (lc $attr{'http-equiv'} eq 'content-type') {
+          if ($attr{content} =~ m(charset\s*=[\s\"\']*([^\s;\"\'>]*))si) {
+            $File->{Charset}->{META} = lc $1;
+          }
+        }
+      }
+      return unless $tag eq $File->{Root};
+    } else {
+      $File->{Root} = $tag;
+    }
+    if ($attr->{xmlns}) {$File->{Namespace} = $attr->{xmlns}};
+  };
+
+  my $p = HTML::Parser->new(api_version => 3);
+  $p->xml_mode(TRUE);
+  $p->ignore_elements('BODY');
+  $p->ignore_elements('body');
+  $p->handler(declaration => $dtd, 'text');
+  $p->handler(start => $start, 'tag,attr');
+  $p->parse(join "\n", @{$File->{Content}});
+
+  $File->{DOCTYPE} = '' unless defined $File->{DOCTYPE};
+  $File->{DOCTYPE} =~ s(^\s+){ }g;
+  $File->{DOCTYPE} =~ s(\s+$){ }g;
+  $File->{DOCTYPE} =~ s(\s+) { }g;
+
+  return $File;
+}
 
 #
 # Check charset conflicts and add any warnings necessary.
