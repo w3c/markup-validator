@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.245 2002-10-12 07:37:44 duerst Exp $
+# $Id: check,v 1.246 2002-10-12 08:25:55 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.245 $;
+  $VERSION    =  q$Revision: 1.246 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-12 07:37:44 $,
+			      Date => q$Date: 2002-10-12 08:25:55 $,
 			     });
 
 #
@@ -2304,7 +2304,7 @@ sub report_earl {
   my $errs  = ($File->{'Is Valid'} ? '0' : scalar @{$File->{Errors}});
 
   print <<".EOF.";
-Content-Type: application/xml; charset=UTF-8
+Content-Type: application/rdf+xml; charset=UTF-8
 X-W3C-Validator-Status: $valid
 X-W3C-Validator-Errors: $errs
 
@@ -2316,10 +2316,23 @@ X-W3C-Validator-Errors: $errs
 
   <Assertor rdf:about="http://validator.w3.org/">
     <name>W3 Validator</name>
+    <contactInfo rdf:resource="http://validator.w3.org/about.html"/>
+    <testMode rdf:resource="http://www.w3.org/2001/03/earl/1.00#Auto" />
 
 .EOF.
 
   unless ($File->{'Is Valid'}) {
+    printf <<".EOF.", &ent($File->{URI});
+  <asserts>
+   <Assertion>
+    <subject rdf:resource="%s" />
+    <result rdf:resource="http://www.w3.org/2001/03/earl/1.00#fails" />
+    <testCase rdf:resource="http://www.w3.org/HTML/" />
+    <note>Invalid!</note>
+   </Assertion>
+  </asserts>
+.EOF.
+
     foreach my $err (@{$File->{Errors}}) {
       # Strip curlies from lq-nsgmls output.
       $err->{msg} =~ s/[{}]//g;
@@ -2340,32 +2353,28 @@ X-W3C-Validator-Errors: $errs
 		     $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char} + $err->{line}
 		    );
       printf <<".EOF.", &ent($File->{URI}), &ent($err->{msg});
-    <asserts rdf:parseType="Resource">
-      <rdf:subject rdf:parseType="Resource">
-        <testSubject rdf:resource="%s" />
-        <val:line>$err->{line}</val:line>
-        <val:column>$err->{char}</val:column>
-        <val:offset>@offsets</val:offset>
-      </rdf:subject>
-      <rdf:predicate rdf:resource="http://www.w3.org/2001/03/earl/1.00#fails" />
-      <rdf:object rdf:parseType="Resource">
-        <testCriteria rdf:parseType="Resource"><id rdf:resource="http://www.w3.org/HTML/" /></testCriteria>
-        <note>%s</note>
-      </rdf:object>
-      <testMode rdf:resource="http://www.w3.org/2001/03/earl/1.00#Auto" />
+    <asserts>
+      <Assertion rdf:about="%s">
+        <subject rdf:parseType="Resource">
+          <val:line>$err->{line}</val:line>
+          <val:column>$err->{char}</val:column>
+          <val:offset>@offsets</val:offset>
+        </subject>
+        <result rdf:resource="http://www.w3.org/2003/03/earl/1.00#fails" />
+        <testCase>%s</testCase>
+      </Assertion>
     </asserts>
 .EOF.
     }
   } else {
     printf <<".EOF.", &ent($File->{URI});
-  <asserts rdf:parseType="Resource">
-    <rdf:subject rdf:parseType="Resource"><testSubject rdf:resource="%s" /></rdf:subject>
-    <rdf:predicate rdf:resource="http://www.w3.org/2001/03/earl/1.00#passes" />
-    <rdf:object rdf:parseType="Resource">
-      <testCriteria rdf:parseType="Resource"><id rdf:resource="http://www.w3.org/HTML/" /></testCriteria>
-      <note>Valid!</note>
-    </rdf:object>
-    <testMode rdf:resource="http://www.w3.org/2001/03/earl/1.00#Auto" />
+  <asserts>
+   <Assertion>
+    <subject rdf:resource="%s" />
+    <result rdf:resource="http://www.w3.org/2001/03/earl/1.00#passes" />
+    <testCase rdf:resource="http://www.w3.org/HTML/" />
+    <note>Valid!</note>
+   </Assertion>
   </asserts>
 .EOF.
   }
