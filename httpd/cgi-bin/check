@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.74 2002-08-17 17:41:02 link Exp $
+# $Id: check,v 1.200.2.75 2002-08-19 00:04:56 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.200.2.74 $;
+  $VERSION    =  q$Revision: 1.200.2.75 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-17 17:41:02 $,
+			      Date => q$Date: 2002-08-19 00:04:56 $,
 			     });
 
 #
@@ -492,8 +492,6 @@ my @xmlflags = ('-wvalid', '-wnon-sgml-char-ref', '-wno-duplicate');
 if (&is_xml($File->{Type})) {
   $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'xml.soc');
   push(@xmlflags, '-wxml');
-} else {
-  push @xmlflags, '-wvalid';
 }
 
 
