@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.112 2001-06-06 09:43:58 duerst Exp $
+# $Id: check,v 1.113 2001-06-07 09:47:33 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -74,9 +74,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.112 $;
+$VERSION    =  q$Revision: 1.113 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-06 09:43:58 $;
+$DATE       =  q$Date: 2001-06-07 09:47:33 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -351,6 +351,30 @@ print(' ' x 4, q(<li>Server: ),         $File->{Server},   qq(</li>\n))
 print(' ' x 4, q(<li>Content length: ), $File->{Size},     qq(</li>\n))
   if $File->{Size};
 
+print ' ' x 4, q(<li>Character encoding: ), $File->{Charset};
+if ($File->{HTTP_Charset} ne $File->{META_Charset}
+    and $File->{HTTP_Charset} ne ''
+    and $File->{META_Charset} ne ''
+    and $File->{Charset} ne 'unknown') {
+  print <<"EOHD";
+      <em><span class="warning">The character encoding specified in the HTTP
+      header ("<code>$File->{HTTP_Charset}</code>") is different from the one
+      specified in the META element ("<code>$File->{META_Charset}</code>").
+      I will use "<code>$File->{Charset}</code>" for this validation.</span></em>
+EOHD
+} elsif ($File->{HTTP_Charset} ne $File->{XML_Charset}
+    and $File->{HTTP_Charset} ne ''
+    and $File->{XML_Charset} ne ''
+    and $File->{Charset} ne 'unknown') {
+  print <<"EOHD";
+      <em><span class="warning">The character encoding specified in the HTTP
+      header ("<code>$File->{HTTP_Charset}</code>") is different from the one
+      specified in the XML declaration ("<code>$File->{XML_Charset}</code>").
+      I will use "<code>$File->{Charset}</code>" for this validation.</span></em>
+EOHD
+}
+print ' ' x 4, qq(</li>\n);
+
 
 my $xmlflags = '';
 my $catalog  = $sgmlstuff . '/catalog';
@@ -392,7 +416,21 @@ unless ($File->{Charset} eq 'utf-8' or $File->{Charset} eq 'unknown') {
       $_ = $c->convert($_); # $_ is local!!
       push @lines, $line if ($in ne "" and $_ eq "");
     }
-    ##@@ write error message if we found some lines with problems
+    if (@lines) {
+      my $lines = $#lines ? "lines " : "line ";
+      $lines .= join ", ", @lines;
+      print <<"EOF";
+      <p class="error">
+        Sorry, I am unable to validate this document because on
+        <strong>$lines</strong> it contained
+        some byte(s) that I cannot interpret as
+        <code>$File->{Charset}</code>.
+        Please check both the content of the file
+        and the character encoding indication.
+      </p>
+EOF
+      &clean_up_and_exit;
+    }
   } else {
     &print_charset_error($@, $File->{Charset});
     &clean_up_and_exit;
@@ -454,30 +492,6 @@ if (($File->{Type} eq 'xhtml') || ($File->{Type} eq 'mathml')) {
   if (length $doctype and not defined $fpi) {$fpi = $doctype};
 }
 $version = $pub_ids->{$fpi} || 'unknown';
-
-print ' ' x 4, q(<li>Character encoding: ), $File->{Charset};
-if ($File->{HTTP_Charset} ne $File->{META_Charset}
-    and $File->{HTTP_Charset} ne ''
-    and $File->{META_Charset} ne ''
-    and $File->{Charset} ne 'unknown') {
-  print <<"EOHD";
-      <em><span class="warning">The character encoding specified in the HTTP
-      header ("<code>$File->{HTTP_Charset}</code>") is different from the one
-      specified in the META element ("<code>$File->{META_Charset}</code>").
-      I will use "<code>$File->{Charset}</code>" for this validation.</span></em>
-EOHD
-} elsif ($File->{HTTP_Charset} ne $File->{XML_Charset}
-    and $File->{HTTP_Charset} ne ''
-    and $File->{XML_Charset} ne ''
-    and $File->{Charset} ne 'unknown') {
-  print <<"EOHD";
-      <em><span class="warning">The character encoding specified in the HTTP
-      header ("<code>$File->{HTTP_Charset}</code>") is different from the one
-      specified in the XML declaration ("<code>$File->{XML_Charset}</code>").
-      I will use "<code>$File->{Charset}</code>" for this validation.</span></em>
-EOHD
-}
-print ' ' x 4, qq(</li>\n);
 
 if ($File->{Type} eq 'xml' || 'xhtml') {
   print ' ' x 4, qq(<li>Document type: ), $version;
