@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.74 2000-10-21 11:40:45 gerald Exp $
+# $Id: check,v 1.75 2000-12-11 11:16:33 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -44,6 +44,9 @@ use vars qw($frag $pub_ids $element_uri $file_type); # Cfg hashes.
 # Paths and file locations
 my $logfile   = '/var/log/httpd/val-svc';
 my $base_path = '/usr/local/validator/';
+if ( $ENV{SERVER_PORT} eq "8000" ) {
+    $base_path = '/home/gerald/validator/';
+}
 my $html_path = $base_path . 'htdocs/';
 my $elem_db   = $html_path . 'config/eref.cfg';
 my $fpis_db   = $html_path . 'config/fpis.cfg';
@@ -71,9 +74,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.74 $;
+$VERSION    =  q$Revision: 1.75 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2000-10-21 11:40:45 $;
+$DATE       =  q$Date: 2000-12-11 11:16:33 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -89,7 +92,7 @@ my $xhtmlt_doctype  = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitiona
 # HTML fragments
 my $lt        = "\020";
 my $gt        = "\021";
-my $gifborder = ' border=0';
+my $gifborder = ' border="0"';
 my $xhtmlendtag;
 
 #
@@ -100,7 +103,7 @@ my @options = qw(weblint pw outline ss sp noatt);
 # Stopgap to shut -w up. It won't actually fix anything, but it'll keep us
 # running without warnings until we can fix the problems.
 my ($validity, %undef_frag, $effective_charset, $catalog,
-    @fake_errors, $guessed_doctype, $doctype, $line, $col, $type, $msg, $diff,
+    @fake_errors, $doctype, $line, $col, $type, $msg, $diff,
     $pos, $indent, $image_uri, $alttext, $gifhw, $pedanticflags,
     $pedantic_blurb, $level, $prevlevel, $prevdata);
 
@@ -192,7 +195,7 @@ $html40t_doctype
   <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
     <h1><a href="http://www.w3.org/"><img
        src="http://www.w3.org/Icons/WWW/w3c_home"
-       width=72 height=48 border=0 alt="W3C"></a>
+       width=72 height=48 border="0" alt="W3C"></a>
       <a href="/">HTML Validation Service</a> Results</h1>
 EOF
 
@@ -254,6 +257,7 @@ EOF
 #     inferred by the check_for_doctype function
 #
 
+my $guessed_doctype = 2;
 #
 # Try to extract or guess the DOCTYPE for HTML and XHTML files.
 if ($File->{Type} eq 'html' or $File->{Type} eq 'xhtml'
@@ -266,6 +270,12 @@ if ($File->{Type} eq 'html' or $File->{Type} eq 'xhtml'
 # This happens when a XHTML file is served as text/html
 if ($doctype =~ /xhtml/i && $guessed_doctype != 2) {
   $File->{Type} = 'xhtml';
+}
+
+#
+# Set document type to MathML if the DOCTYPE was for MathML.
+if ($doctype =~ /mathml/i && $guessed_doctype != 2) {
+  $File->{Type} = 'mathml';
 }
 
 #
@@ -347,6 +357,11 @@ if ($File->{Type} eq 'xhtml') {
     $xmlflags            .= '-wno-valid ';
   }
   $decl                  = $xhtmldecl;
+} elsif ($File->{Type} eq 'mathml') {
+  $catalog = "-c $sgmlstuff/CR-MathML2-20001113/catalog";
+  $ENV{SP_CHARSET_FIXED} = 'YES';
+  $ENV{SP_ENCODING}      = 'XML';
+  $xmlflags              = '-wxml ';
 } elsif ($File->{Type} eq 'xml' or $guessed_doctype == 2) {
   # no doctype, with xmlns attr on 1st element
   $File->{Type} = 'xml'; # @@ probably a better way to do this
@@ -363,7 +378,7 @@ if ($File->{Type} eq 'xhtml') {
 
 my $command  = "$codeconv $sp -E0 $xmlflags $catalog $decl";
 
-if ( $ENV{SERVER_PORT} eq "8000" ) {
+if ( $ENV{SERVER_PORT} eq "8000" ) {	# running on the test server?
     print "    <li>nsgmls command line: <code>$command</code>\n";
 }
 
@@ -406,7 +421,7 @@ close ESIS              or warn "close($temp.esis) returned: $!";
 
 my $fpi;
 my $version = 'unknown';
-if ($File->{Type} eq 'xhtml') {
+if (($File->{Type} eq 'xhtml') || ($File->{Type} eq 'mathml')) {
   $fpi = $doctype;
 } elsif ($File->{Type} eq 'xml') {
   $fpi = 'XML';
@@ -501,6 +516,8 @@ if ( $? || ($guessed_doctype == 1) ) {
     for ((@fake_errors,@errors)) {
 	next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
 	next if / numbers exceeding 65535 not supported$/;
+	# @@ could maybe replace the following statement with an SGMLDECL
+	# setting in the catalog, like mathml2?
 	next if /:W: SGML declaration was not implied$/ &&
 	    ($File->{Type} =~ /^x(ht)?ml$/);
 	s/^$sp:<OSFD>//g;
@@ -614,6 +631,9 @@ if ( $? || ($guessed_doctype == 1) ) {
     if ( $version eq "unknown" ) {
 	print "\n  <p>\n    Sorry, I can't validate this document.\n  </p>\n";
     }
+    elsif ( $File->{Type} eq 'xml' ) {
+	print "\n  <p>\n    Sorry, this document is not well-formed XML.\n  </p>\n";
+    }
     else {
 	print "\n  <p>\n    Sorry, this document does not validate as $version.\n  </p>\n\n";
 	&output_css_validator_blurb( $q->param('uri') );
@@ -637,29 +657,29 @@ else {
 	elsif ( $version =~ /HTML 3\.2</ ) {
 	    $image_uri = "http://www.w3.org/Icons/valid-html32";
 	    $alttext = "Valid HTML 3.2!";
-            $gifhw   = " height=31 width=88";
+            $gifhw   = ' height="31" width="88"';
 	}
 	elsif ( $version =~ /HTML 4\.0<\/a> Strict$/ ) {
 	    $image_uri = "http://www.w3.org/Icons/valid-html40";
 	    $alttext = "Valid HTML 4.0!";
             $gifborder = "";
-            $gifhw   = " height=31 width=88";
+            $gifhw   = ' height="31" width="88"';
 	}
 	elsif ( $version =~ /HTML 4\.0<\/a> / ) {
 	    $image_uri = "http://www.w3.org/Icons/valid-html40";
 	    $alttext = "Valid HTML 4.0!";
-            $gifhw   = " height=31 width=88";
+            $gifhw   = ' height="31" width="88"';
 	}
 	elsif ( $version =~ /HTML 4\.01<\/a> Strict$/ ) {
 	    $image_uri = "http://www.w3.org/Icons/valid-html401";
 	    $alttext = "Valid HTML 4.01!";
             $gifborder = "";
-            $gifhw   = " height=31 width=88";
+            $gifhw   = ' height="31" width="88"';
 	}
 	elsif ( $version =~ /HTML 4\.01<\/a> / ) {
 	    $image_uri = "http://www.w3.org/Icons/valid-html401";
 	    $alttext = "Valid HTML 4.01!";
-            $gifhw   = " height=31 width=88";
+            $gifhw   = ' height="31" width="88"';
 	}
 	elsif ( $version =~ /XHTML 1\.0<\/a> / ) {
 	    $image_uri = "http://www.w3.org/Icons/valid-xhtml10";
@@ -1013,8 +1033,8 @@ sub output_closing {
 
 <address>
   <a href="http://validator.w3.org/check/referer"><img
-     src="http://www.w3.org/Icons/valid-html401" height=31 width=88
-     align=right border=0 alt="Valid HTML 4.01!"></a>
+     src="http://www.w3.org/Icons/valid-html401" height="31" width="88"
+     align=right border="0" alt="Valid HTML 4.01!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</a><br>
   Last modified: $DATE
 </address>
@@ -1136,7 +1156,7 @@ sub check_for_doctype {
     if ($line =~ /<!doctype/i) { # found a doctype
       my $dttext = join '', @{$file}[$count .. $count + 5];
       $dttext =~ s/\n//g;
-      $dttext =~ s/.*?doctype\s+html\s+public\s*([\'\"])([^\1]+?)\1.*/$2/i;
+      $dttext =~ s/.*?doctype\s+(html|math)\s+public\s*([\'\"])([^\2]+?)\2.*/$3/i;
       return 0, $dttext;
     }
 
@@ -1246,7 +1266,7 @@ sub output_css_validator_blurb {
 
   print <<"EOHD";
   <p>
-    If you use <a href="http://www.w3.org/Style/css/">CSS</a> in your document,
+    If you use <a href="http://www.w3.org/Style/CSS/">CSS</a> in your document,
     you should also <a
     href="http://jigsaw.w3.org/css-validator/validator?uri=$uri">check it for
     validity</a> using the W3C <a
