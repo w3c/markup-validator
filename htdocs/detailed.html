@@ -1,9 +1,9 @@
-<!--#set var="revision" value="\$Id: detailed.html,v 1.2 2002-02-11 22:09:09 link Exp $"
---><!--#set var="date" value="\$Date: 2002-02-11 22:09:09 $"
+<!--#set var="revision" value="\$Id: detailed.html,v 1.2.2.1 2002-03-17 22:32:40 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-03-17 22:32:40 $"
 --><!--#set var="title" value="The W3C HTML Validation Service"
 --><!--#include virtual="/header.html" -->
 
-  <p name="skip" id="skip">
+  <p id="skip">
     This form allows you to enter a URI or upload files from your computer and
     have them validated.
   </p>
@@ -11,7 +11,7 @@
       <form method="post" enctype="multipart/form-data" action="/check">
         <table>
           <tr><th><label title="Address of page to Validate" for="uri">Address (URI):</label></th><td colspan="2"><input id="uri" name="uri" size="50" /> or...</td></tr>
-          <tr><th><label for="uploaded_file">Local File:</label></th><td colspan="2"><input type="file" name="uploaded_file" size="50" /></td></tr>
+          <tr><th><label for="uploaded_file">Local File:</label></th><td colspan="2"><input type="file" id="uploaded_file" name="uploaded_file" size="50" /></td></tr>
           <tr>
             <th><label for="charset">Character Encoding:</label></th>
             <td colspan="2">
