@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.364 2004-12-15 08:08:57 duerst Exp $
+# $Id: check,v 1.365 2005-01-08 21:10:10 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -222,7 +222,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.364 $;
+  $VERSION    =  q$Revision: 1.365 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1182,6 +1182,7 @@ sub handle_uri {
   my $File = shift; # The master datastructure.
 
   my $uri = new URI (ref $q ? $q->param('uri') : $q)->canonical();
+  $uri->fragment(undef);
 
   my $ua = new LWP::UserAgent;
   $ua->env_proxy();
