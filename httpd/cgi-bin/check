@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.191 2001-09-28 20:38:25 connolly Exp $
+# $Id: check,v 1.192 2001-10-20 10:47:01 link Exp $
 
 #
 # We need Perl 5.004.
@@ -95,9 +95,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.191 $;
+$VERSION    =  q$Revision: 1.192 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-09-28 20:38:25 $;
+$DATE       =  q$Date: 2001-10-20 10:47:01 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -769,14 +769,17 @@ sub print_table {
 	      ($q->param('noatt')   ? 'checked="checked"' : '') . " />...no attributes</label>\n"
 	     );
   }
-  print "  <form method='get' action='/check'><table class='header'>\n";
+  print '  <form method="get" action="/check">'
+    unless $q->param('uploaded_file');
+  print qq(<table class="header">\n);
   for $tableEntry (@{$File->{Table}}) {
     print "    <tr>\n";
     print ' ' x 6, "<th>", $$tableEntry{Head}, ": </th>\n";
     print ' ' x 6, "<td colspan='3'>", $$tableEntry{Tail}, "</td>\n";
     print "    </tr>\n";
   }
-  print "    <tr><th><input type='submit' value='Revalidate' /></th><td>&nbsp;</td>\n";
+  print qq(    <tr><th><input type="submit" value="Revalidate" /></th><td>&nbsp;</td>\n)
+    unless $q->param('uploaded_file');
   print "  </table></form>\n";
 }
 
