@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.27 2000-02-08 21:19:19 hugo Exp $
+# $Id: checklink.pl,v 2.28 2000-02-08 21:48:34 hugo Exp $
 #
 # This program is licensed under the W3C(r) License.
 #
@@ -14,6 +14,8 @@
 #
 # An online version is available at:
 #	http://validator.w3.org/checklink
+
+use strict;
 
 package W3C::CheckLink;
 require HTML::Parser;
@@ -27,7 +29,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.27 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.28 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -54,6 +56,7 @@ if ($#ARGV >= 0) {
     if ($_user && (! $_password)) {
         &ask_password();
     }
+    my $uri;
     foreach $uri (@uris) {
 	if (! $_summary) {
             printf("%s %s\n", $PROGRAM ,$VERSION);
@@ -214,8 +217,8 @@ sub urize() {
         chop($pwd = `pwd`);
         $base = URI->new('file://localhost'.$pwd.'/');
     }
-    $u = URI->new($res);
-    $result = $u->abs($base);
+    my $u = URI->new($res);
+    my $result = $u->abs($base);
     return($result->as_string());
 }
 
@@ -282,6 +285,7 @@ sub check_uri() {
         print("Checking anchors:\n");
     }
     my %errors;
+    my $anchor;
     foreach $anchor (keys %{$p->{Anchors}}) {
         my @lines = keys %{$p->{Anchors}{$anchor}};
         my $times = $#lines + 1;
@@ -300,9 +304,11 @@ sub check_uri() {
     #############
     my %links;
     # Record all the links
+    my $link;
     foreach $link (keys %{$p->{Links}}) {
         my $link_uri = URI->new($link);
         my $abs_link_uri = URI->new_abs($link_uri, $base);
+        my $lines;
         foreach $lines (keys %{$p->{Links}{$link}}) {
             my $canonical = URI->new($abs_link_uri->canonical());
             my $url = $canonical->scheme().':'.$canonical->opaque();
@@ -311,6 +317,7 @@ sub check_uri() {
             $links{$url}{$fragment}{$lines} = 1;
         }
     }
+    my $url;
     for $url (keys %links) {
         if (!defined($links{$url}{$url})) {
             $links{$url}{$url}{-1} = 1;
@@ -325,6 +332,7 @@ sub check_uri() {
     $results{$uri}{$uri}{success} = 1;
     # Build the list of broken URI's
     my %broken;
+    my $u;
     foreach $u (keys %links) {
         # Don't check mailto: URI's
         next if ($u =~ m/^mailto:/);
@@ -336,9 +344,10 @@ sub check_uri() {
             &hprintf("\tReturn code: %s\n", $results{$u}{$u}{code});
         }
         if ($results{$u}{$u}{success}) {
+            my $fragment;
             foreach $fragment (keys %{$links{$u}}) {
                 next if ($fragment eq $u);
-                if ($_versbose) {
+                if ($_verbose) {
                     &hprintf("\t\t%s %s - Lines: %s\n",
                              $fragment,
                              ($results{$u}{$fragment}?'OK':'Not found'),
@@ -352,6 +361,7 @@ sub check_uri() {
         } else {
             # Couldn't find the document
             $broken{$u}{$u} = 1;
+            my $fragment;
             foreach $fragment (keys %{$links{$u}}) {
                 $broken{$u}{$fragment}++;
             }
@@ -491,7 +501,7 @@ sub parse_document() {
     my $start;
     my $p = W3C::CheckLink->new();
     # Loose interpretation of the HTML comments since browsers will do the same
-    $p->strict_comment(FALSE);
+    $p->strict_comment(0);
     if (! $_summary) {
         $start = &get_timestamp();
         print("Parsing...\n");
@@ -502,8 +512,8 @@ sub parse_document() {
         $p->{Total} = ($document =~ tr/\n//);
     }
     $p->{extract_links} = $links;
-    @chunks = unpack("a$_chunksize"x(length($document)/$_chunksize).'a*',
-                     $document);
+    my @chunks = unpack("a$_chunksize"x(length($document)/$_chunksize).'a*',
+                        $document);
     for (@chunks) {
         $p->parse($_);
     }
@@ -613,7 +623,8 @@ sub check_validity($, $, \%, \%, \%, \%, $) {
     # Checking file: URI's is not allowed with a CGI
     if ($testing ne $uri) {
         if ((! $_cl) && (!($testing =~ m/^file:/)) && ($uri =~ m/^file:/)) {
-            $results->{$uri}{$uri}{code} = $RC_BAD_REQUEST;
+            # Can't test? Return 400 Bad request.
+            $results->{$uri}{$uri}{code} = 400;
             $results->{$uri}{$uri}{success} = 0;
             $results->{$uri}{$uri}{message} = 'Error: \'file:\' URI not allowed';
             if ($_verbose) {
@@ -689,6 +700,7 @@ sub check_validity($, $, \%, \%, \%, \%, $) {
         $p->{Anchors} = $anchors;
     }
     # Check that the fragments exist
+    my $fragment;
     foreach $fragment (keys %{$links->{$uri}}) {
         next if ($fragment eq $uri);
         if (defined($p->{Anchors}{$fragment})
@@ -767,6 +779,7 @@ sub time_diff() {
 # Record the redirects in a hash
 sub record_redirects(\%, \%) {
     my ($redirects, $sub) = @_;
+    my $r;
     foreach $r (keys %$sub) {
         $redirects->{$r} = $sub->{$r};
     }
@@ -811,7 +824,7 @@ sub anchors_summary(\%, \%) {
         print("\n");
     }
     # List of the duplicates, if any.
-    @errors = keys %{$errors};
+    my @errors = keys %{$errors};
     if ($#errors < 0) {
         if (! $_quiet && $_html) {
             print "<p>Valid anchors!</p>\n";
@@ -826,6 +839,7 @@ sub anchors_summary(\%, \%) {
         print("</p>\n<table border=\"1\">\n<tr><td><b>Anchors</b></td><td><b>Lines</b></td></tr>");
     }
     print("\n");
+    my $anchor;
     foreach $anchor (@errors) {
         my $format;
         if ($_html) {
@@ -868,11 +882,14 @@ sub links_summary(\%,\%,\%) {
         my @links = keys %$links;
         my $n_fragments = 0;
         my $n_total = 0;
+        my $u;
         foreach $u (@links) {
             my @fragments = keys %{$links->{$u}};
             $n_fragments += $#fragments + 1;
+            my $f;
             foreach $f (@fragments) {
                 my @lines = keys %{$links->{$u}{$f}};
+                my $l;
                 foreach $l (@lines) {
                     $n_total += $links->{$u}{$f}{$l};
                 }
@@ -889,12 +906,14 @@ sub links_summary(\%,\%,\%) {
     if ($_html) {
         # Print a summary
         my %code_summary;
+        my $u;
         foreach $u (keys %$links) {
             if (defined($results->{$u}{$u}{orig}))  {
                 $code_summary{$results->{$u}{$u}{orig}}++;
             }
         }
         print "<table border=\"1\">\n<tr><td><b>Code</b></td><td><b>Occurences</b></td><td><b>What to do</b></td></tr>\n";
+        my $code;
         foreach $code (sort(keys(%code_summary))) {
             printf("<tr%s>", &bgcolor($code));
             printf("<td>%s</td>", $code);
@@ -906,9 +925,10 @@ sub links_summary(\%,\%,\%) {
     }
 
     # List of the broken links
-    @urls = keys %{$broken};
+    my @urls = keys %{$broken};
     if ($_redirects) {
         # Add the redirected URI's to the report
+        my $l;
         for $l (keys %$redirects) {
             next unless (defined($results->{$l})
                          && !defined($broken->{$l}));
@@ -936,6 +956,7 @@ sub links_summary(\%,\%,\%) {
         print("</p>\n<table border=\"1\">\n<tr><td><b>Location</b></td><td><b>Code</b></td><td><b>Fragment</b></td><td><b>Lines</b></td></tr>");
     }
     print("\n");
+    my $u;
     foreach $u (@urls) {
         my @fragments = keys %{$broken->{$u}};
         # Count the rows displayed
@@ -947,10 +968,12 @@ sub links_summary(\%,\%,\%) {
         my $redirected = &is_redirected($u, %$redirects);
         # List of lines
         my @total_lines;
+        my $f;
         foreach $f (keys %{$links->{$u}}) {
             if ($f eq $u) {
                 next if (defined($links->{$u}{$u}{-1}));
             }
+            my $l;
             foreach $l (keys %{$links->{$u}{$f}}) {
                 push (@total_lines, $l);
             }
@@ -959,7 +982,8 @@ sub links_summary(\%,\%,\%) {
                               sort {$a <=> $b} @total_lines);
         if ($_html) {
             # Main info
-            for (@redirects_urls = &get_redirects($u, %$redirects)) {
+            my @redirects_urls = &get_redirects($u, %$redirects);
+            for (@redirects_urls) {
                 $_ = &show_url($_);
             }
             printf("<tr><th rowspan=\"%d\"%s>%s</th><th rowspan=\"%d\"%s>%d%s%s%s%s</th><td>%s</td><td%s>%s</td></tr>\n",
