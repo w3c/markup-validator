@@ -5,7 +5,7 @@
 # (c) 1999-2002 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.94 2002-10-23 04:33:09 hugo Exp $
+# $Id: checklink.pl,v 2.95 2002-10-23 20:31:46 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -38,7 +38,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.94 $ . '(c) 1999-2002 W3C';
+my $VERSION = q$Revision: 2.95 $ . '(c) 1999-2002 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -91,7 +91,7 @@ if ($#ARGV >= 0 && !(@ARGV == 1 && $ARGV[0] eq 'DEBUG')) {
     my $uri;
     foreach $uri (@ARGV) {
 	if (!$_summary) {
-            printf("%s %s\n", $PROGRAM ,$VERSION) if (! $_html);
+            printf("%s %s\n", $PROGRAM, $VERSION) if (! $_html);
         } else {
             $_verbose = 0;
             $_progress = 0;
@@ -184,7 +184,8 @@ if ($#ARGV >= 0 && !(@ARGV == 1 && $ARGV[0] eq 'DEBUG')) {
 # Command line and usage stuff #
 ################################
 
-sub parse_arguments() {
+sub parse_arguments ()
+{
 
     use Getopt::Long 2.17 qw(GetOptions);
     Getopt::Long::Configure('no_ignore_case');
@@ -220,12 +221,14 @@ sub parse_arguments() {
     }
 }
 
-sub version() {
+sub version ()
+{
     print STDERR "$PROGRAM $VERSION\n";
     exit(0);
 }
 
-sub usage() {
+sub usage ()
+{
     print STDERR "$PROGRAM $VERSION
 
 Usage: checklink <options> <uris>
@@ -271,7 +274,8 @@ Please send bug reports and comments to the www-validator mailing list:
     exit(0);
 }
 
-sub ask_password() {
+sub ask_password ()
+{
     print(STDERR 'Enter the password for user '.$_user.': ');
     # Will only work on Unix... Term::ReadKey from CPAN would be better.
     system('stty -echo');
@@ -286,7 +290,8 @@ sub ask_password() {
 # Transform foo into file://localhost/foo #
 ###########################################
 
-sub urize() {
+sub urize ($)
+{
     use URI ();
     $_ = URI::Escape::uri_unescape($_[0]);
     my $base;
@@ -309,7 +314,8 @@ sub urize() {
 # Check for broken links in a resource #
 ########################################
 
-sub check_uri() {
+sub check_uri ($$$)
+{
     my ($uri, $html_header, $depth) = @_;
     # If $html_header equals 1, we need to generate a HTML header (first
     # instance called in HTML mode).
@@ -556,7 +562,8 @@ Validity</a></p>
 # Get and parse a resource to process #
 #######################################
 
-sub get_document() {
+sub get_document ($$$;\%)
+{
     my ($method, $uri, $in_recursion, $redirects) = @_;
     # $method contains the HTTP method the use (GET or HEAD)
     # $uri contains the identifier of the resource
@@ -628,7 +635,8 @@ sub get_document() {
 # Check whether a URI has already been processed #
 ##################################################
 
-sub already_processed($) {
+sub already_processed ($)
+{
     my ($uri, %redirects) = @_;
     # Don't be verbose for that part...
     my $summary_value = $_summary;
@@ -649,7 +657,8 @@ sub already_processed($) {
 # Get the content of a URI #
 ############################
 
-sub W3C::UserAgent::simple_request() {
+sub W3C::UserAgent::simple_request
+{
     my $self = shift;
     my $response = $self->W3C::UserAgent::SUPER::simple_request(@_);
     if (! defined($self->{FirstResponse})) {
@@ -659,7 +668,8 @@ sub W3C::UserAgent::simple_request() {
     return $response;
 }
 
-sub W3C::UserAgent::redirect_ok {
+sub W3C::UserAgent::redirect_ok
+{
     my ($self, $request) = @_;
 
     if (! ($_summary || (!$doc_count && $_html))) {
@@ -674,7 +684,8 @@ sub W3C::UserAgent::redirect_ok {
     return 1;
 }
 
-sub get_uri() {
+sub get_uri ($$;$\%$$$$)
+{
     # Here we have a lot of extra parameters in order not to lose information
     # if the function is called several times (401's)
     my ($method, $uri, $start, $redirects, $code, $realm, $message,
@@ -754,7 +765,7 @@ sub get_uri() {
     $response->{Redirects} = $ua->{Redirects};
     my $stop = &get_timestamp();
     if (! ($_summary || (!$doc_count && $_html))) {
-        &hprintf(" fetched in %ss\n", &time_diff($start,$stop));
+        &hprintf(" fetched in %ss\n", &time_diff($start, $stop));
     }
     $response->{OriginalCode} = $code;
     $response->{OriginalMessage} = $message;
@@ -768,7 +779,8 @@ sub get_uri() {
 # Record the results of an HTTP request #
 #########################################
 
-sub record_results() {
+sub record_results ($$$)
+{
     my ($uri, $method, $response) = @_;
     $results{$uri}{response} = $response;
     $results{$uri}{method} = $method;
@@ -813,7 +825,8 @@ sub record_results() {
 # Parse a document #
 ####################
 
-sub parse_document() {
+sub parse_document ($$$$;$)
+{
     my ($uri, $location, $document, $links, $rec_needs_links) = @_;
 
     my $p;
@@ -872,7 +885,8 @@ sub parse_document() {
 # Constructor for W3C::CheckLink #
 ###################################
 
-sub W3C::CheckLink::new() {
+sub W3C::CheckLink::new
+{
     my $p = HTML::Parser::new(@_, api_version => 3);
 
     # Start tags
@@ -901,7 +915,8 @@ sub W3C::CheckLink::new() {
 # Record or return  the doctype of the document #
 #################################################
 
-sub W3C::CheckLink::doctype() {
+sub W3C::CheckLink::doctype
+{
     my ($self, $dc) = @_;
     if (! $dc) {
         return $self->{doctype};
@@ -930,7 +945,8 @@ sub W3C::CheckLink::doctype() {
 # Count the number of lines in a file #
 #######################################
 
-sub W3C::CheckLink::new_line() {
+sub W3C::CheckLink::new_line
+{
     my ($self, $string) = @_;
     my $count = ($string =~ tr/\n//);
     $self->{Line} = $self->{Line} + $count;
@@ -943,7 +959,8 @@ sub W3C::CheckLink::new_line() {
 # Extraction of the anchors #
 #############################
 
-sub W3C::CheckLink::get_anchor() {
+sub W3C::CheckLink::get_anchor
+{
     my ($self, $tag, $attr) = @_;
     my $anchor;
 
@@ -967,7 +984,8 @@ sub W3C::CheckLink::get_anchor() {
 # W3C::CheckLink handlers #
 ###########################
 
-sub W3C::CheckLink::add_link() {
+sub W3C::CheckLink::add_link
+{
     my ($self, $uri) = @_;
 
     if (defined($uri)) {
@@ -975,7 +993,8 @@ sub W3C::CheckLink::add_link() {
     }
 }
 
-sub W3C::CheckLink::start() {
+sub W3C::CheckLink::start
+{
     my ($self, $tag, $attr, $text) = @_;
 
     # Anchors
@@ -1010,7 +1029,8 @@ sub W3C::CheckLink::start() {
     }
 }
 
-sub W3C::CheckLink::text() {
+sub W3C::CheckLink::text
+{
     my ($self, $text) = @_;
     if (!$_progress) {
         # If we are just extracting information about anchors,
@@ -1022,7 +1042,8 @@ sub W3C::CheckLink::text() {
     }
 }
 
-sub W3C::CheckLink::declaration() {
+sub W3C::CheckLink::declaration
+{
     my ($self, $text) = @_;
     # Extract the doctype
     my @declaration = split(/\s+/, $text, 4);
@@ -1048,7 +1069,8 @@ sub W3C::CheckLink::declaration() {
 # Check the validity of a link #
 ################################
 
-sub check_validity() {
+sub check_validity ($$\%\%)
+{
     my ($testing, $uri, $links, $redirects) = @_;
     # $testing is the URI of the document checked
     # $uri is the URI of the target that we are verifying
@@ -1133,7 +1155,8 @@ sub check_validity() {
     }
 }
 
-sub escape_match($, \%) {
+sub escape_match ($\%)
+{
     use URI::Escape ();
     my ($a, $hash) = (URI::Escape::uri_unescape($_[0]), $_[1]);
     foreach $b (keys %$hash) {
@@ -1148,7 +1171,8 @@ sub escape_match($, \%) {
 # Ask for authentication #
 ##########################
 
-sub authentication() {
+sub authentication ($)
+{
     my $r = $_[0];
     $r->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
     my $realm = $1;
@@ -1177,12 +1201,14 @@ sub authentication() {
 # Get statistics #
 ##################
 
-sub get_timestamp() {
+sub get_timestamp ()
+{
     use Time::HiRes ();
     return pack('LL', Time::HiRes::gettimeofday());
 }
 
-sub time_diff() {
+sub time_diff ($$)
+{
     my @start = unpack('LL', $_[0]);
     my @stop = unpack('LL', $_[1]);
     for ($start[1], $stop[1]) {
@@ -1196,7 +1222,8 @@ sub time_diff() {
 ########################
 
 # Record the redirects in a hash
-sub record_redirects(\%, \%) {
+sub record_redirects (\%\%)
+{
     my ($redirects, $sub) = @_;
     my $r;
     foreach $r (keys %$sub) {
@@ -1205,13 +1232,15 @@ sub record_redirects(\%, \%) {
 }
 
 # Determine if a request is redirected
-sub is_redirected($, %) {
+sub is_redirected ($%)
+{
     my ($uri, %redirects) = @_;
     return(defined($redirects{$uri}));
 }
 
 # Get a list of redirects for a URI
-sub get_redirects($, %) {
+sub get_redirects ($%)
+{
     my ($uri, %redirects) = @_;
     my @history = ($uri);
     my $origin = $uri;
@@ -1228,7 +1257,8 @@ sub get_redirects($, %) {
 # Tool for sorting the unique elements of an array #
 ####################################################
 
-sub sort_unique() {
+sub sort_unique (@)
+{
     my %saw;
     @saw{@_} = ();
     return (sort { $a <=> $b } keys %saw);
@@ -1238,7 +1268,8 @@ sub sort_unique() {
 # Print the results #
 #####################
 
-sub anchors_summary(\%, \%) {
+sub anchors_summary (\%\%)
+{
     my ($anchors, $errors) = @_;
     # Number of anchors found.
     if (! $_quiet) {
@@ -1287,7 +1318,8 @@ sub anchors_summary(\%, \%) {
     }
 }
 
-sub show_link_report {
+sub show_link_report (\%\%\%\%\@;$\%)
+{
     my ($links, $results, $broken, $redirects, $urls, $codes, $todo) = @_;
 
     if ($_html) {
@@ -1481,7 +1513,8 @@ HTTP Message: %s%s%s</dd>
     }
 }
 
-sub code_shown() {
+sub code_shown ($$)
+{
     my ($u, $results) = @_;
 
     if ($results->{$u}{location}{record} == 200) {
@@ -1491,7 +1524,8 @@ sub code_shown() {
     }
 }
 
-sub links_summary {
+sub links_summary (\%\%\%\%)
+{
     # Advices to fix the problems
 
     my %todo = ( 200 => 'There are broken fragments which must be fixed.',
@@ -1630,7 +1664,8 @@ sub links_summary {
 # Global stats #
 ################
 
-sub global_stats() {
+sub global_stats ()
+{
     my $stop = &get_timestamp();
     return sprintf("Checked %d document(s) in %ss.",
                    ($doc_count<=$_max_documents? $doc_count : $_max_documents),
@@ -1641,7 +1676,8 @@ sub global_stats() {
 # HTML interface #
 ##################
 
-sub html_header() {
+sub html_header ($;$)
+{
     my $uri = &encode($_[0]);
     # Cache control?
     if (defined($_[1])) {
@@ -1706,7 +1742,8 @@ dt.report {
 \n";
 }
 
-sub bgcolor() {
+sub bgcolor ($)
+{
     my ($code) = @_;
     my $class;
     my $r = HTTP::Response->new($code);
@@ -1726,7 +1763,8 @@ sub bgcolor() {
     return(' class="'.$class.'"');
 }
 
-sub show_url() {
+sub show_url ($;$)
+{
     my ($url, $fragment) = @_;
     if (defined($fragment)) {
         $url .= '#'.$fragment;
@@ -1734,7 +1772,8 @@ sub show_url() {
     return('<a href="'.$url.'">'.&encode(defined($fragment) ? $fragment : $url).'</a>');
 }
 
-sub html_footer() {
+sub html_footer ()
+{
 
     if (($doc_count > 0) && !$_quiet) {
         printf("<p>%s</p>\n", &global_stats());
@@ -1762,7 +1801,8 @@ code</a> from
 ";
 }
 
-sub file_uri() {
+sub file_uri ($)
+{
     my $uri = $_[0];
     &html_header($uri);
     print "<h2>Forbidden</h2>
@@ -1772,7 +1812,8 @@ sub file_uri() {
     exit;
 }
 
-sub print_form() {
+sub print_form ($)
+{
     my ($q) = @_;
     &html_header('', 1);
     print "<form action=\"".$q->self_url()."\" method=\"get\">
@@ -1800,7 +1841,8 @@ of a document that you would like to check:</label></p>
     exit;
 }
 
-sub encode() {
+sub encode (@)
+{
     if (! $_html) {
         return @_;
     } else {
@@ -1808,7 +1850,8 @@ sub encode() {
     }
 }
 
-sub hprintf() {
+sub hprintf (@)
+{
     if (! $_html) {
         printf(@_);
     } else {
