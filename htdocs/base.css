@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.20.2.18 2002-06-24 00:40:03 link Exp $
+   $Id: base.css,v 1.20.2.19 2002-07-05 20:33:07 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -12,6 +12,7 @@
 @import url(tips.css);    /* CSS for Quality Tips. */
 
 body {
+	line-height: 1.2;
   color:          black;
   background:     white;
   font-weight:    normal;
@@ -19,7 +20,6 @@ body {
   letter-spacing: normal;
   text-transform: none;
   font-family:    Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
-  font-size:      12pt;
   font-style:     normal;
   text-decoration: none;
   word-spacing: normal;
@@ -31,6 +31,10 @@ a:hover   {background-color:#eee}
 a:visited {color: purple}
 
 acronym:hover, abbrev:hover {cursor: help}
+abbrev[title], acronym[title], span[title] {
+	border-bottom: thin dotted;
+	cursor: help;
+}
 
 pre, code, tt {
 	font-family: monospace;
