@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.40 2003-05-04 01:08:49 ville Exp $
+# $Id: check,v 1.305.2.41 2003-05-04 19:14:31 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.40 $;
+  $VERSION    =  q$Revision: 1.305.2.41 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -172,7 +172,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-05-04 01:08:49 $,
+                              Date => q$Date: 2003-05-04 19:14:31 $,
                              });
 
 #
@@ -2950,6 +2950,9 @@ sub self_url_file {
   return $thispage;
 }
 
-# Local variables:
+# Local Variables:
+# mode: perl
 # indent-tabs-mode: nil
+# tab-width: 2
+# perl-indent-level: 2
 # End:
