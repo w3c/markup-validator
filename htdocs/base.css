@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.20.2.17 2002-06-16 20:42:08 link Exp $
+   $Id: base.css,v 1.20.2.18 2002-06-24 00:40:03 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -14,12 +14,17 @@
 body {
   color:          black;
   background:     white;
-  font-size:      1em;
   font-weight:    normal;
   word-spacing:   normal;
   letter-spacing: normal;
   text-transform: none;
-  font-family:    Verdana, "Myriad Web", Syntax, sans-serif;
+  font-family:    Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-size:      12pt;
+  font-style:     normal;
+  text-decoration: none;
+  word-spacing: normal;
+  letter-spacing: normal;
+  text-transform: none;
 }
 
 a:hover   {background-color:#eee}
@@ -27,7 +32,10 @@ a:visited {color: purple}
 
 acronym:hover, abbrev:hover {cursor: help}
 
-pre, code, tt {font-family: monospace}
+pre, code, tt {
+	font-family: monospace;
+	font-size: 1em;
+}
 
 a:link img, a:visited img {border-style: none}
 a img {color: white} /* The only way to hide the border in NS 4.x */
@@ -73,7 +81,10 @@ h1#title {
 /* done vs. tbc for the TODO list */
 .done { text-decoration: line-through; }
 
-address img {float: right}
+address img {
+	float: right;
+	width: 88px;
+}
 address {
   padding-top: .5em;
   padding-right: 1em;
@@ -82,7 +93,7 @@ address {
   margin-top:  3em;;
   border-top: 1px solid black;
   background-color: #eee;
-  clear: both;
+  clear: right;
 }
 
 p.jumpbar {
