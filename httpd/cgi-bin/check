@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.171 2001-09-06 22:46:20 link Exp $
+# $Id: check,v 1.172 2001-09-06 23:57:54 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.171 $;
+$VERSION    =  q$Revision: 1.172 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-09-06 22:46:20 $;
+$DATE       =  q$Date: 2001-09-06 23:57:54 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -329,7 +329,7 @@ if (URI::eq("$File->{URI}", $q->param('uri'))) { # @@ Why do we need to stringif
   &add_table("File", $File->{URI});
 } else {
   &add_table("<a href='$uri_def_uri'>URI</a>",
-      '<a href="'. $q->param('uri'). '">'. $q->param('uri'). '</a>\n'.
+      '<a href="'. $q->param('uri'). '">'. $q->param('uri'). "</a>\n".
       ' ' x 6 . '<span class="note">I was redirected to <a href="'.
       $File->{URI}. '">'. $File->{URI}. '</a></span>');
 }
