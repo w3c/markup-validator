@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.362 2004-11-19 07:12:24 ot Exp $
+# $Id: check,v 1.363 2004-11-20 09:09:38 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -222,7 +222,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.362 $;
+  $VERSION    =  q$Revision: 1.363 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1196,7 +1196,7 @@ sub handle_uri {
     return $File;
   }
 
-  unless ($CFG->{'Allow Private IPs'}) {
+  unless ($CFG->{'Allow Private IPs'} or !$uri->can('host')) {
     my $addr = my $iptype = undef;
     if (my $host = gethostbyname($uri->host())) {
       $addr = inet_ntoa($host->addr()) if $host->addr();
