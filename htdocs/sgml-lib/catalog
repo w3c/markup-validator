@@ -1,8 +1,9 @@
 
 	-- SGML catalog for the W3C HTML Validation Service --
-	-- $Id: catalog,v 1.16 2001-06-16 18:58:35 link Exp $ --
+	-- $Id: catalog,v 1.17 2001-06-23 16:42:50 link Exp $ --
 
 OVERRIDE YES	-- prefer public identifiers to system identifiers --
+SGMLDECL REC-html401-19991224/HTML4.decl
 
 	-- ISO latin 1 entity set for HTML --
 PUBLIC	"-//IETF//ENTITIES Added Latin 1 for HTML//EN"	html-latin.sgml
