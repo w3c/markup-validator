@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.23 2002-12-06 21:29:51 ville Exp $
+# $Id: check,v 1.305.2.24 2002-12-08 17:51:11 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.23 $;
+  $VERSION    =  q$Revision: 1.305.2.24 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -166,7 +166,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-12-06 21:29:51 $,
+                              Date => q$Date: 2002-12-08 17:51:11 $,
                              });
 
 #
@@ -486,7 +486,7 @@ if (&is_xml($File->{Type})) {
   push(@xmlflags, '-wxml');
   &add_warning($File, <<".EOF.");
   <em>Note</em>: The Validator XML support has
-  <a href="http://openjade.sf.net/doc/xml.htm"
+  <a href="http://openjade.sourceforge.net/doc/xml.htm"
      title="Limitations in Validator XML support">some limitations</a>.
 .EOF.
 }
