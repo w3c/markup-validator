@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.22 2002-12-04 11:01:15 link Exp $
+# $Id: check,v 1.305.2.23 2002-12-06 21:29:51 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.22 $;
+  $VERSION    =  q$Revision: 1.305.2.23 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -166,7 +166,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-12-04 11:01:15 $,
+                              Date => q$Date: 2002-12-06 21:29:51 $,
                              });
 
 #
@@ -820,36 +820,36 @@ sub print_table {
 
   add_table($Options, '',
             # Show source?
-            q(<label title="Show Page Source (accesskey: 5)"><input type="checkbox" value="1" name="ss" ) .
+            q(<label title="Show Page Source (accesskey: 5)" for="ss"><input type="checkbox" value="1" id="ss" name="ss" ) .
             q(accesskey="5" ) .
             ($File->{Opt}->{'Show Source'}    ? q(checked="checked" ) : '') .
             q(/>Show&nbsp;Source</label>),
             # Outline?
-            q(<label title="Show an Outline of the document (accesskey: 6)"><input type="checkbox" value="1" name="outline" ) .
+            q(<label title="Show an Outline of the document (accesskey: 6)" for="outline"><input type="checkbox" value="1" id="outline" name="outline" ) .
             q(accesskey="6" ) .
             ($File->{Opt}->{'Outline'}        ? q(checked="checked" ) : '') .
             q(/>Outline</label>)
            );
   add_table($Options, '',
             # Parse tree?
-            q(<label title="Show Parse Tree (accesskey: 7)"><input type="checkbox" value="1" name="sp" ) .
+            q(<label title="Show Parse Tree (accesskey: 7)" for="sp"><input type="checkbox" value="1" id="sp" name="sp" ) .
             q(accesskey="7" ) .
             ($File->{Opt}->{'Show Parsetree'} ? q(checked="checked" ) : '') .
             q(/>Parse&nbsp;Tree</label>),
             # No attributes?
-            q(<label title="Exclude Attributes from Parse Tree (accesskey: 8)"><input type="checkbox" value="1" name="noatt" ) .
+            q(<label title="Exclude Attributes from Parse Tree (accesskey: 8)" for="noatt"><input type="checkbox" value="1" id="noatt" name="noatt" ) .
             q(accesskey="8" ) .
             ($File->{Opt}->{'No Attributes'}  ? q(checked="checked" ) : '') .
             q(/>...no&nbsp;attributes</label>)
            );
   add_table($Options, '',
             # Validate error pages?
-             q(<label title="Validate also pages for which the HTTP status code indicates an error"><input type="checkbox" value="1" name="No200" ) .
+             q(<label title="Validate also pages for which the HTTP status code indicates an error" for="No200"><input type="checkbox" value="1" id="No200" name="No200" ) .
              # @@@ accesskey missing
              ($File->{Opt}->{'No200'}         ? q(checked="checked" ) : '') .
              q(/>Validate&nbsp;error&nbsp;pages</label>),
             # Verbose output?
-             q(<label title="Show Verbose Output"><input type="checkbox" value="1" name="verbose" ) .
+             q(<label title="Show Verbose Output" for="verbose"><input type="checkbox" value="1" id="verbose" name="verbose" ) .
              # @@@ accesskey missing
              ($File->{Opt}->{'Verbose'}         ? q(checked="checked" ) : '') .
              q(/>Verbose&nbsp;Output</label>)
