@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.25 1999-08-03 04:59:16 gerald Exp $
+# $Id: check,v 1.26 1999-08-19 23:50:21 gerald Exp $
 
 use LWP::UserAgent;
 
@@ -16,8 +16,8 @@ use LWP::UserAgent;
 # Constant definitions
 #############################################################################
 
-$cvsrevision	= '$Revision: 1.25 $';
-$cvsdate	= '$Date: 1999-08-03 04:59:16 $';
+$cvsrevision	= '$Revision: 1.26 $';
+$cvsdate	= '$Date: 1999-08-19 23:50:21 $';
 
 $logfile	= "/var/log/httpd/val-svc";
 
@@ -106,7 +106,10 @@ $gifborder       = " border=0";
     'http://www.w3.org/MarkUp/Cougar/Cougar.dtd', '<a href="http://www.w3.org/MarkUp/Cougar/">HTML Level "Cougar"</a>',
     '-//W3C//DTD HTML 4.0//EN', '<a href="http://www.w3.org/TR/REC-html40/">HTML 4.0</a>',
     '-//W3C//DTD HTML 4.0 Transitional//EN', '<a href="http://www.w3.org/TR/REC-html40/">HTML 4.0</a> Transitional',
-    '-//W3C//DTD HTML 4.0 Frameset//EN', '<a href="http://www.w3.org/TR/REC-html40/">HTML 4.0</a> Frameset',
+    '-//W3C//DTD HTML 4.0 Frameset//EN', '<a href="http://www.w3.org/TR/PR-html40/">HTML 4.0</a> Frameset',
+    '-//W3C//DTD HTML 4.01//EN', '<a href="http://www.w3.org/TR/1999/PR-html40-19990820/">HTML 4.01</a>',
+    '-//W3C//DTD HTML 4.01 Transitional//EN', '<a href="http://www.w3.org/TR/1999/PR-html40-19990820/">HTML 4.01</a> Transitional',
+    '-//W3C//DTD HTML 4.01 Frameset//EN', '<a href="http://www.w3.org/TR/1999/PR-html40-19990820/">HTML 4.01</a> Frameset',
     '-//W3C//DTD XHTML 1.0 Strict//EN', '<a href="http://www.w3.org/TR/WD-html-in-xml/">XHTML 1.0</a> Strict',
     '-//W3C//DTD XHTML 1.0 Transitional//EN', '<a href="http://www.w3.org/TR/WD-html-in-xml/">XHTML 1.0</a> Transitional',
     '-//W3C//DTD XHTML 1.0 Frameset//EN', '<a href="http://www.w3.org/TR/WD-html-in-xml/">XHTML 1.0</a> Frameset'
@@ -462,8 +465,8 @@ if ( defined $response->content_length ) {
 }
 
 if ( $xhtml ) {
-    $ENV{SP_CATALOG_FILES} = "$sgmlstuff/WD-html-in-xml-19990304/DTD/xhtml.soc";
-    $ENV{SGML_SEARCH_PATH} = "$sgmlstuff/WD-html-in-xml-19990304/";
+    $ENV{SP_CATALOG_FILES} = "$sgmlstuff/PR-xhtml1-19990820/xhtml.soc";
+    $ENV{SGML_SEARCH_PATH} = "$sgmlstuff/PR-xhtml1-19990820/";
     $ENV{SP_CHARSET_FIXED}="YES";
     $ENV{SP_ENCODING}="XML";
     $xmlflags = "-wxml ";
@@ -717,6 +720,17 @@ else {
 	elsif ( $version =~ /HTML 4\.0<\/a> / ) {
 	    $gifname = "vh40.gif";
 	    $alttext = "Valid HTML 4.0!";
+            $gifhw   = " height=31 width=88";
+	}
+	elsif ( $version =~ /HTML 4\.01<\/a>$/ ) {
+	    $gifname = "vh40.gif";
+	    $alttext = "Valid HTML 4.01!";
+            $gifborder = "";
+            $gifhw   = " height=31 width=88";
+	}
+	elsif ( $version =~ /HTML 4\.01<\/a> / ) {
+	    $gifname = "vh40.gif";
+	    $alttext = "Valid HTML 4.01!";
             $gifhw   = " height=31 width=88";
 	}
 	elsif ( $version =~ /HTML 3\.0/ ) {
