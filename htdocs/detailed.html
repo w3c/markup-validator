@@ -1,19 +1,24 @@
-<!--#set var="revision" value="\$Id: detailed.html,v 1.2.2.1 2002-03-17 22:32:40 link Exp $"
---><!--#set var="date" value="\$Date: 2002-03-17 22:32:40 $"
+<!--#set var="revision" value="\$Id: detailed.html,v 1.2.2.2 2002-06-15 21:38:04 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-06-15 21:38:04 $"
 --><!--#set var="title" value="The W3C HTML Validation Service"
 --><!--#include virtual="/header.html" -->
 
   <p id="skip">
-    This form allows you to enter a URI or upload files from your computer and
-    have them validated.
+    This form allows you to enter a <acronym
+    title="Universal Resource Identifier">URI</acronym> or upload files from
+    your computer and have them validated.
   </p>
     <div>
       <form method="post" enctype="multipart/form-data" action="/check">
         <table>
-          <tr><th><label title="Address of page to Validate" for="uri">Address (URI):</label></th><td colspan="2"><input id="uri" name="uri" size="50" /> or...</td></tr>
-          <tr><th><label for="uploaded_file">Local File:</label></th><td colspan="2"><input type="file" id="uploaded_file" name="uploaded_file" size="50" /></td></tr>
+          <tr><th><label title="Address of page to Validate"
+             for="uri">Address:</label></th><td colspan="2"><input id="uri"
+             name="uri" size="50" /> or...</td></tr>
+          <tr><th><label for="uploaded_file">Local File:</label></th><td
+          	colspan="2"><input type="file" id="uploaded_file"
+          	name="uploaded_file" size="50" /></td></tr>
           <tr>
-            <th><label for="charset">Character Encoding:</label></th>
+            <th><label for="charset">Encoding:</label></th>
             <td colspan="2">
               <select id="charset" name="charset">
                 <option value="(detect automatically)">(detect automatically)</option>
@@ -54,7 +59,7 @@
             </td>
           </tr>
           <tr>
-            <th><label for="doctype">Document Type:</label></th>
+            <th><label for="doctype">Type:</label></th>
             <td colspan="2">
               <select id="doctype" name="doctype">
                 <option value="Inline">(detect automatically)</option>

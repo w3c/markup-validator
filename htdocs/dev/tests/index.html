@@ -1,137 +1,112 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
+<!--#set var="revision" value="\$Id: index.html,v 1.38.2.2 2002-06-15 21:38:04 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-06-15 21:38:04 $"
+--><!--#set var="title" value="The W3C HTML Validation Service: Tests"
+--><!--#include virtual="../../header.html" -->
 
-<head>
-  <title>W3C HTML Validation Service: Tests</title>
-  <link rev="made" href="mailto:gerald@w3.org">
-  <meta name="revision"
-    content="$Id: index.html,v 1.38.2.1 2002-05-23 18:11:59 link Exp $">
-</head>
+	<p>
+  	This page is mainly for my own use, to test various things to
+  	make sure everything works fine after making changes to
+  	<a href="../../">the validator</a>. If you can think of interesting
+  	test cases that aren't on this page,
+  	<a href="../../feedback.html">let me know</a>.
+	</p>
+	<div id="valid">
+		<h2>Docs that should be valid</h2>
+		<ul>
+			<li><a href="../../check?uri=http://www.w3.org/">W3C home</a></li>
+			<li><a href="../../check?uri=http://www.w3.org/;ss;sp;outline">W3C home, extra parameters</a></li>
+      <li><a href="../../check?uri=http://validator.w3.org/dev/tests/html40-strict.html;ss">HTML 4.0 Strict</a></li>
+      <li><a href="../../check?uri=http://validator.w3.org/dev/tests/html40-transitional.html;ss">HTML 4.0 Transitional</a></li>
+      <li><a href="../../check?uri=http://validator.w3.org/dev/tests/html40-frameset.html;ss">HTML 4.0 Frameset</a></li>
+      <li><a href="../../check?uri=http://www.w3.org/TR/1999/PR-html40-19990824/">HTML 4.01</a></li>
+      <li><a href="../../check?uri=http://validator.w3.org/dev/tests/iso-html.html;ss">ISO-HTML</a></li>
+      <li><a href="../../check?uri=http://validator.w3.org/dev/tests/xhtml1-strict.html;ss">XHTML 1.0 Strict</a></li>
+      <li><a href="../../check?uri=http://validator.w3.org/dev/tests/xhtml1-strict-minimal.html;ss">XHTML 1.0 Strict, minimal document from xhtml spec</a></li>
+      <li><a href="../../check?uri=http://validator.w3.org/dev/tests/xhtml1-strict-missing-xmlns.html;ss">XHTML 1.0 Strict, missing xmlns attribute (valid)</a></li>
+      <li><a href="../../check?uri=http://validator.w3.org/dev/tests/xhtml-basic10.html;ss">XHTML Basic 1.0 (valid)</a></li>
+      <li><a href="../../check?uri=http://validator.w3.org/dev/tests/xhtml11-minimal.html;ss">XHTML 1.1 (minimal document)</a></li>
+      <li><a href="../../check?uri=http://www.w3.org/Protocols/rfc2616/rfc2616.html">XHTML sans doctype</a> (DanC's HTMLized RFC 2616;well-formed, but not valid!)</li>
+      <li><a href="../../check?uri=http://www.w3.org/TR/1999/WD-xhtml1-19991124/">XHTML 1.0</a></li>
+      <li><a href="../../check?uri=http://www.w3.org/TR/1998/REC-xml-19980210.xml">XML 1.0</a></li>
+      <li><a href="../../check?uri=http://validator.w3.org/dev/tests/xhtml-mathml2.html;ss">XHTML/MathML2</a>
+      		(from the <a href="http://www.w3.org/TR/2000/CR-MathML2-20001113/chapter2.html#N1783">MathML 2.0 spec</a>)</li>
+      <li><a href="../../check?uri=http://validator.w3.org/dev/tests/xhtml-mathml2-fpi.html;ss">XHTML/MathML2 w/FPI</a></li>
+      <li><a href="../../check?uri=http://validator.w3.org/dev/tests/mathml2.html;ss">MathML 2.0</a> (minimal test document)</li>
+      <li><a href="../../check?uri=http://www.w3.org/1999/09/SVG-access/computer.svg">image/svg</a></li>
+      <li><a href="../../check?uri=http://www.w3.org/TR/2001/PR-SVG-20010719/images/struct/StandAlone01.svg">SVG 1.0 from 20010719 PR</a></li>
+      <li><a href="../../check?uri=http://validator.w3.org/dev/tests/REC-SVG-1_0-minimal.svg">SVG 1.0 Rec. minimal document</a></li>
+      <li>@@ application/smil</li>
+      <li>SMIL 1.0 <a href="../../check?uri=http://validator.w3.org/dev/tests/smil10-minimal.smi">Minimal Document</a> w/DOCTYPE.</li>
+      <li>SMIL 2.0 <a href="../../check?uri=http://validator.w3.org/dev/tests/smil20-profile-doctype.smi">Testcase (wrong Namespace?)</a> w/DOCTYPE.</li>
+      <li id="xml">more XML test cases:
+			  <ul>
+			    <li><a href="../../check?uri=http://impressive.net/people/gerald/2000/10/18/test-staroffice-doc.xml;ss">XML output from OpenOffice 5.2</a>
+			    		("Build/Tag number OpenOffice605"), many namespaces
+			    <li><a href="../../check?uri=http://www.oasis-open.org/committees/xmltest/xmlconf-19990712.xml;ss">xmlconf-19990712.xml</a>
+			    <li><a href="../../check?uri=http://www.w3.org/1999/08/WD-xpath-19990813.xml;ss">WD-xpath-19990813.xml</a>
+			    <li><a href="http://dmoz.org/rdf.html">stuff linked from http://dmoz.org/rdf.html</a>
+			  </ul>
+			</li>
+		</ul>
+	</div>
 
-<body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
+	<div id="encodings">
+		<h2>Different encodings</h2>
+		<ul>
+      <li><a href="../../check?uri=http://www.w3.org/2001/06/utf-8-test/UTF-8-demo.html">UTF-8 sample text (correct)</a>,
+      		<a href='http://www.w3.org/2001/06/utf-8-test/'>more positive tests</a></li>
+      <li><a href="../../check?uri=http://www.w3.org/2001/06/utf-8-wrong/UTF-8-test.html">UTF-8 stress test (wrong cases)</a>,
+      		<a href='http://www.w3.org/2001/06/utf-8-wrong/'>more negative tests</a></li>
+      <li><a href="../../check?uri=http://www.w3.org/Press/1998/XSL-WD.html.ja">iso-2022-jp encoded document</a></li>
+      <li><a href="../../check?uri=http://www.vir.si/">windows-1250 encoded document (Slovenian)</a></li>
+      <li><a href="../../check?uri=http://www.w3.org/TR/ruby/">utf-8 encoded document</a></li>
+		</ul>
+	</div>
 
-<p>
-  <a href="http://www.w3.org/"><img
-     src="http://www.w3.org/Icons/WWW/w3c_home" height=48 border=0
-     alt="W3C"></a>
-</p>
+	<div id="errors">
+		<h2>Error conditions &amp; strange cases</h2>
+		<ul>
+      <li><a href="../../check/referer">../../check/referer</a></li>
+      <li><a href="../../check?uri=http://www.w3.org/MarkUp">redirect</a></li>
+      <li><a href="../../check">script invoked with no parameters</a></li>
+      <li><a href="../../check?uri=">uri parameter is empty</a></li>
+      <li><a href="../../check?uri=www.w3.org/">uri is missing http://</a></li>
+      <li><a href="../../check?uri=http://www.w3.org/bogus">404 not found</a></li>
+      <li><a href="../../check?uri=http://validator.w3.org/sgml-lib/catalog">text/plain</a></li>
+      <li><a href="../../check?uri=http://validator.w3.org:8000/">httpd on a non-standard port</a></li>
+      <li><a href="../../check?uri=http://validator.w3.org/dev/tests/xhtml1-missing-doctype-and-xmlns.html;ss">XHTML, no doctype, no xmlns</a> (invalid)</li>
+      <li><a href="../../check?uri=http://validator.w3.org/dev/tests/bogus-fpi.html;ss">bogus FPI</a></li>
+      <li><a href="../../check?uri=http://validator.w3.org/dev/tests/xhtml1-blank-1st-line.html;ss">XHTML1, blank first line</a>
+      		(<a href="http://lists.w3.org/Archives/Public/www-validator/2000JanMar/0144.html">should be marked as invalid</a>)</li>
+      <li><a href="../../check?uri=http://validator.w3.org/dev/tests/xhtml1-bogus-element.html;ss">XHTML1, bogus element</a></li>
+      <li><a href="../../check?uri=http://www.w3.org/2001/01/xml-latin1.html;ss;sp;noatt">us-ascii xml document with a latin1 character</a> (should be invalid)</li>
+      <li><a href="../../check?uri=http://validator.w3.org/dev/tests/no-newlines.html;ss;sp;noatt">no newlines</a></li>
+      <li><a href="../../check?uri=file%3A///etc/passwd">a file: URI</a></li>
+      <li><a href="../../check?uri=http://validator.w3.org/dev/tests/nonSGML-chars.html">Non-SGML Chars.</a>
+		</ul>
+	</div>
 
-<h1>W3C HTML Validation Service: Tests</h1>
+	<div id="invalid">
+		<h2>Docs that are probably invalid</h2>
+		<ul>
+      <li><a href="../../check?uri=http://www.yahoo.com/">Yahoo!</a></li>
+      <li><a href="../../check?uri=http://www.microsoft.com/">Microsoft</a></li>
+      <li><a href="../../check?uri=http://www.netscape.com/">Netscape</a>
+    </ul>
+	</div>
 
-<p>
-  This page is mainly for my own use, to test various things to
-  make sure everything works fine after making changes to <a
-  href="/">the validator</a>. If you can think of interesting
-  test cases that aren't on this page, <a
-  href="/feedback.html">let me know</a>.
-</p>
+	<div id="suites">
+		<h2>Other Test Suites</h2>
+		<ul><li><a href="http://www.nist.gov/xml/">NIST's XML, DOM test suites</a></ul>
+	</div>
 
-<h2><a name="valid">Docs that should be valid</a></h2>
+	<div id="regress">
+		<h2>Bugs and Regression Tests</h2>
+		<ul>
+			<li><a href="../../check?uri=http://validator.w3.org/dev/tests/long-lines.html">Long Lines (cause a core)</a></li>
+		</ul>
+	</div>
 
-<ul>
-<li><a href="/check?uri=http://www.w3.org/">W3C home</a>
-<li><a href="/check?uri=http://www.w3.org/;ss;sp;outline;weblint">W3C home, extra parameters</a>
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/html40-strict.html;ss">HTML 4.0 Strict</a>
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/html40-transitional.html;ss">HTML 4.0 Transitional</a>
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/html40-frameset.html;ss">HTML 4.0 Frameset</a>
-<li><a href="/check?uri=http://www.w3.org/TR/1999/PR-html40-19990824/">HTML 4.01</a>
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/iso-html.html;ss">ISO-HTML</a>
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/xhtml1-strict.html;ss">XHTML 1.0 Strict</a>
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/xhtml1-strict-minimal.html;ss">XHTML 1.0 Strict, minimal document from xhtml spec</a>
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/xhtml1-strict-missing-xmlns.html;ss">XHTML 1.0 Strict, missing xmlns attribute (valid)</a>
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/xhtml-basic10.html;ss">XHTML Basic 1.0 (valid)</a>
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/xhtml11-minimal.html;ss">XHTML 1.1 (minimal document)</a>
-<li><a href="/check?uri=http://www.w3.org/Protocols/rfc2616/rfc2616.html">XHTML sans doctype</a> (DanC's HTMLized RFC 2616) (well-formed, but served as text/html; not valid!)
-<li><a href="/check?uri=http://www.w3.org/TR/1999/WD-xhtml1-19991124/">XHTML 1.0</a>
-<li><a href="/check?uri=http://www.w3.org/TR/1998/REC-xml-19980210.xml">XML 1.0</a>
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/xhtml-mathml2.html;ss">XHTML/MathML2</a> (from the <a href="http://www.w3.org/TR/2000/CR-MathML2-20001113/chapter2.html#N1783">MathML 2.0 spec</a>)
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/xhtml-mathml2-fpi.html;ss">XHTML/MathML2 w/FPI</a>
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/mathml2.html;ss">MathML 2.0</a> (minimal test document)
-<li><a href="/check?uri=http://www.w3.org/1999/09/SVG-access/computer.svg">image/svg</a>
-<li><a href="/check?uri=http://www.w3.org/TR/2001/PR-SVG-20010719/images/struct/StandAlone01.svg">SVG 1.0 from 20010719 PR</a>
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/REC-SVG-1_0-minimal.svg">SVG 1.0 Rec. minimal document</a>
-<li>@@ application/smil
-<li>SMIL 1.0 <a href="/check?uri=http://validator.w3.org/dev/tests/smil10-minimal.smi">Minimal Document</a> w/DOCTYPE.
-<li>SMIL 2.0 <a href="/check?uri=http://validator.w3.org/dev/tests/smil20-profile-doctype.smi">Testcase (wrong Namespace?)</a> w/DOCTYPE.
-<li><a name="xml">more XML test cases</a>:
-  <ul>
-    <li><a href="/check?uri=http://impressive.net/people/gerald/2000/10/18/test-staroffice-doc.xml;ss">XML output from OpenOffice 5.2</a> ("Build/Tag number OpenOffice605"), many namespaces
-    <li><a href="/check?uri=http://www.oasis-open.org/committees/xmltest/xmlconf-19990712.xml;ss">xmlconf-19990712.xml</a>
-    <li><a href="/check?uri=http://www.w3.org/1999/08/WD-xpath-19990813.xml;ss">WD-xpath-19990813.xml</a>
-    <li><a href="http://dmoz.org/rdf.html">stuff linked from
-    http://dmoz.org/rdf.html</a>
-  </ul>
-</ul>
-
-<h2><a name="encodings">Different encodings</a></h2>
-
-<ul>
-<li><a href="/check?uri=http://www.w3.org/2001/06/utf-8-test/UTF-8-demo.html">UTF-8
-sample text (correct)</a>, <a href='http://www.w3.org/2001/06/utf-8-test/'>more positive tests</a>
-<li><a href="/check?uri=http://www.w3.org/2001/06/utf-8-wrong/UTF-8-test.html">UTF-8
-stress test (wrong cases)</a>, <a href='http://www.w3.org/2001/06/utf-8-wrong/'>more negative tests</a>
-<li><a href="/check?uri=http://www.w3.org/Press/1998/XSL-WD.html.ja">iso-2022-jp encoded document</a>
-<li><a href="/check?uri=http://www.vir.si/">windows-1250 encoded document (Slovenian)</a>
-<li><a href="/check?uri=http://www.w3.org/TR/ruby/">utf-8 encoded document</a>
-</ul>
-
-<h2><a name="errors">Error conditions & strange cases</a></h2>
-
-<ul>
-<li><a href="/check/referer">/check/referer</a>
-<li><a href="/check?uri=http://www.w3.org/MarkUp">redirect</a>
-<li><a href="/check">script invoked with no parameters</a>
-<li><a href="/check?uri=">uri parameter is empty</a>
-<li><a href="/check?uri=www.w3.org/">uri is missing http://</a>
-<li><a href="/check?uri=http://www.w3.org/bogus">404 not found</a>
-<li><a href="/check?uri=http://validator.w3.org/sgml-lib/catalog">text/plain</a>
-<li><a href="/check?uri=http://validator.w3.org:8000/">httpd on a non-standard port</a>
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/xhtml1-missing-doctype-and-xmlns.html;ss">XHTML, no doctype, no xmlns</a> (invalid)
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/bogus-fpi.html;ss">bogus FPI</a>
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/xhtml1-blank-1st-line.html;ss">XHTML1, blank first line</a> (<a href="http://lists.w3.org/Archives/Public/www-validator/2000JanMar/0144.html">should be marked as invalid</a>)
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/xhtml1-bogus-element.html;ss">XHTML1, bogus element</a>
-<li><a href="/check?uri=http://www.w3.org/2001/01/xml-latin1.html;ss;sp;noatt">us-ascii xml document with a latin1 character</a> (should be invalid)
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/no-newlines.html;ss;sp;noatt">no newlines</a>
-<li><a href="/check?uri=file%3A///etc/passwd">a file: URI</a>
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/nonSGML-chars.html">Non-SGML Chars.</a>
-
-</ul>
-
-<h2><a name="invalid">Docs that are probably invalid</a></h2>
-
-<ul>
-<li><a href="/check?uri=http://www.yahoo.com/">Yahoo!</a>
-<li><a href="/check?uri=http://www.microsoft.com/">Microsoft</a>
-<li><a href="/check?uri=http://www.netscape.com/">Netscape</a>
-</ul>
-
-<h2><a name="suites">Other Test Suites</a></h2>
-
-<ul>
-  <li><a href="http://www.nist.gov/xml/">NIST's XML, DOM test suites</a>
-</ul>
-
-<p>
-  See also: <a href="../../source/">validator source page</a>.
-</p>
-
-<h2><a name="regress">Bugs and Regression Tests</a></h2>
-
-<ul>
-<li><a href="/check?uri=http://validator.w3.org/dev/tests/long-lines.html">Long Lines (cause a core)</a>
-</ul>
-
-<hr>
-
-<address>
-  <a href="http://validator.w3.org/check/referer"><img
-     src="http://validator.w3.org/images/vh40.gif" height=31 width=88
-     align=right border=0 alt="Valid W3C HTML 4.0!"></a>
-  <a href="/feedback.html">Gerald Oskoboiny</A><br>
-     $Date: 2002-05-23 18:11:59 $
-</address>
-
-</body>
-
+<!--#include virtual="/footer.html" -->
+  </body>
 </html>
-
