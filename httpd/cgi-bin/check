@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.53 2003-05-31 01:40:07 link Exp $
+# $Id: check,v 1.305.2.54 2003-06-09 02:23:43 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.53 $;
+  $VERSION    =  q$Revision: 1.305.2.54 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -172,7 +172,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-05-31 01:40:07 $,
+                              Date => q$Date: 2003-06-09 02:23:43 $,
                              });
 
 #
@@ -2425,7 +2425,20 @@ sub transcode {
     $_ = $c->convert($_); # $_ is local!!
     if ($in ne "" and $_ eq "") {
       push @{$File->{Lines}}, $line;
-      $_ = "#### encoding problem on this line, not shown ####";
+      # try to decoded as much as possible of the line
+      my $short = 0;               # longest okay
+      my $long = (length $in) - 1; # longest unknown
+      while ($long > $short) { # binary search
+        my $try = int (($long+$short+1) / 2);
+        if ($c->convert(substr($in,0,$try)) eq "") {
+          $long  = $try-1;
+        } else {
+          $short = $try;
+        }
+      }
+      my $remain = (length $in) - $short;
+      $_ = $c->convert(substr($in,0,$short))
+           . "#### $remain byte(s) unconvertable ####";
     }
   }
   return $File;
