@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.290 2002-11-11 22:52:09 ville Exp $
+# $Id: check,v 1.291 2002-11-11 23:31:31 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.290 $;
+  $VERSION    =  q$Revision: 1.291 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-11-11 22:52:09 $,
+			      Date => q$Date: 2002-11-11 23:31:31 $,
 			     });
 
 #
@@ -1082,7 +1082,7 @@ sub handle_uri {
 
   unless ($ua->is_protocol_supported($uri)) {
     $File->{'Error Flagged'} = TRUE;
-    $File->{'Error Message'} = &uri_rejected($uri);
+    $File->{'Error Message'} = &uri_rejected($uri->scheme());
     return $File;
   }
 
@@ -1381,7 +1381,7 @@ sub parse_errors ($$) {
          that is not in my catalog.
        </p>
 .EOF.
-      $File->{'Error Message'} .= &doctype_spiel;
+      $File->{'Error Message'} .= &doctype_spiel();
       $File->{'Error Message'} .= "    </div>\n";
     }
 
@@ -1397,7 +1397,7 @@ sub parse_errors ($$) {
         to specify the type of markup being used.
       </p>
 .EOF.
-      $File->{'Error Message'} .= &doctype_spiel;
+      $File->{'Error Message'} .= &doctype_spiel();
       $File->{'Error Message'} .= "    </div>\n";
     }
 
@@ -1414,7 +1414,7 @@ sub parse_errors ($$) {
         impossible to validate this document.
       </p>
 .EOF.
-      $File->{'Error Message'} .= &doctype_spiel;
+      $File->{'Error Message'} .= &doctype_spiel();
       $File->{'Error Message'} .= <<".EOF.";
       <p>
         The W3C QA Activity maintains a <a
@@ -1975,7 +1975,7 @@ sub prepCGI {
   # Flag an error if we didn't get a file to validate.
   unless ($q->param('uri')) {
     $File->{'Error Flagged'} = TRUE;
-    $File->{'Error Message'} = &uri_rejected;
+    $File->{'Error Message'} = &uri_rejected();
   }
 
   return $q;
@@ -2011,9 +2011,6 @@ sub prepSSI {
 # Output errors for a rejected URI.
 sub uri_rejected {
   my $scheme = shift || 'undefined';
-  unless ($scheme eq 'undefined') {
-    $scheme = $scheme->scheme();
-  }
 
   return sprintf(<<".EOF.", &ent($scheme));
     <div class="error">
