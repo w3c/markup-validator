@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.129 2001-06-23 04:06:44 link Exp $
+# $Id: check,v 1.130 2001-06-23 05:33:10 link Exp $
 
 #
 # We need Perl 5.004.
@@ -78,9 +78,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.129 $;
+$VERSION    =  q$Revision: 1.130 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-23 04:06:44 $;
+$DATE       =  q$Date: 2001-06-23 05:33:10 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -541,6 +541,8 @@ if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
   print ' ' x 4, qq(<li>Document type: ), $version, qq(</li>\n);
 }
 print ' ' x 2, qq(</ul>\n\n);
+
+&revalidate($q, $File);
 
 if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
   my $xmlvalid = ($File->{DOCTYPE} ? ' and validity' : '');
@@ -1471,4 +1473,47 @@ sub preparse {
   $p->parse(join "\n", @{$File->{Content}});
 
   return $File;
+}
+
+#
+# Output HTML for the revalidate controls in validation results.
+sub revalidate {
+  my $q    = shift;
+  my $File = shift;
+
+  print <<".EOF.";
+  <div id="controls">
+    <form method="get" action="/check">
+      <input type="hidden" name="uri" value="$File->{URI}">
+      <p>
+.EOF.
+  print " " x 8, '<input type="checkbox" value="" name="ss"',
+    ($q->param('ss')      ? 'checked="checked"' : ''), ' />Show Source';
+  print " " x 8, '<input type="checkbox" value="" name="sp"',
+    ($q->param('sp')      ? 'checked="checked"' : ''), ' />Parse Tree';
+  print " " x 8, '<input type="checkbox" value="" name="outline"',
+    ($q->param('outline') ? 'checked="checked"' : ''), ' />Outline';
+  print " " x 8, '<input type="checkbox" value="" name="noatt"',
+    ($q->param('noatt')   ? 'checked="checked"' : ''), ' />...no attributes';
+  print "      </p>\n      <p>\n        Doctype: ";
+  print $q->popup_menu(-name => 'doctype',
+		       -values => [
+				   'Inline',
+				   'XHTML 1.0 Strict',
+				   'XHTML 1.0 Transitional',
+				   'XHTML 1.0 Frameset',
+				   'HTML 4.01 Strict',
+				   'HTML 4.01 Transitional',
+				   'HTML 4.01 Frameset',
+				   'HTML 3.2',
+				   'HTML 2.0',
+				  ],
+		       -default => $q->param('doctype'),
+		      );
+  print <<".EOF.";
+        <input type="submit" value="Revalidate" />
+      </p>
+    </form>
+  </div>
+.EOF.
 }
