@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.161 2001-07-24 10:18:31 link Exp $
+# $Id: check,v 1.162 2001-07-25 00:37:11 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.161 $;
+$VERSION    =  q$Revision: 1.162 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-24 10:18:31 $;
+$DATE       =  q$Date: 2001-07-25 00:37:11 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -321,9 +321,6 @@ if ($File->{Use_Charset} ne 'unknown') {
 # Print header and jump links.
 print $File->{Results}, &build_jump_links;
 
-#
-# Print the list of meta data.
-#print qq(  <form method="get" action="/check">\n    <table class="header">\n);
 
 #
 # Print different things if we got redirected or had a file upload.
@@ -639,12 +636,12 @@ if (scalar @{$File->{Errors}}) {
 # Subroutine definitions
 #############################################################################
 
-sub add_table {
-  my ($head, $tail) = @_;
-  # $File->{Table} = []  unless ($File->{Table});
-  push @{$File->{Table}}, { Head => $head, Tail => $tail };
-}
+#
+# Add info to the metadata table datastructure.
+sub add_table {push @{$File->{Table}}, { Head => $_[0], Tail => $_[1]}};
 
+#
+# Print the table containing the metadata about the Document Entity.
 sub print_table {
   my $tableEntry;
   add_table("Options",
@@ -668,8 +665,12 @@ sub print_table {
   print "  </table></form>\n";
 }
 
+#
+# Add a waring message to the output.
 sub add_warning {push @{$File->{Warnings}}, shift};
 
+#
+# Print out a list of warnings.
 sub print_warnings {
   return unless defined @{$File->{Warnings}};
   print "  <div><h2>Warnings</h2>\n  <ul>\n";
@@ -677,10 +678,10 @@ sub print_warnings {
   print "  </ul></div>\n";
 }
 
+#
+# Print HTML explaining why/how to use a DOCTYPE Declaration.
 sub output_doctype_spiel {
-
-    print <<"EOF";
-
+  print <<"EOF";
     <p>
       You should make the first line of your HTML document a DOCTYPE
       declaration, for example, for a typical <a
@@ -700,13 +701,12 @@ sub output_doctype_spiel {
       &lt;/HTML&gt;</pre>
 
 EOF
-
 }
 
+#
+# Spit out some closing HTML at the end of output.
 sub output_closing {
-
-    print <<"EOF";
-
+  print <<"EOF";
 <hr>
 
 <address>
@@ -721,34 +721,44 @@ sub output_closing {
 
 </html>
 EOF
-
 }
 
-# leave some message and then die (use for internal errors only)
+
+#
+# Leave a message and then die (use for internal errors only)
 sub internal_error {
-    my ($dieMessage) = shift;
-    print <<"EOF";
+  my ($dieMessage) = shift;
+  print <<"EOF";
     <hr>
     <strong class="error">Internal server error ($dieMessage).</strong>
     Please contact <a href="mailto:$MAINTAINER">maintainer</a>.
 EOF
-    &output_closing;
-    &erase_stuff;
-    die "$dieMessage\n";
+  &output_closing;
+  &erase_stuff;
+  die "$dieMessage\n";
 }
 
+
+#
+# Delete temporary files.
 sub erase_stuff {
   unlink $temp        or warn "unlink($temp) returned: $!\n";
   unlink "$temp.esis" or warn "unlink($temp.esis) returned: $!\n";
   unlink "$temp.weblint";
 }
 
+
+#
+# Clean up and exit... :-)
 sub clean_up_and_exit {
   &output_closing;
   &erase_stuff;
   exit;
 }
 
+
+#
+# Redirect them to the home page. Simplistic error handling.
 sub redirect_to_home_page {
   print <<".EOF.";
 Status: 301 Moved Permanently
@@ -761,6 +771,9 @@ Location: $abs_svc_uri
   &clean_up_and_exit;
 }
 
+
+#
+# Generate HTML for the "Jump to:" links in results.
 sub build_jump_links {
 
     my $text  = '';
@@ -801,6 +814,8 @@ sub build_jump_links {
 }
 
 
+#
+# Proxy authentication requests.
 sub authenticate {
   my $resource   = shift;
   my $authHeader = shift;
@@ -859,13 +874,15 @@ Content-Type: text/html
 EOF
 }
 
+
+#
+# Complain about unknown HTTP responses.
 sub print_unknown_http_error_message {
+  my $uri = shift;
+  my $code = shift;
+  my $message = shift;
 
-    my $uri = shift;
-    my $code = shift;
-    my $message = shift;
-
-    print <<"EOF";
+  print <<"EOF";
   <p>
     I got the following unexpected response when trying to
     retrieve <code><a href="$uri">$uri</a></code>:
@@ -880,7 +897,6 @@ sub print_unknown_http_error_message {
   </p>
 
 EOF
-
 }
 
 
@@ -908,6 +924,8 @@ sub print_charset_error {
 }
 
 
+#
+# Print blurb advocating using the CSS Validator.
 sub output_css_validator_blurb {
   my $uri = shift;
   $uri = ent($uri);
@@ -1033,6 +1051,7 @@ sub handle_frag {
   return $File;
 }
 
+
 #
 # Parse a Content-Type and parameters. Return document type and charset.
 sub parse_content_type {
@@ -1056,6 +1075,7 @@ sub parse_content_type {
   return $type, $charset;
 }
 
+
 #
 # Normalize newline forms (CRLF/CR/LF) to native newline.
 sub normalize_newlines {
@@ -1066,6 +1086,7 @@ sub normalize_newlines {
   return [split /\n/, $file];
 }
 
+
 #
 # Return $_[0] encoded for HTML entities (cribbed from merlyn).
 sub ent {
@@ -1073,6 +1094,7 @@ sub ent {
   s(["<&>"]){'&#' . ord($&) . ';'}ge;
   return $_;
 }
+
 
 #
 # Truncate source lines for report.
@@ -1108,6 +1130,7 @@ sub truncate_line {
   return $line, $col;
 }
 
+
 #
 # Supress any existing DOCTYPE by commenting it out.
 sub supress_doctype {
@@ -1120,6 +1143,7 @@ sub supress_doctype {
 		   )->parse(join "\n", @{$file});
   return [split /\n/, $HTML];
 }
+
 
 #
 # Parse errors reported by SP.
@@ -1159,6 +1183,7 @@ sub parse_errors ($$) {
 
   return $File;
 }
+
 
 #
 # Generate a HTML report of detected errors.
@@ -1383,6 +1408,7 @@ EOHD
   }
 }
 
+
 #
 # Legacy support. Print blurb to clarify status of weblint support.
 sub weblint {
@@ -1410,6 +1436,7 @@ sub weblint {
   </div>
 EOF
 }
+
 
 #
 # Produce an outline of the document based on Hn elements from the ESIS.
@@ -1477,6 +1504,7 @@ EOF
 EOF
 }
 
+
 #
 # Create a HTML representation of the document.
 sub show_source {
@@ -1498,6 +1526,7 @@ EOF
   }
   print "    </pre>\n  </div>";
 }
+
 
 #
 # Create a HTML Parse Tree of the document for validation report.
@@ -1578,7 +1607,7 @@ EOF
 
 
 #
-# @@FIXME@@ Add description.
+# Do an initial parse of the Document Entity to extract charset and FPI.
 sub preparse {
   my $File = shift;
 
@@ -1623,7 +1652,7 @@ sub preparse {
 }
 
 #
-# @@FIXME@@ Add description.
+# Print out the raw ESIS output for debugging.
 sub show_esis ($) {
   print <<'EOF';
   <div id="raw_esis" class="mtb">
@@ -1640,7 +1669,7 @@ EOF
 }
 
 #
-# @@FIXME@@ Add description.
+# Print out the raw error output for debugging.
 sub show_errors ($) {
   print <<'EOF';
   <div id="raw_errors" class="mtb">
