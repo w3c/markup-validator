@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.139 2001-07-08 11:59:50 duerst Exp $
+# $Id: check,v 1.140 2001-07-16 07:56:34 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.139 $;
+$VERSION    =  q$Revision: 1.140 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-08 11:59:50 $;
+$DATE       =  q$Date: 2001-07-16 07:56:34 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -502,9 +502,7 @@ open CHECKER, "|$command - >$temp.esis"
 for (@{$File->{Content}}) {print CHECKER $_, "\n"};
 close CHECKER;
 
-open ERRORS, "<$temp" or &internal_error("open($temp) returned: $!");
-$File->{Errors} = [<ERRORS>];
-close ERRORS          or warn "close($temp) returned: $!\n";
+$File = &parse_errors($File, $temp); # Parse error output.
 
 $File->{ESIS} = [];
 my $elements_found = 0;
@@ -609,8 +607,12 @@ EOHD
 EOHD
 }
 
-if   ($?) {&process_errors($File)}
-else      {&report_valid($File)};
+if (scalar @{$File->{Errors}}) {
+  $q->param('ss'. TRUE);
+  &report_errors($File)
+} else {
+  &report_valid($File)
+}
 
 &weblint()          if $q->param('weblint');
 &outline($File)     if $q->param('outline');
@@ -1113,103 +1115,96 @@ sub supress_doctype {
 }
 
 #
-# Process errors reported by SP and produce a report.
-sub process_errors {
+# Parse errors reported by SP.
+sub parse_errors ($$) {
   my $File = shift;
-  my($line, $col, $type, $msg);
-  print "<ul>\n";
-  for (@{$File->{Errors}}) {
+  my $file = shift;
+
+  $File->{Errors} = []; # Initialize to an (empty) anonymous array ref.
+
+  open ERRORS, "<$file" or &internal_error("open($file) returned: $!");
+  for (<ERRORS>) {
+    my $err;
     next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
-    next if / numbers exceeding 65535 not supported$/;
-    next if /^$sp:\(invalid location\):W: URL Redirected to/;
-    s/^$sp:<OSFD>//g;
-    unless (($line, $col, $type, $msg) = (/^[^:]*:([0-9]+):([0-9]+):([A-Z]?):? (.*)/)) {
-      print "Uh oh! I got the following unknown error:\n\n   $_\n\n";
-      print "Please make sure you specified the DOCTYPE properly!\n\n";
-      &output_doctype_spiel;
-      last;
+    next if /numbers exceeding 65535 not supported/;
+    next if /URL Redirected to/;
+    my @errs = split /:/;
+    $err->{src}  = $errs[1];
+    $err->{line} = $errs[2];
+    $err->{char} = $errs[3];
+    $err->{type} = $errs[4];
+    if ($err->{type} eq 'W' or $err->{type} eq 'E') {
+      $err->{msg}  = $errs[5];
+    } else {
+      $err->{type} = 'I';
+      $err->{msg}  = $errs[4];
     }
-    if ($msg =~ /^cannot generate system identifier for entity /) {
-      print "<p><b>Fatal error</b>! $msg\n\n";
-      print "<p>I couldn't parse this document, because it " .
-	"uses a public\n    identifier that's not in my <a\n " .
-	  "    href=\"sgml-lib/catalog\">catalog</a>!\n  </p>\n";
-      &output_doctype_spiel;
-      last;
-    }
-    if ($msg =~ /unrecognized ({{)?DOCTYPE(}})?/i) {
-      print "<p><b>Fatal error</b>! $msg\n\n";
-      print "<p>I couldn't parse this document, because it " .
-	"uses a public\n    identifier that's not in my <a\n " .
-	  "    href=\"sgml-lib/catalog\">catalog</a>!\n  </p>\n";
-      &output_doctype_spiel;
-      last;
-    }
-    if ($msg =~ /^cannot open /) {
-      print "<p>Fatal error! $msg\n\n";
-      print "<p>I couldn't parse this document, because it " .
-	"makes reference to\n    a system-specific file instead of " .
-	  "using a well-known public identifier\n    to specify the " .
-	    "level of HTML being used.\n  </p>\n";
-      &output_doctype_spiel;
-      last;
-    }
-    if ($msg =~ /^cannot find /) {
-      print "<p>Fatal error! $msg\n\n";
-      print "<p>I couldn't parse this document, because it " .
-	"makes reference to\n    a system-specific file instead of " .
-	  "using a well-known public identifier\n    to specify the " .
-	    "level of HTML being used.\n  </p>\n";
+    push @{$File->{Errors}}, $err;
+  }
+  close ERRORS          or &internal_error("close($file) returned: $!\n");
+
+  return $File;
+}
+
+#
+# Generate a HTML report of detected errors.
+sub report_errors ($) {
+  my $File = shift;
+  foreach my $err (@{$File->{Errors}}) {
+
+    # An unknown FPI and no SI.
+    if (   $err->{msg} =~ m(cannot generate system identifier for entity)
+	or $err->{msg} =~ m(unrecognized ({{)?DOCTYPE(}})?)i) {
+      print <<"    .EOF.";
+    <p><strong>Fatal Error</strong>: $err->{msg}</p>
+    <p>
+      I could not parse this document, because it uses a public identifier that
+      is not in my <a href="/sgml-lib/catalog">catalog</a>.
+    </p>
+    .EOF.
       &output_doctype_spiel;
       last;
     }
 
-    my $newline = $File->{Content}->[$line - 1];
+    # No or unknown FPI and a relative SI.
+    if ($err->{msg} =~ m(cannot (open|find))) {
+      print <<"    .EOF.";
+    <p><strong>Fatal Error: $err->{msg}</p>
+    <p>
+      I could not parse this document, because it makes reference to a
+      system-specific file instead of using a well-known public identifier to
+      specify the type of markup being used.
+    </p>
+    .EOF.
+      &output_doctype_spiel;
+      last;
+    }
 
-    # make sure there are no ^P's or ^Q's in the file, since we need to use
-    # them to represent '<' and '>' temporarily. We'll just change them to
-    # literal P's and Q's for a lack of anything better to do with them.
-    my $lt = "\020";
-    my $gt = "\021";
-    $newline =~ s/\020/P/go;
-    $newline =~ s/\021/Q/g;
 
-    my $orig_col = $col;
-    ($newline, $col) = &truncate_line($newline, $col);
+    my($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $err->{char});
 
+    # Strip curlies from lq-nsgmls output.
+    $err->{msg} =~ s/[{}]//g;
 
-    # temporarily strip curlies from lq-nsgmls output.
-    # @@ should link HTML elements using $elem_db instead.
-    $msg =~ s/[{}]//g;
+    # Find index into the %frag hash for the "explanation..." links.
+    $err->{idx} =  $err->{msg};
+    $err->{idx} =~ s/"[^\"]+"/FOO/g;
+    $err->{idx} =~ s/[^A-Za-z ]//g;
 
-    # figure out the index into the %frag associative array for the
-    # "explanation..." links to the KGV FAQ.
-    my $msgindex = $msg;
-    $msgindex =~ s/"[^\"]+"/FOO/g;
-    $msgindex =~ s/[^A-Za-z ]//g;
+    $line = &ent($line); # Entity encode.
+    $line =~ s/\t/ /g;   # Collapse TABs.
 
-    $newline = &ent($newline);
-    $newline =~ s/$lt/</g;
-    $newline =~ s/$gt/>/g;
-    $newline =~ s/\t/ /g;
-    $newline =~ s/\r//g;
+    print qq(  <li>Line <a href="#line-$err->{line}">$err->{line}</a>, column $col:\n);
 
-    print "  <li>";
-    print qq{<a href="#line-$line">} if $q->param('ss');
-    print "Line $line";
-    print "</a>"		     if $q->param('ss');
-    print ", column $orig_col:\n";
+    print "<pre>  <code class=input>$line</code>\n";
+    print " " x ($col + 2); # 2 is the number of spaces before <code> above
+    print " " x 4 if $col != $err->{char}; # only for truncated lines
+    print "<span class=markup>^</span></pre>\n<p>\n";
 
-    print "<pre>  <code class=input>$newline</code>\n";
-    print " " x ($col + 2);	        # 2 is the number of spaces before <code> above
-    print " " x 4 if $col != $orig_col;	# only for truncated lines
-    print "<span class=markup>^</span></pre>\n";
-    print "<p>\n";
+    print qq{<span class="error">Error: $err->{msg}</span>};
 
-    print qq{<span class=error>Error: $msg</span>};
-
-    if (defined $frag->{$msgindex}) {
-      print qq{ (<a href="$faqerrloc#$frag->{$msgindex}">explanation...</a>)};
+    if (defined $frag->{$err->{idx}}) {
+      print qq{ (<a href="$faqerrloc#$frag->{$err->{idx}}">explanation...</a>)};
     }
 
     print "</p>\n";
@@ -1218,14 +1213,15 @@ sub process_errors {
   print "</ul>\n";
   print "<hr>\n";
   if ($version eq 'unknown') {
-    print "\n  <p>\n    Sorry, I can't validate this document.\n  </p>\n";
+    print "<p>Sorry, I can't validate this document.</p>";
   } elsif ($File->{Type} eq 'xml') {
-    print "\n  <p>\n    Sorry, this document is not well-formed XML.\n  </p>\n";
+    print "<p>Sorry, this document is not well-formed XML.</p>";
   } else {
-    print "\n  <p>\n    Sorry, this document does not validate as $version.\n  </p>\n\n";
+    print "<p>Sorry, this document does not validate as $version.</p>";
     &output_css_validator_blurb($q->param('uri'));
   }
 }
+
 
 #
 # Output "This page is Valid" report.
