@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.314 2002-12-05 03:43:56 link Exp $
+# $Id: check,v 1.315 2002-12-05 04:06:23 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -133,7 +133,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.314 $;
+  $VERSION    =  q$Revision: 1.315 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 } # end of BEGIN block.
@@ -307,7 +307,11 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
   $File->{Charset}->{Use} = 'utf-16';
 } elsif ($File->{ContentType} =~ m(^application/([-.a-zA-Z0-9]+\+)?xml$)) {
   $File->{Charset}->{Use} = "utf-8";
-} # @@@FIXME: Need case for image/svg+xml etc.
+} elsif (&is_xml($File) and not $File->{ContentType} =~ m(^text/)) {
+  $File->{Charset}->{Use} = 'utf-8'; # UTF-8 (image/svg+xml etc.)
+}
+
+
 
 $File->{Content} = &normalize_newlines($File->{Bytes},
                        exact_charset($File, $File->{Charset}->{Use}));
