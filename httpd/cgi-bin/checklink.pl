@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.40 2000-05-04 20:28:30 hugo Exp $
+# $Id: checklink.pl,v 2.41 2000-05-04 22:29:01 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -31,7 +31,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.40 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.41 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -42,7 +42,6 @@ my $_verbose = 0;
 my $_progress = 0;
 my $_html = 0;
 my $_timeout = 60;
-my $_chunksize = 1024;
 my $_redirects = 1;
 my $_dir_redirects = 1;
 my $_user;
@@ -152,7 +151,7 @@ sub parse_arguments() {
             push(@uris, $_);
         } elsif (m/^--$/) {
             $uris = 1;
-        } elsif (m/^-[^-upytdclL]/) {
+        } elsif (m/^-[^-upytdlL]/) {
             if (m/q/) {
                 $_quiet = 1;
                 $_summary = 1;
@@ -215,8 +214,6 @@ sub parse_arguments() {
             $_trusted = shift(@ARGV);
         } elsif (m/^-y|--proxy$/) {
             $_http_proxy = shift(@ARGV);
-        } elsif (m/^-c|--chunksize$/) {
-            $_chunksize = shift(@ARGV);
         } else {
             push(@uris, $_);
         }
@@ -250,7 +247,6 @@ Options:
 				which the authetication information will be
 				sent (default: '$_trusted').
 	-y/--proxy proxy	Specify an HTTP proxy server.
-	-c/--chunk-size size	Size of the blocks parsed (default: $_chunksize).
 	-h/--html		HTML output.
 	--help			Show this message.
 ";
@@ -751,12 +747,13 @@ sub parse_document() {
     # might need this information later
     $p->{only_anchors} = !($links || $_recursive);
 
-    # Parse small chunks: much faster
-    my @chunks = unpack("a$_chunksize"x(length($document)/$_chunksize).'a*',
-                        $document);
-    for (@chunks) {
-        $p->parse($_);
-    }
+    # Transform <?xml:stylesheet ...?> into <xml:stylesheet ...> for parsing
+    # Processing instructions are not parsed by process, but in this case
+    # it should be. It's expensive, it's horrible, but it's the easiest way
+    # for right now.
+    $document =~ s/\<\?(xml:stylesheet.*?)\?\>/\<$1\>/;
+
+    $p->parse($document);
 
     if (! $_summary) {
         my $stop = &get_timestamp();
@@ -782,16 +779,26 @@ sub parse_document() {
 sub W3C::CheckLink::new() {
     my $p = HTML::Parser::new(@_);
 
-    # Using API version 2
-    $p->{api_version} = 2;
+    # Using API version 3
+    $p->{api_version} = 3;
+    # Start tags
+    $p->handler(start => 'start', 'self, tagname, attr, text, event, tokens');
+    # Declarations
+    $p->handler(declaration =>
+                sub {
+                    my $self = shift;
+                    $self->declaration(substr($_[0], 2, -1));
+                }, 'self, text');
+    # Other stuff
+    $p->handler(default => 'text', 'self, text');
     # Line count
     $p->{Line} = 1;
     # Check <a [..] name="...">?
     $p->{check_name} = 1;
     # Check <[..] id="..">?
     $p->{check_id} = 1;
-    # Loose interpretation of the HTML comments since browsers will do the same
-    $p->strict_comment(0);
+    # Don't interpret comment loosely
+    $p->strict_comment(1);
 
     return $p;
 }
@@ -838,40 +845,6 @@ sub W3C::CheckLink::new_line() {
     }
 }
 
-#######################################
-# start function used by HTML::Parser #
-#######################################
-
-sub W3C::CheckLink::start() {
-    my ($self, $tag, $attr, $attrseq, $text) = @_;
-
-    # Anchors
-    my $anchor = $self->get_anchor($tag, $attr);
-    if (defined($anchor)) {
-        $self->{Anchors}{$anchor}{$self->{Line}}++;
-    }
-
-    # Links
-    if (!$self->{only_anchors}) {
-        my $link;
-        if (($tag eq 'a')) {
-            $link = $attr->{href};
-        } elsif ($tag eq 'img') {
-            $link = $attr->{src};
-        } elsif (($tag eq 'frame') || ($tag eq 'link')) {
-            $link = $attr->{href};
-        }
-        if (defined($link)) {
-            $self->{Links}{$link}{$self->{Line}}++;
-        }
-    }
-
-    # Line counting
-    if ($text =~ m/\n/) {
-        $self->new_line($text);
-    }
-}
-
 #############################
 # Extraction of the anchors #
 #############################
@@ -895,12 +868,44 @@ sub W3C::CheckLink::get_anchor() {
     return($anchor);
 }
 
-####################################################
-# Overloading functions for line counting purposes #
-####################################################
+###########################
+# W3C::CheckLink handlers #
+###########################
 
-# W3C::CheckLink::text() is called by end(), declaration(), process()
-# and comment()
+sub W3C::CheckLink::add_link() {
+    my ($self, $uri) = @_;
+
+    if (defined($uri)) {
+        $self->{Links}{$uri}{$self->{Line}}++;
+    }
+}
+
+sub W3C::CheckLink::start() {
+    my ($self, $tag, $attr, $text) = @_;
+
+    # Anchors
+    my $anchor = $self->get_anchor($tag, $attr);
+    if (defined($anchor)) {
+        $self->{Anchors}{$anchor}{$self->{Line}}++;
+    }
+
+    # Links
+    if (!$self->{only_anchors}) {
+        # Here, we are checking too many things
+        # The right thing to do is to parse the DTD...
+        $self->add_link($attr->{href});
+        $self->add_link($attr->{src});
+        if ($tag eq 'object') {
+            $self->add_link($attr->{data});
+        }
+    }
+
+    # Line counting
+    if ($text =~ m/\n/) {
+        $self->new_line($text);
+    }
+}
+
 sub W3C::CheckLink::text() {
     my ($self, $text) = @_;
     if (!$_progress) {
@@ -911,14 +916,6 @@ sub W3C::CheckLink::text() {
     if ($text =~ /\n/) {
         $self->new_line($text);
     }
-}
-
-sub W3C::CheckLink::end() {
-    my $self = shift;
-    return unless !$self->{only_anchors};
-    shift;
-    my $text = shift;
-    $self->text($text);
 }
 
 sub W3C::CheckLink::declaration() {
@@ -941,18 +938,6 @@ sub W3C::CheckLink::declaration() {
     }
     return unless !$self->{only_anchors};
     $self->text($text);
-}
-
-sub W3C::CheckLink::comment() {
-    my $self = shift;
-    return unless !$self->{only_anchors};
-    my $text = shift;
-    $self->text($text);
-}
-
-sub W3C::CheckLink::process() {
-    my $self = shift;
-    $self->comment($_[1]);
 }
 
 ################################
@@ -1315,10 +1300,12 @@ HTTP Message: %s%s%s</dd>
                    $results->{$u}{location}{message} : '',
                    # What to do
                    $whattodo);
-            if (($#fragments >= 0) && !($broken->{$u}{'location'})) {
-                print("The following fragments need to be fixed:\n");
-            } else {
-                print("Fragments:\n");
+            if ($#fragments >= 0) {
+                if (!($broken->{$u}{'location'})) {
+                    print("The following fragments need to be fixed:\n");
+                } else {
+                    print("Fragments:\n");
+                }
             }
         }
         # Fragments
