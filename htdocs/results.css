@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.18 2003-07-28 13:36:04 ot Exp $ */
+/* $Id: results.css,v 1.13.2.19 2003-07-29 19:40:08 link Exp $ */
 
 .input {
   color: black;
@@ -8,6 +8,9 @@
   font-size: small;
 }
 
+/* Error Messages Display */
+/*
+*/
 .msg {
   font-weight: bold;
 }
@@ -42,19 +45,6 @@
   font-weight: bolder;
 }
 
-#source div {
-  background: #eee;
-  border: 1px solid black;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-#source code {
-  white-space: normal;
-  font-family: "Bitstream Vera Mono", monospace;
-  font-size: smaller;
-}
-
 ol#errors code {
   float: left;
   margin-bottom: 2ex;
@@ -69,6 +59,22 @@ ol#errors li p code strong {
   padding-left: .5ex;
   padding-right: .5ex;
   font-weight: bolder;
+}
+
+/* Source Code Display */
+/*
+*/
+#source div {
+  background: #eee;
+  border: 1px solid black;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#source code {
+  white-space: normal;
+  font-family: "Bitstream Vera Mono", monospace;
+  font-size: smaller;
 }
 
 
@@ -89,13 +95,16 @@ fieldset legend {
 
 
 /* Style for non-parser warnings. */
+/*
+*/
+
 div#Warnings {
   clear: left;
   padding: 0;
-/*  margin-left: -2em; */
   margin-right: 8em;
 }
 
+/* "Fatal" warnings... */
 div#Warnings div.fatal h3 {
   background: #FCC;
   border-top: 1px solid black;
@@ -126,6 +135,43 @@ div#Warnings div.fatal p:first-child {
   font-size: normal;
   clear: left;
 }
+
+/* "note" warnings... */
+div#Warnings div.note h3 {
+  background: #053188;
+  color: white;
+  border-top: 1px solid black;
+  border-right: 1px solid black;
+  border-bottom: 1px solid black;
+  padding: .5ex;
+  margin: 0;
+  margin-bottom: 1em;
+  margin-right:  1em;
+  float: left;
+  font-size: small;
+  font-weight: bolder;
+}
+
+div#Warnings div.note {
+  margin: 0 0 1ex 0;
+  padding: 0;
+  clear: left;
+}
+
+div#Warnings div.note div {
+  margin: 0 0 0 1em;
+  padding: .5em 1em;
+}
+/* Not all warnings have a "p", but if they
+   do, the first one should be emphasized. */
+div#Warnings div.note p:first-child {
+  font-weight: bold;
+  font-size: normal;
+  clear:       left;
+}
+
+
+
 
 
 
