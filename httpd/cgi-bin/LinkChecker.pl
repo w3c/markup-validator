@@ -5,7 +5,7 @@
 # (c) 1999 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: LinkChecker.pl,v 1.9 1999-12-04 23:19:37 hugo Exp $
+# $Id: LinkChecker.pl,v 1.10 1999-12-04 23:34:02 hugo Exp $
 #
 # This program is licensed under the W3C License.
 
@@ -23,7 +23,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C LinkChecker';
-my $VERSION = '$Revision: 1.9 $ (c) 1999 W3C';
+my $VERSION = '$Revision: 1.10 $ (c) 1999 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -376,7 +376,7 @@ sub get_uri() {
         printf("%s %s ", $method, $uri);
     }
     my $request = new HTTP::Request($method, $uri);
-    if (defined($code) && $code == 401
+    if (defined($tested)
         && ($request->url->netloc =~ /$_trusted$/) && defined($ENV{HTTP_AUTHORIZATION})) {
         $request->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
     }
