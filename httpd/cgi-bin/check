@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.135 2001-06-28 09:53:26 duerst Exp $
+# $Id: check,v 1.136 2001-07-01 13:33:24 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.135 $;
+$VERSION    =  q$Revision: 1.136 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-28 09:53:26 $;
+$DATE       =  q$Date: 2001-07-01 13:33:24 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -276,6 +276,12 @@ $File->{Type} = 'xhtml'  if $File->{DOCTYPE} =~ /xhtml/i;
 $File->{Type} = 'mathml' if $File->{DOCTYPE} =~ /mathml/i;
 
 
+# If we have a charset field in the request, we use it
+if ($q->param('charset')) {
+  $q->param('charset') =~ /^([^ ]*)/;
+  $File->{Form_Charset} = lc $1;
+}
+
 #
 # If we find a XML declaration with charset information,
 # we take it into account.
@@ -304,7 +310,7 @@ foreach my $line (@{$File->{Content}}) {
 }
 
 #
-# Figure out which charset to use for the validation.
+# Figure out which charset was detected.
 if ($File->{HTTP_Charset}) {
   $File->{Charset} = $File->{HTTP_Charset};
 } elsif ($File->{XML_Charset}) {
@@ -315,10 +321,13 @@ if ($File->{HTTP_Charset}) {
   $File->{Charset} = 'unknown';
 }
 
+# Figure out which charset to use for validation.
+$File->{Use_Charset} = $File->{Form_Charset} ?
+            $File->{Form_Charset} : $File->{Charset};
 
 #
 # Setup SP environment for the charset.
-if ($File->{Charset} ne 'unknown') {
+if ($File->{Use_Charset} ne 'unknown') {
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'utf-8';
 }
@@ -329,69 +338,92 @@ print $File->{Results}, &build_jump_links;
 
 #
 # Print the list of meta data.
-print qq(  <form method="get" action="/check">\n    <table class="header">\n);
+#print qq(  <form method="get" action="/check">\n    <table class="header">\n);
 
 #
 # Print different things if we got redirected or had a file upload.
 if (URI::eq("$File->{URI}", $q->param('uri'))) { # @@ Why do we need to stringify here?
-  print ' ' x 4, qq(<tr><th><a href="$uri_def_uri">URI</a>: </th>);
-  print qq(<td><input type="text" name="uri" size="50" value="$File->{URI}" /></td></tr>);
+  &add_table("<a href='$uri_def_uri'>URI</a>",
+      "<input type='text' name='uri' size='50' value='$File->{URI}' />");
 } elsif ($q->param('uploaded_file')) {
-  print ' ' x 4, '<tr><th>File: </th><td>', $File->{URI}, "</td></tr>\n";
+  &add_table("File", $File->{URI});
 } else {
-  print ' ' x 4, qq(<tr><th><a href="$uri_def_uri">URI</a>: </th>);
-  print '<td><a href="', $q->param('uri'), '">', $q->param('uri'), qq(</a>\n),
-  ' ' x 6, qq(<span class="note">), qq(I was redirected to &lt;URI:),
-  '<a href="', $File->{URI}, '">', $File->{URI}, '</a>&gt;', qq(</span>\n),
-  ' ' x 4, qq(</td></tr>\n);
+  &add_table("<a href='$uri_def_uri'>URI</a>",
+      '<a href="'. $q->param('uri'). '">'. $q->param('uri'). '</a>\n'.
+      ' ' x 6 . '<span class="note">I was redirected to <a href="'.
+      $File->{URI}. '">'. $File->{URI}. '</a></span>');
 }
 
-print(' ' x 4, q(<tr><th>Last Modified: </th><td>),  $File->{Modified}, qq(</td></tr>\n))
-  if $File->{Modified};
-print(' ' x 4, q(<tr><th>Server: </th><td>),         $File->{Server},   qq(</td></tr>\n))
-  if $File->{Server};
-print(' ' x 4, q(<tr><th>Content Length: </th><td>), $File->{Size},     qq(</td></tr>\n))
-  if $File->{Size};
+&add_table("Last Modified", $File->{Modified})  if $File->{Modified};
+&add_table("Server", $File->{Server})  if $File->{Server};
+&add_table("Content Length", $File->{Size})  if $File->{Size};
+&add_table("Detected Character Encoding", "<code>$File->{Charset}</code>");
+&add_table("Used Character Encoding", "<code>$File->{Use_Charset}</code>")
+    unless $File->{Charset} eq $File->{Use_Charset};
+&add_table("Select Character Encoding",
+        $q->popup_menu(-name => 'charset',
+                       -values => [
+                                   "$File->{Charset} (as detected)",
+                                   'utf-8 (Unicode, worldwide)',
+                                   'iso-8859-1 (Western Europe)',
+                                   'iso-8859-2 (Eastern Europe)',
+                                   'iso-8859-5 (Cyrillic)',
+                                   'iso-8859-7 (Greek)',
+                                   'euc-jp (Japanese, Unix)',
+                                   'shift_jis (Japanese, Win/Mac)',
+                                   'iso-2022-jp (Japanese, email)',
+                                   'euc-kr (Korean)',
+                                   'GB2312 (Chinese, simplified)',
+                                   'Big5 (Chinese, traditional)',
+                                   # add more@@@@ '',
+                                  ],
+                       -default => $q->param('doctype'),
+        ));
 
-print ' ' x 4, q(<tr><th>Character Encoding: </th><td>), $File->{Charset};
 if ($File->{HTTP_Charset} ne $File->{META_Charset}
     and $File->{HTTP_Charset} ne ''
     and $File->{META_Charset} ne ''
     and $File->{Charset} ne 'unknown') {
-  print <<"EOHD";
-      <em><span class="warning">The character encoding specified in the HTTP
+  &add_warning( <<"EOHD");
+      The character encoding specified in the HTTP
       header ("<code>$File->{HTTP_Charset}</code>") is different from the one
       specified in the META element ("<code>$File->{META_Charset}</code>").
-      I will use "<code>$File->{Charset}</code>" for this validation.</span></em>
+      I will use "<code>$File->{Charset}</code>" for this validation.
 EOHD
 } elsif ($File->{HTTP_Charset} ne $File->{XML_Charset}
     and $File->{HTTP_Charset} ne ''
     and $File->{XML_Charset} ne ''
     and $File->{Charset} ne 'unknown') {
-  print <<"EOHD";
-      <em><span class="warning">The character encoding specified in the HTTP
+  &add_warning( <<"EOHD");
+      The character encoding specified in the HTTP
       header ("<code>$File->{HTTP_Charset}</code>") is different from the one
       specified in the XML declaration ("<code>$File->{XML_Charset}</code>").
-      I will use "<code>$File->{Charset}</code>" for this validation.</span></em>
+      I will use "<code>$File->{Charset}</code>" for this validation.
 EOHD
 }
-print ' ' x 4, qq(</td></tr>\n);
+if ($File->{Use_Charset} ne $File->{Charset}) {
+  &add_warning( <<"EOHD");
+      Detected character encoding ($File->{Charset}) and
+      selected character encoding ($File->{Use_Charset})
+      differ. Tentative validation only.
+EOHD
+}
 
 {  # block for character conversion and checking
   my @lines;
-  unless ($File->{Charset} eq 'utf-8' or $File->{Charset} eq 'unknown') {
-    my ($command, $result_charset) = split " ", $charsets->{$File->{Charset}}, 2;
-    # workaround for Windows 3.1 cruft:
-    #iso-8859-1-Windows-3.1-Latin-1	I cp1252
+  unless ($File->{Use_Charset} eq 'utf-8' or $File->{Use_Charset} eq 'unknown') {
+    my ($command, $result_charset) = split " ", $charsets->{$File->{Use_Charset}}, 2;
     if ($command eq 'I') {
       eval {my $c = Text::Iconv->new($result_charset, 'utf-8')};
       $command = '' if ($@);
     }
     elsif ($command eq 'X') {
-      $@ = "$File->{Charset} undefined; replace by $result_charset";
+      $@ = "$File->{Use_Charset} undefined; replace by $result_charset";
     }
     if ($command ne 'I') {
-      &print_charset_error($@, $File->{Charset});
+      &print_table;
+      &print_warnings;
+      &print_charset_error($@, $File->{Use_Charset});
       &clean_up_and_exit;
     }
     my $c = Text::Iconv->new($result_charset, 'utf-8');
@@ -404,7 +436,7 @@ print ' ' x 4, qq(</td></tr>\n);
     }
   }
   # check correctness of UTF-8 both for UTF-8 input and for conversion results
-  unless ($File->{Charset} eq 'unknown') {
+  unless ($File->{Use_Charset} eq 'unknown') {
     my $line = 0;
     for (@{$File->{Content}}) {
       $line++;
@@ -425,13 +457,14 @@ print ' ' x 4, qq(</td></tr>\n);
   if(@lines) {
     my $lines = $#lines ? "lines " : "line ";
     $lines .= join ", ", @lines;
+    &print_table;
+    &print_warnings;
     print <<"EOF";
-    </ul>
     <p class="error">
       Sorry, I am unable to validate this document because on
       <strong>$lines</strong> it contained
       some byte(s) that I cannot interpret as
-      <code>$File->{Charset}</code>.
+      <code>$File->{Use_Charset}</code>.
       Please check both the content of the file
       and the character encoding indication.
     </p>
@@ -465,21 +498,21 @@ if ($File->{Type} eq 'xhtml') {
 
 my $command  = "$sp -f$temp -E0 $xmlflags -c $catalog";
 
-print "\t<tr><th>nsgmls command line: </th><td><code>$command</code></td></tr>\n" if $DEBUG;
+&add_table("nsgmls command line", "<code>$command</code>") if $DEBUG;
 
 open CHECKER, "|$command - >$temp.esis"
-  or die "open(|$command - >$temp.esis) returned: $!\n";
+  or &internal_error ("open(|$command - >$temp.esis) returned: $!");
 
 for (@{$File->{Content}}) {print CHECKER $_, "\n"};
 close CHECKER;
 
-open ERRORS, "<$temp" or die  "open($temp) returned: $!\n";
+open ERRORS, "<$temp" or &internal_error("open($temp) returned: $!");
 $File->{Errors} = [<ERRORS>];
 close ERRORS          or warn "close($temp) returned: $!\n";
 
 $File->{ESIS} = [];
 my $elements_found = 0;
-open ESIS, "$temp.esis" or die  "open($temp.esis) returned: $!\n";
+open ESIS, "$temp.esis" or &internal_error("open($temp.esis) returned: $!");
 while (<ESIS>) {
   $elements_found++ if /^\(/;
 
@@ -517,35 +550,49 @@ if ($File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml') {
 $version = $pub_ids->{$fpi} || 'unknown';
 
 if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
-  print ' ' x 4, qq(<tr><th>Document Type: </th><td>$version</td></tr>\n);
+  &add_table("Document Type", $version);
   if ($File->{Type} eq 'xhtml' and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
-    print "<br>warning: unknown namespace for text/html document!";
+    &add_warning ("Unknown namespace for text/html document!");
     if ($File->{Namespace} ne '') {
-      print qq(<tr><th>Root Namespace: </th>),
-	qq(<td><a href="$File->{Namespace}">$File->{Namespace}</a>);
+      &add_table("Root Namespace",
+	"<a href='$File->{Namespace}'>$File->{Namespace}</a>");
     }
-    print "<br>Warning: unknown namespace for text/html document!";
-    print "</td></tr>\n";
   } else {
     if ($File->{Namespace} ne '') {
-      print qq(<tr><th>Root Namespace: </th>),
-	qq(<td><a href="$File->{Namespace}">$File->{Namespace}</a></td></tr>);
+      &add_table("Root Namespace",
+	"<a href='$File->{Namespace}'>$File->{Namespace}</a>");
     }
   }
 
   if (scalar keys %{$File->{Namespaces}} > 1) {
-    print "<tr><th>Other Namespaces: </th><td><ul>";
+    my $namespaces = "<ul>";
     for (keys %{$File->{Namespaces}}) {
-      next if $_ eq $File->{Namespace}; # Don't repeat Root Namespace.
-      print qq(<li><a href="$_">$_</a></li>\n);
+      $namespaces .= "\t<li><a href='$_'>$_</a></li>\n"
+          unless $_ eq $File->{Namespace}; # Don't repeat Root Namespace.
     }
-    print "</ul></td></tr>\n";
+    &add_table("Other Namespaces", $namespaces . "</ul>");
   }
 } else {
-  print ' ' x 4, qq(<tr><th>Document Type: </th><td>), $version, qq(</td></tr>\n);
+  &add_table("Current Doctype", $version); # is this current or detected???
 }
-&revalidate($q, $File);
-print ' ' x 2, qq(</table>\n</form>\n);
+&add_table("Select Doctype",
+        $q->popup_menu(-name => 'doctype',
+                       -values => [
+                                   '(specified inline)',
+                                   'XHTML 1.0 Strict',
+                                   'XHTML 1.0 Transitional',
+                                   'XHTML 1.0 Frameset',
+                                   'HTML 4.01 Strict',
+                                   'HTML 4.01 Transitional',
+                                   'HTML 4.01 Frameset',
+                                   'HTML 3.2',
+                                   'HTML 2.0',
+                                  ],
+                       -default => $q->param('doctype'),
+        ));
+# &revalidate($q, $File);
+&print_table;
+&print_warnings;
 
 if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
   my $xmlvalid = ($File->{DOCTYPE} ? ' and validity' : '');
@@ -581,6 +628,56 @@ else      {&report_valid($File)};
 #############################################################################
 # Subroutine definitions
 #############################################################################
+
+sub add_table {
+  my ($head, $tail) = @_;
+  # $File->{Table} = []  unless ($File->{Table});
+  push @{$File->{Table}}, { Head => $head, Tail => $tail };
+}
+
+sub print_table {
+  my $tableEntry;
+  print "  <form method='get' action='/check'><table class='header'>\n";
+  for $tableEntry (@{$File->{Table}}) {
+    print "    <tr>\n";
+    print ' ' x 6, "<th>", $$tableEntry{Head}, ": </th>\n";
+    print ' ' x 6, "<td>", $$tableEntry{Tail}, "</td>\n";
+    print "    </tr>\n";
+  }
+  print <<".EOF.";
+  <tr id="controls"><th>Options: </th>
+    <td>
+      <input type="hidden" name="uri" value="$File->{URI}">
+.EOF.
+  print " " x 8, '<input type="checkbox" value="" name="ss"',
+    ($q->param('ss')      ? 'checked="checked"' : ''), " />Show Source\n";
+  print " " x 8, '<input type="checkbox" value="" name="outline"',
+    ($q->param('outline') ? 'checked="checked"' : ''), " />Outline\n";
+  print " " x 8, '<input type="checkbox" value="" name="sp"',
+    ($q->param('sp')      ? 'checked="checked"' : ''), " />Parse Tree\n";
+  print " " x 8, '<input type="checkbox" value="" name="noatt"',
+    ($q->param('noatt')   ? 'checked="checked"' : ''), " />...no attributes\n";
+  print <<".EOF.";
+        <input type="submit" value="Revalidate" />
+    </td></tr>
+.EOF.
+
+  print "  </table></form>\n";
+}
+
+sub add_warning {
+  push @{$File->{Warnings}}, shift;
+}
+
+sub print_warnings {
+  my $warning;
+  return unless defined @{$File->{Warnings}};
+  print "  <div><h2>Warnings</h2>\n  <ul>\n";
+  for $warning (@{$File->{Warnings}}) {
+    print "    <li class='warning'>$warning</li>\n";
+  }
+  print "  </ul></div>\n";
+}
 
 sub output_doctype_spiel {
 
@@ -627,6 +724,19 @@ sub output_closing {
 </html>
 EOF
 
+}
+
+# leave some message and then die (use for internal errors only)
+sub internal_error {
+    my ($dieMessage) = shift;
+    print <<"EOF";
+    <hr>
+    <strong class="error">Internal server error ($dieMessage).</strong>
+    Please contact <a href="mailto:$MAINTAINER">maintainer</a>.
+EOF
+    &output_closing;
+    &erase_stuff;
+    die "$dieMessage\n";
 }
 
 sub erase_stuff {
