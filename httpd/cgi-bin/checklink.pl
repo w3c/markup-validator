@@ -5,7 +5,7 @@
 # (c) 1999 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.8 1999-12-04 23:00:25 hugo Exp $
+# $Id: checklink.pl,v 2.9 1999-12-04 23:19:37 hugo Exp $
 #
 # This program is licensed under the W3C License.
 
@@ -23,7 +23,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = '$Revision: 2.8 $ (c) 1999 W3C';
+my $VERSION = '$Revision: 2.9 $ (c) 1999 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -38,6 +38,7 @@ my $_chunksize = 1024;
 my $_redirects = 1;
 my $_user;
 my $_password;
+my $_trusted = '\.w3\.org';
 my $query;
 
 if ($#ARGV >= 0) {
@@ -340,6 +341,7 @@ sub W3C::UserAgent::simple_request() {
     my $response = $self->SUPER::simple_request(@_);
     if (! defined($self->{FirstResponse})) {
         $self->{FirstResponse} = $response->code();
+        $self->{FirstMessage} = $response->message();
     }
     return $response;
 }
@@ -359,7 +361,7 @@ sub W3C::UserAgent::redirect_ok {
 }
 
 sub get_uri() {
-    my ($method, $uri, $start, $code, $realm, $tested) = @_;
+    my ($method, $uri, $start, $code, $realm, $message, $tested) = @_;
     if (! defined($start)) {
         $start = &get_timestamp();
     }
@@ -375,12 +377,15 @@ sub get_uri() {
     }
     my $request = new HTTP::Request($method, $uri);
     if (defined($code) && $code == 401
-        && ($request->url->netloc =~ /\.w3\.org$/) && defined($ENV{HTTP_AUTHORIZATION})) {
+        && ($request->url->netloc =~ /$_trusted$/) && defined($ENV{HTTP_AUTHORIZATION})) {
         $request->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
     }
     $response = $ua->request($request);
     if (! defined($code)) {
         $code = $ua->{FirstResponse};
+    }
+    if (! defined($message)) {
+        $message = $ua->{FirstMessage};
     }
     if (($response->code() == 401)
         && defined($ENV{HTTP_AUTHORIZATION})
@@ -390,7 +395,7 @@ sub get_uri() {
             $response->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
             $realm = $1;
         }
-        return &get_uri($method, $response->request->url, $start, $code, $realm, 1);
+        return &get_uri($method, $response->request->url, $start, $code, $realm, $message, 1);
     }
     $response->{Redirects} = $ua->{Redirects};
     my $stop = &get_timestamp();
@@ -398,6 +403,7 @@ sub get_uri() {
         printf(" fetched in %ss\n", &time_diff($start,$stop));
     }
     $response->{OriginalCode} = $code;
+    $response->{OriginalMessage} = $message;
     if (defined($realm)) {
         $response->{Realm} = $realm;
     }
@@ -574,6 +580,7 @@ sub check_validity($, $, \%, \%, \%, \%, $) {
         $results->{$uri}{$uri}{orig} = $response->{OriginalCode};
         if ($response->{OriginalCode} != $response->code()) {
             $results->{$uri}{$uri}{success} = 0;
+            $results->{$uri}{$uri}{orig_message} =  $response->{OriginalMessage};
         } else {
             $results->{$uri}{$uri}{success} = $response->is_success();
         }
@@ -818,15 +825,21 @@ sub links_summary(\%,\%,\%) {
                                sort {$a <=> $b} keys %{$links->{$u}{$u}});
         }
         if ($_html) {
-            printf("<tr><th rowspan=\"%d\">%s</th><th rowspan=\"%d\"%s>%d%s%s</th><td>%s</td><td%s>%s</td></tr>\n",
+            printf("<tr><th rowspan=\"%d\">%s</th><th rowspan=\"%d\"%s>%d%s%s%s%s</th><td>%s</td><td%s>%s</td></tr>\n",
                    $n_fragments,
                    $redirected ? join('<br>-&gt; ',
                                       &get_redirects($u, %$redirects)) : $u,
                    $n_fragments,
                    &bgcolor($results->{$u}{$u}{orig}),
                    $results->{$u}{$u}{orig},
+                   ($results->{$u}{$u}{code} != $results->{$u}{$u}{orig})
+                   ? '-&gt; '.$results->{$u}{$u}{code}
+                   : '',
                    defined($results->{$u}{$u}{realm})
                    ? '<br>Realm: '.$results->{$u}{$u}{realm}
+                   : '',
+                   defined($results->{$u}{$u}{orig_message})
+                   ? '<br>'.$results->{$u}{$u}{orig_message}.' -&gt;' 
                    : '',
                    $results->{$u}{$u}{message}
                    ? '<br>'.$results->{$u}{$u}{message}
@@ -835,11 +848,14 @@ sub links_summary(\%,\%,\%) {
                    &bgcolor($results->{$u}{$u}{code}),
                    $lines_list);
         } else {
-            printf("\n%s\t%s\n  Code: %d %s\n",
+            printf("\n%s\t%s\n  Code: %d%s %s\n",
                    $redirected ? join("\n-> ",
                                       &get_redirects($u, %$redirects)) : $u,
                    $lines_list ? 'Lines: '.$lines_list : '' ,
-                   $results->{$u}{$u}{code},
+                   $results->{$u}{$u}{orig},
+                   ($results->{$u}{$u}{code} != $results->{$u}{$u}{orig})
+                   ? '-> '.$results->{$u}{$u}{code}
+                   : '',
                    $results->{$u}{$u}{message});
         }
         foreach $f (@fragments) {
