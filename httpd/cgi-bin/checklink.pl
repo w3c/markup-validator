@@ -20,9 +20,11 @@ sub start {
     my $self=shift;
     my ($tag,$attr)=@_;
     my $link;
+    $self->{STARTLINK} = 0;
     $link=$attr->{href} if $tag eq "a";
     $link=$attr->{src} if $tag eq "img";
     if (defined $link){
+	$self->{STARTLINK} = 1;
 	$self->{Links}{$link}{$self->{Line}+1}++;
     }
 }
@@ -39,7 +41,6 @@ sub on_return {
     my $self = shift;
     my ($request,$response,$content) = @_;
     if($response->code == 301){
-#	print keys %{$self->{URL}{Registered}},"\n";
 	$self->{URL}{Redirect}{$request->url} = $response->headers->header('Location');
 	unless(defined $self->{URL}{Registered}{$response->headers->header('Location')}){
 	    $self->register(HTTP::Request->new(HEAD => $response->headers->header('Location')),\&callback_check,undef,0);
@@ -54,7 +55,7 @@ use CGI qw(:standard);
 ###############
 # Global Variables
 
-my $VERSION= '$Id: checklink.pl,v 1.12 1998-09-09 13:43:34 renaudb Exp $ ';
+my $VERSION= '$Id: checklink.pl,v 1.13 1998-09-09 20:38:17 renaudb Exp $ ';
 my %ALLOWED_SCHEMES = ( "http" => 1 );
 my %SCHEMES = (); # for report
 my %URL = ();
