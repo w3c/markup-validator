@@ -5,7 +5,7 @@
 # (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.21 2003-11-22 15:17:52 ville Exp $
+# $Id: checklink.pl,v 3.6.2.22 2003-11-22 15:20:15 ville Exp $
 #
 # This program is licensed under the W3C(r) Software License:
 #       http://www.w3.org/Consortium/Legal/copyright-software
@@ -87,7 +87,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.21 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.22 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
 
@@ -1546,7 +1546,7 @@ HTTP Message: %s%s%s</dd>
       }
     } else {
       my $redirmsg = $redirect_loop ? ' redirect loop detected' : '';
-      printf("\n%s\t%s\n  Code: %d%s %s\n To do: %s\n",
+      printf("\n%s\t%s\n  Code: %d%s %s\n%s\n",
              # List of redirects
              $redirected ? join("\n-> ", @redirects_urls) . $redirmsg : $u,
              # List of lines
@@ -1561,7 +1561,7 @@ HTTP Message: %s%s%s</dd>
              $results->{$u}{location}{message} ?
              $results->{$u}{location}{message} : '',
              # What to do
-             wrap('', '        ', $whattodo));
+             wrap(' To do: ', '        ', $whattodo));
       if ($#fragments >= 0) {
         if ($results->{$u}{location}{code} == 200) {
           print("The following fragments need to be fixed:\n");
