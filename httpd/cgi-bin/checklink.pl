@@ -5,7 +5,7 @@
 # (c) 1999-2002 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.5 2002-11-23 15:06:06 ville Exp $
+# $Id: checklink.pl,v 3.6 2002-11-23 21:37:09 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -64,7 +64,7 @@ sub redirect_ok
 
 package W3C::CheckLink;
 
-use vars qw($PROGRAM $VERSION $CVS_VERSION $REVISION
+use vars qw($PROGRAM $AGENT $VERSION $CVS_VERSION $REVISION
             $Have_ReadKey $DocType);
 
 use HTML::Entities      qw();
@@ -83,7 +83,8 @@ BEGIN
 {
   # Version info
   $PROGRAM       = 'W3C checklink';
-  ($CVS_VERSION) = q$Revision: 3.5 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
+  ($CVS_VERSION) = q$Revision: 3.6 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2002 W3C', $VERSION);
 
@@ -145,6 +146,7 @@ if ($_cl) {
   if ($_user && (! $_password)) {
     &ask_password();
   }
+
   my $first = 1;
   foreach my $uri (@ARGV) {
     if (!$_summary) {
@@ -158,19 +160,41 @@ if ($_cl) {
     &check_uri($uri, ($_html && $first), $_depth);
     $first &&= 0;
   }
+  undef $first;
+
   if ($_html) {
     &html_footer();
   } elsif (($doc_count > 0) && !$_summary) {
     printf("\n%s\n", &global_stats());
   }
+
 } else {
 
   use CGI ();
   use CGI::Carp qw(fatalsToBrowser);
   $query = new CGI;
   # Set a few parameters in CGI mode
-  $_verbose = 0;
+  $_verbose  = 0;
   $_progress = 0;
+  $_html     = 1;
+
+  # Backwards compatibility
+  if ($query->param('hide_dir_redirects')) {
+    $query->param('hide_redirects', 'on');
+    $query->param('hide_type', 'dir');
+    $query->delete('hide_dir_redirects');
+  }
+  if (my $uri = $query->param('url')) {
+    $query->param('uri', $uri) unless $query->param('uri');
+    $query->delete('url');
+  }
+
+  # Override undefined values from the cookie, if we got one.
+  if (my %cookie = $query->cookie($AGENT)) {
+    while (my ($key, $value) = each %cookie) {
+      $query->param($key, $value) unless defined($query->param($key));
+    }
+  }
 
   if ($query->param('summary')) {
     $_summary = 1;
@@ -185,8 +209,6 @@ if ($_cl) {
       $_redirects = 0;
     }
   }
-  # Backwards compatibility
-  $_dir_redirects = 0 if ($query->param('hide_dir_redirects'));
 
   if ($query->param('no_accept_language')) {
     $_accept_language = 0;
@@ -199,27 +221,53 @@ if ($_cl) {
   if ($query->param('depth') && ($query->param('depth') != 0)) {
     $_depth = $query->param('depth');
   }
-  $_html = 1;
-  my $uri;
-  if ($query->param('uri')) {
-    $uri = $query->param('uri');
-  } elsif ($query->param('url')) {
-    $uri = $query->param('url');
-  } else {
-    &print_form($query);
+
+  # Save, clear or leave cookie as is.
+  my $cookie = '';
+  if (my $action = $query->param('cookie')) {
+    my %cookie = $query->cookie($AGENT);
+    if ($action eq 'clear') {
+      # Clear the cookie.
+      $cookie{-value}   = '';
+      $cookie{-expires} = '-1M';
+    } else {
+      # Always refresh the expiration time.
+      $cookie{-expires} = '+1M';
+      if ($action eq 'set') {
+        # Set the options.
+        my %options = $query->Vars();
+        delete($options{$_}) for ('url', 'uri', 'check'); # Non-persistent.
+        $cookie{-value}   = \%options;
+        $cookie{-expires} = '+1M';
+      }
+    }
+    $cookie = $query->cookie(%cookie);
   }
+
+  my $uri = $query->param('uri');
+
+  if (! $uri) {
+    &html_header('', 1); # Set cookie only from results page.
+    &print_form($query);
+    &html_footer();
+    exit;
+  }
+
+  undef $query; # Not needed any more.
+
   $uri =~ s/^\s+//g;
   if ($uri =~ m/^file:/) {
     # Only the http scheme is allowed
     &file_uri($uri);
-  } elsif (!($uri =~ m/:/)) {
+  } elsif ($uri !~ m/:/) {
     if ($uri =~ m|^//|) {
       $uri = 'http:'.$uri;
     } else {
       $uri = 'http://'.$uri;
     }
   }
-  &check_uri($uri, 1, $_depth);
+
+  &check_uri($uri, 1, $_depth, $cookie);
   &html_footer();
 }
 
@@ -348,7 +396,7 @@ sub urize ($)
 
 sub check_uri ($$$)
 {
-  my ($uri, $html_header, $depth) = @_;
+  my ($uri, $html_header, $depth, $cookie) = @_;
   # If $html_header equals 1, we need to generate a HTML header (first
   # instance called in HTML mode).
 
@@ -369,7 +417,7 @@ sub check_uri ($$$)
   $doc_count++;
 
   if ($_html) {
-    &html_header($uri) if $html_header;
+    &html_header($uri, 0, $cookie) if $html_header;
     print('<h2>');
   }
 
@@ -408,7 +456,7 @@ Validity</a></p>
   ###############
 
   if (! $_summary) {
-    print("Checking anchors:\n");
+    print("Checking anchors...\n");
   }
   my %errors;
   foreach my $anchor (keys %{$p->{Anchors}}) {
@@ -693,7 +741,7 @@ sub get_uri ($$;$\%$$$$)
   my %lwpargs = ($LWP::VERSION >= 5.6) ? (keep_alive => 1) : ();
   my $ua = W3C::UserAgent->new(%lwpargs);
   $ua->timeout($_timeout);
-  $ua->agent(sprintf('W3C-checklink/%s %s', $VERSION, $ua->agent()));
+  $ua->agent(sprintf('%s/%s %s', $AGENT, $VERSION, $ua->agent()));
   $ua->env_proxy();
   $ua->proxy('http', 'http://' . $_http_proxy) if ($_http_proxy);
 
@@ -1640,7 +1688,7 @@ sub global_stats ()
 
 sub html_header ($;$$)
 {
-  my ($uri, $nocache, $focus) = @_;
+  my ($uri, $doform, $cookie) = @_;
 
   $uri = &encode($uri);
   my $title = ' Link Checker' . ($uri eq '' ? '' : ': ' . $uri);
@@ -1650,13 +1698,29 @@ sub html_header ($;$$)
 
   my $headers = '';
   if (! $_cl) {
-    $headers .= "Cache-Control: no-cache\nPragma: no-cache\n" if $nocache;
+    $headers .= "Cache-Control: no-cache\nPragma: no-cache\n" if $doform;
     $headers .= "Content-Type: text/html; charset=iso-8859-1\n";
     $headers .= "Content-Script-Type: text/javascript\n";
+    $headers .= "Set-Cookie: $cookie\n" if $cookie;
     $headers .= "Content-Language: en\n\n";
   }
 
-  my $onload = $focus ? sprintf(' onload="%s.focus()"', $focus) : '';
+  my $script = my $onload = '';
+  if ($doform) {
+    $script = "
+<script type=\"text/javascript\">
+function uriOk()
+{
+  var v = document.forms[0].uri.value;
+  if (v.length > 0) {
+    if (v.search) return (v.search(/\\S/) != -1);
+    return true;
+  }
+  return false;
+}
+</script>";
+   $onload = ' onload="document.forms[0].uri.focus()"';
+  }
 
   print $headers, $DocType, "
 <html lang=\"en\">
@@ -1674,10 +1738,38 @@ pre, code, tt {
 img {
   color: white;
   border: none;
+  vertical-align: middle;
 }
 fieldset {
   padding-left: 1em;
-  background-color: #eeeeee;
+  background-color: #eee;
+}
+h1 a {
+  color: black;
+}
+h1 {
+  color: #053188;
+}
+h1#title {
+  background-color: #eee;
+  border-bottom: 1px solid black;
+  padding: .25em;
+}
+address {
+  padding: 1ex;
+  border-top: 1px solid black;
+  background-color: #eee;
+  clear: right;
+}
+address img {
+  float: right;
+  width: 88px;
+}
+a:hover {
+  background-color: #eee#;
+}
+a:visited {
+  color: purple;
 }
 .report {
   width: 100%;
@@ -1697,12 +1789,10 @@ dt.report {
 .multiple {
   background-color: fuchsia;
 }
-</style>
+</style>", $script, "
 </head>
 <body", $onload, ">
-<p><a href=\"http://www.w3.org/\" title=\"W3C\"><img alt=\"W3C\" src=\"http://www.w3.org/Icons/w3c_home\" height=\"48\" width=\"72\"></a></p>
-<h1>W3C<sup>&reg;</sup>", $title, "</h1>
-\n";
+<h1 id=\"title\"><a href=\"http://www.w3.org/\" title=\"W3C\"><img alt=\"W3C\" id=\"logo\" src=\"http://www.w3.org/Icons/w3c_home\" height=\"48\" width=\"72\"></a> ", $title, "</h1>\n\n";
 }
 
 sub bgcolor ($)
@@ -1743,20 +1833,17 @@ sub html_footer ()
   }
 
   print "
-<hr>
 <address>
-$PROGRAM $REVISION<br>
-Written by <a href=\"http://www.w3.org/People/Hugo/\">Hugo Haas</a>.
+$PROGRAM $REVISION,
+by <a href=\"http://www.w3.org/People/Hugo/\">Hugo Haas</a> and others.<br>
 Please send bug reports, suggestions and comments to the
 <a href=\"mailto:www-validator\@w3.org?subject=checklink%3A%20\">www-validator
 mailing list</a>
 (<a href=\"http://lists.w3.org/Archives/Public/www-validator/\">archives</a>).
 <br>
-Check out the
-<a href=\"http://www.w3.org/2000/07/checklink\">documentation</a>.
+Check out the <a href=\"docs/checklink.html\">documentation</a>.
 Download the
-<a href=\"http://dev.w3.org/cvsweb/~checkout~/validator/httpd/cgi-bin/checklink.pl?rev=$CVS_VERSION&amp;content-type=text/plain\">source
-code</a> from
+<a href=\"http://dev.w3.org/cvsweb/~checkout~/validator/httpd/cgi-bin/checklink.pl?rev=$CVS_VERSION&amp;content-type=text/plain\">source code</a> from
 <a href=\"http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/checklink.pl\">CVS</a>.
 </address>
 </body>
@@ -1766,7 +1853,7 @@ code</a> from
 
 sub file_uri ($)
 {
-  my $uri = $_[0];
+  my ($uri) = @_;
   &html_header($uri);
   print "<h2>Forbidden</h2>
 <p>You cannot check such a URI (<code>$uri</code>).</p>
@@ -1778,32 +1865,52 @@ sub file_uri ($)
 sub print_form ($)
 {
   my ($q) = @_;
-  &html_header('', 1, 'document.forms[0].uri');
-  print "<form action=\"", $q->self_url(), "\" method=\"get\">
+
+  my $chk = ' checked="checked"';
+  $q->param('hide_type', 'all') unless $q->param('hide_type');
+
+  my $sum = $q->param('summary')              ? $chk : '';
+  my $red = $q->param('hide_redirects')       ? $chk : '';
+  my $all = ($q->param('hide_type') ne 'dir') ? $chk : '';
+  my $dir = $all                              ? ''   : $chk;
+  my $acc = $q->param('no_accept_language')   ? $chk : '';
+  my $rec = $q->param('recursive')            ? $chk : '';
+  my $dep = &encode($q->param('depth')              || '');
+
+  my $cookie_options = '';
+  if ($q->cookie()) {
+    $cookie_options = "
+    <label><input type=\"radio\" name=\"cookie\" value=\"nochanges\" checked=\"checked\"> Don't modify saved options</label>
+    <label><input type=\"radio\" name=\"cookie\" value=\"set\"> Save these options</label>
+    <label><input type=\"radio\" name=\"cookie\" value=\"clear\"> Clear saved options</label>";
+  } else {
+    $cookie_options = "
+    <label><input type=\"checkbox\" name=\"cookie\" value=\"set\"> Save options in a <a href=\"http://www.w3.org/Protocols/rfc2109/rfc2109\">cookie</a></label>";
+  }
+
+  print "<form action=\"", $q->self_url(), "\" method=\"get\" onsubmit=\"return uriOk()\">
 <p><label for=\"uri\">Enter the address (<a href=\"http://www.w3.org/Addressing/#terms\">URL</a>)
 of a document that you would like to check:</label></p>
-<p><input type=\"text\" size=\"50\" id=\"uri\" name=\"uri\"></p>
+<p><input type=\"text\" size=\"50\" id=\"uri\" name=\"uri\" value=\"\"></p>
 <fieldset>
   <legend>Options</legend>
   <p>
-    <label><input type=\"checkbox\" name=\"summary\" value=\"on\"> Summary only</label>
+    <label><input type=\"checkbox\" name=\"summary\" value=\"on\"", $sum, "> Summary only</label>
     <br>
-    <label><input type=\"checkbox\" name=\"hide_redirects\" value=\"on\"> Hide redirects:</label>
-    <label><input type=\"radio\" name=\"hide_type\" value=\"all\" checked=\"checked\"> all</label>
-    <label><input type=\"radio\" name=\"hide_type\" value=\"dir\"> for directories only</label>
+    <label><input type=\"checkbox\" name=\"hide_redirects\" value=\"on\"", $red, "> Hide <a href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.3\">redirects</a>:</label>
+    <label><input type=\"radio\" name=\"hide_type\" value=\"all\"", $all, "> all</label>
+    <label><input type=\"radio\" name=\"hide_type\" value=\"dir\"", $dir, "> for directories only</label>
     <br>
-    <label><input type=\"checkbox\" name=\"no_accept_language\" value=\"on\"> Don't send <tt>Accept-Language</tt> headers</label>
+    <label><input type=\"checkbox\" name=\"no_accept_language\" value=\"on\"", $acc, "> Don't send <tt><a href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4\">Accept-Language</a></tt> headers</label>
     <br>
-    <label title=\"Check linked documents recursively (maximum: $_max_documents documents; sleeping $_sleep_time seconds between each document)\"><input type=\"checkbox\" name=\"recursive\" value=\"on\"> Check linked documents recursively</label>,
-    <label title=\"Depth of the recursion (-1 is the default and means unlimited)\">recursion depth: <input type=\"text\" size=\"3\" maxlength=\"3\" name=\"depth\" value=\"\"></label>
-    <br>
+    <label title=\"Check linked documents recursively (maximum: ", $_max_documents, " documents; sleeping ", $_sleep_time, " seconds between each document)\"><input type=\"checkbox\" name=\"recursive\" value=\"on\"", $rec, "> Check linked documents recursively</label>,
+    <label title=\"Depth of the recursion (-1 is the default and means unlimited)\">recursion depth: <input type=\"text\" size=\"3\" maxlength=\"3\" name=\"depth\" value=\"", $dep, "\"></label>
+    <br><br>", $cookie_options, "
   </p>
 </fieldset>
-<p><input type=\"submit\" name=\"submit\" value=\"Check\"></p>
+<p><input type=\"submit\" name=\"check\" value=\"Check\"></p>
 </form>
 ";
-  &html_footer();
-  exit;
 }
 
 sub encode (@)
