@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.24 2003-11-24 21:11:55 ot Exp $
+   $Id: base.css,v 1.26.2.25 2004-01-20 09:45:00 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -27,6 +27,7 @@ html, body {
 div#main {
   /*padding-left: 2em;*/
   padding-top: 1em;
+  margin-right: 8em;
 }
 
 div#main p, div#main dt {
@@ -119,10 +120,11 @@ h3 a {color: black} /* These are usually targets and not links */
 
 img {vertical-align: middle}
 h1#title {
-  background-color: #eee;
+/*  background-color: #eee; */
   border-bottom: 1px solid black;
   padding: .25em;
   margin: 0;
+  color: #053188;
 }
 
 /* Used for beta releases. */
@@ -167,34 +169,6 @@ p.copyright a {
   color: #88f;
 }
 
-.jumpbar {
-  float:            left;
-  width:            12ex;
-  text-align:       left;
-  text-decoration:  none;
-  padding:          1ex;
-  background-color: #eee;
-  border-top:       1px solid #eee;
-  border-right:     1px solid black;
-  border-bottom:    1px solid black;
-  margin-top:       -1.3em;
-  font-weight:      bolder;
-  font-size:        smaller;
-}
-
-div.jumpbar ul {
-  padding: 0;
-  margin:  0;
-}
-
-div.jumpbar li {
-  list-style-type: none;
-}
-
-p.jumpbar a:hover {
-  background: #ccc;
-}
-
 .nsnote {
   display: none;
 }
@@ -219,7 +193,7 @@ h1 {
   font-weight: bold;
   font-style: normal;
   text-decoration: none;
-  color: #053188
+  color: #053188;
 }
 
 h2 {

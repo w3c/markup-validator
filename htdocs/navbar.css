@@ -1,48 +1,166 @@
 /*
    Navigation Style Sheet for the W3C Markup Validation Service.
 
-   Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
+   Copyright 2000-2004 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: navbar.css,v 1.3.2.3 2003-07-24 12:24:28 link Exp $
+   $Id: navbar.css,v 1.3.2.4 2004-01-20 09:45:00 ot Exp $
 */
 
-div.navbar {
-  font-size: smaller;
+
+navbar {
 }
 
-div.navbar p a {
-  display: block;
-  text-decoration: none;
+
+html {
+min-width: 55em;
 }
 
-div.navbar p a:hover {
-  background: #ccc;
+#menu {
+min-width: 63em;
+list-style-type: none;
+padding: 0;
+margin: 0;
+height: 1.5em;
+background-color: #eee;
+border-bottom: solid 1px black;
 }
 
-div.navbar {
+#menu li {
+display: inline;
+padding: 0;
+margin: 0;
+}
+
+#menu li a:link, #menu li a:visited {
+text-decoration: none;
+text-align: center;
+float: left;
+display: block;
+width: 8em;
+padding: 2px 0px;
+margin: 0;
+background-color: #eee;
+color: #053188;
+font-size: smaller;
+border-right: solid 1px #ddd;
+border-bottom: solid 1px #ddd;
+}
+
+#menu li a#selected:link, #menu li a#selected:visited {
+text-decoration: underline;
+background-color: #fff;
+color: #053188;
+}
+
+#menu li a:hover {
+text-decoration: underline;
+background-color: #fff;
+color: #053188;
+}
+
+#menu li a:active {
+background-color: #fff;
+color: #053188;
+border-right: solid 1px #ddd;
+}
+
+
+/* link bar  - all pages*/
+
+#misclinks {
   float:            right;
-  text-align:       right;
+  width: 8em;
   text-decoration:  none;
-  margin:           .1ex 0 2.5ex 1em;
   padding:          1ex;
   background-color: #eee;
-  border-top:       1px solid #eee;
-  border-left:      1px solid black;
+  border-left:     1px solid black;
   border-bottom:    1px solid black;
-  border-right:     1px solid #eee;
-  clear:            both;
-  width:            8em;
-  margin-top:       -1px;
+  margin-top:       -1px; 
+  font-size:        smaller;
 }
 
-div.navbar p {
-  border-top: 1px groove #444;
-  margin:     .1ex;
-  padding:    .1ex .1em 1.5ex .1em;
+#misclinks p {
+  text-align: left;
+  margin: 0;
 }
 
-div.navbar p:first-child {
-  border: 0;
-  font-weight: bold;
+#misclinks ul {
+  padding: 0;
+  margin:  0;
 }
+
+#misclinks li {
+  list-style-type: none;
+  text-align: right;
+}
+
+#misclinks li a:link, div.jumpbar li a:visited {
+text-decoration: none;
+display: block;
+width: 8em;
+padding: 2px 0px;
+margin: 0;
+background-color: #eee;
+color: #053188;
+font-size: smaller;
+}
+
+#misclinks li a:hover {
+text-decoration: underline;
+}
+
+#misclinks li a#selected:link, div.jumpbar li a#selected:visited {
+text-decoration: underline;
+}
+
+
+/* Jump Bar  - results page*/
+
+.jumpbar {
+  float:            left;
+  width: 8em;
+  text-align:       left;
+  text-decoration:  none;
+  padding:          1ex;
+  background-color: #eee;
+  border-right:     1px solid black;
+  border-bottom:    1px solid black;
+  margin-top:       -1.3em; 
+  font-size:        smaller;
+}
+
+div.jumpbar ul {
+  padding: 0;
+  margin:  0;
+}
+
+div.jumpbar li {
+  list-style-type: none;
+}
+
+div.jumpbar li a:link, div.jumpbar li a:visited {
+text-decoration: none;
+text-align: center;
+display: block;
+width: 8em;
+padding: 2px 0px;
+margin: 0;
+background-color: #eee;
+color: #053188;
+font-size: smaller;
+border-top: dotted 1px black;
+}
+
+div.jumpbar li a:hover {
+text-decoration: underline;
+}
+
+div.jumpbar li a#selected:link, div.jumpbar li a#selected:visited {
+text-decoration: underline;
+background-color: #fff;
+color: #053188;
+border-right: solid 1px #ddd;
+border-bottom: solid 1px #fff;
+}
+
