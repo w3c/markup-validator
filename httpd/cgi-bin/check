@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.41 2003-05-04 19:14:31 link Exp $
+# $Id: check,v 1.305.2.42 2003-05-04 22:03:29 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.41 $;
+  $VERSION    =  q$Revision: 1.305.2.42 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -172,7 +172,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-05-04 19:14:31 $,
+                              Date => q$Date: 2003-05-04 22:03:29 $,
                              });
 
 #
@@ -993,21 +993,6 @@ sub doctype_spiel {
       <a href="http://www.w3.org/TR/xhtml1/">XHTML 1.0</a> Recommendation.
     </p>
 .EOF.
-}
-
-
-#
-# Leave a message and then die (use for internal errors only)
-sub internal_error {
-  my $File = shift;
-  my ($dieMessage) = shift;
-  print <<"EOF";
-    <hr />
-    <strong class="error">Internal server error ($dieMessage).</strong>
-    Please contact <a href="mailto:$CFG->{Maintainer}">maintainer</a>.
-EOF
-  print $File->{'Footer'};
-  croak $dieMessage, "\n";
 }
 
 
