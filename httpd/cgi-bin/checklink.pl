@@ -5,7 +5,7 @@
 # (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.13 2003-07-26 15:48:24 ville Exp $
+# $Id: checklink.pl,v 3.6.2.14 2003-07-26 19:16:26 ville Exp $
 #
 # This program is licensed under the W3C(r) Software License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -85,7 +85,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.13 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.14 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
 
@@ -1280,13 +1280,19 @@ sub get_redirects ($%)
 {
   my ($uri, %redirects) = @_;
   my @history = ($uri);
-  my $origin = $uri;
+  my %seen = ($uri => 1); # for tracking redirect loops
+  my $loop = 0;
   while ($redirects{$uri}) {
     $uri = $redirects{$uri};
     push(@history, $uri);
-    last if ($uri eq $origin);
+    if ($seen{$uri}) {
+      $loop = 1;
+      last;
+    } else {
+      $seen{$uri}++;
+    }
   }
-  return(@history);
+  return ($loop, @history);
 }
 
 ####################################################
@@ -1375,6 +1381,8 @@ sub show_link_report (\%\%\%\%\@;$\%)
       }
     }
 
+    my ($redirect_loop, @redirects_urls) = get_redirects($u, %$redirects);
+
     # Error type
     $c = &code_shown($u, $results);
     # What to do
@@ -1402,6 +1410,11 @@ on how to solve this</a>.';
         } else {
           $whattodo = 'This is a server-side problem. Check the URI.';
         }
+      } elsif ($redirect_loop) {
+        $whattodo =
+          'Retrieving the URI results in a redirect loop, that should be ' .
+          'fixed.  Examine the redirect sequence to see where the loop ' .
+          'occurs.';
       } else {
         $whattodo = $todo->{$c};
       }
@@ -1428,7 +1441,6 @@ on how to solve this</a>.';
         $previous_c = $c;
       }
       # Main info
-      my @redirects_urls = &get_redirects($u, %$redirects);
       for (@redirects_urls) {
         $_ = &show_url($_);
       }
@@ -1441,6 +1453,8 @@ on how to solve this</a>.';
             $http_message.'</span>';
         }
       }
+      my $redirmsg =
+        $redirect_loop ? ' <em>redirect loop detected</em>' : '';
       printf("
 <dt%s>%s</dt>
 <dd>What to do: <strong%s>%s</strong>%s<br></dd>
@@ -1451,7 +1465,8 @@ HTTP Message: %s%s%s</dd>
              $idref,
              # List of redirects
              $redirected ?
-             join(' redirected to<br>', @redirects_urls) : &show_url($u),
+             join(' redirected to<br>', @redirects_urls) . $redirmsg :
+             &show_url($u),
              # Color
              &bgcolor($c),
              # What to do
@@ -1491,10 +1506,10 @@ HTTP Message: %s%s%s</dd>
                $fragment_direction);
       }
     } else {
+      my $redirmsg = $redirect_loop ? ' redirect loop detected' : '';
       printf("\n%s\t%s\n  Code: %d%s %s\nTo do: %s\n",
              # List of redirects
-             $redirected ? join("\n-> ",
-                                &get_redirects($u, %$redirects)) : $u,
+             $redirected ? join("\n-> ", @redirects_urls) . $redirmsg : $u,
              # List of lines
              $lines_list ? "Line$s: $lines_list" : '',
              # Original HTTP reply
@@ -1598,7 +1613,7 @@ sub links_summary (\%\%\%\%)
                    && !defined($broken->{$l}));
       # Check whether we have a "directory redirect"
       # e.g. http://www.w3.org/TR -> http://www.w3.org/TR/
-      my @redirects = &get_redirects($l, %$redirects);
+      my ($redirect_loop, @redirects) = get_redirects($l, %$redirects);
       if (($#redirects == 1)
           && (($redirects[0].'/') eq $redirects[1])) {
         push(@dir_redirect_urls, $l);
