@@ -1,6 +1,6 @@
 
 	-- SGML catalog for the W3C HTML Validation Service --
-	-- $Id: catalog,v 1.3 1999-08-19 23:21:24 gerald Exp $ --
+	-- $Id: catalog,v 1.4 1999-08-25 03:06:13 gerald Exp $ --
 
 OVERRIDE YES	-- prefer public identifiers to system identifiers --
 
@@ -133,10 +133,10 @@ PUBLIC "-//W3C//ENTITIES Special//EN//HTML"	REC-html40-971218/HTMLspecial.ent
 PUBLIC "-//W3C//ENTITIES Symbols//EN//HTML"	REC-html40-971218/HTMLsymbol.ent
 
 	-- HTML 4.01 --
-PUBLIC "-//W3C//DTD HTML 4.01//EN"		PR-html40-19990820/strict.dtd
-PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"	PR-html40-19990820/loose.dtd
-PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"	PR-html40-19990820/frameset.dtd
-PUBLIC "-//W3C//ENTITIES Latin1//EN//HTML"	PR-html40-19990820/HTMLlat1.ent
-PUBLIC "-//W3C//ENTITIES Special//EN//HTML"	PR-html40-19990820/HTMLspecial.ent
-PUBLIC "-//W3C//ENTITIES Symbols//EN//HTML"	PR-html40-19990820/HTMLsymbol.ent
+PUBLIC "-//W3C//DTD HTML 4.01//EN"		PR-html40-19990824/strict.dtd
+PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"	PR-html40-19990824/loose.dtd
+PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"	PR-html40-19990824/frameset.dtd
+PUBLIC "-//W3C//ENTITIES Latin1//EN//HTML"	PR-html40-19990824/HTMLlat1.ent
+PUBLIC "-//W3C//ENTITIES Special//EN//HTML"	PR-html40-19990824/HTMLspecial.ent
+PUBLIC "-//W3C//ENTITIES Symbols//EN//HTML"	PR-html40-19990824/HTMLsymbol.ent
 
