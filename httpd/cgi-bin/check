@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.324 2003-05-25 12:07:56 link Exp $
+# $Id: check,v 1.325 2003-11-12 21:20:38 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -105,6 +105,7 @@ BEGIN {
        -InterPolateVars  => TRUE,
        -DefaultConfig    => { Allowed_Protocols => 'http,https',
                               SGML_Parser       => '/usr/bin/onsgmls',
+                              Template_Path     => '/usr/local/validator/share/templates/en_US',
                             },
       );
     my %cfg = Config::General->new(%config_opts)->getall();
@@ -146,7 +147,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.324 $;
+  $VERSION    =  q$Revision: 1.325 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 } # end of BEGIN block.
 
@@ -213,11 +214,13 @@ $File->{'Other Namespaces'} = []; # Other (non-root) Namespaces.
 ###############################################################################
 
 my $T = HTML::Template->new(
-			    filename => '/usr/local/validator/share/templates/en_US/result.tmpl',
+			    filename =>
+			    File::Spec->catfile($CFG->{Template_Path}, 'result.tmpl'),
 			    die_on_bad_params => FALSE,
 			   );
 my $E = HTML::Template->new(
-			    filename => '/usr/local/validator/share/templates/en_US/fatal-error.tmpl',
+			    filename =>
+			    File::Spec->catfile($CFG->{Template_Path}, 'fatal-error.tmpl'),
 			    die_on_bad_params => FALSE,
 			   );
 
