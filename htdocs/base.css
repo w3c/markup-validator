@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.28 2004-02-16 21:07:38 link Exp $
+   $Id: base.css,v 1.26.2.29 2004-03-27 10:28:24 ville Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -65,7 +65,7 @@ a:active {
   background-color: yellow;
 }
 
-acronym:hover, abbr:hover {cursor: help};
+acronym:hover, abbr:hover {cursor: help}
 abbr[title], acronym[title], span[title], strong[title] {
   border-bottom: thin dotted;
   cursor: help;
