@@ -49,10 +49,10 @@
 </TMPL_IF>
 <TMPL_IF NAME="file_namespaces">
     <tr>
-      <th>Other Namepsaces</th>
+      <th>Other Namespaces</th>
       <td>
         <ul>
-          <TMPL_LOOP NAME="file_namespaces"><li><TMPL_VAR NAME="uri"></li></TMPL_LOOP>
+          <TMPL_LOOP NAME="file_namespaces"><li><a href="<TMPL_VAR NAME="uri">"><TMPL_VAR NAME="uri"></a></li></TMPL_LOOP>
         </ul>
       </td>
     </tr>
