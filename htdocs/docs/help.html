@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: help.html,v 1.12.2.13 2003-09-18 17:21:09 ville Exp $"
---><!--#set var="date" value="\$Date: 2003-09-18 17:21:09 $"
+<!--#set var="revision" value="\$Id: help.html,v 1.12.2.14 2004-04-01 21:59:54 ot Exp $"
+--><!--#set var="date" value="\$Date: 2004-04-01 21:59:54 $"
 --><!--#set var="title" value="Help for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -84,6 +84,10 @@
 	<li>
 		<a href="#faq-typo">I found some nasty typo like &lt;p&lt;a ...&gt; 
 		and the validator accepted it!</a>
+	</li>
+	<li>
+		<a href="#faq-referer">/check/referer does not work</a> or the validator says it does not support 
+		my <a href="#faq-referer">"undefined" URI scheme</a>
 	</li>
    </ul>
    </li>
@@ -440,6 +444,30 @@ of WDG's excellent
 	<a href="http://www.w3.org/TR/html4/appendix/notes.html#h-B.3.7">is not recommended</a>.
       </p>
 
+    <h4 id="faq-referer">/check/referer does not work - or - the validator says it does not support 
+    my "undefined" URI scheme</h4>
+
+      <p>Browsers and other Web agents usually send information about the page they come from, in a 
+      <code>Referer</code> header. The validator uses this information for a features that allows 
+      it to validate whatever page the browser last visited. The "valid" icons on some Web page usually
+      point to the validation of the page using this feature.</p>
+
+      <p>Unfortunately, some zealous "security software" or Web proxies strip the <code>referer</code> 
+      information from what the browser sends. Without this information the validator is not able to
+      find what the URI of the document to validate is, and gives the same error message as when it os
+      given a type of URI it does not understand.</p>
+
+      <p><strong>How to fix</strong>:</p>
+      <ul>
+	<li>Check that it is indeed a referer issue. The validator should have redirected you to
+	<code>http://validator.w3.org/check?uri=</code>. Otherwise, check the address you have given the validator.</li>
+	<li>The validator can not fix this issue. You will have to (ask your administrator to) reconfigure
+	whichever zealous software is stripping this referer info.</li>
+	<li>If you have a link on your page using the "referer" feature, you could replace them with the
+	a link to the validator without this feature, e.g. <code><code>http://validator.w3.org/check?uri=http://www.example.com</code></li>
+	<li>If you have no control over the page or annoying software, simply append the address of the page you wanted validated
+	to the <code>http://validator.w3.org/check?uri=</code> address.</li>
+     </ul>
 </div>
 </div>
 <!--#include virtual="../footer.html" -->
