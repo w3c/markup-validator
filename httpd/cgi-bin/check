@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.87 2004-04-17 01:55:26 link Exp $
+# $Id: check,v 1.305.2.88 2004-04-17 10:05:41 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -43,7 +43,7 @@ use CGI             2.81 qw(
                            ); # 2.81 for XHTML, and import redirect() function.
 
 use CGI::Carp            qw(carp croak fatalsToBrowser);
-use Config::General 2.06 qw(); # Need 2.06 for -SplitPolicy
+use Config::General      qw();
 use File::Spec           qw();
 use HTML::Parser    3.25 qw(); # Need 3.25 for $p->ignore_elements.
 use HTTP::Request        qw();
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.87 $;
+  $VERSION    =  q$Revision: 1.305.2.88 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-04-17 01:55:26 $,
+                              Date => q$Date: 2004-04-17 10:05:41 $,
                              });
 
 #
