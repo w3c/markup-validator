@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.81 2001-03-05 21:52:35 link Exp $
+# $Id: check,v 1.82 2001-03-05 22:26:42 link Exp $
 
 #
 # We need Perl 5.004.
@@ -74,9 +74,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.81 $;
+$VERSION    =  q$Revision: 1.82 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-03-05 21:52:35 $;
+$DATE       =  q$Date: 2001-03-05 22:26:42 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -532,6 +532,7 @@ if ( $? || ($guessed_doctype == 1) ) {
 	# setting in the catalog, like mathml2?
 	next if /:W: SGML declaration was not implied$/ &&
 	    ($File->{Type} =~ /^x(ht)?ml$/);
+	next if /^$sp:\(invalid location\):W: URL Redirected to/;
 	s/^$sp:<OSFD>//g;
 	if ( ! (($line, $col, $type, $msg)=(/^[^:]*:([0-9]+):([0-9]+):([A-Z]?):? (.*)/))) {
 	    print "Uh oh! I got the following unknown error:\n\n   $_\n\n";
