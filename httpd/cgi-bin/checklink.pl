@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.53 2000-06-23 16:56:42 hugo Exp $
+# $Id: checklink.pl,v 2.54 2000-06-23 19:09:52 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -31,7 +31,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.53 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.54 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -1592,8 +1592,8 @@ sub html_footer() {
 <hr>
 <address>
 $PROGRAM $VERSION<br>
-Report bugs to <a href=\"mailto:hugo\@w3.org\">Hugo Haas</a>.
-Check out the <a href=\"http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/checklink.pl\">source code</a>.
+Written by <a href=\"http://www.w3.org/People/Hugo/\">Hugo Haas</a>. Report bugs to <a href=\"mailto:hugo\@w3.org\">hugo\@w3.org</a>.<br>
+Download the <a href=\"http://dev.w3.org/cvsweb/~checkout~/validator/httpd/cgi-bin/checklink.pl?rev=".$REVISION."&amp;content-type=text/plain\">source code</a>. Check out the <a href=\"http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/checklink.pl\">CVS log</a>.
 </address>
 </body>
 </html>
