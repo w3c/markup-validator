@@ -2,10 +2,10 @@
 #
 # W3C Link Checker
 # by Hugo Haas <hugo@w3.org>
-# (c) 1999-2002 World Wide Web Consortium
+# (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.6 2003-02-05 21:47:28 ville Exp $
+# $Id: checklink.pl,v 3.6.2.7 2003-04-19 19:50:26 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -85,9 +85,9 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.6 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.7 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
-  $REVISION      = sprintf('version %s (c) 1999-2002 W3C', $CVS_VERSION);
+  $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
 
   eval "use Term::ReadKey 2.00 qw(ReadMode)";
   $Have_ReadKey = !$@;
@@ -312,7 +312,7 @@ sub parse_arguments ()
   require Getopt::Long;
   Getopt::Long->require_version(2.17);
   Getopt::Long->import('GetOptions');
-  Getopt::Long::Configure('no_ignore_case');
+  Getopt::Long::Configure('bundling', 'no_ignore_case');
   my @masq = ();
 
   GetOptions('help'            => \&usage,
@@ -342,7 +342,8 @@ sub parse_arguments ()
              'masquerade'      => \@masq,
              'hide-same-realm' => \$Opts{Hide_Same_Realm},
              'V|version'       => \&version,
-            );
+            )
+    || usage(1);
 
   if (@masq) {
     $Opts{Masquerade} = 1;
@@ -359,6 +360,12 @@ sub version ()
 
 sub usage ()
 {
+  my ($exitval) = @_;
+  $exitval = 0 unless defined($exitval);
+
+  my $langs = defined($Opts{Languages}) ? " (default: $Opts{Languages})" : '';
+  my $trust = defined($Opts{Trusted})   ? " (default: $Opts{Trusted})"   : '';
+
   print STDERR "$PROGRAM $REVISION
 
 Usage: checklink <options> <uris>
@@ -375,7 +382,7 @@ Options:
                             http://www.w3.org/TR/html4/Overview.html
                             it would be http://www.w3.org/TR/html4/
   -n/--noacclanguage        Do not send an Accept-Language header.
-  -L/--languages            Languages accepted (default: $Opts{Languages}).
+  -L/--languages            Languages accepted$langs.
   -q/--quiet                No output if no errors are found.  Implies -s.
   -v/--verbose              Verbose mode.
   -i/--indicator            Show progress while parsing.
@@ -386,7 +393,7 @@ Options:
   -t/--timeout value        Timeout for HTTP requests.
   -d/--domain domain        Regular expression describing the domain to
                             which the authentication information will be
-                            sent (default: '$Opts{Trusted}').
+                            sent$trust.
   --masquerade base1 base2  Masquerade base URI base1 as base2
                             (e.g. /home/hugo/MathML2/ is in fact
                             http://www.w3.org/TR/MathML2/).
@@ -400,7 +407,7 @@ Please send bug reports and comments to the www-validator mailing list:
   www-validator\@w3.org (with 'checklink' in the subject)
   Archives are at: http://lists.w3.org/Archives/Public/www-validator/
 ";
-  exit(0);
+  exit $exitval;
 }
 
 sub ask_password ()
