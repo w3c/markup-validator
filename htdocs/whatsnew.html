@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.34.2.21 2004-05-18 03:41:18 link Exp $"
---><!--#set var="date" value="\$Date: 2004-05-18 03:41:18 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.34.2.22 2004-05-20 11:40:28 link Exp $"
+--><!--#set var="date" value="\$Date: 2004-05-20 11:40:28 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -15,31 +15,59 @@
       </p>
     </div>
     <dl>
+      <dt id="t2004-05-21">2004-05-21 &mdash; 0.6.6 Release:</dt>
+      <dd>
+        <p>
+          A maintenance release that fixes a few minor bugs, resurrects the
+          whitespace-preserving source display, adds explanations for additional
+          error messages, and makes some slight tweaks to the website style.
+        </p>
+        <div class="note">
+          <p>
+            <strong>Known Issue</strong>:
+            In Document Instances with a Document Type Name of "html", but with
+            an incorrect Formal Public Identifier, the Validator will fall back
+            to HTML 4.01 Transitional and, if no other errors are found,
+            <em>silently</em> ignore the erroneous FPI.
+          </p>
+          <p>
+             This issue has been present since version 0.6.5 Beta #1, but was
+             only discovered immediately prior to the release of version 0.6.6;
+             hence no fix or workaround is available at this time. We expect to
+             issue a new release which addresses this problem as soon as possible.
+          </p>
+        </div>
+      </dd>
       <dt id="t2004-05-07">2004-05-07 &mdash; 0.6.5 Release:</dt>
       <dd>
-      <p>Stable release including all the fixes and improvements made in consecutive beta versions 
-	<a href="#t2004-04-30">0.6.5 Beta #3</a>, 
-	<a href="#t2004-04-15">0.6.5 Beta #2</a>, 
-	<a href="#t2003-08-26">0.6.5 Beta #1</a>,
-	<a href="http://lists.w3.org/Archives/Public/www-validator/2003Jun/0062.html">0.6.2 beta #2</a>, and
-	<a href="http://lists.w3.org/Archives/Public/www-validator/2003May/0069.html">0.6.2 beta #1</a>
-      </p>
+        <p>
+          Stable release including all the fixes and improvements made in
+          consecutive beta versions <a href="#t2004-04-30">0.6.5 Beta #3</a>,
+          <a href="#t2004-04-15">0.6.5 Beta #2</a>,
+          <a href="#t2003-08-26">0.6.5 Beta #1</a>,
+          <a href="http://lists.w3.org/Archives/Public/www-validator/2003Jun/0062.html">0.6.2 beta #2</a>,
+      and <a href="http://lists.w3.org/Archives/Public/www-validator/2003May/0069.html">0.6.2 beta #1</a>
+        </p>
       </dd>
       <dt id="t2004-04-30">2004-04-30 &mdash; 0.6.5 Beta #3:</dt>
       <dd>
         <p>
-	  Testing version 0.6.5 Beta #3 of the Markup Validator; an intermediary
-	  version including further layout, style and documentation improvements
-	  over version 0.6.5 Beta #2, based on discussion and comments during
-	  the testing phase of that version.
-	  Changes include:
-	</p>  
-	<ul>
-	  <li>Simpler navigation system - removed the "links" navigation bar</li>
-	  <li>More consistent layout</li>
-	  <li>A few issues with the way some agents were dealing with our Style Sheets
-	  were fixed. Other minor style fixes were also applied</li>
-	  <li>Cleanup of grammar issues and typos in a large part of the documentation.</li>
+          Testing version 0.6.5 Beta #3 of the Markup Validator; an intermediary
+          version including further layout, style and documentation improvements
+          over version 0.6.5 Beta #2, based on discussion and comments during
+          the testing phase of that version. Changes include:
+        </p>
+        <ul>
+          <li>Simpler navigation system - removed the "links" navigation bar</li>
+          <li>More consistent layout</li>
+          <li>
+            A few issues with the way some agents were dealing with our Style
+            Sheets were fixed. Other minor style fixes were also applied.
+          </li>
+          <li>
+            Cleanup of grammar issues and typos in a large part of the
+            documentation.
+          </li>
         </ul>
       </dd>
 
