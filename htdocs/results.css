@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.19 2003-07-29 19:40:08 link Exp $ */
+/* $Id: results.css,v 1.13.2.20 2003-09-01 01:31:52 link Exp $ */
 
 .input {
   color: black;
@@ -46,12 +46,7 @@
 }
 
 ol#errors code {
-  float: left;
   margin-bottom: 2ex;
-}
-
-ol#errors li {
-  clear: both;
 }
 
 ol#errors li p code strong {
