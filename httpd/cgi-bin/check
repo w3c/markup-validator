@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.88 2001-03-08 00:36:21 link Exp $
+# $Id: check,v 1.89 2001-03-08 00:49:44 link Exp $
 
 #
 # We need Perl 5.004.
@@ -73,9 +73,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.88 $;
+$VERSION    =  q$Revision: 1.89 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-03-08 00:36:21 $;
+$DATE       =  q$Date: 2001-03-08 00:49:44 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -86,17 +86,6 @@ my $html40s_doctype = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http:
 my $html40t_doctype = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">);
 my $html40f_doctype = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/frameset.dtd">);
 my $xhtmlt_doctype  = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN");
-
-#
-# HTML fragments
-my $lt        = "\020";
-my $gt        = "\021";
-
-#
-# Stopgap to shut -w up. It won't actually fix anything, but it'll keep us
-# running without warnings until we can fix the problems.
-my ($image_uri, $alttext, $gifhw, $pedanticflags,
-    $pedantic_blurb, $level, $prevlevel, $prevdata);
 
 #
 # Read configuration files.
@@ -654,6 +643,9 @@ if ( $? || ($guessed_doctype == 1) ) {
 } else {
     my $gifborder   = ' border="0"';
     my $xhtmlendtag = '';
+    my $image_uri;
+    my $alttext;
+    my $gifhw;
 
     if (($File->{Type} eq 'xml') || ($File->{Type} eq 'xhtml')) {
 	print "\n  <pre>\n    No errors found! ";
@@ -785,6 +777,9 @@ EOHD
 }
 
 if ( $q->param('weblint') ) {
+  my $pedanticflags;
+  my $pedantic_blurb;
+
     if ( $q->param('pw') ) {
 	$pedanticflags  = '-pedantic -e mailto-link';
 	$pedantic_blurb = ' (in "pedantic" mode)';
