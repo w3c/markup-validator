@@ -8,8 +8,8 @@
     <link rel="stylesheet" type="text/css" href="/base.css" />
     <meta name="keywords" content="HTML, Hypertext Markup Language, Validation, W3C HTML Validation Service" />
     <meta name="description" content="W3C's easy-to-use HTML validation service, based on an SGML parser." />
-    <meta name="revision" content="$Id: errors.html,v 1.8 2001-07-24 10:18:31 link Exp $" />
-    <meta name="modified" content="$Date: 2001-07-24 10:18:31 $" />
+    <meta name="revision" content="$Id: errors.html,v 1.9 2001-08-25 09:17:42 duerst Exp $" />
+    <meta name="modified" content="$Date: 2001-08-25 09:17:42 $" />
   </head>
 
   <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
@@ -562,15 +562,15 @@
       <dt><a id="utf8-bom" name="utf8-bom">"UTF-8 'BOM' detected and removed"</a></dt>
       <dd>
         <p>
-          The document contained an UTF-8 encoded UNICODE Byte Order mark as
-          the first character and we have removed before parsing. The legality
-          of a UTF-8 encoded BOM in XML is controversial and many XML Processors
+          The document contained an UTF-8 encoded Unicode Byte Order Mark as
+          the first character and we have removed before parsing.
+          Many XML Processors
           do not allow it. To be on the safe side you should avoid using the
           BOM in UTF-8 encoded documents.
         </p>
         <p>
           Note, though, that the BOM in <em>UTF-16</em> encoded documents
-          is non-controverial and handled by all conforming XML Processors.
+          is required and handled by all conforming XML Processors.
         </p>
       </dd>
     </dl>
@@ -581,7 +581,7 @@
 	 src="http://validator.w3.org/images/vxhtml10" height="31" width="88"
 	 align="right" border="0" alt="Valid XHTML 1.0!" /></a>
       <a href="/feedback.html">Webmaster</a><br />
-	 $Date: 2001-07-24 10:18:31 $
+	 $Date: 2001-08-25 09:17:42 $
     </address>
 
   </body>
