@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.169 2001-08-25 01:41:35 duerst Exp $
+# $Id: check,v 1.170 2001-08-25 09:10:01 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.169 $;
+$VERSION    =  q$Revision: 1.170 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-08-25 01:41:35 $;
+$DATE       =  q$Date: 2001-08-25 09:10:01 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -293,12 +293,6 @@ $File->{Type} = 'xhtml'  if $File->{DOCTYPE} =~ /xhtml/i;
 $File->{Type} = 'mathml' if $File->{DOCTYPE} =~ /mathml/i;
 
 
-# If we have a charset field in the request, we use it
-if ($q->param('charset') and not $q->param('charset') =~ m(unknown)i) {
-  $q->param('charset') =~ /^([^ ]*)/;
-  $File->{Form_Charset} = lc $1;
-}
-
 #
 # Figure out which charset was detected.
 if    ($File->{HTTP_Charset}) {$File->{Charset} = $File->{HTTP_Charset}}
@@ -306,9 +300,13 @@ elsif ($File->{XML_Charset})  {$File->{Charset} = $File->{XML_Charset}}
 elsif ($File->{META_Charset}) {$File->{Charset} = $File->{META_Charset}}
 else  {                        $File->{Charset} = 'unknown'}
 
-# Figure out which charset to use for validation.
-$File->{Use_Charset} = $File->{Form_Charset} ?
-            $File->{Form_Charset} : $File->{Charset};
+# If we have a charset field in the request, we use it
+if ($q->param('charset') and $q->param('charset') ne 'unknown'
+               and $q->param('charset') ne '(detect automatically)') {
+  $q->param('charset') =~ /^([^ ]*)/;
+  $File->{Use_Charset} = lc $1;
+}
+else { $File->{Use_Charset} = $File->{Charset}; }
 
 #
 # Setup SP environment for the charset.
@@ -345,7 +343,7 @@ if (URI::eq("$File->{URI}", $q->param('uri'))) { # @@ Why do we need to stringif
 &add_table("Select Character Encoding",
         $q->popup_menu(-name => 'charset',
                        -values => [
-                                   "$File->{Charset} (as detected)",
+                                   '(detect automatically)',
                                    'utf-8 (Unicode, worldwide)',
                                    'iso-8859-1 (Western Europe)',
                                    'iso-8859-2 (Central Europe)',
@@ -380,7 +378,7 @@ if (URI::eq("$File->{URI}", $q->param('uri'))) { # @@ Why do we need to stringif
                                    'windows-1256 (Arabic)',
                                    'windows-1257 (Baltic Rim)',
                                   ],
-                       -default => $q->param('doctype'),
+                   #   -default => $q->param('doctype'),
         ));
 
 if ($File->{HTTP_Charset} ne $File->{META_Charset}
@@ -414,8 +412,18 @@ if ($File->{Use_Charset} ne $File->{Charset}) {
       The detected character encoding
       (&#171;<code>$File->{Charset}</code>&#187;) has been supressed and the
       character encoding (&#171;<code>$File->{Use_Charset}</code>&#187;)
-      used instead. The document will not be Valid until you alter the source
-      file to reflect this new Character Encoding.
+      used instead.
+EOHD
+  $File->{Tentative} = TRUE;
+}
+if ($File->{Use_Charset} eq 'unknown') {
+  &add_warning(<<"EOHD");
+      <strong>No Character Encoding detected!</strong>
+      To assure correct validation, processing, and display,
+      it is important that the character encoding is properly
+      labeled.
+      <a href='http://www.w3.org/International/O-charset.html'>Further
+      explanations</a>.
 EOHD
   $File->{Tentative} = TRUE;
 }
@@ -642,11 +650,13 @@ if (defined $File->{Tentative}) {
   print <<".EOF.";
   <p class="Warning">
     Please note that you have chosen one or more options that alter the content
-    of the document before Validation. Even if no errors are reported below,
+    of the document before Validation, or have not provided enough information
+    to accurately validate the document. Even if no errors are reported below,
     the document will not be Valid until you manually make the changes we have
-    performed automatically. Specifically, since you used some of the options
+    performed automatically. Specifically, if you used some of the options
     that Override a property of the document (e.g. the DOCTYPE or Character
-    Encoding), you must make the same change to the source document before it
+    Encoding), you must make the same change to the source document or its server
+    setup before it
     can be valid.
   </p>
 .EOF.
