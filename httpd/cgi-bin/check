@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.10 2002-11-30 20:33:23 link Exp $
+# $Id: check,v 1.305.2.11 2002-11-30 22:43:18 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -103,7 +103,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.10 $;
+  $VERSION    =  q$Revision: 1.305.2.11 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -165,7 +165,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-30 20:33:23 $,
+                              Date => q$Date: 2002-11-30 22:43:18 $,
                              });
 
 #
@@ -1037,7 +1037,7 @@ Content-Type: text/html; charset=utf-8
       Of course, you may not want to trust me with this information,
       which is fine. I can tell you that I don't log it or do
       anything else nasty with it, and you can <a
-        href="$CFG->{'Home Page'}source/">download the source for
+        href="http://validator.w3.org/source/">download the source for
       this service</a> to see what it does, but you have no guarantee
       that this is actually the code I'm using; you basically have to
       decide whether to trust me or not. :-)
