@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.96 2001-04-18 03:18:29 link Exp $
+# $Id: check,v 1.97 2001-04-19 02:20:38 link Exp $
 
 #
 # We need Perl 5.004.
@@ -75,9 +75,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.96 $;
+$VERSION    =  q$Revision: 1.97 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-04-18 03:18:29 $;
+$DATE       =  q$Date: 2001-04-19 02:20:38 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -667,7 +667,7 @@ if ( $? || ($guessed_doctype == 1) ) {
     }
     if ( $version ne "unknown" ) {
 	if ( $version =~ /^HTML 2\.0$/ ) {
-	    $image_uri = "${abs_svc_ur}iimages/vh20";
+	    $image_uri = "${abs_svc_uri}images/vh20";
 	    $alttext = "Valid HTML 2.0!";
             $gifborder = "";
 	}
@@ -706,15 +706,15 @@ if ( $? || ($guessed_doctype == 1) ) {
 	    $xhtmlendtag = " /";
 	}
 	elsif ( $version =~ /HTML 3\.0/ ) {
-	    $image_uri = "${abs_svc_ur}images/vh30";
+	    $image_uri = "${abs_svc_uri}images/vh30";
 	    $alttext = "Valid HTML 3.0!";
 	}
 	elsif ( $version =~ /Netscape/ ) {
-	    $image_uri = "${abs_svc_ur}images/vhns";
+	    $image_uri = "${abs_svc_uri}images/vhns";
 	    $alttext = "Valid Netscape-HTML!";
 	}
 	elsif ( $version =~ /Hotjava/ ) {
-	    $image_uri = "${abs_svc_ur}images/vhhj";
+	    $image_uri = "${abs_svc_uri}images/vhhj";
 	    $alttext = "Valid Hotjava-HTML!";
 	}
 	if ( defined $image_uri ) {
@@ -1053,7 +1053,7 @@ sub output_closing {
 <hr>
 
 <address>
-  <a href="${abs_svc_ur}check/referer"><img
+  <a href="${abs_svc_uri}check/referer"><img
      src="http://www.w3.org/Icons/valid-html401" height="31" width="88"
      align=right border="0" alt="Valid HTML 4.01!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</a><br>
@@ -1223,7 +1223,7 @@ Content-Type: text/html
   Of course, you may not want to trust me with this information,
   which is fine. I can tell you that I don't log it or do
   anything else nasty with it, and you can <a
-  href="${abs_svc_ur}source/">download the source for
+  href="${abs_svc_uri}source/">download the source for
   this service</a> to see what it does, but you have no guarantee
   that this is actually the code I'm using; you basically have to
   decide whether to trust me or not. :-)
