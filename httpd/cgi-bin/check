@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.302 2002-11-19 16:19:23 link Exp $
+# $Id: check,v 1.303 2002-11-22 22:43:54 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.302 $;
+  $VERSION    =  q$Revision: 1.303 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-19 16:19:23 $,
+                              Date => q$Date: 2002-11-22 22:43:54 $,
                              });
 
 #
@@ -772,24 +772,43 @@ sub print_table {
   $Form->{Table}->{Legend}    = 'Revalidate With Options: (accesskey: 4)';
 
 
-  add_table($Options, '', qq(<label title="Show Page Source (accesskey: 5)"><input type="checkbox" value="" name="ss" ) .
-            qq(accesskey="5" ) .
-            ($File->{Opt}->{'Show Source'}      ? 'checked="checked"' : '') . ' />Show&nbsp;Source</label>',
-            '<label title="Show an Outline of the document (accesskey: 6)"><input type="checkbox" value="" name="outline" ' .
-            qq(accesskey="6" ) .
-            ($File->{Opt}->{'Outline'} ? 'checked="checked"' : '') . ' />Outline</label>');
   add_table($Options, '',
-            '<label title="Show Parse Tree (accesskey: 7)"><input type="checkbox" value="" name="sp" ' .
-            qq(accesskey="7" ) .
-            ($File->{Opt}->{'Show Parsetree'}      ? 'checked="checked"' : '') . ' />Parse&nbsp;Tree</label>',
-            '<label title="Exclude Attributes from Parse Tree (accesskey: 8)"><input type="checkbox" value="" name="noatt" ' .
-            qq(accesskey="8" ) .
-            ($File->{Opt}->{'No Attributes'}   ? 'checked="checked"' : '') . ' />...no&nbsp;attributes</label>'
+            # Show source?
+            q(<label title="Show Page Source (accesskey: 5)"><input type="checkbox" value="" name="ss" ) .
+            q(accesskey="5" ) .
+            ($File->{Opt}->{'Show Source'}    ? q(checked="checked" ) : '') .
+            q(/>Show&nbsp;Source</label>),
+            # Outline?
+            q(<label title="Show an Outline of the document (accesskey: 6)"><input type="checkbox" value="" name="outline" ) .
+            q(accesskey="6" ) .
+            ($File->{Opt}->{'Outline'}        ? q(checked="checked" ) : '') .
+            q(/>Outline</label>)
+           );
+  add_table($Options, '',
+            # Parse tree?
+            q(<label title="Show Parse Tree (accesskey: 7)"><input type="checkbox" value="" name="sp" ) .
+            q(accesskey="7" ) .
+            ($File->{Opt}->{'Show Parsetree'} ? q(checked="checked" ) : '') .
+            q(/>Parse&nbsp;Tree</label>),
+            # No attributes?
+            q(<label title="Exclude Attributes from Parse Tree (accesskey: 8)"><input type="checkbox" value="" name="noatt" ) .
+            q(accesskey="8" ) .
+            ($File->{Opt}->{'No Attributes'}  ? q(checked="checked" ) : '') .
+            q(/>...no&nbsp;attributes</label>)
+           );
+  add_table($Options, '',
+            # Validate error pages?
+            [1, $File->{Table}->{Max},
+             q(<label title="Validate also pages for which the HTTP status code indicates an error"><input type="checkbox" value="" name="No200" ) .
+             # @@@ accesskey missing
+             ($File->{Opt}->{'No200'}         ? q(checked="checked" ) : '') .
+             q(/>Validate&nbsp;error&nbsp;pages</label>)
+            ]
            );
 
   add_table(
             $Form,
-            '<input type="submit" value="Revalidate" accesskey="9" title="Revalidate file (accesskey: 9)" />',
+            q(<input type="submit" value="Revalidate" accesskey="9" title="Revalidate file (accesskey: 9)" />),
             [1, $File->{Table}->{Max}, join('', @{&serialize_table($Options, 'options')})]
            );
 
@@ -2740,7 +2759,8 @@ sub self_url {
      $thispage .= ';sp=1'      if $q->param('sp');
      $thispage .= ';noatt=1'   if $q->param('noatt');
      $thispage .= ';outline=1' if $q->param('outline');
-  if ($q->param('doctype') 
+     $thispage .= ';No200=1'   if $q->param('No200');
+  if ($q->param('doctype')
       and not $q->param('doctype') =~ /(Inline|detect)/i) {
     $thispage .= ';doctype=' . $q->param('doctype');
   }
