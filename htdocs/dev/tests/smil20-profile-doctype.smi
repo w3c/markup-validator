@@ -1,0 +1,24 @@
+<!DOCTYPE smil PUBLIC "-//W3C//DTD SMIL 2.0//EN"
+  "http://www.w3.org/2001/SMIL20/WD/SMIL20.dtd">  
+
+<!-- 
+         Copyright: Copyright 1998-2001 W3C (MIT, INRIA, Keio), All Rights Reserved.
+                    See http://www.w3.org/Consortium/Legal/.
+            Author: Aaron Cohen (Intel)
+           Version: April 24, 2001
+            Module: SMIL 2.0 Language Profile
+           Feature: DOCTYPE and SMIL 2.0 namespace validation
+         File Name: smil20-profile-doctype.smil
+  Media Components: 1 image
+ Expected Behavior: The file has the SMIL 2.0 DOCTYPE declaration,
+                    and an unrecognized default namespace attribute on the
+                    smil element. This should result in the user agent issuing
+                    an error.
+-->
+
+<smil xmlns="http://www.example.org/smil/foo">
+  <body>
+    <img id="smile" end="activateEvent"src="../images/smile.jpg"/>
+  </body>
+</smil> 
+
