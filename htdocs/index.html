@@ -1,11 +1,12 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.58 2003-05-24 20:32:45 link Exp $"
---><!--#set var="date" value="\$Date: 2003-05-24 20:32:45 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.59 2004-05-09 15:56:49 link Exp $"
+--><!--#set var="date" value="\$Date: 2004-05-09 15:56:49 $"
 --><!--#set var="title" value="The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
 
-    <div id="skip" class="intro">
-      <p>
+
+    <div class="intro">
+      <p><a name="skip" id="skip"></a>
         Welcome to the W3C Markup Validation Service; a free service that checks
         documents like HTML and XHTML for conformance to W3C Recommendations
         and other standards.
@@ -13,58 +14,60 @@
     </div>
 
     <div>
-      <h2>Validate Files</h2>
-      <p>
-        You can enter a URI in the <code>Address</code> field below,
-        and have the page validated:
-      </p>
+      <h2>Validate Your Markup</h2>
+      <fieldset class="front"><legend>Validate by URI</legend>
       <form method="get" action="check">
         <p>
           <label title="Address of page to Validate" for="uri">Address:
             <input id="uri" name="uri" size="40" /></label>
-          <label title="Submit URI for validation">
-	    <input type="submit" value="Validate URI..." /></label>
+          <label title="Submit URI for validation"><input type="submit" value="Check" /></label>
+          <input type="hidden" name="verbose" value="0" />
+          <!-- <input type="hidden" name="fussy" value="0" /> -->
         </p>
       </form>
       <p>
-        If you want to upload a file from your computer and have it validated,
-	you can use this form:
-      </p>
-      <form method="post" enctype="multipart/form-data" action="check">
-        <p>    
-          <label title="Choose a Local File to Upload and Validate" for="uploaded_file">Local File: <input type="file" id="uploaded_file" name="uploaded_file" size="30" /></label>
-          <label title="Submit file for validation"><input type="submit" value="Validate File" /></label>
-        </p>
-      </form>
-      <p>
-        There is also an <a
+        Enter the <abbr title="Uniform Resource Identifier">URI</abbr> of the page
+        you want to check. Advanced options are available from the <a
           title="Extended Interface to the W3C Markup Validation Service"
-          href="detailed.html">Extended Interface</a> available if you want
-        to set any advanced options, and a <a
-          title="File Upload Interface to the W3C Markup Validation Service"
-          href="file-upload.html">Extended File Upload Interface</a> if you
-        want to validate uploaded files with advanced options.
+          href="detailed.html">Extended Interface</a>.
       </p>
+      </fieldset>
+	<br />
+      <fieldset class="front"><legend>Validate by File Upload</legend>
+      <form method="post" enctype="multipart/form-data" action="check">
+        <p>
+          <label title="Choose a Local File to Upload and Validate" for="uploaded_file">Local File:
+            <input type="file" id="uploaded_file" name="uploaded_file" size="30" /></label>
+          <label title="Submit file for validation"><input type="submit" value="Check" /></label>
+          <input type="hidden" name="verbose" value="0" />
+          <!-- <input type="hidden" name="fussy" value="0" /> -->
+        </p>
+      </form>
+      <p>
+        Select the file you want to upload and check. Advanced options are
+        available from the <a
+          title="File Upload Interface to the W3C Markup Validation Service"
+          href="file-upload.html">Extended File Upload Interface</a>.
+      </p>
+      </fieldset>
     </div>
 
     <div id="recent">
       <h2>Recent Updates</h2>
+      <dl>
+	<dt><a href="whatsnew.html#t2004-05-07">2004-05-07</a></dt>
+        <dd>Released version 0.6.5, a maintenance release easier to use and install,
+	 featuring new documentation, simpler navigation, new recovery mechanisms instead of fatal errors, 
+	and offering explanations in addition to error messages.</dd>
+        <dt><a href="whatsnew.html#t2002-12-01">2002-12-01</a></dt>
+        <dd>Released version 0.6.1, a maintenance release to fix minor bugs.</dd>
+      </dl>
       <p class="intro">
         These are the most recent major changes to this service. See
         "<a href="whatsnew.html">What's&nbsp;New</a>" for more details.
-      </p> 
-      <dl>
-        <dt><a href="whatsnew.html#2003-05-01">May 01, 2003 (TBC)</a></dt>
-        <dd>
-          Released version 0.6.2 of the Markup Validator; a maintenance
-          release to address various minor issues.
-        </dd>
-        <dt><a href="whatsnew.html#2002-12-01">December 01, 2002</a></dt>
-        <dd>Maintenance release to fix minor bugs.</dd>
-        <dt><a href="whatsnew.html#2002-11-26">November 26, 2002</a></dt>
-        <dd>Internal restructuring and new DTDs added. Bug fixes.</dd>
-      </dl>
+      </p>
    </div>
+
 
 <!--#include virtual="footer.html" -->
 

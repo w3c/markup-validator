@@ -1,16 +1,34 @@
-<!--#set var="revision" value="\$Id: help.html,v 1.14 2003-05-24 20:32:46 link Exp $"
---><!--#set var="date" value="\$Date: 2003-05-24 20:32:46 $"
+<!--#set var="revision" value="\$Id: help.html,v 1.15 2004-05-09 15:56:50 link Exp $"
+--><!--#set var="date" value="\$Date: 2004-05-09 15:56:50 $"
 --><!--#set var="title" value="Help for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
 
+<div class="doc">
+<h2>Help and <acronym title="Frequently Asked Questions">FAQ</acronym> for the Markup Validator</h2>
+
+<p><q cite="http://lists.w3.org/Archives/Public/www-validator/2004Jan/0101.html">Nothing wrong with 
+the validator here, it just knows HTML better than you do.</q> -- David Dorward, Validator's 
+mailing-list.</p>
+
+<h3 id="TableOfContents">Table of contents</h3>
 <div id="toc">
-<h2 id="TableOfContents">Table of contents</h2>
 <ul>
   <li>About the Markup Validator
   <ul>
+        <li>
+		<a href="#clickedandlost">Help me! I clicked on an icon and ended up 
+		on this strange site!</a>
+	</li>
 	<li>
-		<a href="#what-is-it">What is the Markup Validator and what does it do?</a>
+		<a href="#validation_basics">What is <em>Markup Validation</em>?</a>
+	</li>
+	<li>
+		<a href="#validandquality">Is validation some kind of quality control? 
+	Does "valid" mean "quality approved by W3C"?</a>
+	</li>
+	<li>
+		<strong><a href="#what-is-it">What is the Markup Validator and what does it do?</a></strong>
 	</li>
 	<li>
 		<a href="#why-validate">Why validate?</a>
@@ -33,7 +51,7 @@
   <li>Using this service
   <ul>
 	<li>
-		<a href="#manual">How do I use the Markup validator?</a>
+		<strong><a href="#manual">How do I use the Markup validator?</a></strong>
 	</li>	
 	<li>
 		<a href="#errors">What is (are) this (these) error message(s)?</a>
@@ -44,22 +62,24 @@
 	<li>
 		<a href="#cleanup">I don't want error messages, I want you to clean up my page!</a>
 	</li>
+	<li>
+		<a href="#icon">My document is valid, can I use your "valid" icon?</a>
+	</li>
   </ul>
   </li>
   <li>Miscellaneous (Very) Frequently Asked Questions
   <ul>
 	<li>
-		<a href="#faq-doctype">No DOCTYPE Declaration Found!</a>
+		<a href="#faq-doctype"><q>No DOCTYPE Declaration Found!</q></a>
 	</li>
 	<li>
-		<a href="#faq-charset">The validator is <q>not able to extract 
-		a character encoding</q></a> 
+		<a href="#faq-charset"><q>No Character Encoding Found!</q></a> 
 	</li>
 	<li>
 		<a href="#faq-ampersand">The validator complains about "&amp;" in my URLs!</a>
 	</li>
 	<li>
-		<a href="#faq-javascript">The validator complains about something in my Javascript!</a>
+		<a href="#faq-javascript">The validator complains about something in my JavaScript!</a>
 	</li>
 	<li>
 		<a href="#faq-linkandmeta">Why doesn't the validator like my &lt;link ... /&gt; 
@@ -69,15 +89,81 @@
 		<a href="#faq-typo">I found some nasty typo like &lt;p&lt;a ...&gt; 
 		and the validator accepted it!</a>
 	</li>
+	<li>
+		<a href="#faq-referer">/check/referer does not work</a> or the validator says it does not support 
+		my <a href="#faq-referer">"undefined" URI scheme</a>
+	</li>
    </ul>
    </li>
 </ul>
 </div>
 
 
-<div id="skip">
-<h2 id="about">About the Markup Validator</h2>
-      <h3 id="what-is-it">What is the Markup Validator and what does it do?</h3>
+<div><a id="skip" name="skip"></a>
+<h3 id="about">About the Markup Validator</h3>
+    <h4 id="clickedandlost">Help me! I clicked on an icon and ended up on this strange site!</h4>
+      <p>Don't panic!</p>
+
+      <p>
+	The author of the Web page you come from once used our service
+	to <em>validate</em> that page, and the page passed validation. 
+	The author was then authorized to use the icon on that page, as
+	a claim of <em>validity</em>. The icon is used as a link back to
+	the validation service, so that the author can <em>revalidate</em>
+	whenever necessary. This is why, by clicking on the icon, you 
+	followed a link to the current <em>validation results</em> for
+	the page you came from.
+      </p>
+
+      <p>
+	The validation result was certainly positive ("this page is valid..."),
+	but if it wasn't, you would probably do the author of the page where
+	the icon was a favor if you could warn him/her of this abnormal situation.
+      </p>
+
+
+      <p>
+	If you are curious about Markup validation you may read this
+	help document further, or you may simply use the back button
+	of your Web browser to come back to the page where you found 
+	the "valid" icon.
+      </p>
+
+    <h4 id="validation_basics">What is <em>Markup Validation</em>?</h4>
+      <p>Most pages on the World Wide Web are written in computer languages
+	(such as <acronym title="Hypertext Markup Language">HTML</acronym>)
+	that allow Web authors to structure text, add multimedia content, and
+	specify what appearance, or style, the result should have.</p>
+
+     <p>As for every language, these have their own <em>grammar</em>, <em>vocabulary</em>
+	and <em>syntax</em>, and every document written with these computer languages
+	are supposed to follow these rules. However, just as texts in a natural language
+	can include spelling or grammar errors, documents using Markup  languages
+	may (for various reasons) not be following these rules.</p>
+
+      <p>The process of verifying whether a document actually follows the rules for the
+	language(s) it uses is called <em>validation</em>, and the tool used for that
+	is a validator. A document that passes this process with success is called 
+	<em>valid</em>.
+      </p>
+
+    <h4 id="validandquality">Is validation some kind of quality control? 
+	Does "valid" mean "quality approved by W3C"?</h4>
+
+      <p>Validity is one of the quality criteria for a Web page, but there are
+	many others. In other words, a <em>valid</em> Web page is not necessarily
+	a good web page, but an <em>invalid</em> Web page has little chance
+	of being a good web page.</p>
+
+     <p>For that reason, the fact that the W3C Markup Validator says that
+	one page passes validation does <strong>not</strong> mean that
+	W3C assesses that it is a good page. It only means that a tool (not 
+	necessarily without flaws) has found the page to comply with a specific
+	set of rules. No more, no less. This is also why the "valid ..." icons 
+	should never be considered as a "W3C seal of quality".</p>
+
+
+    <h4 id="what-is-it">What is the Markup Validator and what does it do?</h4>
       <p>
 	The Markup Validator is a free tool and service that checks the 
 	syntax of (X)HTML documents.</p> 
@@ -88,7 +174,7 @@
       </p>
       <p><a href="../about.html">Learn more</a> about the Markup Validator.</p>
 
-      <h3 id="why-validate">Why should I validate my HTML pages?</h3>
+    <h4 id="why-validate">Why should I validate my HTML pages?</h4>
       <p>
         One of the important maxims of computer programming is: <q>Be
         conservative in what you produce; be liberal in what you accept.</q>
@@ -108,16 +194,19 @@
         sure your pages are legal HTML. The best way to do that is by
         running your documents through one or more HTML validators. 
       </p>
-     
-
-      <h3 id="who-does-validator">Who owns/maintain the Markup Validator?</h3>
-      <p>The Markup Validator is Maintained at <acronym
-	title="World Wide Web Consortium">W3C</acronym> by W3C staff and 
-	benevolent collaborators, who receive a lot of help from contributors. 
-	(Read the <a href="http://validator.w3.org:8001/about.html#credits">full credits</a>)
+      <p>A <a href="why.html">lengthier answer</a> to this question is
+	also available on this site if the explanation above did not satisfy 
+	you.
       </p>
 
-      <h3 id="others">What other validators are there?</h3>
+    <h4 id="who-does-validator">Who owns/maintain the Markup Validator?</h4>
+      <p>The Markup Validator is maintained at <acronym
+	title="World Wide Web Consortium">W3C</acronym> by W3C staff and 
+	benevolent collaborators, who receive a lot of help from contributors
+	(read the <a href="../about.html#credits">full credits</a>).
+      </p>
+
+    <h4 id="others">What other validators are there?</h4>
 	<p>
 	We're doing our best to provide clear and reliable results as well as
 	a good interface with the Markup Validator, but for some reason you
@@ -137,7 +226,7 @@
 	</p>
 	
 
-      <h3 id="how">How does The Validator work?</h3>
+    <h4 id="how">How does The Validator work?</h4>
       <p>
 	The Validator is based on <a href="http://www.jclark.com/">James
         Clark</a>'s <code><a href="http://www.jclark.com/sp/">nsgmls</a></code>
@@ -146,7 +235,7 @@
         resulting error list for easier reading. 
       </p>
 
-      <h3 id="howto-feedback">How do I send feedback/bug reports about the Markup Validator?</h3>
+    <h4 id="howto-feedback">How do I send feedback/bug reports about the Markup Validator?</h4>
       <p>Read the instructions on our <a href="../feedback.html">Feedback page</a>.</p>
 </div>
 
@@ -154,12 +243,15 @@
 
 
 <div>
-<h2 id="using">Using this service</h2>
+<h3 id="using">Using this service</h3>
 
-      <h3 id="manual">How do I use this service?</h3>
-      <p>
-	Most probably, you will want to use the online Markup Validation service.
-	Read the <a href="users.html">user's manual</a> for further help with this
+    <h4 id="manual">How do I use this service?</h4>
+      <p>Most probably, you will want to use the online Markup Validation service.
+	The simple way to use this service to validate a Web page is to paste its 
+	address into the <a href="../#uri">text area</a> on the 
+	<a href="..">validator's home page</a>, and press the "Check" button.</p>
+      <p>There are other possible uses and a few usage options, please
+	read the <a href="users.html">user's manual</a> for further help with this
 	service.
       </p>
       <p>
@@ -167,14 +259,14 @@
 	check out our <a href="devel.html">developer's documentation</a>.
       </p>
 
-      <h3 id="errors">What are these error messages?</h3>
-      <p>The output of the Markup Validator may be hard to decypher for
+    <h4 id="errors">What are these error messages?</h4>
+      <p>The output of the Markup Validator may be hard to decipher for
 	newcomers and experts alike, so we are maintaining a <a 
-	href="http://validator.w3.org:8001/docs/errors.html">list of error
+	href="errors.html">list of error
 	messages and their interpretation</a>, which should help.
      </p>
 
-      <h3 id="munged-doctype">Many error messages? Don't panic.</h3>
+    <h4 id="munged-doctype">Many error messages? Don't panic.</h4>
       <p>
         Don't panic. Did The Validator complain about your
         <code>DOCTYPE</code> declaration (or lack thereof)? Make sure your
@@ -195,16 +287,58 @@
 	Markup Validator to clean up your HTML documents in no time.
       </p>
 
-      <h3 id="cleanup">I don't want error messages, I want you to clean up my page!</h3>
+    <h4 id="cleanup">I don't want error messages, I want you to clean up my page!</h4>
        <p>The Markup Validator can not do this for you. You may want to have a look
 	at tools such as <a href="http://tidy.sourceforge.net">HTML Tidy</a>.</p>
+
+    <h4 id="icon">My document is valid, can I use your "valid" icon?</h4>
+  <h5>Practical use of the icon</h5>
+  <p>
+      <img class="inline-badge" src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!" height="31" width="88" />
+      Yes. To show readers that one has taken some care to create an
+      interoperable Web page, a "W3C valid" badge may be displayed 
+      (here, the "valid XHTML 1.0" badge) <strong>on any page
+      that validates</strong>. 
+  </p>
+  <p>
+   We encourage you to use the XHTML code below (or its HTML equivalent),
+   but you may use a different code to integrate the icon within your web page
+   as long as the icon is used as a link to revalidate the Web page it is in.
+   Sample code is as follows:
+  </p>
+  <pre>
+   &lt;p&gt;
+      &lt;a href="http://validator.w3.org/check/referer"&gt;&lt;img
+          src="http://www.w3.org/Icons/valid-xhtml10"
+          alt="Valid XHTML 1.0!" height="31" width="88" /&gt;&lt;/a&gt;
+    &lt;/p&gt;
+  </pre>
+  <h5>License and Guidelines for usage of the "valid" icons</h5>
+  <p>Web content providers are granted the right to use the "W3C valid" logo
+  on pages that pass validation (though the use of the 
+  <a href="http://validator.w3.org/">W3C Markup Validator</a>) 
+  for the W3C technology represented by the icon, and <strong>only</strong> 
+  on pages that pass validation. 
+  The icon must be used as a link to revalidate the Web page, thus providing
+  a way to verify the page author's assertion that it passed validation.</p>
+  
+  <p>Note that "W3C Valid" icons are not an endorsement by the W3C of the page's 
+  author, the substantive content of the page, nor its design. 
+  Instead, the icons are <strong>only</strong> a mechanism to identify 
+  pages that have been determined to be valid, and to easily 
+  re-validate pages as often as as they are modified.</p>
+
+  <p>Consequently, the use of the badge is in accordance with and governed by 
+  the W3C <a href="http://www.w3.org/Consortium/Legal/trademark-license">Trademark License</a> 
+  and <a href="http://www.w3.org/Consortium/Legal/logo-usage-20000308.html">Logo and Icon usage</a>
+  policy.</p>
 
 </div>
 
 <div>
-<h2 id="very-faq">Miscellaneous (Very) Frequently Asked Questions</h2>
-<h3 id="faq-doctype">No DOCTYPE Declaration Found!</h3>
-  <p>
+<h3 id="very-faq">Miscellaneous (Very) Frequently Asked Questions</h3>
+    <h4 id="faq-doctype">No DOCTYPE Declaration Found!</h4>
+      <p>
         A DOCTYPE Declaration is mandatory for most current markup languages
         and without one it is impossible to reliably validate a document.
       </p>
@@ -243,56 +377,106 @@
         "<a href="http://htmlhelp.com/tools/validator/doctype.html">Choosing
            a DOCTYPE</a>".
       </p>
-<h3 id="faq-charset">The validator is <q>not able to extract 
-a character encoding</q></h3>
+    <h4 id="faq-charset"><q>No Character Encoding Found! </q></h4>
 
-<p>An HTML document should be served along with its character encoding.</p>
-<p>WDG has some good documentation on 
-<a href="http://www.htmlhelp.com/tools/validator/charset.html">using
-character encodings</a> that will help you fix your document or the way it is served
-by adding the proper character encoding information.</p>
+      <p>An HTML document should be served along with its character encoding.</p>
 
-<h3 id="faq-ampersand">The validator complains about "&amp;" in my URLs!</h3>
+      <p> Specifying a character encoding is normally done in the web server
+      configuration file or administration program. The <a
+        href="http://www.w3.org/"><abbr
+          title="World Wide Web Consortium">W3C</abbr></a> <a
+        href="http://www.w3.org/International/"><abbr
+          title="Internationalization">I18N</abbr> Activity</a> has collected
+        <a href="http://www.w3.org/International/O-HTTP-charset"
+           title="A Few Tips On How To Specify The Character Encoding">a few
+          tips on how to do this</a> in popular web server implementations.
+</p>
+    <p>
+      <a href="http://www.iana.org/"><abbr
+      title="Internet Assigned Numbers Authority">IANA</abbr></a>
+      maintains the list of <a
+      href="http://www.iana.org/assignments/character-sets">official
+      names for character sets</a> and the <abbr
+        title="Web Design Group">WDG</abbr> has some <a
+        href="http://www.htmlhelp.com/tools/validator/charset.html">information
+        to help you correctly specify the character encoding</a>.
+    </p>
+    <p>
+      To quickly check whether the document would validate after addressing
+      the missing character encoding information, you can use the "Encoding"
+      form control (accesskey "2") earlier in the page to force an encoding
+      override to take effect. "iso-8859-1" (Western Europe and North America)
+      and "utf-8" (Universal, but not commonly used in legacy documents) are
+      common encodings if you are not sure what encoding to choose.
+    </p>
+
+
+
+    <h4 id="faq-ampersand">The validator complains about "&amp;" in my URLs!</h4>
 <p>Most probably, you should read the <a 
 href="http://www.htmlhelp.com/tools/validator/problems.html#amp">ampersand section</a>
 of WDG's excellent 
 "<a href="http://www.htmlhelp.com/tools/validator/problems.html">common validation problem</a>"
 </p>
 
-<h3 id="faq-javascript">The validator complains about something in my Javascript!</h3>
-<p>Most probably, you should read the 
-<a href="http://www.htmlhelp.com/tools/validator/problems.html#script">script section</a>
-of WDG's excellent                                                                    
-"<a href="http://www.htmlhelp.com/tools/validator/problems.html">common validation problem</a>"     
-</p>
+    <h4 id="faq-javascript">The validator complains about something in my JavaScript!</h4>
+      <p>Most probably, you should read the 
+	<a href="http://www.htmlhelp.com/tools/validator/problems.html#script">script section</a>
+	of WDG's excellent                                                                    
+	"<a href="http://www.htmlhelp.com/tools/validator/problems.html">common validation problem</a>"
+      </p>
 
-<h3 id="faq-linkandmeta">Why doesn't the validator like my 
-&lt;link ... /&gt; or &lt;meta ... /&gt;?</h3>
-<p>HTML is based on <a href="sgml.html">SGML</a> and uses an SGML 
-feature (called SHORTTAG) (note that this is <strong>not</strong> 
-the case with XHTML).</p>
+    <h4 id="faq-linkandmeta">Why doesn't the validator like my 
+    &lt;link ... /&gt; or &lt;meta ... /&gt;?</h4>
+       <p>HTML is based on <a href="sgml.html">SGML</a> and uses an SGML 
+	feature (called SHORTTAG) (note that this is <strong>not</strong> 
+	the case with XHTML).</p>
 
-<p>With this feature enabled, the "/" in &lt;link ... /&gt; or &lt;meta ... /&gt;
-already closes the link (or meta) tag, and the "&gt;" becomes some regular text,
- which is not allowed in the &lt;head&gt; element. Since &lt;/head&gt;&lt;body&gt; 
-is optional in HTML (again, <strong>not</strong> in XHTML), it is silently inserted, 
-thus head-only elements like meta and style as well as 
-"&lt;/head&gt;" and "&lt;body&gt;", which may apear only once, become false.
-</p>
+      <p>With this feature enabled, the "/" in &lt;link ... /&gt; or &lt;meta ... /&gt;
+	already closes the link (or meta) tag, and the "&gt;" becomes some regular text,
+	which is not allowed in the &lt;head&gt; element. Since &lt;/head&gt;&lt;body&gt; 
+	is optional in HTML (again, <strong>not</strong> in XHTML), it is silently inserted, 
+	thus head-only elements like meta and style as well as 
+	"&lt;/head&gt;" and "&lt;body&gt;", which may appear only once, become false.
+      </p>
 
-<p>(explanation courtesy of Christoph P&auml;per)</p>
+      <p>(explanation courtesy of Christoph P&auml;per)</p>
 
-<h3 id="faq-typo">I found some nasty typo like &lt;p&lt;a ...&gt; 
-and the validator accepted it!</h3>
+    <h4 id="faq-typo">I found some nasty typo like &lt;p&lt;a ...&gt; 
+    and the validator accepted it!</h4>
 
-<p>This again (as in the <a href="#faq-linkandmeta">previous case</a>) comes from the
-SHORTTAG feature in HTML (<strong>not</strong> in XHTML). The typo is actually a 
-"shorthand markup" and is a valid construct in HTML, even though its use 
-<a href="http://www.w3.org/TR/html4/appendix/notes.html#h-B.3.7">is not 
-recommended</a>.</p>
+      <p>This again (as in the <a href="#faq-linkandmeta">previous case</a>) comes from the
+	SHORTTAG feature in HTML (<strong>not</strong> in XHTML). The typo is actually a 
+	"shorthand markup" and is a valid construct in HTML, even though its use 
+	<a href="http://www.w3.org/TR/html4/appendix/notes.html#h-B.3.7">is not recommended</a>.
+      </p>
 
+    <h4 id="faq-referer">/check/referer does not work - or - the validator says it does not support 
+    my "undefined" URI scheme</h4>
+
+      <p>Browsers and other Web agents usually send information about the page they come from, in a 
+      <code>Referer</code> header. The validator uses this information for a features that allows 
+      it to validate whatever page the browser last visited. The "valid" icons on some Web page usually
+      point to the validation of the page using this feature.</p>
+
+      <p>Unfortunately, some zealous "security software" or Web proxies strip the referrer 
+      information from what the browser sends. Without this information the validator is not able to
+      find what the URI of the document to validate is, and gives the same error message as when it is
+      given a type of URI it does not understand.</p>
+
+      <p><strong>How to fix</strong>:</p>
+      <ul>
+	<li>Check that it is indeed the <code>Referer</code> issue. The validator should have redirected you to
+	<code>http://validator.w3.org/check?uri=</code>. Otherwise, check the address you have given the validator.</li>
+	<li>The validator can not fix this issue. You will have to (ask your administrator to) reconfigure
+	whichever zealous software is stripping this referrer info.</li>
+	<li>If you have a link on your page using the "/check/referer" feature, you could replace them with the
+	a link to the validator without this feature, e.g. <code>http://validator.w3.org/check?uri=http://www.example.com</code></li>
+	<li>If you have no control over the page or annoying software, simply append the address of the page you wanted validated
+	to the <code>http://validator.w3.org/check?uri=</code> address.</li>
+     </ul>
 </div>
-
+</div>
 <!--#include virtual="../footer.html" -->
   </body>
 </html>

@@ -1,34 +1,45 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.29 2003-05-24 20:32:46 link Exp $"
---><!--#set var="date" value="\$Date: 2003-05-24 20:32:46 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.30 2004-05-09 15:56:52 link Exp $"
+--><!--#set var="date" value="\$Date: 2004-05-09 15:56:52 $"
 --><!--#set var="title" value="Source Code Availability for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
+<div class="doc">
+<h2>Source code availability<br />for the W3C Markup Validator</h2>
+<h3 id="TableOfContents">Table of Contents</h3>
 
-    <p id="skip">
+    <div id="toc">
+      <ul>
+      <li><a href="#getting">Retrieving and browsing the Code</a>
+       <ul>	
+	<li><a href="#browse">Browsing the code</a></li>
+	<li><a href="#tarball">Download tarballs</a></li>
+	<li><a href="#rpm">RPM package</a></li>
+	<li><a href="#deb">Debian package</a></li>
+	<li><a href="#CVS">CVS repository</a></li>
+       </ul>
+      </li>
+      <li><a href="#using">Using the code</a></li>
+      </ul>
+    </div>
+
+
+      <h3><a name="getting" id="getting"></a>Retrieving and browsing the Code</h3>
+
+    <p><a id="skip" name="skip"></a>
       The source code for the <a
         href="../"><acronym title="World Wide Web Consortium">W3C</acronym>
 	Markup Validation Service</a> is available under the
       terms of the <a
         href="http://www.w3.org/Consortium/Legal/copyright-software"><acronym
           title="World Wide Web Consortium">W3C</acronym>
-	Software Copyright</a>. Tarballs of the source, and available binary
+	Software License</a>. Tarballs of the source, and available binary
       distributions, of the latest production version is always available at
-      &lt;<a href="http://validator.w3.org/dist/">http://validator.w3.org/dist/</a>&gt;.
+      &lt;<a href="http://validator.w3.org/validator.tar.gz">http://validator.w3.org/validator.tar.gz</a>&gt;.
       Development code is only available from CVS.
     </p>
-    <p>
-      The purpose of making the source code available is partly to allow
-      others to set up mirrors of the service (either publicly or within
-      an intranet behind a firewall), but also to allow us to collaborate
-      on making the service better!
-    </p>
 
-    <div id="getting">
-      <h2>Retrieving the Code</h2>
-      <p>You can retrieve the code a number of ways:</p>
-      <ul>
-        <li>
-          <p>
+          <h4><a id="browse" name="browse"></a>Browsing the code</h4>
+	  <p>
             If you just want to glance at the code, or see its revision
             history, you can
             <a href="http://dev.w3.org/cvsweb/validator/">browse it on
@@ -36,50 +47,77 @@
           </p>
           <p>
             The most interesting files are currently
-            <a href="http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/check">a
+            <a href="http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/check?only_with_tag=validator-0_6_0-branch">a
               CGI script called "check"</a> that does pretty much everything,
             and possibly also <a
-              href="http://dev.w3.org/cvsweb/validator/httpd/conf/httpd.conf">the
-              httpd.conf</a>. (Select the topmost revision numbers on these
-            pages to see the most recent revision of each file.)
+              href="http://dev.w3.org/cvsweb/validator/httpd/conf/httpd.conf?only_with_tag=validator-0_6_0-branch">the
+              httpd.conf configuration file snippet for Apache</a>.
+            Select the topmost revision numbers on these
+            pages to see the most recent revision of each file.
           </p>
-        </li>
-        <li>
-          <p>
+          <h4><a id="tarball" name="tarball"></a>Download the code in tarballs</h4>
+	   <p>
             If you want a copy of all the files that make up the service, you
-            can download a tarball of <a href="../validator.tar.gz">the code</a>
-	    (~161kB) and the <a href="../sgml-lib.tar.gz">the <acronym
+            can download a tarball of <a href="http://validator.w3.org/validator.tar.gz">the code</a>
+	    (~161kB) and <a href="http://validator.w3.org/sgml-lib.tar.gz">the <acronym
               title="Document Type Definitions">DTDs</acronym></a> (~2.6MB).
           </p>
-        </li>
-        <li id="rpm">
+        <h4><a id="rpm" name="rpm"></a>RPM package</h4>
           <p>
-            Experimental RPMs are available, courtesy of Ville Skytt&auml;, at
-            &lt;<a href="http://cachalot.ods.org/">http://cachalot.ods.org/</a>&gt;.
+            RPM packages are available, courtesy of Ville Skytt&auml;, at
+            &lt;<a href="http://cachalot.mine.nu/1/">http://cachalot.mine.nu/1/</a>&gt;.
           </p>
           <p>
-            The RPMs have only been tested on <a href="http://www.redhat.com/">Red
-            Hat</a> 8.0, but should be adaptable to other RPM based systems.
+            The RPMs have only been tested on
+            <a href="http://fedora.redhat.com/">Fedora</a> Core 1,
+            but should be adaptable to other RPM based systems.
           </p>
           <p>
-            Note that the Validator RPMs have several dependencies so you will
-            have to get at least the following RPMs:
+            Note that the Validator RPMs have several dependencies, you'll
+            have to get at least the following RPMs (other dependencies are
+            included in the Fedora Core distribution):
           </p>
           <ul>
-            <li>w3c-validator</li>
-            <li>w3c-validator-libs</li>
+            <li>w3c-markup-validator</li>
+            <li>w3c-markup-validator-libs</li>
+            <li>perl-Config-General</li>
+            <li>perl-Net-IP</li>
             <li>perl-Set-IntSpan</li>
             <li>perl-Text-Iconv</li>
-            <li>opensp</li>
           </ul>
           <p>
             In addition, each of these may have further dependencies that must
-            be satisfied. All the necessary RPMs should be either in Red Hat 8.0
-            or available from
-             &lt;<a href="http://cachalot.ods.org/">http://cachalot.ods.org/</a>&gt;.
+            be satisfied. All the necessary RPMs are either included in
+            the Fedora Core distribution or are available from
+            &lt;<a href="http://cachalot.mine.nu/1/">http://cachalot.mine.nu/1/</a>&gt; or
+            &lt;<a href="http://www.fedora.us/">http://www.fedora.us/</a>&gt;.
+            Use of an automated package management tool, such as apt, up2date
+            or yum is strongly recommended.  See the links above for more
+            information about getting and configuring these tools.
           </p>
-        </li>
-        <li id="CVS">
+        <h4><a name="deb" id="deb"></a>Debian package</h4>
+          <p>
+            A Debian package is available, courtesy of Fr&eacute;d&eacute;ric
+            Sch&uuml;tz. The latest version is available for the Debian Woody
+            (current stable), Sarge (current testing) or Sid (unstable)
+            distributions at
+            &lt;<a href="http://www.mathgen.ch/debian/">http://www.mathgen.ch/debian/</a>&gt;.
+            If you want to use the <kbd>apt-get</kbd> command, add the line
+            <kbd>deb http://www.mathgen.ch/debian/woody ./</kbd>
+            in the /etc/apt/sources.list file (replace woody by testing or sid
+            if you use another distribution). All dependencies that are not
+            part of the standard Debian archive are provided at the same
+            address, and running the command <kbd>apt-get install
+            w3c-markup-validator</kbd> as root will install all the packages
+            needed.
+          </p>
+          <p>
+            If you are using the Debian Testing or Unstable distribution, the
+            package is already included in the offical archive and you can
+            directly use the <kbd>apt-get</kbd> command if your
+            /etc/apt/sources.list file is correctly configured.
+          </p>
+        <h4><a id="CVS" name="CVS"></a>CVS repository</h4>
           <p>
             If you intend to actively mirror the code and/or contribute
             patches to the code, you should install and become familiar
@@ -99,7 +137,7 @@
     bash$ <kbd>cvs login</kbd>
     (Logging in to anonymous@dev.w3.org)
     CVS password: <kbd>anonymous</kbd>
-    bash$ <kbd>cvs get -r validator-0_6_2-release validator</kbd>
+    bash$ <kbd>cvs get -r validator-0_6_5 validator</kbd>
     cvs server: Updating validator
     cvs server: Updating validator/htdocs
     U validator/htdocs/about.html
@@ -113,106 +151,20 @@
             or lesser breakage at any given point in time. <em>Approach with
             caution!</em>
           </p>
-        </li>
-      </ul>
-    </div>
 
-    <div>
-      <h2>Prerequisites</h2>
-      <p>
-        Before you will be able to get the code to run, you will need a few
-        things already installed on your system:
-      </p>
-        <ul>
-          <li>
-            A Unix-like operating system. It may also work with Windows
-            NT, Mac OS X or other systems. It has worked on Linux,
-            Solaris, FreeBSD, HP-UX, and Digital UNIX. If you try it on other
-            systems and get it to work, please <a href="../feedback.html">let
-            us know</a> (and <a href="../feedback.html">send us patches</a>,
-            if they are needed to get it to work elsewhere).
-         </li>
-         <li>
-           <a href="http://openjade.sourceforge.net/">OpenSP</a>, version 1.5
-           or newer.  OpenSP is the SGML and XML parser used by the service.
-         </li>
-         <li>
-           <a href="../sgml-lib.tar.gz">A collection of DTDs and other
-             files</a> to validate against. (You do not need to download this
-           if you mirror everything using <a href="#CVS">CVS</a>.)
-         </li>
-         <li>
-           A web server: we are currently running <a
-             href="http://httpd.apache.org/">Apache</a> version 1.3.27, but
-           likely any version will work, and other web servers may work as
-           well with some tweaking.  In particular, the server needs to be
-           able to run <a href="http://www.w3.org/CGI/"><acronym
-           title="Common Gateway Interface">CGI</acronym></a> scripts and
-           have support for
-           <a href="http://httpd.apache.org/docs/howto/ssi.html"><acronym
-           title="Server Side Includes">SSI</acronym></a>.
-         </li>
-         <li>
-           <a href="http://www.perl.org/">Perl</a>: the <a
-             href="http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/check">main
-             CGI script</a> that does everything is written in Perl.
-             You'll need version 5.6.0 or newer.  Additionally, the following
-             <a href="http://www.cpan.org/"><acronym
-             title="Comprehensive Perl Archive Network">CPAN</acronym></a>
-             distributions are needed:
-          <ul>
-           <li>
-            <a href="http://search.cpan.org/dist/CGI.pm/">CGI.pm</a>,
-            version 2.81 or newer
-           </li>
-           <li>
-            <a href="http://search.cpan.org/dist/Config-General/">Config-General</a>,
-            version 2.06 or newer
-           </li>
-           <li>
-            <a href="http://search.cpan.org/dist/HTML-Parser/">HTML-Parser</a>,
-            version 3.25 or newer
-           </li>
-           <li>
-            <a href="http://search.cpan.org/dist/libwww-perl/">libwww-perl</a>,
-            version 5.60 or newer
-           </li>
-           <li>
-            <a href="http://search.cpan.org/dist/Set-IntSpan/">Set-IntSpan</a>
-           </li>
-           <li>
-            <a href="http://search.cpan.org/dist/Text-Iconv/">Text-Iconv</a>
-           </li>
-           <li>
-            <a href="http://search.cpan.org/dist/URI/">URI</a>
-           </li>
-          </ul>
-         </li>
-       </ul>
-       <p>
-         If you try to use the code and succeed (or fail), please <a
-           href="../feedback.html">let us know</a>!
-       </p>
-     </div>
+  <h3><a id="using" name="using"></a>Using the code</h3>
 
-     <div id="dev">
-       <h2>Development</h2>
-       <p>
-         For information on current development activity, see the <a
-           href="http://lists.w3.org/Archives/Public/www-validator/">www-validator
-           mailing list archives</a>. To join in discussions about the
-         Validator, please join us in the <code>#validator</code> IRC channel
-         on <code>irc.freenode.net</code>.
-       </p>
-       <p>
-         Any changes to the service will attempt to maintain
-         compatibility with a <a href="../dev/tests/">list of test cases</a>.
-         Any changes to the code or documentation related to the service cause
-         a notification message to be sent to the <a
-           href="http://lists.w3.org/Archives/Public/www-validator-cvs/">www-validator-cvs
-           mailing list</a>.
-       </p>
-     </div>
+     <p>
+      The purpose of making the source code available is partly to allow
+      others to set up mirrors of the service (either publicly or within
+      an intranet behind a firewall), but also to allow us to collaborate
+      on making the service better! If you are interested in helping with 
+      the development, we suggest you  first <a href="../docs/install.html">install</a>
+      the code and <a href="../docs/devel.html">read our instructions for developers</a>.
+    </p>
+
+
+</div>
 <!--#include virtual="../footer.html" -->
   </body>
 </html>

@@ -1,16 +1,18 @@
-<!--#set var="revision" value="\$Id: errors.html,v 1.26 2003-05-24 20:32:46 link Exp $"
---><!--#set var="date" value="\$Date: 2003-05-24 20:32:46 $"
+<!--#set var="revision" value="\$Id: errors.html,v 1.27 2004-05-09 15:56:50 link Exp $"
+--><!--#set var="date" value="\$Date: 2004-05-09 15:56:50 $"
 --><!--#set var="title" value="Error Explanations for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
 
-    <p id="skip">
+<h2>Explanation of the error messages<br /> for the W3C Markup Validator</h2>
+    <p>
       These error explanations were originally written by Scott Bigham,
       and are used here with his permission.
     </p>
 
+<h3 id="TableOfContents">Table of Contents</h3>
+
     <div id="toc">
-      <h2 id="TableOfContents">Table of Contents</h2>
       <ul>
         <li><a href="#undef-id">ID "<var>FOO</var>" already defined</a></li>
         <li><a href="#unterm-comment-1">entity end not allowed in comment</a></li>
@@ -22,7 +24,7 @@
         <li><a href="#undef-tag">element "<var>FOO</var>" undefined</a></li>
         <li><a href="#not-allowed">document type does not allow element "<var>FOO</var>" here</a></li>
         <li><a href="#not-contained">document type does not allow element "<var>FOO</var>" here; assuming missing "<var>BAR</var>" start-tag</a></li>
-        <li><a href="#attr-undef">there is no attribute "<var>FOO</var>" for this element (in this HTML version)</a></li>
+        <li><a href="#attr-undef">there is no attribute "<var>FOO</var>" for this element (in this <abbr title="HyperText Markup Language">HTML</abbr> version)</a></li>
         <li><a href="#undef-attr-val">"<var>FOO</var>" is not a member of the group specified in the declared value of this attribute</a></li>
         <li><a href="#bad-attr-char">syntax of attribute value does not conform to declared value</a></li>
         <li><a href="#attr-bad-name">value of attribute "<var>FOO</var>" invalid: "#" cannot start a name</a></li>
@@ -33,7 +35,7 @@
         <li><a href="#omitted-content">end tag for "<var>FOO</var>" which is not finished</a></li>
         <li><a href="#no-start-tag">start tag for "<var>FOO</var>" omitted, but its declaration does not permit this</a></li>
         <li><a href="#bad-entity">unknown entity "<var>FOO</var>"</a></li>
-        <li><a href="#bad-char">non SGML character number ###</a></li>
+        <li><a href="#bad-char">non <abbr title="Standard Generalized Markup Language">SGML</abbr> character number ###</a></li>
         <li><a href="#bad-pub-id">cannot generate system identifier for entity `HTML'</a></li>
         <li><a href="#missing-subel">missing a required sub-element of "<var>FOO</var>"</a></li>
         <li><a href="#start-tag">start tag was here</a></li>
@@ -48,9 +50,9 @@
       </ul>
     </div>
 
-    <div>
-      <h2>Listing of errors and their explanation</h2>
-      <dl>
+    <div><a name="skip" id="skip"></a>
+      <h3>Listing of errors and their explanation</h3>
+      <dl id="expl">
         <dt id="undef-id"><code>ID "<var>FOO</var>" already defined</code></dt>
         <dd>
           <p>
@@ -61,7 +63,7 @@
             values of the id attribute as case-sensitive, they must still be
             case-insensitive unique in the document. See
             <a href="http://www.w3.org/TR/html4/struct/links.html#h-12.2.1">Section
-            12.2.1 Syntax of anchor names</a> in the HTML 4.01 Recommendation
+            12.2.1 Syntax of anchor names</a> in the <abbr title="HyperText Markup Language">HTML</abbr> 4.01 Recommendation
             for further information.
           </p>
         </dd>
@@ -71,7 +73,7 @@
             Unterminated comment. The position indicator points to the very end of
             the file, where the problem was detected; to find the beginning of the
             comment, try searching for the last occurrence of
-            `<code>&lt;!--</code>' in the document.
+            "<code class="inline">&lt;!--</code>" in the document.
           </p>
         </dd>
         <dt id="unterm-comment-2"><code>name start character invalid: only s and comment allowed in comment declaration</code></dt>
@@ -79,13 +81,13 @@
           <p>
             Unterminated comments again. This time, you have a case like:
           </p>
-          <pre>
-            &lt;!-- This is the first unterminated comment &gt;
+          <code class="block">
+            &lt;!-- This is the first unterminated comment &gt;<br />
             &lt;!-- This is the second one &gt;
-          </pre>
+          </code>
           <p>
-            The validator (correctly) interprets the `<code>--</code>' in the
-            second comment as terminating the first comment, and then interprets
+            The validator (correctly) interprets the "<code class="inline">--</code>"
+            in the second comment as terminating the first comment, and then interprets
             the text of the second comment as text between comments, which is not
             allowed.
           </p>
@@ -94,8 +96,10 @@
         <dd>
           <p>
             Most likely an invalid comment of the form
-            <code>&lt;!invalid comment&gt;</code>; the validator is (correctly)
-            attempting to interpret it as an <a href="sgml.html#sgml">SGML</a>
+            "<code class="inline">&lt;!invalid comment&gt;</code>"; the validator is
+            (correctly) attempting to interpret it as an
+            <a href="sgml.html#sgml"><abbr
+              title="Standard Generalized Markup Language">SGML</abbr></a>
             markup declaration.
           </p>
         </dd>
@@ -105,14 +109,15 @@
             You have an attribute whose value needs to be in quotes. If an
             attribute value contains any character other than letters, digits,
             hyphens and periods, it must be enclosed in double quotes (single
-            quotes would also be OK from an <a href="sgml.html#sgml">SGML</a>
+            quotes would also be OK from an <a href="sgml.html#sgml"><abbr
+              title="Standard Generalized Markup Language">SGML</abbr></a>
             standpoint, but some browsers don't recognize them).
           </p>
         </dd>
-        <dt id="attr-char"><code>character "X" not allowed in attribute specification list</code></dt>
+        <dt id="attr-char"><code>character "<var>X</var>" not allowed in attribute specification list</code></dt>
         <dd>
           <p>
-            The validator has found a character inside an HTML tag that isn't
+            The validator has found a character inside an <abbr title="HyperText Markup Language">HTML</abbr> tag that isn't
             allowed there. This usually means you didn't put an attribute value in
             quotes when necessary. It also probably means that the character in
             question is not allowed in the value of the attribute at all, or you
@@ -123,14 +128,14 @@
             You can also get in trouble by forgetting the closing quote on an
             attribute. For instance:
           </p>
-          <pre>
-            &lt;IMG SRC="http://foo.com/fred.gif&gt;
-            &lt;IMG SRC="http://foo.com/joe.gif&gt;
-          </pre>
+          <code class="block">
+            &lt;img src="http://foo.com/fred.gif&gt;<br />
+            &lt;img src="http://foo.com/joe.gif&gt;
+          </code>
           <p>
-            The validator will (correctly) interpret this as a SRC value of
-            <code>"http://foo.com/fred.gif&gt; &lt;IMG SRC="</code>, and then
-            choke on the following `:'. In this case, the position indicator in
+            The validator will (correctly) interpret this as a <code class="inline">src</code>
+            value of <code class="inline">"http://example.com/fred.gif&gt; &lt;img src="</code>, and then
+            choke on the following "<code>:</code>". In this case, the position indicator in
             the error message may be several lines below the line with the missing
             quote.
           </p>
@@ -143,38 +148,43 @@
             you've forgotten a closing quote on an attribute value. For instance,
             in:
           </p>
-          <pre>
-            &lt;IMG SRC="fred.gif&gt;
-            &lt;!-- 50 lines of stuff --&gt;
-            &lt;IMG SRC="joe.gif"&gt;
-          </pre>
+          <code class="block">
+            &lt;img src="fred.gif&gt;<br />
+            &lt;!-- 50 lines of stuff --&gt;<br />
+            &lt;img src="joe.gif"&gt;
+          </code>
           <p>
-            The SRC value for the first <code>&lt;IMG&gt;</code> is the entire
+            The "<code class="inline">src</code>" value for the first
+            <code class="inline">&lt;img&gt;</code> is the entire
             fifty lines of stuff up to the next double quote, which probably
-            exceeds the <a href="sgml.html#sgml">SGML</a>-defined length limit for
-            HTML string literals. Note that the position indicator in the error
+            exceeds the <a href="sgml.html#sgml"><abbr
+              title="Standard Generalized Markup Language">SGML</abbr></a>-defined
+            length limit for <abbr title="HyperText Markup Language">HTML</abbr>
+            string literals. Note that the position indicator in the error
             message points to where the attribute value <em>ended</em> &mdash; in
-            this case, the <code>"joe.gif"</code> line.
+            this case, the <code class="inline">"joe.gif"</code> line.
           </p>
         </dd>
         <dt id="undef-tag"><code>element "<var>FOO</var>" undefined</code></dt>
         <dd>
           <p>
             You've used an unknown tag (represented here by "<var>FOO</var>"). Make sure the
-            DTD indicated by your DOCTYPE actually includes this element.
+            <abbr title="Document Type Definition">DTD</abbr> indicated by your
+            <code class="inline">DOCTYPE</code> actually includes this element.
           </p>
           <p>
             If the tag in question is a frame-related tag you must use the
-            "Frameset" DTD, and if you use (deprecated) physical markup ("FONT"
-            and friends) you must use the "Transitional" DTD.
+            "Frameset" <abbr title="Document Type Definition">DTD</abbr>,
+            and if you use (deprecated) physical markup ("FONT"
+            and friends) you must use the "Transitional" <abbr
+              title="Document Type Definition">DTD</abbr>.
           </p>
         </dd>
         <dt id="not-allowed"><code>document type does not allow element "<var>FOO</var>" here</code></dt>
         <dd>
           <p>
-            Straightforward, but not terribly informative. There are a
-            <em>lot</em> of different errors that will generate this error
-            message:
+            Straightforward, but not terribly informative. There are several
+            different mistakes that will generate this error message:
           </p>
           <ul>
             <li>
@@ -183,53 +193,60 @@
             </li>
             <li>
               Using a tag in the wrong place. For instance,
-              <code>&lt;TABLE&gt;&lt;TD&gt;blah&lt;/TABLE&gt;</code> will cause
-              this error. The trick here is that <code>&lt;TABLE&gt;</code> cannot
-              <em>directly</em> contain <code>&lt;TD&gt;</code>'s; it contains
-              <code>&lt;TR&gt;</code>'s which contain <code>&lt;TD&gt;</code>'s.
+              <code class="inline">&lt;table&gt;&lt;td&gt;blah&lt;/table&gt;</code>
+              will cause this error. The trick here is that a <code
+                class="inline">&lt;table&gt;</code> element
+              cannot <em>directly</em> contain <code class="inline">&lt;td&gt;</code>
+              elements; it contains
+              one or more <code class="inline">&lt;tr&gt;</code> elements which in turn
+              contain <code class="inline">&lt;td&gt;</code> elements.
               The above example should be
-              <code>&lt;TABLE&gt;&lt;TR&gt;&lt;TD&gt;blah&lt;/TABLE&gt;</code>.
+              <code class="inline">&lt;table&gt;&lt;tr&gt;&lt;td&gt;blah&lt;/table&gt;</code>.
             </li>
           </ul>
         </dd>
-        <dt><a id="not-contained" name="not-contained">document type does not allow element "<var>FOO</var>" here; assuming missing "<var>BAR</var>" start-tag</a>"</dt>
+        <dt><a id="not-contained"><code>document type does not allow element "<var>FOO</var>" here; assuming missing "<var>BAR</var>" start-tag</code></a></dt>
         <dd>
           <p>
             Similar to the <a href="#not-allowed">previous error</a>, but more
             specific: in this case, you have a "<var>FOO</var>" element that is not contained
-            in a "<var>BAR</var>" element when "<var>FOO</var>" is not allowed outside of "<var>BAR</var>". Some of the
-            most common causes of this error are:
+            in a "<var>BAR</var>" element when "<var>FOO</var>" is not allowed outside of
+            "<var>BAR</var>". Some of the most common causes of this error are:
           </p>
           <ul>
             <li>
-              Using the <code>DD</code> element as a fake paragraph indent.
-              <code>DD</code> is not allowed outside of a <code>DL</code> element.
+              Using the "<code class="inline">&lt;dd&gt;</code>" element as a fake paragraph
+              indent. "<code class="inline">&lt;dd&gt;</code>" is not allowed outside of a
+              "<code class="inline">&lt;dl&gt;</code>" element.
             </li>
             <li>
-              Improper construction of a nested list. An inner UL or OL in a
-              nested list may not appear directly within an outer UL/OL, but only
-              within an LI of the outer UL/OL, as in the following example:
-              <pre>
-          &lt;OL&gt;
-            &lt;LI&gt;Obtain the following items:
-              &lt;UL&gt;
-                &lt;LI&gt;Ham&lt;/LI&gt;
-                &lt;LI&gt;Bread; one of:
-                  &lt;UL&gt;
-                    &lt;LI&gt;White&lt;/LI&gt;
-                    &lt;LI&gt;Rye&lt;/LI&gt;
-                    &lt;LI&gt;Whole wheat&lt;/LI&gt;
-                  &lt;/UL&gt;
-                &lt;/LI&gt;  &lt;!-- End of the "Bread" &lt;LI&gt; --&gt;
-                &lt;LI&gt;Cheese&lt;/LI&gt;
-              &lt;/UL&gt;
-            &lt;/LI&gt;  &lt;!-- End of the "Obtain" &lt;LI&gt; --&gt;
-            &lt;LI&gt;Place ham and cheese between two slices of bread&lt;/LI&gt;
-            &lt;LI&gt;Consume the resulting ham-and-cheese sandwich&lt;/LI&gt;
-          &lt;/OL&gt;
-              </pre>
+              Improper construction of a nested list. An inner "<code
+                class="inline">&lt;ul&gt;</code>" or "<code class="inline">&lt;ol&gt;</code>"
+              in a nested list may not appear directly within an outer
+              "<code class="inline">&lt;ol&gt;</code>" or "<code class="inline">&lt;ul&gt;</code>",
+              but only within an "<code class="inline">&lt;li&gt;</code>" of the outer
+              "<code class="inline">&lt;ol&gt;</code>" or "<code class="inline">&lt;ul&gt;</code>", as in the following example:
+              <code class="block">
+&lt;ol&gt;<br />
+&nbsp;&lt;li&gt;<samp>Obtain the following items:</samp><br />
+&nbsp;&nbsp;&lt;ul&gt;<br />
+&nbsp;&nbsp;&nbsp;&lt;li&gt;<samp>Ham</samp>&lt;/li&gt;<br />
+&nbsp;&nbsp;&nbsp;&lt;li&gt;<samp>Bread; one of:</samp><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;ul&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;<samp>White</samp>&lt;/li&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;<samp>Rye</samp>&lt;/li&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;<samp>Whole wheat</samp>&lt;/li&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/ul&gt;<br />
+&nbsp;&nbsp;&nbsp;&lt;/li&gt;  &lt;!-- End of the "Bread" &lt;li&gt; --&gt;<br />
+&nbsp;&nbsp;&nbsp;&lt;li&gt;<samp>Cheese</samp>&lt;/li&gt;<br />
+&nbsp;&nbsp;&lt;/ul&gt;<br />
+&nbsp;&lt;/li&gt;  &lt;!-- End of the "Obtain" &lt;li&gt; --&gt;<br />
+&nbsp;&lt;li&gt;<samp>Place ham and cheese between two slices of bread</samp>&lt;/li&gt;<br />
+&nbsp;&lt;li&gt;<samp>Consume the resulting ham-and-cheese sandwich</samp>&lt;/li&gt;<br />
+&lt;/ol&gt;<br />
+              </code>
               <p>
-                The <code>&lt;/LI&gt;</code> end tags are optional and are only
+                The "<code class="inline">&lt;/li&gt;</code>" end tags are optional and are only
                 included above to emphasize how the structure of the nested list
                 is arranged; if you omit them, the parser will infer their
                 presence in the locations shown above. 
@@ -242,7 +259,7 @@
             corresponding end tag is also missing</a>.
           </p>
         </dd>
-        <dt id="attr-undef"><code>there is no attribute "<var>FOO</var>" for this element (in this HTML version)</code></dt>
+        <dt id="attr-undef"><code>there is no attribute "<var>FOO</var>" for this element</code></dt>
         <dd>
           <p>
             You have used an attribute with an element that is defined not to have
@@ -257,80 +274,91 @@
             Similar to the <a href="#attr-undef">previous error</a>; this time,
             you're using an attribute that is defined for the element, but with a
             value that isn't defined for the attribute. For instance, the Netscape
-            extension <code>&lt;IMG ALIGN=ABSMIDDLE&gt;</code> will cause this
-            error; ABSMIDDLE isn't one of the allowed values for the ALIGN
-            attribute of <code>&lt;IMG&gt;</code> (unless, of course, you provided
+            extension <code class="inline">&lt;img align="absmiddle"&gt;</code> will
+            cause this error; "<code class="inline">absmiddle</code>" is not one of
+            the allowed values for the "<code class="inline">align</code>" attribute
+            of <code class="inline">&lt;img&gt;</code> (unless, of course, you provided
             a Netscape document type).
           </p>
           <p>
-            If you're using the Netscape document type, the BORDER attribute of
-            <code>&lt;TABLE&gt;</code> can cause this error.
+            If you're using the Netscape document type, the
+            "<code class="inline">border</code>" attribute of
+            "<code class="inline">&lt;table&gt;</code>" can cause this error.
           </p>
           <p>
             This error can also be caused, oddly enough, by missing close quotes
             on attribute values. For instance, given:
           </p>
-          <pre>
-            &lt;IMG SRC="fred.gif&gt; &lt;IMG SRC="joe.gif&gt;
-          </pre>
+          <code class="block">
+            &lt;img src="fred.png&gt; &lt;img src="joe.png&gt;
+          </code>
           <p>
-            The validator will (correctly) see a SRC attribute of
-            <code>"fred.gif&gt; &lt;IMG SRC="</code>, and then try to interpret
-            JOE.GIF as an attribute of <code>&lt;IMG&gt;</code>.
+            The validator will (correctly) see a <code class="inline">src</code> attribute of
+            "<code class="inline">fred.png&gt; &lt;img src=</code>", and then try to
+            interpret <code class="inline">joe.png</code> as an attribute of
+            <code class="inline">&lt;img&gt;</code>.
           </p>
         </dd>
         <dt id="bad-attr-char"><code>syntax of attribute value does not conform to declared value</code></dt>
         <dd>
           <p>
             Yet another attribute error; this time, the attribute in question was
-            defined to take a numeric value, or an <a
-            href="sgml.html#sgml">SGML</a> identifier value, and you used a
-            character that doesn't match what it was expecting.
+            defined to take a numeric value, or an <a href="sgml.html#sgml"><abbr
+              title="Standard Generalized Markup Language">SGML</abbr></a> identifier
+            value, and you used a character that doesn't match what it was expecting.
           </p>
           <p>
             One potentially annoying source of this error is the
-            <code>TD WIDTH</code> attribute. Whether intentionally or by oversight,
-            the HTML 3.2 DTD defines this attribute to have a value type of NUMBER,
-            which means that <code>&lt;TD WIDTH="50%"&gt;</code> is not allowed.
+            <code class="inline">width</code> attribute on the <code class="inline">td</code>
+            element. Whether intentionally or by oversight, the <abbr
+              title="HyperText Markup Language">HTML</abbr> 3.2 <abbr
+              title="Document Type Definition">DTD</abbr> defines this attribute to have a
+            value type of <code class="inline">NUMBER</code>, which means that
+            <code class="inline">&lt;td width="50%"&gt;</code> is not allowed.
           </p>
         </dd>
-        <dt id="attr-bad-name"><code>value of attribute "<var>FOO</var>" invalid: "#" cannot start a name</code></dt>
+        <dt id="attr-bad-name"><code>value of attribute "<var>FOO</var>" invalid: "<var>#</var>" cannot start a name</code></dt>
         <dd>
           <p>
             A special case of <a href="#bad-attr-char">the previous error</a>; the
-            attribute in question is defined to take as value an SGML name token,
-            which must begin with a letter.
+            attribute in question is defined to take as value an <abbr
+              title="Standard Generalized Markup Language">SGML</abbr>
+            <code class="inline">NMTOKEN</code>, a name token, which must begin with
+            a letter.
           </p>
         </dd>
         <dt id="bad-abbrev-attr"><code>"<var>FOO</var>" is not a member of a group specified for any attribute</code></dt>
         <dd>
           <p>
             Another attribute error, this time referring to an "abbreviated"
-            attribute. <a href="sgml.html#sgml">SGML</a> allows you to omit the
-            name of an attribute if the attribute value is unambiguous. For
-            instance, <code>&lt;IMG ISMAP&gt;</code> is actually an abbreviation
-            of <code>&lt;IMG ISMAP=ISMAP&gt;</code>. (Technically, this also means
-            that e.g. <code>&lt;P ALIGN=CENTER&gt;</code> could be abbreviated to
-            <code>&lt;P CENTER&gt;</code>, but it is unlikely that current
-            browsers will get this right.) The validator has found something that
-            looks like an abbreviated attribute but doesn't match the value of any
-            attribute for this element. For instance, a typo like
-            <code>&lt;IMG ISNAP&gt;</code> would produce this error.
+            (minimized) attribute. <a href="sgml.html#sgml"><abbr
+              title="Standard Generalized Markup Language">SGML</abbr></a> allows
+            you to omit the name of an attribute if the attribute value is unambiguous.
+            For instance, "<code class="inline">&lt;img ismap&gt;</code>" is actually an
+            abbreviation of <code class="inline">&lt;img ismap="ismap"&gt;</code>.
+            The validator has found something that looks like an abbreviated attribute
+            but doesn't match the value of any attribute for this element. For instance,
+            a typo like "<code class="inline">&lt;img is<em>n</em>ap&gt;</code>" would
+            produce this error.
           </p>
           <p>
             A missing close quote on a previous attribute value can also trigger
             this error if the next quote it finds is followed by something that
             looks like an abbreviated attribute; for instance,
-            <code>&lt;IMG SRC="fred.gif&gt;&lt;IMG SRC="joe.gif&gt;</code> would
-            produce this error, referring to the "attribute value" <code>JOE.GIF</code>.
+          </p>
+          <code class="block">&lt;img src="fred.png&gt;&lt;img src="joe.png&gt;</code>
+          <p>
+            would produce this error, referring to the "attribute value"
+            <code class="inline">joe.png</code>.
           </p>
         </dd>
         <dt id="attr-missing"><code>required attribute "<var>FOO</var>" not specified</code></dt>
         <dd>
           <p>
             You left off a required attribute of the indicated element. The most
-            common such omitted attribute is the <code>ALT</code> attribute of the
-            <code>AREA</code> or <code>IMG</code> element; browsers will typically
+            common such omitted attribute is the <code class="inline">alt</code>
+            attribute of the <code class="inline">area</code> or <code
+              class="inline">img</code> element; browsers will typically
             use these to build a menu equivalent to your client-side image map if
             the user has disabled image loading, so you'll want to use a
             meaningful value here.
@@ -339,63 +367,80 @@
         <dt id="no-end-tag"><code>end tag for "<var>FOO</var>" omitted, but its declaration does not permit this</code></dt>
         <dd>
           <p>
-            You forgot to close something. "<var>FOO</var>" is the element you forgot to close
-            (and the next message, `start tag was here' points to the particular
-            instance of "<var>FOO</var>" in question); the positional indicator points to where
-            the validator expected you to close the element. There are a few
-            common ways that this can happen:
+            You forgot to close something. "<var>FOO</var>" is the element you forgot to
+            close (and the next message, "<code class="inline">start tag was here</code>"
+            points to the particular instance of "<var>FOO</var>" in question); the
+            positional indicator points to where the validator expected you to close the
+            element. There are a few common ways that this can happen:
           </p>
           <ul>
             <li>
-              You've put something inside the "<var>FOO</var>" element that isn't allowed
-              there. For instance,
-              <code>&lt;UL&gt;&lt;LI&gt;&lt;H4&gt;fake font change&lt;/H4&gt;&lt;/UL&gt;</code>
-              will cause this error, since headers aren't allowed inside <code>&lt;UL&gt;</code>'s; the
-              validator assumes that you meant to close the
-              <code>&lt;UL&gt;</code> before opening the <code>&lt;H4&gt;</code>.
+              <p>
+                You've put something inside the "<var>FOO</var>" element that isn't allowed
+                there. For instance,
+              </p>
+              <code class="block">
+                &lt;ul&gt;&lt;li&gt;&lt;h4&gt;<samp>fake font change</samp>&lt;/h4&gt;&lt;/li&gt;&lt;/ul&gt;
+              </code>
+              <p>
+                will cause this error, since headers aren't allowed inside <code
+                  class="inline">&lt;ul&gt;</code> elements; the validator assumes that you
+                meant to close the <code class="inline">&lt;ul&gt;</code> before opening the
+                <code class="inline">&lt;h4&gt;</code>.
+              </p>
             </li>
             <li>
               Interlocked elements. For instance,
-              <code>&lt;B&gt;&lt;I&gt;nope&lt;/B&gt;&lt;/I&gt;</code> will cause
-              this error. HTML requires that you close elements inside-out
+              <code class="inline">&lt;b&gt;&lt;i&gt;<samp>nope</samp>&lt;/b&gt;&lt;/i&gt;</code> will cause
+              this error. <abbr title="HyperText Markup Language">HTML</abbr> requires that you close elements inside-out
               &mdash; that is, the last element you opened is the first element you should
-              close. In this example, you'd have to close the
-              <code>&lt;I&gt;</code> before the <code>&lt;B&gt;</code>.
+              close. In this example, you'd have to close the <code
+                class="inline">&lt;i&gt;</code> before the <code
+                class="inline">&lt;b&gt;</code>.
             </li>
             <li>
-              Unclosed <code>&lt;A&gt;</code> tags. Yes, even
-              <code>&lt;A NAME="foo"&gt;</code> has to have a corresponding
-              <code>&lt;/A&gt;</code>. Note that an empty
-              <code>&lt;A NAME&gt;</code> element won't be recognized by some browsers; be
-              sure to put at least a word or two inside the
-              <code>&lt;A&gt;</code>.
+              Unclosed <code class="inline">&lt;a&gt;</code> tags. Yes, even
+              <code class="inline">&lt;a name="foo"&gt;</code> has to have a corresponding
+              <code class="inline">&lt;/a&gt;</code>. Note that an empty
+              <code class="inline">&lt;a name="foo"&gt;</code> element won't be recognized by some
+              browsers; be sure to put at least a word or two inside the
+              <code class="inline">&lt;a&gt;</code>.
             </li>
             <li>
               Having unadorned text where the validator was expecting a
               sub-element of "<var>FOO</var>". For instance,
-              <code>&lt;DL&gt;fake indent&lt;/DL&gt;</code> will produce this error,
-              since inside a
-              <code>&lt;DL&gt;</code>, the validator only expects to see
-              <code>&lt;DT&gt;</code>'s and <code>&lt;DD&gt;</code>'s.
+              <code class="inline">&lt;dl&gt;<samp>fake indent</samp>&lt;/dl&gt;</code>
+              will produce this error, since inside a
+              <code class="inline">&lt;dl&gt;</code>, the validator only expects to see
+              <code class="inline">&lt;dt&gt;</code> and <code
+                class="inline">&lt;dd&gt;</code> elements (i.e. you can't just put text
+              in there).
             </li>
             <li>
-              A tag of the form <code>&lt;TABLE WIDTH=100%&gt;</code>. The
-              previous error should have been that the `%' was <a
-              href="#attr-char">"not allowed in attribute specification list"</a>.
-              What's happening here is that, in trying to get past the `%', the
-              validator has become confused and thinks the `%' is <em>inside</em>
-              the <code>&lt;TABLE&gt;...&lt;/TABLE&gt;</code>, thus triggering the
-              error message for the previous reason. This error will likely be
-              followed by mistaken complaints that your <code>&lt;TR&gt;</code>'s
-              are <a href="#not-allowed">"not allowed here"</a>, plus a complaint
-              about your <code>&lt;/TABLE&gt;</code> end tag. The solution is to
-              put the attribute value in quotes; ie. <code>&lt;TABLE
-              WIDTH="100%"&gt;</code>.
+              <p>
+                A tag of the form <code class="inline">&lt;table width=100%&gt;</code>.
+                The previous error should have been that the "<code class="inline">%</code>"
+                was "<a href="#attr-char"><code class="inline">not allowed in attribute
+                  specification list</code></a>".
+              </p>
+              <p>
+                What's happening here is that, in trying to get past the "<code
+                  class="inline">%</code>", the validator has become confused and
+                thinks the "<code class="inline">%</code>" is <em>inside</em> the
+                <code class="inline">&lt;table&gt;&hellip;&lt;/table&gt;</code>,
+                thus triggering the error message for the previous reason. This error
+                will likely be followed by mistaken complaints that your <code
+                  class="inline">&lt;tr&gt;</code> elements are "<a
+                  href="#not-allowed"><code class="inline">not allowed here</code></a>",
+                plus a complaint about your <code class="inline">&lt;/table&gt;</code>
+                end tag. The solution is to put the attribute value in quotes; ie.
+                <code class="inline">&lt;table width="100%"&gt;</code>.
+              </p>
             </li>
           </ul>
           <p>
-            In general, you should always explicitly close all elements and
-            quote all attribute values.
+            <strong>In general, you should always explicitly close all elements and
+            quote all attribute values!</strong>
           </p>
         </dd>
         <dt id="floating-close"><code>end tag for element "<var>FOO</var>" which is not open</code></dt>
@@ -404,33 +449,40 @@
             The validator found an end tag, represented here by "<var>FOO</var>", without a
             corresponding start tag. This frequently occurs in conjunction with
             the <a href="#no-end-tag">previous error</a>. For instance, given
-            <code>&lt;B&gt;&lt;I&gt;nope&lt;/B&gt;&lt;/I&gt;</code>, the validator
-            will insert a <code>&lt;/I&gt;</code> before the
-            <code>&lt;/B&gt;</code>, and then will find the
-            <code>&lt;/I&gt;</code> after the <code>&lt;/B&gt;</code> and will
-            have nothing to match it with.
+            <code class="inline">&lt;b&gt;&lt;i&gt;<samp>nope</samp>&lt;/b&gt;&lt;/i&gt;</code>,
+            the validator will insert a <code class="inline">&lt;/i&gt;</code> before the
+            <code class="inline">&lt;/b&gt;</code>, and then will find the
+            <code class="inline">&lt;/i&gt;</code> after the <code
+              class="inline">&lt;/b&gt;</code> and will have nothing to match it with.
           </p>
           <p>
-            A subtle variation of this is <code>&lt;P&gt;&lt;H4&gt;fake font
-            change&lt;/H4&gt;&lt;/P&gt;</code>. <code>&lt;H4&gt;</code>'s aren't
-            allowed inside <code>&lt;P&gt;</code>'s, but since HTML allows you to
-            omit the <code>&lt;/P&gt;</code> end tag for paragraphs, the validator
-            assumes that you meant <code>&lt;P&gt;&lt;/P&gt;&lt;H4&gt;fake font
-            change&lt;/H4&gt;&lt;/P&gt;</code>, in which case the final
-            <code>&lt;/P&gt;</code> is indeed superfluous.
+            A subtle variation of this is <code
+              class="inline">&lt;p&gt;&lt;h4&gt;<samp>fake font change</samp>&lt;/h4&gt;&lt;/p&gt;</code>.
+            <code class="inline">&lt;h4&gt;</code> elements are not allowed inside
+            <code class="inline">&lt;p&gt;</code> elements, but since <abbr
+              title="HyperText Markup Language">HTML</abbr> allows you to
+            omit the <code class="inline">&lt;/p&gt;</code> end tag for paragraphs
+            (unlike <abbr title="eXtensible HyperText Markup Language">XHTML</abbr>),
+            the validator assumes that you meant <code
+              class="inline">&lt;p&gt;<em>&lt;/p&gt;</em>&lt;h4&gt;<samp>fake font
+                change</samp>&lt;/h4&gt;&lt;/p&gt;</code>, in which case the final
+            <code class="inline">&lt;/p&gt;</code> is indeed superfluous.
           </p>
           <p>
             This error can also be caused by incorrectly supplying an end tag for
-            "empty" elements like <code>&lt;HR&gt;</code>, <code>&lt;BR&gt;</code>
-            or <code>&lt;IMG&gt;</code>.
+            "empty" elements like <code class="inline">&lt;hr&gt;</code>,
+            <code class="inline">&lt;br&gt;</code>
+            or <code class="inline">&lt;img&gt;</code>. This is why they are written
+            <code class="inline">&lt;hr /&gt;</code>, <code class="inline">&lt;br /&gt;</code>, and
+            <code class="inline">&lt;img /&gt;</code> in <abbr title="eXtensible HyperText Markup Language">XHTML</abbr>.
           </p>
         </dd>
         <dt id="omitted-content"><code>end tag for "<var>FOO</var>" which is not finished</code></dt>
         <dd>
           <p>
-            You have a "<var>FOO</var>" element, but you have omitted some required sub-element
-            of it. For instance, a <code>TABLE</code> with no <code>TR</code>'s
-            would cause this error.
+            You have a "<var>FOO</var>" element, but you have omitted some required
+            sub-element of it. For instance, a <code class="inline">table</code>
+            with no <code class="inline">tr</code>'s would cause this error.
           </p>
         </dd>
         <dt id="no-start-tag"><code>start tag for "<var>FOO</var>" omitted, but its declaration does not permit this</code></dt>
@@ -438,92 +490,103 @@
           <p>
             The validator expected you to start a "<var>FOO</var>" element at the indicated
             point. This probably means you've put unadorned text somewhere it
-            isn't allowed; for instance, <code>&lt;UL&gt;fake
-            indent&lt;/UL&gt;</code> will cause this error.
+            isn't allowed; for instance, <code class="inline">&lt;ul&gt;<samp>fake
+            indent</samp>&lt;/ul&gt;</code> will cause this error.
           </p>
         </dd>
         <dt id="bad-entity"><code>unknown entity "<var>FOO</var>"</code></dt>
         <dd>
           <p>
             The validator has found an entity (something like
-            <code>&amp;this;</code>) that it doesn't recognize. There are a few
-            possibilities:
+            <code class="inline">&amp;this;</code>) that it doesn't recognize.
+            There are a few possibilities:
           </p>
           <ul>
             <li>
               <p>
-                A reference to a URI that uses <code>&amp;</code> as a separator
-                between parameters, such as
-                "<code>http://example.org/prog?x=1&amp;y=2</code>".
+                A reference to a <abbr title="Uniform Resource Identifier">URI</abbr>
+                that uses "<code class="inline">&amp;</code>" as a separator between
+                parameters, such as "<code
+                  class="inline">http://example.com/cgi-bin/prog?x=1&amp;y=2</code>".
               </p>
               <p>
-                To solve this problem, simply replace all the <code>&amp;</code>'s
-                in attribute values with <code>&amp;amp;</code> (user agents will
-                convert them back before following the links.)
+                To solve this problem, simply replace all the <code
+                  class="inline">&amp;</code>'s
+                in attribute values with <code class="inline">&amp;amp;</code>
+                (user agents will convert them back before following the links).
               </p>
               <p>
-                Another way to get around this problem is for the author of the CGI
+                Another way to get around this problem is for the author of the
+                <abbr title="Common Gateway Interface">CGI</abbr>
                 program to allow a different value to be used between arguments,
-                like ';' or '|', which would allow the link to be coded as e.g.
-                <code>&lt;a href="http://example.org/prog?x=1;y=2"&gt;</code>
+                like "<code class="inline">;</code>" or "<code class="inline">|</code>",
+                which would allow the link to be coded as e.g.
+                <code class="inline">&lt;a href="http://example.com/cgi-bin/prog?x=1;y=2"&gt;</code>
               </p>
             </li>
             <li>
-              An unterminated entity; for instance, <code>this&amp;ampthat</code>
-              for "this&amp;that", which the validator (correctly) interprets as a
-              request for the entity <code>&amp;ampthat;</code>. Technically, any
+              An unterminated entity; for instance, "<code
+                class="inline">this&amp;ampthat</code>"
+              for "<code class="inline">this&amp;that</code>", which the validator
+              (correctly) interprets as a request for the entity "<code
+                class="inline">&amp;ampthat;</code>". Technically, any
               non-alphanumeric character (such as a space) will suffice to
               terminate the entity, but some browsers get this wrong; the safest
               thing to do is to terminate all entities with a semicolon, turning
-              our example into <code>this&amp;amp;that</code>.
+              our example into "<code class="inline">this&amp;amp;that</code>".
             </li>
             <li>
-              The entity <code>&amp;quot;</code> in conjunction with the HTML 3.2
-              <code>DOCTYPE</code>. This entity was <a
-              href="http://lists.w3.org/Archives/Public/www-html/1997Mar/0003.html">accidentally
-              omitted</a> from the most recent version of the HTML 3.2 DTD. You
+              The entity <code class="inline">&amp;quot;</code> in conjunction with the
+              <abbr title="HyperText Markup Language">HTML</abbr> 3.2 <code>DOCTYPE</code>.
+              This entity was <a
+                href="http://lists.w3.org/Archives/Public/www-html/1997Mar/0003.html">accidentally
+                omitted</a> from the most recent version of the <abbr
+                title="HyperText Markup Language">HTML</abbr> 3.2 <abbr
+                title="Document Type Definition">DTD</abbr>. You
               should be able to ignore this error safely, though if you wish, you
-              can replace <code>&amp;quot;</code> with the equivalent character
-              entity <code>&amp;#34;</code>.
+              can replace <code class="inline">&amp;quot;</code> with the equivalent
+              character entity <code class="inline">&amp;#34;</code>.
             </li>
           </ul>
         </dd>
-        <dt id="bad-char"><code>non SGML character number ###</code></dt>
+        <dt id="bad-char"><code>non <abbr title="Standard Generalized Markup Language">SGML</abbr> character number ###</code></dt>
         <dd>
           <p>
-            You've used an illegal character in your text. HTML uses the standard
-            ISO8859-1 character encoding, and ISO8859-1 leaves undefined 65
-            character codes (0 to 31 inclusive and 127 to 159 inclusive); the
-            validator has found one of these undefined characters in your
-            document. The character may appear on your browser as a curly quote,
-            or a trademark symbol, or some other fancy glyph; on a different
+            You have used an illegal character in your text.
+            <abbr title="HyperText Markup Language">HTML</abbr> uses the standard
+            <a href="http://www.unicode.org/">UNICODE Consortium</a> character repertoire,
+            and it leaves undefined (among others) 65 character codes (0 to 31 inclusive and 127 to 159
+            inclusive) that are sometimes used for typographical quote marks and similar in
+            proprietary character sets. The validator has found one of these undefined
+            characters in your document. The character may appear on your browser as a
+            curly quote, or a trademark symbol, or some other fancy glyph; on a different
             computer, however, it will likely appear as a completely different
             character, or nothing at all.
           </p>
           <p>
             Your best bet is to replace the character with the nearest equivalent
             ASCII character, or to use an appropriate <a
-            href="http://www.w3.org/hypertext/WWW/MarkUp/html3/latin1.html">character
-            entity</a>. For more information on ISO8859-1, see <a
-            href="http://ppewww.ph.gla.ac.uk/%7Eflavell/aflavell.html">Alan
+              href="http://www.w3.org/hypertext/WWW/MarkUp/html3/latin1.html">character
+            entity</a>. For more information on Character Encoding on the web, see <a
+              href="http://ppewww.ph.gla.ac.uk/%7Eflavell/aflavell.html">Alan
             Flavell</a>'s excellent <a
-            href="http://ppewww.ph.gla.ac.uk/%7Eflavell/iso8859/">ISO8859-1/HTML
-            reference</a>.
+            href="http://ppewww.ph.gla.ac.uk/%7Eflavell/charset/">HTML Character Set Issues</a>
+            reference.
           </p>
           <p>
             This error can also be triggered by formatting characters embedded in
             documents by some word processors. If you use a word processor to edit
-            your HTML documents, be sure to use the "Save as ASCII" or similar
+            your <abbr title="HyperText Markup Language">HTML</abbr> documents, be sure to use the "Save as ASCII" or similar
             command to save the document without formatting information.
           </p>
         </dd>
         <dt id="bad-pub-id"><code>cannot generate system identifier for entity "HTML"</code></dt>
         <dd>
           <p>
-            Your <code>DOCTYPE</code> declaration contains a public identifier
-            that the validator doesn't recognize. See the <a
-            href="sgml.html#doctype">discussion of <code>DOCTYPE</code></a> for an
-            explanation of what's happening, and what public identifiers the
+            Your <code class="inline">DOCTYPE</code> declaration contains a public identifier
+            that the validator does not recognize. See the <a
+              href="sgml.html#doctype">discussion of <code class="inline">DOCTYPE</code></a>
+            for an explanation of what's happening, and what public identifiers the
             validator recognizes.
           </p>
         </dd>
@@ -531,7 +594,8 @@
         <dd>
           <p>
             The element "<var>FOO</var>" is defined to <em>require</em> one or more
-            sub-elements. One example is TR which requires one or more TD or TH
+            sub-elements. One example is <code class="inline">tr</code> which requires
+            one or more <code class="inline">td</code> or <code class="inline">th</code>
             elements.
           </p>
         </dd>
@@ -546,14 +610,15 @@
         <dd>
           <p>
             The document contained bare text where an element was expected.
-            For instance, you must wrap text in <code>&lt;p&gt;</code> if it
-            appears directly inside the <code>&lt;body&gt;</code>.
+            For instance, you must wrap text in <code class="inline">&lt;p&gt;</code>
+            if it appears directly inside the <code class="inline">&lt;body&gt;</code>.
           </p>
           <p>
             This error may also indicate an unquoted attribute value containing
-            a reserved character (such as "<samp>/</samp>") which terminates the
-            attribute. The net effect is that the rest of the attribute value
-            appears to be plain text, outside any element, to an SGML parser.
+            a reserved character (such as "<code class="inline">/</code>") which
+            terminates the attribute. The net effect is that the rest of the attribute
+            value appears to be plain text, outside any element, to an <abbr
+              title="Standard Generalized Markup Language">SGML</abbr> parser.
            </p>
         </dd>
         <dt id="unkn-att-val"><code> value of attribute "<var>FOO</var>" cannot be "<var>BAR</var>"; must be one of "<var>FOO</var>", "<var>BAR</var>", "<var>BAZ</var>"</code></dt>
@@ -576,9 +641,9 @@
         <dt id="dup-attr"><code>duplicate specification of attribute "<var>FOO</var>"</code></dt>
         <dd>
           <p>
-            You have specified an attribute more than once. For instance, you've
-            used the "height" attribute on the "img" element twice on the same
-            "img" tag.
+            You have specified an attribute more than once. For instance, you have
+            used the "<code class="inline">height</code>" attribute twice on the same
+            "<code class="inline">img</code>" tag.
           </p>
         </dd>
         <dt id="invalid-attr-val"><code>invalid attribute value</code></dt>
@@ -603,7 +668,7 @@
         <dt id="inval-comment"><code>invalid comment declaration; check your comment syntax</code></dt>
         <dd>
           <p>
-            There is a syntax error in an SGML Comment Declaration. This may be
+            There is a syntax error in an <abbr title="Standard Generalized Markup Language">SGML</abbr> Comment Declaration. This may be
             caused by too many or too few hyphens "-" or that you have included
             an invalid character in the comment. The next message will be
             "comment declaration started here".
@@ -619,7 +684,8 @@
             check if this is the case and insert the proper tag.
           </p>
         </dd>
-    </dl>
+      </dl>
+    </div>
 <!--#include virtual="../footer.html" -->
   </body>
 </html>

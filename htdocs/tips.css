@@ -4,16 +4,23 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: tips.css,v 1.6 2003-02-24 23:33:18 ville Exp $
+   $Id: tips.css,v 1.7 2004-05-09 15:56:49 link Exp $
 */
 
-
 dl.tip {
-  text-align: justify;
-  margin-top:    0em;
-  background:    #eeeeee;
-  border-top: 1px solid black;
+     margin-top: 0em;
+     text-align: center;
+     background: #eeeeee;
+     border-top: 1px solid black;
   border-bottom: 1px solid black;
+        padding: .5em;
+}
+
+dl.tip dt {
+  text-align: center;
+       color: black;
+  background: #eeeeee;
+     display: inline;
 }
 
 dl.tip dt a {
@@ -21,26 +28,16 @@ dl.tip dt a {
   color: inherit;
 } 
 
-dl.tip dt {
-  text-align: center;
-  padding: 0em;
-  margin: 0em;
-  color: black;
-  background: #eeeeee;
-}
-
 dl.tip dd {
   text-align: center;
   text-decoration: none;
   font-weight: bolder;
-  margin: .5em;
   color: blue;
+  display: inline;
+
 }
 
 dl.tip dd a {
-  padding: .1em .25em;
   text-decoration: none;
-  margin:  .5em;
-  display: block;
 }
 
