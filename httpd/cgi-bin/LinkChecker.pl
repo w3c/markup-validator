@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: LinkChecker.pl,v 1.15 2000-01-17 22:16:36 hugo Exp $
+# $Id: LinkChecker.pl,v 1.16 2000-01-20 21:40:05 hugo Exp $
 #
 # This program is licensed under the W3C License.
 
@@ -21,7 +21,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C LinkChecker';
-my $VERSION = q$Revision: 1.15 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 1.16 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -471,7 +471,7 @@ sub parse_document() {
         $p->{Total} = ($document =~ tr/\n//);
     }
     $p->{extract_links} = $links;
-    @chunks = unpack("A$_chunksize"x(length($document)/$_chunksize).'A*',
+    @chunks = unpack("a$_chunksize"x(length($document)/$_chunksize).'a*',
                      $document);
     for (@chunks) {
         $p->parse($_);
@@ -556,7 +556,7 @@ sub W3C::LinkChecker::end() {
     return unless $self->{extract_links};
     shift;
     my $text = shift;
-    $self->text($self, $text);
+    $self->text($text);
 }
 
 sub W3C::LinkChecker::declaration() {
