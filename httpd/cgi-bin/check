@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.140 2004-05-29 07:36:23 ville Exp $
+# $Id: check,v 1.305.2.141 2004-06-04 06:47:23 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.140 $;
+  $VERSION    =  q$Revision: 1.305.2.141 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-29 07:36:23 $,
+                              Date => q$Date: 2004-06-04 06:47:23 $,
                              });
 
 #
@@ -1184,7 +1184,7 @@ sub jump_links {
   my $me = &uri_escape(&self_url_file($File));
 
   $links .= <<".EOF.";
-      <div  class="jumpbar">
+      <div class="jumpbar">
         <a id="skip" name="skip"></a> Jump To:
         <ul>
           <li><a title="Result of Validation" href="#result">Results</a></li>
@@ -1197,7 +1197,7 @@ sub jump_links {
     $links .= '<li><a title="Document Outline" href="#outline">Outline</a></li>'
       if $File->{Opt}->{'Outline'};
   }
-  $links .= "      </ul></div>\n";
+  $links .= "        </ul></div>\n";
   return $links;
 }
 
@@ -1279,6 +1279,7 @@ sub http_error {
   my $message = &ent(shift);
 
   print <<"EOF";
+  <a id="skip" name="skip"></a>
   <p>
     I got the following unexpected response when trying to
     retrieve &lt;<a href="$uri">$uri</a>&gt;:
@@ -2464,6 +2465,7 @@ sub prepCGI {
       $File->{'Error Flagged'} = TRUE;
       $File->{'Error Message'} = <<".EOF.";
       <div class="error">
+        <a id="skip" name="skip"></a>
         <h2><strong>No Referer header found!</strong></h2>
         <p>
           You have requested we check the referring page, but your browser did
@@ -2548,6 +2550,7 @@ sub ip_rejected {
   $msg = 'of ' . $msg if ($ip && $host ne $ip);
   return sprintf(<<".EOF.", &ent($msg));
     <div class="error">
+      <a id="skip" name="skip"></a>
       <p>
         Sorry, the IP address %s is not public.
         For security reasons, validating resources located at non-public IP
@@ -2565,9 +2568,10 @@ sub uri_rejected {
 
   return sprintf(<<".EOF.", &ent($scheme));
     <div class="error">
+      <a id="skip" name="skip"></a>
       <p>
         Sorry, this type of
-        <a href="http://www.w3.org/Addressing/#terms">URL</a>
+        <a href="http://www.w3.org/Addressing/">URL</a>
         <a href="http://www.iana.org/assignments/uri-schemes">scheme</a>
         (<q>%s</q>) is not supported by this service. Please check
         that you entered the URL correctly.

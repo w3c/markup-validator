@@ -1,9 +1,9 @@
 # RPM spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.1.2.19 2004-05-20 18:18:31 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.1.2.20 2004-06-04 06:47:23 ville Exp $
 
 Name:           w3c-markup-validator
 Version:        0.6.6
-Release:        1
+Release:        2
 Epoch:          0
 Summary:        W3C Markup Validator
 
@@ -40,7 +40,7 @@ mv validator-%{version}/htdocs/sgml-lib .
 # Localize config files
 perl -pi -e \
   's|\bwww-validator\@w3\.org\b|root\@localhost| ;
-   s|/validator\.w3\.org/|/localhost/%{name}/| ;
+   s|/validator\.w3\.org/|/localhost/w3c-validator/| ;
    s|/usr/local/validator/htdocs/config/|%{_sysconfdir}/w3c/| ;
    s|/usr/local/validator/htdocs/|%{_datadir}/%{name}/| ;
    s|^(SGML\s+Library\s+).*|${1}%{_datadir}/sgml/%{name}|' \
@@ -129,6 +129,9 @@ done
 
 
 %changelog
+* Fri Jun  4 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.6-2
+- Fix Home Page and Msg FAQ URI in %%{_sysconfdir}/w3c/validator.conf.
+
 * Thu May 20 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.6-1
 - Update to 0.6.6.
 - Include local source/index.html in the package.
