@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.174 2001-09-07 02:53:24 link Exp $
+# $Id: check,v 1.175 2001-09-09 15:17:34 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.174 $;
+$VERSION    =  q$Revision: 1.175 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-09-07 02:53:24 $;
+$DATE       =  q$Date: 2001-09-09 15:17:34 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -654,10 +654,11 @@ if (defined $File->{Tentative}) {
     to accurately validate the document. Even if no errors are reported below,
     the document will not be Valid until you manually make the changes we have
     performed automatically. Specifically, if you used some of the options
-    that Override a property of the document (e.g. the DOCTYPE or Character
-    Encoding), you must make the same change to the source document or its server
-    setup before it
-    can be valid.
+    that override a property of the document (e.g. the DOCTYPE or Character
+    Encoding), you must make the same change to the source document or its
+    server setup before it can be valid. You will also need to insert an
+    appropriate DOCTYPE Declaration or Character Encoding (the "charset"
+    parameter for the COntent-Type HTTP header) if any of those are missing.
   </p>
 .EOF.
 }
