@@ -1,5 +1,5 @@
 # RPM Spec file for the W3C MarkUp Validator
-# $Id: w3c-validator.spec,v 1.1.2.1 2002-11-30 22:47:45 ville Exp $
+# $Id: w3c-validator.spec,v 1.1.2.2 2002-12-01 11:39:46 ville Exp $
 
 %define httpd_confdir %{_sysconfdir}/httpd/conf.d
 %define htmldir       %{_var}/www/html
@@ -9,12 +9,12 @@
 
 Summary:        W3C MarkUp Validator
 Name:           w3c-validator
-Version:        0.6.0
+Version:        0.6.1
 Release:        1w3c
 URL:            http://validator.w3.org/
 License:        http://www.w3.org/Consortium/Legal/copyright-software
-Source0:        http://validator.w3.org/validator-0_6_0.tar.gz
-Source1:        http://validator.w3.org/sgml-lib-0_6_0.tar.gz
+Source0:        http://validator.w3.org/validator-0_6_1.tar.gz
+Source1:        http://validator.w3.org/sgml-lib-0_6_1.tar.gz
 Group:          Applications/Internet
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires:  perl
@@ -115,5 +115,8 @@ rm -rf $RPM_BUILD_ROOT
 # -----------------------------------------------------------------------------
 
 %changelog
+* Sun Dec  1 2002 Ville Skyttä <ville.skytta at iki.fi> - 0.6.1-1w3c
+- Update to 0.6.1.
+
 * Fri Nov 29 2002 Ville Skyttä <ville.skytta at iki.fi> - 0.6.0-1w3c
 - First release.
