@@ -6,9 +6,9 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: referers,v 1.7 1999-11-01 10:41:00 gerald Exp $
+# $Id: referers,v 1.8 2000-05-08 02:12:31 gerald Exp $
 
-LOG=/var/log/httpd/validator_log; export LOG
+LOG=/usr/local/apache/logs/validator_log; export LOG
 
 cat <<EOHD
 Content-Type: text/html
@@ -39,7 +39,7 @@ cat <<EOHD
 <hr>
 <address>
 <a href="http://www.w3.org/People/Gerald/">Gerald Oskoboiny</a><br>
-\$Date: 1999-11-01 10:41:00 $ \
+\$Date: 2000-05-08 02:12:31 $ \
 </address>
 
 EOHD
