@@ -5,7 +5,7 @@
 # (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.20 2003-10-20 20:19:52 ville Exp $
+# $Id: checklink.pl,v 3.6.2.21 2003-11-22 15:17:52 ville Exp $
 #
 # This program is licensed under the W3C(r) Software License:
 #       http://www.w3.org/Consortium/Legal/copyright-software
@@ -87,7 +87,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.20 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.21 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
 
@@ -740,7 +740,7 @@ sub get_document ($$$;\%)
   # What is the URI of the resource that we are processing by the way?
   my $base_uri = URI->new($response->base());
   my $request_uri = URI->new($response->request->url);
-  $response->{absolute_uri} = $base_uri->abs($request_uri);
+  $response->{absolute_uri} = $request_uri->abs($base_uri);
 
   # Can we parse the document?
   my $failed_reason;
