@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.34 2003-04-23 01:19:43 link Exp $
+# $Id: check,v 1.305.2.35 2003-04-23 01:24:52 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.34 $;
+  $VERSION    =  q$Revision: 1.305.2.35 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -166,7 +166,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-04-23 01:19:43 $,
+                              Date => q$Date: 2003-04-23 01:24:52 $,
                              });
 
 #
@@ -1459,9 +1459,6 @@ sub parse_errors ($$) {
       $err->{msg}  = $errors[4];
     }
 
-    # Strip curlies from lq-nsgmls output.
-    $err->{msg} =~ s/[{}]//g;
-
     # An unknown FPI and no SI.
     if ($err->{msg} =~ m(cannot generate system identifier for entity)
      or $err->{msg} =~ m(unrecognized DOCTYPE)i
@@ -1562,9 +1559,6 @@ EOHD
 
     foreach my $err (@{$File->{Errors}}) {
       my($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $err->{char});
-
-      # Strip curlies from lq-nsgmls output.
-      $err->{msg} =~ s/[{}]//g;
 
       # Find index into the %frag hash for the "explanation..." links.
       $err->{idx} =  $err->{msg};
@@ -2471,8 +2465,6 @@ X-W3C-Validator-Errors: $errs
     print qq(  <messages>\n);
 
     foreach my $err (@{$File->{Errors}}) {
-      # Strip curlies from lq-nsgmls output.
-      $err->{msg} =~ s/[{}]//g;
       chomp $err->{msg};
 
       # Find index into the %frag hash for the "explanation..." links.
@@ -2536,9 +2528,7 @@ X-W3C-Validator-Errors: $errs
 
     my $errnum = 0 ;
     foreach my $err (@{$File->{Errors}}) {
-      # Strip curlies from lq-nsgmls output.
       ++$errnum ;
-      $err->{msg} =~ s/[{}]//g;
       chomp $err->{msg};
 
       # Find index into the %frag hash for the "explanation..." links.
@@ -2619,8 +2609,6 @@ X-W3C-Validator-Errors: $errs
   unless ($File->{'Is Valid'}) {
     for (my $i = 0; $i <= scalar @{$File->{Errors}}; $i++) {
       my $err = $File->{Errors}->[$i];
-      # Strip curlies from lq-nsgmls output.
-      $err->{msg} =~ s/[{}]//g;
       chomp $err->{msg};
 
       # Find index into the %frag hash for the "explanation..." links.
