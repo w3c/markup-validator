@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.72 2000-10-21 09:11:01 gerald Exp $
+# $Id: check,v 1.73 2000-10-21 10:35:01 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -71,9 +71,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.72 $;
+$VERSION    =  q$Revision: 1.73 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2000-10-21 09:11:01 $;
+$DATE       =  q$Date: 2000-10-21 10:35:01 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1242,6 +1242,8 @@ EOF
 
 sub output_css_validator_blurb {
   my $uri = shift;
+  $uri = ent($uri);
+
   print <<"EOHD";
   <p>
     If you use <a href="http://www.w3.org/Style/css/">CSS</a> in your document,
