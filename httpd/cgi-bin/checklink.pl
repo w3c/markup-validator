@@ -80,7 +80,7 @@ use CGI;
 ###############
 # Global Variables
 
-my $VERSION= '$Id: checklink.pl,v 1.29 2000-01-13 17:27:29 hugo Exp $ ';
+my $VERSION= '$Id: checklink.pl,v 1.30 2000-01-13 17:32:17 hugo Exp $ ';
 my $CVSINFO= 'http://dev.w3.org/cgi-bin/cvsweb/validator/httpd/cgi-bin/checklink.pl';
 my $CVSSERVER= 'http://dev.w3.org/';
 my %ALLOWED_SCHEMES = ( "http" => 1 );
@@ -366,7 +366,37 @@ sub print_result{
 sub html_header {
     my $q = shift;
     print $q->header;
-    print $q->start_html(-title=>(defined $q->param('url')?'Checking '.$q->param('url'):'W3C\'s Link Checker'),-BGCOLOR=>'#FFFFFF');
+    print "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">
+<html>
+<head>
+<title>W3C Link Ckecker: ".(defined($q->param('url'))?'Checking '.$q->param('url'):'W3C\'s Link Checker')."</title>
+<style type=\"text/css\">
+
+BODY {
+  font-family: sans-serif;
+  color: black;
+  background: white;
+}
+
+A:link, A:active {
+  color: #00E;
+  background: transparent;
+}
+
+A:visited {
+  color: #529;
+  background: transparent;
+}
+
+PRE {
+  font-family: monospace
+}
+
+</style>
+</head>
+<body>
+\n";
+    
     print $q->a({href=>"http://www.w3.org"},$q->img({src=>"http://www.w3.org/Icons/w3c_home",alt=>"W3C",border=>"0"}));
     print $q->h1('The W3C Link Checker');
     print "<P>This tool lets you check the validity of the links in a URL. It was developped as an internal tool at W3C.</P>\n";
