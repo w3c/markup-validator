@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: errors.html,v 1.15 2001-09-24 10:05:41 link Exp $" -->
-<!--#set var="date" value="\$Date: 2001-09-24 10:05:41 $" -->
+<!--#set var="revision" value="\$Id: errors.html,v 1.16 2001-09-25 04:53:21 link Exp $" -->
+<!--#set var="date" value="\$Date: 2001-09-25 04:53:21 $" -->
 <!--#set var="title" value="Error Explanations for The W3C HTML Validation Service" -->
 <!--#include virtual="/header.html" -->
 
@@ -537,7 +537,91 @@
           is required and handled by all conforming XML Processors.
         </p>
       </dd>
+      <dt><a id="text-not-allowed" name="text-not-allowed">" text is not allowed here; try wrapping the text in a more descriptive container"</a></dt>
+      <dd>
+        <p>
+          The document contained bare text where an element was expected.
+          For instance, you must wrap text in <code>&lt;p&gt;</code> if it
+          appears directly inside the <code>&lt;body&gt;</code>.
+        </p>
+        <p>
+          This error may also indicate an unquoted attribute value containing
+          a reserved character (such as "<samp>/</samp>") which terminates the
+          attribute. The net effect is that the rest of the attribute value
+          appears to be plain text, outside any element, to an SGML parser.
+         </p>
+      </dd>
+      <dt><a id="unkn-att-val" name="unkn-att-val">" value of attribute "FOO" cannot be "BAR"; must be one of "FOO", "BAR", "BAZ""</a></dt>
+      <dd>
+        <p>
+          An attribute was specified to contain one of a set of predefined
+          values and you have used a value that is not in that set. The error
+          message tells which attribute value was unknonw and the possible
+          legal values for this attribute.
+        </p>
+      </dd>
+      <dt><a id="no-attr-end" name="no-attr-end">"character FOO not allowed in attribute specification list possibly caused by a missing quotation mark ending a previous attribute value"</a></dt>
+      <dd>
+        <p>
+          A character that is illegal in the attribute list for a particular
+          attribute was encountered. It's is likely that this is a result of
+          a missing quote character on a previous attribute value.
+        </p>
+      </dd>
+      <dt><a id="dup-attr" name="dup-attr">"duplicate specification of attribute "FOO""</a></dt>
+      <dd>
+        <p>
+          You have specified an attribute more than once. For instance, you've
+          used the "height" attribute on the "img" element twice on the same
+	  "img" tag.
+        </p>
+      </dd>
+      <dt><a id="invalid-attr-val" name="invalid-attr-val">"invalid attribute value"</a></dt>
+      <dd>
+        <p>
+          The value of this attribute is not a legal value for attributes. For
+          instance, the attribute cannot be the empty string. This is distinct
+          from errors related to illegal values for a specific attribute.
+        </p>
+      </dd>
+      <dt><a id="attr-spec-nmtoken" name="attr-spec-nmtoken">"an attribute specification must start with a name or name token"</a></dt>
+      <dd>
+        <p>
+          An attribute name (and some attribute values) must start with one of
+          a restricted set of characters. This error usually indicates that
+          you have failed to add a closing quotation mark on a previous
+          attribute value (so the attribute value looks like the start of a
+          new attribute) or have used an attribute that is not defined
+          (usually a typo in a common attribute name).
+        </p>
+      </dd>
+      <dt><a id="inval-comment" name="inval-comment">"invalid comment declaration; check your comment syntax"</a></dt>
+      <dd>
+        <p>
+          There is a syntax error in an SGML Comment Declaration. This may be
+          caused by too many or too few hyphens "-" or that you have included
+          an invalid character in the comment. The next message will be
+          "comment declaration started here".
+        </p>
+      </dd>
+      <dt><a id="assuming-missing-starttag" name="assuming-missing-starttag">"element "FOO" not allowed here; assuming missing "BAR" start-tag"</a></dt>
+      <dd>
+        <p>
+          The referenced element "FOO" isn't allowed in the context it occurs
+          in, but it would be if it was wrapped in a "BAR" element. The
+          Validator has assumed that you have forgotten to add a "BAR"
+          starttag and continued validation as if it was there. You should
+          check if this is the case and insert the proper tag.
+        </p>
+      </dd>
+<!--
+      <dt><a id="" name="">""</a></dt>
+      <dd>
+        <p>
+        </p>
+      </dd>
     </dl>
+-->
 
 <!--#include virtual="/footer.html" -->
   </body>

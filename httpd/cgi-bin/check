@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.188 2001-09-25 01:15:28 link Exp $
+# $Id: check,v 1.189 2001-09-25 04:53:21 link Exp $
 
 #
 # We need Perl 5.004.
@@ -91,9 +91,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.188 $;
+$VERSION    =  q$Revision: 1.189 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-09-25 01:15:28 $;
+$DATE       =  q$Date: 2001-09-25 04:53:21 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1357,10 +1357,12 @@ sub report_errors ($) {
 
     # Find index into the %frag hash for the "explanation..." links.
     $err->{idx} =  $err->{msg};
-    $err->{idx} =~ s/"[^\"]+"/FOO/g;
+    $err->{idx} =~ s/"[^\"]*"/FOO/g;
     $err->{idx} =~ s/[^A-Za-z ]//g;
     $err->{idx} =~ s/\s+/ /g; # Collapse spaces
     $err->{idx} =~ s/(^\s|\s$)//g; # Remove leading and trailing spaces.
+    $err->{idx} =~ s/(FOO )+/FOO /g; # Collapse FOOs. :-)
+    $err->{idx} =~ s/FOO FOO/FOO/g; # Collapse FOOs. :-)
 
     $line = &ent($line); # Entity encode.
     $line =~ s/\t/ /g;   # Collapse TABs.
