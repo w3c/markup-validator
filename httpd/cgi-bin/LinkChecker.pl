@@ -5,7 +5,7 @@
 # (c) 1999 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: LinkChecker.pl,v 1.11 1999-12-05 00:31:44 hugo Exp $
+# $Id: LinkChecker.pl,v 1.12 1999-12-14 15:20:23 hugo Exp $
 #
 # This program is licensed under the W3C License.
 
@@ -21,7 +21,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C LinkChecker';
-my $VERSION = '$Revision: 1.11 $ (c) 1999 W3C';
+my $VERSION = '$Revision: 1.12 $ (c) 1999 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -282,6 +282,12 @@ sub check_uri() {
         }
     }
     my %results;
+    # Record the paged tested in the results hash
+    $results{$uri}{$uri}{code} = 200;
+    $results{$uri}{$uri}{display} = $results{$uri}{$uri}{code};
+    $results{$uri}{$uri}{orig} = $results{$uri}{$uri}{code};
+    $results{$uri}{$uri}{message} = 'Page tested';
+    $results{$uri}{$uri}{success} = 1;
     my %broken;
     foreach $u (keys %links) {
         # Don't check mailto: URI's
@@ -882,7 +888,7 @@ sub links_summary(\%,\%,\%) {
                    $lines_list ? 'Lines: '.$lines_list : '' ,
                    $results->{$u}{$u}{orig},
                    ($results->{$u}{$u}{code} != $results->{$u}{$u}{orig})
-                   ? '-> '.$results->{$u}{$u}{code}
+                   ? ' -> '.$results->{$u}{$u}{code}
                    : '',
                    $results->{$u}{$u}{message});
         }
@@ -918,6 +924,10 @@ sub links_summary(\%,\%,\%) {
 
 sub html_header() {
     my $uri = HTML::Entities::encode($_[0]);
+    # Cache control?
+    if (defined($_[1])) {
+        print "Cache-Control: no-cache\nPragma: no-cache\n";
+    }
     print "Content-type: text/html
 
 <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">
@@ -1007,7 +1017,7 @@ sub file_uri() {
 
 sub print_form() {
     my ($q) = @_;
-    &html_header($VERSION);
+    &html_header($VERSION, 1);
     print "<form action=\"".$q->self_url()."\" method=\"get\">
 <p>Enter the URI that you want to check:</p>
 <p><input type=\"text\" size=\"50\" name=\"uri\"></p>
