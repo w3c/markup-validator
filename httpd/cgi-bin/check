@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.289 2002-11-11 22:39:25 ville Exp $
+# $Id: check,v 1.290 2002-11-11 22:52:09 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.289 $;
+  $VERSION    =  q$Revision: 1.290 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-11-11 22:39:25 $,
+			      Date => q$Date: 2002-11-11 22:52:09 $,
 			     });
 
 #
@@ -1199,11 +1199,10 @@ sub parse_content_type {
 
   if ($type =~ m(/)) {
     $File->{'Error Flagged'} = TRUE;
-    $File->{'Error Message'} = <<"    EOF";
+    $File->{'Error Message'} = sprintf(<<"    EOF", &ent($type));
     <p class="error">
-      Sorry, I am unable to validate this document because its returned
-      content-type was <code>$type</code>, which is not currently supported
-      by this service.
+      Sorry, I am unable to validate this document because its content type is
+      <code>%s</code>, which is not currently supported by this service.
     </p>
     EOF
   }
@@ -2019,8 +2018,9 @@ sub uri_rejected {
   return sprintf(<<".EOF.", &ent($scheme));
     <div class="error">
       <p>
-        Sorry, this type of <a
-          href="http://www.w3.org/Addressing/#terms">URI</a>
+        Sorry, this type of
+        <a href="http://www.w3.org/Addressing/#terms">URI</a>
+        <a href="http://www.iana.org/assignments/uri-schemes">scheme</a>
         (<q>%s</q>) is not supported by this service. Please check
         that you entered the URI correctly.
       </p>
