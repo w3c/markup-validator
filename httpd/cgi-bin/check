@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.57 2003-06-30 09:17:14 ville Exp $
+# $Id: check,v 1.305.2.58 2003-07-05 05:33:14 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -120,7 +120,7 @@ BEGIN
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.57 $;
+  $VERSION    =  q$Revision: 1.305.2.58 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -192,7 +192,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-06-30 09:17:14 $,
+                              Date => q$Date: 2003-07-05 05:33:14 $,
                              });
 
 #
@@ -1923,45 +1923,71 @@ sub outline {
 EOF
 
   my $prevlevel = 0;
-  my $indent    = 0;
   my $level     = 0;
 
   for (1 .. $#{$File->{ESIS}}) {
     my $line = $File->{ESIS}->[$_];
     next unless ($line && $line =~ /^\(H([1-6])$/i);
+
     $prevlevel = $level;
     $level     = $1;
 
-    print "    </ul>\n" x ($prevlevel - $level); # perl is so cool.
-    if ($level - $prevlevel == 1) {print "    <ul>\n"};
-    foreach my $i (($prevlevel + 1) .. ($level - 1)) {
-      print qq(  <ul>\n    <li class="warning">A level $i heading is missing!</li>\n);
+    my $TAB = $level + 2;
+
+    if ($prevlevel == 0) {
+      print "    <ul>\n";
+    } else {
+      if ($level < $prevlevel) {
+	print "</li>\n";
+	for (my $i = $prevlevel; $i > $level; $i--) {
+	  print "  " x ($i + 2), "</ul>\n";
+	  print "  " x (($i + 2) - 1), "</li>\n";
+	}
+      } elsif ($level == $prevlevel) {
+	print "</li>\n";
+      } elsif ($level > $prevlevel) {
+	if ($level - $prevlevel > 1) {
+	  foreach my $i (($prevlevel + 1) .. ($level - 1)) {
+	    print "\n", "  " x ($i + 2), "<ul>\n", "  " x ($i + 2);
+	    print qq(<li class="warning">A level $i heading is missing!);
+	  }
+	  print "\n", "  " x $TAB, "<ul>\n";
+	} else {
+	  print "\n", "  " x $TAB;
+	  print "<ul>\n";
+	}
+      }
     }
-    if ($level - $prevlevel > 1) {print "    <ul>\n"};
 
     $line       = '';
     my $heading = '';
     until (substr($line, 0, 3) =~ /^\)H$level/i) {
       $line = $File->{ESIS}->[$_++];
-      $line =~ s/\\011/ /g;
-      $line =~ s/\\012/ /g;
       if ($line =~ /^-/) {
         my $headcont = $line;
         substr($headcont, 0, 1) = " ";
-        $headcont =~ s/\\n/ /g;
         $heading .= $headcont;
       } elsif ($line =~ /^AALT CDATA( .+)/i) {
         my $headcont = $1;
-        $headcont =~ s/\\n/ /g;
         $heading .= $headcont;
       }
     }
 
+    $heading =~ s/\\011/ /g;
+    $heading =~ s/\\012/ /g;
+    $heading =~ s/\\n/ /g;
+    $heading =~ s/\s+/ /g;
     $heading = substr($heading, 1); # chop the leading '-' or ' '.
     $heading = &ent($heading);
-    print "    <li>$heading</li>\n";
+    print "  " x ($level + 2), "<li>$heading";
   }
-  print "    </ul>\n" x $level;
+  print "</li>\n";
+  for (my $i = $level; $i > 1; $i--) {
+    print "  " x ($i + 2), "</ul>\n";
+    print "  " x (($i + 2) - 1), "</li>\n";
+  }
+  print "</ul>\n";
+
   print <<'EOF';
     <p>
       If this does not look like a real outline, it is likely that the
