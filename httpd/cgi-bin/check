@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.45 2002-06-16 19:48:27 link Exp $
+# $Id: check,v 1.200.2.46 2002-06-16 20:13:28 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -74,18 +74,55 @@ use constant T_CHARSET_KLUDGE => 128; # 1000 0000
 # Define global variables.
 use vars qw($DEBUG $CFG $VERSION);
 
-#
-# Read Config Files.
-$CFG = &read_cfg($ENV{W3C_VALIDATOR_CFG} || '/etc/w3c/validator.conf');
 
 #
-# Set debug flag.
-$DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
+# Things inside BEGIN don't happen on every request in persistent
+# environments, such as mod_perl.  So let's do globals, eg. read config here.
+BEGIN {
 
-#
-# Strings
-$VERSION    =  q$Revision: 1.200.2.45 $;
-$VERSION    =~ s/Revision: ([\d\.]+) /$1/;
+  #
+  # Read Config Files.
+  $CFG = &read_cfg($ENV{W3C_VALIDATOR_CFG} || '/etc/w3c/validator.conf');
+
+  #
+  # Set debug flag.
+  $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
+
+  #
+  # Strings
+  $VERSION    =  q$Revision: 1.200.2.46 $;
+  $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
+
+
+  #
+  # Read TAB-delimited configuration files. Returns a hash reference.
+  sub read_cfg {
+    my $file = shift;
+    my %cfg;
+
+    open CFG, $file or die "open($file) returned: $!\n";
+
+    my $fh = new IO::File $file;
+    if (defined $fh) {
+      while (<$fh>) {
+	next if /^\s*$/;
+	next if /^\s*\#/;
+	chomp;
+	my($k, $v) = split /\t+/, $_, 2;
+	$v = '' unless defined $v;
+
+	if    ($v =~ s(^file://){}) {$cfg{$k} = &read_cfg($v)  }
+	elsif ($v =~ /,/)           {$cfg{$k} = [split /,/, $v]}
+	else                        {$cfg{$k} = $v             }
+      }
+      undef $fh;
+    } else {
+      croak "open($file) returned: $!\n";
+    }
+    return \%cfg;
+  }
+
+} # end of BEGIN block.
 
 #
 # Get rid of (possibly insecure) $PATH.
@@ -113,7 +150,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-06-16 19:48:27 $,
+			      Date => q$Date: 2002-06-16 20:13:28 $,
 			     });
 
 #
@@ -444,7 +481,7 @@ my $pid = do {
 
 #
 # Close input file, reap the kid, and rewind temporary filehandles.
-close $spin;
+close $spin or warn "close(SP STDIN) returned: $!\n";
 waitpid $pid, 0;
 seek $_, 0, 0 for $spout, $sperr;
 
@@ -827,7 +864,7 @@ sub internal_error {
     Please contact <a href="mailto:$CFG->{Maintainer}">maintainer</a>.
 EOF
   print $File->{'Footer'};
-  die "$dieMessage\n";
+  croak $dieMessage, "\n";
 }
 
 
@@ -974,34 +1011,6 @@ sub print_tip_of_the_day{
 EOHD
 }
 
-
-#
-# Read TAB-delimited configuration files. Returns a hash reference.
-sub read_cfg {
-  my $file = shift;
-  my %cfg;
-
-  open CFG, $file or die "open($file) returned: $!\n";
-
-  my $fh = new IO::File $file;
-  if (defined $fh) {
-    while (<$fh>) {
-      next if /^\s*$/;
-      next if /^\s*\#/;
-      chomp;
-      my($k, $v) = split /\t+/, $_, 2;
-      $v = '' unless defined $v;
-
-      if    ($v =~ s(^file://){}) {$cfg{$k} = &read_cfg($v)  }
-      elsif ($v =~ /,/)           {$cfg{$k} = [split /,/, $v]}
-      else                        {$cfg{$k} = $v             }
-    }
-    undef $fh;
-  } else {
-    croak "open($file) returned: $!\n";
-  }
-  return \%cfg;
-}
 
 #
 # Fetch an URI and return the content and selected meta-info.
@@ -1807,11 +1816,11 @@ sub prepCGI {
 # Preprocess SSI files.
 sub prepSSI {
   my $opt = shift;
-  my $ssi;
 
-  open FH, $opt->{File} or carp "open($opt->{File}) returned: $!\n";
-  $ssi = join '', <FH>;
-  close FH       or carp "close($opt->{File}) returned: $!\n";
+  my $fh = new IO::File "< $opt->{File}"
+    or croak "open($opt->{File}) returned: $!\n";
+  my $ssi = join '', <$fh>;
+  close $fh or carp "close($opt->{File}) returned: $!\n";
 
   $ssi =~ s/<!--\#echo var="title" -->/$opt->{Title}/g
     if defined $opt->{Title};
