@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.55.2.14 2003-06-08 20:30:40 link Exp $"
---><!--#set var="date" value="\$Date: 2003-06-08 20:30:40 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.55.2.15 2003-07-20 17:08:38 link Exp $"
+--><!--#set var="date" value="\$Date: 2003-07-20 17:08:38 $"
 --><!--#set var="title" value="The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -13,29 +13,25 @@
     </div>
 
     <div>
-      <h2>Validate Files</h2>
-      <p>
-        You can enter a URI in the <code>Address</code> field below,
-        and have the page validated:
-      </p>
+      <h2>Validate Your Markup</h2>
+      <fieldset><legend>Validate by URI</legend>
       <form method="get" action="check">
         <p>
           <label title="Address of page to Validate" for="uri">Address:
             <input id="uri" name="uri" size="40" /></label>
-          <label title="Submit URI for validation">
-	    <input type="submit" value="Validate URI..." /></label>
+          <label title="Submit URI for validation"><input type="submit" value="Check" /></label>
         </p>
       </form>
-      <p>
-        If you want to upload a file from your computer and have it validated,
-	you can use this form:
-      </p>
+      </fieldset>
+      <fieldset><legend>Validate by File Upload</legend>
       <form method="post" enctype="multipart/form-data" action="check">
         <p>    
-          <label title="Choose a Local File to Upload and Validate" for="uploaded_file">Local File: <input type="file" id="uploaded_file" name="uploaded_file" size="30" /></label>
-          <label title="Submit file for validation"><input type="submit" value="Validate File" /></label>
+          <label title="Choose a Local File to Upload and Validate" for="uploaded_file">Local File:
+            <input type="file" id="uploaded_file" name="uploaded_file" size="30" /></label>
+          <label title="Submit file for validation"><input type="submit" value="Check" /></label>
         </p>
       </form>
+      </fieldset>
       <p>
         There is also an <a
           title="Extended Interface to the W3C Markup Validation Service"

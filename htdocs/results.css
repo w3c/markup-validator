@@ -1,19 +1,24 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.8 2003-05-31 01:31:24 link Exp $ */
+/* $Id: results.css,v 1.13.2.9 2003-07-20 17:08:38 link Exp $ */
 
 .markup {
   color: red;
   background: white;
   font-weight: bolder;
+  font-family: "Bitstream Vera Mono", monospace;
 }
 
 .input {
   color: black;
   background-color: #eeeeee; /* light grey */
+  font-family: "Bitstream Vera Mono", monospace;
 }
 
 fieldset {
   color: black;
+  clear: left;
+  margin-left: auto;
+  margin-right: auto;
   background-color: #eeeeee;
 }
 
@@ -48,7 +53,7 @@ dl#Warnings dd.fatal p:first-child {
 
 
 div.meat {
-  margin-right: 10em;
+/*  margin-right: 10em; */
 }
 
 th {

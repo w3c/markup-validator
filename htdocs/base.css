@@ -4,14 +4,14 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.12 2003-06-01 21:22:21 link Exp $
+   $Id: base.css,v 1.26.2.13 2003-07-20 17:08:38 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
 @import url(navbar.css);  /* CSS for navigation menu. */
 @import url(tips.css);    /* CSS for Quality Tips. */
 
-body {
+html, body {
   line-height:     120%;
   color:           black;
   background:      white;
@@ -19,6 +19,23 @@ body {
   font-family:     "Bitstream Vera Sans", sans-serif;
   font-style:      normal;
   text-decoration: none;
+  margin:  0;
+  padding: 0;
+  border:  0;
+}
+
+div#main {
+  padding-left: 2em;
+  padding-top: 1em;
+}
+
+fieldset {
+  margin-bottom: 3em;
+}
+
+.intro {
+  font-style: italic;
+  text-align: justify;
 }
 
 a:hover {
@@ -79,6 +96,7 @@ h1#title {
   background-color: #eee;
   border-bottom: 1px solid black;
   padding: .25em;
+  margin: 0;
 }
 
 /* done vs. tbc for the TODO list */
@@ -101,26 +119,45 @@ address {
 }
 
 p.copyright {
-  margin-top: 5em;
-  padding-top: .5em;
-  font-size: xx-small;
-  max-width: 75ex;
-  text-align: justify;
+  margin-top:     5em;
+  padding-top:    .5em;
+  font-size:      xx-small;
+  max-width:      85ex;
+  text-align:     justify;
   text-transform: uppercase;
-  margin-left: auto;
-  margin-right: auto;
-  font-family: monospace;
+  margin-left:    auto;
+  margin-right:   auto;
+  font-family:    monospace;
+  color:          #888;
+  line-height:    120%;
 }
 
-p.jumpbar {
-  text-align: left;
-  text-decoration: none;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 1ex;
+p.copyright a {
+  color: #88f;
+}
+
+.jumpbar {
+  text-align:       left;
+  text-decoration:  none;
+  padding:          1ex;
   background-color: #eee;
-  border-left: 1px solid black;
-  border-right: 1px solid black;
+  border-top:       1px solid #eee;
+  border-right:     1px solid black;
+  border-bottom:    1px solid black;
+  float:            left;
+  margin-left:      -2.5em;
+  margin-top:       -1.3em;
+  font-weight:      bolder;
+  font-size:        smaller;
+}
+
+div.jumpbar ul {
+  padding: 0;
+  margin:  0;
+}
+
+div.jumpbar li {
+  list-style-type: none;
 }
 
 p.jumpbar a:hover {
