@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.83 2003-10-14 18:19:57 ville Exp $
+# $Id: check,v 1.305.2.84 2003-11-13 13:11:54 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.83 $;
+  $VERSION    =  q$Revision: 1.305.2.84 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-10-14 18:19:57 $,
+                              Date => q$Date: 2003-11-13 13:11:54 $,
                              });
 
 #
@@ -1989,7 +1989,7 @@ sub report_valid {
       $gifhw     = ' height="31" width="88"';
       $xhtmlendtag = " /";
     } elsif ($File->{Version} =~ /XHTML Basic 1.0/) {
-      $image_uri = "$CFG->{'Home Page'}/images/vxhtml-basic10";
+      $image_uri = "$CFG->{'Home Page'}images/vxhtml-basic10";
       $alttext   = "Valid XHTML Basic 1.0!";
       $gifborder = "";
       $gifhw     = ' height="31" width="88"';
