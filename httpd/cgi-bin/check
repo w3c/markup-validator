@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.8 2002-11-30 17:20:11 ville Exp $
+# $Id: check,v 1.305.2.9 2002-11-30 19:30:42 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -103,7 +103,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.8 $;
+  $VERSION    =  q$Revision: 1.305.2.9 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -165,7 +165,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-30 17:20:11 $,
+                              Date => q$Date: 2002-11-30 19:30:42 $,
                              });
 
 #
@@ -345,7 +345,7 @@ if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
 
 unless ($File->{Charset}->{Use}) {
   $File->{'Error Flagged'} = TRUE;
-  $File->{'Error Message'} = <<".EOF.";
+  $File->{'Error Message'} = <<".EOF." . iana_charset_blurb();
     <p>
       I was not able to extract a character encoding labeling from any of
       the valid sources for such information. Without encoding information it
@@ -367,6 +367,19 @@ unless ($File->{Charset}->{Use}) {
       character encoding in use.
     </p>
 .EOF.
+}
+
+sub iana_charset_blurb ()
+{
+  return <<EOF;
+    <p>
+      <a href="http://www.iana.org/"><acronym
+      title="Internet Assigned Numbers Authority">IANA</acronym></a>
+      maintains the list of <a
+      href="http://www.iana.org/assignments/character-sets">official
+      names for character sets</a>.
+    </p>
+EOF
 }
 
 #
@@ -2253,6 +2266,7 @@ sub transcode {
         look into supporting it in the future.
       </p>
 .EOF.
+    $File->{'Error Message'} .= iana_charset_blurb();
     return $File;
   }
 
