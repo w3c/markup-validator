@@ -4,10 +4,8 @@
   Copyright © 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
   See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-  $Id: base.css,v 1.19 2001-09-27 00:47:14 link Exp $
+  $Id: base.css,v 1.20 2002-02-13 16:53:17 link Exp $
 */
-
-@import url(non-netscape.css);
 
 body {
   color:          black;
@@ -45,7 +43,7 @@ div.issue {
 
 .hideme {display: none}
 
-dt a {color: black} /* These are usually targets and not links */
+/* dt a {color: black} */ /* These are usually targets and not links */
 h1 a {color: black} /* These are usually targets and not links */
 h2 a {color: black} /* These are usually targets and not links */
 h3 a {color: black} /* These are usually targets and not links */
@@ -71,14 +69,15 @@ address {
   clear: both;
 }
 
-p.navbar a {
-  text-decoration: none;
+p.navbar {
+  float: right;
+  text-align: right;
 }
 
 p.navbar a:hover {
-  text-decoration: underline;
   background: #ccc;
 }
+
 p.navbar {
   text-decoration: none;
   margin: .1em;
@@ -89,6 +88,10 @@ p.navbar {
   background-color: #eee;
   border:1px dashed #999;
   clear: both;
+}
+
+.nsnote {
+  display: none;
 }
 
 table th {
