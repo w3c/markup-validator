@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.45 2003-05-20 15:40:18 link Exp $
+# $Id: check,v 1.305.2.46 2003-05-20 16:26:34 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.45 $;
+  $VERSION    =  q$Revision: 1.305.2.46 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -172,7 +172,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-05-20 15:40:18 $,
+                              Date => q$Date: 2003-05-20 16:26:34 $,
                              });
 
 #
@@ -446,7 +446,7 @@ sub iana_charset_blurb () {
 # Check the detected Encoding and transcode.
 if (&conflict($File->{Charset}->{Use}, 'utf-8')) {
   $File = &transcode($File);
-  &abort_if_error_flagged($File, 0);
+  &abort_if_error_flagged($File, O_CHARSET);
 }
 
 
