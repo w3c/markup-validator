@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.123 2001-06-23 01:09:01 link Exp $
+# $Id: check,v 1.124 2001-06-23 01:14:34 link Exp $
 
 #
 # We need Perl 5.004.
@@ -77,9 +77,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.123 $;
+$VERSION    =  q$Revision: 1.124 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-23 01:09:01 $;
+$DATE       =  q$Date: 2001-06-23 01:14:34 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1085,8 +1085,7 @@ sub process_errors {
     $msgindex =~ s/"[^\"]+"/FOO/g;
     $msgindex =~ s/[^A-Za-z ]//g;
 
-    $newline =~ s/&/&amp;/go;
-    $newline =~ s/</&lt;/go;
+    $newline = &ent($newline);
     $newline =~ s/$lt/</g;
     $newline =~ s/$gt/>/g;
     $newline =~ s/\t/ /g;
@@ -1328,7 +1327,7 @@ EOF
     }
 
     $heading = substr($heading, 1); # chop the leading '-' or ' '.
-    $heading =~ s/&/&amp;/go; $heading =~ s/</&lt;/go;
+    $heading = &ent($heading);
     print "    <li>$heading\n";
   }
   print "    </ul>\n" x $level;
@@ -1412,15 +1411,13 @@ EOF
       $prevdata .= $line;
       next;
     } elsif ($prevdata) {
-      $prevdata =~ s/&/&amp;/go;
-      $prevdata =~ s/</&lt;/go;
+      $prevdata = &ent($prevdata);
       $prevdata =~ s/\s+/ /go;
       print wrap(' ' x $indent, ' ' x $indent, $prevdata), "\n";
       undef $prevdata;
     }
 
-    $line =~ s/&/&amp;/go;
-    $line =~ s/</&lt;/go;
+    $line = &ent($line);
     if ($line =~ /^\)/) {
       $indent -= 2;
     }
