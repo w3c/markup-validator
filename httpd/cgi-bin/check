@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.327 2004-05-10 01:41:52 link Exp $
+# $Id: check,v 1.328 2004-05-10 13:32:07 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -187,7 +187,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.327 $;
+  $VERSION    =  q$Revision: 1.328 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -263,15 +263,13 @@ $File->{'Other Namespaces'} = []; # Other (non-root) Namespaces.
 ###############################################################################
 
 my $T = HTML::Template->new(
-			    filename =>
-			    File::Spec->catfile($CFG->{Template_Path}, 'result.tmpl'),
-			    die_on_bad_params => FALSE,
-			   );
+  filename          => File::Spec->catfile($CFG->{Template_Path}, 'result.tmpl'),
+  die_on_bad_params => FALSE,
+);
 my $E = HTML::Template->new(
-			    filename =>
-			    File::Spec->catfile($CFG->{Template_Path}, 'fatal-error.tmpl'),
-			    die_on_bad_params => FALSE,
-			   );
+  filename          => File::Spec->catfile($CFG->{Template_Path}, 'fatal-error.tmpl'),
+  die_on_bad_params => FALSE,
+);
 
 $T->param(cfg_home_page => $CFG->{Home_Page});
 
@@ -640,7 +638,7 @@ sub parse (\$) {
                       {name => 'SP_CHARSET_FIXED', value => &ent($ENV{SP_CHARSET_FIXED})},
                       {name => 'SP_ENCODING',      value => &ent($ENV{SP_ENCODING})},
                       {name => 'SP_BCTF',          value => &ent($ENV{SP_BCTF})},
-  		               ],
+                     ],
            );
 
   #FIXME: This needs a UI and testing!
@@ -1719,10 +1717,7 @@ sub source {
     substr $File->{Content}->[0], ($File->{BOM} ? 3 : 0); # remove BOM
 
   for (@{$File->{Content}}) {
-    push @source, {
-		   file_source_i => $line,
-		   file_source_line => ent $_,
-		  };
+    push @source, {file_source_i => $line, file_source_line => ent $_};
     $line++;
   }
   return \@source;
