@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.10 2003-06-01 08:51:41 link Exp $
+   $Id: base.css,v 1.26.2.11 2003-06-01 19:35:14 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -203,19 +203,78 @@ h6 {
 
 /* comma tools table */
 
-td.comma-desc { background: #ffeecc;  
-border : 1px solid black;
-font-family: sans-serif }
-td.comma-shortcut { background: #e7e7ff; 
-border : 1px solid black;
-font-family: monospace }
-td.comma-tool { background: #e7e7ff;  border : 1px solid black;}
+td.comma-desc {
+  background: #ffeecc;
+  border : 1px solid black;
+  font-family: sans-serif
+}
+
+td.comma-shortcut {
+  background: #e7e7ff; 
+  border : 1px solid black;
+  font-family: monospace;
+}
+
+td.comma-tool {
+  background: #e7e7ff;
+  border: 1px solid black;
+}
 
 
 /* documentation - table of contents */
 #toc {
   border-bottom : 2px dotted black;
+  font-size: .8em;
 }
+
+/* documentation - error explanations */
+dl#expl dt code { /* headings for an error */
+  white-space: normal;
+  font-weight: bold;
+}
+
+dl#expl dt {
+  border-top: 1px dashed black;
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+dl#expl var { /* headings for an error */
+  color: #006;
+}
+
+dl#expl dd code.inline { /* a snippet of code used inline */
+  white-space: normal;
+  font-weight: bold;
+  color: #006;
+  display: inline;
+  padding-left: .2em;
+  padding-right: .2em;
+  border: 0;
+}
+
+dl#expl dd {
+  margin-right: 5em;
+}
+
+dl#expl dd code.block {
+  color: #006;
+  border: 1px solid black;
+  display: block;
+  padding: 1em;
+  background: #CCC;
+  white-space: nowrap;
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+dl#expl dd code samp {
+  font-weight: normal;
+  color: black;
+  font-style: italic;
+}
+
 
 kbd {
   font-weight: bold;
