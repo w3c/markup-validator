@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.34 2004-05-18 01:19:17 link Exp $ */
+/* $Id: results.css,v 1.13.2.35 2004-05-18 02:04:06 link Exp $ */
 
 .input {
   color: black;
@@ -11,17 +11,22 @@
 /* Various Bits of the Table Header */
 /*
 */
-div.moreinfo {
+fieldset div.moreinfo {
   float: right;
   width: 30%;
 }
 
-div.moreinfo p {
+fieldset div.moreinfo p {
   background: #FFF;
   border: 1px solid #CCC;
   text-align: justify;
   font-size: smaller;
 }
+
+fieldset div.cheat {
+  clear: both;
+}
+
 
 table.header {
   clear: left;
