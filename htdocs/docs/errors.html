@@ -1,12 +1,12 @@
-<!--#set var="revision" value="\$Id: errors.html,v 1.22 2002-11-07 03:25:24 ot Exp $"
---><!--#set var="date" value="\$Date: 2002-11-07 03:25:24 $"
+<!--#set var="revision" value="\$Id: errors.html,v 1.23 2002-11-07 05:09:56 ot Exp $"
+--><!--#set var="date" value="\$Date: 2002-11-07 05:09:56 $"
 --><!--#set var="title" value="Error Explanations for The W3C MarkUp Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
 
     <p id="skip">
       These error explanations were originally written by Scott Bigham,
-      they are used here with his permission.
+      and are used here with his permission.
     </p>
 
 <div id="toc">
@@ -22,8 +22,7 @@
 </a></li>
 
 <li><a href="#unterm-comment-2">
-&ldquo;<code>name start character invalid: only s and comment allowed in 
-comment declaration</code>&rdquo;
+&ldquo;<code>name start character invalid: only s and comment allowed in comment declaration</code>&rdquo;
 </a></li>
 
 <li><a href="#bad-comment">
@@ -31,8 +30,7 @@ comment declaration</code>&rdquo;
 </a></li>
 
 <li><a href="#attr-quoted">
-&ldquo;<code>an attribute value must be a literal unless it 
-contains only name characters</code>&rdquo;
+&ldquo;<code>an attribute value must be a literal unless it contains only name characters</code>&rdquo;
 </a></li>
 
 <li><a href="#attr-char">
@@ -40,78 +38,59 @@ contains only name characters</code>&rdquo;
 </a></li>
 
 <li><a href="#name-length">
-&ldquo;<code>length of attribute value must not exceed 
-LITLEN less NORMSEP (1022)</code>&rdquo;
+&ldquo;<code>length of attribute value must not exceed LITLEN less NORMSEP (1022)</code>&rdquo;
 </a></li>
 
 <li><a href="#undef-tag">
-&ldquo;<code>element &lsquo;<var>FOO</var>&rsquo; 
-undefined</code>&rdquo;
+&ldquo;<code>element &lsquo;<var>FOO</var>&rsquo; undefined</code>&rdquo;
 </a></li>
 
 <li><a href="#not-allowed">
-&ldquo;<code>document type does not allow element 
-&lsquo;<var>FOO</var>&rsquo; here</code>&rdquo;
+&ldquo;<code>document type does not allow element &lsquo;<var>FOO</var>&rsquo; here</code>&rdquo;
 </a></li>
 
 <li><a href="#not-contained">
-&ldquo;<code>
-document type does not allow element &lsquo;
-<var>FOO</var>&rsquo; here; assuming missing &lsquo;
-<var>BAR</var>&rsquo; start-tag&rdquo;
-</code>
+&ldquo;<code>document type does not allow element &lsquo;<var>FOO</var>&rsquo; here; assuming missing &lsquo;<var>BAR</var>&rsquo; start-tag</code>&rdquo;
 </a></li>
 
 <li><a href="#attr-undef">
-&ldquo;<code>there is no attribute 
-&lsquo;<var>FOO</var>&rsquo; 
-for this element (in this HTML version)</code>&rdquo;
+&ldquo;<code>there is no attribute &lsquo;<var>FOO</var>&rsquo; for this element (in this HTML version)</code>&rdquo;
 </a></li>
 
 <li><a href="#undef-attr-val">
-&ldquo;<code>&lsquo;<var>FOO</var>&rsquo; 
-is not a member of the group specified in the 
-declared value of this attribute</code>&rdquo;
+&ldquo;<code>&lsquo;<var>FOO</var>&rsquo; is not a member of the group specified in the declared value of this attribute</code>&rdquo;
 </a></li>
 
 <li><a href="#bad-attr-char">
-&ldquo;<code>syntax of attribute value does not conform 
-to declared value</code>&rdquo;
+&ldquo;<code>syntax of attribute value does not conform to declared value</code>&rdquo;
 </a></li>
 
 <li><a href="#attr-bad-name">
-&ldquo;<code>value of attribute &lsquo;<var>FOO</var>&rsquo; 
-invalid: "#" cannot start a name</code>&rdquo;
+&ldquo;<code>value of attribute &lsquo;<var>FOO</var>&rsquo; invalid: "#" cannot start a name</code>&rdquo;
 </a></li>
 
 <li><a href="#bad-abbrev-attr">
-&ldquo;<code>&lsquo;<var>FOO</var>&rsquo; is not a member of 
-a group specified for any attribute</code>&rdquo;
+&ldquo;<code>&lsquo;<var>FOO</var>&rsquo; is not a member of a group specified for any attribute</code>&rdquo;
 </a></li>
 
 <li><a href="#attr-missing">
-&ldquo;<code>required attribute &lsquo;<var>FOO</var>&rsquo; 
-not specified</code>&rdquo;
+&ldquo;<code>required attribute &lsquo;<var>FOO</var>&rsquo; not specified</code>&rdquo;
 </a></li>
 
 <li><a href="#no-end-tag">
-&ldquo;<code>end tag for &lsquo;<var>FOO</var>&rsquo; 
-omitted, but its declaration does not permit this</code>&rdquo;
+&ldquo;<code>end tag for &lsquo;<var>FOO</var>&rsquo; omitted, but its declaration does not permit this</code>&rdquo;
 </a></li>
 
 <li><a href="#floating-close">
-&ldquo;<code>end tag for element &lsquo;<var>FOO</var>&rsquo;
-which is not open</code>&rdquo;
+&ldquo;<code>end tag for element &lsquo;<var>FOO</var>&rsquo; which is not open</code>&rdquo;
 </a></li>
 
 <li><a href="#omitted-content">
-&ldquo;<code>end tag for &lsquo;<var>FOO</var>&rsquo; 
-which is not finished</code>&rdquo;
+&ldquo;<code>end tag for &lsquo;<var>FOO</var>&rsquo; which is not finished</code>&rdquo;
 </a></li>
 
 <li><a href="#no-start-tag">
-&ldquo;<code>start tag for &lsquo;<var>FOO</var>&rsquo; 
-omitted, but its declaration does not permit this</code>&rdquo;
+&ldquo;<code>start tag for &lsquo;<var>FOO</var>&rsquo; omitted, but its declaration does not permit this</code>&rdquo;
 </a></li>
 
 <li><a href="#bad-entity">
@@ -131,8 +110,7 @@ omitted, but its declaration does not permit this</code>&rdquo;
 </a></li>
 
 <li><a href="#missing-subel">
-&ldquo;<code>missing a required sub-element of 
-&lsquo;<var>FOO</var>&rsquo;</code>&rdquo;
+&ldquo;<code>missing a required sub-element of &lsquo;<var>FOO</var>&rsquo;</code>&rdquo;
 </a></li>
 
 <li><a href="#start-tag">
@@ -144,26 +122,19 @@ omitted, but its declaration does not permit this</code>&rdquo;
 </a></li>
 
 <li><a href="#text-not-allowed">
-&ldquo;<code> text is not allowed here; try wrapping the text 
-in a more descriptive container</code>&rdquo;
+&ldquo;<code> text is not allowed here; try wrapping the text in a more descriptive container</code>&rdquo;
 </a></li>
 
 <li><a href="#unkn-att-val">
-&ldquo;<code> value of attribute 
-&lsquo;<var>FOO</var>&rsquo; cannot be &lsquo;<var>BAR</var>&rsquo;; 
-must be one of &lsquo;<var>FOO</var>&rsquo;, &lsquo;<var>BAR</var>&rsquo;, 
-&lsquo;<var>BAZ</var>&rsquo;</code>&rdquo;
+&ldquo;<code> value of attribute &lsquo;<var>FOO</var>&rsquo; cannot be &lsquo;<var>BAR</var>&rsquo;; must be one of &lsquo;<var>FOO</var>&rsquo;, &lsquo;<var>BAR</var>&rsquo;, &lsquo;<var>BAZ</var>&rsquo;</code>&rdquo;
 </a></li>
 
 <li><a href="#no-attr-end">
-&ldquo;<code>character &lsquo;<var>FOO</var>&rsquo; not allowed 
-in attribute specification list possibly caused by a missing 
-quotation mark ending a previous attribute value</code>&rdquo;
+&ldquo;<code>character &lsquo;<var>FOO</var>&rsquo; not allowed in attribute specification list possibly caused by a missing quotation mark ending a previous attribute value</code>&rdquo;
 </a></li>
 
 <li><a href="#dup-attr">
-&ldquo;<code>duplicate specification of attribute 
-&lsquo;<var>FOO</var>&rsquo;</code>&rdquo;
+&ldquo;<code>duplicate specification of attribute &lsquo;<var>FOO</var>&rsquo;</code>&rdquo;
 </a></li>
 
 <li><a href="#invalid-attr-val">
@@ -171,18 +142,15 @@ quotation mark ending a previous attribute value</code>&rdquo;
 </a></li>
 
 <li><a href="#attr-spec-nmtoken">
-&ldquo;<code>an attribute specification must start with a name 
-or name token</code>&rdquo;
+&ldquo;<code>an attribute specification must start with a name or name token</code>&rdquo;
 </a></li>
 
 <li><a href="#inval-comment">
-&ldquo;<code>invalid comment declaration; 
-check your comment syntax</code>&rdquo;
+&ldquo;<code>invalid comment declaration; check your comment syntax</code>&rdquo;
 </a></li>
 
 <li><a href="#assuming-missing-starttag">
-&ldquo;<code>element &lsquo;<var>FOO</var>&rsquo; not allowed here; 
-assuming missing &lsquo;<var>BAR</var>&rsquo; start-tag</code>&rdquo;</a>
+&ldquo;<code>element &lsquo;<var>FOO</var>&rsquo; not allowed here; assuming missing &lsquo;<var>BAR</var>&rsquo; start-tag</code>&rdquo;</a>
 </li>
 </ul>
 </div>
