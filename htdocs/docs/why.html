@@ -1,0 +1,135 @@
+<!--#set var="revision" value="\$Id: why.html,v 1.1 2001-09-27 00:47:14 link Exp $" -->
+<!--#set var="date" value="\$Date: 2001-09-27 00:47:14 $" -->
+<!--#set var="title" value="Why Validate?" -->
+<!--#include virtual="/header.html" -->
+    <div id="skip" class="colophon">
+      <h2>Why Validate?</h2>
+      <p>
+        This document attempts to answer the questions many people have
+        regarding <em>why</em> they should bother with Validating their
+        web sites and tries to dispell a few common myths.
+      </p>
+      <p>
+        The original version was written by Nick Kew for his
+        <a href="http://valet.webthing.com/">Site Valet</a> service and he has
+        generously donated it for our use. This version has been slightly
+        modified, but is essentially the same.
+      </p>
+    </div>
+    <div class="intro">
+      <h3>What is Validation?</h3>
+      <p>
+        Validation is a process of checking your documents against a formal
+        Standard, such as those published by the
+        <a href="http://www.w3.org/">World Wide Web Consortium (W3C)</a>
+        for HTML and XML-derived Web document types, or by the
+        <a href="http://www.wapforum.org/">WapForum</a> for WML, etc.  It
+        serves a similar purpose to spellchecking and proofreading for grammar
+        and syntax, but is much more precise and reliable than any of those
+        processes because it is dealing with precisely-specified machine
+        languages, not with nebulously-defined human natural language.
+      </p>
+      <p>
+        It is important to note that validation has a very precise meaning.
+        Unfortunately the issue is confused by the fact that some products
+        falsely claim to "validate", whilst in fact applying an arbitrary
+        selection of tests that are not derived from any standard.  Such 
+        tools may be genuinely useful, but should be used alongside true
+        validation, not in place of it.
+      </p>
+    </div>
+    <div>
+      <h3>Why Validate?</h3>
+      <p>
+        Well, firstly there is the very practical issue that non-valid
+        pages are (by definition) relying on error-correction by a
+        browser.  This error correction can and does vary radically
+        across different browsers and versions, so that many authors
+        who unwittingly relied on the quirks of Netscape 1.1 suddenly
+        found their pages appeared totally blank in Netscape 2.0.
+        Whilst Internet Explorer initially set out to be bug-compatible
+        with Netscape, it too has moved towards standards compliance in
+        later releases.  Other browsers differ further.
+      </p>
+      <p>
+        The three questions below deal with three different points of
+        view on the issue of Validation.
+      </p>
+      <dl>
+        <dt>The novice (or non-technical website owner) question:</dt>
+        <dd>
+          <h4>"My site looks right and works fine - isn't that enough?"</h4>
+          <p>
+            The answer to this one is that markup languages are no more than
+            data formats.  So a website doesn't look like anything at all!
+            It only takes on a visual appearance when it is presented by
+            your browser.
+          </p>
+          <p>
+            In practice, different browsers can and do display the same page
+            very differently.  This is deliberate, and doesn't imply any kind
+            of browser bug.  A term sometimes used for this is WYSINWOG -
+            What You See Is Not What Others Get (unless by coincidence).
+            It is indeed one of the principal strengths of the web, that
+            (for example) a visually impaired user can select very large print
+            or text-to-speech without a publisher having to go to the
+            trouble and expense of preparing a separate edition.
+          </p>
+          <p>
+            It is perhaps unfortunate that the best-known browsers - Netscape
+            Navigator and MS Internet Explorer on Windows - are visually very
+            similar indeed in their presentation of many documents, differing
+            only in trivial details like margins and spacings.  The "same"
+            browser on a Mac or Unix/Linux display will often look far more
+            different.
+          </p>
+        </dd>
+        <dt>The perceptive observation</dt>
+        <dd>
+          <h4>"Lots of websites out there don't validate -
+            including household-name companies."</h4>
+          <p>
+            Do remember: household-name companies expect people to visit 
+            <em>because of</em> the name and <em>in spite of</em>
+            dreadful websites.  Can <em>you</em> afford that luxury?
+          </p>
+          <p>
+            Even if you can, do you want to risk being on the wrong side of a
+            lawsuit if your site proves inaccessible to - for instance - a
+            disabled person who cannot use a 'conventional' browser?
+            Accessibility is the law in many countries.  Whilst validation
+            doesn't guarantee accessibility (there is no substitute for common
+            sense), it should be an important component of exercising "due
+            diligence".  It is now just over a year since a court first
+            awarded damages to a blind user against the owners
+            of a website he found inaccessible (Maguire vs SOCOG, August 2000).
+          </p>
+        </dd>
+        <dt>The strawman argument</dt>
+        <dd>
+          <h4>"Validation means boring websites, and stifles creativity"</h4>
+          <p>
+            This is simply head-in-the-sand ignorance (indeed, it lies at the
+            heart of the most spectacular hype-filled dot-com failures).
+            Validation is fully compatible with a wide range of dynamic pages,
+            multimedia presentations, scripting and active content, etc.  It
+            is part of the difference between doing it right and doing it
+            wrong in a dynamic multimedia presentation, just as much as in a
+            purely textual site.
+          </p>
+          <p>
+            It is perfectly in order for authors to express their creativity on
+            the Web, though it is of course generally more approriate to some
+            sites (e.g. recreational ones) than to others (e.g. informational
+            or functional sites like this one). But authors with creative
+            ambitions should bear in mind that in any artistic field, you
+            <em>must</em> start with a thorough understanding
+            of the rules before breaking them.  Otherwise you just look
+            foolish.
+          </p>
+        </dd>
+      </dl>
+    </div>
+<!--#include virtual="/footer.html" -->
+  </body>
+</html>
