@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.21 2005-01-04 08:37:53 ot Exp $ */
+/* $Id: results.css,v 1.22 2005-01-25 21:35:49 ot Exp $ */
 
 .input {
   color: black;
@@ -228,10 +228,7 @@ div#result {
 
 h2.valid, h2.invalid {
     text-align: center;
-    margin-top: 0;
-    margin-bottom: 0;
-    margin-left: -15px !important;
-    margin-right: -15px !important;
+    margin: 0;
 }
 
 
