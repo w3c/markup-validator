@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.306 2002-11-26 21:40:19 ville Exp $
+# $Id: check,v 1.307 2002-11-26 22:22:16 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -125,7 +125,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.306 $;
+  $VERSION    =  q$Revision: 1.307 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 } # end of BEGIN block.
@@ -156,7 +156,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{Footer},
-                              Date => q$Date: 2002-11-26 21:40:19 $,
+                              Date => q$Date: 2002-11-26 22:22:16 $,
                              });
 
 #
@@ -2754,7 +2754,7 @@ sub popup_charset {
 sub self_url {
   my $q = shift;
   my $thispage = $File->{Env}->{'Self URI'};
-     $thispage .= '?uri='       . $q->param('uri');
+     $thispage .= '?uri='       . uri_escape($q->param('uri'));
      $thispage .= ';ss=1'      if $q->param('ss');
      $thispage .= ';sp=1'      if $q->param('sp');
      $thispage .= ';noatt=1'   if $q->param('noatt');
@@ -2762,10 +2762,10 @@ sub self_url {
      $thispage .= ';No200=1'   if $q->param('No200');
   if ($q->param('doctype')
       and not $q->param('doctype') =~ /(Inline|detect)/i) {
-    $thispage .= ';doctype=' . $q->param('doctype');
+    $thispage .= ';doctype=' . uri_escape($q->param('doctype'));
   }
   if ($q->param('charset') and not $q->param('charset') =~ /detect/i) {
-    $thispage .= ';charset=' . $q->param('charset');
+    $thispage .= ';charset=' . uri_escape($q->param('charset'));
   }
   return $thispage;
 }
