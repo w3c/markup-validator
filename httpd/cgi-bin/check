@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.34 1999-09-17 08:52:54 gerald Exp $
+# $Id: check,v 1.35 1999-09-27 10:12:31 gerald Exp $
 
 use LWP::UserAgent;
 use strict;
@@ -17,8 +17,8 @@ use strict;
 # Constant definitions
 #############################################################################
 
-my $cvsrevision	= '$Revision: 1.34 $';
-my $cvsdate	= '$Date: 1999-09-17 08:52:54 $';
+my $cvsrevision	= '$Revision: 1.35 $';
+my $cvsdate	= '$Date: 1999-09-27 10:12:31 $';
 
 my $logfile	= "/var/log/httpd/val-svc";
 
@@ -775,7 +775,7 @@ if ( $FORM{"weblint"} eq "true" ) {
 
   <p>
     Below are the results of running <a
-    href="http://www.cre.canon.co.uk/~neilb/weblint/">Weblint</a>
+    href="http://www.weblint.org/">Weblint</a>
     on this document$pedantic_blurb:
   </p>
 EOF
