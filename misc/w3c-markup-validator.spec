@@ -1,17 +1,17 @@
 # RPM spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.1.2.15 2004-04-24 17:04:58 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.1.2.16 2004-04-30 20:22:40 ville Exp $
 
 Name:           w3c-markup-validator
 Version:        0.6.5
-Release:        0.beta2.2
+Release:        0.beta3.1
 Epoch:          0
 Summary:        W3C Markup Validator
 
 Group:          Applications/Internet
 License:        W3C Software License
 URL:            http://validator.w3.org/
-Source0:        http://validator.w3.org:8001/dist/validator-0_6_5b2.tar.gz
-Source1:        http://validator.w3.org:8001/dist/sgml-lib-0_6_5b2.tar.gz
+Source0:        http://validator.w3.org:8001/dist/validator-0_6_5b3.tar.gz
+Source1:        http://validator.w3.org:8001/dist/sgml-lib-0_6_5b3.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -34,8 +34,8 @@ SGML and XML DTDs for the W3C Markup Validator.
 
 
 %prep
-%setup -q -a 1 -n validator-0.6.5b2
-mv validator-0.6.5b2/htdocs/sgml-lib .
+%setup -q -a 1 -n validator-0.6.5b3
+mv validator-0.6.5b3/htdocs/sgml-lib .
 
 # Localize config files
 perl -pi -e \
@@ -137,6 +137,9 @@ done
 
 
 %changelog
+* Fri Apr 30 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.5-0.beta3.1
+- Update to 0.6.5 beta 3.
+
 * Sat Apr 24 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.5-0.beta2.2
 - Make httpd reload its config after install, upgrade and erase.
 - Fix a couple of paths for beta2.
