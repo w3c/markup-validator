@@ -1,6 +1,6 @@
 
 	-- SGML catalog for the W3C HTML Validation Service --
-	-- $Id: catalog,v 1.5 1999-09-05 22:39:08 gerald Exp $ --
+	-- $Id: catalog,v 1.6 1999-10-29 21:47:53 gerald Exp $ --
 
 OVERRIDE YES	-- prefer public identifiers to system identifiers --
 
@@ -114,6 +114,9 @@ PUBLIC "ISO 8879-1986//ENTITIES Publishing//EN"		pro/usr/local/lib/sgml/iso_8879
 PUBLIC "ISO 8879-1986//ENTITIES General Technical//EN"	pro/usr/local/lib/sgml/iso_8879-1986/entities/general_technical
 PUBLIC "ISO 8879-1986//ENTITIES Numeric and Special Graphic//EN"	pro/usr/local/lib/sgml/iso_8879-1986/entities/numeric_and_special_graphic
 PUBLIC "+//Silmaril//DTD HTML Pro v0r11 19970101//EN"	pro/html/dtds/htmlpro.dtd
+
+	-- experimental DTDs --
+PUBLIC "-//W3C//DTD HTML Experimental 19960712//EN"	pro/usr/local/lib/sgml/w3c/dtd/html_experimental_19960712
 
 	-- HTML 3.2 --
 PUBLIC "-//W3C//DTD HTML 3.2//EN"			html-3.2.dtd
