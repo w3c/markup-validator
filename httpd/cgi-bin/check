@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.225 2002-08-31 03:38:21 duerst Exp $
+# $Id: check,v 1.226 2002-08-31 04:04:02 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.225 $;
+  $VERSION    =  q$Revision: 1.226 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-31 03:38:21 $,
+			      Date => q$Date: 2002-08-31 04:04:02 $,
 			     });
 
 #
@@ -2417,36 +2417,36 @@ X-W3C-Validator-Errors: $errs
 # Autodetection as in Appendix F of the XML 1.0 Recommendation.
 # <URL:http://www.w3.org/TR/2000/REC-xml-20001006#sec-guessing>
 #
-# return values are: (base_encoding, BOMSize, preSize, postSize)
+# return values are: (base_encoding, BOMSize, Size, Pattern)
 sub find_base_encoding {
   local $_ = shift;
 
   # With a Byte Order Mark:
-  return ('ucs-4be',  4, 3, 0)
+  return ('ucs-4be',  4, 4, '\x00\x00\x00(.)')
     if /^\x00\x00\xFE\xFF/; # UCS-4, big-endian machine (1234)
-  return ('ucs-4le',  4, 0, 3)
+  return ('ucs-4le',  4, 4, '(.)\x00\x00\x00')
     if /^\xFF\xFE\x00\x00/; # UCS-4, little-endian machine (4321)
-  return ('utf-16be', 2, 1, 0)
+  return ('utf-16be', 2, 2, '\x00(.)')
     if /^\xFE\xFF/;         # UTF-16, big-endian.
-  return ('utf-16le', 2, 0, 1)
+  return ('utf-16le', 2, 2, '(.)\x00')
     if /^\xFF\xFE/;         # UTF-16, little-endian.
-  return ('utf-8',    3, 0, 0)
+  return ('utf-8',    3, 1, '')
     if /^\xEF\xBB\xBF/; # UTF-8.
 
   # Without a Byte Order Mark:
-  return ('ucs-4be',  0, 3, 0)
+  return ('ucs-4be',  0, 4, '\x00\x00\x00(.)')
     if /^\x00\x00\x00\x3C/; # UCS-4 or 32bit; big-endian machine (1234 order).
-  return ('ucs-4le',  0, 0, 3)
+  return ('ucs-4le',  0, 4, '(.)\x00\x00\x00')
     if /^\x3C\x00\x00\x00/; # UCS-4 or 32bit; little-endian machine (4321 order).
-  return ('utf-16be', 0, 1, 0)
+  return ('utf-16be', 0, 2, '\x00(.)')
     if /^\x00\x3C\x00\x3F/; # UCS-2, UTF-16, or 16bit; big-endian.
-  return ('utf-16le', 0, 0, 1)
+  return ('utf-16le', 0, 2, '(.)\x00')
     if /^\x3C\x00\x3F\x00/; # UCS-2, UTF-16, or 16bit; little-endian.
-  return ('utf-8',    0, 0, 0)
+  return ('utf-8',    0, 1, '')
     if /^\x3C\x3F\x78\x6D/; # UTF-8, ISO-646, ASCII, ISO-8859-*, Shift-JIS, EUC, etc.
-  return ('ebcdic',   0, 0, 0)
+  return ('ebcdic',   0, 1, '')
     if /^\x4C\x6F\xA7\x94/; # EBCDIC
-  return ('',         0, 0, 0);
+  return ('',         0, 1, '');
                             # nothing in particular
 }
 
@@ -2456,41 +2456,27 @@ sub find_base_encoding {
 # Only meaningfull if file contains a BOM, or for well-formed XML!
 sub find_xml_encoding {
   my $File = shift;
-  my ($preSize, $postSize);
+  my ($CodeUnitSize, $Pattern);
 
-  ($File->{Charset}->{Auto}, $File->{BOM}, $preSize, $postSize)
+  ($File->{Charset}->{Auto}, $File->{BOM}, $CodeUnitSize, $Pattern)
     = &find_base_encoding($File->{Bytes});
-  my $charSize = $preSize + $postSize + 1;
-  my $initSize = $charSize * 100;  # 100 arbitrary, but enough in any case
-  my $someBytes = substr $File->{Bytes}, $File->{BOM}, $initSize;
-  my $someText = '';
+  my $someBytes = substr $File->{Bytes}, $File->{BOM}, ($CodeUnitSize * 100);
+  my $someText = '';                  # 100 arbitrary, but enough in any case
 
   # translate from guessed encoding to ascii-compatible
   if ($File->{Charset}->{Auto} eq 'ebcdic') {
     # special treatment for EBCDIC, maybe use tr///
     # work on this later
   }
-  elsif ($charSize == 1) {
+  elsif (!$Pattern) {
     $someText = $someBytes; # efficiency shortcut
   }
   else { # generic code for UTF-16/UCS-4
-    my ($i, $j);
-   LABEL:
-    for ($i=0; $i<=$initSize-$charSize; ) {
-      for ($j=0; $j<$preSize; $i++, $j++) {
-        if ((substr $someBytes, $i, 1) != '\x00') {
-          last LABEL;
-        }
-      }
-      $someText .= substr $someBytes, $i++, 1;
-      for ($j=0; $j<$postSize; $i++, $j++) {
-        if ((substr $someBytes, $i, 1) != '\x00') {
-          chop $someText; # remove last character
-          last LABEL;
-        }
-      }
-    }
+    $someBytes =~ /^(($Pattern)*)/;
+    $someText = $1;       # get initial piece without chars >255
+    $someText = s/$Pattern/$1/g;    # select the relevant bytes
   }
+
   # try to find encoding pseudo-attribute
   $someText =~ m("^<\?xml[ \t\n\r]+version[ \t\n\r]?=[ \t\n\r]?([\'\"])[-._:a-zA-Z0-9]+\1[
 \t\n\r]+encoding[ \t\n\r]?=[ \t\n\r]?([\'\"])([A-Za-z][-._A-Za-z0-9]*)\2);
