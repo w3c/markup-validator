@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.49 2003-05-24 09:30:31 link Exp $
+# $Id: check,v 1.305.2.50 2003-05-24 11:03:55 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.49 $;
+  $VERSION    =  q$Revision: 1.305.2.50 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -172,7 +172,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-05-24 09:30:31 $,
+                              Date => q$Date: 2003-05-24 11:03:55 $,
                              });
 
 #
@@ -386,13 +386,15 @@ if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
 }
 
 unless ($File->{Charset}->{Use}) { # No charset given...
-  $File->{'Error Flagged'} = TRUE;
-  $File->{'Error Message'} = <<".EOF.";
+  my $message = <<".EOF.";
     <p>
       I was not able to extract a character encoding labeling from any of
-      the valid sources for such information. Without encoding information it
-      is impossible to validate the document. The sources I tried are:
+      the valid sources for such information. Without encoding information
+      it is impossible to reliably validate the document. I'm falling back
+      to the "UTF-8" encoding and will attempt to perform the validation,
+      but this is likely to fail for all non-trivial documents.
     </p>
+    <p>The sources I tried to find encoding information include:</p>
     <ul>
       <li>The HTTP Content-Type field.</li>
       <li>The XML Declaration.</li>
@@ -405,8 +407,8 @@ unless ($File->{Charset}->{Use}) { # No charset given...
     </p>
     <p>
       Since none of these sources yielded any usable information, I will not be
-      able to validate this document. Sorry. Please make sure you specify the
-      character encoding in use.
+      able to reliably validate this document. Sorry. Please make sure you
+      specify the character encoding in use.
     </p>
     <p class="note">
       Specifying a character encoding is normally done in the web server
@@ -420,8 +422,8 @@ unless ($File->{Charset}->{Use}) { # No charset given...
           tips on how to do this</a> in popular web server implementations.
     </p>
 .EOF.
-  $File->{'Error Message'} .= &iana_charset_blurb();
-  $File->{'Error Message'} .= <<".EOF.";
+  $message .= &iana_charset_blurb();
+  $message .= <<".EOF.";
     <p>
       To quickly check whether the document would validate after addressing
       the missing character encoding information, you can use the "Encoding"
@@ -431,6 +433,10 @@ unless ($File->{Charset}->{Use}) { # No charset given...
       common encodings if you are not sure what encoding to choose.
     </p>
 .EOF.
+  my $title = 'No Character Encoding Found! Falling back to UTF-8.';
+  &add_warning($File, 'fatal', $title, $message);
+  $File->{Tentative} |= T_ERROR; # Can never be valid.
+  $File->{Charset}->{Use} = 'utf-8';
 }
 
 sub iana_charset_blurb () {
@@ -1601,12 +1607,15 @@ sub parse_errors ($$) {
     # No DOCTYPE.
     if ($err->{msg} =~ m(prolog can\'t be omitted)) {
       my $class = 'fatal';
-      my $title = 'No DOCTYPE Declaration Found!';
+      my $title = 'No DOCTYPE Declaration Found! Falling Back to HTML 4.01 Transitional';
       my $message = <<".EOF.";
     <div>
       <p>
         A DOCTYPE Declaration is mandatory for most current markup languages
         and without one it is impossible to reliably validate this document.
+        I am falling back to "HTML 4.01 Transitional" and will attempt to
+        validate the document anyway, but this is very likley to produce
+        spurious error messages for most non-trivial documents.
       </p>
 .EOF.
 	$message .= &doctype_spiel();
