@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.3 1998-07-24 23:26:08 gerald Exp $
+# $Id: check,v 1.4 1998-07-25 00:36:59 gerald Exp $
 
 #############################################################################
 # Constant definitions
@@ -48,10 +48,10 @@ $default_doctype = $html2_doctype;
 $temp		 = "/tmp/validate.$$";
 $lt		 = "\020";
 $gt		 = "\021";
-# $leftarrow	 = qq{${lt}tt${gt}${lt}img src="arrow_left.gif" alt="^"${gt}${lt}/tt${gt}};
-$leftarrow	 = "${lt}tt${gt}${lt}img src=\"/arrow_left.gif\" alt=\"^\"${gt}${lt}/tt${gt}";
-$rightarrow	 = "${lt}tt${gt}${lt}img src=\"/arrow_right.gif\" alt=\"^\"${gt}${lt}/tt${gt}";
-$contchars	 = "${lt}tt${gt}${lt}img src=\"/ellipsis.gif\" alt=\"[...]\"${gt}${lt}/tt${gt}";
+# $leftarrow	 = qq{${lt}tt${gt}${lt}img src="/images/arrow_left.gif" alt="^"${gt}${lt}/tt${gt}};
+$leftarrow	 = "${lt}tt${gt}${lt}img src=\"/images/arrow_left.gif\" alt=\"^\"${gt}${lt}/tt${gt}";
+$rightarrow	 = "${lt}tt${gt}${lt}img src=\"/images/arrow_right.gif\" alt=\"^\"${gt}${lt}/tt${gt}";
+$contchars	 = "${lt}tt${gt}${lt}img src=\"/images/ellipsis.gif\" alt=\"[...]\"${gt}${lt}/tt${gt}";
 $gifborder       = " BORDER=0";
 
 @options = ( 'weblint', 'pw', 'outline', 'ss', 'sp', 'noatt' );
@@ -1203,7 +1203,7 @@ sub output_closing {
      align=right border=0 alt="Valid HTML 4.0!"></a>
   <a href="http://www.w3.org/People/Gerald/">Gerald Oskoboiny</A><br><A
      href="http://www.w3.org/Help/Webmaster">Webmaster</A><br>
-     \$Date: 1998-07-24 23:26:08 $ \
+     \$Date: 1998-07-25 00:36:59 $ \
 </address>
 
 </body>
