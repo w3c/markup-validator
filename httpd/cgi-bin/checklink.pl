@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.54 2000-06-23 19:09:52 hugo Exp $
+# $Id: checklink.pl,v 2.55 2000-07-10 15:21:37 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -31,7 +31,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.54 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.55 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -767,10 +767,8 @@ sub parse_document() {
 ####################################
 
 sub W3C::CheckLink::new() {
-    my $p = HTML::Parser::new(@_);
+    my $p = HTML::Parser::new(@_, api_version => 3);
 
-    # Using API version 3
-    $p->{api_version} = 3;
     # Start tags
     $p->handler(start => 'start', 'self, tagname, attr, text, event, tokens');
     # Declarations
