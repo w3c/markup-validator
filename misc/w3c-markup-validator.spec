@@ -1,5 +1,5 @@
 # RPM Spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.2 2003-02-24 19:11:07 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.3 2003-03-01 09:26:13 ville Exp $
 
 %define httpd_confdir %{_sysconfdir}/httpd/conf.d
 %define htmldir       %{_var}/www/html
@@ -52,7 +52,7 @@ perl -pi -e 's|\bwww-validator\@w3\.org\b|root\@localhost| ;
              s|/usr/local/validator/htdocs/config/|%{_sysconfdir}/w3c/| ;
              s|/usr/local/validator/htdocs/|%{htmldir}/%{name}/| ;
              s|^(SGML\s+Library\s+).*|${1}%{sgmldir}/%{name}|' \
-  htdocs/config/check.cfg
+  htdocs/config/validator.conf
 perl -pi -e 's|/var/www/html/|%{htmldir}/|' httpd/conf/httpd.conf
 
 # Cleanup of unused files
@@ -82,7 +82,6 @@ ln -s %{htmldir}/%{name}/checklink $RPM_BUILD_ROOT/%{_bindir}
 
 # Config files
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/w3c
-mv htdocs/config/check.cfg htdocs/config/validator.conf
 cp -p htdocs/config/* $RPM_BUILD_ROOT%{_sysconfdir}/w3c
 cp -p httpd/conf/httpd.conf $RPM_BUILD_ROOT%{httpd_confdir}/%{name}.conf
 
