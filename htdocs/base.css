@@ -4,7 +4,7 @@
   Copyright © 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
   See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-  $Id: base.css,v 1.15 2001-09-20 16:44:33 link Exp $
+  $Id: base.css,v 1.16 2001-09-20 18:14:12 link Exp $
 */
 
 @import url(non-netscape.css);
@@ -23,7 +23,7 @@ body {
 a:hover   {background-color:#eee}
 a:visited {color: purple}
 
-pre {font-family: monospace}
+/* pre {font-family: monospace} */
 
 a:link img, a:visited img {border-style: none}
 a img {color: white} /* The only way to hide the border in NS 4.x */
@@ -91,6 +91,7 @@ p.navbar {
 }
 
 table th {
+  text-align: left;
   vertical-align: top;
 }
 
