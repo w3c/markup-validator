@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: favlets.html,v 1.4 2002-10-23 23:11:29 link Exp $"
---><!--#set var="date" value="\$Date: 2002-10-23 23:11:29 $"
+<!--#set var="revision" value="\$Id: favlets.html,v 1.5 2002-10-29 22:32:07 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-10-29 22:32:07 $"
 --><!--#set var="title" value="Favlets For The W3C MarkUp Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -35,9 +35,13 @@
           xmlhttp.open("HEAD",url,true);
           xmlhttp.onreadystatechange=function() {
           if (xmlhttp.readyState==4) {
+           if (xmlhttp.getResponseHeader('X-W3C-Validator-Status')!='') {
             alert(hsh+' is '+xmlhttp.getResponseHeader('X-W3C-Validator-Status')+'\nErrors: '+xmlhttp.getResponseHeader('X-W3C-Validator-Errors'));
+           } else {
+            alert("Validation result not found, this may be for a number of reasons, including url not being available, or a character coding not detected.") 
+           }
           }
-        }
+         }
         xmlhttp.setRequestHeader('User-Agent','Validator+Favlet');
         xmlhttp.send("")
       }
