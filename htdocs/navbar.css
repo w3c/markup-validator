@@ -4,24 +4,23 @@
    Copyright 2000-2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: navbar.css,v 1.15 2005-02-04 16:45:03 link Exp $
+   $Id: navbar.css,v 1.16 2005-02-16 03:28:54 ot Exp $
 */
 
 
 #menu {
-        background-color: #053188;
-        background-image:url(images/bg2.gif);
+        background-color: #036;
         margin: 0;
         padding: 0;
         margin-left: 42px;
-        padding-top:8px;
-        padding-bottom: 8px;
+        padding-top:3px;
+        padding-bottom: 3px;
         line-height: 140%;
         vertical-align: bottom;
         font-size: 0.9em;
         list-style-type: none;
-        border-left: 1px solid #053188;
-        border-right: 1px solid #053188;
+	border-left: 1px solid #E8E8FA;
+	border-right: 1px solid #E8E8FA;
        
 }
 
@@ -36,7 +35,6 @@
   padding-left: 25px;
   color: white;
 }
-
 
 /* Jump Bar  - results page*/
 #jumpbar {

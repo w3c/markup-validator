@@ -4,7 +4,7 @@
    Copyright 2000-2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.39 2005-02-04 23:31:03 link Exp $
+   $Id: base.css,v 1.40 2005-02-16 03:28:54 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -40,7 +40,7 @@ body {
     background-attachment: fixed;
     background-position: 0 20px;
     background-repeat: no-repeat;
-    color: #33333E;
+    color: #11111A;
     font-family: Helvetica, Arial, sans-serif;
     font-size: 1em; /* setting base font to user's prefered size */
 }
@@ -51,20 +51,20 @@ body {
 
 #banner {
     background: white;
-    background-image: url(images/header.jpg);
+    background-image: url(images/header2.png);
     background-repeat: no-repeat;
     background-attachment: scroll;
     background-position: top right;
     padding: 0;
     height: 50px;
     margin-bottom: 0;
-    margin-top: 20px;
+    margin-top: 10px;
     margin-left: 42px;
 /*    width: 780px; */
     border-bottom: 0;
-    border-top: 1px solid #053188;
-    border-left: 1px solid #053188;
-    border-right: 1px solid #053188;
+    border-top: 1px solid #E8E8FA;
+    border-left: 1px solid #E8E8FA;
+    border-right: 1px solid #E8E8FA;
 }
 
 #banner h1 { 
@@ -81,7 +81,7 @@ body {
     padding-left: 0;
     padding-right: 0;
     background: white;
-    border: 1px solid #053188;
+    border: 1px solid #E8E8FA;
 }
 
 address {
@@ -90,6 +90,7 @@ address {
     background-repeat: no-repeat;
     background-attachment: scroll;
     background-position: right;
+    border-top: 1px solid #E8E8FA;
     height:50px;
     padding-top: 0;
     padding-bottom: 0;
@@ -120,32 +121,31 @@ h1 {
 }
 
 h2 { 
-    color: #C65831;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    color: #C60;
+    padding: 5px 15px;
     margin-top: 20px;
     margin-bottom: 20px;
     font-size: 1.3em;
-    text-align: center;
     text-decoration: none;
 }
 
 h3 {
-    color: #C65831;
-    font-size: 1.2em;
+   /* color: #C65831; */
+    color: #c60;
+    font-size: 1.1em;
     padding: 5px 15px;
-    background-color: #E3EDFE;
-    border-top: 1px dotted #C65831;
-    border-bottom: 1px dotted #C65831;
+    background-color: #f6f6ff;
+    border-top: 1px dotted #f93;
+    border-bottom: 1px dotted #f93;
     text-decoration: none;
 } 
 
 h4 {
-    color: #C65831;
+    color: #C60;
     font-weight: 600;
     font-style: normal;
-    text-decoration: underline;
-    font-size: 1.1em;
+    text-decoration: none;
+    font-size: 1.0em;
 }
 
 /* 
@@ -153,15 +153,14 @@ h4 {
                          */
 
 a:link, a:visited {
-    color: #00209E;
+    color: #036;
     text-decoration: none;
 
 }
 
 a:hover, a:active {
-  color: #C65831;
-  text-decoration: underline;
-
+    color: #036;
+    text-decoration: underline;
 }
 
 
@@ -170,7 +169,7 @@ a:hover, a:active {
                       */
 
 /* TODO - add ol, li, td here ? */
-p {
+p, dt {
     margin-left: 15px;
     margin-right: 25px;
 }
@@ -243,11 +242,13 @@ p.copyright a {
 /* Fieldsets */
 fieldset {
     background: #FCFCFC;
-    border: 1px dotted #053188;
+    border: 1px dotted #f93;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 fieldset legend {
-    color: #C65831;
+    color: #C60;
     padding: .1ex .5ex;
     border-right: 1px solid gray;
     border-bottom: 1px solid gray;
