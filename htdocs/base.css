@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.19 2003-07-30 01:35:10 link Exp $
+   $Id: base.css,v 1.26.2.20 2003-08-20 21:20:41 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -40,6 +40,15 @@ dt {
 dl.tip {
  margin-top: 2em;
 }
+
+
+div.doc h4, div.doc h5, div.doc p, div.doc pre, div.doc ul, div.doc dl, div.doc table {
+ margin-left: 2em;
+ margin-right: 20%;
+}
+
+div.doc div#toc ul, div.doc dd p{
+margin-left: 0; margin-right: 0}
 
 fieldset {
   margin-bottom: 3em;
@@ -212,7 +221,7 @@ h2 {
   text-decoration: none;
   margin-top : 2em;
   margin-bottom : 1em;
-  
+  line-height: 120%;  
 }
 
 h3 {
