@@ -1,0 +1,15 @@
+<!DOCTYPE smil PUBLIC "-//W3C//DTD SMIL 1.0//EN"
+  "http://www.w3.org/TR/REC-smil/SMIL10.dtd">
+<smil>
+<head>
+</head>
+<body>
+<par>
+<img id="i1"
+         src="http://smil.nist.gov/interop1/getout.jpg"
+         dur="2s"
+      />
+</par>
+</body>
+</smil>
+
