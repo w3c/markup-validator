@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.118 2001-06-19 10:05:06 link Exp $
+# $Id: check,v 1.119 2001-06-20 10:07:44 link Exp $
 
 #
 # We need Perl 5.004.
@@ -76,9 +76,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.118 $;
+$VERSION    =  q$Revision: 1.119 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-19 10:05:06 $;
+$DATE       =  q$Date: 2001-06-20 10:07:44 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1390,8 +1390,7 @@ sub show_source {
 EOF
 
   for (@{$File->{Content}}) {
-    s/&/&amp;/go; s/</&lt;/go;
-    printf "<a name=\"line-%s\">%4d</a>: %s\n", $line, $line, $_;
+    printf "<a name=\"line-%s\">%4d</a>: %s\n", $line, $line, ent $_;
     $line++;
   }
   print "    </pre>\n  </div>";
