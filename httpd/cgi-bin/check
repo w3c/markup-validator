@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.65 2000-05-10 20:24:03 gerald Exp $
+# $Id: check,v 1.66 2000-06-30 20:33:50 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -73,9 +73,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.65 $;
+$VERSION    =  q$Revision: 1.66 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2000-05-10 20:24:03 $;
+$DATE       =  q$Date: 2000-06-30 20:33:50 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -342,7 +342,10 @@ if ($File->{Type} eq 'xhtml') {
   $ENV{SGML_SEARCH_PATH} = $sgmlstuff . '/REC-xhtml1-20000126/';
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'UTF-8';
-  $xmlflags              = '-wxml -wno-valid ';
+  $xmlflags              = '-wxml ';
+  if ( $guessed_doctype != 0 ) {	# if no doctype, don't validate
+    $xmlflags            .= '-wno-valid ';
+  }
   $decl                  = $xhtmldecl;
 } elsif ($guessed_doctype == 2) { # no doctype, with xmlns attr on 1st element
   $File->{Type} = 'xml';	# @@ probably a better way to do this
@@ -466,11 +469,16 @@ else {
 print ' ' x 2, qq(</ul>\n\n);
 
 if (($File->{Type} eq 'xml') || ($File->{Type} eq 'xhtml')) {
+  my $validity_blurb = "";
+  if ( $guessed_doctype == 0 ) {
+    $validity_blurb = " and validity";
+  }
+
 print <<"EOHD";
   <p>
     Below are the results of checking this document for <a
     href="http://www.w3.org/TR/REC-xml#sec-conformance">XML
-    well-formedness</a>.
+    well-formedness</a>${validity_blurb}.
   </p>
 
 EOHD
@@ -702,7 +710,12 @@ EOHD
 	}
     }
     if ( ( $version eq "unknown" ) || ( ! defined $gifname ) ) {
+      if ( $guessed_doctype != 0 ) {	# if no doctype, only checked wf-ness
+	print "  <p>\n    Congratulations, this document is well-formed XML.\n  </p>\n";
+      }
+      else {	# checked validity
 	print "  <p>\n    Congratulations, this document validates as the document type specified! (I don't have an icon for this one yet, sorry.)\n  </p>\n";
+      }
     }
 
     unless ($q->param('uploaded_file')) {
