@@ -1,7 +1,7 @@
 #!/usr/bin/perl -T
 #
-# W3C HTML Validation Service
-# A CGI script to retrieve and validate an HTML file
+# W3C MarkUp Validation Service
+# A CGI script to retrieve and validate a MarkUp file
 #
 # Copyright 1995-2002 Gerald Oskoboiny <gerald@w3.org>
 # for additional contributors, see http://dev.w3.org/cvsweb/validator/
@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.272 2002-10-27 10:04:06 link Exp $
+# $Id: check,v 1.273 2002-10-27 15:40:22 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.272 $;
+  $VERSION    =  q$Revision: 1.273 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-27 10:04:06 $,
+			      Date => q$Date: 2002-10-27 15:40:22 $,
 			     });
 
 #
@@ -300,7 +300,7 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
   &add_warning($File, <<".EOF.");
       <em>Note:</em>
       The HTTP Content-Type field $_source[0] did not contain
-      a "charset" attribute, but the Content-Type was one of the XML text/*
+      a "charset" parameter, but the Content-Type was one of the XML text/*
       sub-types (<code>$File->{ContentType}</code>). The relevant
       specification (RFC 3023) specifies a strong default of "us-ascii" for
       such documents so we will use this value regardless of any encoding you
