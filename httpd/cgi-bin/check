@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.94 2001-04-17 04:19:43 link Exp $
+# $Id: check,v 1.95 2001-04-18 03:06:37 link Exp $
 
 #
 # We need Perl 5.004.
@@ -18,6 +18,7 @@ require 5.004;
 # Load modules
 use strict;
 use LWP::UserAgent;
+use URI;
 use URI::Escape;
 use CGI::Carp;
 use CGI qw(:cgi -newstyle_urls -private_tempfiles);
@@ -74,9 +75,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.94 $;
+$VERSION    =  q$Revision: 1.95 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-04-17 04:19:43 $;
+$DATE       =  q$Date: 2001-04-18 03:06:37 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -150,8 +151,7 @@ if ($q->param('uploaded_file')) {
 &redirect_to_home_page unless length($q->param('uri')) > 5;
 
 #
-# Munge the URI to include commonly omitted prefixes/suffixes.
-$q->param('uri', $q->param('uri') . '/')   unless $q->param('uri') =~ m(/);
+# Munge the URI to include commonly omitted prefix.
 $q->param('uri', 'http://' . $q->param('uri')) if $q->param('uri') =~ m(^www)i;
 
 
@@ -1080,17 +1080,15 @@ sub clean_up_and_exit {
 }
 
 sub redirect_to_home_page {
+  print <<".EOF.";
+Status: 301 Moved Permanently
+Content-Type: text/html
+Location: $abs_svc_uri
 
-    print "Status: 301 Moved Permanently\n";
-    print "Content-Type: text/html\n";
-    print "Location: http://validator.w3.org/\n\n";
-    print "<title>Moved!</title>\n";
-    print "<p>\n";
-    print "  Please see <a href=\"http://validator.w3.org/\">the validation service's home page.</a>\n";
-    print "</p>\n";
-
-    &clean_up_and_exit;
-
+<title>Moved!</title>
+<p>Please see <a href="$abs_svc_uri">the home page.</a></p>
+.EOF.
+  &clean_up_and_exit;
 }
 
 sub build_jump_links {
