@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13 2002-11-23 21:55:01 ot Exp $ */
+/* $Id: results.css,v 1.13.2.1 2002-11-26 02:28:15 link Exp $ */
 
 .markup {
   color: red;
@@ -138,3 +138,9 @@ img.inline-badge {
   float: left;
 }
 
+
+
+div.mtb { /* "Medium Thematic Break" */
+  margin-top: 5em;
+  border-top: 1px solid black;
+}
