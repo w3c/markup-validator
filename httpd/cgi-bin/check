@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.273 2002-10-27 15:40:22 ville Exp $
+# $Id: check,v 1.274 2002-10-27 18:36:16 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.273 $;
+  $VERSION    =  q$Revision: 1.274 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-27 15:40:22 $,
+			      Date => q$Date: 2002-10-27 18:36:16 $,
 			     });
 
 #
@@ -757,6 +757,9 @@ sub print_table {
 
   print join '', @{&serialize_table($File, 'header')};
 
+  # Don't output revalidation options for uploads, can't revalidate them.
+  return if ($File->{'Is Upload'});
+
   my $Options = {};
   my $Form    = {};
   $Form->{Table}->{Fieldset}  = TRUE;
@@ -792,7 +795,7 @@ sub print_table {
   print join '', @{&serialize_table($Form, 'header')};
   print qq(      </fieldset>\n);
 
-  print qq(  </form>\n) unless $File->{'Is Upload'};
+  print qq(  </form>\n);
 }
 
 #
@@ -2554,18 +2557,27 @@ sub abort_if_error_flagged {
     print $File->{'Results'};
 
     #
-    # "Manually" add DOCTYPE popup to table if requested.
+    # "Manually" add DOCTYPE row to table if requested.
     if ($Flags & O_DOCTYPE) {
-      &add_table($File, qq(<label accesskey="3" for="doctype" title="Document Type (accesskey: 3)">Doctype</label>),
-		 $File->{Version}, &popup_doctype);
+      # @@@ "accesskey" and "for" shouldn't be output for uploads.
+      my @data = ($File->{Version});
+      # Don't add popup for uploads.
+      push(@data, &popup_doctype) unless ($File->{'Is Upload'});
+      &add_table($File,
+		 qq(<label accesskey="3" for="doctype" title="Document Type (accesskey: 3)">Doctype</label>),
+                 @data);
     }
 
     #
-    # "Manually" add charset popup to table if requested.
+    # "Manually" add charset row to table if requested.
     if ($Flags & O_CHARSET) {
+      # @@@ "accesskey" and "for" shouldn't be output for uploads.
+      my @data = (&ent($File->{Charset}->{Use}));
+      # Don't add popup for uploads.
+      push(@data, &popup_charset) unless ($File->{'Is Upload'});
       &add_table($File,
-		 qq(<label accesskey="2" title="Character Encoding (accesskey: 2)" for="charset">Encoding</label>),
-		 &ent($File->{Charset}->{Use}), &popup_charset);
+                 qq(<label accesskey="2" title="Character Encoding (accesskey: 2)" for="charset">Encoding</label>),
+                 @data);
     }
 
 
