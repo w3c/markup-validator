@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.280 2002-10-30 21:47:00 link Exp $
+# $Id: check,v 1.281 2002-11-02 16:36:10 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.280 $;
+  $VERSION    =  q$Revision: 1.281 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-30 21:47:00 $,
+			      Date => q$Date: 2002-11-02 16:36:10 $,
 			     });
 
 #
@@ -1936,13 +1936,7 @@ sub prepCGI {
     if ($q->path_info eq '/referer') {
       $q->param('uri', 'referer');
     } else {
-      my $thispage = $File->{Env}->{'Self URI'};
-         $thispage .= '?uri='       . $q->param('uri');
-         $thispage .= ';ss=1'      if $q->param('ss');
-         $thispage .= ';sp=1'      if $q->param('sp');
-         $thispage .= ';noatt=1'   if $q->param('noatt');
-         $thispage .= ';outline=1' if $q->param('outline');
-
+      my $thispage = &self_url($q);
       print $q->redirect($thispage);
       exit;
     }
@@ -1976,13 +1970,7 @@ sub prepCGI {
 
   # Redirect to a GETable URL if method is POST without a file upload.
   if ($q->request_method eq 'POST' and not $File->{'Is Upload'}) {
-    my $thispage = $File->{Env}->{'Self URI'};
-       $thispage .= '?uri='       . $q->param('uri');
-       $thispage .= ';ss=1'      if $q->param('ss');
-       $thispage .= ';sp=1'      if $q->param('sp');
-       $thispage .= ';noatt=1'   if $q->param('noatt');
-       $thispage .= ';outline=1' if $q->param('outline');
-
+    my $thispage = &self_url($q);
     print $q->redirect($thispage);
     exit;
   }
@@ -2714,4 +2702,24 @@ sub popup_charset {
 				      'windows-1257 (Baltic Rim)',
 				     ],
 			 );
+}
+
+#
+# Construct a self-referential URL.
+sub self_url {
+  my $q = shift;
+  my $thispage = $File->{Env}->{'Self URI'};
+     $thispage .= '?uri='       . $q->param('uri');
+     $thispage .= ';ss=1'      if $q->param('ss');
+     $thispage .= ';sp=1'      if $q->param('sp');
+     $thispage .= ';noatt=1'   if $q->param('noatt');
+     $thispage .= ';outline=1' if $q->param('outline');
+  if ($q->param('doctype') 
+      and not $q->param('doctype') =~ /(Inline|detect)/i) {
+    $thispage .= ';doctype=' . $q->param('doctype');
+  }
+  if ($q->param('charset') and not $q->param('charset') =~ /detect/i) {
+    $thispage .= ';charset=' . $q->param('charset');
+  }
+  return $thispage;
 }
