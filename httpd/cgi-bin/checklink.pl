@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.35 2000-03-20 20:55:40 hugo Exp $
+# $Id: checklink.pl,v 2.36 2000-03-29 22:31:51 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -31,7 +31,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.35 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.36 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -331,7 +331,6 @@ sub check_uri() {
     my $base = URI->new($p->{base});
 
     # Check anchors
-    ###############
 
     if (! $_summary) {
         print("Checking anchors:\n");
@@ -353,7 +352,6 @@ sub check_uri() {
     }
 
     # Check links
-    #############
 
     my %links;
     # Record all the links
@@ -762,9 +760,10 @@ sub W3C::CheckLink::new() {
 
     # Line count
     $p->{Line} = 1;
-    # Attribute for ids in element a
-    # Up to XHTML 1.0, it is 'name'. After that it is 'id'.
+    # Check <a [..] name="...">?
     $p->{check_name} = 1;
+    # Check <[..] id="..">?
+    $p->{check_id} = 1;
 
     return $p;
 }
@@ -779,11 +778,19 @@ sub W3C::CheckLink::doctype() {
         return $self->{doctype};
     }
     $self->{doctype} = $dc;
-    # Check if we should check <a name="..."> or not
-    # The good way to do that is to get the DTD and parse it but it is
-    # much more complex
+
+    # What to look for depending on the doctype
     if ($dc eq '-//W3C//DTD XHTML Basic 1.0//EN') {
         $self->{check_name} = 0;
+    }
+    $_ = $dc;
+    # Check for the id tag
+    if (
+        # HTML 2.0 & 3.0
+        m/^-\/\/IETF\/\/DTD HTML [23]\.0\/\// ||
+        # HTML 3.2
+        m/^-\/\/W3C\/\/DTD HTML 3\.2\/\//) {
+        $self->{check_id} = 0;
     }
 }
 
@@ -806,16 +813,18 @@ sub W3C::CheckLink::new_line() {
 
 sub W3C::CheckLink::start() {
     my ($self, $tag, $attr, $attrseq, $text) = @_;
-    my $anchor;
+
+    # Anchors
+    my $anchor = $self->get_anchor($tag, $attr);
+    if (defined($anchor)) {
+        $self->{Anchors}{$anchor}{$self->{Line}}++;
+    }
+
     # Links
     if (!$self->{only_anchors}) {
         my $link;
-        $anchor = $attr->{id};
         if (($tag eq 'a')) {
             $link = $attr->{href};
-            if ($self->{check_name}) {
-                $anchor = $attr->{name};
-            }
         } elsif ($tag eq 'img') {
             $link = $attr->{src};
         } elsif (($tag eq 'frame') || ($tag eq 'link')) {
@@ -824,20 +833,35 @@ sub W3C::CheckLink::start() {
         if (defined($link)) {
             $self->{Links}{$link}{$self->{Line}}++;
         }
-    # Just anchors
-    } else {
-        $anchor = $attr->{id};
-        if (($tag eq 'a') && $self->{check_name}) {
-            $anchor = $attr->{name};
-        }
     }
-    if (defined($anchor)) {
-        $self->{Anchors}{$anchor}{$self->{Line}}++;
-    }
+
     # Line counting
     if ($text =~ m/\n/) {
         $self->new_line($text);
     }
+}
+
+#############################
+# Extraction of the anchors #
+#############################
+
+sub W3C::CheckLink::get_anchor() {
+    my ($self, $tag, $attr) = @_;
+    my $anchor;
+
+    if ($self->{check_id}) {
+        $anchor = $attr->{id};
+    }
+    if ($self->{check_name} && ($tag eq 'a')) {
+        # If id is defined, name if defined must have the same value
+        if (!$anchor) {
+            $anchor = $attr->{name};
+        } else {
+            # @@@ Issue a warning
+        }
+    }
+
+    return($anchor);
 }
 
 ####################################################
