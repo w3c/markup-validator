@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>W3C HTML Validation Service: Validate Fragment</title>
+  <link rev="made" href="mailto:gerald@w3.org" />
+  <meta name="keywords" content="HTML, Hypertext Markup Language, Validation,
+    W3C HTML Validation Service" />
+  <meta name="description" content="W3C's easy-to-use
+    HTML validation service, based on an SGML parser." />
+  <meta name="revision" content="$Id: fragment-upload.html,v 1.1 2001-04-15 02:33:55 link Exp $" />
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
+
+  <p>
+    <a href="http://www.w3.org/"><img align="left"
+       src="http://www.w3.org/Icons/WWW/w3c_home" height="48" border="0"
+       alt="W3C" /></a>
+  </p>
+
+  <p align="right" class="navbar">
+    <a href="/">Validator home</a> |
+    <a href="about.html">About this service</a> |
+    <a href="feedback.html">Feedback</a><br clear="all" />
+  </p>
+
+  <h1>HTML Validation Service</h1>
+  <p> This form allows you paste fragments of HTML and have them validated.</p>
+
+  <form method="post" enctype="multipart/form-data" action="/check">
+    Doctype:
+	<select name="doctype">
+	  <option>Inline</option>
+	  <option>XHTML 1.0 Strict</option>
+	  <option>XHTML 1.0 Transitional</option>
+	  <option>XHTML 1.0 Frameset</option>
+	  <option>HTML 4.01 Strict</option>
+	  <option>HTML 4.01 Transitional</option>
+	  <option>HTML 4.01 Frameset</option>
+	  <option>HTML 3.2</option>
+	  <option>HTML 2.0</option>
+	</select>
+    <table cellpadding="0" cellspacing="0">
+
+    <tr>
+      <td>
+        <input name="ss" type="checkbox" value="" /> Show source input
+      </td>
+      <td>
+        <input name="outline" type="checkbox" value="" /> Show an outline of this
+        document<br />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <input name="sp" type="checkbox" value="" /> Show parse tree
+      </td>
+      <td>
+        <input name="noatt" type="checkbox" value="" /> exclude
+        attributes from the parse tree<br />
+      </td>
+    </tr>
+    <tr><td colspan="2"><textarea cols="80" rows="24" name="uploaded_fragment"></textarea></td></tr>
+    </table>
+      <input type="submit" value="Validate this document" />
+      <input type="reset" value="Reset this form" />
+  </form>
+
+  <p>
+    If your document is on the Web, you can validate
+    it by <a href="/">entering its address</a> instead.
+  </p>
+
+<hr />
+
+<address>
+  <a href="http://validator.w3.org/check/referer"><img
+     src="http://validator.w3.org/images/vxhtml10" height="31" width="88"
+     align="right" border="0" alt="Valid XHTML 1.0!" /></a>
+  <a href="/feedback.html">Gerald Oskoboiny</a><br />
+     $Date: 2001-04-15 02:33:55 $
+</address>
+
+</body>
+
+</html>
