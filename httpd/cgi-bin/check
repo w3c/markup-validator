@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.55 1999-12-06 05:54:39 gerald Exp $
+# $Id: check,v 1.56 1999-12-06 07:18:03 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -73,9 +73,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.55 $;
+$VERSION    =  q$Revision: 1.56 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 1999-12-06 05:54:39 $;
+$DATE       =  q$Date: 1999-12-06 07:18:03 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1196,13 +1196,18 @@ sub handle_uri {
   
   my($type, $charset) = &parse_content_type($res->header('Content-Type'));
 
+  my $lastmod = undef;
+  if ( $res->last_modified ) {
+    $lastmod = scalar(gmtime($res->last_modified));
+  }
+
   return {Content       => &normalize_newlines($res->content),
 	  Type          => $type,
 	  HTTP_Charset  => $charset,
-	  Modified      => scalar(gmtime($res->last_modified)),
-	  Server        => $res->server,
-	  Size          => $res->content_length,
-	  URI           => $res->request->url};
+	  Modified      => $lastmod,
+	  Server        => scalar($res->server),
+	  Size          => scalar($res->content_length),
+	  URI           => scalar($res->request->url)};
 }
 
 #
