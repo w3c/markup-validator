@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.155 2001-07-21 11:32:06 duerst Exp $
+# $Id: check,v 1.156 2001-07-21 12:05:46 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.155 $;
+$VERSION    =  q$Revision: 1.156 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-21 11:32:06 $;
+$DATE       =  q$Date: 2001-07-21 12:05:46 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -403,6 +403,11 @@ if ($File->{Use_Charset} ne $File->{Charset}) {
       selected character encoding ($File->{Use_Charset})
       differ. Tentative validation only.
 EOHD
+}
+
+if ($File->{Use_Charset} eq 'utf-8' and $File->{Content}[0] =~ m/^\xEF\xBB\xBF/) {
+  $File->{Content}[0] =~ s/^...//;
+  &add_warning("UTF-8 'BOM' detected and removed.");
 }
 
 {  # block for character conversion and checking
@@ -1135,11 +1140,6 @@ sub parse_errors ($$) {
     next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
     next if /numbers exceeding 65535 not supported/;
     next if /URL Redirected to/;
-    if (/character "(.)(.)(.)" not allowed in prolog/) {
-      if (ord($1) == 0xEF and ord($2) == 0xBB and ord($3) eq 0xBF) {
-	next; # Skip error on BOM in UTF-8; amended by XML 1.0 SE!
-      }
-    }
 
     my(@_err) = split /:/;
     if ($_err[1] =~ m(^<URL>)) {
