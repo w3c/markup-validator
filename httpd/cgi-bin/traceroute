@@ -7,7 +7,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: traceroute,v 1.1 1998-08-12 22:11:51 gerald Exp $
+# $Id: traceroute,v 1.2 1998-08-12 22:12:45 gerald Exp $
 
 $| = 1;
 
@@ -63,7 +63,8 @@ print <<"EOF";
 
 <hr>
 <address>
-<a href="http://www.w3.org/People/Gerald/">Gerald Oskoboiny</a>
+<a href="http://www.w3.org/People/Gerald/">Gerald Oskoboiny</a><br>
+\$Date: 1998-08-12 22:12:45 $ \
 </address>
 
 EOF
