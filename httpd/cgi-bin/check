@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.47 1999-11-15 04:25:52 gerald Exp $
+# $Id: check,v 1.48 1999-12-01 00:59:31 gerald Exp $
 
 #
 # Load modules
@@ -29,8 +29,8 @@ use constant UNDEF => undef;
 # Constant definitions
 #############################################################################
 
-my $cvsrevision	= '$Revision: 1.47 $';
-my $cvsdate	= '$Date: 1999-11-15 04:25:52 $';
+my $cvsrevision	= '$Revision: 1.48 $';
+my $cvsdate	= '$Date: 1999-12-01 00:59:31 $';
 
 my $logfile	= "/var/log/httpd/val-svc";
 
@@ -1116,77 +1116,45 @@ sub build_jump_links {
     return $text;
 
 }
+#
+# Check if the document has a doctype; if it doesn't, try to guess an
+# appropriate one given the elements used. Returns 2 values. First value is 0
+# if there was a DOCTYPE and 1 otherwise. The Second value is the doctype.
 
 sub check_for_doctype {
-    # check if the document has a doctype; if it doesn't, try to
-    # guess an appropriate one given the elements used
-    #
-    # returns 2 values:
-    #
-    # first value: 0 or 1:
-    #     if 0, there was a doctype already present;
-    #     if 1, there wasn't a doctype
-    #
-    # second value:
-    #     the inferred doctype, if any
+  my $file = shift; # a reference to @file, for efficiency
 
-    my $fileref = shift;		# a reference to @file, for efficiency
-    my @file = @$fileref;		# dereference $fileref
+  foreach my $count (0 .. scalar @{$file}) {
+    my $line = $file->[$count];
 
-    foreach $count (0..$#file) {
-	$line = $file[$count];
+    # does an HTML element precede the doctype on the same line?
+    last if $line =~ /<[a-z].*<!doctype/i;
 
-	# does an HTML element precede the doctype on the same line?
-	last if $line =~ /<[a-z].*<!doctype/i;
-
-	if ( $line =~ /<!doctype/i ) {	# found a doctype
-	    my $dttext = join( "", @file[$count..$count+5] );
-	    $dttext =~ s/\n//g;
-	    $dttext =~ s/.*doctype\s+html\s+public\s*["']//i;
-	    $dttext =~ s/["'].*//;	# strip everything except the FPI
-	        # @@ should make sure both quote chars were the same
-	    return 0, $dttext;
-	}
-
-	$line =~ s/<!(?:--(?:[^-]|-[^-])*--\s*)+>//go;	# strip comments,
-	    # so the next line doesn't find commented-out markup etc.
-	    # (this doesn't handle multi-line comments, unfortunately)
-
-	last if ( $line =~ /<[a-z]/i );		# found an element
-
+    if ($line =~ /<!doctype/i) { # found a doctype
+      my $dttext = join '', @{$file}[$count .. $count + 5];
+      $dttext =~ s/\n//g;
+      $dttext =~ s/.*?doctype\s+html\s+public\s*([\'\"])([^\1]+?)\1.*/$2/i;
+      return 0, $dttext;
     }
 
-    # do several loops of increasing lengths to avoid iterating over
-    # the whole file if possible.
-    #
-    # these heuristics could be improved a lot.
+    $line =~ s/<!(?:--(?:[^-]|-[^-])*--\s*)+>//go;
+    # Strip comments, so the next line doesn't find commented-out markup etc.
+    # (this doesn't handle multi-line comments, unfortunately)
+    last if $line =~ /<[a-z]/i; # found an element
+  }
 
-    foreach $line (@file[0..20]) {
-	return 1, $xhtmlt_doctype if $line =~ /xmlns\s*=/i;
-    }
-
-    foreach $line (@file[0..20]) {
-	return 1, $html40f_doctype if $line =~ /<frame/i;
-    }
-
-    foreach $line (@file[0..20]) {
-	return 1, $html40t_doctype if $line =~ /<(table|body )/i;
-    }
-
-    # go through the whole file
-    foreach $line (@file) {
-	return 1, $html40t_doctype if $line =~ /<(table|body )/i;
-    }
-
-    foreach $line (@file) {
-	return 1, $html32_doctype if $line =~ /<center>/i;
-	return 1, $html32_doctype if $line =~ /<[h0-9p]*\s*align\s*=\s*center>/i;
-    }
-
-    # no luck earlier; guess HTML 4.0 transitional
-    return 1, $html40t_doctype;
-
+  for (@{$file}[0 .. 20]) {
+    return 1, $xhtmlt_doctype  if /xmlns\s*=/i;
+    return 1, $html40f_doctype if /<frame/i;
+  }
+  for (@{$file}) {
+    return 1, $html40t_doctype if /<(table|body )/i;
+    return 1, $html32_doctype  if /<center>/i;
+    return 1, $html32_doctype  if /<[h0-9p]*\s*align\s*=\s*center>/i;
+  }
+  return 1, $html40t_doctype; # no luck earlier; guess HTML 4.0 transitional
 }
+
 
 sub print_401_auth_required_message {
 
