@@ -5,8 +5,8 @@
 <TMPL_IF NAME="is_upload">
       <th>File:</th><td colspan="2"><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></td>
 <TMPL_ELSE>
-      <th><label title="Address of Page to Validate (accesskey: 1)" for="uri">Address</label>:</th>
-      <td colspan="2"><input accesskey="1" type="text" id="uri" name="uri" value="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">" /></td>
+      <th><label title="Address of Page to Validate" for="uri">Address</label>:</th>
+      <td colspan="2"><input type="text" id="uri" name="uri" value="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">" /></td>
 </TMPL_IF>
     </tr>
 <TMPL_IF NAME="opt_verbose">
@@ -26,7 +26,7 @@
 <TMPL_ELSE>
   <TMPL_IF NAME="file_charset">
     <tr>
-      <th><label accesskey="2" title="Character Encoding (accesskey: 2)" for="charset">Encoding</label>:</th>
+      <th><label title="Character Encoding" for="charset">Encoding</label>:</th>
       <td><TMPL_VAR NAME="file_charset" ESCAPE="HTML"></td><td><TMPL_INCLUDE NAME="popup_charset.tmpl"></td>
     </tr>
   <TMPL_ELSE>
@@ -34,7 +34,7 @@
   </TMPL_IF>
   <TMPL_IF NAME="file_version">
     <tr>
-      <th><label accesskey="3" for="doctype" title="Document Type (accesskey: 3)">Doctype</label>:</th>
+      <th><label for="doctype" title="Document Type">Doctype</label>:</th>
       <td><TMPL_VAR NAME="file_version" ESCAPE="HTML"></td><td><TMPL_INCLUDE NAME="popup_doctype.tmpl"></td>
     </tr>
   <TMPL_ELSE>
@@ -60,31 +60,31 @@
   </table>
 <TMPL_UNLESS NAME="is_upload">
   <fieldset>
-    <legend accesskey="4">Revalidate With Options</legend>
+    <legend>Revalidate With Options</legend>
     <table class="header">
       <tr>
-        <th><input type="submit" value="Revalidate" accesskey="9" title="Revalidate file (accesskey: 9)" />: </th>
+        <th><input type="submit" value="Revalidate" title="Revalidate file" />: </th>
         <td colspan="2">
           <table class="options">
             <tr>
-              <td><label title="Show Page Source (accesskey: 5)" for="ss"><input type="checkbox" value="1" id="ss" name="ss" accesskey="5"
+              <td><label title="Show Page Source" for="ss"><input type="checkbox" value="1" id="ss" name="ss" 
 <TMPL_IF NAME="opt_show_source">
 	checked="checked"
 </TMPL_IF>
 		/>Show&nbsp;Source</label></td>
-              <td><label title="Show an Outline of the document (accesskey: 6)" for="outline"><input type="checkbox" value="1" id="outline" name="outline" accesskey="6"
+              <td><label title="Show an Outline of the document" for="outline"><input type="checkbox" value="1" id="outline" name="outline" 
 <TMPL_IF NAME="opt_show_outline">
 	checked="checked"
 </TMPL_IF>
 		/>Show&nbsp;Outline</label></td>
             </tr>
             <tr>
-              <td><label title="Show Parse Tree (accesskey: 7)" for="sp"><input type="checkbox" value="1" id="sp" name="sp" accesskey="7"
+              <td><label title="Show Parse Tree" for="sp"><input type="checkbox" value="1" id="sp" name="sp" 
 <TMPL_IF NAME="opt_show_parsetree">
 	checked="checked"
 </TMPL_IF>
 		/>Show&nbsp;Parse&nbsp;Tree</label></td>
-              <td><label title="Exclude Attributes from Parse Tree (accesskey: 8)" for="noatt"><input type="checkbox" value="1" id="noatt" name="noatt" accesskey="8"
+              <td><label title="Exclude Attributes from Parse Tree" for="noatt"><input type="checkbox" value="1" id="noatt" name="noatt" 
 <TMPL_IF NAME="opt_show_noatt">
 	checked="checked"
 </TMPL_IF>
