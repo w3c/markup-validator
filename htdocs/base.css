@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.35 2004-04-28 07:38:18 ot Exp $
+   $Id: base.css,v 1.26.2.36 2004-04-28 08:14:56 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -44,8 +44,8 @@ dt {
 /* Fieldsets in general */
 fieldset {
 /*  max-width:     80%; */
-  margin-left:   2em;
-  margin-right:   2em;
+  margin-left:   1em;
+  margin-right:  1em;
 }
 
 /* The front-page fieldsets */

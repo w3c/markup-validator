@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.26 2004-04-18 01:44:06 ot Exp $ */
+/* $Id: results.css,v 1.13.2.27 2004-04-28 08:14:57 ot Exp $ */
 
 .input {
   color: black;
@@ -129,7 +129,7 @@ fieldset legend {
 div.Warnings {
   clear: left;
   padding: 0;
-  margin-right: 8em;
+  margin-right: 1em;
 }
 
 /* "Fatal" warnings... */
@@ -339,3 +339,4 @@ div.mtb { /* "Medium Thematic Break" */
   margin-top: 5em;
   border-top: 1px solid black;
 }
+
