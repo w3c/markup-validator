@@ -4,31 +4,30 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: tips.css,v 1.4.2.3 2004-01-20 09:45:00 ot Exp $
+   $Id: tips.css,v 1.4.2.4 2004-02-16 21:10:51 link Exp $
 */
 
-
 dl.tip {
-  text-align: center;
-  background:    #eeeeee;
-  border-top: 1px solid black;
+     margin-top: 0em;
+     text-align: center;
+     background: #eeeeee;
+     border-top: 1px solid black;
   border-bottom: 1px solid black;
-  padding: .5em;
-
+        padding: .5em;
 }
-
 
 dl.tip dt {
   text-align: center;
-  color: black;
+       color: black;
   background: #eeeeee;
-  display: inline;
+     display: inline;
 }
 
 dl.tip dt a {
   text-decoration: none;
   color: inherit;
 } 
+
 dl.tip dd {
   text-align: center;
   text-decoration: none;
