@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.286 2002-11-03 16:53:30 link Exp $
+# $Id: check,v 1.287 2002-11-03 16:54:31 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.286 $;
+  $VERSION    =  q$Revision: 1.287 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-11-03 16:53:30 $,
+			      Date => q$Date: 2002-11-03 16:54:31 $,
 			     });
 
 #
@@ -299,7 +299,7 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
   }
   &add_warning($File, <<".EOF.");
       <em>Note:</em>
-      The HTTP Content-Type field $_source[0] ($_source[1]) did not contain
+      The HTTP Content-Type header $_source[0] ($_source[1]) did not contain
       a "charset" parameter, but the Content-Type was one of the XML text/*
       sub-types (<code>$File->{ContentType}</code>). The relevant
       specification (RFC 3023) specifies a strong default of "us-ascii" for
