@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.239 2002-10-05 11:21:09 ville Exp $
+# $Id: check,v 1.240 2002-10-05 15:50:00 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.239 $;
+  $VERSION    =  q$Revision: 1.240 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-05 11:21:09 $,
+			      Date => q$Date: 2002-10-05 15:50:00 $,
 			     });
 
 #
@@ -395,7 +395,7 @@ $File = &charset_conflicts($File);
 #
 # Print different things if we got redirected or had a file upload.
 if ($File->{'Is Upload'}) {
-  &add_table($File, "File", $File->{URI});
+  &add_table($File, 'File', &ent($File->{URI}));
 } else {
   my $size = (length($File->{Opt}->{URI}) || 38) + 2;
   $size = 70 if $size > 70;
@@ -403,31 +403,32 @@ if ($File->{'Is Upload'}) {
   if (URI::eq("$File->{Opt}->{URI}", $File->{URI})) {
     &add_table($File, qq(<label title="Address of Page to Validate (accesskey: 1)" for="uri">Address</label>),
 	       [1, 2, '<input accesskey="1" type="text" id="uri" name="uri" size="' . $size
-	       . '" value="' . $File->{Opt}->{URI} . '" />']);
+	       . '" value="' . &ent($File->{Opt}->{URI}) . '" />']);
   } else {
+    my $furi = &ent($File->{URI});
     &add_table($File, qq(<label title="Address of Page to Validate (accesskey: 1)" for="uri">URI</label>),
 	       '<input accesskey="1" type="text" id="uri" name="uri" size="' . $size
-	       . '" value="' . $File->{URI} . '" />');
+	       . '" value="' . $furi . '" />');
     &add_warning($File, '<em>Note:</em> The URI you gave me, &#171;<code>' .
-		 $File->{Opt}->{URI} . '</code>&#187;, ' .
+		 &ent($File->{Opt}->{URI}) . '</code>&#187;, ' .
 		 'returned a redirect to ' .
-		 '&#171;<code>' . $File->{URI} . '</code>&#187;.');
+		 '&#171;<code>' . $furi . '</code>&#187;.');
   }
 }
 
 
 if ($File->{Opt}->{Verbose}) {
-  &add_table($File, "Modified", $File->{Modified}) if $File->{Modified};
-  &add_table($File, "Server",   $File->{Server})   if $File->{Server};
-  &add_table($File, "Size",     $File->{Size})     if $File->{Size};
+  &add_table($File, "Modified", &ent($File->{Modified})) if $File->{Modified};
+  &add_table($File, "Server",   &ent($File->{Server}))   if $File->{Server};
+  &add_table($File, "Size",     &ent($File->{Size}))     if $File->{Size};
 }
 
 if ($File->{'Is Upload'}) {
-  &add_table($File, 'Encoding', $File->{Charset}->{Use});
+  &add_table($File, 'Encoding', &ent($File->{Charset}->{Use}));
 } else {
   &add_table($File,
 	     qq(<label accesskey="2" title="Character Encoding (accesskey: 2)" for="charset">Encoding</label>),
-	     $File->{Charset}->{Use},
+	     &ent($File->{Charset}->{Use}),
 	     &CGI::popup_menu(
 			      -name      => 'charset',
 			      -id        => 'charset',
@@ -525,10 +526,14 @@ $ENV{SGML_SEARCH_PATH} = $CFG->{'SGML Library'};
 my @cmd = ($CFG->{'SGML Parser'}, '-c', $catalog, '-E0', @xmlflags);
 
 if ($DEBUG) {
-  &add_table($File, 'Command',          [1, 2, "@cmd"]);
-  &add_table($File, 'SP_CHARSET_FIXED', [1, 2, "<code>$ENV{SP_CHARSET_FIXED}</code>"]);
-  &add_table($File, 'SP_ENCODING',      [1, 2, "<code>$ENV{SP_ENCODING}</code>"]);
-  &add_table($File, 'SP_BCTF',          [1, 2, "<code>$ENV{SP_BCTF}</code>"]);
+  &add_table($File, 'Command',
+             [1, 2, &ent("@cmd")]);
+  &add_table($File, 'SP_CHARSET_FIXED',
+             [1, 2, '<code>' . &ent($ENV{SP_CHARSET_FIXED}) . '</code>']);
+  &add_table($File, 'SP_ENCODING',
+             [1, 2, '<code>' . &ent($ENV{SP_ENCODING})      . '</code>']);
+  &add_table($File, 'SP_BCTF',
+             [1, 2, '<code>' . &ent($ENV{SP_BCTF})          . '</code>']);
 }
 
 #
@@ -625,7 +630,11 @@ if (&is_xml($File->{Type}) and not $File->{DOCTYPE}) {
 
 #
 # Get the pretty text version of the FPI if a mapping exists.
-$File->{Version} = $CFG->{'FPI to Text'}->{$File->{Version}} || $File->{Version};
+if (my $prettyver = $CFG->{'FPI to Text'}->{$File->{Version}}) {
+  $File->{Version} = $prettyver;
+} else {
+  $File->{Version} = &ent($File->{Version});
+}
 
 if ($File->{'Is Upload'}) {
   &add_table($File, 'Doctype', $File->{Version});
@@ -652,32 +661,24 @@ if ($File->{'Is Upload'}) {
 
 
 if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
+  my $rns = &ent($File->{Namespace});
   if ($File->{Type} eq 'xhtml' and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
-    &add_warning($File, "Unknown namespace (&#171;<code>$File->{Namespace}</code>&#187;) for text/html document!");
-    if ($File->{Namespace} ne '') {
-      &add_table($File, "Root Namespace",
-	qq(<a href="$File->{Namespace}">$File->{Namespace}</a>));
-    }
+    &add_warning($File, "Unknown namespace (&#171;<code>$rns</code>&#187;) for text/html document!");
   } elsif ($File->{Type} eq 'svg' and $File->{Namespace} ne 'http://www.w3.org/2000/svg') {
-    &add_warning($File, "Unknown namespace (&#171;<code>$File->{Namespace}</code>&#187;) for SVG document!");
-    if ($File->{Namespace} ne '') {
-      &add_table($File, "Root Namespace",
-	qq(<a href="$File->{Namespace}">$File->{Namespace}</a>));
-    }
-  } else {
-    if ($File->{Namespace} ne '') {
-      &add_table($File, "Root Namespace",
-	qq(<a href="$File->{Namespace}">$File->{Namespace}</a>));
-    }
+    &add_warning($File, "Unknown namespace (&#171;<code>$rns</code>&#187;) for SVG document!");
+  }
+  if ($File->{Namespace} ne '') {
+    &add_table($File, 'Root Namespace', qq(<a href="$rns">$rns</a>));
   }
 
   if (scalar keys %{$File->{Namespaces}} > 1) {
-    my $namespaces = "<ul>";
+    my $namespaces = '<ul>';
     for (keys %{$File->{Namespaces}}) {
-      $namespaces .= qq(\t<li><a href="$_">$_</a></li>\n)
+      my $ns = &ent($_);
+      $namespaces .= qq(\t<li><a href="$ns">$ns</a></li>\n)
           unless $_ eq $File->{Namespace}; # Don't repeat Root Namespace.
     }
-    &add_table($File, "Other Namespaces", $namespaces . "</ul>");
+    &add_table($File, 'Other Namespaces', $namespaces . '</ul>');
   }
 }
 
@@ -759,6 +760,8 @@ exit;
 # exactly one table data cell. If the argument is a string it is inserted
 # directly. If it is a reference it is assumed to be a reference to an array
 # of 3 elements. The 3 are: rowspan, colspan, and data.
+#
+# Make sure that the arguments are properly encoded, this uses them as is.
 #
 sub add_table {
   my $File = shift;
@@ -1256,8 +1259,12 @@ sub normalize_newlines {
 
 #
 # Return $_[0] encoded for HTML entities (cribbed from merlyn).
+#
+# Note that this is used both for HTML and XML escaping.
+#
 sub ent {
   local $_ = shift;
+  return '' unless defined; # Eliminate warnings
   s(["<&>"]){'&#' . ord($&) . ';'}ge;  # should switch to hex sooner or later
   return $_;
 }
@@ -1985,12 +1992,12 @@ sub uri_rejected {
     $scheme = $scheme->scheme();
   }
 
-  return <<".EOF.";
+  return sprintf(<<".EOF.", &ent($scheme));
     <div class="error">
       <p>
         Sorry, this type of <a
           href="http://www.w3.org/Addressing/#terms">URI</a>
-        (<q>$scheme</q>) is not supported by this service. Please check
+        (<q>%s</q>) is not supported by this service. Please check
         that you entered the URI correctly.
       </p>
       <p>URIs should be in the form: <code>http://validator.w3.org/</code></p>
@@ -2035,15 +2042,21 @@ sub charset_conflicts {
     $File->{Tentative} |= T_WARN;
   }
 
+  my $cs_use  = $File->{Charset}->{Use}  ? &ent($File->{Charset}->{Use})  : '';
+  my $cs_opt  = $File->{Opt}->{Charset}  ? &ent($File->{Opt}->{Charset})  : '';
+  my $cs_http = $File->{Charset}->{HTTP} ? &ent($File->{Charset}->{HTTP}) : '';
+  my $cs_xml  = $File->{Charset}->{XML}  ? &ent($File->{Charset}->{XML})  : '';
+  my $cs_meta = $File->{Charset}->{META} ? &ent($File->{Charset}->{META}) : '';
+
   #
   # warn about charset override
   if ($File->{Charset}->{Override} &&
-        $File->{Charset}->{Override} ne $File->{Charset}->{Use}) {
+      $File->{Charset}->{Override} ne $File->{Charset}->{Use}) {
     &add_warning($File, <<".EOF.");
       <strong>Character Encoding Override in effect!</strong>
       The detected character encoding,
-      &#171;<code>$File->{Charset}->{Use}</code>&#187;, has been suppressed and
-      the character encoding &#171;<code>$File->{Opt}->{Charset}</code>&#187;
+      &#171;<code>$cs_use</code>&#187;, has been suppressed and
+      the character encoding &#171;<code>$cs_opt</code>&#187;
       is used instead.
 .EOF.
     $File->{Tentative} |= T_ERROR;
@@ -2056,22 +2069,22 @@ sub charset_conflicts {
     &add_warning($File, <<".EOF.");
       <strong>Character Encoding mismatch!</strong>
       The character encoding specified in the
-        HTTP header (<code>$File->{Charset}->{HTTP}</code>)
+        HTTP header (<code>$cs_http</code>)
       is different from the value in the
-        XML declaration (<code>$File->{Charset}->{XML}</code>).
+        XML declaration (<code>$cs_xml</code>).
       I will use the value from the
-        HTTP header (<code>$File->{Charset}->{Use}</code>)
+        HTTP header (<code>$cs_use</code>)
       for this validation.
 .EOF.
   } elsif (&conflict($File->{Charset}->{HTTP}, $File->{Charset}->{META})) {
     &add_warning($File, <<".EOF.");
       <strong>Character Encoding mismatch!</strong>
       The character encoding specified in the
-        HTTP header (<code>$File->{Charset}->{HTTP}</code>)
+        HTTP header (<code>$cs_http</code>)
       is different from the value in the
-        <code>&lt;meta&gt;</code> element (<code>$File->{Charset}->{META}</code>).
+        <code>&lt;meta&gt;</code> element (<code>$cs_meta</code>).
       I will use the value from the
-        HTTP header (<code>$File->{Charset}->{Use}</code>)
+        HTTP header (<code>$cs_use</code>)
       for this validation.
 .EOF.
   }
@@ -2079,11 +2092,11 @@ sub charset_conflicts {
     &add_warning($File, <<".EOF.");
       <strong>Character Encoding mismatch!</strong>
       The character encoding specified in the
-        XML declaration (<code>$File->{Charset}->{XML}</code>)
+        XML declaration (<code>$cs_xml</code>)
       is different from the value in the
-        <code>&lt;meta&gt;</code> element (<code>$File->{Charset}->{META}</code>).
+        <code>&lt;meta&gt;</code> element (<code>$cs_meta</code>).
       I will use the value from the
-        XML declaration (<code>$File->{Charset}->{XML}</code>)
+        XML declaration (<code>$cs_xml</code>)
       for this validation.
 .EOF.
   }
@@ -2116,19 +2129,22 @@ sub transcode {
   }
 
   if ($command ne 'I') {
+    my $cs = &ent($File->{Charset}->{Use});
     $File->{'Error Flagged'} = TRUE;
-    $File->{'Error Message'} = <<".EOF.";
+    $File->{'Error Message'} = sprintf(<<".EOF.", $cs, &ent($@));
       <p>Sorry!
-        A fatal error occurred when attempting to transcode the character encoding
-        of the document. Either we do not support this character encoding yet, or you
-        have specified a non-existent character encoding (often a misspelling).
+        A fatal error occurred when attempting to transcode the character
+        encoding of the document. Either we do not support this character
+        encoding yet, or you have specified a non-existent character encoding
+        (often a misspelling).
       </p>
-      <p>The detected character encoding was "$File->{Charset}->{Use}".</p>
-      <p>The error was "$@".</p>
+      <p>The detected character encoding was "%s".</p>
+      <p>The error was "%s".</p>
       <p>
-        If you believe the character encoding to be valid you can submit a request for
-        that character encoding (see the <a href="feedback.html">feedback page</a>
-        for details) and we will look into supporting it in the future.
+        If you believe the character encoding to be valid you can submit a
+        request for that character encoding (see the
+        <a href="feedback.html">feedback page</a> for details) and we will
+        look into supporting it in the future.
       </p>
 .EOF.
     return $File;
@@ -2187,12 +2203,13 @@ sub byte_error {
     $File->{'Error Flagged'} = TRUE;
     my $s = $#lines ? 's' : '';
     my $lines = join ', ', split ',', Set::IntSpan->new(\@lines)->run_list;
+    my $cs = &ent($File->{Charset}->{Use});
     $File->{'Error Message'} = <<".EOF.";
       <p class="error">
         Sorry, I am unable to validate this document because on line$s
         <strong>$lines</strong>
 	it contained one or more bytes that I cannot interpret as
-        <code>$File->{Charset}->{Use}</code> (in other words, the bytes
+        <code>$cs</code> (in other words, the bytes
         found are not valid values in the specified Character Encoding).
         Please check both the content of the file and the character
         encoding indication.
@@ -2218,20 +2235,22 @@ X-W3C-Validator-Errors: $errs
 
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/css" href="xml-results.css"?>
+.EOF.
 
+  print qq(
 <results>
   <meta>
-    <uri>$File->{URI}</uri>
-    <modified>$File->{Modified}</modified>
-    <server>$File->{Server}</server>
-    <size>$File->{Size}</size>
-    <encoding>$File->{Charset}->{Use}</encoding>
-    <doctype>$File->{DOCTYPE}</doctype>
+    <uri>), &ent($File->{URI}), qq(</uri>
+    <modified>), &ent($File->{Modified}), qq(</modified>
+    <server>), &ent($File->{Server}), qq(</server>
+    <size>), &ent($File->{Size}), qq(</size>
+    <encoding>), &ent($File->{Charset}->{Use}), qq(</encoding>
+    <doctype>), &ent($File->{DOCTYPE}), qq(</doctype>
   </meta>
-  <warnings>
-.EOF.
-  print qq(<warning>$_</warning>) for @{$File->{Warnings}};
-  print "  </warnings>\n  <messages>\n";
+  <warnings>);
+
+  printf qq(\n    <warning>%s</warning>), &ent($_) for @{$File->{Warnings}};
+  print "\n  </warnings>\n  <messages>\n";
 
   foreach my $err (@{$File->{Errors}}) {
     # Strip curlies from lq-nsgmls output.
@@ -2252,10 +2271,11 @@ X-W3C-Validator-Errors: $errs
 		   $File->{Offsets}->[$err->{line} - 1]->[1],
 		   $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char} + $err->{line}
 		  );
-    print <<".EOF.";
-    <error><line>$err->{line}</line><column>$err->{char}</column><offset>@offsets</offset><msg>$err->{msg}</msg></error>
+    printf <<".EOF.", &ent($err->{msg});
+    <error><line>$err->{line}</line><column>$err->{char}</column><offset>@offsets</offset><msg>%s</msg></error>
 .EOF.
   }
+
   print <<".EOF.";
   </messages>
 </results>
@@ -2265,7 +2285,7 @@ X-W3C-Validator-Errors: $errs
 
 
 #
-# Return an XML report for the page.
+# Return an EARL report for the page.
 sub report_earl {
   my $File = shift;
 
@@ -2308,10 +2328,10 @@ X-W3C-Validator-Errors: $errs
 		     $File->{Offsets}->[$err->{line} - 1]->[1],
 		     $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char} + $err->{line}
 		    );
-      print <<".EOF.";
+      printf <<".EOF.", &ent($File->{URI}), &ent($err->{msg});
     <asserts rdf:parseType="Resource">
       <rdf:subject rdf:parseType="Resource">
-        <testSubject rdf:resource="$File->{URI}" />
+        <testSubject rdf:resource="%s" />
         <val:line>$err->{line}</val:line>
         <val:column>$err->{char}</val:column>
         <val:offset>@offsets</val:offset>
@@ -2319,16 +2339,16 @@ X-W3C-Validator-Errors: $errs
       <rdf:predicate rdf:resource="http://www.w3.org/2001/03/earl/1.00#fails" />
       <rdf:object rdf:parseType="Resource">
         <testCriteria rdf:parseType="Resource"><id rdf:resource="http://www.w3.org/HTML/" /></testCriteria>
-        <note>$err->{msg}</note>
+        <note>%s</note>
       </rdf:object>
       <testMode rdf:resource="http://www.w3.org/2001/03/earl/1.00#Auto" />
     </asserts>
 .EOF.
     }
   } else {
-    print <<".EOF.";
+    printf <<".EOF.", &ent($File->{URI});
   <asserts rdf:parseType="Resource">
-    <rdf:subject rdf:parseType="Resource"><testSubject rdf:resource="$File->{URI}" /></rdf:subject>
+    <rdf:subject rdf:parseType="Resource"><testSubject rdf:resource="%s" /></rdf:subject>
     <rdf:predicate rdf:resource="http://www.w3.org/2001/03/earl/1.00#passes" />
     <rdf:object rdf:parseType="Resource">
       <testCriteria rdf:parseType="Resource"><id rdf:resource="http://www.w3.org/HTML/" /></testCriteria>
@@ -2348,7 +2368,9 @@ X-W3C-Validator-Errors: $errs
 
 
 #
-# Return an XML report for the page.
+# Return a Notation3 EARL report for the page.
+#
+# @@ TODO: escape output
 sub report_n3 {
   my $File = shift;
 
