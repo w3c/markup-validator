@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.35 2003-04-23 01:24:52 link Exp $
+# $Id: check,v 1.305.2.36 2003-04-23 01:27:42 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.35 $;
+  $VERSION    =  q$Revision: 1.305.2.36 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -166,7 +166,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-04-23 01:24:52 $,
+                              Date => q$Date: 2003-04-23 01:27:42 $,
                              });
 
 #
@@ -1572,8 +1572,10 @@ EOHD
       $line = &ent($line); # Entity encode.
       $line =~ s/\t/ /g;   # Collapse TABs.
 
+      my $msg = &ent($err->{msg}); # Entity encode error message.
+
       print qq(  <li><em>Line <a href="#line-$err->{line}">$err->{line}</a>, column $err->{char}</em>: );
-      print qq{<span class="msg">$err->{msg}</span>};
+      print qq{<span class="msg">$msg</span>};
       if (defined $CFG->{'Error to URI'}->{$err->{idx}}) {
 	print qq{ (<a href="$CFG->{'Msg FAQ URI'}#$CFG->{'Error to URI'}->{$err->{idx}}">explain...</a>).};
       } elsif ($DEBUG) {
