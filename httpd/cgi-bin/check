@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.205 2002-08-23 08:06:03 duerst Exp $
+# $Id: check,v 1.206 2002-08-23 08:21:34 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.205 $;
+  $VERSION    =  q$Revision: 1.206 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-23 08:06:03 $,
+			      Date => q$Date: 2002-08-23 08:21:34 $,
 			     });
 
 #
@@ -218,6 +218,8 @@ if ($q->param('uploaded_file')) {
 } elsif ($q->param('uri')) {
   $File = &handle_uri($q, $File);
 }
+$File->{Content} = &normalize_newlines($File->{Content}); # FIXME: Breaks on non-ascii compatible.
+
 
 #
 # Get rid of the CGI object.
@@ -1149,7 +1151,7 @@ sub handle_uri {
     $lastmod = scalar(gmtime($res->last_modified));
   }
 
-  $File->{Content}         = &normalize_newlines($res->content); # FIXME: Breaks on non-ascii compatible.
+  $File->{Content}         = $res->content;
   $File->{Type}            = $type;
   $File->{Charset}->{HTTP} = $charset;
   $File->{Modified}        = $lastmod;
@@ -1172,10 +1174,12 @@ sub handle_file {
   my $h = $q->uploadInfo($f);
   my $file;
 
-  while (not eof $f) {$file .= <$f>};
+  while (not eof $f) {$file .= <$f>}; ### there should be a faster
+                                      ### way to slurp in a file, by
+                                      ### changing the line delimiter
   my($type, $charset) = &parse_content_type($File, $h->{'Content-Type'});
 
-  $File->{Content}         = &normalize_newlines($file); # FIXME: Breaks on non-ascii compatible.
+  $File->{Content}         = $file;
   $File->{Type}            = $type;
   $File->{Charset}->{HTTP} = $charset;
   $File->{Modified}        = $h->{'Last-Modified'};
@@ -1193,7 +1197,7 @@ sub handle_frag {
   my $q    = shift; # The CGI object.
   my $File = shift; # The master datastructure.
 
-  $File->{Content}     = &normalize_newlines($q->param('fragment')); # FIXME: Breaks on non-ascii compatible.
+  $File->{Content}     = $q->param('fragment');
   $File->{Type}        = 'html';
   $File->{Modified}    = '';
   $File->{Server}      = '';
