@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.349 2004-10-16 20:51:40 ville Exp $
+# $Id: check,v 1.350 2004-10-25 21:26:10 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -227,7 +227,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.349 $;
+  $VERSION    =  q$Revision: 1.350 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -893,6 +893,10 @@ if ($File->{Opt}->{Output} eq 'xml') {
     $T->param(VALID => FALSE);
     $T->param(file_errors => &report_errors($File));
   }
+
+  # 
+  # todo: parsetree() is quite expensive for non-trivial documents, it
+  # should only be called if the user actually requested the parse tree.
 
   $T->param(file_warnings  => $File->{Warnings});
   $T->param(file_outline   => &outline($File));
