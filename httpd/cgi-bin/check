@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.360 2004-11-15 05:27:11 ot Exp $
+# $Id: check,v 1.361 2004-11-19 07:02:47 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -211,12 +211,7 @@ Directory not readable (permission denied): @_r
   }
   #FIXME;
 
-  #
-  # Read Resource files... (friendly error messages)
-  my %config_opts = (-ConfigFile => $CFG->{'Verbose Msg'});
-  my %rsrc = Config::General->new(%config_opts)->getall();
-  $RSRC = \%rsrc;
-
+ 
   #
   # Set debug flag.
   if ($CFG->{'Allow Debug'} == TRUE) {
@@ -227,7 +222,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.360 $;
+  $VERSION    =  q$Revision: 1.361 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -314,6 +309,14 @@ my $E = HTML::Template->new(
                                            $lang, 'fatal-error.tmpl'),
   die_on_bad_params => FALSE,
 );
+
+
+# Read friendly error message file
+my $error_messages_list =  File::Spec->catfile($CFG->{Paths}->{Templates}, $lang, 'error_messages.cfg')
+my %config_opts = (-ConfigFile => $error_messages_list);
+my %rsrc = Config::General->new(%config_opts)->getall();
+$RSRC = \%rsrc;
+
 
 $T->param(cfg_home_page => $CFG->{'Home Page'});
 
