@@ -8,14 +8,16 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.16 1999-03-04 16:04:53 gerald Exp $
+# $Id: check,v 1.17 1999-04-08 22:18:49 renaudb Exp $
+
+use LWP::UserAgent;
 
 #############################################################################
 # Constant definitions
 #############################################################################
 
-$cvsrevision	= '$Revision: 1.16 $';
-$cvsdate	= '$Date: 1999-03-04 16:04:53 $';
+$cvsrevision	= '$Revision: 1.17 $';
+$cvsdate	= '$Date: 1999-04-08 22:18:49 $';
 
 $logfile	= "/var/log/httpd/val-svc";
 $reflogfile	= "/var/log/httpd/val-svc-referers";
@@ -192,7 +194,7 @@ foreach $pair (split(/[&;,]/, $parameters)) {
 }
 
 # accept "url=foo" for backwards compatibility (but uri=foo is preferred)
-$uri = $FORM{uri} || $FORM{url};
+$uri = URI::URL->new($FORM{uri} || $FORM{url});
 
 if ( ( $uri eq "true" || length( $uri ) == 0 ) &&
         ( $ENV{REQUEST_URI} =~ /check/ ) ) {
@@ -211,7 +213,7 @@ if ( $uri =~ /^www/i ) {
 # Output validation results
 #############################################################################
 
-print <<"EOF";
+$header = <<"EOF";
 Content-Type: text/html
 
 $html40t_doctype
@@ -236,7 +238,8 @@ $notice$debugmessage
 EOF
 
 if ( $uri !~ m#^http://# ) {
-    print <<"EOF";
+     print $header;
+     print <<"EOF";
 <p>
   Sorry, this type of URI is not supported by this service.
 </p>
@@ -260,57 +263,68 @@ EOF
 }
 
 # @@ is this completely safe!?
-$uri_escaped = $uri;
-$uri_escaped =~ s/\$/\\\$/g;
-open( URI, "$grabber \"$uri_escaped\" |" ) || die "couldn't retrieve uri: $!";
-@file = <URI>;
-close( URI ) || die "couldn't close uri retrieval pipe: $!";
+
+$ua = new LWP::UserAgent;
+$request = new HTTP::Request(GET => $uri);
+
+$request->headers->user_agent($ENV{USER_AGENT});
+# if we got a Authorization header from the client, it means
+# that the client is back at it after being prompted for
+# a password: let's insert the header as is in the outgoing request
+if($ENV{HTTP_AUTHORIZATION}){
+    $request->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
+}
+
+$response = $ua->request($request);
+
+#open( URI, "$grabber \"$uri_escaped\" |" ) || die "couldn't retrieve uri: $!";
+#@file = <URI>;
+#close( URI ) || die "couldn't close uri retrieval pipe: $!";
 
 # skip the request headers
-while ( $_ = shift( @file ) ) {
-    chop;
-    last if /^$/;
-}
+#while ( $_ = shift( @file ) ) {
+#    chop;
+#    last if /^$/;
+#}
 
 # check the response headers
-while ( $_ = shift( @file ) ) {
-    chop;
-    s/\r$//;
-    if (/^HTTP\/[0-9\.]+ [0-9][0-9][0-9] ?.*/ ) {
-	( ( $httpversion, $response, $message ) =
-	    ( /^(HTTP\/[0-9\.]+) ([0-9][0-9][0-9]) ?(.*)/ ) );
-    }
-    if (/^Last-Modified: /i ) {
-	( $lastmod ) = ( /^Last-Modified: (.*)/i );
-    }
-    if (/^Content-Length: /i ) {
-	( $length ) = ( /^Content-Length: (.*)/i );
-    }
-    if (/^Server: /i ) {
-	( $server ) = ( /^Server: (.*)/i );
-    }
-    if (/^Location: /i ) {
-	( $redirect_uri ) = ( /^Location: (.*)/i );
-	$redirect_uri =~ s/\s*$//g;	# it has a trailing space sometimes (?)
-    }
-    if (/^Content-Type: /i) {
-        ( $content_type ) = ( /^Content-Type: (.*)/i );
-        ( $http_charset ) = ( $content_type =~ /;\s*charset=(.*)/i );
-        $content_type =~ s/;.*$//;
-        $content_type =~ s/\s*$//g;
-	$http_charset =~ s/;.*//;
-        $http_charset =~ s/\s*//g;
-    }
+#while ( $_ = shift( @file ) ) {
+#    chop;
+#    s/\r$//;
+#    if (/^HTTP\/[0-9\.]+ [0-9][0-9][0-9] ?.*/ ) {
+#	( ( $httpversion, $response, $message ) =
+#	    ( /^(HTTP\/[0-9\.]+) ([0-9][0-9][0-9]) ?(.*)/ ) );
+#    }
+#    if (/^Last-Modified: /i ) {
+#	( $lastmod ) = ( /^Last-Modified: (.*)/i );
+#    }
+#    if (/^Content-Length: /i ) {
+#	( $length ) = ( /^Content-Length: (.*)/i );
+#    }
+#    if (/^Server: /i ) {
+#	( $server ) = ( /^Server: (.*)/i );
+#    }
+#    if (/^Location: /i ) {
+#	( $redirect_uri ) = ( /^Location: (.*)/i );
+#	$redirect_uri =~ s/\s*$//g;	# it has a trailing space sometimes (?)
+#    }
+#    if (/^Content-Type: /i) {
+#        ( $content_type ) = ( /^Content-Type: (.*)/i );
+#        ( $http_charset ) = ( $content_type =~ /;\s*charset=(.*)/i );
+#        $content_type =~ s/;.*$//;
+#        $content_type =~ s/\s*$//g;
+#	$http_charset =~ s/;.*//;
+#        $http_charset =~ s/\s*//g;
+#    }
 
-    last if /^$/;
-}
+#    last if /^$/;
+#}
 
-if ( $response != 200 ) {
-    print "<p>\n  I got the following unexpected response when trying to ";
-    print "retrieve $uri:\n";
-    print "</p>\n\n<blockquote>  <code>$response $message</code>\n</blockquote>\n";
+
+
+if ( $response->code != 200 ) {
     $optionstring = &build_options;
-    if ( ( $response == "302" ) || ( $response == "301" ) ){
+    if ( ( $response->code == "302" ) || ( $response->code == "301" ) ){
         # this (server name grabbing) should be moved elsewhere, probably.
 	($server_name) = ($uri =~ /^http:\/\/([^\/]*)/i);
 
@@ -328,6 +342,10 @@ if ( $response != 200 ) {
 	    $redirect_uri = "http://$server_name$redirect_uri";
         }
 
+	print $header;
+	print "<p>\n  I got the following unexpected response when trying to ";
+	print "retrieve $uri:\n";
+	print "</p>\n\n<blockquote>  <code>".$response->code." ".$response->message."</code>\n</blockquote>\n";
 	print <<"EOF";
 
 <p>
@@ -346,9 +364,22 @@ $whiney_location_message
 EOF
 
     }
-    elsif ( $response == "401" ) {
+    elsif ( $response->code == 401 ) {
+	$response->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
+	my $realm = $1;
+	my $resource = $response->request->url;
+	my $authHeader = $response->headers->www_authenticate;
 	print <<"EOF";
+Status: 401 Authorization Required
+WWW-Authenticate: $authHeader
+Connection: close
+Content-Type: text/html
 
+<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">
+<HTML><HEAD>
+<TITLE>401 Authorization Required</TITLE>
+</HEAD><BODY>
+<H1>Authorization Required</H1>
 <p>
   Sorry, I am not authorized to access the specified URI.
 </p>
@@ -363,12 +394,14 @@ EOF
 
     }
     else {
+	print $header;
 	print "<p>\n  Please make sure you have entered the URI correctly.\n</p>";
     }
     &clean_up_and_exit;
 }
 
-unless ($content_type =~ /text\/html/i) {
+unless ($response->headers->content_type =~ /text\/html/i) {
+    print $header;
     print <<"EOF";
 
 <p>
@@ -381,21 +414,23 @@ EOF
     &clean_up_and_exit;
 }
 
-    $jump_links = &build_jump_links;
-    $count = 1; # @@ should loop over many uris instead
+$jump_links = &build_jump_links;
+$count = 1; # @@ should loop over many uris instead
 
+print $header;
 print <<"EOF";
-  <h2><a name="doc$count">Document Checked</a></h2>
+<h2><a name="doc$count">Document Checked</a></h2>
 
 $jump_links
 EOF
-
+    
+@file = split '\n',$response->content;
 ( $guessed_doctype, $doctype ) = &check_for_doctype( \@file );
 
 if ( $doctype =~ /xhtml/i ) {
     $xhtml = 1;
 }
-
+#&clean_up_and_exit;
 foreach $line (@file) {
     # @@ needs to handle meta elements that span more than one line
     if ( $line =~ /<meta/i ) {
@@ -405,6 +440,13 @@ foreach $line (@file) {
 	}
     }
 }
+
+$content_type = $response->headers->content_type;
+( $http_charset ) = ( $content_type =~ /;\s*charset=(.*)/i );
+$content_type =~ s/;.*$//;
+$content_type =~ s/\s*$//g;
+$http_charset =~ s/;.*//;
+$http_charset =~ s/\s*//g;
 
 if ( $http_charset ne '' ) {
     $effective_charset = $http_charset;
@@ -434,20 +476,20 @@ else {
 
 print qq{<ul>\n  <li><a href="$uri_def_uri">URI</a>: <a href="$uri">$uri</a>\n};
 
-if ( defined $lastmod ) {
+if ( $lastmod = $response->headers->header("Last-Modified") ) {
     print qq{  <li>Last modified: $lastmod\n};
 }
 
 # @@ add a "verbose" option or something on the advanced form, then
 # display a bunch of stuff like this if it's selected
-#
-# if ( defined $server ) {
-#     print qq{<li>Server: $server\n};
-# }
-# 
-# if ( defined $length ) {
-#     print qq{<li>Content length: $length\n};
-# }
+
+if ( defined $response->headers->server ) {
+    print "<li>Server: ".$response->headers->server."\n";
+}
+
+if ( defined $response->content_length ) {
+    print "<li>Content length: ".$response->content_length."\n";
+}
 
 if ( $xhtml ) {
     $ENV{SP_CATALOG_FILES} = "$sgmlstuff/WD-html-in-xml-19990304/DTD/xhtml.soc";
@@ -481,7 +523,7 @@ if ( $#file == 0 ) {
 # kludge for other DOS users with CRLFs
 for (@file) {
     s/+$//;
-    print CHECKER;
+    print CHECKER $_, "\n";
 }
 # print CHECKER @file;
 close( CHECKER ) || "couldn't close checker";
@@ -1309,8 +1351,8 @@ sub check_for_doctype {
     # second value:
     #     the inferred doctype, if any
 
-    my $fileref = shift;		# a reference to @file, for efficiency
-    my @file = @$fileref;		# dereference $fileref
+    my $arrayref = shift;		# a reference to @file, for efficiency
+    my @file = @$arrayref;		# dereference $fileref
 
     foreach $count (0..$#file) {
 	$line = $file[$count];
