@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.8.2.10 2002-07-05 20:43:57 link Exp $ */
+/* $Id: results.css,v 1.8.2.11 2002-07-05 22:17:29 link Exp $ */
 
 .markup {
   color: red;
@@ -12,7 +12,6 @@
 }
 
 table.header {
-/*  width: 100%; */
   background-color: #eeeeee;
 }
 
@@ -30,8 +29,6 @@ div.splash {
   border: 1px solid blue; /* Used for debugging */
   background:  #eeeeee;
 }
-
-
 
 th {
   padding-right: .5em;
@@ -66,7 +63,6 @@ td {
 }
 
 .valid {
-/*  clear: left; */
   background:		#053188;
   color:		white;
   font-family:		Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
@@ -85,9 +81,18 @@ td {
   color: yellow;
 }
 
+.valid a:visited {
+  color: silver;
+}
+
 .valid a:hover {
   color: #053188;
 }
+
+.valid a:active {
+  color: red;
+}
+
 
 .invalid {
 /*  clear: both; */
