@@ -10,7 +10,7 @@
     direction text, and enhancements to forms for improved
     accessibility for people with disabilities.
 
-          Draft: $Date: 2004-07-21 18:37:35 $
+          Draft: $Date: 2005-02-04 13:20:31 $
 
           Authors:
               Dave Raggett <dsr@w3.org>
@@ -27,7 +27,7 @@
     the DTDs.
 
 -->
-<!ENTITY % HTML.Version "-//W3C//DTD HTML Fallback//EN"
+<!ENTITY % HTML.Version "-//W3C//DTD SGML Fallback//EN"
   -- Typical usage:
 
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"

@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.377 2005-02-03 22:49:59 link Exp $
+# $Id: check,v 1.378 2005-02-04 13:20:31 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -222,7 +222,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.377 $;
+  $VERSION    =  q$Revision: 1.378 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -810,15 +810,16 @@ sub parse (\$) {
   # Extract any version attribute from the ESIS.
   for (@{$File->{ESIS}}) {
     no warnings 'uninitialized';
-    next unless /^AVERSION CDATA (.*)/;
-    if ($1 eq '-//W3C//DTD HTML Fallback//EN') {
+    next unless /^AVERSION CDATA (.*)/i;
+    if ($1 =~ '-//W3C//DTD (SGML|XML) Fallback//EN') {
       $File->{Tentative} |= (T_ERROR | T_FALL);
+      my $dtd = $1 eq 'SGML' ? 'HTML 4.01 Transitional' : 'XHTML 1.0 Strict';
       &add_warning($File, 'fallback', 'DOCTYPE Fallback in effect!', <<".EOF.");
       The DOCTYPE Declaration in your document was not recognized. This
       probably means that the Formal Public Identifier contains a spelling
       error, or that the Declaration is not using correct syntax. Validation
       has been performed using a default "fallback" Document Type Definition
-      that closely resembles HTML 4.01 Transitional, but the document will not
+      that closely resembles $dtd, but the document will not
       be Valid until you have corrected the problem with the DOCTYPE
       Declaration.
 .EOF.

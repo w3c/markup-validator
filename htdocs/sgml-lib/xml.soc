@@ -93,8 +93,6 @@ PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Transition//EN"
        "REC-smil20-20010807/SMIL-transition.mod"
 
 
--- Do not prefer document type name over a SYSTEM Identifier. --
-OVERRIDE NO
-
 -- Fallback if no FPI is given. --
-DOCTYPE html "REC-xhtml1-20020801/xhtml1-transitional.dtd"
+DOCTYPE html xml.dtd
+

@@ -1,5 +1,5 @@
 	-- SGML catalog for the W3C Markup Validation Service --
-	-- $Id: sgml.soc,v 1.14 2004-10-12 18:18:02 ville Exp $ --
+	-- $Id: sgml.soc,v 1.15 2005-02-04 13:20:31 link Exp $ --
 
 OVERRIDE YES	-- prefer public identifiers to system identifiers --
 SGMLDECL sgml.dcl
@@ -42,8 +42,6 @@ PUBLIC "-//W3C//ENTITIES Full Latin 1//EN//HTML"	REC-html401-19991224/HTMLlat1.e
 PUBLIC "-//W3C//ENTITIES Symbolic//EN//HTML"	REC-html401-19991224/HTMLsymbol.ent
 
 
-        -- Do not prefer document type name over a SYSTEM Identifier. --
-OVERRIDE NO
-
 	-- Fallback for HTML documents if no FPI is given. --
 DOCTYPE html sgml.dtd
+
