@@ -5,7 +5,7 @@
 # (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.7 2003-04-19 19:50:26 ville Exp $
+# $Id: checklink.pl,v 3.6.2.8 2003-06-02 17:27:59 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -85,7 +85,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.7 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.8 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
 
@@ -315,7 +315,7 @@ sub parse_arguments ()
   Getopt::Long::Configure('bundling', 'no_ignore_case');
   my @masq = ();
 
-  GetOptions('help'            => \&usage,
+  GetOptions('help|?'          => sub { usage(0) },
              'q|quiet'         => sub { $Opts{Quiet} = 1;
                                         $Opts{Summary_Only} = 1;
                                       },
@@ -376,8 +376,8 @@ Options:
                             http://www.w3.org/TR -> http://www.w3.org/TR/
   -r/--recursive            Check the documents linked from the first one.
   -D/--depth n              Check the documents linked from the first one
-                            to depth n.
-  -l/--location uri         Scope of the documents checked.
+                            to depth n (implies --recursive).
+  -l/--location uri         Scope of the documents checked in recursive mode.
                             By default, for example for
                             http://www.w3.org/TR/html4/Overview.html
                             it would be http://www.w3.org/TR/html4/
@@ -399,7 +399,7 @@ Options:
                             http://www.w3.org/TR/MathML2/).
   -y/--proxy proxy          Specify an HTTP proxy server.
   -h/--html                 HTML output.
-  --help                    Show this message.
+  -?/--help                 Show this message.
   -V/--version              Output version information.
 
 Documentation at: http://www.w3.org/2000/07/checklink
