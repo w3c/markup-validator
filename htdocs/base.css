@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26 2002-11-19 14:45:05 link Exp $
+   $Id: base.css,v 1.26.2.1 2002-11-27 01:35:02 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -27,8 +27,15 @@ body {
   text-transform:  none;
 }
 
-a:hover   {background-color:#eee}
-a:visited {color: purple}
+a:hover {
+  color: blue;
+  background-color: #eee;
+}
+
+a:active {
+  color: red;
+  background-color: yellow;
+}
 
 acronym:hover, abbrev:hover {cursor: help}
 abbrev[title], acronym[title], span[title] {
