@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.412 2005-03-31 07:43:42 ot Exp $
+# $Id: check,v 1.413 2005-03-31 21:33:04 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -220,7 +220,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.412 $;
+  $VERSION    =  q$Revision: 1.413 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -935,9 +935,13 @@ sub prep_template ($$) {
   $T->param(file_namespaces => \@nss) if @nss;
   
   if ($File->{Opt}->{DOCTYPE}) {
-      my $over_doctype_param = "override $File->{Opt}->{DOCTYPE}";
-       $T->param($over_doctype_param => TRUE);
-      
+      my $over_doctype_param = "override doctype $File->{Opt}->{DOCTYPE}";
+       $T->param($over_doctype_param => TRUE);   
+  }
+  
+  if ($File->{Opt}->{Charset}) {
+      my $over_charset_param = "override charset $File->{Opt}->{Charset}";
+       $T->param($over_charset_param => TRUE);   
   }
   
 }
