@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.128 2004-05-17 06:52:12 link Exp $
+# $Id: check,v 1.305.2.129 2004-05-17 07:52:14 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.128 $;
+  $VERSION    =  q$Revision: 1.305.2.129 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-17 06:52:12 $,
+                              Date => q$Date: 2004-05-17 07:52:14 $,
                              });
 
 #
@@ -3152,7 +3152,8 @@ sub abort_if_error_flagged {
                  @data);
     }
 
-    &print_table($File) unless $Flags & O_NONE;
+    &print_table($File)    unless $Flags & O_NONE;
+    &print_warnings($File) unless $Flags & O_NONE;
     print $File->{'Error Message'};
     if ($File->{Opt}->{'Show Source'} and $Flags & O_SOURCE) {
       &show_source($File);
