@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.95 2004-05-06 04:21:27 ot Exp $
+# $Id: check,v 1.305.2.96 2004-05-06 14:50:19 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.95 $;
+  $VERSION    =  q$Revision: 1.305.2.96 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-06 04:21:27 $,
+                              Date => q$Date: 2004-05-06 14:50:19 $,
                              });
 
 #
@@ -346,7 +346,7 @@ if ($File->{'Is Upload'}) {
   $size = 50 if $size > 50;
 
   if (URI::eq("$File->{Opt}->{URI}", $File->{URI})) {
-    &add_table($File, qq(<label title="Address of Page to Validate (accesskey: 1)" for="uri"><a class="formoptions" href="docs/users.html#QuickStart" title="How to use this form">Address</a></label>),
+    &add_table($File, qq(<label title="Address of Page to Validate (accesskey: 1)" for="uri">Address</label>),
                [1, 2, '<input accesskey="1" type="text" id="uri" name="uri" size="' . $size
              . '" value="' . &ent($File->{Opt}->{URI}) . '" />']);
   } else {
@@ -588,7 +588,7 @@ if ($File->{'Is Upload'}) {
   &add_table($File, 'Encoding', &ent($File->{Charset}->{Use}));
 } else {
   &add_table($File,
-             qq(<label accesskey="2" title="Character Encoding (accesskey: 2)" for="charset"><a class="formoptions" href="docs/users.html#option-charset" title="Explanation of the Encoding options">Encoding</a></label>),
+             qq(<label accesskey="2" title="Character Encoding (accesskey: 2)" for="charset">Encoding</label>),
              &ent($File->{Charset}->{Use}), &popup_charset);
 }
 
@@ -784,7 +784,7 @@ if (my $prettyver = $CFG->{'FPI to Text'}->{$File->{Version}}) {
 if ($File->{'Is Upload'}) {
   &add_table($File, 'Doctype', $File->{Version});
 } else {
-  &add_table($File, qq(<label accesskey="3" for="doctype" title="Document Type (accesskey: 3)"><a class="formoptions" href="docs/users.html#option-doctype" title="Explanation for the Doctype options">Doctype</a></label>),
+  &add_table($File, qq(<label accesskey="3" for="doctype" title="Document Type (accesskey: 3)">Doctype</label>),
              $File->{Version}, &popup_doctype);
 }
 
@@ -975,36 +975,36 @@ sub print_table {
             q(<label title="Show Page Source (accesskey: 5)" for="ss"><input type="checkbox" value="1" id="ss" name="ss" ) .
             q(accesskey="5" ) .
             ($File->{Opt}->{'Show Source'}    ? q(checked="checked" ) : '') .
-            q(/><a class="formoptions" href="docs/users.html#option-ss" title="Explanation for the 'Show source' option">Show&nbsp;Source</a></label>),
+            q(/>Show&nbsp;Source</label>),
             # Outline?
             q(<label title="Show an Outline of the document (accesskey: 6)" for="soutline"><input type="checkbox" value="1" id="soutline" name="outline" ) .
             q(accesskey="6" ) .
             ($File->{Opt}->{'Outline'}        ? q(checked="checked" ) : '') .
-            q(/><a class="formoptions" href="docs/users.html#option-outline" title="explanation for the 'Show outline' option">Show Outline</a></label>)
+            q(/>Outline</label>)
            );
   add_table($Options, '',
             # Parse tree?
             q(<label title="Show Parse Tree (accesskey: 7)" for="sp"><input type="checkbox" value="1" id="sp" name="sp" ) .
             q(accesskey="7" ) .
             ($File->{Opt}->{'Show Parsetree'} ? q(checked="checked" ) : '') .
-            q(/><a class="formoptions" href="docs/users.html#option-sp" title="Explanation for the 'Show parse tree' option">Parse&nbsp;Tree</a></label>),
+            q(/>Parse&nbsp;Tree</label>),
             # No attributes?
             q(<label title="Exclude Attributes from Parse Tree (accesskey: 8)" for="noatt"><input type="checkbox" value="1" id="noatt" name="noatt" ) .
             q(accesskey="8" ) .
             ($File->{Opt}->{'No Attributes'}  ? q(checked="checked" ) : '') .
-            q(/><a class="formoptions" href="docs/users.html#option-noatt" title="Explanation for the 'exclude attributes' option">...no&nbsp;attributes</a></label>)
+            q(/>...no&nbsp;attributes</label>)
            );
   add_table($Options, '',
             # Validate error pages?
              q(<label title="Validate also pages for which the HTTP status code indicates an error" for="No200"><input type="checkbox" value="1" id="No200" name="No200" ) .
              # @@@ accesskey missing
              ($File->{Opt}->{'No200'}         ? q(checked="checked" ) : '') .
-             q(/><a class="formoptions" href="docs/users.html#option-no200" title="Explanation for the 'Validate error pages' option">Validate&nbsp;error&nbsp;pages</a></label>),
+             q(/>Validate&nbsp;error&nbsp;pages</label>),
             # Verbose output?
-             q(<label title="Show Verbose Output" for="verbose"><input type="checkbox" value="1" id="verbose" name="verbose" ) .
+             q(<label title="Show Verbose Output" for="verbose"><input type="checkbox" value="0" id="verbose" name="verbose" ) .
              # @@@ accesskey missing
              ($File->{Opt}->{'Verbose'}         ? q(checked="checked" ) : '') .
-             q(/><a class="formoptions" href="docs/users.html#option-verbose" title="Explanation for the 'Verbose output' option">Verbose&nbsp;Output</a></label>)
+             q(/>Verbose&nbsp;Output</label>)
            );
 #  add_table($Options, '',
 #            # Fussy Parse Mode?
@@ -1025,6 +1025,8 @@ sub print_table {
         <legend accesskey="4">Revalidate With Options</legend>
 .EOF.
   print join '', @{&serialize_table($Form, 'header')};
+  print qq(<p><a href='http://qa-dev.w3.org/wmvs/0.6/docs/users.html#Options'>Help</a> on the options is available. 
+	Verbose output will give you explanations in addition to the error messages);
   print qq(      </fieldset>\n);
 
   print qq(  </form>\n);
