@@ -5,7 +5,7 @@
 # (c) 1999-2001 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.80 2001-04-04 19:18:52 hugo Exp $
+# $Id: checklink.pl,v 2.81 2001-06-05 10:09:14 gerald Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -38,7 +38,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.80 $ . '(c) 1999-2001 W3C';
+my $VERSION = q$Revision: 2.81 $ . '(c) 1999-2001 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -1371,7 +1371,7 @@ on how to solve this</a>.';
                 $whattodo = $todo->{$c};
             }
             if (defined($redirects{$u}) && ($c != 301) && ($c != 302)) {
-                $redirect_too = 'The original resquest has been redirected.';
+                $redirect_too = 'The original request has been redirected.';
                 $whattodo .= ' '.$redirect_too if (! $_html);
             }
         } else {
