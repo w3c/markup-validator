@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: favelets.html,v 1.1.2.14 2004-09-02 03:14:25 ot Exp $"
---><!--#set var="date" value="\$Date: 2004-09-02 03:14:25 $"
+<!--#set var="revision" value="\$Id: favelets.html,v 1.1.2.15 2004-09-15 17:25:08 ville Exp $"
+--><!--#set var="date" value="\$Date: 2004-09-15 17:25:08 $"
 --><!--#set var="title" value="Favelets For The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -48,28 +48,28 @@
       </div>
       <div>
         <dl>
-          <dt>"<a href="javascript:void%28window.location='http://validator.w3.org/check?uri='+escape%28window.location%29%29"
+          <dt>"<a href="javascript:void(window.location='http://validator.w3.org/check?uri='+escape(window.location))"
                  title="Validate This Page">Validate <em>This</em> Page</a>"</dt>
           <dd>
             This is the basic "Validate This Page" <a href="http://favelets.com/">Favelet</a>.
             It simply submits the URL for the currently viewed page to the
             Validator for processing. Results appear in the same window.
           </dd>
-          <dt>"<a href="javascript:window.open%28'http://validator.w3.org/check?uri='+escape%28window.location%29%29;void%200"
+          <dt>"<a href="javascript:window.open('http://validator.w3.org/check?uri='+escape(window.location));void%200"
                  title="Validate This Page In New Window">Validate <em>This</em> Page In New Window</a>"</dt>
           <dd>
             Like the last <a href="http://favelets.com/">Favelet</a>, this also
             submits the URL of the current page to the Validator for processing,
             but this version will show the results in a new window.
           </dd>
-          <dt>"<a href="javascript:void%28q=prompt%28'Validate Page:',''%29%29;if%28q%29void%28window.location='http://validator.w3.org/check?uri='+escape%28q%29%29"
+          <dt>"<a href="javascript:void(q=prompt('Validate%20Page:',''));if(q)void(window.location='http://validator.w3.org/check?uri='+escape(q))"
                  title="Validate Page...">Validate Page...</a>"</dt>
           <dd>
             Puts up a dialog with a text entry field where you can type in the
             URL of a page you would like to Validate. The results appear in the
             current window.
           </dd>
-          <dt>"<a href="javascript:void%28q=prompt%28'Validate Page:',''%29%29;if%28q%29window.open%28'http://validator.w3.org/check?uri='+escape%28q%29%29;void%200"
+          <dt>"<a href="javascript:void(q=prompt('Validate%20Page:',''));if(q)window.open('http://validator.w3.org/check?uri='+escape(q));void%200"
                  title="Validate Page In New Window...">Validate Page In New Window...</a>"</dt>
           <dd>Same as above but shows results in a new window.</dd>
         </dl>
