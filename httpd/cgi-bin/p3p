@@ -1,0 +1,6 @@
+#! perl
+print "Content-type: text/html
+
+<html><body>koike</body></html>
+";
+
