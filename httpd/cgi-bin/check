@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.93 2001-04-17 03:26:33 link Exp $
+# $Id: check,v 1.94 2001-04-17 04:19:43 link Exp $
 
 #
 # We need Perl 5.004.
@@ -74,9 +74,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.93 $;
+$VERSION    =  q$Revision: 1.94 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-04-17 03:26:33 $;
+$DATE       =  q$Date: 2001-04-17 04:19:43 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -140,6 +140,7 @@ if ($q->param('url') and not $q->param('uri')) {
 #
 # Supercede URI with an uploaded file.
 if ($q->param('uploaded_file')) {
+  &redirect_to_home_page unless length($q->param('uri')); # Must have filename.
   $q->param('uri', 'upload://' . $q->param('uploaded_file'));
 }
 
