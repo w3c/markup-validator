@@ -1,11 +1,9 @@
 # RPM Spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.1.2.8 2003-07-30 09:39:32 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.1.2.9 2003-08-17 21:27:31 ville Exp $
 
 %{!?apxs: %{expand:   %%define apxs %{_sbindir}/apxs}}
 %define httpd_confdir %(test -d %{_sysconfdir}/httpd/conf.d && echo %{_sysconfdir}/httpd/conf.d || %{apxs} -q SYSCONFDIR)
 %define sgmldir       %{_datadir}/sgml
-
-# -----------------------------------------------------------------------------
 
 Name:           w3c-markup-validator
 Version:        0.6.2
@@ -42,7 +40,6 @@ Obsoletes:      w3c-validator-libs
 %description    libs
 SGML and XML DTDs for the W3C Markup Validator.
 
-# -----------------------------------------------------------------------------
 
 %prep
 %setup -q -a 1 -n validator
@@ -72,14 +69,11 @@ find . -type d -exec chmod 0755 {} ';'
 find . -type f -exec chmod 0644 {} ';'
 chmod 0755 httpd/cgi-bin/check*
 
-# -----------------------------------------------------------------------------
 
 %build
-
 # Create the manual pages.
 pod2man --center="W3C Link Checker" httpd/cgi-bin/checklink > checklink.1
 
-# -----------------------------------------------------------------------------
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -107,12 +101,10 @@ cp -pr sgml-lib $RPM_BUILD_ROOT%{sgmldir}/%{name}
 mkdir -p $RPM_BUILD_ROOT%{_mandir}/man1
 cp -p checklink.1 $RPM_BUILD_ROOT%{_mandir}/man1
 
-# -----------------------------------------------------------------------------
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-# -----------------------------------------------------------------------------
 
 %post libs
 # Note that we're using a fully versioned catalog, so this is always ok.
@@ -134,7 +126,6 @@ if [ -x %{_bindir}/install-catalog -a -d %{_sysconfdir}/sgml ]; then
   done
 fi
 
-# -----------------------------------------------------------------------------
 
 %files
 %defattr(-,root,root,-)
@@ -149,7 +140,6 @@ fi
 %ghost %config %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat
 %{sgmldir}/%{name}
 
-# -----------------------------------------------------------------------------
 
 %changelog
 * Wed Jul 23 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.2-4w3c
