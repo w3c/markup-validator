@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.211 2002-08-26 11:41:25 duerst Exp $
+# $Id: check,v 1.212 2002-08-26 23:37:35 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.211 $;
+  $VERSION    =  q$Revision: 1.212 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-26 11:41:25 $,
+			      Date => q$Date: 2002-08-26 23:37:35 $,
 			     });
 
 #
@@ -265,7 +265,7 @@ untie *STDIN;
 # Find encoding in document according to XML rules
 # Only meaningfull if file contains a BOM, or for well-formed XML!
 {
-  my $preSize, $postSize;
+  my ($preSize, $postSize);
 
   ($File->{Charset}->{Auto}, $File->{BOM}, $preSize, $postSize)
     = &find_base_encoding($File->{Bytes});
@@ -283,7 +283,7 @@ untie *STDIN;
     $someText = $someBytes; # efficiency shortcut
   }
   else { # generic code for UTF-16/UCS-4
-    my $i, $j;
+    my ($i, $j);
    LABEL:
     for ($i=0; $i<=$initSize-$charSize; ) {
       for ($j=0; $j<$preSize; $i++, $j++) {
@@ -291,10 +291,10 @@ untie *STDIN;
           last LABEL;
         }
       }
-      $someText .= substr someBytes, $i++, 1;
+      $someText .= substr $someBytes, $i++, 1;
       for ($j=0; $j<$postSize; $i++, $j++) {
         if ((substr $someBytes, $i, 1) != '\x00') {
-          substr $someText, -1, 1 = ''; # remove last character
+          chop $someText; # remove last character
           last LABEL;
         }
       }
@@ -338,7 +338,7 @@ if ($File->{Charset}->{HTTP}) {
 } 
 
 $File->{Content} = &normalize_newlines($File->{Bytes}, $File->{Charset}->{Use});
-substr $File->{Content}->[0], 0, $File->{BOM} = ''; # remove BOM
+$File->{Content}->[0] = substr $File->{Content}->[0], $File->{BOM}; # remove BOM
 
 
 #
@@ -381,7 +381,6 @@ if (!$File->{Charset}->{Use}) {
       of how you specified the character encoding that we failed to detect.
     </p>
 .EOF.
-    }
   }
 }
 
@@ -1291,7 +1290,7 @@ sub parse_content_type {
 # Normalize newline forms (CRLF/CR/LF) to native newline.
 sub normalize_newlines {
   my $file = shift;
-  my $_ = shift;  #charset
+  local $_ = shift;  #charset
   my $pattern = '';
 
   # patterns are not allowed to have parentheses
@@ -2506,13 +2505,12 @@ X-W3C-Validator-Errors: $errs
 #
 # Find the encoding in use in a document instance.
 #
-# Implements autodetection as in Appendix F of the
-# XML 1.0 Reccomendation.
+# Implements autodetection as in Appendix F of the XML 1.0 Recommendation.
 # <URL:http://www.w3.org/TR/2000/REC-xml-20001006#sec-guessing>
 #
 # return values are: (base_encoding, BOMSize, preSize, postSize)
 sub find_base_encoding {
-  my $_ = shift;
+  local $_ = shift;
 
   # With a Byte Order Mark:
   return ('UCS-4BE',  4, 3, 0)
