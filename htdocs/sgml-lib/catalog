@@ -1,6 +1,6 @@
 
 	-- SGML catalog for the W3C HTML Validation Service --
-	-- $Id: catalog,v 1.7 2000-10-18 22:35:55 gerald Exp $ --
+	-- $Id: catalog,v 1.8 2000-10-18 22:40:45 gerald Exp $ --
 
 OVERRIDE YES	-- prefer public identifiers to system identifiers --
 
@@ -144,5 +144,6 @@ PUBLIC "-//W3C//ENTITIES Special//EN//HTML"	PR-html40-19990824/HTMLspecial.ent
 PUBLIC "-//W3C//ENTITIES Symbols//EN//HTML"	PR-html40-19990824/HTMLsymbol.ent
 
 	-- ISO-HTML --
+PUBLIC "ISO/IEC 15445:2000//DTD HyperText Markup Language//EN"	ISO-HTML/15445.dtd
 PUBLIC "ISO/IEC 15445:2000//DTD HTML//EN"	ISO-HTML/15445.dtd
 
