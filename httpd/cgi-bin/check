@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.11 2002-11-30 22:43:18 ville Exp $
+# $Id: check,v 1.305.2.12 2002-11-30 23:18:00 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -103,7 +103,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.11 $;
+  $VERSION    =  q$Revision: 1.305.2.12 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -165,7 +165,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-30 22:43:18 $,
+                              Date => q$Date: 2002-11-30 23:18:00 $,
                              });
 
 #
@@ -571,14 +571,13 @@ while (<$spout>) {
   push @{$File->{'DEBUG'}->{ESIS}}, $_;
   $elements_found++ if /^\(/;
 
-  if (&is_xml($File)) {
-    if (/^Axmlns() \w+ (.*)/ or /^Axmlns:([^ ]+) \w+ (.*)/) {
-      if (not $File->{Namespace} and $elements_found == 0 and $1 eq "") {
-        $File->{Namespace} = $2;
-      }
-      $File->{Namespaces}->{$2}++;
+  if (/^Axmlns() \w+ (.*)/ or /^Axmlns:([^ ]+) \w+ (.*)/) {
+    if (not $File->{Namespace} and $elements_found == 0 and $1 eq "") {
+      $File->{Namespace} = $2;
     }
+    $File->{Namespaces}->{$2}++;
   }
+
   next if / IMPLIED$/;
   next if /^ASDAFORM CDATA /;
   next if /^ASDAPREF CDATA /;
