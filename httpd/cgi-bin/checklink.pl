@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.36 2000-03-29 22:31:51 hugo Exp $
+# $Id: checklink.pl,v 2.37 2000-04-05 21:28:01 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -31,7 +31,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.36 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.37 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -50,8 +50,10 @@ my $_password;
 my $_trusted = '\.w3\.org';
 my $_http_proxy;
 my $_recursive = 0;
+my $_accept_language = 1;
+my $_languages = 'en';
 my $_base_location = '.';
-my $_contact_address = 'webreq@w3.org';
+my $_contact_address = 'hugo@w3.org';
 
 # Restrictions for the online version
 my $_sleep_time = 3;
@@ -108,6 +110,9 @@ if ($#ARGV >= 0) {
     if ($query->param('hide_redirects')) {
         $_redirects = 0;
     }
+    if ($query->param('no_accept_language')) {
+        $_accept_language = 0;
+    }
     if ($query->param('hide_dir_redirects')) {
         $_dir_redirects = 0;
     }
@@ -147,7 +152,7 @@ sub parse_arguments() {
             push(@uris, $_);
         } elsif (m/^--$/) {
             $uris = 1;
-        } elsif (m/^-[^-upytdcl]/) {
+        } elsif (m/^-[^-upytdclL]/) {
             if (m/q/) {
                 $_quiet = 1;
                 $_summary = 1;
@@ -170,6 +175,9 @@ sub parse_arguments() {
             if (m/h/) {
                 $_html = 1;
             }
+            if (m/n/) {
+                $_accept_language = 0;
+            }
             if (m/r/) {
                 $_recursive = 1;
             }
@@ -189,6 +197,8 @@ sub parse_arguments() {
             $_progress = 1;
         } elsif (m/^--html$/) {
             $_html = 1;
+        } elsif (m/^--noacclanguage$/) {
+            $_accept_language = 0;
         } elsif (m/^--recursive$/) {
             $_recursive = 1;
         } elsif (m/^-l|--location$/) {
@@ -199,6 +209,8 @@ sub parse_arguments() {
             $_password = shift(@ARGV);
         } elsif (m/^-t|--timeout$/) {
             $_timeout = shift(@ARGV);
+        } elsif (m/^-L|--languages$/) {
+            $_languages = shift(@ARGV);
         } elsif (m/^-d|--domain$/) {
             $_trusted = shift(@ARGV);
         } elsif (m/^-y|--proxy$/) {
@@ -226,6 +238,8 @@ Options:
 				http://www.w3.org/TR/html4/Overview.html
 				for example, it would be:
 				http://www.w3.org/TR/html4/
+	-n/--noacclanguage	Do not send an Accept-Language header.
+	-L/--languages		Languages accepted (default: '$_languages'). 
 	-q/--quiet		No output if no errors are found.
 	-v/--verbose		Verbose mode.
 	-i/--indicator		Show progress while parsing.
@@ -234,7 +248,7 @@ Options:
 	-t/--timeout value	Timeout for the HTTP requests.
 	-d/--domain domain	Regular expression describing the domain to
 				which the authetication information will be
-				sent (default: $_trusted).
+				sent (default: '$_trusted').
 	-y/--proxy proxy	Specify an HTTP proxy server.
 	-c/--chunk-size size	Size of the blocks parsed (default: $_chunksize).
 	-h/--html		HTML output.
@@ -245,6 +259,7 @@ Options:
 
 sub ask_password() {
     print(STDERR 'Enter your password: ');
+    # Will only work on Unix...
     system('stty -echo');
     chomp($_password = <STDIN>);
     system('stty echo');
@@ -319,7 +334,7 @@ sub check_uri() {
     printf("\nProcessing\t%s\n\n", $absolute_uri);
 
     if ($_html) {
-        print("</h2>\n");
+        printf("</h2>\n<p>Check also: <a href=\"http://validator.w3.org/check?uri=%s\">HTML Validity</a> &amp; <a href=\"http://jigsaw.w3.org/css-validator/validator?uri=%s\">CSS Validity</a></p>\n", map{&encode($absolute_uri)}(1..2));
         if (! $_summary) {
             print "<pre>\n";
         }
@@ -602,6 +617,9 @@ sub get_uri() {
         &hprintf("%s %s ", $method, $uri);
     }
     my $request = new HTTP::Request($method, $uri);
+    if ($_accept_language) {
+        $request->header('Accept-Language' => 'en');
+    }
     # Are we providing authentication info?
     if (defined($tested)
         && ($request->url->netloc =~ /$_trusted$/)) {
@@ -682,8 +700,8 @@ sub record_results() {
         $results{$uri}{location}{record} = $results{$uri}{location}{display};
     }
     # Did it fail?
+    $results{$uri}{location}{message} = $response->message();
     if (! $results{$uri}{location}{success}) {
-        $results{$uri}{location}{message} = $response->message();
         if ($_verbose) {
             &hprintf("Error: %d %s\n",
                      $results{$uri}{location}{code},
@@ -1137,7 +1155,7 @@ sub anchors_summary(\%, \%) {
     foreach $anchor (@errors) {
         my $format;
         if ($_html) {
-            $format = "<tr><td>%s</td><td>%s</td></tr>\n";
+            $format = "<tr class=\"broken\"><td>%s</td><td>%s</td></tr>\n";
         } else {
             $format = "\t%s\tLines: %s\n";
         }
@@ -1151,20 +1169,18 @@ sub anchors_summary(\%, \%) {
 }
 
 sub show_link_report {
-    my ($links, $results, $broken, $redirects, $urls) = @_;
+    my ($links, $results, $broken, $redirects, $urls, $codes) = @_;
 
-    # Head of the table
     if ($_html) {
-        print("\n<table border=\"1\">\n<tr><td><b>Location</b></td><td><b>Code</b></td><td><b>Fragment</b></td><td><b>Lines</b></td></tr>");
+        print("\n<dl class=\"report\">");
     }
     print("\n");
 
     # Process each URL
     my $u;
+    my ($c, $previous_c);
     foreach $u (@{$urls}) {
         my @fragments = keys %{$broken->{$u}{fragments}};
-        # Count the rows displayed
-        my $n_fragments = $#fragments+2;
         # Did we get a redirect?
         my $redirected = &is_redirected($u, %$redirects);
         # List of lines
@@ -1185,46 +1201,58 @@ sub show_link_report {
         my $lines_list = join(', ',
                               &sort_unique(@total_lines));
         if ($_html) {
+            my $idref = '';
+            $c = &code_shown($u, $results);
+            if ($c != $previous_c) {
+                $idref = ' id="code_'.$c.'"';
+                $previous_c = $c;
+            }
             # Main info
             my @redirects_urls = &get_redirects($u, %$redirects);
             for (@redirects_urls) {
                 $_ = &show_url($_);
             }
-            printf("<tr><th rowspan=\"%d\"%s>%s</th><th rowspan=\"%d\"%s>%d%s%s%s%s</th><td>%s</td><td%s>%s</td></tr>\n",
-                   # Number of fragments (for rowspan)
-                   $n_fragments,
+            printf("
+<dt%s%s>%s</dt>
+<dd%s>HTTP Code returned: %d%s<br>
+HTTP Message: %s%s%s</dd>
+<dd%s>Lines: %s</dd>\n",
                    # Color
                    &bgcolor($results->{$u}{location}{record}),
+                   # Anchor for return codes
+                   $idref,
                    # List of redirects
-                   $redirected ? join('<br>-&gt; ',
+                   $redirected ? join(' redirected to<br>',
                                       @redirects_urls) : &show_url($u),
-                   # Number of fragments (for rowspan)
-                   $n_fragments,
                    # Color
                    &bgcolor($results->{$u}{location}{orig}),
                    # Original HTTP reply
                    $results->{$u}{location}{orig},
                    # Final HTTP reply
                    ($results->{$u}{location}{code} != $results->{$u}{location}{orig})
-                   ? '-&gt; '.&encode($results->{$u}{location}{code})
+                   ? ' <span title="redirected to">-&gt;</span> '.
+                   &encode($results->{$u}{location}{code})
                    : '',
                    # Realm
-                   defined($results->{$u}{location}{realm})
-                   ? '<br>Realm: '.&encode($results->{$u}{location}{realm})
-                   : '',
+                   (defined($results->{$u}{location}{realm})
+                   ? 'Realm: '.&encode($results->{$u}{location}{realm}).'<br>'
+                   : ''),
                    # HTTP original message
                    defined($results->{$u}{location}{orig_message})
-                   ? '<br>'.&encode($results->{$u}{location}{orig_message}).' -&gt;' 
+                   ? &encode($results->{$u}{location}{orig_message}).
+                   ' <span title="redirected to">-&gt;</span> ' 
                    : '',
                    # HTTP final message
                    $results->{$u}{location}{message}
-                   ? '<br>'.&encode($results->{$u}{location}{message})
+                   ? &encode($results->{$u}{location}{message})
                    : '',
-                   '',
                    # Color again
                    &bgcolor($results->{$u}{location}{code}),
                    # List of lines
                    $lines_list);
+            if ($#fragments >= 0) {
+                print("<dd><dl><dt>Broken fragments and their line numbers:</dt>\n");
+            }
         } else {
             printf("\n%s\t%s\n  Code: %d%s %s\n",
                    # List of redirects
@@ -1243,16 +1271,13 @@ sub show_link_report {
         }
         # Fragments
         foreach $f (@fragments) {
-            next if ($f eq $u);
             if ($_html) {
-                my $color = ($broken->{$u}{fragments}{$f} > 1) ? &bgcolor(404) : &bgcolor($results->{$u}{location}{code});
-                printf("<tr><td%s>%s</td><td%s>%s</td></tr>\n",
-                       # Color
-                       $color,
+                printf("<dd%s>%s: %s</dd>\n",
+                       ($broken->{$u}{fragments}{$f} > 1) ?
+                       &bgcolor(404) :
+                       &bgcolor($results->{$u}{location}{code}),
                        # Broken fragment
                        &show_url($u, $f),
-                       # Color
-                       $color,
                        # List of lines
                        join(', ',
                             &sort_unique(keys %{$links->{$u}{fragments}{$f}})));
@@ -1265,95 +1290,54 @@ sub show_link_report {
                             &sort_unique(keys %{$links->{$u}{fragments}{$f}})));
             }
         }
+        if ($_html) {
+            if ($#fragments >= 0) {
+                print("</dl></dd>\n");
+            }
+        }
     }
-    # End of the table
+    # End of the table 
     if ($_html) {
-        print("</table>\n");
+       print("</dl>\n");
+    }
+}
+
+sub code_shown() {
+    my ($u, $results) = @_;
+
+    if ($results->{$u}{location}{record} == 200) {
+        return $results->{$u}{location}{orig};
+    } else {
+        return $results->{$u}{location}{record};
     }
 }
 
 sub links_summary {
     # Advices to fix the problems
 
-    my %todo = ( 200 => 'nothing !',
-                 300 => 'it usually means that there is a typo in a link that triggers <strong>mod_speling</strong> action - this should be fixed',
-                 301 => 'usually nothing, unless the end point of the redirect is broken (in which case, the <B>Code</B> column is RED)',
-                 302 => 'usually nothing, unless the end point of the redirect is broken (in which case, the <B>Code</B> column is RED)',
-                 400 => 'Usually the sign of a malformed URL that cannot be parsed by the server',
+    my %todo = ( 200 => 'There are broken fragments that must be fixed.',
+                 300 => 'It usually means that there is a typo in a link that triggers <strong>mod_speling</strong> action - this must be fixed!',
+                 301 => 'Usually nothing, unless the end point of the redirect is broken.',
+                 302 => 'Usually nothing, unless the end point of the redirect is broken.',
+                 400 => 'Usually the sign of a malformed URL that cannot be parsed by the server.',
                  401 => 'The link is not public. You had better specify it.',
-                 403 => 'The link is forbidden ! This needs fixing. Usual suspect: a missing Overview.html or index.html, or bad access control',
-                 404 => 'The link is broken. Fix it <B>NOW</B>',
+                 403 => 'The link is forbidden! This needs fixing. Usual suspect: a missing Overview.html or index.html, or bad access control.',
+                 404 => 'The link is broken. Fix it <B>NOW</B>!',
                  405 => 'The server does not allow HEAD requests. How liberal. Go ask the guys who run this server why.',
                  407 => 'The link is a proxy, but requires Authentication.',
                  408 => 'The request timed out',
                  415 => 'The media type is not supported.',
                  500 => 'The server failed. It is a server side problem.',
                  501 => 'HEAD or GET is not implemented on this server... What kind of server is that?',
-                 503 => 'The server cannot service the request, for some unknown reason');
+                 503 => 'The server cannot service the request, for some unknown reason.');
+    my %priority = ( 404 => 1,
+                     403 => 5,
+                     200 => 10,
+                     300 => 15,
+                     401 => 20
+                    );
 
     my ($links, $results, $broken, $redirects) = @_;
-
-    # Count the links. Useless but interesting.
-    if (! $_quiet) {
-        if ($_html) {
-            print("\n\n<p>");
-        }
-        my @links = keys %$links;
-        my $n_fragments = 0;
-        my $n_total = 0;
-        my $u;
-        # Give a few stats
-        foreach $u (@links) {
-            my @fragments = keys %{$links->{$u}{fragments}};
-            $n_fragments += $#fragments + 1;
-            if (defined($links->{$u}{location})) {
-                $n_fragments++;
-            }
-            my ($f, $l);
-            foreach $l (keys %{$links->{$u}{location}}) {
-                $n_total += $links->{$u}{location}{$l};
-            }
-            foreach $f (@fragments) {
-                my @lines = keys %{$links->{$u}{fragments}{$f}};
-                foreach $l (@lines) {
-                    $n_total += $links->{$u}{fragments}{$f}{$l};
-                }
-            }
-        }
-        &hprintf("Found %d locations for %d unique URI's (%d total).",
-                 $#links+1, $n_fragments, $n_total);
-        if ($_html) {
-            print('</p>');
-        }
-        print("\n");
-    }
-
-    # Print a summary
-    if ($_html) {
-        my %code_summary;
-        my $u;
-        foreach $u (keys %$links) {
-            if (defined($results->{$u}{location}{record}))  {
-                my $c;
-                if ($results->{$u}{location}{record} == 200) {
-                    $c = $results->{$u}{location}{orig};
-                } else {
-                    $c = $results->{$u}{location}{record};
-                }
-                $code_summary{$c}++;
-            }
-        }
-        print "<table border=\"1\">\n<tr><td><b>Code</b></td><td><b>Occurences</b></td><td><b>What to do</b></td></tr>\n";
-        my $code;
-        foreach $code (sort(keys(%code_summary))) {
-            printf("<tr%s>", &bgcolor($code));
-            printf("<td>%s</td>", $code);
-            printf("<td>%s</td>", $code_summary{$code});
-            printf("<td>%s</td>", $todo{$code});
-            print "</tr>\n";
-        }
-        print "</table>\n";
-    }
 
     # List of the broken links
     my @urls = keys %{$broken};
@@ -1384,26 +1368,69 @@ sub links_summary {
         }
     } else {
         if ($_html) {
-            print('<p>');
+            print('<h3>');
         }
         print("\nList of broken links");
         if ($_redirects) {
             print(' and redirects');
         }
-        print(':');
+
+        # Sort the URI's by HTTP Code
+        my %code_summary;
+        my $u;
+        my @idx;
+        foreach $u (@urls) {
+            if (defined($results->{$u}{location}{record}))  {
+                my $c = &code_shown($u, $results);
+                $code_summary{$c}++;
+                push(@idx, $c);
+            }
+        }
+        my @sorted = @urls[
+                           sort {
+                               defined($priority{$idx[$a]}) ?
+                                   defined($priority{$idx[$b]}) ?
+                                       $priority{$idx[$a]}
+                                       <=> $priority{$idx[$b]} :
+                                   -1 :
+                                defined($priority{$idx[$b]}) ?
+                                   1 :
+                                $idx[$a] <=> $idx[$b]
+                           } 0 .. $#idx
+                           ];
+        @urls = @sorted;
+        undef(@sorted); undef(@idx);
+
         if ($_html) {
-            print('<br>Broken fragments appear in red</p>');
+            print('</h3><p><i>Fragments listed are broken. See the table below to know what action to take.</i></p>');
+
+            # Print a summary
+            print "<table border=\"1\">\n<tr><td><b>Code</b></td><td><b>Occurences</b></td><td><b>What to do</b></td></tr>\n";
+            my $code;
+            foreach $code (sort(keys(%code_summary))) {
+                printf('<tr%s>', &bgcolor($code));
+                printf('<td><a href="#code_%s">%s</a></td>', $code, $code);
+                printf('<td>%s</td>', $code_summary{$code});
+                printf('<td>%s</td>', $todo{$code});
+                print "</tr>\n";
+            }
+            print "</table>\n";
+        } else {
+            print(':');
         }
         &show_link_report($links, $results, $broken, $redirects,
-                          \@urls);
+                          \@urls, 1);
     }
 
     # Show directory redirects
     if ($_redirects && $_dir_redirects && ($#dir_redirect_urls > -1)) {
         if ($_html) {
-            print('<p>');
+            print('<h3>');
         }
         print("\nList of directory redirects:");
+        if ($_html) {
+            print("</h3>\n");
+        }
         &show_link_report($links, $results, $broken, $redirects,
                           \@dir_redirect_urls);
     }
@@ -1443,29 +1470,43 @@ sub html_header() {
 <title>W3C Link Ckecker: $uri</title>
 <style type=\"text/css\">
 
-BODY {
+body {
   font-family: sans-serif;
   color: black;
   background: white;
 }
 
-A:link, A:active {
-  color: #00E;
-  background: transparent;
-}
-
-A:visited {
-  color: #529;
-  background: transparent;
-}
-
-PRE {
+pre {
   font-family: monospace
 }
 
-IMG {
+img {
   color: white;
   border: none;
+}
+
+.report {
+  width: 100%;
+}
+
+dt.report {
+  font-weight: bold;
+}
+
+.unauthorized {
+  background-color: aqua;
+}
+
+.redirect {
+  background-color: yellow;
+}
+
+.broken {
+  background-color: red;
+}
+
+.multiple {
+  background-color: fuchsia;
 }
 
 </style>
@@ -1478,24 +1519,22 @@ IMG {
 
 sub bgcolor() {
     my ($code) = @_;
-    my $color;
+    my $class;
     my $r = HTTP::Response->new($code);
     if ($r->is_success()) {
         return '';
+    } elsif ($code == 300) {
+        $class = 'multiple';
+    } elsif ($code == 401) {
+        $class = 'unauthorized';
+    } elsif ($r->is_redirect()) {
+        $class = 'redirect';
+    } elsif ($r->is_error()) {
+        $class = 'broken';
+    } else {
+        $class = 'broken';
     }
-    if ($code == 300) {
-        return ' bgcolor="magenta"';
-    }
-    if ($code == 401) {
-        return ' bgcolor="aqua"';
-    }
-    if ($r->is_redirect()) {
-        return ' bgcolor="yellow"';
-    }
-    if ($r->is_error()) {
-        return ' bgcolor="red"';
-    }
-    return ' bgcolor="grey"';
+    return(' class="'.$class.'"');
 }
 
 sub show_url() {
@@ -1545,6 +1584,8 @@ sub print_form() {
   <input type=\"checkbox\" name=\"summary\"> Summary only
   <br>
   <input type=\"checkbox\" name=\"hide_redirects\"> Hide redirects
+  <br>
+  <input type=\"checkbox\" name=\"no_accept_language\"> Don't send <tt>Accept-Language</tt> headers.
   <br>
   <input type=\"checkbox\" name=\"hide_dir_redirects\"> Hide directory redirects
   <br>
