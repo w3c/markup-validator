@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.281 2002-11-02 16:36:10 link Exp $
+# $Id: check,v 1.282 2002-11-02 17:24:08 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.281 $;
+  $VERSION    =  q$Revision: 1.282 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-11-02 16:36:10 $,
+			      Date => q$Date: 2002-11-02 17:24:08 $,
 			     });
 
 #
@@ -1933,7 +1933,7 @@ sub prepCGI {
 
   # Futz the URI so "/referer" works.
   if ($q->path_info) {
-    if ($q->path_info eq '/referer') {
+    if ($q->path_info eq '/referer' or $q->path_info eq '/referrer') {
       $q->param('uri', 'referer');
     } else {
       my $thispage = &self_url($q);
