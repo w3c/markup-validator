@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.355 2004-11-13 10:31:18 ville Exp $
+# $Id: check,v 1.356 2004-11-13 15:40:46 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -227,7 +227,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.355 $;
+  $VERSION    =  q$Revision: 1.356 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -345,7 +345,6 @@ if ($HAVE_SOAP_LITE) {
   # $File->{Opt}->{'Fussy'}          = $q->param('fussy')   ? TRUE                   :  FALSE;
   $File->{Opt}->{'Charset'}        = $q->param('charset') ? lc $q->param('charset'):     '';
   $File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') ? $q->param('doctype')   :     '';
-  $File->{Opt}->{'URI'}            = $q->param('uri')     ? $q->param('uri')       :     '';
   $File->{Opt}->{'Output'}         = $q->param('output')  ? $q->param('output')    : 'html';
   $File->{Opt}->{'Max Errors'}     = $q->param('me')      ? $q->param('me')        :     '';
 
