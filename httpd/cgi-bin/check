@@ -9,15 +9,15 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.275 2002-10-30 01:41:34 link Exp $
+# $Id: check,v 1.276 2002-10-30 01:50:11 link Exp $
 
 #
 # Disable buffering on STDOUT!
 $| = 1;
 
 #
-# We need Perl 5.005_03. (no access to 5.004 testing box any more)
-require 5.005_03;
+# We need Perl 5.6.0+.
+use 5.006;
 
 ###############################################################################
 #### Load modules. ############################################################
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.275 $;
+  $VERSION    =  q$Revision: 1.276 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-30 01:41:34 $,
+			      Date => q$Date: 2002-10-30 01:50:11 $,
 			     });
 
 #
