@@ -3,13 +3,13 @@
 # W3C HTML Validation Service
 # A CGI script to retrieve and validate an HTML file
 #
-# Copyright 1995-2001 Gerald Oskoboiny <gerald@w3.org>
+# Copyright 1995-2002 Gerald Oskoboiny <gerald@w3.org>
 # for additional contributors, see http://dev.w3.org/cvsweb/validator/
 #
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.215 2002-08-27 03:04:43 duerst Exp $
+# $Id: check,v 1.216 2002-08-27 14:52:46 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -97,7 +97,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.215 $;
+  $VERSION    =  q$Revision: 1.216 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -153,7 +153,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-27 03:04:43 $,
+			      Date => q$Date: 2002-08-27 14:52:46 $,
 			     });
 
 #
@@ -177,11 +177,13 @@ $File->{Env}->{'Self URI'} = $q->url(-query => 0);
 
 #
 # Initialize parameters we'll need (and override) later.
+# (casing policy: lowercase early)
 $File->{Charset}->{Use}  = ''; # The charset used for validation.
-$File->{Charset}->{Auto} = ''; # Autodetected using XML rules.
+$File->{Charset}->{Auto} = ''; # Autodetion using XML rules (Appendix F).
 $File->{Charset}->{HTTP} = ''; # From HTTP's "charset" parameter.
 $File->{Charset}->{META} = ''; # From HTML's <meta http-equiv>.
 $File->{Charset}->{XML}  = ''; # From the XML Declaration.
+$File->{Charset}->{Override}=''# From override.
 
 #
 # Array (ref) used to store character offsets for the XML report.
@@ -198,18 +200,18 @@ $q = &prepCGI($File, $q);
 
 #
 # Set session switches.
-$File->{Opt}->{'Outline'}        = $q->param('outline') ? TRUE                 :  FALSE;
-$File->{Opt}->{'Show Source'}    = $q->param('ss')      ? TRUE                 :  FALSE;
-$File->{Opt}->{'Show Parsetree'} = $q->param('sp')      ? TRUE                 :  FALSE;
-$File->{Opt}->{'No Attributes'}  = $q->param('noatt')   ? TRUE                 :  FALSE;
-$File->{Opt}->{'Show ESIS'}      = $q->param('esis')    ? TRUE                 :  FALSE;
-$File->{Opt}->{'Show Errors'}    = $q->param('errors')  ? TRUE                 :  FALSE;
-$File->{Opt}->{'Verbose'}        = $q->param('verbose') ? TRUE                 :  FALSE;
-$File->{Opt}->{'Debug'}          = $q->param('debug')   ? TRUE                 :  FALSE;
-$File->{Opt}->{'Charset'}        = $q->param('charset') ? $q->param('charset') :     '';
-$File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') ? $q->param('doctype') :     '';
-$File->{Opt}->{'URI'}            = $q->param('uri')     ? $q->param('uri')     :     '';
-$File->{Opt}->{'Output'}         = $q->param('output')  ? $q->param('output')  : 'html';
+$File->{Opt}->{'Outline'}        = $q->param('outline') ? TRUE                   :  FALSE;
+$File->{Opt}->{'Show Source'}    = $q->param('ss')      ? TRUE                   :  FALSE;
+$File->{Opt}->{'Show Parsetree'} = $q->param('sp')      ? TRUE                   :  FALSE;
+$File->{Opt}->{'No Attributes'}  = $q->param('noatt')   ? TRUE                   :  FALSE;
+$File->{Opt}->{'Show ESIS'}      = $q->param('esis')    ? TRUE                   :  FALSE;
+$File->{Opt}->{'Show Errors'}    = $q->param('errors')  ? TRUE                   :  FALSE;
+$File->{Opt}->{'Verbose'}        = $q->param('verbose') ? TRUE                   :  FALSE;
+$File->{Opt}->{'Debug'}          = $q->param('debug')   ? TRUE                   :  FALSE;
+$File->{Opt}->{'Charset'}        = $q->param('charset') ? lc $q->param('charset'):     '';
+$File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') ? $q->param('doctype')   :     '';
+$File->{Opt}->{'URI'}            = $q->param('uri')     ? $q->param('uri')       :     '';
+$File->{Opt}->{'Output'}         = $q->param('output')  ? $q->param('output')    : 'html';
 
 $DEBUG = $File->{Opt}->{Debug};
 
@@ -246,125 +248,55 @@ untie *STDIN;
 ###############################################################################
 
 
-
-# if (<http charset given>) {
-#   # Use it, transcode, validate...
-# } elsif (<text/...+xml>) { # The one special case.
-#   # Act as if $http_charset was 'us-ascii'.
-# } else {
-#   if (<XML Rec Autodetect>) {
-#     # Trust it, transcode, validate...
-#   } else { # Autodetect failed... Assume ASCII/UTF-8 compatible.
-#     if (<XML encoding given>) {
-#       # Use it, transcode, validate...
-#     } elsif (<meta charset given...>) {
-#       # Use it, transcode, validate...
-#     } else {
-#       # No charset in HTTP, XML, or META.
-#       # Refuse to validate!
-#     }
-#   }
-# }
-
-
-#
-# Find encoding in document according to XML rules
-# Only meaningfull if file contains a BOM, or for well-formed XML!
-{
-  my ($preSize, $postSize);
-
-  ($File->{Charset}->{Auto}, $File->{BOM}, $preSize, $postSize)
-    = &find_base_encoding($File->{Bytes});
-  my $charSize = $preSize + $postSize + 1;
-  my $initSize = $charSize * 100;  # 100 arbitrary, but enough in any case
-  my $someBytes = substr $File->{Bytes}, $File->{BOM}, $initSize;
-  my $someText = '';
-
-  # translate from guessed encoding to ascii-compatible
-  if ($File->{Charset}->{Auto} eq 'EBCDIC') {
-    # special treatment for EBCDIC, maybe use tr///
-    # work on this later
-  }
-  elsif (($preSize + $postSize) == 0) {
-    $someText = $someBytes; # efficiency shortcut
-  }
-  else { # generic code for UTF-16/UCS-4
-    my ($i, $j);
-   LABEL:
-    for ($i=0; $i<=$initSize-$charSize; ) {
-      for ($j=0; $j<$preSize; $i++, $j++) {
-        if ((substr $someBytes, $i, 1) != '\x00') {
-          last LABEL;
-        }
-      }
-      $someText .= substr $someBytes, $i++, 1;
-      for ($j=0; $j<$postSize; $i++, $j++) {
-        if ((substr $someBytes, $i, 1) != '\x00') {
-          chop $someText; # remove last character
-          last LABEL;
-        }
-      }
-    }
-  }
-  # try to find encoding pseudo-attribute
-  $someText =~ m("^<\?xml[ \t\n\r]+version[ \t\n\r]?=[ \t\n\r]?([\'\"])[-._:a-zA-Z0-9]+\1[
-\t\n\r]+encoding[ \t\n\r]?=[ \t\n\r]?([\'\"])([A-Za-z][-._A-Za-z0-9]*)\2);
-
-  $File->{Charset}->{XML} = $3;
-}
-
-#
-# Abort if an error was flagged by charset autodetect.
-# &abort_if_error_flagged($File, 0); #### no errors up to here ?!
+$File = &find_xml_encoding ($File);
 
 #
 # Decide on a charset to use (first part)
 #
-if ($File->{Opt}->{'Charset'} && $File->{Opt}->{'Charset'} ne '(detect automatically)') {
-  ($File->{Charset}->{Use}) = split $File->{Opt}->{'Charset'}, ' ', 1;
-  ## message about 'charset override in effect
-}
-elsif ($File->{Charset}->{HTTP}) {
+if ($File->{Charset}->{HTTP}) {
   $File->{Charset}->{Use} = $File->{Charset}->{HTTP}; # HTTP, if given, is authorative.
 } elsif ($File->{Type} =~ m(^text/\w+\+xml$)) {
   $File->{Charset}->{Use} = 'us-ascii'; # Act as if $http_charset was 'us-ascii'. (MIME rules)
-      &add_warning($File, <<"      .EOF.");
+  &add_warning($File, <<"      .EOF.");
       <em>Note:</em>
       The HTTP Content-Type field did not contain a "charset" attribute,
       but the Content-Type was one of the XML text/* sub-types. The relevant
-      standards specify a strong default of "us-ascii" for such documents so
+      specification (RFC 3023) specifies a strong default of "us-ascii" for such documents so
       we will use this value regardless of any encoding you may have indicated
       elsewhere. If you would like to use a different encoding, you should
       arrange to have your server send this new encoding information.
       .EOF.
 } elsif ($File->{Charset}->{XML}) {
   $File->{Charset}->{Use} = $File->{Charset}->{XML};
-} elsif ($File->{Charset}->{Auto} =~ "^UTF-16" && $File->{BOM} == 2) {
-  $File->{Charset}->{Use} = $File->{Charset}->{Auto};
-} elsif ($File->{Charset}->{Auto} eq "UTF-8"   && $File->{BOM} == 3) {
-  $File->{Charset}->{Use} = "UTF-8";
+} elsif ($File->{Charset}->{Auto} =~ "^utf-16[bl]e$" && $File->{BOM} == 2) {
+  $File->{Charset}->{Use} = 'utf-16';
 } elsif ($File->{Type} =~ m(^application/\w+\+xml$)) {
-  $File->{Charset}->{Use} = "UTF-8";
+  $File->{Charset}->{Use} = "utf-8";
 } 
 
 $File->{Content} = &normalize_newlines($File->{Bytes}, $File->{Charset}->{Use});
 $File->{Content}->[0] = substr $File->{Content}->[0], $File->{BOM}; # remove BOM
-
+#### add warning about BOM in UTF-8
 
 #
-# Decide on a charset to use (continue)
-#
-if (!$File->{Charset}->{Use}) {
-  #
-  # Try to extract META charset.
-  $File = &preparse($File);
-  if ($File->{Charset}->{META}) {
-    $File->{Charset}->{Use} = $File->{Charset}->{META};
-  } else {
+# Try to extract META charset
+# (works only if ascii-based and reasonably clean before <meta>)
+$File = &preparse($File);
+unless ($File->{Charset}->{Use}) {
+  $File->{Charset}->{Use} = $File->{Charset}->{META};
+}
+
+if (&conflict($File->{Opt}->{'Charset'}, '(detect automatically)')) {
+  $File->{Charset}->{Override} = split $File->{Opt}->{'Charset'}, ' ', 1;
+  $File->{Charset}->{Use} = $File->{Charset}->{Override} = lc $File->{Charset}->{Override};
+  # message about 'charset override' in effect comes later
+}
+
+unless ($File->{Charset}->{Use}) {
     $File->{'Error Flagged'} = TRUE;
     $File->{'Error Message'} = <<".EOF.";
     <p>
-      I was not able to extract a character encoding labelling from either of
+      I was not able to extract a character encoding labelling from any of
       the valid sources for such information. Without encoding information it
       is impossible to validate the document. The sources I tried are:
     </p>
@@ -401,10 +333,10 @@ if (!$File->{Charset}->{Use}) {
 
 #
 # Check the detected Encoding and transcode.
-$File = &validate_encoding($File);
+$File = &transcode_and_check($File);
 
 #
-# Abort if an error was flagged during Encoding Validation.
+# Abort if an error was flagged during transcoding
 &abort_if_error_flagged($File, O_SOURCE);
 
 
@@ -452,7 +384,7 @@ $File->{Type} = 'mathml+xml' if $File->{DOCTYPE} =~ /mathml/i;
 
 #
 # Sanity check Charset information and add any warnings necessary.
-$File = &validate_charset($File);
+$File = &charset_conflicts($File);
 
 
 #
@@ -497,6 +429,7 @@ if ($File->{'Is Upload'}) {
 			      -values => [
 					  '(detect automatically)',
 					  'utf-8 (Unicode, worldwide)',
+					  'utf-16 (Unicode, worldwide)',
 					  'iso-8859-1 (Western Europe)',
 					  'iso-8859-2 (Central Europe)',
 					  'iso-8859-3 (Maltese)',
@@ -577,7 +510,7 @@ $ENV{SGML_SEARCH_PATH} = $CFG->{'SGML Library'};
 
 ##
 ## MathML and XHTML. Must be here because they're usually served as text/html
-## to deal with braindead browsers. IOW, these override the check for &is_html.
+## to deal with braindead browsers. In other words, these override the check for &is_html.
 #$catalog = File::Spec->catfile($CFG->{'SGML Library'}, 'xhtml.soc')
 #  if &is_xhtml($File->{Type});
 #$catalog = File::Spec->catfile($CFG->{'SGML Library'}, 'mathml.soc')
@@ -1204,7 +1137,7 @@ sub handle_uri {
 
   $File->{Bytes}           = $res->content;
   $File->{Type}            = $type;
-  $File->{Charset}->{HTTP} = $charset;
+  $File->{Charset}->{HTTP} = lc $charset;
   $File->{Modified}        = $lastmod;
   $File->{Server}          = scalar $res->server;
   $File->{Size}            = scalar $res->content_length;
@@ -1232,7 +1165,7 @@ sub handle_file {
 
   $File->{Bytes}           = $file;
   $File->{Type}            = $type;
-  $File->{Charset}->{HTTP} = $charset;
+  $File->{Charset}->{HTTP} = lc $charset;
   $File->{Modified}        = $h->{'Last-Modified'};
   $File->{Server}          = $h->{'Server'};
   $File->{Size}            = $h->{'Content-Length'};
@@ -1304,11 +1237,11 @@ sub normalize_newlines {
   my $pattern = '';
 
   # patterns are not allowed to have parentheses
-  $pattern = '\x00\015\x00\012|\x00\015|\x00\012' if /^UTF-16BE$/i;
-  $pattern = '\015\x00\012\x00|\015\x00|\012\x00' if /^UTF-16LE$/i;
-  $pattern = '\x00\x00\x00\015\x00\x00\x00\012|\x00\x00\x00\015|\x00\x00\x00\012' if /^UCS-4BE$/i;
-  $pattern = '\015\x00\x00\x00\012\x00\x00\x00|\015\x00\x00\x00|\012\x00\x00\x00' if /^UCS-4LE$/i;
-  # insert other special cases here
+  $pattern = '\x00\015\x00\012|\x00\015|\x00\012' if /^utf-16be$/;
+  $pattern = '\015\x00\012\x00|\015\x00|\012\x00' if /^utf-16le$/;
+  $pattern = '\x00\x00\x00\015\x00\x00\x00\012|\x00\x00\x00\015|\x00\x00\x00\012' if /^UCS-4be$/;
+  $pattern = '\015\x00\x00\x00\012\x00\x00\x00|\015\x00\x00\x00|\012\x00\x00\x00' if /^UCS-4le$/;
+  # insert other special cases here, such as EBCDIC
   $pattern = '\015\012|\015|\012' if !$pattern;    # all other cases
 
   return [split /$pattern/, $file];
@@ -1319,7 +1252,7 @@ sub normalize_newlines {
 # Return $_[0] encoded for HTML entities (cribbed from merlyn).
 sub ent {
   local $_ = shift;
-  s(["<&>"]){'&#' . ord($&) . ';'}ge;
+  s(["<&>"]){'&#' . ord($&) . ';'}ge;  # should switch to hex sooner or later
   return $_;
 }
 
@@ -1415,10 +1348,6 @@ sub parse_errors ($$) {
       $err->{type} = 'I';
       $err->{msg}  = $errors[4];
     }
-
-
-
-
 
 
     # An unknown FPI and no SI.
@@ -2081,15 +2010,15 @@ sub is_mathml {shift =~ m(^mathml)};
 
 
 #
-# Sanity check charset info and add any warnings necessary.
-sub validate_charset {
+# Check charset conflicts and add any warnings necessary.
+sub charset_conflicts {
   my $File = shift;
   #
   # Handle the case where there was no charset to be found.
   # (This is a different issue from whether an override was given!)
   unless ($File->{Charset}->{Use}) {
     if (&is_xml($File->{Type})) {
-      $File->{Charset}->{Use} = 'UTF-8'; # @@@TODO@@@: Should detect UTF-8 vs. UTF-16!
+      $File->{Charset}->{Use} = 'UTF-8';
       &add_warning($File, <<"      .EOF.");
       <strong>No Character Encoding detected!</strong>
       To ensure correct validation, processing, and display,
@@ -2114,53 +2043,55 @@ sub validate_charset {
   }
 
   #
-  # If we have a charset field in the request, we use it
-  if ($File->{Opt}->{Charset}) {
-    if ($File->{Opt}->{Charset} =~ m(detect automatically)i) {
-      $File->{Opt}->{Charset} = '';
-    } else {
-      $File->{Opt}->{Charset} =~ /^(\w+)/;
-      $File->{Opt}->{Charset} = lc $1;
-
-      &add_warning($File, <<"      .EOF.");
+  # warn about charset override
+  if (&conflict($File->{Charset}->{Override}, $File->{Charset}->{Use})) {
+    &add_warning($File, <<"      .EOF.");
       <strong>Character Encoding Override in effect!</strong>
       The detected character encoding,
       &#171;<code>$File->{Charset}->{Use}</code>&#187;, has been supressed and the
-      character encoding &#171;<code>$File->{Opt}->{Charset}</code>&#187;
+      character encoding &#171;<code>$File->{Opt}->{Charset}</code>&#187; is
       used instead.
       .EOF.
-      $File->{Tentative} |= T_ERROR;
-      $File->{Charset}->{Use} = $File->{Opt}->{Charset};
-    }
+    $File->{Tentative} |= T_ERROR;
   }
 
   #
-  # Add a warning if there was charset info in the HTTP header, but it was
-  # later overridden by a META element or XML Declaration.
-  if ($File->{Charset}->{HTTP}) {
-    if ($File->{Charset}->{META}) {
-      unless ($File->{Charset}->{META} eq $File->{Charset}->{HTTP}) {
-	&add_warning($File, <<"        .EOF.");
+  # Add a warning if there was charset info conflict (HTTP header,
+  # XML declaration, or <meta> element).
+  if (&conflict($File->{Charset}->{HTTP}, $File->{Charset}->{XML})) {
+    &add_warning($File, <<"        .EOF.");
       <strong>Character Encoding mismatch!</strong>
-      The character encoding specified in the HTTP header,
-      &#171;<code>$File->{Charset}->{HTTP}</code>&#187;, is different from the
-      value &#171;<code>$File->{Charset}->{META}</code>&#187; in the META element.
-      I will use &#171;<code>$File->{Charset}->{Use}</code>&#187; for this validation.
-        .EOF.
-      }
-    } elsif ($File->{Charset}->{XML}) {
-      unless ($File->{Charset}->{XML} eq $File->{Charset}->{HTTP}) {
-	&add_warning($File, <<"        .EOF.");
-      <strong>Character Encoding mismatch!</strong>
-      The character encoding specified in the HTTP header
-      (&#171;<code>$File->{Charset}->{HTTP}</code>&#187;) is different from the
-      value in the XML declaration (&#171;<code>$File->{Charset}->{XML}</code>&#187;).
-      I will use the value from the XML Declaration
-      (&#171;<code>$File->{Charset}->{Use}</code>&#187;)
+      The character encoding specified in the
+        HTTP header (<code>$File->{Charset}->{HTTP}</code>)
+      is different from the value in the
+        XML declaration (<code>$File->{Charset}->{XML}</code>).
+      I will use the value from the
+        HTTP header (<code>$File->{Charset}->{Use}</code>)
       for this validation.
         .EOF.
-      }
-    }
+  } elsif (&conflict($File->{Charset}->{HTTP}, $File->{Charset}->{META})) {
+    &add_warning($File, <<"        .EOF.");
+      <strong>Character Encoding mismatch!</strong>
+      The character encoding specified in the
+        HTTP header (<code>$File->{Charset}->{HTTP}</code>)
+      is different from the value in the
+        <code>&lt;meta&gt;</code> element (<code>$File->{Charset}->{META}</code>).
+      I will use the value from the
+        HTTP header (<code>$File->{Charset}->{Use}</code>)
+      for this validation.
+        .EOF.
+  }
+  elsif (&conflict($File->{Charset}->{XML}, $File->{Charset}->{META})) {
+    &add_warning($File, <<"        .EOF.");
+      <strong>Character Encoding mismatch!</strong>
+      The character encoding specified in the
+        XML declaration (<code>$File->{Charset}->{XML}</code>)
+      is different from the value in the
+        <code>&lt;meta&gt;</code> element (<code>$File->{Charset}->{META}</code>).
+      I will use the value from the
+        XML declaration (<code>$File->{Charset}->{XML}</code>)
+      for this validation.
+        .EOF.
   }
 
   return $File;
@@ -2169,15 +2100,19 @@ sub validate_charset {
 
 #
 # Check Encoding and Transcode.
-sub validate_encoding {
+sub transcode_and_check {
   my $File = shift;
 
   my @lines;
 
-  unless ($File->{Charset}->{Use} =~ m(utf-8)i) {
+  unless ($File->{Charset}->{Use} eq 'utf-8') {
     my ($command, $result_charset) = split " ", $CFG->{Charsets}->{$File->{Charset}->{Use}}, 2;
 
+    if ($result_charset eq 'utf-16' && $File->{Charset}->{Auto} =~ m/^utf-16[bl]e$/) {
+      $result_charset = $File->{Charset}->{Auto}; # for per-line conversion, need to be exact
+    }
     if ($command eq 'I') {
+      # test if given charset is available
       eval {my $c = Text::Iconv->new($result_charset, 'utf-8')};
       $command = '' if $@;
     } elsif ($command eq 'X') {
@@ -2194,7 +2129,6 @@ sub validate_encoding {
         </p>
         <p>The detected character encoding was "$File->{Charset}->{Use}".</p>
         <p>The error was "$@".</p>
-        <p>The command was "$command".</p>
         <p>
           If you believe the character encoding to be valid you can submit a request for
           that character encoding (see the <a href="feedback.html">feedback page</a>
@@ -2218,7 +2152,7 @@ sub validate_encoding {
   }
 
   # check correctness of UTF-8 both for UTF-8 input and for conversion results
-  if ($File->{Charset}->{Use}) {
+  if ($File->{Charset}->{Use}) {  #### this check seems to be unnecessary
     for (my $i = 0; $i < $#{$File->{Content}}; $i++) {
       # substitution needed for very long lines (>32K), to avoid backtrack
       # stack overflow. Handily, this also happens to count characters.
@@ -2236,6 +2170,7 @@ sub validate_encoding {
       push @lines, ($i+1) if length;
       $count += 0; # Force numeric.
       $File->{Offsets}->[$i + 1] = [$count, $File->{Offsets}->[$i]->[1] + $count];
+      #### replace invalid line with some dummy text
     }
   }
 
@@ -2259,31 +2194,31 @@ sub validate_encoding {
   return $File;
 }
 
-
+#### not used
 #
 # Transcode into UTF-8.
-sub transcode {
-  my $File = shift;
-  my $from = shift;
-
-  my @Result = ();
-  my @lines  = ();
-
-  eval {my $c = Text::Iconv->new($from, 'utf-8')};
-  if ($@) {
-    return FALSE;
-  } else {
-    my $c = Text::Iconv->new($from, 'utf-8');
-    my $line = 0;
-    foreach my $in (@{$File->{Content}}) {
-      $line++;
-      my $out = $c->convert($in);
-      push @lines, $line if ($in and not $out);
-      push @Result, $out;
-    }
-  }
-  return {Data => \@Result, Lines => \@lines};
-}
+#sub transcode {
+#  my $File = shift;
+#  my $from = shift;
+#
+#  my @Result = ();
+#  my @lines  = ();
+#
+#  eval {my $c = Text::Iconv->new($from, 'utf-8')};
+#  if ($@) {
+#    return FALSE;
+#  } else {
+#    my $c = Text::Iconv->new($from, 'utf-8');
+#    my $line = 0;
+#    foreach my $in (@{$File->{Content}}) {
+#      $line++;
+#      my $out = $c->convert($in);
+#      push @lines, $line if ($in and not $out);
+#      push @Result, $out;
+#    }
+#  }
+#  return {Data => \@Result, Lines => \@lines};
+#}
 
 
 #
@@ -2513,9 +2448,7 @@ X-W3C-Validator-Errors: $errs
 
 
 #
-# Find the encoding in use in a document instance.
-#
-# Implements autodetection as in Appendix F of the XML 1.0 Recommendation.
+# Autodetection as in Appendix F of the XML 1.0 Recommendation.
 # <URL:http://www.w3.org/TR/2000/REC-xml-20001006#sec-guessing>
 #
 # return values are: (base_encoding, BOMSize, preSize, postSize)
@@ -2523,56 +2456,107 @@ sub find_base_encoding {
   local $_ = shift;
 
   # With a Byte Order Mark:
-  return ('UCS-4BE',  4, 3, 0)
+  return ('ucs-4be',  4, 3, 0)
     if /^\x00\x00\xFE\xFF/; # UCS-4, big-endian machine (1234)
-  return ('UCS-4LE',  4, 0, 3)
+  return ('ucs-4le',  4, 0, 3)
     if /^\xFF\xFE\x00\x00/; # UCS-4, little-endian machine (4321)
-  return ('UTF-16BE', 2, 1, 0)
+  return ('utf-16be', 2, 1, 0)
     if /^\xFE\xFF/;         # UTF-16, big-endian.
-  return ('UTF-16LE', 2, 0, 1)
+  return ('utf-16le', 2, 0, 1)
     if /^\xFF\xFE/;         # UTF-16, little-endian.
-  return ('UTF-8',    3, 0, 0)
+  return ('utf-8',    3, 0, 0)
     if /^\xEF\xBB\xBF/; # UTF-8.
 
   # Without a Byte Order Mark:
-  return ('UCS-4BE',  0, 3, 0)
+  return ('ucs-4be',  0, 3, 0)
     if /^\x00\x00\x00\x3C/; # UCS-4 or 32bit; big-endian machine (1234 order).
-  return ('UCS-4LE',  0, 0, 3)
+  return ('ucs-4le',  0, 0, 3)
     if /^\x3C\x00\x00\x00/; # UCS-4 or 32bit; little-endian machine (4321 order).
-  return ('UTF-16BE', 0, 1, 0)
+  return ('utf-16be', 0, 1, 0)
     if /^\x00\x3C\x00\x3F/; # UCS-2, UTF-16, or 16bit; big-endian.
-  return ('UTF-16LE', 0, 0, 1)
+  return ('utf-16le', 0, 0, 1)
     if /^\x3C\x00\x3F\x00/; # UCS-2, UTF-16, or 16bit; little-endian.
-  return ('UTF-8',    0, 0, 0)
+  return ('utf-8',    0, 0, 0)
     if /^\x3C\x3F\x78\x6D/; # UTF-8, ISO-646, ASCII, ISO-8859-*, Shift-JIS, EUC, etc.
-  return ('EBCDIC',   0, 0, 0)
+  return ('ebcdic',   0, 0, 0)
     if /^\x4C\x6F\xA7\x94/; # EBCDIC
   return ('',         0, 0, 0);
+                            # nothing in particular
 }
 
 
-sub parse_xml_decl {
-  my $f = shift;
-  my $e = '';
-  my $p =  HTML::Parser->new(api_version => 3);
+#
+# Find encoding in document according to XML rules
+# Only meaningfull if file contains a BOM, or for well-formed XML!
+sub find_xml_encoding {
+  my $File = shift;
+  my ($preSize, $postSize);
 
-  my $pi = sub {
-    return if $e;
-    my $pi = shift;
-    return unless $pi =~ m(<\?xml);
-    $pi =~ m(<\?xml[^>]*\sencoding\s*=\s*([\"\'])([A-Za-z][-A-Za-z0-9._]*)\1)s;
-    warn qq(\$1 == '$1' and \$2 == '$2'\n) if $DEBUG;
-    $e = lc $2 if $2;
-    warn "\$e inside == $e\n";
-    $p->eof()  if $e;
-  };
+  ($File->{Charset}->{Auto}, $File->{BOM}, $preSize, $postSize)
+    = &find_base_encoding($File->{Bytes});
+  my $charSize = $preSize + $postSize + 1;
+  my $initSize = $charSize * 100;  # 100 arbitrary, but enough in any case
+  my $someBytes = substr $File->{Bytes}, $File->{BOM}, $initSize;
+  my $someText = '';
 
-  $p->xml_mode(TRUE);
-  $p->handler(process => $pi, 'text');
-  $p->parse($f->{Content});
-  warn "$e\n" if $DEBUG;
-  return $e;
+  # translate from guessed encoding to ascii-compatible
+  if ($File->{Charset}->{Auto} eq 'ebcdic') {
+    # special treatment for EBCDIC, maybe use tr///
+    # work on this later
+  }
+  elsif ($charSize == 1) {
+    $someText = $someBytes; # efficiency shortcut
+  }
+  else { # generic code for UTF-16/UCS-4
+    my ($i, $j);
+   LABEL:
+    for ($i=0; $i<=$initSize-$charSize; ) {
+      for ($j=0; $j<$preSize; $i++, $j++) {
+        if ((substr $someBytes, $i, 1) != '\x00') {
+          last LABEL;
+        }
+      }
+      $someText .= substr $someBytes, $i++, 1;
+      for ($j=0; $j<$postSize; $i++, $j++) {
+        if ((substr $someBytes, $i, 1) != '\x00') {
+          chop $someText; # remove last character
+          last LABEL;
+        }
+      }
+    }
+  }
+  # try to find encoding pseudo-attribute
+  $someText =~ m("^<\?xml[ \t\n\r]+version[ \t\n\r]?=[ \t\n\r]?([\'\"])[-._:a-zA-Z0-9]+\1[
+\t\n\r]+encoding[ \t\n\r]?=[ \t\n\r]?([\'\"])([A-Za-z][-._A-Za-z0-9]*)\2);
+
+  $File->{Charset}->{XML} = lc $3;
+  return $File;
 }
+
+
+#### not used anymore
+#sub parse_xml_decl {
+#  my $f = shift;
+#  my $e = '';
+#  my $p =  HTML::Parser->new(api_version => 3);
+#
+#  my $pi = sub {
+#    return if $e;
+#    my $pi = shift;
+#    return unless $pi =~ m(<\?xml);
+#    $pi =~ m(<\?xml[^>]*\sencoding\s*=\s*([\"\'])([A-Za-z][-A-Za-z0-9._]*)\1)s;
+#    warn qq(\$1 == '$1' and \$2 == '$2'\n) if $DEBUG;
+#    $e = lc $2 if $2;
+#    warn "\$e inside == $e\n";
+#    $p->eof()  if $e;
+#  };
+#
+#  $p->xml_mode(TRUE);
+#  $p->handler(process => $pi, 'text');
+#  $p->parse($f->{Content});
+#  warn "$e\n" if $DEBUG;
+#  return $e;
+#}
 
 
 #
@@ -2589,4 +2573,13 @@ sub abort_if_error_flagged {
     exit;
   }
 }
+
+#
+# conflicting encodings
+sub conflict {
+  my $encodingA = shift;
+  my $encodingB = shift;
+  return $encodingA && $encodingB && $encodingA ne $encodingB;
+}
+
 
