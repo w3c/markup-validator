@@ -71,7 +71,8 @@
 <TMPL_IF NAME="fatal_ip_error">
       <p>
         Sorry, the IP address <TMPL_IF NAME="fatal_ip_hostname">of</TMPL_IF>
-        <TMPL_VAR NAME="fatal_ip_host"> is not public.
+        <TMPL_VAR NAME="fatal_ip_host"> is
+        <a href="http://www.ietf.org/rfc/rfc1918.txt">not public</a>.
         For security reasons, validating resources located at non-public IP
         addresses has been disabled in this service.
       </p>
