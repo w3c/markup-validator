@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.110 2004-05-07 18:11:02 ville Exp $
+# $Id: check,v 1.305.2.111 2004-05-08 17:10:41 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.110 $;
+  $VERSION    =  q$Revision: 1.305.2.111 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-07 18:11:02 $,
+                              Date => q$Date: 2004-05-08 17:10:41 $,
                              });
 
 #
@@ -1904,8 +1904,12 @@ EOHD
 
       my $msg = &ent($err->{msg}); # Entity encode error message.
 
+      # Link from line numbers to source iff we're showing it.
+      my $linenr = $File->{'Opt'}->{'Show Source'} ?
+        qq(<a href="#line-$err->{line}">$err->{line}</a>) : $err->{line};
+
       print ' ' x 8; # Indent markup...
-      print qq(<li><p><em>Line <a href="#line-$err->{line}">$err->{line}</a>, column $err->{char}</em>: );
+      print qq(<li><p><em>Line $linenr, column $err->{char}</em>: );
       print qq{<span class="msg">$msg</span></p>};
       print qq(<p><code class="input">$line</code></p>);
 
