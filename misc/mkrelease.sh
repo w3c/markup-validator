@@ -6,7 +6,7 @@
 #   export CVSROOT=:pserver:anonymous@dev.w3.org:/sources/public
 #   cvs -z3 export -r validator-0_6_6-release validator
 #   cd validator
-#   misc/mkrelease.sh 0.6.6
+#   misc/mkrelease.sh 0.6.7
 
 version="$1"
 if [ -z "$version" ] ; then
