@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.140 2001-07-16 07:56:34 link Exp $
+# $Id: check,v 1.141 2001-07-16 08:08:34 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.140 $;
+$VERSION    =  q$Revision: 1.141 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-16 07:56:34 $;
+$DATE       =  q$Date: 2001-07-16 08:08:34 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1316,7 +1316,12 @@ EOHD
   }
 
   unless ($q->param('uploaded_file')) {
-    my $thispage = $q->url(-query => 1);
+    my $thispage = $q->url(-query => 0);
+    $thispage .= qq(?uri=$File->{URI});
+    $thispage .= ';ss=1'      if $q->param('ss');
+    $thispage .= ';sp=1'      if $q->param('sp');
+    $thispage .= ';noatt=1'   if $q->param('noatt');
+    $thispage .= ';outline=1' if $q->param('outline');
 
     &output_css_validator_blurb($q->param('uri'));
 
