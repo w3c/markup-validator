@@ -1,19 +1,16 @@
-<!--#set var="revision" value="\$Id: docs_errors.tmpl,v 1.2 2005-03-18 06:37:30 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-03-18 06:37:30 $"
+<!--#set var="revision" value="\$Id: docs_errors.tmpl,v 1.3 2005-03-31 21:28:53 ot Exp $"
+--><!--#set var="date" value="\$Date: 2005-03-31 21:28:53 $"
 --><!--#set var="title" value="Error Explanations for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
 
 <h2>Explanation of the error messages<br /> for the W3C Markup Validator</h2>
-    <p>
-      These error explanations were originally written by Scott Bigham,
-      and are used here with his permission.
-    </p>
 
 <h3 id="TableOfContents">Table of Contents</h3>
   <div id="toc">
     <ul>
-	<li>...</li>
+	<li><a href="#hasverbose">Error messages with explanation</a></li>
+	<li><a href="#noverbose">Error messages without explanation</a></li>
     </ul>
   </div>
 
@@ -23,10 +20,10 @@
 
       <dl>
       <TMPL_LOOP NAME="list_errors_hasverbose">
-        <dt><TMPL_VAR NAME="id">: <TMPL_VAR NAME="original"></dt>
+        <dt id="ve-<TMPL_VAR NAME="id">"><TMPL_VAR NAME="id">: <TMPL_VAR NAME="original"></dt>
         <dd><TMPL_VAR NAME="verbose">
 	<p>
-	  <a href="feedback.html?errmsg_id=<TMPL_VAR NAME="id">#errormsg"
+	  <a href="../feedback.html?errmsg_id=<TMPL_VAR NAME="id">#errormsg"
 	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
 	</p>
 	</dd>  
@@ -38,9 +35,8 @@
     <a href="../feedback.html#errormsg">feedback channels</a> to send your suggestions.</p>
     <ul>
 	<TMPL_LOOP NAME="list_errors_noverbose">
-        <li><p><TMPL_VAR NAME="id">: <TMPL_VAR NAME="original"></p>
-	<p class="helpwanted">
-	  <a href="feedback.html?errmsg_id=<TMPL_VAR NAME="id">#errormsg"
+        <li id="ve-<TMPL_VAR NAME="id">"><p><TMPL_VAR NAME="id">: <TMPL_VAR NAME="original">
+	  <a href="../feedback.html?errmsg_id=<TMPL_VAR NAME="id">#errormsg"
 	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
 	</p>
 	</li>
@@ -50,3 +46,4 @@
 <!--#include virtual="../footer.html" -->
   </body>
 </html>
+
