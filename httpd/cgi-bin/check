@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.179 2001-09-14 00:40:35 link Exp $
+# $Id: check,v 1.180 2001-09-14 01:26:36 link Exp $
 
 #
 # We need Perl 5.004.
@@ -46,6 +46,8 @@ use constant T_INFO  =>  2; # 0000 0010
 use constant T_WARN  =>  4; # 0000 0100
 use constant T_ERROR =>  8; # 0000 1000
 use constant T_FATAL => 16; # 0001 0000
+
+use constant T_CHARSET_KLUDGE => 128; # 1000 0000
 
 
 #
@@ -89,9 +91,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.179 $;
+$VERSION    =  q$Revision: 1.180 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-09-14 00:40:35 $;
+$DATE       =  q$Date: 2001-09-14 01:26:36 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1454,7 +1456,11 @@ EOHD
   if ($File->{Type} eq 'xml' and not $File->{DOCTYPE}) {
     print "  <p>Congratulations, this document is well-formed XML.</p>\n";
   } elsif (defined $File->{Tentative}) {
-    print "  <p>\n    This document would validate as the document type specified if you updated it to match the Options used.\n  </p>\n";
+    if ($File->{Tentative} == T_CHARSET_KLUDGE) {
+      print "  <p>\n    This document would validate as the document type specified if you updated it to specify the Character Encoding used.\n  </p>\n";
+    } else {
+      print "  <p>\n    This document would validate as the document type specified if you updated it to match the Options used.\n  </p>\n";
+    }
   } elsif ($version eq 'unknown' or not defined $image_uri) {
     print "  <p>\n    Congratulations, this document validates as the document type specified! (I don't have an icon for this one yet, sorry.)\n  </p>\n";
   }
