@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: navbar.css,v 1.4 2002-11-26 01:01:57 link Exp $
+   $Id: navbar.css,v 1.5 2002-12-01 13:44:59 link Exp $
 */
 
 dl.navbar {
@@ -38,7 +38,7 @@ dl.navbar ul li {
 dl.navbar ul li a {
   display: block;
   text-decoration: none;
-  font-family: "Luxi Mono";
+  font-family: sans-serif;
 }
 
 dl.navbar ul li a:hover {
