@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.383 2005-02-04 19:25:20 link Exp $
+# $Id: check,v 1.384 2005-02-04 19:44:42 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -239,7 +239,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.383 $;
+  $VERSION    =  q$Revision: 1.384 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -567,7 +567,7 @@ unless ($File->{Charset}->{Use}) { # No charset given...
 .EOF.
  }
   my $title = 'No Character Encoding Found! Falling back to UTF-8.';
-  &add_warning($File, 'fatal', $title, $message);
+  &add_warning($File, 'fallback', $title, $message);
   $File->{Tentative} |= T_ERROR; # Can never be valid.
   $File->{Charset}->{Use} = 'utf-8';
 }
@@ -1107,11 +1107,13 @@ sub add_warning ($$$$) {
   my $Title   = shift;
   my $Message = shift;
 
-  push @{$File->{Warnings}}, {
-                              Class   => $Class,
-                              Title   => $Title,
-                              Message => $Message,
-                             };
+  if ($File->{Mode} eq 'html' or $Class eq 'fatal') {
+    push @{$File->{Warnings}}, {
+                                Class   => $Class,
+                                Title   => $Title,
+                                Message => $Message,
+                               };
+  }
 }
 
 
@@ -1705,7 +1707,7 @@ sub parse_errors ($$) {
     if ($err->{msg} =~ m(prolog can\'t be omitted)) {
       my $dtd = ($File->{Mode} == MODE_SGML ?
                    'HTML 4.01 Transitional' : 'XHTML 1.0 Transitional');
-      my $class = 'fatal';
+      my $class = 'fallback';
       my $title = "No DOCTYPE Found! Falling Back to $dtd";
       my $message = <<".EOF.";
       <p>
@@ -2887,12 +2889,24 @@ sub abort_if_error_flagged {
   my $Flags = shift;
 
   return unless $File->{'Error Flagged'};
+  return if $File->{'Error Message'} eq ''; # Previous error, keep going.
 
-  &prep_template($File, $E);
+  if ($File->{Output} eq 'html') {
+    &prep_template($File, $E);
 
-  $E->param(error_message => $File->{'Error Message'});
-  print $E->output;
-  exit;
+    $E->param(error_message => $File->{'Error Message'});
+    print $E->output;
+    exit;
+  } else {
+    &add_warning($File, 'fatal', 'Fatal Error', <<".EOF.");
+A fatal error has occurred while processing the requested document. Processing
+has continued but any later output will be of dubious quality. Limitations of
+this output mode prevent the full error message from being returned; please
+retry this operation in interactive mode using the web interface to see the
+actual error message.
+.EOF.
+    $File->{'Error Message'} = '';
+  }
 }
 
 #
