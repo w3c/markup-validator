@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.42 2003-05-04 22:03:29 link Exp $
+# $Id: check,v 1.305.2.43 2003-05-05 00:05:42 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.42 $;
+  $VERSION    =  q$Revision: 1.305.2.43 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -172,7 +172,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-05-04 22:03:29 $,
+                              Date => q$Date: 2003-05-05 00:05:42 $,
                              });
 
 #
@@ -299,7 +299,13 @@ if ($File->{'Is Upload'}) {
     &add_table($File, qq(<label title="Address of Page to Validate (accesskey: 1)" for="uri">URI</label>),
                '<input accesskey="1" type="text" id="uri" name="uri" size="' . $size
              . '" value="' . $furi . '" />');
-    &add_warning($File, sprintf('<em>Note:</em> The URI you gave me, &lt;%s&gt;, returned a redirect to &lt;%s&gt;.', &ent($File->{Opt}->{URI}), $furi));
+    &add_warning(
+		 $File, 'note', 'Note:',
+		 sprintf(
+			 'The URI you gave me, &lt;%s&gt;, returned a redirect to &lt;%s&gt;.',
+			 &ent($File->{Opt}->{URI}), $furi
+			)
+		);
   }
 }
 
@@ -320,8 +326,7 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
   } else {
     @_source = ('returned by your web server', ($File->{Server}||'unknown'), 'server return');
   }
-  &add_warning($File, <<".EOF.");
-      <em>Note:</em>
+  &add_warning($File, 'note', 'Note:', <<".EOF.");
       The HTTP Content-Type header $_source[0] ($_source[1]) did not contain
       a "charset" parameter, but the Content-Type was one of the XML text/*
       sub-types (<code>$File->{ContentType}</code>). The relevant
@@ -359,9 +364,9 @@ if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
   $File->{Charset}->{Override} = lc($override);
   unless ($File->{Charset}->{Use} and $File->{Opt}->{FB}->{Charset}) {
     if ($File->{Opt}->{FB}->{Charset} and not $File->{Charset}->{Use}) {
-      &add_warning($File, <<".EOF."); # Warn about fallback...
-  <strong>No Character Encoding Found!</strong>
-  Falling back to "$File->{Charset}->{Override}" (<a href="docs/errors.html#fbc">explain...</a>).
+      &add_warning($File, 'fallback', 'No Character Encoding Found!', <<".EOF."); # Warn about fallback...
+  Falling back to "$File->{Charset}->{Override}"
+  (<a href="docs/errors.html#fbc">explain...</a>).
 .EOF.
       $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
     } else {
@@ -369,8 +374,7 @@ if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
       unless ($File->{Charset}->{Override} eq $File->{Charset}->{Use}) {
 	my $cs_use = &ent($File->{Charset}->{Use});
 	my $cs_opt = &ent($File->{Charset}->{Override});
-	&add_warning($File, <<".EOF.");
-      <strong>Character Encoding Override in effect!</strong>
+	&add_warning($File, 'override', 'Character Encoding Override in effect!', <<".EOF.");
       The detected character encoding "<code>$cs_use</code>"
       has been suppressed and "<code>$cs_opt</code>" used instead.
 .EOF.
@@ -513,8 +517,8 @@ my @xmlflags = qw(
 if (&is_xml($File->{Type})) {
   $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'xml.soc');
   push(@xmlflags, '-wxml');
-  &add_warning($File, <<".EOF.");
-  <em>Note</em>: The Validator XML support has
+  &add_warning($File, 'note', 'Note:', <<".EOF.");
+  The Validator XML support has
   <a href="http://openjade.sourceforge.net/doc/xml.htm"
      title="Limitations in Validator XML support">some limitations</a>.
 .EOF.
@@ -673,9 +677,15 @@ if ($File->{'Is Upload'}) {
 if (&is_xml($File->{Type}) and $File->{Namespace}) {
   my $rns = &ent($File->{Namespace});
   if (&is_xhtml($File->{Type}) and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
-    &add_warning($File, "Unknown namespace (&#171;<code>$rns</code>&#187;) for text/html document!");
+    &add_warning(
+		 $File, 'warning', 'Warning:',
+		 "Unknown namespace (&#171;<code>$rns</code>&#187;) for text/html document!",
+		);
   } elsif (&is_svg($File->{Type}) and $File->{Namespace} ne 'http://www.w3.org/2000/svg') {
-    &add_warning($File, "Unknown namespace (&#171;<code>$rns</code>&#187;) for SVG document!");
+    &add_warning(
+		 $File, 'warning', 'Warning:',
+		 "Unknown namespace (&#171;<code>$rns</code>&#187;) for SVG document!",
+		);
   }
 
   &add_table($File, 'Root Namespace', [1, 2, qq(<a href="$rns">$rns</a>)])
@@ -748,8 +758,8 @@ if ($File->{Opt}->{Output} eq 'xml') {
       $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
       $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
 
-      &add_warning($File, <<".EOF.");
-<em>Note</em>: You can also view <a href="$thispage;verbose=1">verbose
+      &add_warning($File, 'note', 'Note:', <<".EOF.");
+You can also view <a href="$thispage;verbose=1">verbose
 results</a> by setting the corresponding option on the <a
   href="detailed.html">Extended Interface</a>.
 .EOF.
@@ -951,7 +961,18 @@ sub serialize_table {
 
 #
 # Add a waring message to the output.
-sub add_warning {push @{shift->{Warnings}}, shift};
+sub add_warning ($$$$) {
+  my $File    = shift;
+  my $Class   = shift;
+  my $Title   = shift;
+  my $Message = shift;
+
+  push @{$File->{Warnings}}, {
+			      Class   => $Class,
+			      Title   => $Title,
+			      Message => $Message,
+			     };
+}
 
 
 #
@@ -959,9 +980,15 @@ sub add_warning {push @{shift->{Warnings}}, shift};
 sub print_warnings {
   my $File = shift;
   return unless (defined $File->{Warnings} and scalar @{$File->{Warnings}});
-  print qq(  <ul id="Warnings">\n);
-  print qq(    <li>$_</li>\n) for @{$File->{Warnings}};
-  print "  </ul>\n";
+  print qq(  <dl id="Warnings">\n);
+  for (@{$File->{Warnings}}) {
+    if ($_->{Class} eq 'fake' and not $File->{'Is Valid'}) {
+      next; # Don't report twice if file is invalid.
+    }
+    printf qq(    <dt class="%s">%s</dt>), $_->{Class}, $_->{Title};
+    printf qq(    <dd class="%s">%s</dd>), $_->{Class}, $_->{Message};
+  }
+  print qq(  </dl>\n);
 }
 
 #
@@ -1443,8 +1470,7 @@ sub override_doctype {
   if ($seen) {
     unless ($File->{Opt}->{FB}->{DOCTYPE}) {
       my $dtd = ent($File->{Opt}->{DOCTYPE});
-      &add_warning($File, <<".EOF.");
-<strong>DOCTYPE Override in effect!</strong>
+      &add_warning($File, 'override', 'DOCTYPE Override in effect!', <<".EOF.");
 The detected DOCTYPE Declaration "$org_dtd" has been suppressed and
 the DOCTYPE for "<code>$dtd</code>" inserted instead, but even if no
 errors are shown below the document will not be Valid until you update
@@ -1456,15 +1482,13 @@ it to reflect this new DOCTYPE.
     unshift @{$File->{Content}}, $dtd;
 
     if ($File->{Opt}->{FB}->{DOCTYPE}) {
-      &add_warning($File, <<".EOF.");
-<strong>No DOCTYPE Found!</strong>
+      &add_warning($File, 'fallback', 'No DOCTYPE Found!', <<".EOF.");
 Falling back to HTML 4.01 Transitional. (<a href="docs/errors.html#fbd">explain...</a>)
 .EOF.
       $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
     } else {
       my $dtd = ent($File->{Opt}->{DOCTYPE});
-      &add_warning($File, <<".EOF.");
-<strong>DOCTYPE Override in effect!</strong>
+      &add_warning($File, 'override', 'DOCTYPE Override in effect!', <<".EOF.");
 The DOCTYPE Declaration for "$dtd" has been inserted at the start of
 the document, but even if no errors are shown below the document will
 not be Valid until you add the new DOCTYPE Declaration.
@@ -1506,26 +1530,14 @@ sub parse_errors ($$) {
     if ($err->{type} eq 'E' or $err->{type} eq 'X' or $err->{type} eq 'Q') {
       $err->{msg}  = join ':', @errors[5 .. $#errors];
     } elsif ($err->{type} eq 'W') {
-      &add_warning($File, "Line $err->{line}, column $err->{char}: $errors[5]");
+      &add_warning(
+		   $File, 'fake', 'Warning:',
+		   "Line $err->{line}, column $err->{char}: $errors[5]",
+		  );
       $err->{msg}  = join ':', @errors[5 .. $#errors];
     } else {
       $err->{type} = 'I';
       $err->{msg}  = $errors[4];
-    }
-
-    # An unknown FPI and no SI.
-    if ($err->{msg} =~ m(unrecognized DOCTYPE)i or $err->{msg} =~ m(no document type declaration)i) {
-      $File->{'Error Flagged'} = TRUE;
-      $File->{'Error Message'} = <<".EOF.";
-     <div class="fatal">
-       <h2>Fatal Error: $err->{msg}</h2>
-       <p>
-         I could not parse this document, because it uses a public identifier
-         that is not in my catalog.
-       </p>
-.EOF.
-      $File->{'Error Message'} .= &doctype_spiel();
-      $File->{'Error Message'} .= "    </div>\n";
     }
 
     # No or unknown FPI and a relative SI.
@@ -1546,19 +1558,17 @@ sub parse_errors ($$) {
 
     # No DOCTYPE.
     if ($err->{msg} =~ m(prolog can\'t be omitted)) {
-      $File->{'Error Flagged'} = TRUE;
-      $File->{'Error Message'} = <<".EOF.";
-    <div class="fatal">
-      <h2>Fatal Error: No DOCTYPE specified!</h2>
+      my $class = 'fatal';
+      my $title = 'No DOCTYPE Declaration Found!';
+      my $message = <<".EOF.";
+    <div>
       <p>
-        I could not parse this document, because it does not include a
-        DOCTYPE Declaration. A DOCTYPE Declaration is mandatory for most
-        current markup languages and without such a declaration it is
-        impossible to validate this document.
+        A DOCTYPE Declaration is mandatory for most current markup languages
+        and without one it is impossible to reliably validate this document.
       </p>
 .EOF.
-	$File->{'Error Message'} .= &doctype_spiel();
-	$File->{'Error Message'} .= <<".EOF.";
+	$message .= &doctype_spiel();
+	$message .= <<".EOF.";
       <p>
         The W3C QA Activity maintains a <a
           href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">List of
@@ -1567,8 +1577,11 @@ sub parse_errors ($$) {
         "<a href="http://htmlhelp.com/tools/validator/doctype.html">Choosing
            a DOCTYPE</a>".
       </p>
+    </div>
 .EOF.
-      $File->{'Error Message'} .= "    </div>\n";
+
+      &add_warning($File, $class, $title, $message);
+      next; # Don't report this as a normal error.
     }
 
     &abort_if_error_flagged($File, O_DOCTYPE);
@@ -2260,12 +2273,10 @@ sub charset_conflicts {
   # warn about charset override
   if ($File->{Charset}->{Override} &&
       $File->{Charset}->{Override} ne $File->{Charset}->{Use}) {
-    &add_warning($File, <<".EOF.");
-      <strong>Character Encoding Override in effect!</strong>
-      The detected character encoding,
-      &#171;<code>$cs_use</code>&#187;, has been suppressed and
-      the character encoding &#171;<code>$cs_opt</code>&#187;
-      is used instead.
+    &add_warning($File, 'override', 'Character Encoding Override in effect!', <<".EOF.");
+      The detected character encoding, "<code>$cs_use</code>", has been
+      suppressed and the character encoding "<code>$cs_opt</code>" used
+      instead.
 .EOF.
     $File->{Tentative} |= T_ERROR;
   }
@@ -2274,38 +2285,25 @@ sub charset_conflicts {
   # Add a warning if there was charset info conflict (HTTP header,
   # XML declaration, or <meta> element).
   if (&conflict($File->{Charset}->{HTTP}, $File->{Charset}->{XML})) {
-    &add_warning($File, <<".EOF.");
-      <strong>Character Encoding mismatch!</strong>
-      The character encoding specified in the
-        HTTP header (<code>$cs_http</code>)
-      is different from the value in the
-        XML declaration (<code>$cs_xml</code>).
-      I will use the value from the
-        HTTP header (<code>$cs_use</code>)
-      for this validation.
+    &add_warning($File, 'note', 'Character Encoding mismatch!', <<".EOF.");
+      The character encoding specified in the HTTP header (<code>$cs_http</code>)
+      is different from the value in the XML declaration (<code>$cs_xml</code>).
+      I will use the value from the HTTP header (<code>$cs_use</code>).
 .EOF.
   } elsif (&conflict($File->{Charset}->{HTTP}, $File->{Charset}->{META})) {
-    &add_warning($File, <<".EOF.");
-      <strong>Character Encoding mismatch!</strong>
-      The character encoding specified in the
-        HTTP header (<code>$cs_http</code>)
-      is different from the value in the
-        <code>&lt;meta&gt;</code> element (<code>$cs_meta</code>).
-      I will use the value from the
-        HTTP header (<code>$cs_use</code>)
-      for this validation.
+    &add_warning($File, 'note', 'Character Encoding mismatch!', <<".EOF.");
+      The character encoding specified in the HTTP header (<code>$cs_http</code>)
+      is different from the value in the <code>&lt;meta&gt;</code> element
+      (<code>$cs_meta</code>). I will use the value from the HTTP header
+      (<code>$cs_use</code>) for this validation.
 .EOF.
   }
   elsif (&conflict($File->{Charset}->{XML}, $File->{Charset}->{META})) {
-    &add_warning($File, <<".EOF.");
-      <strong>Character Encoding mismatch!</strong>
-      The character encoding specified in the
-        XML declaration (<code>$cs_xml</code>)
-      is different from the value in the
-        <code>&lt;meta&gt;</code> element (<code>$cs_meta</code>).
-      I will use the value from the
-        XML declaration (<code>$cs_xml</code>)
-      for this validation.
+    &add_warning($File, 'note', 'Character Encoding mismatch!', <<".EOF.");
+      The character encoding specified in the XML declaration (<code>$cs_xml</code>)
+      is different from the value in the <code>&lt;meta&gt;</code> element
+      (<code>$cs_meta</code>). I will use the value from the XML declaration
+      (<code>$cs_xml</code>) for this validation.
 .EOF.
     $File->{Tentative} |= T_WARN;
   }
@@ -2397,7 +2395,7 @@ sub check_utf8 {
 
   # Add a warning if doc is UTF-8 and contains a BOM.
   if ($File->{Content}->[0] =~ m(^\xEF\xBB\xBF)) {
-    &add_warning($File, <<".EOF.");
+    &add_warning($File, 'note', 'Note:', <<".EOF.");
       The Unicode Byte-Order Mark (BOM) in UTF-8 encoded files is known to cause
       problems for some text editors and older browsers. You may want to consider
       avoiding its use until it is better supported.
@@ -2486,7 +2484,7 @@ X-W3C-Validator-Errors: $errs
   </meta>
 );
 
-  &add_warning($File, <<".EOF.");
+  &add_warning($File, 'note', 'Note:', <<".EOF.");
       This interface is highly experimental and the output *will* change
       -- probably even several times -- before finished. Do *not* rely on it!
       See http://validator.w3.org:8001/docs/users.html#api-warning
