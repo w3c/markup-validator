@@ -1,5 +1,5 @@
-# RPM Spec file for the W3C MarkUp Validator
-# $Id: w3c-validator.spec,v 1.3 2002-12-01 16:52:03 ville Exp $
+# RPM Spec file for the W3C Markup Validator
+# $Id: w3c-markup-validator.spec,v 1.2 2003-02-24 19:11:07 ville Exp $
 
 %define httpd_confdir %{_sysconfdir}/httpd/conf.d
 %define htmldir       %{_var}/www/html
@@ -7,36 +7,39 @@
 
 # -----------------------------------------------------------------------------
 
-Summary:        W3C MarkUp Validator
-Name:           w3c-validator
-Version:        0.6.1
+Summary:        W3C Markup Validator
+Name:           w3c-markup-validator
+Version:        0.6.2
 Release:        1w3c
 URL:            http://validator.w3.org/
 License:        http://www.w3.org/Consortium/Legal/copyright-software
-Source0:        http://validator.w3.org/validator-0_6_1.tar.gz
-Source1:        http://validator.w3.org/sgml-lib-0_6_1.tar.gz
+Source0:        http://validator.w3.org/dist/validator-0_6_2.tar.gz
+Source1:        http://validator.w3.org/dist/sgml-lib-0_6_2.tar.gz
 Group:          Applications/Internet
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires:  perl
-Requires:       httpd, %{name}-libs >= 0.6.0-1w3c
+Requires:       httpd, %{name}-libs = 0.6.2
 Requires:       perl >= 5.6, perl-HTML-Parser >= 3.25, perl-libwww-perl
 Requires:       perl-URI, perl-Text-Iconv, perl(CGI) >= 2.81, perl(Time::HiRes)
-Requires:       perl(Set::IntSpan), opensp >= 1.5
+Requires:       perl(Set::IntSpan), perl(Config::General) >= 2.06
+Requires:       opensp >= 1.5
+Obsoletes:      w3c-validator
 BuildArch:      noarch
 
 %description
-The W3C MarkUp Validator checks documents like HTML and XHTML for
+The W3C Markup Validator checks documents like HTML and XHTML for
 conformance to W3C Recommendations and other standards.
 
 # -----------------------------------------------------------------------------
 
 %package libs
-Summary:        SGML and XML DTDs for the W3C MarkUp Validator
+Summary:        SGML and XML DTDs for the W3C Markup Validator
 Group:          Applications/Text
+Obsoletes:      w3c-validator-libs
 # No need to require the main package
 
 %description libs
-SGML and XML DTDs for the W3C MarkUp Validator.
+SGML and XML DTDs for the W3C Markup Validator.
 
 # -----------------------------------------------------------------------------
 
@@ -44,8 +47,7 @@ SGML and XML DTDs for the W3C MarkUp Validator.
 %setup -q -a 1 -n validator
 
 # Localize config files
-perl -pi -e 's|^(DEBUG\s+)1|${1}0| ;
-             s|\bwww-validator\@w3\.org\b|root\@localhost| ;
+perl -pi -e 's|\bwww-validator\@w3\.org\b|root\@localhost| ;
              s|/validator\.w3\.org/|/localhost/%{name}/| ;
              s|/usr/local/validator/htdocs/config/|%{_sysconfdir}/w3c/| ;
              s|/usr/local/validator/htdocs/|%{htmldir}/%{name}/| ;
@@ -115,6 +117,10 @@ rm -rf $RPM_BUILD_ROOT
 # -----------------------------------------------------------------------------
 
 %changelog
+* Sat Feb 22 2003 Ville Skyttä <ville.skytta at iki.fi> - 0.6.2-1w3c
+- Update to 0.6.2.
+- Rename to w3c-markup-validator.
+
 * Sun Dec  1 2002 Ville Skyttä <ville.skytta at iki.fi> - 0.6.1-1w3c
 - Update to 0.6.1.
 
