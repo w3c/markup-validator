@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Typical usage:
+#   mkdir foo
+#   cd foo
+#   export CVSROOT=:pserver:anonymous@dev.w3.org:/sources/public
+#   cvs -z3 export -r validator-0_6_5 validator
+#   cd validator
+#   misc/mkrelease.sh 0.6.5
+
 version="$1"
 if [ -z "$version" ] ; then
   echo "Usage: $0 <version>"
