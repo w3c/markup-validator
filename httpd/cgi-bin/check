@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.241 2002-10-09 07:05:02 ville Exp $
+# $Id: check,v 1.242 2002-10-10 05:09:53 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.241 $;
+  $VERSION    =  q$Revision: 1.242 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-09 07:05:02 $,
+			      Date => q$Date: 2002-10-10 05:09:53 $,
 			     });
 
 #
@@ -1165,9 +1165,9 @@ sub handle_file {
   my $h = $q->uploadInfo($f);
   my $file;
 
-  while (not eof $f) {$file .= <$f>}; ### there should be a faster
-                                      ### way to slurp in a file, by
-                                      ### changing the line delimiter
+  local $/ = undef; # set line delimiter so that <> reads rest of file
+  $file = <$f>;
+
   my($type, $charset) = &parse_content_type($File, $h->{'Content-Type'});
 
   $File->{Bytes}           = $file;
