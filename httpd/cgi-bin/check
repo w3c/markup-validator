@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.19 2002-04-30 16:41:46 link Exp $
+# $Id: check,v 1.200.2.20 2002-05-01 20:00:22 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -70,7 +70,7 @@ $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.19 $;
+$VERSION    =  q$Revision: 1.200.2.20 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 #
@@ -99,7 +99,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-04-30 16:41:46 $,
+			      Date => q$Date: 2002-05-01 20:00:22 $,
 			     });
 
 #
@@ -130,7 +130,7 @@ $File->{Charset}->{Use}  = ''; # The charset used for validation.
 
 #
 # Array (ref) used to store character offsets for the XML report.
-$File->{Offsets} = [];
+$File->{Offsets}->[0] = [0, 0]; # The first item isn't used...
 
 
 #########################################
@@ -143,15 +143,16 @@ $q = &prepCGI($File, $q);
 
 #
 # Set session switches.
-$File->{Opt}->{'Outline'}        = $q->param('outline') ? TRUE                 : FALSE;
-$File->{Opt}->{'Show Source'}    = $q->param('ss')      ? TRUE                 : FALSE;
-$File->{Opt}->{'Show Parsetree'} = $q->param('sp')      ? TRUE                 : FALSE;
-$File->{Opt}->{'No Attributes'}  = $q->param('noatt')   ? TRUE                 : FALSE;
-$File->{Opt}->{'Show ESIS'}      = $q->param('esis')    ? TRUE                 : FALSE;
-$File->{Opt}->{'Show Errors'}    = $q->param('errors')  ? TRUE                 : FALSE;
-$File->{Opt}->{'Charset'}        = $q->param('charset') ? $q->param('charset') :    '';
-$File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') ? $q->param('doctype') :    '';
-$File->{Opt}->{'URI'}            = $q->param('uri')     ? $q->param('uri')     :    '';
+$File->{Opt}->{'Outline'}        = $q->param('outline') ? TRUE                 :  FALSE;
+$File->{Opt}->{'Show Source'}    = $q->param('ss')      ? TRUE                 :  FALSE;
+$File->{Opt}->{'Show Parsetree'} = $q->param('sp')      ? TRUE                 :  FALSE;
+$File->{Opt}->{'No Attributes'}  = $q->param('noatt')   ? TRUE                 :  FALSE;
+$File->{Opt}->{'Show ESIS'}      = $q->param('esis')    ? TRUE                 :  FALSE;
+$File->{Opt}->{'Show Errors'}    = $q->param('errors')  ? TRUE                 :  FALSE;
+$File->{Opt}->{'Charset'}        = $q->param('charset') ? $q->param('charset') :     '';
+$File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') ? $q->param('doctype') :     '';
+$File->{Opt}->{'URI'}            = $q->param('uri')     ? $q->param('uri')     :     '';
+$File->{Opt}->{'Output'}         = $q->param('output')  ? $q->param('output')  : 'html';
 
 
 #
@@ -216,9 +217,6 @@ $File->{Content}[0] =~ s/^\xEF\xBB\xBF//
      <a href="$CFG->{'Msg FAQ URI'}#utf8-bom">explanation</a> for details.)
 .EOF.
 
-&add_warning($File, 'Test warning');
-&add_warning($File, 'Test warning');
-&add_warning($File, 'Test warning');
 
 #
 # Override DOCTYPE if user asked for it.
@@ -1779,6 +1777,7 @@ sub validate_charset {
     if (&is_xml($File->{Type})) {
       $File->{Charset}->{Use} = 'UTF-8'; # @@@TODO@@@: Should detect UTF-8 vs. UTF-16!
     } else {
+      $File->{Charset}->{Use} = 'UTF-8'; # @@@FIXME@@@: This needs thought!
       &add_warning($File, <<"      .EOF.");
       <strong>No Character Encoding detected!</strong>
       To ensure correct validation, processing, and display,
@@ -1910,9 +1909,10 @@ sub validate_encoding {
         |  \xF4[\x80-\x8F][\x80-\xBF]{2}        # plane 16
        //xg;
       push @lines, $i if length;
+      warn $File->{Content}->[$i] unless $count;
       $count += 0; # Force numeric.
       $File->{Offsets}->[$i + 1] = [$count, $File->{Offsets}->[$i]->[1] + $count];
-      warn qq(Line "$i" has "$count" characters.\n);
+#      warn qq(Line "$i" has "$count" characters.\n);
     }
   }
 

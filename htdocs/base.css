@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.20.2.7 2002-04-30 16:41:46 link Exp $
+   $Id: base.css,v 1.20.2.8 2002-05-01 20:00:22 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -46,7 +46,6 @@ div.issue {
 .hideme {display: none}
 
 #Notice {
-  width: 75ex;
   border: solid;
   margin: .2em;
   padding: .5em;
