@@ -5,7 +5,7 @@
 # (c) 1999-2001 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.70 2001-01-19 13:59:31 hugo Exp $
+# $Id: checklink.pl,v 2.71 2001-01-22 15:49:34 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -18,6 +18,10 @@
 #
 # An online version is available at:
 #	http://validator.w3.org/checklink
+#
+# Comments and suggestions should be sent to the www-validator mailing list:
+#	mailto:www-validator@w3.org
+#	http://lists.w3.org/Archives/Public/www-validator/
 
 use strict;
 
@@ -34,7 +38,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.70 $ . '(c) 1999-2001 W3C';
+my $VERSION = q$Revision: 2.71 $ . '(c) 1999-2001 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -55,7 +59,7 @@ my $_recursive = 0;
 my $_accept_language = 1;
 my $_languages = '*';
 my $_base_location = '.';
-my $_contact_address = 'hugo@w3.org';
+my $_contact_address = 'www-validator@w3.org';
 my $_masquerade = 0;
 my $_local_dir = my $_remote_masqueraded_uri = '';
 my $_hide_same_realm = 0;
@@ -241,8 +245,8 @@ sub parse_arguments() {
 
 sub usage() {
     print STDERR "$PROGRAM $VERSION
+
 Usage: checklink <options> <uris>
-Documentation at: http://www.w3.org/2000/07/checklink
 Options:
 	-s/--summary		Result summary only.
 	-b/--broken		Show only the broken links, not the redirects.
@@ -273,6 +277,9 @@ Options:
 	-y/--proxy proxy	Specify an HTTP proxy server.
 	-h/--html		HTML output.
 	--help			Show this message.
+
+Documentation at: http://www.w3.org/2000/07/checklink
+Please send bug reports and comments to: $_contact_address
 ";
     exit(0);
 }
@@ -524,7 +531,7 @@ sub check_uri() {
                 # For the online version, wait for a while to avoid abuses
                 if (!$_cl) {
                     if ($doc_count == $_max_documents) {
-                        print("<hr>\n<p><strong>Maximum number of documents reached!</strong> Please contact <a href=\"mailto:$_contact_address\">$_contact_address</a> if you need to check more than $_max_documents documents at once.</a></p>\n");
+                        print("<hr>\n<p><strong>Maximum number of documents reached!</strong></p>\n");
                     }
                     if ($doc_count >= $_max_documents) {
                         $doc_count++;
@@ -1715,7 +1722,7 @@ sub html_footer() {
 <hr>
 <address>
 $PROGRAM $VERSION<br>
-Written by <a href=\"http://www.w3.org/People/Hugo/\">Hugo Haas</a>. Report bugs to <a href=\"mailto:hugo\@w3.org\">hugo\@w3.org</a>.<br>
+Written by <a href=\"http://www.w3.org/People/Hugo/\">Hugo Haas</a>. Please send bug reports and comments to <a href=\"mailto:$_contact_address\">$_contact_address</a>.<br>
 Check out the <a href=\"http://www.w3.org/2000/07/checklink\">documentation</a>. Download the <a href=\"http://dev.w3.org/cvsweb/~checkout~/validator/httpd/cgi-bin/checklink.pl?rev=".$REVISION."&amp;content-type=text/plain\">source code</a> from the <a href=\"http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/checklink.pl\">CVS log</a>.
 </address>
 </body>
