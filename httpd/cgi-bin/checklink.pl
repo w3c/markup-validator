@@ -5,7 +5,7 @@
 # (c) 1999-2001 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.75 2001-03-26 22:33:41 hugo Exp $
+# $Id: checklink.pl,v 2.76 2001-03-26 22:46:05 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -38,7 +38,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.75 $ . '(c) 1999-2001 W3C';
+my $VERSION = q$Revision: 2.76 $ . '(c) 1999-2001 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -373,13 +373,11 @@ sub check_uri() {
     printf("\nProcessing\t%s\n\n", $_html ? &show_url(&encode($absolute_uri))
            : $absolute_uri);
 
-    if ($_html && ! $_quiet) {
+    if ($_html && ! $_summary) {
         printf("</h2>\n<p>Go to <a href='#%s'>the results</a>.</p>\n",
                $result_anchor);
         printf("<p>Check also: <a href=\"http://validator.w3.org/check?uri=%s\">HTML Validity</a> &amp; <a href=\"http://jigsaw.w3.org/css-validator/validator?uri=%s\">CSS Validity</a></p>\n<p>Back to the <a href=\"checklink\">link checker</a>.</p>\n", map{&encode($absolute_uri)}(1..2));
-        if (! $_summary) {
-            print "<pre>\n";
-        }
+        print "<pre>\n";
     }
 
     # Record that we have processed this resource
