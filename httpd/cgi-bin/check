@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.248 2002-10-12 09:58:01 link Exp $
+# $Id: check,v 1.249 2002-10-12 10:00:27 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.248 $;
+  $VERSION    =  q$Revision: 1.249 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-12 09:58:01 $,
+			      Date => q$Date: 2002-10-12 10:00:27 $,
 			     });
 
 #
@@ -189,7 +189,7 @@ $File->{Offsets}->[0] = [0, 0]; # The first item isn't used...
 
 #
 # List to hold line numbers for encoding errors
-@{$File->{Lines}} = ();
+$File->{Lines} = [];
 
 
 #########################################
