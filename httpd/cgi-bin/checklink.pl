@@ -11,10 +11,6 @@
 use strict;
 $|++;
 
-BEGIN {
-    unshift@INC,('/usr/etc/apache/PerlLib');
-}
-
 package ParseLink;
 use HTML::Parser;
 use vars qw(@ISA);
@@ -84,7 +80,7 @@ use CGI;
 ###############
 # Global Variables
 
-my $VERSION= '$Id: checklink.pl,v 1.23 1999-03-01 20:09:08 renaudb Exp $ ';
+my $VERSION= '$Id: checklink.pl,v 1.24 1999-03-01 22:35:08 renaudb Exp $ ';
 my %ALLOWED_SCHEMES = ( "http" => 1 );
 my %SCHEMES = (); # for report
 my %URL = ();
@@ -137,7 +133,7 @@ sub doit {
     } else {
 	&html_header($q);
 	print $q->startform($q->url);
-	print "Enter a URI ",$q->textfield(-name=>'url',-size=>'50'),$q->br;
+	print "Enter a URL ",$q->textfield(-name=>'url',-size=>'50'),$q->br;
 	print $q->submit('','Check the Links !');
 	print $q->endform;
     }
@@ -361,8 +357,9 @@ sub html_header {
     print $q->header;
     print $q->start_html(-title=>(defined $q->param('url')?'Checking '.$q->param('url'):'W3C\'s Link Checker'),-BGCOLOR=>'#FFFFFF');
     print $q->a({href=>"http://www.w3.org"},$q->img({src=>"http://www.w3.org/Icons/w3c_home",alt=>"W3C",border=>"0"}));
-    print $q->a({href=>"http://www.w3.org/Web"},$q->img({src=>"http://www.w3.org/Icons/WWW/web",border=>"0",alt=>"Web Team"}));
-    print $q->h1($q->a({href=>$q->url},'Link Checker'));
+    print $q->h1('The W3C Link Checker');
+    print "<P>This tool lets you check the validity of the links in a URL. It was developped as an internal tool at W3C.</P>\n";
+    print "<P>Please go to the ".$q->a({href=>$q->url},"input form")." to check a new URL.</P>\n";
 }
 
 sub recurse_redirect {
