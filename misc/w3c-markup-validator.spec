@@ -1,5 +1,5 @@
 # RPM spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.1.2.16 2004-04-30 20:22:40 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.1.2.17 2004-05-02 13:00:48 ville Exp $
 
 Name:           w3c-markup-validator
 Version:        0.6.5
@@ -50,11 +50,7 @@ perl -pi -e \
   httpd/conf/httpd.conf
 
 # Cleanup of unused files
-rm -rf \
-  htdocs/source \
-  htdocs/config/verbosemsg.rc \
-  htdocs/config/checklink.conf \
-  httpd/cgi-bin/checklink.pl
+rm -rf htdocs/source htdocs/config/verbosemsg.rc
 
 # Move config out of the way
 mv htdocs/config __config
