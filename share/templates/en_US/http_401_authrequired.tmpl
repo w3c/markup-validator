@@ -1,0 +1,52 @@
+Status: 401 Authorization Required
+<TMPL_VAR NAME="http_401_headers">
+<TMPL_INCLUDE NAME="header.tmpl">
+
+  <div id="main">
+    <h2>Authorization Required</h2>
+    <p>Sorry, I am not authorized to access the specified URL.</p>
+    <p>
+      The URL you specified, &lt;<a href="<TMPL_VAR NAME="http_401_url">"><TMPL_VAR NAME="http_401_url"></a>&gt;,
+      returned a 401 "authorization required" response when I tried
+      to download it.
+    </p>
+    <p>
+      You should have been prompted by your browser for a
+      username/password pair; if you had supplied this information, I
+      would have forwarded it to your server for authorization to
+      access the resource. You can use your browser's "reload" function
+      to try again, if you wish.
+    </p>
+    <p>
+      Of course, you may not want to trust me with this information,
+      which is fine. I can tell you that I don't log it or do
+      anything else nasty with it, and you can <a href="source/">download the
+      source code for this service</a> to see what it does, but you have no
+      guarantee that this is actually the code I'm using; you basically have to
+      decide whether to trust me or not :-)
+    </p>
+    <p>
+      You should also be aware that the way we proxy this authentication
+      information defeats the normal working of HTTP Authentication.
+      If you authenticate to server A, your browser may keep sending
+      the authentication information to us every time you validate
+      a page, regardless of what server it's on, and we'll happily pass
+      that on to the server thereby making it possible for a malicious
+      server operator to capture your credentials.
+    </p>
+    <p>
+      Due to the way HTTP Authentication works there is no way we can
+      avoid this. We are using some "tricks" to fool your client into
+      not sending this information in the first place, but there is no
+      guarantee this will work. If security is a concern to you, you
+      may wish to avoid validating protected resources or take extra
+      precautions to prevent your browser from sending authentication
+      information when validating other servers.
+    </p>
+    <p>
+      Also note that you shouldn't use HTTP Basic Authentication for
+      anything which really needs to be private, since the password
+      goes across the network unencrypted.
+    </p>
+  </div><!-- End of "main" -->
+<TMPL_INCLUDE NAME="footer.tmpl">
