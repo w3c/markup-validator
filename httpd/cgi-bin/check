@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.203 2002-08-20 01:51:30 link Exp $
+# $Id: check,v 1.204 2002-08-21 19:33:13 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.203 $;
+  $VERSION    =  q$Revision: 1.204 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-20 01:51:30 $,
+			      Date => q$Date: 2002-08-21 19:33:13 $,
 			     });
 
 #
@@ -312,23 +312,23 @@ if ($File->{Charset}->{HTTP}) {
     <p>
       I was not able to extract a character encoding labelling from either of
       the valid sources for such information. Without encoding information it
-      is impossible to validate the document. The sources I tried returned:
+      is impossible to validate the document. The sources I tried are:
     </p>
-    <dl>
-      <dt>The "charset" parameter on the HTTP Content-Type field:</dt>
-      <dd>"$File->{Charset}->{HTTP}"</dd>
-      <dt>The "encoding" attribute on the XML Declaration:</dt>
-      <dd>"$File->{Charset}->{XML}"</dd>
-      <dt>Any "charset" value given in a HTML "META" element:</dt>
-      <dd>"$File->{Charset}->{META}"</dd>
-      <dt>And the charset autodetect from the XML Reccomendation:</dt>
-      <dd>"$File->{Charset}->{AUTO}"</dd>
-    </dl>
+    <ul>
+      <li>The HTTP Content-Type field.</li>
+      <li>The XML Declaration.</li>
+      <li>The HTML "META" element.</li>
+    </ul>
+    <p>
+      And I even tried to autodetect it using the algorithm defined in
+      <a href="http://www.w3.org/TR/REC-xml#sec-guessing">Appendix F of
+        the XML 1.0 Recommendation</a>.
+    </p>
     <p>
       Since none of these sources yielded any usable information, I will not be
-      able to validate this document. Sorry.
+      able to validate this document. Sorry. Please make sure you specify the
+      character encoding in use.
     </p>
-    <p>Please make sure you specify the character encoding in use.</p>
     <p>
       If you <em>did</em> specify a character encoding and we failed to detect
       it, please report this as outlined on our
