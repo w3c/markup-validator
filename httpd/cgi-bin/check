@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.72 2003-07-29 22:05:16 link Exp $
+# $Id: check,v 1.305.2.73 2003-07-29 22:06:06 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -130,7 +130,7 @@ BEGIN
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.72 $;
+  $VERSION    =  q$Revision: 1.305.2.73 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -202,7 +202,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-07-29 22:05:16 $,
+                              Date => q$Date: 2003-07-29 22:06:06 $,
                              });
 
 #
@@ -726,12 +726,6 @@ if (&is_xml($File->{Type}) and not $File->{DOCTYPE}) {
 } else {
   $File->{Version} = $File->{DOCTYPE} unless $File->{Version};
 }
-
-
-#$File->{Version} = $File->{DOCTYPE} if &is_xhtml($File->{Type});
-#$File->{Version} = $File->{DOCTYPE} if &is_mathml($File->{Type});
-#$File->{Version} = $File->{DOCTYPE} if &is_svg($File->{Type});
-#$File->{Version} = $File->{DOCTYPE} if &is_smil($File->{Type});
 
 #
 # Get the pretty text version of the FPI if a mapping exists.
