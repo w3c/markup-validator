@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.31 1999-09-06 04:58:00 gerald Exp $
+# $Id: check,v 1.32 1999-09-10 22:39:06 gerald Exp $
 
 use LWP::UserAgent;
 use strict;
@@ -17,8 +17,8 @@ use strict;
 # Constant definitions
 #############################################################################
 
-my $cvsrevision	= '$Revision: 1.31 $';
-my $cvsdate	= '$Date: 1999-09-06 04:58:00 $';
+my $cvsrevision	= '$Revision: 1.32 $';
+my $cvsdate	= '$Date: 1999-09-10 22:39:06 $';
 
 my $logfile	= "/var/log/httpd/val-svc";
 
@@ -830,7 +830,7 @@ EOF
 	next if / IMPLIED$/;
 	next if /^ASDAFORM CDATA /;
 	next if /^ASDAPREF CDATA /;
-	next unless $line =~ /^\(H[1-6]$/;
+	next unless $line =~ /^\(H[1-6]$/i;
 	$prevlevel = $level;
 	$level = substr( $line, 2, 1 );
 
