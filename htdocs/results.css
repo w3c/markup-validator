@@ -1,7 +1,5 @@
-
-/* style sheet for the validator's results page */
-
-/* $Id: results.css,v 1.7 2001-09-20 16:47:31 link Exp $ */
+/* style sheet for the validator's results page          */
+/* $Id: results.css,v 1.8 2001-09-20 18:12:13 link Exp $ */
 
 @import url(base.css);
 
@@ -40,7 +38,7 @@ h1.title img {
   text-align: justify;
 }
 
-.Info    {background: white;  border-color: gray;}
-.Warning {background: silver; border-color: gray;}
-.Error   {background: yellow; border-color: black;}
-.Fatal   {background: red;    border-color: black;}
+.info    {background: white;  border-color: gray;}
+.warning {background: silver; border-color: gray;}
+.error   {background: yellow; border-color: black;}
+.fatal   {background: red;    border-color: black;}
