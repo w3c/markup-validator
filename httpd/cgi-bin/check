@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.257 2002-10-24 06:03:57 ville Exp $
+# $Id: check,v 1.258 2002-10-25 02:34:25 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.257 $;
+  $VERSION    =  q$Revision: 1.258 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -156,7 +156,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-24 06:03:57 $,
+			      Date => q$Date: 2002-10-25 02:34:25 $,
 			     });
 
 #
@@ -1444,7 +1444,7 @@ sub parse_errors ($$) {
         For a list of possible DOCTYPE Declarations, please see
         the W3C QA Activity's
         <a href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">List
-        List of Valid Doctypes</a>.
+          of Valid Doctypes</a>.
 .EOF.
       $File->{'Error Message'} .= "    </div>\n";
     }
