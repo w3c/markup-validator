@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.247 2002-10-12 09:56:24 link Exp $
+# $Id: check,v 1.248 2002-10-12 09:58:01 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.247 $;
+  $VERSION    =  q$Revision: 1.248 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-12 09:56:24 $,
+			      Date => q$Date: 2002-10-12 09:58:01 $,
 			     });
 
 #
@@ -181,7 +181,7 @@ $File->{Charset}->{Auto}     = ''; # Autodetection using XML rules (Appendix F)
 $File->{Charset}->{HTTP}     = ''; # From HTTP's "charset" parameter.
 $File->{Charset}->{META}     = ''; # From HTML's <meta http-equiv>.
 $File->{Charset}->{XML}      = ''; # From the XML Declaration.
-$File->{Charset}->{Override} = ''; # From override.
+$File->{Charset}->{Override} = ''; # From CGI/user override.
 
 #
 # Array (ref) used to store character offsets for the XML report.
