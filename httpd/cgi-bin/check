@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl -w
+#!/usr/bin/perl -w
 #
 # W3C HTML Validation Service
 # A CGI script to retrieve and validate an HTML file
@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.198 2002-01-17 08:58:38 duerst Exp $
+# $Id: check,v 1.199 2002-03-02 00:28:34 link Exp $
 
 #
 # We need Perl 5.004.
@@ -95,9 +95,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.198 $;
+$VERSION    =  q$Revision: 1.199 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2002-01-17 08:58:38 $;
+$DATE       =  q$Date: 2002-03-02 00:28:34 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
