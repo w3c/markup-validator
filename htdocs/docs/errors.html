@@ -8,8 +8,8 @@
     <link rel="stylesheet" type="text/css" href="/base.css" />
     <meta name="keywords" content="HTML, Hypertext Markup Language, Validation, W3C HTML Validation Service" />
     <meta name="description" content="W3C's easy-to-use HTML validation service, based on an SGML parser." />
-    <meta name="revision" content="$Id: errors.html,v 1.5 2001-03-28 19:00:57 gerald Exp $" />
-    <meta name="modified" content="$Date: 2001-03-28 19:00:57 $" />
+    <meta name="revision" content="$Id: errors.html,v 1.6 2001-04-15 20:26:30 link Exp $" />
+    <meta name="modified" content="$Date: 2001-04-15 20:26:30 $" />
   </head>
 
   <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
@@ -446,7 +446,7 @@
               problem: the inventors of CGI didn't think things through very
               carefully when they decided to use the '&amp;' character as a
               separator between CGI arguments, because '&amp;' has special
-              status in HTML. The only way to get around this is for the author
+              status in HTML. One way to get around this is for the author
               of the CGI program to use a different value between arguments,
               like ';' or '|', which would allow the link to be coded as
               <code>&lt;img src="http://site/cgi?opt1=val1;opt2=val2"&gt;</code>
@@ -458,6 +458,11 @@
               (Normally this is extremely easy to add to the CGI program;
               multiple characters can also be used so existing links using the
               '&amp;' character will still work.)
+            </p>
+            <p>
+              There is also a simple workaround described at &lt;URL:<a
+              href="http://www.htmlhelp.com/tools/validator/problems.html#amp">http://www.htmlhelp.com/tools/validator/problems.html#amp</a>&gt;.
+              Simply encode all your &amp;'s as &amp;amp; in attribute values.
             </p>
           </li>
         </ul>
@@ -548,7 +553,7 @@
 	 src="http://validator.w3.org/images/vxhtml10" height="31" width="88"
 	 align="right" border="0" alt="Valid XHTML 1.0!" /></a>
       <a href="/feedback.html">Webmaster</a><br />
-	 $Date: 2001-03-28 19:00:57 $
+	 $Date: 2001-04-15 20:26:30 $
     </address>
 
   </body>
