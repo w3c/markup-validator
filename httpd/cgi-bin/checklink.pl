@@ -5,7 +5,7 @@
 # (c) 1999-2002 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.0 2002-10-26 22:43:22 ville Exp $
+# $Id: checklink.pl,v 3.1 2002-10-27 10:55:14 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -83,8 +83,8 @@ BEGIN
 {
   # Version info
   $PROGRAM  = 'W3C checklink';
-  $REVISION = q$Revision: 3.0 $ . '(c) 1999-2002 W3C';
-  $VERSION  = sprintf('%d.%02d', $REVISION =~ /(\d+)\.(\d+)/);
+  $VERSION  = sprintf('%d.%02d', q$Revision: 3.1 $ =~ /(\d+)\.(\d+)/);
+  $REVISION = sprintf('version %s (c) 1999-2002 W3C', $VERSION);
 
   eval "use Term::ReadKey 2.00 qw(ReadMode)";
   $Have_ReadKey = !$@;
@@ -142,8 +142,7 @@ if ($#ARGV >= 0 && !(@ARGV == 1 && $ARGV[0] eq 'DEBUG')) {
   if ($_user && (! $_password)) {
     &ask_password();
   }
-  my $uri;
-  foreach $uri (@ARGV) {
+  foreach my $uri (@ARGV) {
     if (!$_summary) {
       printf("%s %s\n", $PROGRAM, $REVISION) if (! $_html);
     } else {
@@ -241,7 +240,9 @@ if ($#ARGV >= 0 && !(@ARGV == 1 && $ARGV[0] eq 'DEBUG')) {
 sub parse_arguments ()
 {
 
-  use Getopt::Long 2.17 qw(GetOptions);
+  require Getopt::Long;
+  Getopt::Long->require_version(2.17);
+  Getopt::Long->import('GetOptions');
   Getopt::Long::Configure('no_ignore_case');
   my @masq = ();
 
@@ -386,13 +387,13 @@ sub check_uri ($$$)
 
   my $result_anchor = 'results'.$doc_count;
 
-  printf("\nProcessing\t%s\n\n", $_html ? &show_url(&encode($absolute_uri))
-         : $absolute_uri);
+  printf("\nProcessing\t%s\n\n",
+         $_html ? &show_url(&encode($absolute_uri)) : $absolute_uri);
 
   if ($_html) {
     print("</h2>\n");
     if (! $_summary) {
-      printf("<p>Go to <a href='#%s'>the results</a>.</p>\n",
+      printf("<p>Go to <a href=\"#%s\">the results</a>.</p>\n",
              $result_anchor);
       printf("<p>Check also:
 <a href=\"check?uri=%s\">HTML Validity</a> &amp;
@@ -420,11 +421,9 @@ Validity</a></p>
     print("Checking anchors:\n");
   }
   my %errors;
-  my $anchor;
-  foreach $anchor (keys %{$p->{Anchors}}) {
-    my $times;
-    my $l;
-    foreach $l (keys %{$p->{Anchors}{$anchor}}) {
+  foreach my $anchor (keys %{$p->{Anchors}}) {
+    my $times = 0;
+    foreach my $l (keys %{$p->{Anchors}{$anchor}}) {
       $times += $p->{Anchors}{$anchor}{$l};
     }
     # They should appear only once
@@ -445,22 +444,19 @@ Validity</a></p>
 
   my %links;
   # Record all the links found
-  my $link;
-  foreach $link (keys %{$p->{Links}}) {
+  foreach my $link (keys %{$p->{Links}}) {
     my $link_uri = URI->new($link);
     my $abs_link_uri = URI->new_abs($link_uri, $base);
     if ($_masquerade) {
       if ($abs_link_uri =~ m|^$_remote_masqueraded_uri|) {
         printf("processing %s in base %s\n", $abs_link_uri, $_local_dir);
-        my $nlink;
-        $nlink = $abs_link_uri;
+        my $nlink = $abs_link_uri;
         $nlink =~
           s|^$_remote_masqueraded_uri|file://localhost$_local_dir|;
         $abs_link_uri = URI->new($nlink);
       };
     }
-    my $lines;
-    foreach $lines (keys %{$p->{Links}{$link}}) {
+    foreach my $lines (keys %{$p->{Links}{$link}}) {
       my $canonical = URI->new($abs_link_uri->canonical());
       my $url = $canonical->scheme().':'.$canonical->opaque();
       my $fragment = $canonical->fragment();
@@ -476,8 +472,7 @@ Validity</a></p>
 
   # Build the list of broken URI's
   my %broken;
-  my $u;
-  foreach $u (keys %links) {
+  foreach my $u (keys %links) {
     # Don't check mailto: URI's
     next if ($u =~ m/^mailto:/);
     if (! $_summary) {
@@ -489,14 +484,13 @@ Validity</a></p>
       &hprintf("\tReturn code: %s\n", $results{$u}{location}{code});
     }
     if ($results{$u}{location}{success}) {
-      my $fragment;
       # Even though it was not broken, we might want to display it
       # on the results page (e.g. because it required authentication)
       if ($results{$u}{location}{display} >= 400) {
         $broken{$u}{location} = 1;
       }
       # List the broken fragments
-      foreach $fragment (keys %{$links{$u}{fragments}}) {
+      foreach my $fragment (keys %{$links{$u}{fragments}}) {
         if ($_verbose) {
           &hprintf("\t\t%s %s - Lines: %s\n",
                    $fragment,
@@ -515,22 +509,20 @@ Validity</a></p>
       # Couldn't find the document
       $broken{$u}{location} = 1;
       # All the fragments associated are hence broken
-      my $fragment;
-      foreach $fragment (keys %{$links{$u}{fragments}}) {
+      foreach my $fragment (keys %{$links{$u}{fragments}}) {
         $broken{$u}{fragments}{$fragment}++;
       }
     }
   }
   if (! $_summary) {
-    my $stop = &get_timestamp();
-    &hprintf("Processed in %ss.\n", &time_diff($start, $stop));
+    &hprintf("Processed in %ss.\n", &time_diff($start, &get_timestamp()));
   }
 
   # Display results
   if ($_html) {
     if (! $_summary) {
       print("</pre>\n");
-      printf("<h2><a name='%s'>Results</a></h2>\n", $result_anchor);
+      printf("<h2><a name=\"%s\">Results</a></h2>\n", $result_anchor);
     }
   }
   if (! $_quiet) {
@@ -548,7 +540,7 @@ Validity</a></p>
       $results{$uri}{parsing}{base} =~ m|^(.*/)[^/]*|;
       $_base_location = $1;
     }
-    foreach $u (keys %links) {
+    foreach my $u (keys %links) {
       next if (! (# Check if it's in our scope for recursion
                   ($u =~ m|^$_base_location|) &&
                   # and the link is not broken
@@ -565,10 +557,7 @@ Validity</a></p>
       # Do the job
       print "\n";
       if (! $_html) {
-        my $i = 40;
-        while ($i--) {
-          print('-');
-        }
+        print '-' x 40;
       } else {
         # For the online version, wait for a while to avoid abuses
         if (!$_cl) {
@@ -721,9 +710,8 @@ sub get_uri ($$;$\%$$$$)
   $ua->timeout($_timeout);
   $ua->agent(sprintf('W3C-checklink/%s %s', $VERSION, $ua->agent()));
   $ua->env_proxy();
-  if ($_http_proxy) {
-    $ua->proxy('http', 'http://'.$_http_proxy);
-  }
+  $ua->proxy('http', 'http://' . $_http_proxy) if ($_http_proxy);
+
   # $ua->{fetching} contains the URI we originally wanted
   # $ua->{uri} is modified in the case of a redirect; this is used to
   # build $ua->{Redirects}
@@ -780,9 +768,8 @@ sub get_uri ($$;$\%$$$$)
   }
   # Record the redirects
   $response->{Redirects} = $ua->{Redirects};
-  my $stop = &get_timestamp();
   &hprintf(" fetched in %ss\n",
-           &time_diff($start, $stop)) if $verbose_progress;
+           &time_diff($start, &get_timestamp())) if $verbose_progress;
 
   $response->{OriginalCode} = $code;
   $response->{OriginalMessage} = $message;
@@ -1001,7 +988,7 @@ sub W3C::CheckLink::get_anchor
 # W3C::CheckLink handlers #
 ###########################
 
-sub W3C::CheckLink::add_link
+sub add_link
 {
   my ($self, $uri) = @_;
 
@@ -1010,7 +997,7 @@ sub W3C::CheckLink::add_link
   }
 }
 
-sub W3C::CheckLink::start
+sub start
 {
   my ($self, $tag, $attr, $text) = @_;
 
@@ -1046,7 +1033,7 @@ sub W3C::CheckLink::start
   }
 }
 
-sub W3C::CheckLink::text
+sub text
 {
   my ($self, $text) = @_;
   if (!$_progress) {
@@ -1111,15 +1098,10 @@ sub check_validity ($$\%\%)
   }
 
   # Get the document with the appropriate method
-  my $method;
-  my @fragments = keys %{$links->{$uri}{fragments}};
   # Only use GET if there are fragments. HEAD is enough if it's not the
   # case.
-  if ($#fragments == -1) {
-    $method = 'HEAD';
-  } else {
-    $method = 'GET';
-  }
+  my @fragments = keys %{$links->{$uri}{fragments}};
+  my $method = scalar(@fragments) ? 'GET' : 'HEAD';
 
   my $response;
   my $being_processed = 0;
@@ -1134,9 +1116,8 @@ sub check_validity ($$\%\%)
   }
 
   # We got the response of the HTTP request. Stop here if it was a HEAD.
-  if ($#fragments == -1) {
-    return;
-  }
+  return if ($method eq 'HEAD');
+
   # There are fragments. Parse the document.
   my $p;
   if ($being_processed) {
@@ -1161,8 +1142,7 @@ sub check_validity ($$\%\%)
     $p->{Anchors} = $results{$uri}{parsing}{Anchors};
   }
   # Check that the fragments exist
-  my $fragment;
-  foreach $fragment (keys %{$links->{$uri}{fragments}}) {
+  foreach my $fragment (keys %{$links->{$uri}{fragments}}) {
     if (defined($p->{Anchors}{$fragment})
         || &escape_match($fragment, $p->{Anchors})) {
       $results{$uri}{fragments}{$fragment} = 1;
@@ -1175,7 +1155,7 @@ sub check_validity ($$\%\%)
 sub escape_match ($\%)
 {
   my ($a, $hash) = (URI::Escape::uri_unescape($_[0]), $_[1]);
-  foreach $b (keys %$hash) {
+  foreach my $b (keys %$hash) {
     if ($a eq URI::Escape::uri_unescape($b)) {
       return(1);
     }
@@ -1240,8 +1220,7 @@ sub time_diff ($$)
 sub record_redirects (\%\%)
 {
   my ($redirects, $sub) = @_;
-  my $r;
-  foreach $r (keys %$sub) {
+  foreach my $r (keys %$sub) {
     $redirects->{$r} = $sub->{$r};
   }
 }
@@ -1259,7 +1238,6 @@ sub get_redirects ($%)
   my ($uri, %redirects) = @_;
   my @history = ($uri);
   my $origin = $uri;
-  my %seen;
   while ($redirects{$uri}) {
     $uri = $redirects{$uri};
     push(@history, $uri);
@@ -1293,8 +1271,7 @@ sub anchors_summary (\%\%)
     } else {
       print("Anchors\n\n");
     }
-    my @anchors = keys %{$anchors};
-    &hprintf("Found %d anchor(s).", $#anchors+1);
+    &hprintf("Found %d anchor(s).", scalar(keys %{$anchors}));
     if ($_html) {
       print('</p>');
     }
@@ -1316,8 +1293,7 @@ sub anchors_summary (\%\%)
     print("</p>\n<table border=\"1\">\n<tr><td><b>Anchors</b></td><td><b>Lines</b></td></tr>");
   }
   print("\n");
-  my $anchor;
-  foreach $anchor (@errors) {
+  foreach my $anchor (@errors) {
     my $format;
     if ($_html) {
       $format = "<tr class=\"broken\"><td>%s</td><td>%s</td></tr>\n";
@@ -1325,7 +1301,7 @@ sub anchors_summary (\%\%)
       $format = "\t%s\tLines: %s\n";
     }
     printf($format,
-           &encode($anchor eq '' ? 'Empty anchor' : $ anchor),
+           &encode($anchor eq '' ? 'Empty anchor' : $anchor),
            join(', ', &sort_unique(keys %{$anchors->{$anchor}})));
   }
   if ($_html) {
@@ -1343,24 +1319,21 @@ sub show_link_report (\%\%\%\%\@;$\%)
   print("\n");
 
   # Process each URL
-  my $u;
   my ($c, $previous_c);
-  foreach $u (@{$urls}) {
+  foreach my $u (@{$urls}) {
     my @fragments = keys %{$broken->{$u}{fragments}};
     # Did we get a redirect?
     my $redirected = &is_redirected($u, %$redirects);
     # List of lines
     my @total_lines;
-    my ($f, $l);
-    foreach $l (keys %{$links->{$u}{location}}) {
+    foreach my $l (keys %{$links->{$u}{location}}) {
       push (@total_lines, $l);
     }
-    foreach $f (keys %{$links->{$u}{fragments}}) {
+    foreach my $f (keys %{$links->{$u}{fragments}}) {
       if ($f eq $u) {
         next if (defined($links->{$u}{$u}{-1}));
       }
-      my $l;
-      foreach $l (keys %{$links->{$u}{fragments}{$f}}) {
+      foreach my $l (keys %{$links->{$u}{fragments}{$f}}) {
         push (@total_lines, $l);
       }
     }
@@ -1463,7 +1436,7 @@ HTTP Message: %s%s%s</dd>
              # List of lines
              $lines_list);
       if ($#fragments >= 0) {
-        my $fragment_direction;
+        my $fragment_direction = '';
         if ($results->{$u}{location}{code} == 200) {
           $fragment_direction =
             ' <strong class="broken">They need to be fixed!</strong>';
@@ -1498,7 +1471,7 @@ HTTP Message: %s%s%s</dd>
       }
     }
     # Fragments
-    foreach $f (@fragments) {
+    foreach my $f (@fragments) {
       if ($_html) {
         printf("<dd>%s: %s</dd>\n",
                # Broken fragment
@@ -1571,8 +1544,7 @@ sub links_summary (\%\%\%\%)
   my @dir_redirect_urls = ();
   if ($_redirects) {
     # Add the redirected URI's to the report
-    my $l;
-    for $l (keys %$redirects) {
+    for my $l (keys %$redirects) {
       next unless (defined($results->{$l})
                    && defined($links->{$l})
                    && !defined($broken->{$l}));
@@ -1610,9 +1582,8 @@ sub links_summary (\%\%\%\%)
 
     # Sort the URI's by HTTP Code
     my %code_summary;
-    my $u;
     my @idx;
-    foreach $u (@urls) {
+    foreach my $u (@urls) {
       if (defined($results->{$u}{location}{record}))  {
         my $c = &code_shown($u, $results);
         $code_summary{$c}++;
@@ -1639,8 +1610,7 @@ sub links_summary (\%\%\%\%)
 
       # Print a summary
       print "<table border=\"1\">\n<tr><td><b>Code</b></td><td><b>Occurrences</b></td><td><b>What to do</b></td></tr>\n";
-      my $code;
-      foreach $code (sort(keys(%code_summary))) {
+      foreach my $code (sort(keys(%code_summary))) {
         printf('<tr%s>', &bgcolor($code));
         printf('<td><a href="#d%scode_%s">%s</a></td>',
                $doc_count, $code, $code);
@@ -1829,8 +1799,8 @@ sub print_form ($)
 {
   my ($q) = @_;
   &html_header('', 1);
-  print "<form action=\"".$q->self_url()."\" method=\"get\">
-<p><label for=\"uri\">Enter the address (<a href='http://www.w3.org/Addressing/#terms'>URL</a>)
+  print "<form action=\"", $q->self_url(), "\" method=\"get\">
+<p><label for=\"uri\">Enter the address (<a href=\"http://www.w3.org/Addressing/#terms\">URL</a>)
 of a document that you would like to check:</label></p>
 <p><input type=\"text\" size=\"50\" id=\"uri\" name=\"uri\"></p>
 <p>Options:</p>
