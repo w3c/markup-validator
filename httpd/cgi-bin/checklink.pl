@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.59 2000-07-17 14:26:48 hugo Exp $
+# $Id: checklink.pl,v 2.60 2000-08-03 18:38:26 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -34,7 +34,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.59 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.60 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -631,9 +631,7 @@ sub get_uri() {
         if (defined($ENV{HTTP_AUTHORIZATION})) {
             $request->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
         } elsif (defined($_user) && defined($_password)) {
-            use MIME::Base64;
-            my $authorization = encode_base64($_user.':'.$_password);
-            $request->headers->header(Authorization => 'Basic '.$authorization);
+            $request->authorization_basic($_user, $_password);
         }
     }
     # Do the query
