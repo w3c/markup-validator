@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.391 2005-02-05 04:20:57 link Exp $
+# $Id: check,v 1.392 2005-02-05 21:02:14 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -239,7 +239,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.391 $;
+  $VERSION    =  q$Revision: 1.392 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1320,6 +1320,10 @@ sub handle_uri {
     return $File;
   }
 
+  #
+  # Enforce Max Recursion level.
+  &check_recursion($File, $res);
+
   my($mode, $ct, $charset)
     = &parse_content_type(
                           $File,
@@ -1477,6 +1481,30 @@ sub parse_content_type {
 
   return $mode, $ct, $charset;
 }
+
+#
+# Check recursion level and enforce Max Recursion limit.
+sub check_recursion ($$) {
+  my $File = shift;
+  my $res  = shift;
+
+  # Not looking at our own output.
+  return unless defined $res->header('X-W3C-Validator-Recursion');
+
+  my $lvl = $res->header('X-W3C-Validator-Recursion');
+  &add_warning($File, 'debug', 'Old Recursion Depth', $lvl);
+  return unless $lvl =~ m(^\d+$); # Non-digit, i.e. garbage, ignore.
+
+  if ($lvl >= $CFG->{'Max Recursion'}) {
+    &add_warning($File, 'debug', 'Recursion Depth Limit Exceeded',
+      qq(Recursion depth "$lvl" exceedes limit "$CFG->{'Max Recursion'}"));
+    print redirect $CFG->{'Home Page'};
+  } else {
+    $T->param(depth => $lvl++); # Increase recursion level in output.
+    &add_warning($File, 'debug', 'New Recursion Depth', $lvl);
+  }
+}
+
 
 
 #
