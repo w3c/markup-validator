@@ -5,7 +5,7 @@
 # (c) 1999 World Wide Web Consortium
 # based on Renaud Bruyeron's checklin.pl
 #
-# $Id: checklink.pl,v 2.2 1999-11-26 13:14:50 hugo Exp $
+# $Id: checklink.pl,v 2.3 1999-12-01 19:47:34 hugo Exp $
 #
 # This program is licensed under the W3C License.
 
@@ -21,7 +21,8 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = '$Revision: 2.2 $ (c) 1999 W3C';
+my $VERSION = '$Revision: 2.3 $ (c) 1999 W3C';
+my $REVISION; ($REVISION = $VERSION) =~ s/^\$Revision: 2.3 $1/;
 
 # State of the program
 my $_cl;
@@ -200,7 +201,7 @@ sub check_uri() {
         printf("\nProcessing\t%s\n", $uri);
     }
     # Get the document
-    my $response = &get_uri('GET', $uri);
+    my $response = &get_uri('GET', $uri, 1);
     if (! $response->is_success()) {
         printf("Error: %d %s\n", $response->code(), $response->message());
         if ($response->code() == 401) {
@@ -321,11 +322,11 @@ sub W3C::UserAgent::redirect_ok {
 }
 
 sub get_uri() {
-    my ($method, $uri) = @_;
+    my ($method, $uri, $authentication) = @_;
     my $start = &get_timestamp();
     my $ua = new W3C::UserAgent;
     $ua->timeout($_timeout);
-    $ua->agent($PROGRAM.' '.$VERSION);
+    $ua->agent('W3Cchecklink/'.$REVISION.' '.$ua->agent());
     $ua->{uri} = $uri;
     $ua->{fetching} = $uri;
     my $count = 0;
@@ -335,6 +336,10 @@ sub get_uri() {
     }
     my $request = new HTTP::Request($method, $uri);
     $response = $ua->request($request);
+    if (($response->code() == 401) && $authentication) {
+        # Deal with authentication
+        # Either with LWP::UserAgent or HTTP::Request
+    }
     $response->{Redirects} = $ua->{Redirects};
     my $stop = &get_timestamp();
     if (! $_summary) {
@@ -573,6 +578,8 @@ sub authentication() {
         printf(STDERR "The realm is %s.\n", $realm);
         print(STDERR "Use the -u and -p options to specify a username and password.\n");
     } else {
+        &html_header();
+        &html_footer();
     }
 }
 
@@ -718,23 +725,33 @@ sub links_summary(\%,\%,\%) {
         my @fragments = keys %{$broken->{$u}};
         my $n_fragments = $#fragments+1;
         my $redirected = &is_redirected($u, %$redirects);
-        my $lines_list = defined($links->{$u}{$u}{-1}) ?
-            '' : join(', ', keys %{$links->{$u}{$u}});
+        my $lines_list;
+        if (defined($links->{$u}{$u}{-1})) {
+            $lines_list = '';
+            $n_fragments++;
+        } else {
+            $lines_list = join(', ',
+                               sort {$a <=> $b} keys %{$links->{$u}{$u}});
+        }
         if ($_html) {
-            printf("<tr><th rowspan=\"%d\">%s</th><th rowspan=\"%d\">%d</th><td>%s</td><td>%s</td></tr>\n",
+            printf("<tr><th rowspan=\"%d\">%s</th><th rowspan=\"%d\">%d%s</th><td>%s</td><td>%s</td></tr>\n",
                    $n_fragments,
                    $redirected ? join('<br>-&gt; ',
                                       &get_redirects($u, %$redirects)) : $u,
                    $n_fragments,
                    $results->{$u}{$u}{code},
+                   $results->{$u}{$u}{message}
+                   ? '<br>'.$results->{$u}{$u}{code}
+                   : '',
                    '',
                    $lines_list);
         } else {
-            printf("%s\tLines: %s\tCode: %d\n",
+            printf("\n%s\t%s\n  Code: %d%s\n",
                    $redirected ? join("\n-> ",
                                       &get_redirects($u, %$redirects)) : $u,
-                   $lines_list,
-                   $results->{$u}{$u}{code});
+                   $lines_list ? 'Lines: '.$lines_list : '' ,
+                   $results->{$u}{$u}{code},
+                   $results->{$u}{$u}{message});
         }
         foreach $f (@fragments) {
             next if ($f eq $u);
@@ -746,7 +763,8 @@ sub links_summary(\%,\%,\%) {
             }
             printf($format,
                    $f,
-                   join(', ', keys %{$links->{$u}{$f}}));
+                   join(', ',
+                        sort {$a <=> $b} keys %{$links->{$u}{$f}}));
         }
     }
     if ($_html) {
