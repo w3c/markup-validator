@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.63 2000-08-05 14:46:58 hugo Exp $
+# $Id: checklink.pl,v 2.64 2000-08-11 21:35:32 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -34,7 +34,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.63 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.64 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -1196,16 +1196,16 @@ sub show_link_report {
         my @fragments = keys %{$broken->{$u}{fragments}};
         # Did we get a redirect?
         my $redirected = &is_redirected($u, %$redirects);
-        # List of lines
+        # List of lines: list only the lines that we care about, i.e. only
+        # the lines with broken fragments for 200's
         my @total_lines;
         my ($f, $l);
-        foreach $l (keys %{$links->{$u}{location}}) {
-            push (@total_lines, $l);
-        }        
-        foreach $f (keys %{$links->{$u}{fragments}}) {
-            if ($f eq $u) {
-                next if (defined($links->{$u}{$u}{-1}));
+        if ($results->{$u}{location}{code} != 200) {
+            foreach $l (keys %{$links->{$u}{location}}) {
+                push (@total_lines, $l);
             }
+        }
+        foreach $f (@fragments) {
             my $l;
             foreach $l (keys %{$links->{$u}{fragments}{$f}}) {
                 push (@total_lines, $l);
@@ -1378,7 +1378,7 @@ sub links_summary {
                  408 => 'The request timed out',
                  415 => 'The media type is not supported.',
                  500 => 'Either the hostname is incorrect or it is a server side problem.',
-                 501 => 'HEAD or GET is not implemented on this server... What kind of server is that?',
+                 501 => 'Could not check this link: method not implemented or scheme not supported.',
                  503 => 'The server cannot service the request, for some unknown reason.');
     my %priority = ( 404 => 1,
                      403 => 5,
@@ -1413,9 +1413,14 @@ sub links_summary {
 
     # Broken links and redirects
     if ($#urls < 0) {
-        if (! $_quiet && $_html) {
-            print "<h3>Links</h3>\n";
-            print "<p>Valid links!</p>\n";
+        if (! $_quiet) {
+            if ($_html) {
+                print "<h3>Links</h3>\n";
+                print "<p>Valid links!</p>";
+            } else {
+                print "\nValid links.";
+            }
+            print "\n";
         }
     } else {
         if ($_html) {
