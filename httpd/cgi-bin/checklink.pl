@@ -31,6 +31,7 @@ sub start {
     $link=$attr->{href} if $tag eq "a";
     $link=$attr->{src} if $tag eq "img";
     if (defined $link){
+	# recording the line number for that particular link
 	$self->{Links}{$link}{$self->{Line}+1}++;
     }
 }
@@ -41,14 +42,13 @@ use vars qw(@ISA);
 @ISA = qw(LWP::Parallel::UserAgent);
 # function overload to handle 301s and build
 # redirect chain
-# it now handles 401s too, but not like I wanted it to
-# it uses a team password to HEAD non-public documents
-# I make sure I don't air this password out of w3.org
-# proper way would be: fork a HTTP server, and then proxy 401
-# between server and client
-# caching credentials in HTTP Daemon may be difficult
-# I'll look at this later
-# it is the way to go if we ever want to integrate this into validator
+# it now handles 401s too
+# The password comes from the ENV variable HTTP_AUTHORIZATION
+# passed down to CGIs by Apache.
+# Apache needs to be compiled with -DSECURITY_HOLE_PASS_AUTHORIZATION
+# I make sure the passwod is not aired out of w3.org
+# See in the function checklink how I get the
+# HTTP_AUTHORIZATION header
 sub on_return {
     my $self = shift;
     my ($request,$response,$content) = @_;
@@ -62,8 +62,11 @@ sub on_return {
 	}
 	if($response->code == 401 && !defined($self->{Auth}{$response->request->url})){
 	    if($response->request->url->netloc =~ /\.w3\.org$/){
+		# we got a 401, let's create a new request object
 		my $newreq = HTTP::Request->new(HEAD => $response->request->url);
+		# send the Authorization header as is (we never deal with passwords)
 		$newreq->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
+		# make sure we don't loop if the password fails
 		$self->{Auth}{$response->request->url} = 1;
 		$self->register($newreq,\&callback_check,undef,0);
 	    }	    
@@ -76,7 +79,7 @@ use CGI;
 ###############
 # Global Variables
 
-my $VERSION= '$Id: checklink.pl,v 1.21 1999-02-21 00:13:37 renaudb Exp $ ';
+my $VERSION= '$Id: checklink.pl,v 1.22 1999-02-21 00:25:51 renaudb Exp $ ';
 my %ALLOWED_SCHEMES = ( "http" => 1 );
 my %SCHEMES = (); # for report
 my %URL = ();
@@ -95,8 +98,8 @@ my %HTTP_CODES = ( 200 => 'ok' ,
 		  501 => '501',
 		  503 => '503');
 my %TODO = ( 200 => 'nothing !',
-	     301 => 'usually nothing, unless the end point of the redirect is broken (in which case, the <B>Code</B> column is RED',
-	     302 => 'usually nothing, unless the end point of the redirect is broken (in which case, the <B>Code</B> column is RED',
+	     301 => 'usually nothing, unless the end point of the redirect is broken (in which case, the <B>Code</B> column is RED)',
+	     302 => 'usually nothing, unless the end point of the redirect is broken (in which case, the <B>Code</B> column is RED)',
 	     401 => 'The link is not public. The <B>Extra</B> column gives the Realm',
 	     403 => 'The link is forbidden ! This needs fixing. Usual suspect: a missing Overview.html or index.html',
 	     404 => 'The link is broken. Fix it <B>NOW</B>',
@@ -193,6 +196,9 @@ sub checklinks {
     # Request document and parse it as it arrives via callback
     # Then get the UA ready for the requests in the foreach loop
     if($CGI){
+	# if we got a Authorization header from the client, it means
+	# that the client is back at it after being prompted for
+	# a password: let's insert the header as is in the outgoing request
 	if($ENV{HTTP_AUTHORIZATION}){
 	    $request->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
 	}
@@ -250,7 +256,7 @@ Content-Type: text/html
 
 EOF
     ;
-		    if(0){
+		    if(0){ # I keep the old code around...
 			&html_header($q);
 			print $q->h3($r->request->url);
 			print "<PRE>",$authResponse;
@@ -262,7 +268,7 @@ EOF
 			print $q->password_field(-name=>'password',-size=>'10'),"Password",$q->br;
 			print $q->submit('Proceed');
 			print $q->endform;
-		    } else {
+		    } else { # this makes the client browser prompt for a password
 			print $authResponse;
 		    }
 		} elsif($VERBOSE){
