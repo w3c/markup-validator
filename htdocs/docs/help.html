@@ -1,11 +1,13 @@
-<!--#set var="revision" value="\$Id: help.html,v 1.12.2.3 2003-05-06 11:47:57 ot Exp $"
---><!--#set var="date" value="\$Date: 2003-05-06 11:47:57 $"
+<!--#set var="revision" value="\$Id: help.html,v 1.12.2.4 2003-07-28 07:34:11 ot Exp $"
+--><!--#set var="date" value="\$Date: 2003-07-28 07:34:11 $"
 --><!--#set var="title" value="Help for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
 
+<h2>Help and <acronym title="Frequently Asked Questions">FAQ</acronym> for the Markup Validator</h2>
+
+<h3 id="TableOfContents">Table of contents</h3>
 <div id="toc">
-<h2 id="TableOfContents">Table of contents</h2>
 <ul>
   <li>About the Markup Validator
   <ul>
@@ -76,8 +78,8 @@
 
 
 <div id="skip">
-<h2 id="about">About the Markup Validator</h2>
-      <h3 id="what-is-it">What is the Markup Validator and what does it do?</h3>
+<h3 id="about">About the Markup Validator</h3>
+      <h4 id="what-is-it">What is the Markup Validator and what does it do?</h4>
       <p>
 	The Markup Validator is a free tool and service that checks the 
 	syntax of (X)HTML documents.</p> 
@@ -88,7 +90,7 @@
       </p>
       <p><a href="../about.html">Learn more</a> about the Markup Validator.</p>
 
-      <h3 id="why-validate">Why should I validate my HTML pages?</h3>
+      <h4 id="why-validate">Why should I validate my HTML pages?</h4>
       <p>
         One of the important maxims of computer programming is: <q>Be
         conservative in what you produce; be liberal in what you accept.</q>
@@ -110,14 +112,14 @@
       </p>
      
 
-      <h3 id="who-does-validator">Who owns/maintain the Markup Validator?</h3>
+      <h4 id="who-does-validator">Who owns/maintain the Markup Validator?</h4>
       <p>The Markup Validator is Maintained at <acronym
 	title="World Wide Web Consortium">W3C</acronym> by W3C staff and 
 	benevolent collaborators, who receive a lot of help from contributors. 
 	(Read the <a href="http://validator.w3.org:8001/about.html#credits">full credits</a>)
       </p>
 
-      <h3 id="others">What other validators are there?</h3>
+      <h4 id="others">What other validators are there?</h4>
 	<p>
 	We're doing our best to provide clear and reliable results as well as
 	a good interface with the Markup Validator, but for some reason you
@@ -137,7 +139,7 @@
 	</p>
 	
 
-      <h3 id="how">How does The Validator work?</h3>
+      <h4 id="how">How does The Validator work?</h4>
       <p>
 	The Validator is based on <a href="http://www.jclark.com/">James
         Clark</a>'s <code><a href="http://www.jclark.com/sp/">nsgmls</a></code>
@@ -146,7 +148,7 @@
         resulting error list for easier reading. 
       </p>
 
-      <h3 id="howto-feedback">How do I send feedback/bug reports about the Markup Validator?</h3>
+      <h4 id="howto-feedback">How do I send feedback/bug reports about the Markup Validator?</h4>
       <p>Read the instructions on our <a href="../feedback.html">Feedback page</a>.</p>
 </div>
 
@@ -154,9 +156,9 @@
 
 
 <div>
-<h2 id="using">Using this service</h2>
+<h3 id="using">Using this service</h3>
 
-      <h3 id="manual">How do I use this service?</h3>
+      <h4 id="manual">How do I use this service?</h4>
       <p>
 	Most probably, you will want to use the online Markup Validation service.
 	Read the <a href="users.html">user's manual</a> for further help with this
@@ -167,14 +169,14 @@
 	check out our <a href="devel.html">developer's documentation</a>.
       </p>
 
-      <h3 id="errors">What are these error messages?</h3>
+      <h4 id="errors">What are these error messages?</h4>
       <p>The output of the Markup Validator may be hard to decypher for
 	newcomers and experts alike, so we are maintaining a <a 
 	href="http://validator.w3.org:8001/docs/errors.html">list of error
 	messages and their interpretation</a>, which should help.
      </p>
 
-      <h3 id="munged-doctype">Many error messages? Don't panic.</h3>
+      <h4 id="munged-doctype">Many error messages? Don't panic.</h4>
       <p>
         Don't panic. Did The Validator complain about your
         <code>DOCTYPE</code> declaration (or lack thereof)? Make sure your
@@ -195,15 +197,15 @@
 	Markup Validator to clean up your HTML documents in no time.
       </p>
 
-      <h3 id="cleanup">I don't want error messages, I want you to clean up my page!</h3>
+      <h4 id="cleanup">I don't want error messages, I want you to clean up my page!</h4>
        <p>The Markup Validator can not do this for you. You may want to have a look
 	at tools such as <a href="http://tidy.sourceforge.net">HTML Tidy</a>.</p>
 
 </div>
 
 <div>
-<h2 id="very-faq">Miscellaneous (Very) Frequently Asked Questions</h2>
-<h3 id="faq-doctype">No DOCTYPE Declaration Found!</h3>
+<h3 id="very-faq">Miscellaneous (Very) Frequently Asked Questions</h3>
+<h4 id="faq-doctype">No DOCTYPE Declaration Found!</h4>
   <p>
         A DOCTYPE Declaration is mandatory for most current markup languages
         and without one it is impossible to reliably validate a document.
@@ -243,8 +245,8 @@
         "<a href="http://htmlhelp.com/tools/validator/doctype.html">Choosing
            a DOCTYPE</a>".
       </p>
-<h3 id="faq-charset">The validator is <q>not able to extract 
-a character encoding</q></h3>
+<h4 id="faq-charset">The validator is <q>not able to extract 
+a character encoding</q></h4>
 
 <p>An HTML document should be served along with its character encoding.</p>
 <p>WDG has some good documentation on 
@@ -252,22 +254,22 @@ a character encoding</q></h3>
 character encodings</a> that will help you fix your document or the way it is served
 by adding the proper character encoding information.</p>
 
-<h3 id="faq-ampersand">The validator complains about "&amp;" in my URLs!</h3>
+<h4 id="faq-ampersand">The validator complains about "&amp;" in my URLs!</h4>
 <p>Most probably, you should read the <a 
 href="http://www.htmlhelp.com/tools/validator/problems.html#amp">ampersand section</a>
 of WDG's excellent 
 "<a href="http://www.htmlhelp.com/tools/validator/problems.html">common validation problem</a>"
 </p>
 
-<h3 id="faq-javascript">The validator complains about something in my Javascript!</h3>
+<h4 id="faq-javascript">The validator complains about something in my Javascript!</h4>
 <p>Most probably, you should read the 
 <a href="http://www.htmlhelp.com/tools/validator/problems.html#script">script section</a>
 of WDG's excellent                                                                    
 "<a href="http://www.htmlhelp.com/tools/validator/problems.html">common validation problem</a>"     
 </p>
 
-<h3 id="faq-linkandmeta">Why doesn't the validator like my 
-&lt;link ... /&gt; or &lt;meta ... /&gt;?</h3>
+<h4 id="faq-linkandmeta">Why doesn't the validator like my 
+&lt;link ... /&gt; or &lt;meta ... /&gt;?</h4>
 <p>HTML is based on <a href="sgml.html">SGML</a> and uses an SGML 
 feature (called SHORTTAG) (note that this is <strong>not</strong> 
 the case with XHTML).</p>
@@ -282,8 +284,8 @@ thus head-only elements like meta and style as well as
 
 <p>(explanation courtesy of Christoph P&auml;per)</p>
 
-<h3 id="faq-typo">I found some nasty typo like &lt;p&lt;a ...&gt; 
-and the validator accepted it!</h3>
+<h4 id="faq-typo">I found some nasty typo like &lt;p&lt;a ...&gt; 
+and the validator accepted it!</h4>
 
 <p>This again (as in the <a href="#faq-linkandmeta">previous case</a>) comes from the
 SHORTTAG feature in HTML (<strong>not</strong> in XHTML). The typo is actually a 
