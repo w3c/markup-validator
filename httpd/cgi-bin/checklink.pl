@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl -T
+#!/usr/local/bin/perl
 use strict;
 $|++;
 
@@ -67,13 +67,14 @@ sub on_return {
     }
 }
 
-use CGI qw(:standard);
+#use CGI qw(:standard);
+use CGI;
 #use W3CDebugCGI;
 
 ###############
 # Global Variables
 
-my $VERSION= '$Id: checklink.pl,v 1.15 1998-09-11 21:34:04 renaudb Exp $ ';
+my $VERSION= '$Id: checklink.pl,v 1.16 1998-09-11 23:05:50 renaudb Exp $ ';
 my %ALLOWED_SCHEMES = ( "http" => 1 );
 my %SCHEMES = (); # for report
 my %URL = ();
@@ -101,9 +102,7 @@ if ($#ARGV == 0){
     &checklinks($ARGV[0]);
 } else {
     $CGI = 1;
-    #my $query = new W3CDebugCGI($0, $ARGV[0] eq 'DEBUG', '/tmp/test', 0);
     my $query = new CGI;
-
     &doit($query);
 }
  
@@ -111,13 +110,12 @@ sub doit {
     my $q=shift;
     
     &html_header($q);
-
     if(defined $q->param('url')){
-	&checklinks($q->param('url'),$q);
+	&checklinks($q);
     } else {
 	print $q->startform($q->url);
 	print "Enter a URI ",$q->textfield(-name=>'url',-size=>'50'),$q->br;
-	print $q->submit('Check the Links !');
+	print $q->submit('','Check the Links !');
 	print $q->endform;
     }
     print $q->hr,$q->i($VERSION);
@@ -162,8 +160,13 @@ sub callback_check {
 }
 
 sub checklinks {
-    my $url=URI::URL->new(shift);
-    my $q = shift if($CGI);
+    my $q;
+    my $url;
+    $url=URI::URL->new(shift) if($VERBOSE);
+    if($CGI){
+	$q = shift;
+	$url = URI::URL->new($q->param('url'));
+    }
     my $ua = new UserAgent;
     my $request = HTTP::Request->new(GET => $url);
 
@@ -175,7 +178,7 @@ sub checklinks {
     # Request document and parse it as it arrives via callback
     # Then get the UA ready for the requests in the foreach loop
     if($CGI){
-	if(defined $q->param('username')){
+	if($q->param('username')){
 	    $request->headers->authorization_basic($q->param('username'),$q->param('password'));
 	}
     }
@@ -185,7 +188,7 @@ sub checklinks {
     $ua->initialize;
     $ua->{URL}= \%URL;
     $ua->{DoAuth} = 1;
- 
+
     foreach my $r (map {$res->{$_}->response} keys %$res){
 	if ($r->is_success && $r->content_type =~ /text\/html/i){
 	    # if the request is a success
