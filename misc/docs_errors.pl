@@ -2,7 +2,7 @@
 ##
 ## Generates HTML documentation of error messages and explanations
 ## for W3C Markup Validation Service
-## $Id: docs_errors.pl,v 1.2 2005-03-18 06:37:30 ot Exp $
+## $Id: docs_errors.pl,v 1.3 2005-03-18 06:44:14 ot Exp $
 
 ## Pragmas.
 use strict;
@@ -77,8 +77,8 @@ our $T = HTML::Template->new(
   die_on_bad_params => FALSE,
 );
 
-$T->param(list_errors => &list_errors_hasverbose($RSRC));
-$T->param(list_errors => &list_errors_noverbose($RSRC));
+$T->param(list_errors_hasverbose => &list_errors_hasverbose($RSRC));
+$T->param(list_errors_noverbose => &list_errors_noverbose($RSRC));
 print $T->output;
 
 sub list_errors_hasverbose{
@@ -104,7 +104,6 @@ sub list_errors_hasverbose{
 
 	}
     }
-    print $errors;
     return  $errors;
 }
 
@@ -131,7 +130,6 @@ sub list_errors_noverbose{
 
 	}
     }
-    print $errors;
     return  $errors;
 }
 
