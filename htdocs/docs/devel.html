@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: devel.html,v 1.9 2002-11-19 14:58:40 link Exp $"
---><!--#set var="date" value="\$Date: 2002-11-19 14:58:40 $"
+<!--#set var="revision" value="\$Id: devel.html,v 1.10 2002-11-25 01:27:56 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-11-25 01:27:56 $"
 --><!--#set var="title" value="Developer Documentation for The W3C MarkUp Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -21,11 +21,11 @@
       <h2>Prerequisites</h2>
       <p>
         Apart from a properly configured web server, the Validator needs a
-        SGML parser -- that does all the heard work -- and several Perl
+        SGML parser -- that does all the hard work -- and several Perl
         modules used by the "check" CGI script.
       </p>
       <p>
-        The SGML parser we're currently using is <code>OpenSP 1.5pre9</code>,
+        The SGML parser we're currently using is <code>OpenSP 1.5</code>,
         which can be found on the <a href="http://openjade.sf.net/">OpenJade
         home page</a>.
       </p>
@@ -36,7 +36,7 @@
         can be found on <a href="http://www.cpan.org/">CPAN</a> (minimum
         versions in parenthesis after the name). The following
         list was complete when CVS spit out:
-        <code>$Date: 2002-11-19 14:58:40 $</code>. <tt>:-)</tt>
+        <code>$Date: 2002-11-25 01:27:56 $</code>. <tt>:-)</tt>
       </p>
       <dl>
         <dt><code>CGI (2.81)</code></dt>
@@ -95,9 +95,7 @@
         <dt>frag.cfg</dt>
         <dd>
           Maps error messages to an URI fragment identifier where an
-          explanation of that error can be found. Currently not used and may
-          be phased out in the future (to be replaced with a more robust
-          system).
+          explanation of that error can be found.
         </dd>
         <dt>type.cfg</dt>
         <dd>
