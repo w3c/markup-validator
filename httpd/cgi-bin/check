@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.147 2001-07-18 09:23:01 duerst Exp $
+# $Id: check,v 1.148 2001-07-18 11:47:14 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.147 $;
+$VERSION    =  q$Revision: 1.148 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-18 09:23:01 $;
+$DATE       =  q$Date: 2001-07-18 11:47:14 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1572,7 +1572,7 @@ EOF
 sub preparse {
   my $File = shift;
 
-  my $dtd   = sub {return if $File->{Root}; ($File->{Root}, $File->{DOCTYPE}) = shift =~  m(<!DOCTYPE\s+(\w+)\s+PUBLIC\s+"([^\"]+)".*>)si};
+  my $dtd   = sub {return if $File->{Root}; ($File->{Root}, $File->{DOCTYPE}) = shift =~  m(<!DOCTYPE\s+(\w+)\s+PUBLIC\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si};
 #  my $dtd   = sub {print "DTD:   ", shift(), "\n"};
 #  my $pi    = sub {print "PI:    ", shift(), "\n"};
   my $start = sub {
