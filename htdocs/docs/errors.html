@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: errors.html,v 1.13 2001-09-19 08:52:09 link Exp $" -->
-<!--#set var="date" value="\$Date: 2001-09-19 08:52:09 $" -->
+<!--#set var="revision" value="\$Id: errors.html,v 1.14 2001-09-20 16:51:24 link Exp $" -->
+<!--#set var="date" value="\$Date: 2001-09-20 16:51:24 $" -->
 <!--#include virtual="/header.html" -->
 
     <p>
@@ -527,9 +527,9 @@
         <p>
           The document contained an UTF-8 encoded Unicode Byte Order Mark (BOM)
           as the first character and we have removed it before parsing.
-          Many XML Processors
-          do not allow it. To be on the safe side you should avoid using the
-          BOM in UTF-8 encoded documents.
+          Many XML Processors fail to recognize it (allthough it's perfectly
+	  valid). To be on the safe side you may want to avoid using the
+          BOM in UTF-8 encoded documents until browsers are updated to support it.
         </p>
         <p>
           Note that the BOM in <em>UTF-16</em> encoded documents
