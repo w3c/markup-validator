@@ -1,13 +1,15 @@
-      <p id="skip" class="jumpbar">
+      <div id="skip" class="jumpbar">
         Jump To:
-        [<a title="Result of Validation" href="#result">Results</a>]
+        <ul>
+          <li><a title="Result of Validation" href="#result">Results</a></li>
   <TMPL_IF NAME="opt_show_source">
-        [<a title="Listing of Source Input" href="#source">Source Listing</a>]
+          <li><a title="Listing of Source Input" href="#source">Source Listing</a></li>
   </TMPL_IF>
   <TMPL_IF NAME="opt_show_parsetree">
-        [<a title="Document Parse Tree" href="#parse">Parse&nbsp;Tree</a>]
+          <li><a title="Document Parse Tree" href="#parse">Parse&nbsp;Tree</a></li>
   </TMPL_IF>
   <TMPL_IF NAME="opt_show_outline">
-        [<a title="Document Outline" href="#outline">Outline</a>]
+          <li><a title="Document Outline" href="#outline">Outline</a></li>
   </TMPL_IF>
-      </p>
+        </ul>
+      </div>
