@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.303 2002-11-22 22:43:54 ville Exp $
+# $Id: check,v 1.304 2002-11-24 19:03:30 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.303 $;
+  $VERSION    =  q$Revision: 1.304 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-22 22:43:54 $,
+                              Date => q$Date: 2002-11-24 19:03:30 $,
                              });
 
 #
@@ -1625,13 +1625,13 @@ sub report_valid {
       that validates. Here is the HTML you could use to add this icon
       to your Web page:
     </p>
-    <code>
+    <pre>
     &lt;p&gt;
       &lt;a href="$CFG->{'Home Page'}check/referer"&gt;&lt;img$gifborder
           src="$image_uri"
           alt="$alttext"$gifhw$xhtmlendtag&gt;&lt;/a&gt;
     &lt;/p&gt;
-    </code>
+    </pre>
     <p>
       If you like, you can download a copy of this image (in <a
       href="${image_uri}.png">PNG</a> or <a href="${image_uri}.gif">GIF</a>
