@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.22.2.8 2003-07-04 09:33:19 ville Exp $"
---><!--#set var="date" value="\$Date: 2003-07-04 09:33:19 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.22.2.9 2003-07-04 13:46:20 ville Exp $"
+--><!--#set var="date" value="\$Date: 2003-07-04 13:46:20 $"
 --><!--#set var="title" value="Source Code Availability for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -55,11 +55,12 @@
         <li id="rpm">
           <p>
             Experimental RPMs are available, courtesy of Ville Skytt&auml;, at
-            &lt;<a href="http://cachalot.ods.org/">http://cachalot.ods.org/</a>&gt;.
+            &lt;<a href="http://cachalot.ods.org/9/">http://cachalot.ods.org/9/</a>&gt;.
           </p>
           <p>
-            The RPMs have only been tested on <a href="http://www.redhat.com/">Red
-            Hat</a> 8.0, but should be adaptable to other RPM based systems.
+            The RPMs have only been tested on
+            <a href="http://www.redhat.com/">Red Hat</a> Linux 9,
+            but should be adaptable to other RPM based systems.
           </p>
           <p>
             Note that the Validator RPMs have several dependencies so you will
@@ -74,9 +75,32 @@
           </ul>
           <p>
             In addition, each of these may have further dependencies that must
-            be satisfied. All the necessary RPMs should be either in Red Hat 8.0
-            or available from
-             &lt;<a href="http://cachalot.ods.org/">http://cachalot.ods.org/</a>&gt;.
+            be satisfied. All the necessary RPMs should either be included in
+            the Red Hat Linux distribution or available from
+             &lt;<a href="http://cachalot.ods.org/9/">http://cachalot.ods.org/9/</a>&gt;.
+          </p>
+        </li>
+        <li id="deb">
+          <p>
+            A Debian package is available, courtesy of Fr&eacute;d&eacute;ric
+            Sch&uuml;tz. The latest version is available for the Debian Woody
+            (current stable), Sarge (current testing) or Sid (unstable)
+            distributions at
+            &lt;<a href="http://www.mathgen.ch/debian/">http://www.mathgen.ch/de+bian/</a>&gt;.
+            If you want to use the <kbd>apt-get</kbd> command, add the line
+            <kbd>deb http://www.mathgen.ch/debian/woody ./</kbd>
+            in the /etc/apt/sources.list file (replace woody by testing or sid
+            if you use another distribution). All dependencies that are not
+            part of the standard Debian archive are provided at the same
+            address, and running the command <kbd>apt-get install
+            w3c-markup-validator</kbd> as root will install all the packages
+            needed.
+          </p>
+          <p>
+            If you are using the Debian Unstable distribution, the package
+            is already included in the offical archive and you can directly
+            use the <kbd>apt-get</kbd> command if your /etc/apt/sources.list
+            file is correctly configured.
           </p>
         </li>
         <li id="CVS">
