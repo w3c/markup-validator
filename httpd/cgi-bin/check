@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.361 2004-11-19 07:02:47 ot Exp $
+# $Id: check,v 1.362 2004-11-19 07:12:24 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -222,7 +222,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.361 $;
+  $VERSION    =  q$Revision: 1.362 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -312,7 +312,7 @@ my $E = HTML::Template->new(
 
 
 # Read friendly error message file
-my $error_messages_list =  File::Spec->catfile($CFG->{Paths}->{Templates}, $lang, 'error_messages.cfg')
+my $error_messages_list =  File::Spec->catfile($CFG->{Paths}->{Templates}, $lang, 'error_messages.cfg');
 my %config_opts = (-ConfigFile => $error_messages_list);
 my %rsrc = Config::General->new(%config_opts)->getall();
 $RSRC = \%rsrc;
