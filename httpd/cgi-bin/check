@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.18 1999-04-09 00:06:52 gerald Exp $
+# $Id: check,v 1.19 1999-04-24 23:28:49 gerald Exp $
 
 use LWP::UserAgent;
 
@@ -16,8 +16,8 @@ use LWP::UserAgent;
 # Constant definitions
 #############################################################################
 
-$cvsrevision	= '$Revision: 1.18 $';
-$cvsdate	= '$Date: 1999-04-09 00:06:52 $';
+$cvsrevision	= '$Revision: 1.19 $';
+$cvsdate	= '$Date: 1999-04-24 23:28:49 $';
 
 $logfile	= "/var/log/httpd/val-svc";
 
@@ -596,6 +596,7 @@ if ( $? || $guessed_doctype ) {
 	$extraspaces = "";	# in case we put "(truncated)" gif on LHS
 	$line-- if $guessed_doctype;
 	$newline = $file[$line-1];
+	$newline .= "\n";
 
 	# make sure there's no ^P or ^Q's in the file, since we need to use
 	# them to represent '<' and '>' temporarily.
