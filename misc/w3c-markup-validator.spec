@@ -1,13 +1,9 @@
-# RPM Spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.1.2.11 2003-08-28 23:03:42 ville Exp $
-
-%{!?apxs: %{expand:   %%define apxs %{_sbindir}/apxs}}
-%define httpd_confdir %(test -d %{_sysconfdir}/httpd/conf.d && echo %{_sysconfdir}/httpd/conf.d || %{apxs} -q SYSCONFDIR)
-%define sgmldir       %{_datadir}/sgml
+# RPM spec file for the W3C Markup Validator
+# $Id: w3c-markup-validator.spec,v 1.1.2.12 2003-12-01 21:23:36 ville Exp $
 
 Name:           w3c-markup-validator
 Version:        0.6.5
-Release:        0.beta1.1
+Release:        0.beta1.2
 Epoch:          0
 Summary:        W3C Markup Validator
 
@@ -17,14 +13,10 @@ URL:            http://validator.w3.org/
 Source0:        http://validator.w3.org:8001/dist/validator-0_6_5b1.tar.gz
 Source1:        http://validator.w3.org:8001/dist/sgml-lib-0_6_5b1.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildArch:      noarch
 
-BuildRequires:  perl, %{apxs}
-Requires:       httpd, %{name}-libs = %{epoch}:%{version}
-Requires:       perl >= 5.6, perl-HTML-Parser >= 3.25, perl-libwww-perl
-Requires:       perl-URI, perl-Text-Iconv, perl(CGI) >= 2.81, perl(Time::HiRes)
-Requires:       perl(Set::IntSpan), perl(Config::General) >= 2.06
-Requires:       perl(Net::IP), openjade >= 0:1.3.2
+BuildArch:      noarch
+BuildRequires:  perl
+Requires:       httpd, openjade >= 0:1.3.2, %{name}-libs = %{epoch}:%{version}
 Obsoletes:      w3c-validator
 
 %description
@@ -34,8 +26,8 @@ conformance to W3C Recommendations and other standards.
 %package        libs
 Summary:        SGML and XML DTDs for the W3C Markup Validator
 Group:          Applications/Text
+Requires:       sgml-common
 Obsoletes:      w3c-validator-libs
-# No need to require the main package
 
 %description    libs
 SGML and XML DTDs for the W3C Markup Validator.
@@ -51,26 +43,25 @@ perl -pi -e \
    s|/validator\.w3\.org/|/localhost/%{name}/| ;
    s|/usr/local/validator/htdocs/config/|%{_sysconfdir}/w3c/| ;
    s|/usr/local/validator/htdocs/|%{_datadir}/%{name}/| ;
-   s|^(SGML\s+Library\s+).*|${1}%{sgmldir}/%{name}|' \
+   s|^(SGML\s+Library\s+).*|${1}%{_datadir}/sgml/%{name}|' \
   htdocs/config/validator.conf
 perl -pi -e \
   's|/usr/share/w3c-markup-validator|%{_datadir}/%{name}|g' \
   httpd/conf/httpd.conf
 
 # Cleanup of unused files
-rm -rf \
-  httpd/cgi-bin/[Lprt]* \
-  htdocs/p3p.html \
-  htdocs/source \
-  htdocs/config/verbosemsg.rc
+rm -rf htdocs/source htdocs/config/verbosemsg.rc
 
 # Rename checklink
-rename .pl '' httpd/cgi-bin/checklink.pl
+mv httpd/cgi-bin/checklink.pl httpd/cgi-bin/checklink
+
+# Move config out of the way
+mv htdocs/config __config
 
 # Fixup permissions
-find . -type d -exec chmod 0755 {} ';'
-find . -type f -exec chmod 0644 {} ';'
-chmod 0755 httpd/cgi-bin/check*
+find . -type d | xargs chmod 755
+find . -type f | xargs chmod 644
+chmod 755 httpd/cgi-bin/check*
 
 # Point to validator.w3.org for source code
 perl -pi -e \
@@ -79,34 +70,37 @@ perl -pi -e \
 
 
 %build
-# Create the manual pages.
+# Create the manual page.
 pod2man --center="W3C Link Checker" httpd/cgi-bin/checklink > checklink.1
 
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT{%{_datadir}/%{name},%{httpd_confdir},%{_bindir}}
+mkdir -pm 755 $RPM_BUILD_ROOT%{_datadir}/%{name}
 
 # Scripts
 cp -p httpd/cgi-bin/check* $RPM_BUILD_ROOT%{_datadir}/%{name}
+mkdir -pm 755 $RPM_BUILD_ROOT%{_bindir}
 ln -s %{_datadir}/%{name}/checklink $RPM_BUILD_ROOT%{_bindir}
 
 # Config files
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/w3c
-cp -p htdocs/config/* $RPM_BUILD_ROOT%{_sysconfdir}/w3c
-cp -p httpd/conf/httpd.conf $RPM_BUILD_ROOT%{httpd_confdir}/%{name}.conf
+mkdir -pm 755 $RPM_BUILD_ROOT%{_sysconfdir}/w3c
+cp -p __config/* $RPM_BUILD_ROOT%{_sysconfdir}/w3c
+mkdir -pm 755 $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d
+cp -p httpd/conf/httpd.conf \
+  $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/%{name}.conf
 
 # HTML and stuff
-rm -rf htdocs/config
-cp -a htdocs/* $RPM_BUILD_ROOT%{_datadir}/%{name}
+cp -pR htdocs/* $RPM_BUILD_ROOT%{_datadir}/%{name}
 
 # SGML library
-mkdir -p $RPM_BUILD_ROOT{%{sgmldir},%{_sysconfdir}/sgml}
-cp -pr sgml-lib $RPM_BUILD_ROOT%{sgmldir}/%{name}
-> $RPM_BUILD_ROOT%{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat
+mkdir -pm 755 $RPM_BUILD_ROOT%{_datadir}/sgml
+cp -pR sgml-lib $RPM_BUILD_ROOT%{_datadir}/sgml/%{name}
+mkdir -pm 755 $RPM_BUILD_ROOT%{_sysconfdir}/sgml
+touch $RPM_BUILD_ROOT%{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat
 
 # Man pages
-mkdir -p $RPM_BUILD_ROOT%{_mandir}/man1
+mkdir -pm 755 $RPM_BUILD_ROOT%{_mandir}/man1
 cp -p checklink.1 $RPM_BUILD_ROOT%{_mandir}/man1
 
 
@@ -115,41 +109,38 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %post libs
-# Note that we're using a fully versioned catalog, so this is always ok.
-if [ -x %{_bindir}/install-catalog -a -d %{_sysconfdir}/sgml ]; then
-  for catalog in "mathml.soc sgml.soc svg.soc xhtml.soc xml.soc"; do
-    %{_bindir}/install-catalog --add \
-      %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
-      %{sgmldir}/%{name}/$catalog > /dev/null 2>&1 || :
-  done
-fi
+for catalog in "mathml.soc sgml.soc svg.soc xhtml.soc xml.soc"; do
+  install-catalog --add \
+    %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
+    %{_datadir}/sgml/%{name}/$catalog >/dev/null 2>&1 || :
+done
 
 %preun libs
-# Note that we're using a fully versioned catalog, so this is always ok.
-if [ -x %{_bindir}/install-catalog -a -d %{_sysconfdir}/sgml ]; then
-  for catalog in "mathml.soc sgml.soc svg.soc xhtml.soc xml.soc"; do
-    %{_bindir}/install-catalog --remove \
-      %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
-      %{sgmldir}/%{name}/$catalog > /dev/null 2>&1 || :
-  done
-fi
+for catalog in "mathml.soc sgml.soc svg.soc xhtml.soc xml.soc"; do
+  install-catalog --remove \
+    %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
+    %{_datadir}/sgml/%{name}/$catalog >/dev/null 2>&1 || :
+done
 
 
 %files
 %defattr(-,root,root,-)
-%config(noreplace) %{httpd_confdir}/%{name}.conf
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config(noreplace) %{_sysconfdir}/w3c
 %{_datadir}/%{name}
 %{_bindir}/checklink
 %{_mandir}/man1/checklink.1*
 
 %files libs
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %ghost %config %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat
-%{sgmldir}/%{name}
+%{_datadir}/sgml/%{name}
 
 
 %changelog
+* Mon Dec  1 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.5-0.beta1.2
+- Cleanups.
+
 * Fri Aug 29 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.5-0.beta1.1
 - Update to 0.6.5 beta 1.
 
