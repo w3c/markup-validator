@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.80 2001-03-05 03:51:07 gerald Exp $
+# $Id: check,v 1.81 2001-03-05 21:52:35 link Exp $
 
 #
 # We need Perl 5.004.
@@ -74,9 +74,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.80 $;
+$VERSION    =  q$Revision: 1.81 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-03-05 03:51:07 $;
+$DATE       =  q$Date: 2001-03-05 21:52:35 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -409,7 +409,7 @@ close ERRORS            or warn "close($temp) returned: $!\n";
 my @esis;
 my $elements_found = 0;
 my $root_namespace;
-my @other_namespaces;
+my %other_namespaces;
 open ESIS, "$temp.esis" or die  "open($temp.esis) returned: $!\n";
 while (<ESIS>) {
     $elements_found++ if ( /^\(/ );
@@ -419,9 +419,8 @@ while (<ESIS>) {
         if ( ( ! defined $root_namespace ) &&
 	     ( $elements_found == 0 ) && ( $1 eq "" ) ) {
 	    $root_namespace = $2;
-	}
-	else {
-	    push( @other_namespaces, $2 );
+	} else {
+	  $other_namespaces{$2}++;
 	}
     }
     next if / IMPLIED$/;
@@ -484,9 +483,9 @@ if (($File->{Type} eq 'xml') || ($File->{Type} eq 'xhtml')) {
 	}
     }
 
-    if ( $#other_namespaces >= 0 ) {
+    if (scalar(keys %other_namespaces) >= 0) {
         print "<br>Other namespaces in this document: ";
-        for (@other_namespaces) {
+        for (keys %other_namespaces) {
 	    print qq(<a href="$_">$_</a>, ), "\n";
 	}
     }
