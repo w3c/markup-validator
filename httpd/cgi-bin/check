@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.123 2004-05-16 07:09:00 link Exp $
+# $Id: check,v 1.305.2.124 2004-05-16 09:01:27 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.123 $;
+  $VERSION    =  q$Revision: 1.305.2.124 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-16 07:09:00 $,
+                              Date => q$Date: 2004-05-16 09:01:27 $,
                              });
 
 #
@@ -303,6 +303,7 @@ if ($HAVE_SOAP_LITE) {
   # If ";debug" was given, let it overrule the value from the config file,
   # regardless of whether it's "0" or "1" (on or off).
   $DEBUG = $q->param('debug') if defined $q->param('debug');
+  $File->{Opt}->{Verbose} = TRUE if $DEBUG;
 
   &abort_if_error_flagged($File, O_NONE); # Too early to &print_table.
 
