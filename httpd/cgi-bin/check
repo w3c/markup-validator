@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.315 2002-12-05 04:06:23 link Exp $
+# $Id: check,v 1.316 2002-12-07 03:14:32 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -42,7 +42,7 @@ use CGI             2.81 qw(
 			    redirect
 			   ); # 2.81 for XHTML, and import redirect() function.
 
-use CGI::Carp            qw(carp croak);
+use CGI::Carp            qw(carp croak fatalsToBrowser);
 use Config::General 2.06 qw(); # Need 2.06 for -SplitPolicy
 use File::Spec           qw();
 use HTML::Parser    3.25 qw(); # Need 3.25 for $p->ignore_elements.
@@ -133,7 +133,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.315 $;
+  $VERSION    =  q$Revision: 1.316 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 } # end of BEGIN block.
@@ -181,6 +181,22 @@ $File->{Offsets}->[0] = [0, 0]; # The first item isn't used...
 $File->{Lines}              = []; # Line numbers for encoding errors.
 $File->{Warnings}           = []; # Warnings...
 $File->{'Other Namespaces'} = []; # Other (non-root) Namespaces.
+
+
+###############################################################################
+#### Generate Template for Result. ############################################
+###############################################################################
+
+my $T = HTML::Template->new(
+			    filename => '/usr/local/validator/share/templates/en_US/result.tmpl',
+			    die_on_bad_params => FALSE,
+			   );
+my $E = HTML::Template->new(
+			    filename => '/usr/local/validator/share/templates/en_US/fatal-error.tmpl',
+			    die_on_bad_params => FALSE,
+			   );
+
+$T->param(cfg_home_page => $CFG->{Home_Page});
 
 
 #########################################
@@ -238,22 +254,6 @@ untie *STDIN;
 #
 # Abort if an error was flagged during initialization.
 &abort_if_error_flagged($File, 0);
-
-
-###############################################################################
-#### Generate Template for Result. ############################################
-###############################################################################
-
-my $T = HTML::Template->new(
-			    filename => '/usr/local/validator/share/templates/en_US/result.tmpl',
-			    die_on_bad_params => FALSE,
-			   );
-my $E = HTML::Template->new(
-			    filename => '/usr/local/validator/share/templates/en_US/fatal-error.tmpl',
-			    die_on_bad_params => FALSE,
-			   );
-
-$T->param(cfg_home_page => $CFG->{Home_Page});
 
 
 ###############################################################################
