@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.38 1999-10-04 17:44:44 gerald Exp $
+# $Id: check,v 1.39 1999-10-04 18:35:29 gerald Exp $
 
 #
 # Load modules
@@ -27,8 +27,8 @@ use constant UNDEF => undef;
 # Constant definitions
 #############################################################################
 
-my $cvsrevision	= '$Revision: 1.38 $';
-my $cvsdate	= '$Date: 1999-10-04 17:44:44 $';
+my $cvsrevision	= '$Revision: 1.39 $';
+my $cvsdate	= '$Date: 1999-10-04 18:35:29 $';
 
 my $logfile	= "/var/log/httpd/val-svc";
 
@@ -291,7 +291,7 @@ if ( $response->code != 200 ) {
     &clean_up_and_exit;
 }
 
-my $content_type = $response->headers->content_type;
+my $content_type = $response->headers->header("Content-Type");
 
 if ( ( $content_type =~ /text\/xml/i ) ||
      ( $content_type =~ /image\/svg/i ) ||
