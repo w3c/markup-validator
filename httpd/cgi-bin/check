@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.331 2004-07-21 15:07:31 link Exp $
+# $Id: check,v 1.332 2004-07-21 17:06:27 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -189,7 +189,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.331 $;
+  $VERSION    =  q$Revision: 1.332 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1701,26 +1701,26 @@ sub outline {
     my $TAB = $level + 2;
 
     if ($prevlevel == 0) {
-      print "    <ul>\n";
+      $outline .= "    <ul>\n";
     } else {
       if ($level < $prevlevel) {
-        print "</li>\n";
+        $outline .= "</li>\n";
         for (my $i = $prevlevel; $i > $level; $i--) {
-          print "  " x ($i + 2), "</ul>\n";
-          print "  " x (($i + 2) - 1), "</li>\n";
+          $outline .= "  " x ($i + 2)       . "</ul>\n";
+          $outline .= "  " x (($i + 2) - 1) . "</li>\n";
         }
       } elsif ($level == $prevlevel) {
-        print "</li>\n";
+        $outline .= "</li>\n";
       } elsif ($level > $prevlevel) {
         if ($level - $prevlevel > 1) {
           foreach my $i (($prevlevel + 1) .. ($level - 1)) {
-            print "\n", "  " x ($i + 2), "<ul>\n", "  " x ($i + 2);
-            print qq(<li class="warning">A level $i heading is missing!);
+            $outline .= "\n", "  " x ($i + 2) . "<ul>\n" . "  " x ($i + 2);
+            $outline .= qq(<li class="warning">A level $i heading is missing!);
           }
-          print "\n", "  " x $TAB, "<ul>\n";
+          $outline .= "\n" . "  " x $TAB . "<ul>\n";
         } else {
-          print "\n", "  " x $TAB;
-          print "<ul>\n";
+          $outline .= "\n" . "  " x $TAB;
+          $outline .= "<ul>\n";
         }
       }
     }
@@ -1769,7 +1769,6 @@ sub source {
   $File->{Content}->[0] =
     substr $File->{Content}->[0], ($File->{BOM} ? 3 : 0); # remove BOM
 
-  my $line    = 1;
   my $maxhlen = length scalar @{$File->{Content}};
   for (@{$File->{Content}}) {
     my $hline = (' ' x ($maxhlen - length("$line"))) . $line;
