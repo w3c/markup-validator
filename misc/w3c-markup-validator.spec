@@ -1,17 +1,17 @@
 # RPM spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.1.2.17 2004-05-02 13:00:48 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.1.2.18 2004-05-06 19:33:05 ville Exp $
 
 Name:           w3c-markup-validator
 Version:        0.6.5
-Release:        0.beta3.1
+Release:        1
 Epoch:          0
 Summary:        W3C Markup Validator
 
 Group:          Applications/Internet
 License:        W3C Software License
 URL:            http://validator.w3.org/
-Source0:        http://validator.w3.org:8001/dist/validator-0_6_5b3.tar.gz
-Source1:        http://validator.w3.org:8001/dist/sgml-lib-0_6_5b3.tar.gz
+Source0:        http://validator.w3.org/validator-0_6_5.tar.gz
+Source1:        http://validator.w3.org/sgml-lib-0_6_5.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -34,8 +34,8 @@ SGML and XML DTDs for the W3C Markup Validator.
 
 
 %prep
-%setup -q -a 1 -n validator-0.6.5b3
-mv validator-0.6.5b3/htdocs/sgml-lib .
+%setup -q -a 1 -n validator-%{version}
+mv validator-%{version}/htdocs/sgml-lib .
 
 # Localize config files
 perl -pi -e \
@@ -55,18 +55,20 @@ rm -rf htdocs/source htdocs/config/verbosemsg.rc
 # Move config out of the way
 mv htdocs/config __config
 
+# Point to http://validator.w3.org/source/ for source code
+perl -pi -e \
+  's|href=".*?\bsource/|href="http://validator.w3.org/source/|' \
+  htdocs/about.html htdocs/whatsnew.html htdocs/docs/devel.html \
+  htdocs/docs/index.html htdocs/docs/install.html httpd/cgi-bin/check
+
 # Fixup permissions
 find . -type d | xargs chmod 755
 find . -type f | xargs chmod 644
 chmod 755 httpd/cgi-bin/check
 
-# Point to validator.w3.org for source code
-perl -pi -e \
-  's|<!--\#echo var="relroot"\s*-->source/|http://validator.w3.org/source/|' \
-  htdocs/header.html
-
 
 %build
+# Not
 
 
 %install
@@ -133,6 +135,9 @@ done
 
 
 %changelog
+* Thu May  6 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.5-1
+- Update to 0.6.5.
+
 * Fri Apr 30 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.5-0.beta3.1
 - Update to 0.6.5 beta 3.
 
