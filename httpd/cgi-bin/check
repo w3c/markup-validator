@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.65 2003-07-24 16:14:56 link Exp $
+# $Id: check,v 1.305.2.66 2003-07-28 03:44:17 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -130,7 +130,7 @@ BEGIN
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.65 $;
+  $VERSION    =  q$Revision: 1.305.2.66 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -202,7 +202,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-07-24 16:14:56 $,
+                              Date => q$Date: 2003-07-28 03:44:17 $,
                              });
 
 #
@@ -1737,11 +1737,85 @@ EOHD
     foreach my $err (@{$File->{Errors}}) {
       my($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $err->{char});
 
-      my $left  = &ent(substr $line,        0,          $col);
-      my $right = &ent(substr $line, $col + 1, length($line) - 1);
-      my $char  = &ent(substr $line, $col    ,                 1);
+      #DEBUG: Gather vars for print below.
+      my $orglength = length($File->{Content}->[$err->{line}-1]);
+      my $adjlength = length $line;
+      my $orgcol = $err->{char};
+      my $adjcol = $col;
+      #DEBUG;
+
+      #
+      # Chop the source line into 3 pieces; the character at which the error
+      # was detected, and everything to the left and right of that position.
+      # That way we can add markup to the relevant char without breaking &ent().
+      #
+
+      #
+      # Left side...
+      my $left;
+      {
+	my $offset = 0; # Left side allways starts at 0.
+	my $length;
+
+	if ($col - 1 < 0) { # If error is at start of line...
+	  $length = 0; # ...floor to 0 (no negative offset).
+	} elsif ($col == length $line) { # If error is at EOL...
+	  $length = $col - 1; # ...leave last char to indicate position.
+	} else { # Otherwise grab everything up to pos of error.
+	  $length = $col;
+	}
+	$left = substr $line, $offset, $length;
+	$left = &ent($left);
+      }
+
+      #
+      # The character where the error was detected.
+      my $char;
+      {
+	my $offset;
+	my $length = 1; # Length is always 1; the char where error was found.
+
+	if ($col == length $line) { # If err is at EOL...
+	  $offset = $col - 1; # ...then grab last char on line instead.
+	} else {
+	  $offset = $col; # Otherwise just grab the char.
+	}
+	$char = substr $line, $offset, $length;
+	$char = &ent($char);
+      }
+
+      #
+      # The right side up to the end of the line...
+      my $right;
+      {
+	my $offset;
+	my $length;
+
+	# Offset...
+	if ($col == length $line) { # If at EOL...
+	  $offset = 0; # Don't bother as there is nothing left to grab.
+	} else {
+	  $offset = $col + 1; # Otherwise get everything from char-after-error.
+	}
+
+	# Length...
+	if ($col == length $line) { # If at end of line...
+	  $length = 0; # ...then don't grab anything.
+	} else {
+	  $length = length($line) - ($col - 1); # Otherwise get the rest of the line.
+	}
+	$right = substr $line, $offset, $length;
+	$right = &ent($right);
+      }
+
       $char = qq(<strong title="Position where error was detected.">$char</strong>);
       $line = $left . $char . $right;
+
+      #DEBUG: Print misc. vars relevant to source display.
+      if ($DEBUG) {
+	$line .= "<br/> <strong>org length: $orglength - adj length: $adjlength - org col: $orgcol - adj col: $adjcol</strong>";
+      }
+      #DEBUG;
 
       my $msg = &ent($err->{msg}); # Entity encode error message.
 
