@@ -29,7 +29,7 @@ cleanup()
 
 tmpdir=$(mktemp -d /tmp/validator.XXXXXX)
 mkdir -p $tmpdir/validator-$version
-cp -pR $topdir/{htdocs,httpd,misc,README.cvs} $tmpdir/validator-$version
+cp -pR $topdir/{htdocs,httpd,misc,share,README.cvs} $tmpdir/validator-$version
 
 cd $tmpdir
 
