@@ -1,9 +1,9 @@
 #
 # robots.txt for validator.w3.org
 #
-# $Id: robots.txt,v 1.2 1998-07-24 22:11:35 gerald Exp $
+# $Id: robots.txt,v 1.3 2000-12-13 13:04:09 gerald Exp $
 #
 
-# User-Agent: *
-# Disallow:
+User-agent: *
+Disallow: /check
 
