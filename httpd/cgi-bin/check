@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.112 2004-05-08 19:16:44 ville Exp $
+# $Id: check,v 1.305.2.113 2004-05-15 06:58:10 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.112 $;
+  $VERSION    =  q$Revision: 1.305.2.113 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-08 19:16:44 $,
+                              Date => q$Date: 2004-05-15 06:58:10 $,
                              });
 
 #
@@ -1709,6 +1709,10 @@ sub parse_errors ($$) {
     $err->{src}  = $errors[1];
     $err->{line} = $errors[2];
     $err->{char} = $errors[3];
+    # Workaround for onsgmls 1.5 sometimes reporting errors beyond EOL.
+    if ((my $l = length($File->{Content}->[$err->{line}-1])) < $err->{char}) {
+      $err->{char} = $l;
+    }
     $err->{num}  = $errors[4] || '';
     $err->{type} = $errors[5] || '';
     if ($err->{type} eq 'E' or $err->{type} eq 'X' or $err->{type} eq 'Q') {
