@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.33 2000-02-24 22:22:05 hugo Exp $
+# $Id: checklink.pl,v 2.34 2000-03-01 23:15:42 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -31,7 +31,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.33 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.34 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -51,6 +51,11 @@ my $_trusted = '\.w3\.org';
 my $_http_proxy;
 my $_recursive = 0;
 my $_base_location = '.';
+my $_contact_address = 'webreq@w3.org';
+
+# Restrictions for the online version
+my $_sleep_time = 3;
+my $_max_documents = 50;
 
 # Global variables
 # Used for the output
@@ -63,6 +68,10 @@ my %processed;
 my %results;
 # List of redirects
 my %redirects;
+# Count of the number of documents checked
+my $doc_count = 0;
+# Time stamp
+my $timestamp = &get_timestamp;
 
 if ($#ARGV >= 0) {
     $_cl = 1;
@@ -73,14 +82,17 @@ if ($#ARGV >= 0) {
     }
     my $uri;
     foreach $uri (@uris) {
-	if (! $_summary) {
-            printf("%s %s\n", $PROGRAM ,$VERSION);
+	if (!$_summary) {
+            printf("%s %s\n", $PROGRAM ,$VERSION) if (! $_html);
         } else {
             $_verbose = 0;
             $_progress = 0;
         }
         $uri = urize($uri);
         &check_uri($uri);
+    }
+    if (($doc_count > 0) && !$_summary) {
+        printf("\n%s\n", &global_stats());
     }
 } else {
     use CGI;
@@ -271,7 +283,10 @@ sub urize() {
 sub check_uri() {
     my ($uri, $html_stuff) = @_;
 
-    if ($_html && $html_stuff) {
+    # Are we in a recursion cycle?
+    my $in_recursion = !$first;
+
+    if ($_html) {
         $first = 1;
     } else {
         $first = 0;
@@ -283,19 +298,14 @@ sub check_uri() {
     }
 
     # Get the document
-    my $response = &get_document('GET', $uri, 1, \%redirects);
+    my $response = &get_document('GET', $uri, $in_recursion, \%redirects);
 
     if (defined($response->{Stop})) {
-        if ($html_stuff) {
-            &html_header($uri);
-        }
-        &hprintf("\nError: %d %s\n",
-                 $response->code(), $response->message());
-        if ($html_stuff) {
-            &html_footer();
-        }
         return(-1);
     }
+
+    # We are checking a new document
+    $doc_count++;
 
     if ($_html) {
         if ($html_stuff) {
@@ -448,9 +458,20 @@ sub check_uri() {
                     print('-');
                 }
             } else {
-                print('<hr>');
                 # For the online version, wait for a while to avoid abuses
-                sleep(3);
+                if (!$_cl) {
+                    if ($doc_count == $_max_documents) {
+                        print("<hr>\n<p><strong>Maximum number of documents reached!</strong> Please contact <a href=\"mailto:$_contact_address\">$_contact_address</a> if you need to check more than $_max_documents documents at once.</a></p>\n");
+                    }
+                    if ($doc_count >= $_max_documents) {
+                        $doc_count++;
+                        print("<p>Not checking <strong>$u</strong></p>\n");
+                        $processed{$u} = 1;
+                        next;
+                    }
+                }
+                print('<hr>');
+                sleep($_sleep_time);
             }
             print "\n";
             &check_uri($u, 0);
@@ -481,7 +502,7 @@ sub get_document() {
                 if ($_html) {
                     &html_header($uri);
                 }
-                &hprintf("Error: %d %s\n",
+                &hprintf("\nError: %d %s\n",
                          $response->code(), $response->message());
                 if ($_html) {
                     &html_footer();
@@ -977,7 +998,7 @@ sub authentication() {
         print(STDERR "Use the -u and -p options to specify a username and password.\n");
     } else {
         printf("Status: 401 Authorization Required\nWWW-Authenticate: %s\nConnection: close\nContent-Type: text/html\n\n", $r->headers->www_authenticate);
-        printf("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\">
+        printf("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">
 <html>
 <head>
 <title>401 Authorization Required</title>
@@ -1008,7 +1029,7 @@ sub time_diff() {
     for ($start[1], $stop[1]) {
         $_ /= 1_000_000;
     }
-    return(sprintf("%.2f", ($stop[0]+$stop[1])-($start[0]+$start[1])));
+    return(sprintf("%.1f", ($stop[0]+$stop[1])-($start[0]+$start[1])));
 }
 
 ########################
@@ -1369,6 +1390,17 @@ sub links_summary {
 
 ###############################################################################
 
+################
+# Global stats #
+################
+
+sub global_stats() {
+    my $stop = &get_timestamp();
+    return sprintf("Checked %d document(s) in %ss.",
+                   ($doc_count<=$_max_documents? $doc_count : $_max_documents),
+                   &time_diff($timestamp, $stop)); 
+}
+
 ##################
 # HTML interface #
 ##################
@@ -1379,9 +1411,12 @@ sub html_header() {
     if (defined($_[1])) {
         print "Cache-Control: no-cache\nPragma: no-cache\n";
     }
-    print "Content-type: text/html
+    if (! $_cl) {
+        print 'Content-type: text/html';
+    }
+    print "
 
-<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">
+<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">
 <html>
 <head>
 <title>W3C Link Ckecker: $uri</title>
@@ -1451,6 +1486,11 @@ sub show_url() {
 }
 
 sub html_footer() {
+
+    if (($doc_count > 0) && !$_quiet) {
+        printf("<p>%s</p>\n", &global_stats());
+    }
+
     print "
 <hr>
 <address>
@@ -1487,7 +1527,7 @@ sub print_form() {
   <br>
   <input type=\"checkbox\" name=\"hide_dir_redirects\"> Hide directory redirects
   <br>
-  <input type=\"checkbox\" name=\"recursive\"> Check linked documents recursively
+  <input type=\"checkbox\" name=\"recursive\"> Check linked documents recursively <small>(maximum: $_max_documents documents; sleeping $_sleep_time\s between each document)</small>
 </p>
 <p><input type=\"submit\" name=\"submit\" value=\"Check\"></p>
 </form>
