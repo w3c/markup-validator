@@ -28,8 +28,7 @@
              55296     2048  UNUSED -- surrogates --
              57344     8190   57344
              65534        2  UNUSED -- FFFE and FFFF --
-             65536  1048576   65536
-           1114112 14680064 1114112 -- Outside BMP --
+             65536  1048576   65536 -- 16 planes outside BMP --
 
 
 
