@@ -8,8 +8,8 @@
     <link rel="stylesheet" type="text/css" href="/base.css" />
     <meta name="keywords" content="HTML, Hypertext Markup Language, Validation, W3C HTML Validation Service" />
     <meta name="description" content="W3C's easy-to-use HTML validation service, based on an SGML parser." />
-    <meta name="revision" content="$Id: errors.html,v 1.6 2001-04-15 20:26:30 link Exp $" />
-    <meta name="modified" content="$Date: 2001-04-15 20:26:30 $" />
+    <meta name="revision" content="$Id: errors.html,v 1.7 2001-07-14 22:19:59 link Exp $" />
+    <meta name="modified" content="$Date: 2001-07-14 22:19:59 $" />
   </head>
 
   <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
@@ -29,6 +29,20 @@
     </p>
 
     <dl>
+      <dt><a id="undef-id" name="dup-id">"ID "FOO" already defined"</a></dt>
+      <dd>
+        <p>
+          You have defined the id/name "FOO" more then once. You will also get
+          a message telling you where it was first defined. Be aware that this
+          message may be the result of an ambiguity in the specification.
+          While user-agents must treat values of the id attribute
+          as case-sensitive, they must still be case-insensitive unique in the
+          document. See
+          <a href="http://www.w3.org/TR/html4/struct/links.html#h-12.2.1">Section
+          12.2.1 Syntax of anchor names</a> in the HTML 4.01 Reccomendation
+          for further information.
+        </p>
+      </dd>
       <dt><a id="unterm-comment-1" name="unterm-comment-1">"entity end not allowed in comment"</a></dt>
       <dd>
         <p>
@@ -553,7 +567,7 @@
 	 src="http://validator.w3.org/images/vxhtml10" height="31" width="88"
 	 align="right" border="0" alt="Valid XHTML 1.0!" /></a>
       <a href="/feedback.html">Webmaster</a><br />
-	 $Date: 2001-04-15 20:26:30 $
+	 $Date: 2001-07-14 22:19:59 $
     </address>
 
   </body>
