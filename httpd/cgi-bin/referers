@@ -6,7 +6,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: referers,v 1.3 1998-08-15 00:50:45 gerald Exp $
+# $Id: referers,v 1.4 1998-08-15 00:57:11 gerald Exp $
 
 LOG=/usr/local/apache/logs/complete_log; export LOG
 
@@ -35,12 +35,10 @@ tail -50000 $LOG | grep -v image/gif | cut -d\" -f4 | sort | uniq -c | \
 cat <<EOHD
 </table>
 
-</pre>
-
 <hr>
 <address>
 <a href="http://www.w3.org/People/Gerald/">Gerald Oskoboiny</a><br>
-\$Date: 1998-08-15 00:50:45 $ \
+\$Date: 1998-08-15 00:57:11 $ \
 </address>
 
 EOHD
