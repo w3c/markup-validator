@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.124 2001-06-23 01:14:34 link Exp $
+# $Id: check,v 1.125 2001-06-23 01:16:42 link Exp $
 
 #
 # We need Perl 5.004.
@@ -77,9 +77,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.124 $;
+$VERSION    =  q$Revision: 1.125 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-23 01:14:34 $;
+$DATE       =  q$Date: 2001-06-23 01:16:42 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -995,18 +995,6 @@ sub supress_doctype {
 		    declaration_h => [sub {$HTML .= '<!-- ' . $_[0] . ' -->'}, 'text']
 		   )->parse(join "\n", @{$file});
   return [split /\n/, $HTML];
-}
-
-#
-# Extract a DOCTYPE to determine what kind of document this is.
-sub get_doctype {
-  no strict 'vars';
-  my $file = shift;
-  local $dtd = '';
-
-  HTML::Parser->new(declaration_h => [sub {$dtd = $_[0]}, 'text'])->parse(join "\n", @{$file});
-  $dtd =~ s(<!DOCTYPE\s+\w+\s+PUBLIC\s+"([^\"]+)".*>){$1}si;
-  return $dtd;
 }
 
 #
