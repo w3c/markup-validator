@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.4 2002-12-02 12:14:44 link Exp $
+   $Id: base.css,v 1.26.2.5 2003-01-04 02:57:48 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -99,6 +99,10 @@ address {
   border-top:       1px solid black;
   background-color: #eee;
   clear:            right;
+}
+
+p.copyright {
+background-color: #eee;
 }
 
 p.jumpbar {
