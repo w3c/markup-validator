@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.44 2002-06-16 19:41:43 link Exp $
+# $Id: check,v 1.200.2.45 2002-06-16 19:48:27 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -30,18 +30,24 @@ use warnings;
 
 #
 # Modules.
-use CGI qw(:cgi -newstyle_urls -private_tempfiles);
-use CGI::Carp;
-use File::Spec ();          # File::Spec pollutes our namespace by default. :-(
-use HTML::Parser 3.25;      # Need 3.25 for $p->ignore_elements.
-use HTTP::Request;
-use IO::File;
-use IPC::Open3;
-use LWP::UserAgent 1.90;    # Need 1.90 for protocols_(allowed|forbidden)
-use Text::Iconv;            # Debian: apt-get install libtext-iconv-perl
-use Text::Wrap;
-use URI;
-use URI::Escape qw(uri_escape);
+#
+# Version numbers given where we absolutely need a minimum version of a given
+# module (gives nicer error messages). By default, add an empty import list
+# when loading modules to prevent non-OO or poorly written modules from
+# polluting our namespace.
+#
+use CGI                 qw(:cgi -newstyle_urls -private_tempfiles);
+use CGI::Carp           qw(carp croak);
+use File::Spec          qw();
+use HTML::Parser   3.25 qw(); # Need 3.25 for $p->ignore_elements.
+use HTTP::Request       qw();
+use IO::File            qw();
+use IPC::Open3          qw(open3);
+use LWP::UserAgent 1.90 qw(); # Need 1.90 for protocols_(allowed|forbidden)
+use Text::Iconv         qw(); # Debian: apt-get install libtext-iconv-perl
+use Text::Wrap          qw(wrap);
+use URI                 qw();
+use URI::Escape         qw(uri_escape);
 
 
 ###############################################################################
@@ -78,7 +84,7 @@ $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.44 $;
+$VERSION    =  q$Revision: 1.200.2.45 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 #
@@ -107,7 +113,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-06-16 19:41:43 $,
+			      Date => q$Date: 2002-06-16 19:48:27 $,
 			     });
 
 #
