@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.323 2003-05-24 20:32:47 link Exp $
+# $Id: check,v 1.324 2003-05-25 12:07:56 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -146,7 +146,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.323 $;
+  $VERSION    =  q$Revision: 1.324 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 } # end of BEGIN block.
 
@@ -340,7 +340,7 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
   $File->{Charset}->{Use} = 'utf-16';
 } elsif ($File->{ContentType} =~ m(^application/([-.a-zA-Z0-9]+\+)?xml$)) {
   $File->{Charset}->{Use} = "utf-8";
-} elsif (&is_xml($File->{Type}) and not $File->{ContentType} =~ m(^text/)) {
+} elsif (&is_xml($File) and not $File->{ContentType} =~ m(^text/)) {
   $File->{Charset}->{Use} = 'utf-8'; # UTF-8 (image/svg+xml etc.)
 }
 
@@ -552,7 +552,8 @@ $ENV{SGML_SEARCH_PATH} = $CFG->{SGML_Library};
 
 #
 # Set final command to use.
-my @cmd = ($CFG->{SGML_Parser}, '-c', $catalog, '-E0', @xmlflags);
+#my @cmd = ($CFG->{SGML_Parser}, '-c', $catalog, '-E0', @xmlflags);
+my @cmd = ('/usr/bin/onsgmls', '-c', '/usr/local/validator/htdocs/sgml-lib/xml.soc', '-E0', @xmlflags);
 
 #
 # Set debug info for HTML report.
@@ -590,7 +591,6 @@ my $pid = do {
   local(*SPIN, *SPOUT, *SPERR)  = ($spin, $spout, $sperr);
   open3("<&SPIN", ">&SPOUT", ">&SPERR", @cmd);
 };
-
 
 #
 # Close input file, reap the kid, and rewind temporary filehandles.
@@ -665,42 +665,20 @@ if (my $prettyver = $CFG->{Types}->{$File->{Version}}->{Display}) {
   $File->{Version} = &ent($File->{Version});
 }
 
-if ($File->{'Is Upload'}) {
-  &add_table($File, 'Doctype', $File->{Version});
-} else {
-  &add_table($File, qq(<label accesskey="3" for="doctype" title="Document Type (accesskey: 3)">Doctype</label>),
-             $File->{Version}, &popup_doctype);
-}
-
 #
 # Warn about unknown Namespaces.
-if (&is_xml($File->{Type}) and $File->{Namespace}) {
+if (&is_xml($File) and $File->{Namespace}) {
   my $rns = &ent($File->{Namespace});
-  if (&is_xhtml($File->{Type}) and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
+  if (&is_xhtml($File) and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
     &add_warning(
 		 $File, 'warning', 'Warning:',
 		 "Unknown namespace (&#171;<code>$rns</code>&#187;) for text/html document!",
 		);
-  } elsif (&is_svg($File->{Type}) and $File->{Namespace} ne 'http://www.w3.org/2000/svg') {
+  } elsif (&is_svg($File) and $File->{Namespace} ne 'http://www.w3.org/2000/svg') {
     &add_warning(
 		 $File, 'warning', 'Warning:',
 		 "Unknown namespace (&#171;<code>$rns</code>&#187;) for SVG document!",
 		);
-  }
-
-  &add_table($File, 'Root Namespace', [1, 2, qq(<a href="$rns">$rns</a>)])
-    if $File->{Opt}->{Verbose};
-
-  if (scalar keys %{$File->{Namespaces}} > 1) {
-    my $namespaces = '<ul>';
-    for (keys %{$File->{Namespaces}}) {
-      my $ns = &ent($_);
-      $namespaces .= qq(\t<li><a href="$ns">$ns</a></li>\n)
-          unless $_ eq $File->{Namespace}; # Don't repeat Root Namespace.
-    }
-    $namespaces .= '</ul>';
-    &add_table($File, 'Other Namespaces', [1, 2, $namespaces])
-      if $File->{Opt}->{Verbose};
   }
 }
 
@@ -1391,10 +1369,10 @@ sub parse_errors ($$) {
     if ($err->{type} eq 'E' or $err->{type} eq 'X' or $err->{type} eq 'Q') {
       $err->{msg}  = join ':', @errors[5 .. $#errors];
     } elsif ($err->{type} eq 'W') {
-      &add_warning(
-		   $File, 'fake', 'Warning:',
-		   "Line $err->{line}, column $err->{char}: $errors[5]",
-		  );
+#      &add_warning(
+#		   $File, 'fake', 'Warning:',
+#		   "Line $err->{line}, column $err->{char}: $errors[5]",
+#		  );
       $err->{msg}  = join ':', @errors[5 .. $#errors];
     } else {
       $err->{type} = 'I';
@@ -1575,6 +1553,7 @@ sub source {
 #
 # Create a HTML Parse Tree of the document for validation report.
 sub parsetree {
+  return;
   my $File = shift;
   my $tree = '';
 
@@ -2398,7 +2377,6 @@ sub find_xml_encoding {
 
   ($File->{Charset}->{Auto}, $File->{BOM}, $CodeUnitSize, $Pattern)
     = &find_base_encoding($File->{Bytes});
-  warn qq("$File->{Charset}->{Auto}" "$File->{BOM}" "$CodeUnitSize" "$Pattern");
   my $someBytes = substr $File->{Bytes}, $File->{BOM}, ($CodeUnitSize * 100);
   my $someText = '';                  # 100 arbitrary, but enough in any case
 
@@ -2449,76 +2427,6 @@ sub conflict {
   return $encodingA && $encodingB && ($encodingA ne $encodingB);
 }
 
-#
-# Return a text string suitable for inclusion in the result table.
-sub popup_doctype {
-  return &CGI::popup_menu(
-                          -name => 'doctype',
-                            -id => 'doctype',
-                        -values => [
-                                    '(detect automatically)',
-                                    'XHTML 1.1',
-                                    'XHTML Basic 1.0',
-                                    'XHTML 1.0 Strict',
-                                    'XHTML 1.0 Transitional',
-                                    'XHTML 1.0 Frameset',
-                                    'HTML 4.01 Strict',
-                                    'HTML 4.01 Transitional',
-                                    'HTML 4.01 Frameset',
-                                    'HTML 3.2',
-                                    'HTML 2.0',
-                                   ],
-                          );
-}
-
-#
-# Return a text string suitable for inclusion in the result table.
-sub popup_charset {
-  return &CGI::popup_menu(
-                          -name      => 'charset',
-                          -id        => 'charset',
-                          -values => [
-                                      '(detect automatically)',
-                                      'utf-8 (Unicode, worldwide)',
-                                      'utf-16 (Unicode, worldwide)',
-                                      'iso-8859-1 (Western Europe)',
-                                      'iso-8859-2 (Central Europe)',
-                                      'iso-8859-3 (Southern Europe)',
-                                      'iso-8859-4 (North European)',
-                                      'iso-8859-5 (Cyrillic)',
-                                      'iso-8859-6 (Arabic)',
-                                      'iso-8859-7 (Greek)',
-                                      'iso-8859-8 (Hebrew, visual)',
-                                      'iso-8859-8-i (Hebrew, logical)',
-                                      'iso-8859-9 (Turkish)',
-                                      'iso-8859-10 (Latin 6)',
-                                      'iso-8859-13 (Baltic Rim)',
-                                      'iso-8859-14 (Celtic)',
-                                      'iso-8859-15 (Latin 9)',
-                                      'us-ascii (basic English)',
-                                      'euc-jp (Japanese, Unix)',
-                                      'shift_jis (Japanese, Win/Mac)',
-                                      'iso-2022-jp (Japanese, email)',
-                                      'euc-kr (Korean)',
-                                      'gb2312 (Chinese, simplified)',
-                                      'gb18030 (Chinese, simplified)',
-                                      'big5 (Chinese, traditional)',
-                                      'tis-620 (Thai)',
-                                      'koi8-r (Russian)',
-                                      'koi8-u (Ukrainian)',
-                                      'iso-ir-111 (Cyrillic KOI-8)',
-                                      'macintosh (MacRoman)',
-                                      'windows-1250 (Central Europe)',
-                                      'windows-1251 (Cyrillic)',
-                                      'windows-1252 (Western Europe)',
-                                      'windows-1253 (Greek)',
-                                      'windows-1254 (Turkish)',
-                                      'windows-1255 (Hebrew)',
-                                      'windows-1256 (Arabic)',
-                                      'windows-1257 (Baltic Rim)',
-                                     ],
-                         );
-}
 
 #
 # Construct a self-referential URL from a CGI.pm $q object.
