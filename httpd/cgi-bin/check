@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.43 1999-10-25 08:20:17 gerald Exp $
+# $Id: check,v 1.44 1999-10-25 12:21:23 gerald Exp $
 
 #
 # Load modules
@@ -29,8 +29,8 @@ use constant UNDEF => undef;
 # Constant definitions
 #############################################################################
 
-my $cvsrevision	= '$Revision: 1.43 $';
-my $cvsdate	= '$Date: 1999-10-25 08:20:17 $';
+my $cvsrevision	= '$Revision: 1.44 $';
+my $cvsdate	= '$Date: 1999-10-25 12:21:23 $';
 
 my $logfile	= "/var/log/httpd/val-svc";
 
@@ -57,7 +57,7 @@ my $revision	= $cvsrevision;
 my ( $validity, $version, $document_type, %undef_frag,
     $effective_charset, $charsets_differ,
     $lastmod, $catalog, $command, @fake_errors,
-    $guessed_doctype, $doctype, $line, $col, $type, $msg, $extraspaces, $diff,
+    $guessed_doctype, $doctype, $line, $col, $type, $msg, $diff,
     $pos, $indent, $gifname, $alttext, $gifhw, $nicegifname, $pedanticflags,
     $pedantic_blurb, $level, $prevlevel, $i, $prevdata );
 
@@ -73,9 +73,6 @@ my $xhtmlt_doctype	= qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitiona
 my $temp		= "/tmp/validate.$$";
 my $lt			= "\020";
 my $gt			= "\021";
-my $leftarrow		= "${lt}tt${gt}${lt}img src=\"/images/arrow_left.gif\" alt=\"^\"${gt}${lt}/tt${gt}";
-my $rightarrow		= "${lt}tt${gt}${lt}img src=\"/images/arrow_right.gif\" alt=\"^\"${gt}${lt}/tt${gt}";
-my $contchars		= "${lt}tt${gt}${lt}img src=\"/images/ellipsis.gif\" alt=\"[...]\"${gt}${lt}/tt${gt}";
 my $gifborder		= " border=0";
 
 my @options = qw(weblint pw outline ss sp noatt);
@@ -162,7 +159,7 @@ my %frag = (
 );
 
 #############################################################################
-# Set up some signal handlers in case we get killed (darned impatient people...)
+# Set up some signal handlers in case we get killed before exiting naturally
 #############################################################################
 
 $SIG{'TERM'} = 'erase_stuff';
@@ -223,6 +220,7 @@ $html40t_doctype
   <head>
     <title>W3C HTML Validation Service Results</title>
     <link rev="made" href="mailto:$maintainer">
+    <link rel="stylesheet" href="/results.css" media="screen">
   </head>
 
   <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
@@ -439,8 +437,7 @@ print CHECKER "$doctype\n" if $guessed_doctype;
 # this is a kludge for DOS users with their entire file on a single line
 # like http://validator.w3.org/dev/tests/no-newlines.html
 if ( $#file == 0 ) {
-    @file = (split(/
-/,$file[0]));
+    @file = (split(//,$file[0]));
     for (0..$#file) {
 	$file[$_] .= "\n";
     }
@@ -491,7 +488,7 @@ else {
 $version = $pub_ids{$fpi} || "unknown";
 
 if ( $guessed_doctype ) {
-    push( @fake_errors, "nsgmls:<OSFD>0:2:1:E: Missing DOCTYPE declaration at start of document (${lt}a href=\"http://www.htmlhelp.org/tools/validator/doctype.html\"${gt}explanation...${lt}/a${gt})\n" );
+    push( @fake_errors, "$sp:<OSFD>0:2:1:E: Missing DOCTYPE declaration at start of document (<a href=\"http://www.htmlhelp.org/tools/validator/doctype.html\">explanation...</a>)\n" );
 }
 
 print qq{  <li>Character encoding: $effective_charset\n};
@@ -535,12 +532,13 @@ print <<"EOHD";
 EOHD
 
 if ( $? || $guessed_doctype ) {
-    print "<pre>\n";
+    print "<ul>\n";
     for ((@fake_errors,@errors)) {
 	next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
 	next if / numbers exceeding 65535 not supported$/;
-	next if ( $document_type eq "xhtml" ) && /:W: SGML declaration was not implied$/;
-	s/.*<OSFD>//g;
+	next if /:W: SGML declaration was not implied$/ &&
+	    ( $document_type =~ /^x(ht)?ml$/ );
+	s/^$sp:<OSFD>//g;
 	if ( ! (($line, $col, $type, $msg)=(/^[^:]*:([0-9]+):([0-9]+):([A-Z]?):? (.*)/))) {
 	    print "Uh oh! I got the following unknown error:\n\n   $_\n\n";
 	    print "Please make sure you specified the DOCTYPE properly!\n\n";
@@ -548,45 +546,43 @@ if ( $? || $guessed_doctype ) {
 	    last;
 	}
 	if ( $msg =~ /^cannot generate system identifier for entity / ) {
-	    print "   <b>Fatal error</b>! $msg\n";
-	    print "</pre>\n<p>I couldn't parse this document, because it " .
+	    print "<p><b>Fatal error</b>! $msg\n\n";
+	    print "<p>I couldn't parse this document, because it " .
 		  "uses a public\n    identifier that's not in my <a\n " .
 		  "    href=\"sgml-lib/catalog\">catalog</a>!\n  </p>\n";
 	    &output_doctype_spiel;
-	    print "<pre>";	# so the </pre> we print later gets re-started
 	    last;
 	}
 	if ( $msg =~ /^cannot open / ) {
-	    print "   Fatal error! $msg\n";
-	    print "</pre>\n<p>I couldn't parse this document, because it " .
+	    print "<p>Fatal error! $msg\n\n";
+	    print "<p>I couldn't parse this document, because it " .
 		  "makes reference to\n    a system-specific file instead of " .
 		  "simply using a public identifier\n    to specify the " .
 		  "level of HTML being used.\n  </p>\n";
 	    &output_doctype_spiel;
-	    print "<pre>";	# so the </pre> we print later gets re-started
 	    last;
 	}
-	$extraspaces = "";	# in case we put "(truncated)" gif on LHS
 	$line-- if $guessed_doctype;
 	my $newline = $file[$line-1];
-	$newline .= "\n";
 
-	# make sure there's no ^P or ^Q's in the file, since we need to use
-	# them to represent '<' and '>' temporarily.
+	# make sure there are no ^P's or ^Q's in the file, since we need to use
+	# them to represent '<' and '>' temporarily. We'll just change them to
+	# literal P's and Q's for a lack of anything better to do with them.
 	$newline =~ s/${lt}/P/go; $newline =~ s/${gt}/Q/g;
 
+	my $orig_col = $col;
 	if ( length( $newline ) > 70 ) {
 	    if ( $col < 25 ) {
 		# truncate source line at 70 chars (truncate right side only)
-		$newline = substr( $newline, 0, 70 ) . "$contchars" . "\n";
+		$newline = substr( $newline, 0, 70 ) . " ...";
 	    }
 	    elsif ( $col > 70 ) {
 		# keep rightmost 70 chars; adjust $col accordingly
 		# (truncate left side only)
 		$diff = $col - 50;
-		$newline = "$contchars" . substr( $newline, $diff, 70 );
-		if ( length( $newline ) == (70 + length( "$contchars" )) ) {
-		    $newline .= "$contchars" . "\n";
+		$newline = "... " . substr( $newline, $diff, 70 );
+		if ( length( $newline ) == (70 + 4) ) {
+		    $newline .= " ...";
 		}
 		if ( $col > $diff ) {
 		    $col -= $diff;
@@ -594,22 +590,20 @@ if ( $? || $guessed_doctype ) {
 		else {
 		    $col -= 70;
 		}
-		$extraspaces = " " x 8;
 	    }
 	    else {
 		# truncate source line on both sides; leave more source text
 		# on left, and about 30 chars on right side. Also, adjust $col.
 		if ( $col < 35 ) {
-		    $newline = "$contchars" . substr( $newline, 0, 60 );
+		    $newline = "... " . substr( $newline, 0, 60 );
 		}
 		else {
-		    $newline = "$contchars" . substr( $newline, $col - 35, 60 );
+		    $newline = "... " . substr( $newline, $col - 35, 60 );
 		    $col = 35;
 		}
-		if ( length( $newline ) == ( 60 + length( "$contchars" ))) {
-		    $newline .= "$contchars" . "\n";
+		if ( length( $newline ) == ( 60 + 4 ) ) {
+		    $newline .= " ...";
 		}
-		$extraspaces = " " x 8;
 	    }
 	}
 
@@ -619,47 +613,35 @@ if ( $? || $guessed_doctype ) {
 	$msgindex =~ s/"[^"]+"/FOO/g;
 	$msgindex =~ s/[^A-Za-z ]//;
 
-	my $out = "${lt}hr${gt}\n\nError at line $line:\n   $newline";
-	if ( length( $msg ) < $col ) {    # does it fit in front?
-	    $out .= "$extraspaces " . ' ' x ($col-length($msg)) .
-		"$msg $rightarrow";
-	}
-	else {
-	    if ( ( length( $msg ) + $col ) > 60 ) {
-		if ( $msg =~ /,/ ) {
-		    $msg =~ s/,/,\n         /;
-		}
-		else {
-		    if ( ( (length( $msg ) / 2) + $col ) > 60 ) {
-			$pos = index( $msg, ' ', length($msg)/4 );
-			$indent = " " x (65-length($msg)*3/4);
-		    }
-		    else {
-			$pos = index( $msg, ' ', length($msg)/2 );
-			$indent = " " x ($col + 4);
-		    }
-		    $msg = substr( $msg, 0, $pos ) .
-			"\n$indent" . substr( $msg, $pos );
-		}
-	    }
-	    $out .= "$extraspaces   " . ' ' x ($col-1) . "$leftarrow $msg";
-	}
+	$newline =~ s/&/&amp;/go; $newline =~ s/</&lt;/go;
+	$newline =~ s/${lt}/</g; $newline =~ s/${gt}/>/g;
+
+	print "  <li>";
+	print qq{<a href="#line-$line">}	if $q->param('ss');
+	print "Line $line";
+	print "</a>"				if $q->param('ss');
+	print ", column $orig_col:\n";
+
+	print "<pre>  <code class=input>$newline</code>\n";
+	print " " x ($col+2);	# 2 is the number of spaces before <code> above
+	print " " x 4 if $col != $orig_col;	# only for truncated lines
+	print "<span class=markup>^</span></pre>\n";
+	print "<p>\n";
+
+        print qq{<span class=error>Error: $msg</span>};
 
 	if ( defined $frag{$msgindex} ) {
-	    $out .=
-  " (${lt}a href=\"$faqerrloc#$frag{$msgindex}\"${gt}explanation...${lt}/a${gt})";
+	    print qq{ (<a
+	        href="$faqerrloc#$frag{$msgindex}">explanation...</a>)};
 	}
 	else { # remember msgindexes without frags, to get the KGV FAQ updated.
 	    $undef_frag{$msgindex} = 1;
 	}
 
-	$out .= "\n";
-	$out =~ s/&/&amp;/go; $out =~ s/</&lt;/go; $out =~ s/>/&gt;/go;
-# the following kludge is so the <img src>s don't get sgml-proofed above
-	$out =~ s/${lt}/</g; $out =~ s/${gt}/>/g;
-	print $out;
+	print "</p>\n";
+
     }
-    print "</pre>\n";
+    print "</ul>\n";
     print "<hr>\n";
     if ( $version eq "unknown" ) {
 	print "\n  <p>\n    Sorry, I can't validate this document.\n  </p>\n";
@@ -910,7 +892,7 @@ EOF
     $line = 1;
     for (@file) {
 	s/&/&amp;/go; s/</&lt;/go;
-	printf "%4d: %s\n", $line, $_;
+	printf "<a name=\"line-%s\">%4d</a>: %s\n", $line, $line, $_;
 	$line++;
     }
     print "</pre>\n";
@@ -980,7 +962,7 @@ EOF
 		   &html_element_ref($2) .
 		   "\">$2<\/a>>"
 		 }egx;
-    $printme =~ s,^A.*,  <small>$&</small>,;
+    $printme =~ s,^A,  A,;	# indent attributes a bit
     print ' ' x $indent, $printme, "\n";
     if ($line =~ /^\(/) {
       $indent += 2;
@@ -1157,8 +1139,9 @@ sub check_for_doctype {
 	if ( $line =~ /<!doctype/i ) {	# found a doctype
 	    my $dttext = join( "", @file[$count..$count+5] );
 	    $dttext =~ s/\n//g;
-	    $dttext =~ s/.*doctype\s+html\s+public\s*"//i;
-	    $dttext =~ s/".*//;	# strip everything except the FPI
+	    $dttext =~ s/.*doctype\s+html\s+public\s*["']//i;
+	    $dttext =~ s/["'].*//;	# strip everything except the FPI
+	        # @@ should make sure both quote chars were the same
 	    return 0, $dttext;
 	}
 
