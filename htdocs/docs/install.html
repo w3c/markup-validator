@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.1.2.1 2003-12-25 06:47:59 ot Exp $"
---><!--#set var="date" value="\$Date: 2003-12-25 06:47:59 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.1.2.2 2003-12-25 09:44:31 ot Exp $"
+--><!--#set var="date" value="\$Date: 2003-12-25 09:44:31 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -11,32 +11,21 @@
 
     <div id="toc">
       <ul>
+            <li><a href="#otherguides">This guide, and other guides</a></li>
             <li><a href="#install-package">Packaged systems</a></li>
             <li><a href="#install-fromsource">Install from source</a></li>
+            <li><a href="#credits">Credits and Acknowledgments</a></li>
       </ul>
     </div>
     
-    <p id="skip">
-    </p>
-    <p>
-      This document tries to draw a road map of the prerequisites and what the
-      different parts of the system do. It is intended for system
-      administrators and people interested in helping developing the validator.
-      This is not end user documentation. See the
-      <a href="users.html">User Manual</a> for usage instructions.
-    </p>
 
     <div id="install" class="stb">
-    <h3>Installation Guide</h3>
-    <p>In addition to being an online service at W3C, the Markup Validator is 
-    also fully available and it can be installed on your own Web server. This can
-    be useful if you want to provide an internal validation service (for an intranet 
-    or critical, confidential material) or if you want to test and help develop this 
-    service.</p> 
-    
-    <p>The Validator Team wishes to thank Nick Talbott and Stephen Yoch for their help
-    in creating the following installation instructions. Please note that these are 
-    generic instructions, other platform-specific guides are also available:</p>
+    <a name="skip" id="skip"> </a>
+
+    <h3 id="otherguides">This guide, and other guides</h3>    
+    <p>The installation guide we provide here is a rather generic set of instructions, 
+    which should work on most systems. To our knowledge, the following platform-specific 
+    guides are also available and can be of interest :</p>
     <ul>
         <li><a href="http://www.mediaville.net/articles/validator/">Mac OSX and OSX Server</a>
         by Stephen Yoch,</li>
@@ -44,23 +33,23 @@
         by Nick Talbot</li>
     </ul>
     
-    <h4 id="install-package">Packaged systems</h4>
+    <h3 id="install-package">Installing on packaged systems</h3>
     
     <p>The easiest way to install released versions of the Markup Validator is to use the packages created
     for some platforms by contributors: Debian GNU/Linux and Linux Redhat packages are 
     <a href="../source/">available</a> .</p>
     
-    <h4 id="install-fromsource">Install from source</h4>
+    <h3 id="install-fromsource">Installing from source (generic case)</h3>
     <p>These instructions are strongly inspired from Nick Talbott's guide for Linux Slackware. Thanks Nick!</p>
-    <h5>Download</h5>
+    <h4>Download</h4>
         <p>Download the <a href="http://validator.w3.org/validator.tar.gz">Validator's Tar Ball</a>
         and the <a href="http://validator.w3.org/sgml-lib.tar.gz">DTD library</a> from our site.</p>
         <p>Alternatively, if you want to work on the latest development version, you can download 
-        both from our CVs repository, but you should be aware that this version may not work at all.</p>
+        both from our CVS repository, but you should be aware that this version may not work at all.</p>
         <p>(<a href="../source/">Read more</a> about retrieving the source)</p>
 
 
-    <h5>Install the various necessary components:</h5>
+    <h4>Install the various necessary components:</h4>
         <ol>
             <li><p>The installation guide assumes that you have a working Web server. We suggest
             the popular Apache server, which is used for the W3C Markup Validation service. 
@@ -68,9 +57,10 @@
             we can not guarantee that it will. You will also need a working installation 
             of the Perl language (standard on most Web servers).</p></li>
                 
-            <li><p>Proceed with the  <a href="devel.html#prereq">Prerequisites</a> : Install openSP and 
+            <li><p>Proceed with the  <a href="../source/#prereq">Prerequisites</a> : Install openSP and 
             the listed Perl libraries. This can be made by using your Operating System's packaging 
-            mechanism, the CPAN installation mechanism, or simply download the modules and follow 
+            mechanism, the <a href="http://search.cpan.org/~jhi/perl-5.8.0/lib/CPAN.pm">CPAN installation 
+            mechanism</a>, or simply download the modules and follow 
             their embedded installation instructions.</p></li>
                 
             <li><p>Create a directory for the validator's installation. On Unix-based systems, 
@@ -83,11 +73,15 @@
             (if you used CVS, the latter is actually in the <code>htdocs</code> subdirectory, 
             but that is not really important).</p></li>
         </ol>
-    <h5>Configure</h5>
+    <h4>Configure</h4>
+
+	<h5>Configure the Web server</h5>
+	<p>The following instructions are for the Apache Web server, and should be adapted 
+	if you plan on using another server.</p>
         <ol>
             <li><p>Edit the configuration of your Web server to refer to the specific configuration file
             for the Validation service.</p>
-            <p>With apache, this can be done by adding this line:</p>
+            <p>This can be done by adding this line:</p>
             <pre>Include [validatorpath]/httpd/conf/validator-httpd.conf</pre>
             </li>
 
@@ -96,34 +90,38 @@
             editing this file.</p></li>
             
             <li><p>You may want to set up a "virtual server" for the service. This can be done
-            by adding something similar to the following:</p>
+            by adding something similar to the following :</p>
 <pre>&lt;VirtualHost 127.0.0.1&gt;                                                               
 	DocumentRoot [validatorpath]/htdocs/                        
 	ServerName validator.example.org
 &lt;/VirtualHost&gt;</pre>
             <p><strong>AND/OR</strong> you may want to have the service at a specific location
-            on your Web server, which can be configured as follows:</p>
+            on your Web server, which can be configured as follows :</p>
             <pre>Alias /validator/ [validatorpath]/htdocs/</pre>
             </li>
                 
             <li><p>Finish editing this HTTP server configuration file, adapting 
             all the directory references to reflect the paths used in your installation.</p></li>
                 
-            <li><p>Now restart the web server to activate the updated configuration. For Apache
+            <li><p>Now restart the Web server to activate the updated configuration.</p><p> For Apache
             this is done by typing into a shell, as System Administrator: 
             <code>apachectl graceful</code> (or, for older versions of Apache 
             <code>apachectl configtest</code> then <code>apachectl restart</code>)</p></li>
-            
+       </ol>
+
+       <h5>Configure the Validator itself</h5>
+    <ol>
             <li><p>Create the directory <code>/etc/w3c</code> and create a file called 
             <code>validator.conf</code> using the file 
-            <code>[validatorpath]/htdocs/config/check.cfg</code> as template.  
-            This file is well commented.  Make changes to reflect where files are in your installation.</p>
-            </li>
+            <code>[validatorpath]/htdocs/config/check.cfg</code> as template.</p></li>
+	    <li><p> 
+             Make changes to reflect where files are in your installation.</p>
+            This file is well commented and this should be relatively straightforward. </li>
     </ol>
-    <h5>Check the installation</h5>
+    <h4>Check the installation</h4>
     <ol>
         <li><p>Point your browser at the new site.</p></li> 
-        <li><p>Check the error log of the webserver to get clues on what may be wrong 
+        <li><p>Check the error log of the Web server to get clues on what may be wrong 
         if you get any server errors.</p></li>
    </ol>
 
@@ -132,35 +130,12 @@
 
     </div>
     
-    <div id="todo" class="stb">
-      <h3>TODO</h3>
-      <p>
-        The TODO list for the Validator is online at
-        &lt;<a href="../todo.html">http://validator.w3.org/todo.html</a>&gt;.
- 	      This is probably the best place to start.
- 	    </p>
-      <p>
-        However this list is by no means comprehensive. Feel free to suggest
-        other features that should be on this list or send patches for your
-        favourite feature.
-      </p>
-      <p>
-        Keep in mind that features should be of general utility and that the
-        point if the validator is that it does an <em>objective</em>
-        validation instead of just what some random developer happens to
-        think is a Good Idea&reg;. While extra features are nice, they
-        shouldn't dilute the value of the validator as an objective check.
-      </p>
-    </div>
-    <div id="bugzilla" class="stb">
-      <h3>Bugs and Issue Tracking</h3>
-      <p>
-        Bug and Issue Tracking for the Validator happens in the <a
-          href="http://www.w3.org/Bugs/Public/">W3C Public Bugzilla</a>
-        instance. Developers should feel free to set up an account
-        and report bugs, enhancement requests, patches, etc. directly there
-        (end users should continue to send stuff to the mailinglist).
-      </p>
+    <div id="credits" class="stb">
+      <h3>Credits and Acknowledgments</h3>
+<p>The Validator Team wishes to thank Nick Talbott and Stephen Yoch for their help 
+in creating the following installation instructions. Thanks also to all the people who 
+use and review the guide to make it better and better!</p>
+
     </div>
 </div>
 <!--#include virtual="../footer.html" -->
