@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.121 2001-06-22 07:15:06 link Exp $
+# $Id: check,v 1.122 2001-06-22 08:53:26 link Exp $
 
 #
 # We need Perl 5.004.
@@ -24,6 +24,7 @@ use CGI::Carp;
 use CGI qw(:cgi -newstyle_urls -private_tempfiles);
 use Text::Wrap;
 use Text::Iconv;
+use HTML::Parser 3.25; # Need 3.25 for $p->ignore_elements.
 
 
 #############################################################################
@@ -76,9 +77,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.121 $;
+$VERSION    =  q$Revision: 1.122 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-22 07:15:06 $;
+$DATE       =  q$Date: 2001-06-22 08:53:26 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -543,12 +544,13 @@ if ($File->{Type} eq 'xml' || 'xhtml') {
 }
 print ' ' x 2, qq(</ul>\n\n);
 
-if (($File->{Type} eq 'xml') || ($File->{Type} eq 'xhtml')) {
+if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
+  my $xmlvalid = ($File->{DOCTYPE} ? ' and validity' : '');
   print <<"EOHD";
   <p>
     Below are the results of checking this document for <a
     href="http://www.w3.org/TR/REC-xml#sec-conformance">XML
-    well-formedness</a> and validity.
+    well-formedness</a>$xmlvalid.
   </p>
 
 EOHD
@@ -1209,7 +1211,9 @@ sub report_valid {
 EOHD
     }
   }
-  if ($version eq 'unknown' or not defined $image_uri) {
+  if ($File->{Type} eq 'xml' and not $File->{DOCTYPE}) {
+    print "  <p>\n    Congratulations, this document is well-formed XML.\n  </p>\n";
+  } elsif ($version eq 'unknown' or not defined $image_uri) {
     print "  <p>\n    Congratulations, this document validates as the document type specified! (I don't have an icon for this one yet, sorry.)\n  </p>\n";
   }
 
