@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.29 2002-05-30 05:22:05 link Exp $
+# $Id: check,v 1.200.2.30 2002-06-04 17:57:43 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -78,7 +78,7 @@ $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.29 $;
+$VERSION    =  q$Revision: 1.200.2.30 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 #
@@ -107,7 +107,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-05-30 05:22:05 $,
+			      Date => q$Date: 2002-06-04 17:57:43 $,
 			     });
 
 #
@@ -1948,22 +1948,53 @@ sub validate_encoding {
 sub report_xml {
   my $File = shift;
 
+  my $valid = ($File->{'Is Valid'} ? 'Valid' : 'Invalid');
+  my $errs  = ($File->{'Is Valid'} ? '0' : scalar @{$File->{Errors}});
+
   print <<".EOF.";
 Content-Type: application/xml; charset=UTF-8
+X-W3C-Validator-Status: $valid
+X-W3C-Validator-Errors: $errs
 
 <?xml version="1.0" encoding="UTF-8"?>
 <results>
   <meta>
     <uri>$File->{URI}</uri>
-    <modified></modified>
-    <server></server>
-    <size></size>
+    <modified>$File->{Modified}</modified>
+    <server>$File->{Server}</server>
+    <size>$File->{Size}</size>
     <encoding>$File->{Charset}->{Use}</encoding>
     <doctype>$File->{DOCTYPE}</doctype>
   </meta>
-  <warnings></warnings>
-  <messages>
-    <error><line></line><column></column><offset></offset><msg></msg></error>
+  <warnings>
+.EOF.
+  print qq(<warning>$_</warning>) for @{$File->{Warnings}};
+  print "  </warnings>\n  <messages>\n";
+
+  foreach my $err (@{$File->{Errors}}) {
+    # Strip curlies from lq-nsgmls output.
+    $err->{msg} =~ s/[{}]//g;
+    chomp $err->{msg};
+
+    # Find index into the %frag hash for the "explanation..." links.
+    $err->{idx} =  $err->{msg};
+    $err->{idx} =~ s/"[^\"]*"/FOO/g;
+    $err->{idx} =~ s/[^A-Za-z ]//g;
+    $err->{idx} =~ s/\s+/ /g; # Collapse spaces
+    $err->{idx} =~ s/(^\s|\s$)//g; # Remove leading and trailing spaces.
+    $err->{idx} =~ s/(FOO )+/FOO /g; # Collapse FOOs.
+    $err->{idx} =~ s/FOO FOO/FOO/g; # Collapse FOOs.
+
+    my @offsets = (
+		   $File->{Offsets}->[$err->{line}    ]->[0],
+		   $File->{Offsets}->[$err->{line} - 1]->[1],
+		   $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char} + $err->{line}
+		  );
+    print <<".EOF.";
+    <error><line>$err->{line}</line><column>$err->{char}</column><offset>@offsets</offset><msg>$err->{msg}</msg></error>
+.EOF.
+  }
+  print <<".EOF.";
   </messages>
 </results>
 .EOF.
