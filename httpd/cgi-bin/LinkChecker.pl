@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: LinkChecker.pl,v 1.25 2000-01-28 21:19:17 hugo Exp $
+# $Id: LinkChecker.pl,v 1.26 2000-02-03 18:30:29 hugo Exp $
 #
 # This program is licensed under the W3C(r) License.
 #
@@ -27,7 +27,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C LinkChecker';
-my $VERSION = q$Revision: 1.25 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 1.26 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -282,6 +282,9 @@ sub check_uri() {
         my @lines = keys %{$p->{Anchors}{$anchor}};
         my $times = $#lines + 1;
         if ($times > 1) {
+            $errors{$anchor} = 1;
+        }
+        if ($anchor eq '') {
             $errors{$anchor} = 1;
         }
     }
@@ -800,7 +803,7 @@ sub anchors_summary(\%, \%) {
     if ($_html) {
         print('<p>');
     }
-    print('List of duplicate anchors:');
+    print('List of duplicate and empty anchors:');
     if ($_html) {
         print("</p>\n<table border=\"1\">\n<tr><td><b>Anchors</b></td><td><b>Lines</b></td></tr>");
     }
@@ -812,7 +815,7 @@ sub anchors_summary(\%, \%) {
         } else {
             $format = "\t%s\tLines: %s\n";
         }
-        printf($format, $anchor, join(', ', keys %{$anchors->{$anchor}}));
+        printf($format, &encode($anchor eq '' ? 'Empty anchor' : $ anchor), join(', ', sort {$a <=> $b} keys %{$anchors->{$anchor}}));
     }
     if ($_html) {
         print("</table>\n");
@@ -892,11 +895,18 @@ sub links_summary(\%,\%,\%) {
         }
         return;
     }
-
+    print "\n";
     if ($_html) {
         print('<p>');
     }
-    printf('<p>List of broken %slinks:<br>(Broken fragments appear in red)</p>', $_redirects ? 'and redirected ' : '');
+    print('List of broken ');
+    if ($_redirects) {
+        print('and redirected ');
+    }
+    print('links:');
+    if ($_html) {
+        print('<br>Broken fragments appear in red</p>');
+    }
     if ($_html) {
         print("</p>\n<table border=\"1\">\n<tr><td><b>Location</b></td><td><b>Code</b></td><td><b>Fragment</b></td><td><b>Lines</b></td></tr>");
     }
@@ -931,38 +941,55 @@ sub links_summary(\%,\%,\%) {
                 $_ = &show_url($_);
             }
             printf("<tr><th rowspan=\"%d\"%s>%s</th><th rowspan=\"%d\"%s>%d%s%s%s%s</th><td>%s</td><td%s>%s</td></tr>\n",
+                   # Number of fragments (for rowspan)
                    $n_fragments,
+                   # Color
                    &bgcolor($results->{$u}{$u}{display}),
+                   # List of redirects
                    $redirected ? join('<br>-&gt; ',
                                       @redirects_urls) : &show_url($u),
+                   # Number of fragments (for rowspan)
                    $n_fragments,
+                   # Color
                    &bgcolor($results->{$u}{$u}{orig}),
+                   # Original HTTP reply
                    $results->{$u}{$u}{orig},
+                   # Final HTTP reply
                    ($results->{$u}{$u}{code} != $results->{$u}{$u}{orig})
-                   ? '-&gt; '.HTML::Entities::encode($results->{$u}{$u}{code})
+                   ? '-&gt; '.&encode($results->{$u}{$u}{code})
                    : '',
+                   # Realm
                    defined($results->{$u}{$u}{realm})
-                   ? '<br>Realm: '.HTML::Entities::encode($results->{$u}{$u}{realm})
+                   ? '<br>Realm: '.&encode($results->{$u}{$u}{realm})
                    : '',
+                   # HTTP original message
                    defined($results->{$u}{$u}{orig_message})
-                   ? '<br>'.HTML::Entities::encode($results->{$u}{$u}{orig_message}).' -&gt;' 
+                   ? '<br>'.&encode($results->{$u}{$u}{orig_message}).' -&gt;' 
                    : '',
+                   # HTTP final message
                    $results->{$u}{$u}{message}
-                   ? '<br>'.HTML::Entities::encode($results->{$u}{$u}{message})
+                   ? '<br>'.&encode($results->{$u}{$u}{message})
                    : '',
                    '',
+                   # Color again
                    &bgcolor($results->{$u}{$u}{code}),
+                   # List of lines
                    $lines_list);
         } else {
             printf("\n%s\t%s\n  Code: %d%s %s\n",
+                   # List of redirects
                    $redirected ? join("\n-> ",
                                       &get_redirects($u, %$redirects)) : $u,
+                   # List of lines
                    $lines_list ? 'Lines: '.$lines_list : '' ,
+                   # Original HTTP reply
                    $results->{$u}{$u}{orig},
+                   # Final HTTP reply
                    ($results->{$u}{$u}{code} != $results->{$u}{$u}{orig})
                    ? ' -> '.$results->{$u}{$u}{code}
                    : '',
-                   $results->{$u}{$u}{message});
+                   # HTTP message
+                   $results->{$u}{$u}{message} ? $results->{$u}{$u}{message} : '');
         }
         # Fragments
         foreach $f (@fragments) {
@@ -970,14 +997,20 @@ sub links_summary(\%,\%,\%) {
             if ($_html) {
                 my $color = ($broken->{$u}{$f} > 1) ? &bgcolor(404) : &bgcolor($results->{$u}{$u}{code});
                 printf("<tr><td%s>%s</td><td%s>%s</td></tr>\n",
+                       # Color
                        $color,
+                       # Broken fragment
                        &show_url($u, $f),
+                       # Color
                        $color,
+                       # List of lines
                        join(', ',
                             sort {$a <=> $b} keys %{$links->{$u}{$f}}));
             } else {
                 printf("\t%s\tLines: %s\n",
+                       # Fragment
                        $f,
+                       # List of lines
                        join(', ',
                             sort {$a <=> $b} keys %{$links->{$u}{$f}}));
             }
@@ -995,7 +1028,7 @@ sub links_summary(\%,\%,\%) {
 ##################
 
 sub html_header() {
-    my $uri = HTML::Entities::encode($_[0]);
+    my $uri = &encode($_[0]);
     # Cache control?
     if (defined($_[1])) {
         print "Cache-Control: no-cache\nPragma: no-cache\n";
@@ -1068,7 +1101,7 @@ sub show_url() {
     if (defined($fragment)) {
         $url .= '#'.$fragment;
     }
-    return('<a href="'.$url.'">'.HTML::Entities::encode(defined($fragment) ? $fragment : $url).'</a>');
+    return('<a href="'.$url.'">'.&encode(defined($fragment) ? $fragment : $url).'</a>');
 }
 
 sub html_footer() {
@@ -1076,7 +1109,8 @@ sub html_footer() {
 <hr>
 <address>
 $PROGRAM $VERSION<br>
-Report bugs to <a href=\"mailto:hugo\@w3.org\">Hugo Haas</a>
+Report bugs to <a href=\"mailto:hugo\@w3.org\">Hugo Haas</a>.
+Check out the <a href=\"http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/LinkChecker.pl\">source code</a>.
 </address>
 </body>
 </html>
@@ -1110,6 +1144,14 @@ sub print_form() {
 ";
     &html_footer();
     exit;
+}
+
+sub encode() {
+    if (! $_html) {
+        return @_;
+    } else {
+        return HTML::Entities::encode(@_);
+    }
 }
 
 sub hprintf() {
