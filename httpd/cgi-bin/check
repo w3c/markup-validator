@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.52 2003-05-24 15:16:47 ot Exp $
+# $Id: check,v 1.305.2.53 2003-05-31 01:40:07 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.52 $;
+  $VERSION    =  q$Revision: 1.305.2.53 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -172,7 +172,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-05-24 15:16:47 $,
+                              Date => q$Date: 2003-05-31 01:40:07 $,
                              });
 
 #
@@ -1559,6 +1559,7 @@ sub parse_errors ($$) {
 
   for (<$fh>) {
     push @{$File->{'DEBUG'}->{Errors}}, $_;
+    chomp;
     my($err, @errors);
     next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
     next if /numbers exceeding 65535 not supported/;
@@ -1636,6 +1637,7 @@ sub parse_errors ($$) {
     }
 
     &abort_if_error_flagged($File, O_DOCTYPE);
+    $err->{msg} =~ s/^\s*//;
     push @{$File->{Errors}}, $err;
   }
   undef $fh;
