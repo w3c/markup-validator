@@ -1,17 +1,17 @@
 # RPM spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.1.2.13 2004-04-05 20:34:17 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.1.2.14 2004-04-17 10:12:48 ville Exp $
 
 Name:           w3c-markup-validator
 Version:        0.6.5
-Release:        0.beta1.3
+Release:        0.beta2.1
 Epoch:          0
 Summary:        W3C Markup Validator
 
 Group:          Applications/Internet
 License:        W3C Software License
 URL:            http://validator.w3.org/
-Source0:        http://validator.w3.org:8001/dist/validator-0_6_5b1.tar.gz
-Source1:        http://validator.w3.org:8001/dist/sgml-lib-0_6_5b1.tar.gz
+Source0:        http://validator.w3.org:8001/dist/validator-0_6_5b2.tar.gz
+Source1:        http://validator.w3.org:8001/dist/sgml-lib-0_6_5b2.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -129,6 +129,9 @@ done
 
 
 %changelog
+* Sat Apr 17 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.5-0.beta2.1
+- Update to 0.6.5 beta 2.
+
 * Mon Apr  5 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.5-0.beta1.3
 - The link checker is now available separately from CPAN.
 
