@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.265 2002-10-26 01:05:41 link Exp $
+# $Id: check,v 1.266 2002-10-26 01:15:19 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.265 $;
+  $VERSION    =  q$Revision: 1.266 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-26 01:05:41 $,
+			      Date => q$Date: 2002-10-26 01:15:19 $,
 			     });
 
 #
@@ -1600,11 +1600,7 @@ sub report_valid {
       $alttext = "Valid ISO-HTML!";
     }
 
-    if (defined $image_uri) {
-      print qq(    <h2 id="skip" class="valid"><img src="$image_uri"
-        alt="$alttext"$gifhw />
-      This Page Is Valid $File->{Version}!</h2>\n);
-    } elsif ($File->{Version}) {
+    if ($File->{Version}) {
       print qq(<h2 id="skip" class="valid">This Page Is Valid $File->{Version}!</h2>\n);
     } else {
       print qq(<h2 id="skip" class="valid">This Page Is Valid!</h2>\n);
@@ -1627,6 +1623,7 @@ sub report_valid {
       if (defined $image_uri) {
 	print <<".EOF.";
     <p>
+      <img class="inline-badge" src="$image_uri" alt="$alttext"$gifhw />
       To show your readers that you have taken the care to create an
       interoperable Web page, you may display this icon on any page
       that validates. Here is the HTML you could use to add this icon

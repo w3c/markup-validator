@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.11 2002-10-25 06:28:22 link Exp $ */
+/* $Id: results.css,v 1.12 2002-10-26 01:15:19 link Exp $ */
 
 .markup {
   color: red;
@@ -64,6 +64,10 @@ td {
   border: solid black 1px;
 }
 
+h2.valid {
+  text-align: center;
+}
+
 .valid {
   background:		#053188;
   color:		white;
@@ -126,5 +130,7 @@ td {
   color: red;
 }
 
-
+img.inline-badge {
+  float: left;
+}
 
