@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.9 2003-07-20 17:08:38 link Exp $ */
+/* $Id: results.css,v 1.13.2.10 2003-07-23 19:43:22 link Exp $ */
 
 .markup {
   color: red;
@@ -13,6 +13,42 @@
   background-color: #eeeeee; /* light grey */
   font-family: "Bitstream Vera Mono", monospace;
 }
+
+.msg {
+  font-weight: bold;
+}
+
+.ve {
+  font-size: smaller;
+  margin-right: 1em;
+}
+
+.ve p {
+  margin: 0;
+}
+
+.helpwanted {
+  float: right;
+  width: 30ex;
+  border: 1px solid black;
+  background: #eee;
+  font-size: smaller;
+  line-height: 120%;
+  padding-left: 2em;
+  padding-right: 1em;
+  text-align: justify;
+}
+
+.helpwanted em {
+  font-weight: bolder;
+}
+
+
+ol#errors li {
+  clear: right;
+  margin-top: 2em;
+}
+
 
 fieldset {
   color: black;
@@ -49,11 +85,6 @@ dl#Warnings dd.fatal {
 
 dl#Warnings dd.fatal p:first-child {
   font-weight: bold;
-}
-
-
-div.meat {
-/*  margin-right: 10em; */
 }
 
 th {

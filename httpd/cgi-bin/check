@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.59 2003-07-17 18:58:12 ville Exp $
+# $Id: check,v 1.305.2.60 2003-07-23 19:43:22 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -42,7 +42,8 @@ use CGI            2.81 qw(
 			   redirect
 			  ); # 2.81 for XHTML, and import redirect() function.
 
-use CGI::Carp           qw(carp croak);
+use CGI::Carp           qw(carp croak fatalsToBrowser);
+use Config::General 2.06 qw(); # Need 2.06 for -SplitPolicy
 use File::Spec          qw();
 use HTML::Parser   3.25 qw(); # Need 3.25 for $p->ignore_elements.
 use HTTP::Request       qw();
@@ -85,7 +86,7 @@ use constant O_NONE    =>  8; # 0000 1000
 
 #
 # Define global variables.
-use vars qw($DEBUG $CFG $VERSION $HAVE_IPC_RUN);
+use vars qw($DEBUG $CFG $RSRC $VERSION $HAVE_IPC_RUN);
 
 
 #
@@ -118,12 +119,18 @@ BEGIN
   }
 
   #
+  # Read Resource files... (friendly error messages)
+  my %config_opts = (-ConfigFile => $CFG->{'Verbose Msg'});
+  my %rsrc = Config::General->new(%config_opts)->getall();
+  $RSRC = \%rsrc;
+
+  #
   # Set debug flag.
   $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.59 $;
+  $VERSION    =  q$Revision: 1.305.2.60 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -195,7 +202,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-07-17 18:58:12 $,
+                              Date => q$Date: 2003-07-23 19:43:22 $,
                              });
 
 #
@@ -605,7 +612,7 @@ $ENV{SGML_SEARCH_PATH} = $CFG->{'SGML Library'};
 #  if &is_mathml($File->{Type});
 
 
-my @cmd = ($CFG->{'SGML Parser'}, '-c', $catalog, '-E0', @xmlflags);
+my @cmd = ($CFG->{'SGML Parser'}, '-n', '-c', $catalog, '-E0', @xmlflags);
 
 if ($DEBUG) {
   &add_table($File, 'Command',
@@ -795,9 +802,8 @@ if ($File->{Opt}->{Output} eq 'xml') {
   &report_n3($File);
 } else {
   print $File->{Results};
-  print qq(    <div class="meat">\n);
-
   print &jump_links($File);
+  print qq(    <div class="meat">\n);
 
   if ($File->{Opt}->{Verbose} or not $File->{'Is Valid'}) {
     print qq(<div class="splash">\n);
@@ -1087,25 +1093,26 @@ sub jump_links {
   my $me = &uri_escape(&self_url_file($File));
 
   $links .= <<".EOF.";
-      <p id="skip" class="jumpbar">
-        Jump To: [<a title="Result of Validation" href="#result">Results</a>]
+      <div id="skip" class="jumpbar">
+        Jump To:
+        <ul>
+          <li><a title="Result of Validation" href="#result">Results</a></li>
 .EOF.
   if ($File->{Opt}->{Verbose}) {
-    $links .= ' [<a title="Listing of Source Input" href="#source">Source&nbsp;Listing</a>]'
+    $links .= '<li><a title="Listing of Source Input" href="#source">Source&nbsp;Listing</a></li>'
       if $File->{Opt}->{'Show Source'};
-    $links .= ' [<a title="Document Parse Tree" href="#parse">Parse&nbsp;Tree</a>]'
+    $links .= '<li><a title="Document Parse Tree" href="#parse">Parse&nbsp;Tree</a></li>'
       if $File->{Opt}->{'Show Parsetree'};
-    $links .= ' [<a title="Document Outline" href="#outline">Outline</a>]'
+    $links .= '<li><a title="Document Outline" href="#outline">Outline</a></li>'
       if $File->{Opt}->{'Outline'};
   }
   if ($File->{Opt}->{Verbose} or not $File->{Valid}) {
-    $links .= qq( [<a class="comma" title="Go to a text version of the results." href="http://cgi.w3.org/cgi-bin/html2txt?url=$me">,text</a>]);
-    $links .= qq( [<a class="comma" title="Go to a version with tables linearized" href="http://jiggles.w3.org/servlet/tablin?url=$me&amp;tableno=&amp;cellSeparator=&amp;headerSeparator=&amp;valueSeparator=&amp;orient=row&amp;repeat=4&amp;interact=0">,tablin</a>]);
+    $links .= qq(<li><a class="comma" title="Go to a text version of the results." href="http://cgi.w3.org/cgi-bin/html2txt?url=$me">,text</a></li>);
+    $links .= qq(<li><a class="comma" title="Go to a version with tables linearized" href="http://jiggles.w3.org/servlet/tablin?url=$me&amp;tableno=&amp;cellSeparator=&amp;headerSeparator=&amp;valueSeparator=&amp;orient=row&amp;repeat=4&amp;interact=0">,tablin</a></li>);
   }
-  $links .= "      </p>\n";
+  $links .= "      </ul></div>\n";
   return $links;
 }
-
 
 #
 # Proxy authentication requests.
@@ -1616,18 +1623,20 @@ sub parse_errors ($$) {
     $err->{src}  = $errors[1];
     $err->{line} = $errors[2];
     $err->{char} = $errors[3];
-    $err->{type} = $errors[4];
+    $err->{num}  = $errors[4] || '';
+    $err->{type} = $errors[5] || '';
     if ($err->{type} eq 'E' or $err->{type} eq 'X' or $err->{type} eq 'Q') {
-      $err->{msg}  = join ':', @errors[5 .. $#errors];
+      $err->{msg}  = join ':', @errors[6 .. $#errors];
     } elsif ($err->{type} eq 'W') {
       &add_warning(
 		   $File, 'fake', 'Warning:',
-		   "Line $err->{line}, column $err->{char}: $errors[5]",
+		   "Line $err->{line}, column $err->{char}: $errors[6]",
 		  );
-      $err->{msg}  = join ':', @errors[5 .. $#errors];
+      $err->{msg}  = join ':', @errors[6 .. $#errors];
     } else {
       $err->{type} = 'I';
-      $err->{msg}  = $errors[4];
+      $err->{num}  = '';
+      $err->{msg}  = join ':', @errors[4 .. $#errors];
     }
 
     # No or unknown FPI and a relative SI.
@@ -1690,6 +1699,11 @@ sub parse_errors ($$) {
 sub report_errors ($) {
   my $File = shift;
 
+  #
+  # Hash to keep track of how many of each error is reported.
+  my %Msgs; # Used to generate a UID for explanations.
+
+
   print <<"EOHD";
     <h2 id="result" class="invalid">This page is <strong>not</strong> Valid $File->{Version}!</h2>
 EOHD
@@ -1713,19 +1727,10 @@ EOHD
   }
 
   if (scalar @{$File->{Errors}}) {
-    print qq(  <ol>\n);
+    print qq(  <ol id="errors">\n);
 
     foreach my $err (@{$File->{Errors}}) {
       my($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $err->{char});
-
-      # Find index into the %frag hash for the "explanation..." links.
-      $err->{idx} =  $err->{msg};
-      $err->{idx} =~ s/"[^\"]*"/FOO/g;
-      $err->{idx} =~ s/[^A-Za-z ]//g;
-      $err->{idx} =~ s/\s+/ /g; # Collapse spaces
-      $err->{idx} =~ s/(^\s|\s\Z)//g; # Remove leading and trailing spaces. )
-      $err->{idx} =~ s/(FOO )+/FOO /g; # Collapse FOOs.
-      $err->{idx} =~ s/FOO FOO/FOO/g; # Collapse FOOs.
 
       $line = &ent($line); # Entity encode.
       $line =~ s/\t/ /g;   # Collapse TABs.
@@ -1734,15 +1739,22 @@ EOHD
 
       print qq(  <li><em>Line <a href="#line-$err->{line}">$err->{line}</a>, column $err->{char}</em>: );
       print qq{<span class="msg">$msg</span>};
-      if (defined $CFG->{'Error to URI'}->{$err->{idx}}) {
-	print qq{ (<a href="$CFG->{'Msg FAQ URI'}#$CFG->{'Error to URI'}->{$err->{idx}}">explain...</a>).};
-      } elsif ($DEBUG) {
-	print qq{ (<code style="background: red">"$err->{idx}"</code>)};
-      }
 
       print qq(\n<pre>  <code class="input">$line</code>\n);
       print ' ' x ($col + 2); # 2 is the number of spaces before <code> above
-      print qq(<span class="markup">^</span></pre></li>\n);
+      print qq(<span class="markup">^</span></pre>\n);
+
+      if ($err->{num} and $File->{Opt}->{Verbose}) {
+	my(undef, $num) = split /\./, $err->{num};
+	if (exists $Msgs{$num}) {
+	  print qq(<div class="hidden mid-$num"></div>\n);
+	} else {
+	  $Msgs{$num} = 1;
+	  print $RSRC->{msg}->{$num}->{verbose}
+	    if $RSRC->{msg}->{$num};
+	}
+      }
+      print "</li>\n";
     }
     print qq(  </ol>\n);
   }
