@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.1.2.2 2003-12-25 09:44:31 ot Exp $"
---><!--#set var="date" value="\$Date: 2003-12-25 09:44:31 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.1.2.3 2004-04-06 15:10:46 ot Exp $"
+--><!--#set var="date" value="\$Date: 2004-04-06 15:10:46 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -128,7 +128,36 @@
     <p><strong>Help us</strong> improve this installation guide by sending us your feedback
     if you install the validator on your local system!</p>
 
-    </div>
+   <h3 id="install-troubleshoot">Troubleshooting a new installation</h3>
+   <p>It is not always easy to troubleshoot an incomplete, or failed, installation of
+   the Markup Validator. While the instructions given in this page should help most people
+   install the validator successfully on their system, bad luck, a forgotten step 
+    or a broken component can make things go sour.</p>
+
+   <h4>Double check the installation steps</h4>
+   <p>The first sound thing to do if the installation failed would be to check that you did not forget
+   any step while installing. properly copying and editing the configuration file is among the common
+   mistakes, for example.</p>
+
+   <h4>Check the logs</h4>
+   <p>The error logs for your Web server should be a good first place to look for hints on what
+   is wrong with your installation.</p>
+
+   <h4>Check the dependencies</h4>
+   <p>A common problem with a newly installed validator is a validator that is apparently running
+   but marking anything as "invalid", without giving any error message as output.</p>
+
+  <p>This is somewhat typical of a problem with OpenSP. Cross-check that you actually have a version
+  above 1.5, by running <kbd>onsgmls --version</kbd>.</p>   
+
+
+   <h4>The miracle debug options</h4>
+   <p>If the validator is misbehaving, you can try forcing various debug options by appending to
+   the uri the following string: <kbd>&amp;debug=1&amp;errors=1&amp;esis=1&amp;verbose=1</kbd>.</p>
+   <p>This can sometimes provide you with error messages that would not have appeared anywhere in
+   non-debug mode, and can be helpflu o diagnose the problem</p>
+
+ </div>
     
     <div id="credits" class="stb">
       <h3>Credits and Acknowledgments</h3>
