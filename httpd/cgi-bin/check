@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.71 2003-07-29 18:39:14 link Exp $
+# $Id: check,v 1.305.2.72 2003-07-29 22:05:16 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -130,7 +130,7 @@ BEGIN
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.71 $;
+  $VERSION    =  q$Revision: 1.305.2.72 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -202,7 +202,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-07-29 18:39:14 $,
+                              Date => q$Date: 2003-07-29 22:05:16 $,
                              });
 
 #
@@ -266,6 +266,7 @@ $File->{Opt}->{'Charset'}        = $q->param('charset') ? lc $q->param('charset'
 $File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') ? $q->param('doctype')   :     '';
 $File->{Opt}->{'URI'}            = $q->param('uri')     ? $q->param('uri')       :     '';
 $File->{Opt}->{'Output'}         = $q->param('output')  ? $q->param('output')    : 'html';
+$File->{Opt}->{'Max Errors'}     = $q->param('me')      ? $q->param('me')        :     '';
 
 #
 # "Fallback" info for Character Encoding (fbc), Content-Type (fbt),
@@ -604,7 +605,26 @@ $ENV{SGML_SEARCH_PATH} = $CFG->{'SGML Library'};
 
 #
 # Set the command to execute.
-my @cmd = ($CFG->{'SGML Parser'}, '-n', '-c', $catalog, '-E0', @xmlflags);
+my @cmd = ($CFG->{'SGML Parser'}, '-n', '-c', $catalog, @xmlflags);
+
+#FIXME: This needs a UI and testing!
+#
+# Set onsgmls' -E switch to the number of errors requested.
+if ($File->{Opt}->{'Max Errors'} =~ m(^all$)i) {
+  push @cmd, '-E0';
+} elsif ($File->{Opt}->{'Max Errors'} =~ m(^(\d+)$)) {
+  my $numErr = $1;
+  if ($numErr >= 200) {
+    $numErr = 200;
+  } elsif ($numErr <= 0) {
+    $numErr = 0; #FIXME: Should add feature to supress error output in this case.;
+  }
+  push @cmd, '-E' . $numErr;
+} else {
+  push @cmd, '-E' . ($CFG->{'Max Errors'} || 0); # "-E0" means "all".
+}
+#FIXME;
+
 
 if ($DEBUG) {
   &add_table($File, 'Command',
