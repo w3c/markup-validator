@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.12 2002-11-30 23:18:00 link Exp $
+# $Id: check,v 1.305.2.13 2002-12-02 13:12:49 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -103,7 +103,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.12 $;
+  $VERSION    =  q$Revision: 1.305.2.13 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -165,7 +165,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-30 23:18:00 $,
+                              Date => q$Date: 2002-12-02 13:12:49 $,
                              });
 
 #
@@ -985,13 +985,14 @@ sub jump_links {
       <p id="skip" class="jumpbar">
         Jump To: [<a title="Result of Validation" href="#result">Results</a>]
 .EOF.
-
-  $links .= ' [<a title="Listing of Source Input" href="#source">Source&nbsp;Listing</a>]'
-    if $File->{Opt}->{'Show Source'};
-  $links .= ' [<a title="Document Parse Tree" href="#parse">Parse&nbsp;Tree</a>]'
-    if $File->{Opt}->{'Show Parsetree'};
-  $links .= ' [<a title="Document Outline" href="#outline">Outline</a>]'
-    if $File->{Opt}->{'Outline'};
+  if ($File->{Opt}->{Verbose}) {
+    $links .= ' [<a title="Listing of Source Input" href="#source">Source&nbsp;Listing</a>]'
+      if $File->{Opt}->{'Show Source'};
+    $links .= ' [<a title="Document Parse Tree" href="#parse">Parse&nbsp;Tree</a>]'
+      if $File->{Opt}->{'Show Parsetree'};
+    $links .= ' [<a title="Document Outline" href="#outline">Outline</a>]'
+      if $File->{Opt}->{'Outline'};
+  }
   $links .= "      </p>\n";
   return $links;
 }
