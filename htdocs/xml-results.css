@@ -4,11 +4,11 @@
    Copyright 2002 Terje Bless <link@pobox.com>. All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: xml-results.css,v 1.3 2002-10-27 15:36:19 ville Exp $
+   $Id: xml-results.css,v 1.4 2002-10-30 16:48:05 link Exp $
 */
 
-results, meta, uri, modified, server, size, encoding, doctype, warnings, messages {display: block}
-strong, a, line, column, offset, msg {display: inline}
+result, meta, uri, modified, server, size, encoding, doctype, warnings, messages {display: block}
+strong, a {display: inline}
 
 meta {
   margin-left: 5em;
@@ -37,11 +37,6 @@ warning {
 }
 
 messages {margin: 2em}
-error {display: list-item}
-
-line {padding-right: 1ex}
-column {padding-right: 1ex}
 msg {
-  padding: 1ex;
-  color: red;
+  display: list-item;
 }
