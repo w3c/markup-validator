@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.150 2001-07-18 21:35:41 link Exp $
+# $Id: check,v 1.151 2001-07-18 22:08:39 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.150 $;
+$VERSION    =  q$Revision: 1.151 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-18 21:35:41 $;
+$DATE       =  q$Date: 2001-07-18 22:08:39 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1276,12 +1276,12 @@ sub report_valid {
       $alttext = "Valid HTML 4.0!";
       $gifhw   = ' height="31" width="88"';
     } elsif ($version =~ /HTML 4\.01<\/a> Strict$/) {
-      $image_uri = "http://www.w3.org/Icons/valid-html401";
+      $image_uri = "${abs_svc_uri}images/vh401";
       $alttext = "Valid HTML 4.01!";
       $gifborder = "";
       $gifhw   = ' height="31" width="88"';
     } elsif ($version =~ /HTML 4\.01<\/a> /) {
-      $image_uri = "http://www.w3.org/Icons/valid-html401";
+      $image_uri = "${abs_svc_uri}images/vh401";
       $alttext = "Valid HTML 4.01!";
       $gifhw   = ' height="31" width="88"';
     } elsif ($version =~ /XHTML 1\.0<\/a> /) {
