@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.50 2002-07-05 21:31:54 link Exp $
+# $Id: check,v 1.200.2.51 2002-07-05 21:34:05 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -36,7 +36,7 @@ use warnings;
 # when loading modules to prevent non-OO or poorly written modules from
 # polluting our namespace.
 #
-use CGI            2.81 qw(:cgi -newstyle_urls -private_tempfiles);
+use CGI            2.81 qw(-newstyle_urls -private_tempfiles); # 2.81 for XHTML
 use CGI::Carp           qw(carp croak);
 use File::Spec          qw();
 use HTML::Parser   3.25 qw(); # Need 3.25 for $p->ignore_elements.
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.200.2.50 $;
+  $VERSION    =  q$Revision: 1.200.2.51 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-07-05 21:31:54 $,
+			      Date => q$Date: 2002-07-05 21:34:05 $,
 			     });
 
 #
