@@ -1,5 +1,5 @@
 # RPM Spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.1.2.9 2003-08-17 21:27:31 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.1.2.10 2003-08-23 19:30:41 ville Exp $
 
 %{!?apxs: %{expand:   %%define apxs %{_sbindir}/apxs}}
 %define httpd_confdir %(test -d %{_sysconfdir}/httpd/conf.d && echo %{_sysconfdir}/httpd/conf.d || %{apxs} -q SYSCONFDIR)
@@ -7,7 +7,7 @@
 
 Name:           w3c-markup-validator
 Version:        0.6.2
-Release:        4w3c
+Release:        5w3c
 Epoch:          0
 Summary:        W3C Markup Validator
 
@@ -24,7 +24,7 @@ Requires:       httpd, %{name}-libs = %{epoch}:%{version}
 Requires:       perl >= 5.6, perl-HTML-Parser >= 3.25, perl-libwww-perl
 Requires:       perl-URI, perl-Text-Iconv, perl(CGI) >= 2.81, perl(Time::HiRes)
 Requires:       perl(Set::IntSpan), perl(Config::General) >= 2.06
-Requires:       perl(Net::IP), opensp >= 1.5
+Requires:       perl(Net::IP), openjade >= 0:1.3.2
 Obsoletes:      w3c-validator
 
 %description
@@ -142,6 +142,9 @@ fi
 
 
 %changelog
+* Sat Aug 23 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.2-5w3c
+- Requires openjade >= 0:1.3.2 (Red Hat packages OpenSP 1.5 there).
+
 * Wed Jul 23 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.2-4w3c
 - Include checklink manual page.
 - Some spec file cleanups.
