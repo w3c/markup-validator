@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.232 2002-09-14 10:50:50 ville Exp $
+# $Id: check,v 1.233 2002-09-14 13:48:10 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.232 $;
+  $VERSION    =  q$Revision: 1.233 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-09-14 10:50:50 $,
+			      Date => q$Date: 2002-09-14 13:48:10 $,
 			     });
 
 #
@@ -292,9 +292,9 @@ unless ($File->{Charset}->{Use}) {
   $File->{Charset}->{Use} = $File->{Charset}->{META};
 }
 
-if (&conflict($File->{Opt}->{'Charset'}, '(detect automatically)')) {
-  ($File->{Charset}->{Override}) = split(' ', $File->{Opt}->{'Charset'}, 1);
-  $File->{Charset}->{Use} = $File->{Charset}->{Override} = lc $File->{Charset}->{Override};
+if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
+  my ($override, undef) = split(/\s/, $File->{Opt}->{Charset}, 2);
+  $File->{Charset}->{Use} = $File->{Charset}->{Override} = lc($override);
   # message about 'charset override' in effect comes later
 }
 
@@ -331,7 +331,7 @@ unless ($File->{Charset}->{Use}) {
 
 #
 # Check the detected Encoding and transcode.
-unless (&conflict($File->{Charset}->{Use}, 'utf-8')) {
+if (&conflict($File->{Charset}->{Use}, 'utf-8')) {
   $File = &transcode($File);
   &abort_if_error_flagged($File, 0);
 }
@@ -1355,10 +1355,12 @@ sub parse_errors ($$) {
       $err->{msg}  = $errors[4];
     }
 
+    # Strip curlies from lq-nsgmls output.
+    $err->{msg} =~ s/[{}]//g;
 
     # An unknown FPI and no SI.
     if ($err->{msg} =~ m(cannot generate system identifier for entity)
-	or $err->{msg} =~ m(unrecognized ({{)?DOCTYPE(}})?)i
+	or $err->{msg} =~ m(unrecognized DOCTYPE)i
 	or $err->{msg} =~ m(no document type declaration)i) {
       $File->{'Error Flagged'} = TRUE;
       $File->{'Error Message'} = <<".EOF.";
@@ -1366,7 +1368,7 @@ sub parse_errors ($$) {
        <h2>Fatal Error: $err->{msg}</h2>
        <p>
          I could not parse this document, because it uses a public identifier
-         that is not in my <a href="sgml-lib/catalog">catalog</a>.
+         that is not in my catalog.
        </p>
 .EOF.
       $File->{'Error Message'} .= &doctype_spiel;
