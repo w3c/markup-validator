@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.14 2002-12-02 13:25:45 link Exp $
+# $Id: check,v 1.305.2.15 2002-12-02 23:24:42 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -103,7 +103,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.14 $;
+  $VERSION    =  q$Revision: 1.305.2.15 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -165,7 +165,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-12-02 13:25:45 $,
+                              Date => q$Date: 2002-12-02 23:24:42 $,
                              });
 
 #
@@ -648,7 +648,7 @@ if (&is_xml($File->{Type}) and $File->{Namespace}) {
     &add_warning($File, "Unknown namespace (&#171;<code>$rns</code>&#187;) for SVG document!");
   }
 
-  &add_table($File, 'Root Namespace', qq(<a href="$rns">$rns</a>))
+  &add_table($File, 'Root Namespace', [1, 2, qq(<a href="$rns">$rns</a>)])
     if $File->{Opt}->{Verbose};
 
   if (scalar keys %{$File->{Namespaces}} > 1) {
@@ -658,7 +658,8 @@ if (&is_xml($File->{Type}) and $File->{Namespace}) {
       $namespaces .= qq(\t<li><a href="$ns">$ns</a></li>\n)
           unless $_ eq $File->{Namespace}; # Don't repeat Root Namespace.
     }
-    &add_table($File, 'Other Namespaces', $namespaces . '</ul>')
+    $namespaces .= '</ul>';
+    &add_table($File, 'Other Namespaces', [1, 2, $namespaces])
       if $File->{Opt}->{Verbose};
   }
 }
