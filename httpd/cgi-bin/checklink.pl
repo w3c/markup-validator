@@ -5,7 +5,7 @@
 # (c) 1999 World Wide Web Consortium
 # based on Renaud Bruyeron's checklin.pl
 #
-# $Id: checklink.pl,v 2.4 1999-12-01 19:53:17 hugo Exp $
+# $Id: checklink.pl,v 2.5 1999-12-01 20:40:33 hugo Exp $
 #
 # This program is licensed under the W3C License.
 
@@ -21,7 +21,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = '$Revision: 2.4 $ (c) 1999 W3C';
+my $VERSION = '$Revision: 2.5 $ (c) 1999 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -59,7 +59,17 @@ if ($#ARGV >= 0) {
     use CGI;
     $query = new CGI;
     $_cl = 0;
+#    $_quiet = 1;
+    $_verbose = 0;
+    if ($query->param('summary')) {
+        $_summary = 1;
+    } else {
+    }
+    if (! $query->param('redirects')) {
+        $_redirects = 0;
+    }
     $_progress = 0;
+    $_html = 1;
     my $uri;
     if ($query->param('uri')) {
         $uri = $query->param('uri');
@@ -195,6 +205,12 @@ sub urize() {
 
 sub check_uri() {
     my $uri = $_[0];
+    if ($_html) {
+        &html_header($uri);
+        if (! $_summary) {
+            print "<pre>\n";
+        }
+    }
     my $start;
     if (! $_summary) {
         $start = &get_timestamp();
@@ -206,6 +222,9 @@ sub check_uri() {
         printf("Error: %d %s\n", $response->code(), $response->message());
         if ($response->code() == 401) {
             &authentication($response);
+        }
+        if ($_html) {
+            &html_footer();
         }
         exit(-1);
     }
@@ -292,10 +311,11 @@ sub check_uri() {
     }
     # Display results
     if ($_html) {
-        &html_header($uri);
-    } else {
-        print "\n";
+        if (! $_summary) {
+            print '</pre><hr>';
+        }
     }
+    print "\n";
     &anchors_summary($p->{Anchors}, \%errors);
     &links_summary(\%links, \%results, \%broken, \%redirects);
     if ($_html) {
@@ -652,7 +672,12 @@ sub anchors_summary(\%, \%) {
     }
     # List of the duplicates, if any.
     @errors = keys %{$errors};
-    return if ($#errors < 0);
+    if ($#errors < 0) {
+        if (! $_quiet) {
+            print "<p>Valid anchors!</p>";
+        }
+        return;
+    }
     if ($_html) {
         print('<p>');
     }
@@ -705,7 +730,12 @@ sub links_summary(\%,\%,\%) {
     }
     # List of the broken links
     @urls = keys %{$broken};
-    return if ($#urls < 0);
+    if ($#urls < 0) {
+        if (! $_quiet) {
+            print "<p>Valid links!</p>";
+        }
+        return;
+    }
     if ($_html) {
         print('<p>');
     }
@@ -741,7 +771,7 @@ sub links_summary(\%,\%,\%) {
                    $n_fragments,
                    $results->{$u}{$u}{code},
                    $results->{$u}{$u}{message}
-                   ? '<br>'.$results->{$u}{$u}{code}
+                   ? '<br>'.$results->{$u}{$u}{message}
                    : '',
                    '',
                    $lines_list);
@@ -799,7 +829,7 @@ sub html_footer() {
 <hr>
 <address>
 $PROGRAM $VERSION<br>
-Report bugs to <a href=\"hugo\@w3.org\">Hugo Haas</a>
+Report bugs to <a href=\"mailto:hugo\@w3.org\">Hugo Haas</a>
 </address>
 </body>
 </html>
@@ -821,8 +851,14 @@ sub print_form() {
     &html_header($VERSION);
     print "<form action=\"".$q->self_url()."\" method=\"get\">
 <p>Enter the URI that you want to check:</p>
-<input type=\"text\" name=\"uri\">
-<input type=\"submit\" name=\"submit\" value=\"Check\">
+<p><input type=\"text\" size=\"50\" name=\"uri\"></p>
+<p>Options:</p>
+<p>
+  <input type=\"checkbox\" name=\"summary\"> Summary only
+  &nbsp;
+  <input type=\"checkbox\" name=\"redirects\" checked> Show redirects
+</p>
+<p><input type=\"submit\" name=\"submit\" value=\"Check\"></p>
 </form>
 ";
     &html_footer();
