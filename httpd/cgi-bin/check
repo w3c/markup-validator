@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.59 2002-08-17 14:05:47 link Exp $
+# $Id: check,v 1.200.2.60 2002-08-17 14:13:40 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.200.2.59 $;
+  $VERSION    =  q$Revision: 1.200.2.60 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-17 14:05:47 $,
+			      Date => q$Date: 2002-08-17 14:13:40 $,
 			     });
 
 #
@@ -495,40 +495,38 @@ my $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'xml.soc');
 my @xmlflags = ('-wxml', '-wnon-sgml-char-ref', '-wno-duplicate');
 
 #
-# Defaults for SP; turn off fixed charset mode and enable XML semantics for
-# detecting the input charset. Only way to set this is through %ENV.
+# Switch to XML semantics if file is XML.
+if (&is_xml($File->{Type})) {
+  $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'xml.soc');
+  push(@xmlflags, '-wxml');
+} else {
+  push @xmlflags, '-wvalid';
+}
+
+
+#
+# Defaults for SP; turn off fixed charset mode and set encoding to UTF-8.
 $ENV{SP_CHARSET_FIXED} = 'NO';
 $ENV{SP_ENCODING}      = 'UTF-8';
+$ENV{SP_BCTF}          = 'UTF-8';
 
-#
-# Generic XML with Root Namespace.
-if (&is_xml($File->{Type}) or $File->{Namespace}) {
-  push(@xmlflags, '-wno-valid') unless $File->{DOCTYPE};
-}
 
-#
-# SVG and SMIL.
-$catalog = File::Spec->catfile($CFG->{'SGML Library'}, 'svg.soc')
-  if &is_svg($File->{Type});
-$catalog = File::Spec->catfile($CFG->{'SGML Library'}, 'smil.soc')
-  if &is_smil($File->{Type});
+##
+## HTML. Turn back to SGML semantics.
+#if (&is_html($File->{Type})) {
+#  $ENV{SP_CHARSET_FIXED} = 'YES';
+#  $ENV{SP_ENCODING}      = 'UTF-8';
+#  $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'catalog');
+#  @xmlflags = '-wnon-sgml-char-ref';
+#}
 
-#
-# HTML. Turn back to SGML semantics.
-if (&is_html($File->{Type})) {
-  $ENV{SP_CHARSET_FIXED} = 'YES';
-  $ENV{SP_ENCODING}      = 'UTF-8';
-  $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'catalog');
-  @xmlflags = '-wnon-sgml-char-ref';
-}
-
-#
-# MathML and XHTML. Must be here because they're usually served as text/html
-# to deal with braindead browsers. IOW, these override the check for &is_html.
-$catalog = File::Spec->catfile($CFG->{'SGML Library'}, 'xhtml.soc')
-  if &is_xhtml($File->{Type});
-$catalog = File::Spec->catfile($CFG->{'SGML Library'}, 'mathml.soc')
-  if &is_mathml($File->{Type});
+##
+## MathML and XHTML. Must be here because they're usually served as text/html
+## to deal with braindead browsers. IOW, these override the check for &is_html.
+#$catalog = File::Spec->catfile($CFG->{'SGML Library'}, 'xhtml.soc')
+#  if &is_xhtml($File->{Type});
+#$catalog = File::Spec->catfile($CFG->{'SGML Library'}, 'mathml.soc')
+#  if &is_mathml($File->{Type});
 
 
 my @cmd = ($CFG->{'SGML Parser'}, '-c', $catalog, '-E0', @xmlflags);
