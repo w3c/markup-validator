@@ -5,7 +5,7 @@
 # (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.24 2003-11-24 19:11:21 ville Exp $
+# $Id: checklink.pl,v 3.6.2.25 2003-11-25 20:46:46 ville Exp $
 #
 # This program is licensed under the W3C(r) Software License:
 #       http://www.w3.org/Consortium/Legal/copyright-software
@@ -87,7 +87,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.24 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.25 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
 
@@ -1390,7 +1390,17 @@ sub anchors_summary (\%\%)
 
   print('<p>') if $Opts{HTML};
   print('List of duplicate and empty anchors');
-  print("</p>\n<table border=\"1\">\n<tr><td><b>Anchors</b></td><td><b>Lines</b></td></tr>") if $Opts{HTML};
+  print <<EOF if $Opts{HTML};
+</p>
+<table border="1" summary="List of duplicate and empty anchors.">
+<thead>
+<tr>
+<th>Anchors</th>
+<th>Lines</th>
+</tr>
+</thead>
+<tbody>
+EOF
   print("\n");
 
   foreach my $anchor (@errors) {
@@ -1407,7 +1417,7 @@ sub anchors_summary (\%\%)
            join(', ', @unique));
   }
 
-  print("</table>\n") if $Opts{HTML};
+  print("</tbody>\n</table>\n") if $Opts{HTML};
 }
 
 sub show_link_report (\%\%\%\%\@;$\%)
@@ -1715,8 +1725,7 @@ sub links_summary (\%\%\%\%)
   if ($#urls < 0) {
     if (! $Opts{Quiet}) {
       if ($Opts{HTML}) {
-        print "<h3>Links</h3>\n";
-        print "<p>Valid links!</p>";
+        print "<h3>Links</h3>\n<p>Valid links!</p>";
       } else {
         print "\nValid links.";
       }
@@ -1753,10 +1762,21 @@ sub links_summary (\%\%\%\%)
     undef(@sorted); undef(@idx);
 
     if ($Opts{HTML}) {
-      print('</h3><p><em>Fragments listed are broken. See the table below to know what action to take.</em></p>');
-
       # Print a summary
-      print "<table border=\"1\">\n<tr><td><b>Code</b></td><td><b>Occurrences</b></td><td><b>What to do</b></td></tr>\n";
+      print <<EOF;
+</h3>
+<p><em>Fragments listed are broken. See the table below to know what action
+to take.</em></p>
+<table border="1" summary="List of broken fragments and suggested actions.">
+<thead>
+<tr>
+<th>Code</th>
+<th>Occurrences</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody>
+EOF
       foreach my $code (sort(keys(%code_summary))) {
         printf('<tr%s>', &bgcolor($code));
         printf('<td><a href="#d%scode_%s">%s</a></td>',
@@ -1765,7 +1785,7 @@ sub links_summary (\%\%\%\%)
         printf('<td>%s</td>', $todo{$code});
         print "</tr>\n";
       }
-      print "</table>\n";
+      print "</tbody>\n</table>\n";
     } else {
       print(':');
     }
@@ -1862,6 +1882,9 @@ fieldset {
   padding-left: 1em;
   background-color: #eee;
 }
+th {
+  text-align: left;
+}
 h1 a {
   color: black;
 }
@@ -1950,24 +1973,25 @@ sub show_url ($;$)
 sub html_footer ()
 {
   printf("<p>%s</p>\n", &global_stats()) if ($doc_count > 0 && !$Opts{Quiet});
-
-  print "
+  print <<EOF;
+<div>
 <address>
 $PROGRAM $REVISION,
-by <a href=\"http://www.w3.org/People/Hugo/\">Hugo Haas</a> and others.<br>
+by <a href="http://www.w3.org/People/Hugo/">Hugo Haas</a> and others.<br>
 Please send bug reports, suggestions and comments to the
-<a href=\"mailto:www-validator\@w3.org?subject=checklink%3A%20\">www-validator
+<a href="mailto:www-validator\@w3.org?subject=checklink%3A%20">www-validator
 mailing list</a>
-(<a href=\"http://lists.w3.org/Archives/Public/www-validator/\">archives</a>).
+(<a href="http://lists.w3.org/Archives/Public/www-validator/">archives</a>).
 <br>
-Check out the <a href=\"docs/checklink.html\">documentation</a>.
+Check out the <a href="docs/checklink.html">documentation</a>.
 Download the
-<a href=\"http://dev.w3.org/cvsweb/~checkout~/validator/httpd/cgi-bin/checklink.pl?rev=$CVS_VERSION&amp;content-type=text/plain\">source code</a> from
-<a href=\"http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/checklink.pl\">CVS</a>.
+<a href="http://dev.w3.org/cvsweb/~checkout~/validator/httpd/cgi-bin/checklink.pl?rev=$CVS_VERSION&amp;content-type=text/plain">source code</a> from
+<a href="http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/checklink.pl">CVS</a>.
 </address>
+</div>
 </body>
 </html>
-";
+EOF
 }
 
 sub file_uri ($)
