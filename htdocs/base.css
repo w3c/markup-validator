@@ -4,7 +4,7 @@
   Copyright © 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
   See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-  $Id: base.css,v 1.11 2001-08-28 00:35:56 link Exp $
+  $Id: base.css,v 1.12 2001-09-06 23:16:16 link Exp $
 */
 
 @import url(non-netscape.css);
@@ -30,12 +30,11 @@ a:link img, a:visited img {border-style: none}
 a img {color: white} /* The only way to hide the border in NS 4.x */
 
 ul.toc {
-  list-style: disc;
   list-style: none;
 }
 
 ol li {
-  width: 75ex;
+  max-width: 75ex;
   padding: .1em;
 }
 
@@ -60,7 +59,22 @@ address {
   border-top-color: black;
 }
 
-p.navbar a {text-decoration: none}
+p.navbar a {
+  text-decoration: none;
+}
+
+p.navbar a:hover {
+  text-decoration: underline;
+  background: yellow;
+}
+p.navbar {
+  text-decoration: none;
+  margin: .1em;
+  padding: .1em;
+  min-width: 13ex;
+  max-width: 15em;
+  width: 15ex;
+}
 
 table th {
   text-align: right;
@@ -70,9 +84,9 @@ table th {
 div.stb {clear: both}
 
 .intro {
-  width: 65ex;
-  margin-left: 2em;
-  text-align: justify;
+  max-width: 75ex;
+  margin: .1ex;
+  padding: .1ex;
 }
 
 /* Various header(ish) things. Definitions cribbed from the CORE Styles. */
