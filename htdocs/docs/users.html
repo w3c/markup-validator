@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: users.html,v 1.14.2.3 2003-02-24 23:14:30 ville Exp $"
---><!--#set var="date" value="\$Date: 2003-02-24 23:14:30 $"
+<!--#set var="revision" value="\$Id: users.html,v 1.14.2.4 2003-05-06 12:00:26 ot Exp $"
+--><!--#set var="date" value="\$Date: 2003-05-06 12:00:26 $"
 --><!--#set var="title" value="User Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -60,31 +60,77 @@
       <p>
         In addition to the text field where you enter an URL -- or the file
         selection field if you are uploading files -- there are a few
-        checkboxes that alter the behaviour of the validator. The options are:
+        checkboxes that alter the behaviour of the validator.</p>
+      <p>
+	 These options are:
       </p>
 
       <dl>
-        <dt>Show source input (<code>ss</code>)</dt>
+	<dt id="option-charset">Encoding</dt>
+	<dd>
+	  This allows you to <strong>override</strong> the character encoding
+	  information about your document. You can use this option for test 
+	  purposes, but you will eventually have to serve your document with the
+	  correct character encoding, or the validator will <a href="help#faq-charset">complain</a> 
+	  about it and you document will not be valid.
+	</dd>
+	<dt id="option-fbc">Use Fallback instead of Override (Encoding) (<code>fbc</code>)</dt>
+	<dd>
+	  Uses the <a href="#option-charset">character encoding override</a> mechanism
+	  described above, but only does it as a fall back mechanism if the actual document
+	  is not served with character encoding information. Think of this as a gentler 
+	  override mechanism.
+	</dd>
+	<dt id="option-doctype">Type</dt>
+	<dd>
+	  This allows you to <strong>override</strong> the DOCTYPE declaration for you
+	  document. ou can use this option for test 
+          purposes, but you will eventually have to serve your document with the
+          correct character encoding, or the validator will <a href="help#faq-doctype">complain</a>
+          about it and you document will not be valid.
+	</dd>
+	<dt id="option-fbc">Use Fallback instead of Override (Type) (<code>fbd</code>)</dt>
+        <dd>
+          Uses the <a href="#option-doctype">Doctype override</a> mechanism
+          described above, but only does it as a fall back mechanism if the actual document
+          does not have a Doctype declaration. Think of this as a gentler override mechanism.
+        </dd>
+
+
+        <dt id="option-ss">Show source input (<code>ss</code>)</dt>
         <dd>
           Displays the HTML source of the document you validated and links
           error messages directly to lines in this output. Makes it easy to
           see what's wrong.
         </dd>
-        <dt>Show an outline of this document (<code>outline</code>)</dt>
+        <dt id="option-outline">Show an outline of this document (<code>outline</code>)</dt>
         <dd>
           Will generate an outline of your document from the H1 - H6 elements.
           For a properly formed document, this will be a nicely nested tree
           structure. The visualization of your document's structure makes it
           easier to see where you've skipped a heading.
         </dd>
-        <dt>Show parse tree (<code>sp</code>)</dt>
+        <dt id="option-sp">Show parse tree (<code>sp</code>)</dt>
         <dd>
           Shows you exactly how the SGML Parser read your document. Probably
           best used only by advanced users as it deals with low-level SGML
           constructs.
         </dd>
-        <dt>exclude attributes from the parse tree (<code>noatt</code>)</dt>
+        <dt id="option-noatt">exclude attributes from the parse tree (<code>noatt</code>)</dt>
         <dd>Suppress attributes from the parse tree to make it more readable.</dd>
+	<dt id="option-no200">Validate error pages</dt>
+	<dd>The Markup Validator will usually tell you if the page you tried to validate
+	could not be retrieved (for example, if the server gave a "404 not found" message.
+	In some circumstances you may want to be able to validate the error page sent by 
+	the server. This is the option to use then.
+	</dd>
+	<dt id="option-verbose">Verbose Output</dt>
+	<dd>This option triggers verbose output. By default the validator will only output
+	the validity result if the document is valid, but you may want to have the rest of 
+	the information (outline, etc.). This is the option to use then.
+	</dd>
+
+
       </dl>
     </div>
 
