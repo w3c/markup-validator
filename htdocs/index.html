@@ -60,15 +60,18 @@
   </p>
 
   <hr />
-  <h2><a name="byURI">Validate Documents by URI</a></h2>
+  <h2><a name="byURI">Validate documents on the Web</a></h2>
 
   <p>
-    Enter the location of a document you would like validated:
+    Enter the location (<a
+    href="http://www.w3.org/Addressing/#terms">URI</a>) of a
+    document you would like to validate:
   </p>
 
   <form method="get" action="/check">
     Location: <input name="uri" size="50" />
     <table cellpadding="0" cellspacing="0">
+  <!--
     <tr>
       <td>
         <input name="weblint" type="checkbox" value="" /> Include <a
@@ -80,6 +83,7 @@
         in "pedantic" mode
       </td>
     </tr>
+  -->
     <tr>
       <td>
         <input name="ss" type="checkbox" value="" /> Show source input
@@ -99,12 +103,12 @@
       </td>
     </tr>
     </table>
-      <input type="submit" value="Validate this URI" />
+      <input type="submit" value="Validate this page" />
       <input type="reset" value="Reset this form" />
   </form>
 
   <hr />
-  <h2><a name="seeAlso">See Also</a></h2>
+  <h2><a name="seeAlso">See also</a></h2>
 
   <ul>
     <li><a href="whatsnew.html">Recent changes to this service</a></li>
@@ -143,15 +147,16 @@
       by Gisle Aas and Martijn Koster for retrieving documents.
     </li>
 
+    <!--
     <li>
       <a href="http://www.weblint.org/~neilb/">Neil Bowers</a>' HTML
       style checker, <a
       href="http://www.weblint.org/">Weblint</a>.
     </li>
 
-    <!--
     <li>
       SGML error explanations written by Scott Bigham.
+    </li>
       -->
 
     <li>
@@ -177,7 +182,7 @@
      src="http://validator.w3.org/images/vxhtml10" height="31" width="88"
      align="right" border="0" alt="Valid XHTML 1.0!" /></a>
   <a href="/feedback.html">Gerald Oskoboiny</a><br />
-     $Date: 2000-02-01 20:50:00 $
+     $Date: 2000-02-01 21:54:44 $
 </address>
 
 </body>
