@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.67 2000-09-29 09:19:07 gerald Exp $
+# $Id: check,v 1.68 2000-10-21 06:04:35 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -71,9 +71,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.67 $;
+$VERSION    =  q$Revision: 1.68 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2000-09-29 09:19:07 $;
+$DATE       =  q$Date: 2000-10-21 06:04:35 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -201,11 +201,12 @@ $header .= $notice;
 #
 # Punt if we don't recognize this URI scheme.
 # @@ LWP does a whole bunch more: transparently!
-unless ($q->param('uri') =~ m(^(http|file)://)) {
+unless ($q->param('uri') =~ m(^http://)) {
   print $header;
   print <<"EOF";
   <p>
-    Sorry, this type of URI is not supported by this service.
+    Sorry, this type of <a href="http://www.w3.org/Addressing/#terms">URI</a>
+    is not supported by this service.
   </p>
   <p>
     URIs should be in the form:
@@ -255,7 +256,7 @@ EOF
 
 #
 # Try to extract or guess the DOCTYPE for HTML and XHTML files.
-if ($File->{Type} eq 'html' or $File->{Type} eq 'xhtml') {
+if ($File->{Type} ne 'xml') {
   ($guessed_doctype, $doctype) = &check_for_doctype($File->{Content});
 }
 
@@ -313,7 +314,7 @@ print "  <ul>\n";
 # Print different things if we got redirected or had a file upload.
 if ($File->{URI} eq $q->param('uri')) {
   print ' ' x 4, qq(<li><a href="$uri_def_uri">URI</a>: );
-  print '<a href="', $File->{URI}, '">', $File->{URI}, qq(</a>\n);
+  print '<a href="', ent($File->{URI}), '">', ent($File->{URI}), qq(</a>\n);
 } elsif ($q->param('uploaded_file')) {
   print ' ' x 4, '<li>File: ', $File->{URI}, "</li>\n";
 } else {
@@ -345,8 +346,9 @@ if ($File->{Type} eq 'xhtml') {
     $xmlflags            .= '-wno-valid ';
   }
   $decl                  = $xhtmldecl;
-} elsif ($guessed_doctype == 2) { # no doctype, with xmlns attr on 1st element
-  $File->{Type} = 'xml';	# @@ probably a better way to do this
+} elsif ($File->{Type} eq 'xml' or $guessed_doctype == 2) {
+  # no doctype, with xmlns attr on 1st element
+  $File->{Type} = 'xml'; # @@ probably a better way to do this
   $ENV{SGML_CATALOG_FILES} = $sgmlstuff . '/sp-1.3/pubtext/xml.soc';
   $ENV{SGML_SEARCH_PATH} = $sgmlstuff . '/sp-1.3/pubtext/';
   $ENV{SP_CHARSET_FIXED} = 'YES';
@@ -1378,3 +1380,12 @@ sub normalize_newlines {
 
   return [split /\n/, $file];
 }
+
+#
+# Return $_[0] encoded for HTML entities (cribbed from merlyn).
+sub ent {
+  local $_ = shift;
+  s(["<&>"]){'&#' . ord($&) . ';'}ge;
+  return $_;
+}
+
