@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.28 1999-08-31 22:49:16 gerald Exp $
+# $Id: check,v 1.29 1999-09-05 23:22:28 gerald Exp $
 
 use LWP::UserAgent;
 
@@ -16,8 +16,8 @@ use LWP::UserAgent;
 # Constant definitions
 #############################################################################
 
-$cvsrevision	= '$Revision: 1.28 $';
-$cvsdate	= '$Date: 1999-08-31 22:49:16 $';
+$cvsrevision	= '$Revision: 1.29 $';
+$cvsdate	= '$Date: 1999-09-05 23:22:28 $';
 
 $logfile	= "/var/log/httpd/val-svc";
 
@@ -32,7 +32,7 @@ $sgmlstuff	= "/usr/local/src/validator/htdocs/sgml-lib";
 $sp		= "/usr/local/bin/nsgmls";
 $nkf		= "/usr/local/bin/nkf";
 
-$sgmldecl	= "$sgmlstuff/REC-html40-971218/HTML4.decl";
+$sgmldecl	= "$sgmlstuff/REC-html40-19980424/HTML4.decl";
 $xhtmldecl	= "$sgmlstuff/PR-xhtml1-19990824/xhtml1.dcl";
 $xmldecl	= "/usr/local/src/validator/htdocs/sgml-lib/sp-1.3/pubtext/xml.dcl";
 
@@ -105,10 +105,10 @@ $gifborder       = " border=0";
     '+//Silmaril//DTD HTML Pro v0r11 19970101//EN', '<a href="http://www.ucc.ie/doc/www/html/dtds/htmlpro.html">HTML Pro</a>',
     '-//Spyglass//DTD HTML 2.0 Extended//EN', 'Spyglass HTML 2.0 Extended',
     'http://www.w3.org/MarkUp/Cougar/Cougar.dtd', '<a href="http://www.w3.org/MarkUp/Cougar/">HTML Level "Cougar"</a>',
-    '-//W3C//DTD HTML 4.0//EN', '<a href="http://www.w3.org/TR/REC-html40/">HTML 4.0</a>',
+    '-//W3C//DTD HTML 4.0//EN', '<a href="http://www.w3.org/TR/REC-html40/">HTML 4.0</a> Strict',
     '-//W3C//DTD HTML 4.0 Transitional//EN', '<a href="http://www.w3.org/TR/REC-html40/">HTML 4.0</a> Transitional',
     '-//W3C//DTD HTML 4.0 Frameset//EN', '<a href="http://www.w3.org/TR/PR-html40/">HTML 4.0</a> Frameset',
-    '-//W3C//DTD HTML 4.01//EN', '<a href="http://www.w3.org/TR/1999/PR-html40-19990824/">HTML 4.01</a>',
+    '-//W3C//DTD HTML 4.01//EN', '<a href="http://www.w3.org/TR/1999/PR-html40-19990824/">HTML 4.01</a> Strict',
     '-//W3C//DTD HTML 4.01 Transitional//EN', '<a href="http://www.w3.org/TR/1999/PR-html40-19990824/">HTML 4.01</a> Transitional',
     '-//W3C//DTD HTML 4.01 Frameset//EN', '<a href="http://www.w3.org/TR/1999/PR-html40-19990824/">HTML 4.01</a> Frameset',
     '-//W3C//DTD XHTML 1.0 Strict//EN', '<a href="http://www.w3.org/TR/1999/PR-xhtml1-19990824/">XHTML 1.0</a> Strict',
@@ -454,6 +454,11 @@ else {
 	next unless /^AVERSION CDATA (.*)/;
 	$fpi = $1;
 	last;
+    }
+    if ( ! defined $fpi && length( $doctype) ) {
+	    # this is needed for HTML 4 strict, which doesn't have a
+	    # version attribute on the HTML element
+        $fpi = $doctype;
     }
 }
 $version = $pub_ids{$fpi} || "unknown";
@@ -1149,14 +1154,11 @@ sub check_for_doctype {
 	last if $line =~ /<[a-z].*<!doctype/i;
 
 	if ( $line =~ /<!doctype/i ) {	# found a doctype
-	    $dttext = join( "", @file[$count..$count+3] );
-	    if ( $dttext =~ /xhtml/i ) {
-		$dttext =~ s/\n//g;
-		$dttext =~ s/.*doctype\s+html\s+public\s*"//i;
-		$dttext =~ s/".*//;	# strip everything except the FPI
-		return 0, $dttext;
-	    }
-	    return 0, "";	# doc does have a doctype
+	    $dttext = join( "", @file[$count..$count+5] );
+	    $dttext =~ s/\n//g;
+	    $dttext =~ s/.*doctype\s+html\s+public\s*"//i;
+	    $dttext =~ s/".*//;	# strip everything except the FPI
+	    return 0, $dttext;
 	}
 
 	$line =~ s/<!(?:--(?:[^-]|-[^-])*--\s*)+>//go;	# strip comments,
