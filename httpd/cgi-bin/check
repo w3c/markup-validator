@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.142 2001-07-16 09:03:47 link Exp $
+# $Id: check,v 1.143 2001-07-16 09:38:27 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.142 $;
+$VERSION    =  q$Revision: 1.143 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-16 09:03:47 $;
+$DATE       =  q$Date: 2001-07-16 09:38:27 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1267,6 +1267,12 @@ sub report_valid {
     } elsif ($version =~ /XHTML 1\.0<\/a> /) {
       $image_uri = "http://www.w3.org/Icons/valid-xhtml10";
       $alttext = "Valid XHTML 1.0!";
+      $gifborder = "";
+      $gifhw   = ' height="31" width="88"';
+      $xhtmlendtag = " /";
+    } elsif ($version =~ /XHTML Basic 1.0/) {
+      $image_uri = "${abs_svc_uri}/images/vxhtml-basic10";
+      $alttext = "Valid XHTML Basic 1.0!";
       $gifborder = "";
       $gifhw   = ' height="31" width="88"';
       $xhtmlendtag = " /";
