@@ -4,7 +4,11 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.14 2003-07-24 02:53:18 link Exp $
+<<<<<<< base.css
+   $Id: base.css,v 1.26.2.15 2003-07-24 22:43:57 ot Exp $
+=======
+   $Id: base.css,v 1.26.2.15 2003-07-24 22:43:57 ot Exp $
+>>>>>>> 1.26.2.14
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -25,8 +29,12 @@ html, body {
 }
 
 div#main {
-  padding-left: 2em;
+  /*padding-left: 2em;*/
   padding-top: 1em;
+}
+
+div#main p, div#main dt {
+padding-left: 1em;
 }
 
 fieldset {
@@ -145,7 +153,6 @@ p.copyright a {
   border-right:     1px solid black;
   border-bottom:    1px solid black;
   float:            left;
-  margin-left:      -2.5em;
   margin-top:       -1.3em;
   font-weight:      bolder;
   font-size:        smaller;
@@ -198,6 +205,7 @@ h2 {
   font-weight: 500;
   font-style: normal;
   text-decoration: none;
+  padding-left: .2em;
 }
 
 h3 {

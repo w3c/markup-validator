@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.14 2003-07-24 12:24:29 link Exp $ */
+/* $Id: results.css,v 1.13.2.15 2003-07-24 22:43:57 ot Exp $ */
 
 .input {
   color: black;
@@ -101,7 +101,7 @@ fieldset legend {
 div#Warnings {
   clear: left;
   padding: 0;
-  margin-left: -2em;
+/*  margin-left: -2em; */
   margin-right: 8em;
 }
 
