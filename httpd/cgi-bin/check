@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.56 2003-06-19 22:42:55 ville Exp $
+# $Id: check,v 1.305.2.57 2003-06-30 09:17:14 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -120,7 +120,7 @@ BEGIN
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.56 $;
+  $VERSION    =  q$Revision: 1.305.2.57 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -192,7 +192,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-06-19 22:42:55 $,
+                              Date => q$Date: 2003-06-30 09:17:14 $,
                              });
 
 #
@@ -917,7 +917,7 @@ sub print_table {
             ($File->{Opt}->{'Show Source'}    ? q(checked="checked" ) : '') .
             q(/>Show&nbsp;Source</label>),
             # Outline?
-            q(<label title="Show an Outline of the document (accesskey: 6)" for="outline"><input type="checkbox" value="1" id="outline" name="outline" ) .
+            q(<label title="Show an Outline of the document (accesskey: 6)" for="soutline"><input type="checkbox" value="1" id="soutline" name="outline" ) .
             q(accesskey="6" ) .
             ($File->{Opt}->{'Outline'}        ? q(checked="checked" ) : '') .
             q(/>Outline</label>)
@@ -1928,7 +1928,7 @@ EOF
 
   for (1 .. $#{$File->{ESIS}}) {
     my $line = $File->{ESIS}->[$_];
-    next unless $line =~ /^\(H([1-6])$/i;
+    next unless ($line && $line =~ /^\(H([1-6])$/i);
     $prevlevel = $level;
     $level     = $1;
 
