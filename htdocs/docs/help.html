@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: help.html,v 1.12.2.16 2004-04-09 05:56:33 ot Exp $"
---><!--#set var="date" value="\$Date: 2004-04-09 05:56:33 $"
+<!--#set var="revision" value="\$Id: help.html,v 1.12.2.17 2004-04-29 06:27:40 ville Exp $"
+--><!--#set var="date" value="\$Date: 2004-04-29 06:27:40 $"
 --><!--#set var="title" value="Help for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -79,7 +79,7 @@ mailing-list.</p>
 		<a href="#faq-ampersand">The validator complains about "&amp;" in my URLs!</a>
 	</li>
 	<li>
-		<a href="#faq-javascript">The validator complains about something in my Javascript!</a>
+		<a href="#faq-javascript">The validator complains about something in my JavaScript!</a>
 	</li>
 	<li>
 		<a href="#faq-linkandmeta">Why doesn't the validator like my &lt;link ... /&gt; 
@@ -108,7 +108,7 @@ mailing-list.</p>
 	The author of the Web page you come from once used our service
 	to <em>validate</em> that page, and the page passed validation. 
 	The author was then authorized to use the icon on that page, as
-	aa claim of <em>validity</em>. The icon is used as a link back to
+	a claim of <em>validity</em>. The icon is used as a link back to
 	the validation service, so that the author can <em>revalidate</em>
 	whenever necessary. This is why, by clicking on the icon, you 
 	followed a link to the current <em>validation results</em> for
@@ -194,16 +194,16 @@ mailing-list.</p>
         sure your pages are legal HTML. The best way to do that is by
         running your documents through one or more HTML validators. 
       </p>
-      <p>A <a href="why.html">lenghtier answer</a> to this question is
+      <p>A <a href="why.html">lengthier answer</a> to this question is
 	also available on this site if the explanation above did not satisfy 
 	you.
       </p>
 
     <h4 id="who-does-validator">Who owns/maintain the Markup Validator?</h4>
-      <p>The Markup Validator is Maintained at <acronym
+      <p>The Markup Validator is maintained at <acronym
 	title="World Wide Web Consortium">W3C</acronym> by W3C staff and 
-	benevolent collaborators, who receive a lot of help from contributors. 
-	(Read the <a href="../about.html#credits">full credits</a>)
+	benevolent collaborators, who receive a lot of help from contributors
+	(read the <a href="../about.html#credits">full credits</a>).
       </p>
 
     <h4 id="others">What other validators are there?</h4>
@@ -260,7 +260,7 @@ mailing-list.</p>
       </p>
 
     <h4 id="errors">What are these error messages?</h4>
-      <p>The output of the Markup Validator may be hard to decypher for
+      <p>The output of the Markup Validator may be hard to decipher for
 	newcomers and experts alike, so we are maintaining a <a 
 	href="errors.html">list of error
 	messages and their interpretation</a>, which should help.
@@ -302,7 +302,7 @@ mailing-list.</p>
   </p>
   <p>
    We encourage you to use the XHTML code below (or its HTML equivalent),
-   but you may use a different code to integrate the icon within your webpage
+   but you may use a different code to integrate the icon within your web page
    as long as the icon is used as a link to revalidate the Web page it is in.
    Sample code is as follows:
   </p>
@@ -419,7 +419,7 @@ of WDG's excellent
 "<a href="http://www.htmlhelp.com/tools/validator/problems.html">common validation problem</a>"
 </p>
 
-    <h4 id="faq-javascript">The validator complains about something in my Javascript!</h4>
+    <h4 id="faq-javascript">The validator complains about something in my JavaScript!</h4>
       <p>Most probably, you should read the 
 	<a href="http://www.htmlhelp.com/tools/validator/problems.html#script">script section</a>
 	of WDG's excellent                                                                    
@@ -437,7 +437,7 @@ of WDG's excellent
 	which is not allowed in the &lt;head&gt; element. Since &lt;/head&gt;&lt;body&gt; 
 	is optional in HTML (again, <strong>not</strong> in XHTML), it is silently inserted, 
 	thus head-only elements like meta and style as well as 
-	"&lt;/head&gt;" and "&lt;body&gt;", which may apear only once, become false.
+	"&lt;/head&gt;" and "&lt;body&gt;", which may appear only once, become false.
       </p>
 
       <p>(explanation courtesy of Christoph P&auml;per)</p>
@@ -459,18 +459,18 @@ of WDG's excellent
       it to validate whatever page the browser last visited. The "valid" icons on some Web page usually
       point to the validation of the page using this feature.</p>
 
-      <p>Unfortunately, some zealous "security software" or Web proxies strip the <code>referer</code> 
+      <p>Unfortunately, some zealous "security software" or Web proxies strip the referrer 
       information from what the browser sends. Without this information the validator is not able to
-      find what the URI of the document to validate is, and gives the same error message as when it os
+      find what the URI of the document to validate is, and gives the same error message as when it is
       given a type of URI it does not understand.</p>
 
       <p><strong>How to fix</strong>:</p>
       <ul>
-	<li>Check that it is indeed a referer issue. The validator should have redirected you to
+	<li>Check that it is indeed the <code>Referer</code> issue. The validator should have redirected you to
 	<code>http://validator.w3.org/check?uri=</code>. Otherwise, check the address you have given the validator.</li>
 	<li>The validator can not fix this issue. You will have to (ask your administrator to) reconfigure
-	whichever zealous software is stripping this referer info.</li>
-	<li>If you have a link on your page using the "referer" feature, you could replace them with the
+	whichever zealous software is stripping this referrer info.</li>
+	<li>If you have a link on your page using the "/check/referer" feature, you could replace them with the
 	a link to the validator without this feature, e.g. <code><code>http://validator.w3.org/check?uri=http://www.example.com</code></li>
 	<li>If you have no control over the page or annoying software, simply append the address of the page you wanted validated
 	to the <code>http://validator.w3.org/check?uri=</code> address.</li>
