@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.385 2005-02-04 21:01:54 link Exp $
+# $Id: check,v 1.386 2005-02-04 21:03:07 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -239,7 +239,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.385 $;
+  $VERSION    =  q$Revision: 1.386 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2908,7 +2908,7 @@ sub abort_if_error_flagged {
   return unless $File->{'Error Flagged'};
   return if $File->{'Error Message'} eq ''; # Previous error, keep going.
 
-  if ($File->{Output} eq 'html') {
+  if ($File->{Opt}->{Output} eq 'html') {
     &prep_template($File, $E);
 
     $E->param(error_message => $File->{'Error Message'});
