@@ -1,5 +1,5 @@
 	-- SGML catalog for the W3C Markup Validation Service --
-	-- $Id: sgml.soc,v 1.6 2004-07-21 15:07:20 link Exp $ --
+	-- $Id: sgml.soc,v 1.7 2004-09-12 20:27:36 link Exp $ --
 
 OVERRIDE YES	-- prefer public identifiers to system identifiers --
 SGMLDECL sgml.dcl
@@ -36,13 +36,13 @@ PUBLIC  "-//IETF//DTD HTML Strict Level 3//EN"		html-3s.dtd
 PUBLIC  "-//IETF//DTD HTML Strict Level 3//EN//3.0"	html-3s.dtd
 
 	-- Ways to refer to Level 2: most general to most specific --
-PUBLIC  "HTML"					html.dtd
-PUBLIC  "-//IETF//DTD HTML//EN"			html.dtd
-PUBLIC  "-//IETF//DTD HTML//EN//2.0"		html.dtd
-PUBLIC  "-//IETF//DTD HTML 2.0//EN"		html.dtd
-PUBLIC  "-//IETF//DTD HTML Level 2//EN"		html.dtd
-PUBLIC  "-//IETF//DTD HTML Level 2//EN//2.0"	html.dtd
-PUBLIC  "-//IETF//DTD HTML 2.0 Level 2//EN"	html.dtd
+PUBLIC  "HTML"                                  IETF/HTML-2_0.dtd
+PUBLIC  "-//IETF//DTD HTML//EN"                 IETF/HTML-2_0.dtd
+PUBLIC  "-//IETF//DTD HTML//EN//2.0"            IETF/HTML-2_0.dtd
+PUBLIC  "-//IETF//DTD HTML 2.0//EN"             IETF/HTML-2_0.dtd
+PUBLIC  "-//IETF//DTD HTML Level 2//EN"         IETF/HTML-2_0.dtd
+PUBLIC  "-//IETF//DTD HTML Level 2//EN//2.0"    IETF/HTML-2_0.dtd
+PUBLIC  "-//IETF//DTD HTML 2.0 Level 2//EN"     IETF/HTML-2_0.dtd
 
 	-- Ways to refer to Level 1: most general to most specific --
 PUBLIC  "-//IETF//DTD HTML Level 1//EN"		html-1.dtd
