@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.359 2004-11-13 21:40:11 ville Exp $
+# $Id: check,v 1.360 2004-11-15 05:27:11 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -227,7 +227,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.359 $;
+  $VERSION    =  q$Revision: 1.360 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1651,6 +1651,9 @@ sub parse_errors ($$) {
 sub report_errors ($) {
   my $File = shift;
   my $Errors = [];
+    
+  # Hash to keep track of how many of each error is reported.
+  my %Msgs; # Used to generate a UID for explanations.
 
   if (scalar @{$File->{Errors}}) {
     foreach my $err (@{$File->{Errors}}) {
@@ -1671,8 +1674,30 @@ sub report_errors ($) {
       }
       #DEBUG;
 
+      my $explanation;
+
+      if ($err->{num}) {
+        my(undef, $num) = split /\./, $err->{num};
+        if (exists $Msgs{$num}) { # We've already seen this message...
+          if ($File->{Opt}->{Verbose}) { # ...so only repeat it in Verbose mode.
+            $explanation = qq(\n    <div class="hidden mid-$num"></div>\n);
+          }
+        } else {
+          $Msgs{$num} = 1;
+          $explanation .= "\n    $RSRC->{msg}->{$num}->{verbose}\n"
+            if exists $RSRC->{msg}->{$num}
+            && exists $RSRC->{msg}->{$num}->{verbose};
+        }
+        my $_msg = $RSRC->{msg}->{nomsg}->{verbose};
+        $_msg =~ s/<!--MID-->/$num/g;
+        $explanation .= "    $_msg\n"; # The send feedback plea.
+      }
+
+
+
       $err->{src} = $line;
       $err->{col} = ' ' x $col;
+      $err->{expl} = $explanation;
 
       push @{$Errors}, $err;
     }
@@ -1748,6 +1773,9 @@ sub mark_error (\$\$) {
 
   $char = qq(<strong title="Position where error was detected.">$char</strong>);
   $line = $left . $char . $right;
+
+
+
 
   return $line;
 }
