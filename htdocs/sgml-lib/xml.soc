@@ -1,0 +1,87 @@
+SGMLDECL "xml.dcl"
+OVERRIDE YES
+
+PUBLIC "-//W3C//DTD Specification V2.0//EN" "http://www.w3.org/XML/1998/06/xmlspec-v20.dtd"
+SYSTEM "spec.dtd" "http://www.w3.org/XML/1998/06/xmlspec-v20.dtd"
+
+-- MathMLL 2.0 Catalog Data File --
+-- MathML 2.0 DTD driver --
+
+PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN"
+       "REC-MathML2-20010221/xhtml-math11-f.dtd"
+PUBLIC "-//W3C//DTD MathML 2.0//EN"
+       "REC-MathML2-20010221/mathml2.dtd"
+
+SYSTEM "http://www.w3.org/TR/MathML2/dtd/xhtml-math11-f.dtd"
+       "REC-MathML2-20010221/xhtml-math11-f.dtd"
+SYSTEM "http://www.w3.org/TR/MathML2/dtd/mathml2.dtd"
+       "REC-MathML2-20010221/mathml2.dtd"
+
+-- XHTML + MathML + SVG --
+PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
+       "xhtml-math-svg-flat-20020430.dtd"
+
+PUBLIC "-//W3C//DTD SVG 20010719//EN"	PR-SVG-20010719/svg10.dtd
+PUBLIC "-//W3C//DTD SVG 1.0//EN"	REC-SVG-20010904/svg10.dtd
+
+--  XHTML 1.0/1.1/Basic Catalog Data File --
+
+-- XHTML 1.1 DTD modular driver file --
+-- note that this uses the local, flattened version of the DTD. If you want
+   your catalog to use the master version of the XHTML Modules, change the 
+   entry to reference xhtml11.dtd instead of xhtml11-flat.dtd
+--
+
+PUBLIC "-//W3C//DTD XHTML 1.1//EN" "REC-xhtml11-20010531/xhtml11-flat.dtd"
+
+
+-- XHTML 1.1 framework modules --
+PUBLIC "-//W3C//ENTITIES XHTML 1.1 Document Model 1.0//EN" "REC-xhtml11-20010531/xhtml11-model-1.mod"
+
+        -- Oasis entity catalog for Extensible HTML 1.0 --
+
+PUBLIC  "-//W3C//DTD XHTML 1.0 Strict//EN"       "REC-xhtml1-20000126/xhtml1-strict.dtd"
+PUBLIC  "-//W3C//DTD XHTML 1.0 Transitional//EN" "REC-xhtml1-20000126/xhtml1-transitional.dtd"
+PUBLIC  "-//W3C//DTD XHTML 1.0 Frameset//EN"     "REC-xhtml1-20000126/xhtml1-frameset.dtd"
+
+        -- ISO latin 1 entity set for Extensible HTML (XML 1.0 format) --
+
+PUBLIC	"-//W3C//ENTITIES Latin 1 for XHTML//EN" "REC-xhtml1-20000126/xhtml-lat1.ent"
+PUBLIC	"-//W3C//ENTITIES Symbols for XHTML//EN" "REC-xhtml1-20000126/xhtml-symbol.ent"
+PUBLIC	"-//W3C//ENTITIES Special for XHTML//EN" "REC-xhtml1-20000126/xhtml-special.ent"
+
+        -- XHTML Basic DTD modular driver file --
+PUBLIC "-//W3C//DTD XHTML Basic 1.0//EN" "REC-xhtml-basic-20001219/xhtml-basic10.dtd"
+
+        -- XHTML Basic framework module --
+PUBLIC "-//W3C//ENTITIES XHTML Basic 1.0 Document Model 1.0//EN" "REC-xhtml-basic-20001219/xhtml-basic10-model-1.mod"
+
+-- SGML Open Catalog file for SMIL 1.0/2.0 
+
+   This is SMIL 1.0/2.0.
+   Copyright 2000 W3C (MIT, INRIA, Keio), All Rights Reserved. 
+--
+-- DTD drivers --
+PUBLIC "-//W3C//DTD SMIL 1.0//EN"	REC-smil-19980615/smil10.dtd
+PUBLIC "-//W3C//DTD SMIL 2.0//EN"	PR-smil20-20010605/SMIL20.dtd
+PUBLIC "-//W3C//DTD SMIL 2.0 Basic//EN"	PR-smil20-20010605/SMIL20Basic.dtd
+
+-- Framework utilities ---
+PUBLIC "-//W3C//ENTITIES SMIL 2.0 Modular Framework 1.0//EN"	PR-smil20-20010605/smil-framework-1.mod
+PUBLIC "-//W3C//ENTITIES SMIL 2.0 Datatypes 1.0//EN"		PR-smil20-20010605/smil-datatypes-1.mod
+PUBLIC "-//W3C//ENTITIES SMIL 2.0 Qualified Names 1.0//EN"	PR-smil20-20010605/smil-qname-1.mod
+PUBLIC "-//W3C//ENTITIES SMIL 2.0 Common Attributes 1.0//EN"	PR-smil20-20010605/smil-attribs-1.mod
+PUBLIC "-//W3C//ENTITIES SMIL 2.0 Document Model 1.0//EN"	PR-smil20-20010605/smil-model-1.mod
+
+-- SMIL 2.0 elements from section modules ---
+PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Document Structure//EN"	PR-smil20-20010605/SMIL-struct.mod
+PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Animation//EN"		PR-smil20-20010605/SMIL-anim.mod
+PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Content Control//EN"		PR-smil20-20010605/SMIL-control.mod
+PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Document Metainformation//EN"	PR-smil20-20010605/SMIL-metainformation.mod
+PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Layout//EN"			PR-smil20-20010605/SMIL-layout.mod
+PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Linking//EN"			PR-smil20-20010605/SMIL-link.mod
+PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Media Objects//EN"		PR-smil20-20010605/SMIL-media.mod
+PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Timing//EN"			PR-smil20-20010605/SMIL-timing.mod
+PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Transition//EN"		PR-smil20-20010605/SMIL-transition.mod
+PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Integration//EN"		PR-smil20-20010605/SMIL-integrate.mod
+
