@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.26 2004-01-20 09:57:54 ot Exp $
+   $Id: base.css,v 1.26.2.27 2004-02-02 06:06:44 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -32,6 +32,7 @@ div#main {
 
 div#main p, div#main dt {
 padding-left: 1em;
+padding-right: 1em;
 }
 
 dt {
@@ -119,18 +120,8 @@ h2 a {color: black} /* These are usually targets and not links */
 h3 a {color: black} /* These are usually targets and not links */
 
 img {vertical-align: middle}
-h1#title {
-/*  background-color: #eee; */
-  border-bottom: 1px solid black;
-  padding: .25em;
-  margin: 0;
-  color: #053188;
-}
 
-/* Used for beta releases. */
-h1#title em {
-  color: red;
-}
+
 
 /* done vs. tbc for the TODO list */
 .done { text-decoration: line-through; }
@@ -195,7 +186,29 @@ h1 {
   text-decoration: none;
   color: #053188;
 }
+#banner h1 {font-size: 1.3em;
+border-bottom: 1px solid black;}
 
+#banner {background-image: url(/validator/banner-qa.jpg);
+background-repeat: no-repeat;
+background-attachment: scroll;
+height: 50px;
+background-position: right;
+margin:0; padding:0;}
+
+h1#title {
+/*  background-color: #eee; 
+  border-bottom: 1px solid black; 
+  padding: .25em;*/
+  padding:0;
+  margin: 0;
+  color: #053188;
+}
+
+/* Used for beta releases. */
+h1#title em {
+  color: red;
+}
 h2 {
   font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
   font-size-adjust: .53;
