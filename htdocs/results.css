@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.8.2.2 2002-03-31 06:30:45 link Exp $ */
+/* $Id: results.css,v 1.8.2.3 2002-03-31 07:04:07 link Exp $ */
 
 .markup {
   color: red;
@@ -13,7 +13,7 @@
 
 dl.tip {
   float: left;
-  margin: 0em 3em 0em 3em;
+  margin-top: 0em;
   max-width: 20em;
   background: #eeeeee;
   border-top: 3px solid #eeeeee;
@@ -41,19 +41,18 @@ dl.tip dd {
   font-weight: bolder;
   margin: .5em;
   color: blue;
-  border: 3px dashed black;
+  border: .1em dashed black;
 }
 
-dl.tip dd a:hover {
+/ * dl.tip dd a:hover {
   color: blue;
   background: silver;
-  border: 3px solid black;
-}
+} */
 
 dl.tip dd a {
   padding: .1em .25em;
   text-decoration: none;
-  margin:  .25em;
+  margin:  .5em;
 }
 
 table.header {
@@ -92,6 +91,7 @@ td {
 }
 
 .valid {
+  clear: both;
   background:		blue;
   color:		white;
   font-family:		Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
@@ -111,6 +111,7 @@ td {
 }
 
 .invalid {
+  clear: both;
   background:		red;
   color:		white;
   font-family:		Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
