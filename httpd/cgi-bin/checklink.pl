@@ -5,7 +5,7 @@
 # (c) 1999-2002 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.3 2002-10-27 13:04:51 ville Exp $
+# $Id: checklink.pl,v 3.4 2002-11-21 23:27:47 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -83,7 +83,7 @@ BEGIN
 {
   # Version info
   $PROGRAM       = 'W3C checklink';
-  ($CVS_VERSION) = q$Revision: 3.3 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.4 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2002 W3C', $VERSION);
 
@@ -473,12 +473,12 @@ Validity</a></p>
       # List the broken fragments
       foreach my $fragment (keys %{$links{$u}{fragments}}) {
         if ($_verbose) {
-          &hprintf("\t\t%s %s - Lines: %s\n",
+          my @frags = sort keys %{$links{$u}{fragments}{$fragment}};
+          &hprintf("\t\t%s %s - Line%s: %s\n",
                    $fragment,
-                   ($results{$u}{fragments}{$fragment}
-                    ? 'OK' : 'Not found'),
-                   join(',',
-                        keys %{$links{$u}{fragments}{$fragment}})
+                   ($results{$u}{fragments}{$fragment}) ? 'OK' : 'Not found',
+                   (scalar(@frags) > 1) ? 's' : '',
+                   join(', ', @frags)
                   );
         }
         # A broken fragment?
@@ -594,9 +594,7 @@ sub get_document ($$$;\%)
       if ($response->code() == 401) {
         &authentication($response);
       } else {
-        if ($_html) {
-          &html_header($uri);
-        }
+        &html_header($uri) if $_html;
         &hprintf("\nError: %d %s\n",
                  $response->code(), $response->message());
       }
@@ -625,11 +623,8 @@ sub get_document ($$$;\%)
   if ($failed_reason) {
     # No, there is a problem...
     if (! $in_recursion) {
-      if ($_html) {
-        &html_header($uri);
-      }
-      &hprintf("Can't check links: %s.\n",
-               $failed_reason);
+      &html_header($uri) if $_html;
+      &hprintf("Can't check links: %s.\n", $failed_reason);
     }
     $response->{Stop} = 1;
   }
@@ -752,11 +747,10 @@ sub get_uri ($$;$\%$$$$)
   &hprintf(" fetched in %ss\n",
            &time_diff($start, &get_timestamp())) if $verbose_progress;
 
-  $response->{OriginalCode} = $code;
+  $response->{OriginalCode}    = $code;
   $response->{OriginalMessage} = $message;
-  if (defined($realm)) {
-    $response->{Realm} = $realm;
-  }
+  $response->{Realm}           = $realm if defined($realm);
+
   return $response;
 }
 
@@ -1252,10 +1246,9 @@ sub anchors_summary (\%\%)
     } else {
       print("Anchors\n\n");
     }
-    &hprintf("Found %d anchor(s).", scalar(keys %{$anchors}));
-    if ($_html) {
-      print('</p>');
-    }
+    my $n = scalar(keys(%$anchors));
+    &hprintf("Found %d anchor%s.", $n, ($n == 1) ? '' : 's');
+    print('</p>') if $_html;
     print("\n");
   }
   # List of the duplicates, if any.
@@ -1266,37 +1259,34 @@ sub anchors_summary (\%\%)
     }
     return;
   }
-  if ($_html) {
-    print('<p>');
-  }
-  print('List of duplicate and empty anchors:');
-  if ($_html) {
-    print("</p>\n<table border=\"1\">\n<tr><td><b>Anchors</b></td><td><b>Lines</b></td></tr>");
-  }
+
+  print('<p>') if $_html;
+  print('List of duplicate and empty anchors');
+  print("</p>\n<table border=\"1\">\n<tr><td><b>Anchors</b></td><td><b>Lines</b></td></tr>") if $_html;
   print("\n");
+
   foreach my $anchor (@errors) {
     my $format;
+    my @unique = &sort_unique(keys %{$anchors->{$anchor}});
     if ($_html) {
       $format = "<tr class=\"broken\"><td>%s</td><td>%s</td></tr>\n";
     } else {
-      $format = "\t%s\tLines: %s\n";
+      my $s = (scalar(@unique) > 1) ? 's' : '';
+      $format = "\t%s\tLine$s: %s\n";
     }
     printf($format,
            &encode($anchor eq '' ? 'Empty anchor' : $anchor),
-           join(', ', &sort_unique(keys %{$anchors->{$anchor}})));
+           join(', ', @unique));
   }
-  if ($_html) {
-    print("</table>\n");
-  }
+
+  print("</table>\n") if $_html;
 }
 
 sub show_link_report (\%\%\%\%\@;$\%)
 {
   my ($links, $results, $broken, $redirects, $urls, $codes, $todo) = @_;
 
-  if ($_html) {
-    print("\n<dl class=\"report\">");
-  }
+  print("\n<dl class=\"report\">") if $_html;
   print("\n");
 
   # Process each URL
@@ -1318,7 +1308,7 @@ sub show_link_report (\%\%\%\%\@;$\%)
         push (@total_lines, $l);
       }
     }
-    my $lines_list = join(', ', &sort_unique(@total_lines));
+
     # Error type
     $c = &code_shown($u, $results);
     # What to do
@@ -1357,6 +1347,12 @@ on how to solve this</a>.';
       # Directory redirects
       $whattodo = 'Add a trailing slash to the URL.';
     }
+
+    my @unique = &sort_unique(@total_lines);
+    my $lines_list = join(', ', @unique);
+    my $s = (scalar(@unique) > 1) ? 's' : '';
+    undef @unique;
+
     if ($_html) {
       # Style stuff
       my $idref = '';
@@ -1383,7 +1379,7 @@ on how to solve this</a>.';
 <dd>What to do: <strong%s>%s</strong>%s<br></dd>
 <dd>HTTP Code returned: %d%s<br>
 HTTP Message: %s%s%s</dd>
-<dd>Lines: %s</dd>\n",
+<dd>Line%s: %s</dd>\n",
              # Anchor for return codes
              $idref,
              # List of redirects
@@ -1414,6 +1410,7 @@ HTTP Message: %s%s%s</dd>
              : '',
              # HTTP final message
              $http_message,
+             $s,
              # List of lines
              $lines_list);
       if ($#fragments >= 0) {
@@ -1431,7 +1428,7 @@ HTTP Message: %s%s%s</dd>
              $redirected ? join("\n-> ",
                                 &get_redirects($u, %$redirects)) : $u,
              # List of lines
-             $lines_list ? 'Lines: '.$lines_list : '' ,
+             $lines_list ? "Line$s: $lines_list" : '',
              # Original HTTP reply
              $results->{$u}{location}{orig},
              # Final HTTP reply
@@ -1460,23 +1457,22 @@ HTTP Message: %s%s%s</dd>
                # List of lines
                join(', ', &sort_unique(keys %{$links->{$u}{fragments}{$f}})));
       } else {
-        printf("\t%-30s\tLines: %s\n",
+        my @unq = &sort_unique(keys %{$links->{$u}{fragments}{$f}});
+        printf("\t%-30s\tLine%s: %s\n",
                # Fragment
                $f,
+               # Multiple?
+               (scalar(@unq) > 1) ? 's' : '',
                # List of lines
-               join(', ', &sort_unique(keys %{$links->{$u}{fragments}{$f}})));
+               join(', ', @unq));
       }
     }
-    if ($_html) {
-      if ($#fragments >= 0) {
-        print("</dl></dd>\n");
-      }
-    }
+
+    print("</dl></dd>\n") if ($_html && scalar(@fragments));
   }
+
   # End of the table
-  if ($_html) {
-    print("</dl>\n");
-  }
+  print("</dl>\n") if $_html;
 }
 
 sub code_shown ($$)
@@ -1553,13 +1549,9 @@ sub links_summary (\%\%\%\%)
       print "\n";
     }
   } else {
-    if ($_html) {
-      print('<h3>');
-    }
+    print('<h3>') if $_html;
     print("\nList of broken links");
-    if ($_redirects) {
-      print(' and redirects');
-    }
+    print(' and redirects') if $_redirects;
 
     # Sort the URI's by HTTP Code
     my %code_summary;
@@ -1609,13 +1601,9 @@ sub links_summary (\%\%\%\%)
 
   # Show directory redirects
   if ($_redirects && $_dir_redirects && ($#dir_redirect_urls > -1)) {
-    if ($_html) {
-      print('<h3>');
-    }
-    print("\nList of directory redirects:");
-    if ($_html) {
-      print("</h3>\n<p>The links below are not broken, but the document does not use the exact URL.</p>");
-    }
+    print('<h3>') if $_html;
+    print("\nList of directory redirects");
+    print("</h3>\n<p>The links below are not broken, but the document does not use the exact URL.</p>") if $_html;
     &show_link_report($links, $results, $broken, $redirects,
                       \@dir_redirect_urls);
   }
@@ -1630,8 +1618,10 @@ sub links_summary (\%\%\%\%)
 sub global_stats ()
 {
   my $stop = &get_timestamp();
-  return sprintf("Checked %d document(s) in %ss.",
-                 ($doc_count<=$_max_documents? $doc_count : $_max_documents),
+  my $n_docs = ($doc_count <= $_max_documents) ? $doc_count : $_max_documents;
+  return sprintf('Checked %d document%s in %s seconds.',
+                 $n_docs,
+                 ($n_docs == 1) ? '' : 's',
                  &time_diff($timestamp, $stop));
 }
 
@@ -1734,7 +1724,8 @@ sub show_url ($;$)
   if (defined($fragment)) {
     $url .= '#'.$fragment;
   }
-  return('<a href="'.$url.'">'.&encode(defined($fragment) ? $fragment : $url).'</a>');
+  return sprintf('<a href="%s">%s</a>',
+                 $url, &encode(defined($fragment) ? $fragment : $url));
 }
 
 sub html_footer ()
