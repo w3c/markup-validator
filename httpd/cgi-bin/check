@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.37 1999-10-04 17:08:36 gerald Exp $
+# $Id: check,v 1.38 1999-10-04 17:44:44 gerald Exp $
 
 #
 # Load modules
@@ -27,8 +27,8 @@ use constant UNDEF => undef;
 # Constant definitions
 #############################################################################
 
-my $cvsrevision	= '$Revision: 1.37 $';
-my $cvsdate	= '$Date: 1999-10-04 17:08:36 $';
+my $cvsrevision	= '$Revision: 1.38 $';
+my $cvsdate	= '$Date: 1999-10-04 17:44:44 $';
 
 my $logfile	= "/var/log/httpd/val-svc";
 
@@ -52,7 +52,7 @@ my $revision	= $cvsrevision;
    $revision	=~ s/^\$Revision: //;
    $revision	=~ s/ \$$//;
 
-my ( $uri, $validity, $version, $document_type, $xmlflags, %undef_frag,
+my ( $validity, $version, $document_type, $xmlflags, %undef_frag,
     $meta_charset, $http_charset, $effective_charset, $charsets_differ,
     $codeconv, $lastmod, $decl, $catalog, $command, @fake_errors,
     $guessed_doctype, $doctype, $line, $col, $type, $msg, $extraspaces, $diff,
@@ -651,7 +651,8 @@ if ( $? || $guessed_doctype ) {
 	print "\n  <p>\n    Sorry, I can't validate this document.\n  </p>\n";
     }
     else {
-	print "\n  <p>\n    Sorry, this document does not validate as $version.\n  </p>\n";
+	print "\n  <p>\n    Sorry, this document does not validate as $version.\n  </p>\n\n";
+	&output_css_validator_blurb( $q->param('uri') );
     }
     $validity="invalid";
 }
@@ -719,7 +720,7 @@ else {
   </p>
   <pre>
   &lt;p&gt;
-    &lt;a href="$abs_svc_uri"&gt;&lt;img$gifborder
+    &lt;a href="${abs_svc_uri}check/referer"&gt;&lt;img$gifborder
         src="$abs_img_uri$nicegifname"
         alt="$alttext"$gifhw&gt;&lt;/a&gt;
   &lt;/p&gt;</pre>
@@ -728,6 +729,7 @@ else {
     image</a> to keep in your local web directory, and change the HTML fragment
     above to reference your local image rather than the one on this server.
   </p>
+
 EOHD
 	}
     }
@@ -737,8 +739,9 @@ EOHD
 
     my $thispage = $q->self_url;
 
-    print <<"EOHD";
+    &output_css_validator_blurb( $q->param('uri') );
 
+    print <<"EOHD";
   <p>
     If you would like to create a link to <em>this</em> page (i.e., this
     validation result) to make it easier to re-validate this page in the
@@ -1273,6 +1276,24 @@ sub print_unknown_http_error_message {
   </p>
 
 EOF
+
+}
+
+sub output_css_validator_blurb {
+
+    my $uri = shift;
+
+    print <<"EOHD";
+  <p>
+    If you use <a href="http://www.w3.org/Style/css/">CSS</a>
+    in your document, you should also <a
+    href="http://jigsaw.w3.org/css-validator/validator?uri=$uri">check
+    it for validity</a> using W3C's <a
+    href="http://jigsaw.w3.org/css-validator/">CSS
+    Validation Service</a>.
+  </p>
+
+EOHD
 
 }
 
