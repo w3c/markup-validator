@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.19 1999-04-24 23:28:49 gerald Exp $
+# $Id: check,v 1.20 1999-04-26 11:50:20 gerald Exp $
 
 use LWP::UserAgent;
 
@@ -16,8 +16,8 @@ use LWP::UserAgent;
 # Constant definitions
 #############################################################################
 
-$cvsrevision	= '$Revision: 1.19 $';
-$cvsdate	= '$Date: 1999-04-24 23:28:49 $';
+$cvsrevision	= '$Revision: 1.20 $';
+$cvsdate	= '$Date: 1999-04-26 11:50:20 $';
 
 $logfile	= "/var/log/httpd/val-svc";
 
@@ -38,8 +38,6 @@ $xhtmldecl	= "$sgmlstuff/WD-html-in-xml-19990304/DTD/xhtml1.dcl";
 $revision	= $cvsrevision;
 $revision	=~ s/^\$Revision: //;
 $revision	=~ s/ \$$//;
-
-$ENV{USER_AGENT} = "W3C_Validator/$revision";
 
 # $notice		= "<p><strong>Note: This service will be intermittently unavailable for the next few hours for an operating system upgrade.</strong>";
 
@@ -254,9 +252,9 @@ EOF
 }
 
 $ua = new LWP::UserAgent;
+$ua->agent( "W3C_Validator/$revision " . $ua->agent );
 $request = new HTTP::Request(GET => $uri);
 
-$request->headers->user_agent($ENV{USER_AGENT});
 # if we got a Authorization header from the client, it means
 # that the client is back at it after being prompted for
 # a password: let's insert the header as is in the outgoing request
