@@ -8,7 +8,7 @@
     W3C HTML Validation Service, What's New">
   <meta name="description" content="What's New with W3C's Validation Service.">
   <meta name="revision"
-    content="$Id: whatsnew.html,v 1.9 1999-03-04 16:07:40 gerald Exp $">
+    content="$Id: whatsnew.html,v 1.10 1999-04-09 00:21:02 gerald Exp $">
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
@@ -28,6 +28,23 @@
 
 <dl>
 
+<dt><a name="1999.04.08"><strong>April 8, 1999</strong></a>:
+<dd>
+  <p>
+    Added username/password proxying for validation of documents
+    protected by HTTP Basic Authentication, thanks to patches
+    from <a href="http://www.w3.org/People/Renaud/">Renaud
+    Bruyeron</a>. (see <a
+    href="http://dev.w3.org/cgi-bin/cvsweb/validator/httpd/cgi-bin/check.diff?r1=text&amp;tr1=1.16&amp;r2=text&amp;tr2=1.18&amp;f=h">the
+    changes</a>)
+  </p>
+
+  <p>
+    This revision also uses the Perl5 version of libwww-perl, <a
+    href="http://www.linpro.no/lwp/">LWP</a>.
+  </p>
+
+<p>
 <dt><a name="1999.03.04"><strong>March 4, 1999</strong></a>:
 <dd>
   <p>
@@ -142,7 +159,7 @@
      src="http://validator.w3.org/images/vh40.gif" height=31 width=88
      align=right border=0 alt="Valid HTML 4.0!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</A><br>
-     $Date: 1999-03-04 16:07:40 $
+     $Date: 1999-04-09 00:21:02 $
 </address>
 
 </body>
