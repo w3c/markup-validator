@@ -1,40 +1,42 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.18 2004-05-09 15:56:49 link Exp $ */
+/* $Id: results.css,v 1.19 2004-07-21 15:06:55 link Exp $ */
 
 .input {
   color: black;
   background-color: #eee;
-  font-family: "Bitstream Vera Mono", monospace;
+  font-family: "Bitstream Vera Sans Mono", monospace;
   font-size: small;
 }
 
-/* The "Jump To" links in result pages. */
-.jumpbar {
-  float:            left;
-  width:            12ex;
-  text-align:       left;
-  text-decoration:  none;
-  padding:          1ex;
-  background-color: #eee;
-  border-top:       1px solid #eee;
-  border-right:     1px solid black;
-  border-bottom:    1px solid black;
-  margin-top:       -1.3em;
-  font-weight:      bolder;
-  font-size:        smaller;
+/* Various Bits of the Table Header */
+/*
+*/
+fieldset div.moreinfo {
+  float: right;
+  width: 30%;
 }
 
-div.jumpbar ul {
-  padding: 0;
-  margin:  0;
+fieldset div.moreinfo p {
+  background: #FFF;
+  border: 1px solid #CCC;
+  text-align: justify;
+  font-size: smaller;
 }
 
-div.jumpbar li {
-  list-style-type: none;
+fieldset div.cheat {
+  clear: both;
 }
 
-p.jumpbar a:hover {
-  background: #ccc;
+
+table.header {
+  clear: left;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+fieldset table.header {
+  float: left;
+  margin: 1ex;
 }
 
 /* Error Messages Display */
@@ -46,7 +48,6 @@ p.jumpbar a:hover {
 
 .ve {
   font-size: smaller;
-  clear: left;
   padding: 0;
   width: 100%;
 }
@@ -55,23 +56,21 @@ p.jumpbar a:hover {
   line-height: 100%;
   font-style: italic;
   font-size: small;
-  margin: 0;
-}
-
-.ve p.helpwanted {
-  float: right;
-  width: 30ex;
-  border: 1px solid black;
-  background: #eee;
-  font-size: smaller;
-  line-height: 120%;
-  padding: 1ex;
+  margin: 1ex 5em 1ex 1em;
   text-align: justify;
-  margin: 0;
 }
 
-.helpwanted em {
-  font-weight: bolder;
+p.helpwanted {
+  margin-left:  auto;
+  margin-right: auto;
+  font-size: x-small;
+  color:        #888;
+  text-align:       right;
+}
+
+p.helpwanted a {
+  color: #88f;
+  text-decoration: none;
 }
 
 ol#errors code {
@@ -93,35 +92,20 @@ ol#errors li {
 /*
 */
 #source div {
-/* where the source is actually displayed */
+  font-family: "Bitstream Vera Sans Mono", monospace;
+  font-size: smaller;
   background: #eee;
   border: 1px solid black;
-  margin-right: 1em;
-  margin-left: 1em;
-  padding-left: 1em;
-  padding-right: 1em;
+  margin: 1em;
+}
+#source div pre {
+  margin: 1em;
 }
 
-#source code {
-  white-space: normal;
-  font-family: "Bitstream Vera Mono", monospace;
-  font-size: smaller;
-}
-
-
-fieldset {
-  color: black;
-  clear: left;
-  margin-left: auto;
-  margin-right: auto;
-  background-color: #eeeeee;
-}
-
-fieldset legend {
-  background-color: #eee;
-  border-right: 1px solid gray;
-  border-bottom: 1px solid gray;
-  font-weight: bold;
+#source div pre a {
+  color: inherit;
+  background-color: transparent;
+  text-decoration: none;
 }
 
 
@@ -245,7 +229,7 @@ h2.valid {
 .valid {
   background:		#053188;
   color:		white;
-  font-family:		sans-serif;
+  font-family: "Bitstream Vera Sans", sans-serif;
   font-size-adjust:	.53;
   font-size:		1.5em;
   font-weight:		500;
@@ -297,7 +281,7 @@ h2.invalid {
 .invalid {
   background:		#880531;
   color:		white;
-  font-family:		sans-serif;
+  font-family: "Bitstream Vera Sans", sans-serif;
   font-size-adjust:	.53;
   font-size:		1.5em;
   font-weight:		500;

@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.59 2004-05-09 15:56:49 link Exp $"
---><!--#set var="date" value="\$Date: 2004-05-09 15:56:49 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.60 2004-07-21 15:06:55 link Exp $"
+--><!--#set var="date" value="\$Date: 2004-07-21 15:06:55 $"
 --><!--#set var="title" value="The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -15,18 +15,16 @@
 
     <div>
       <h2>Validate Your Markup</h2>
-      <fieldset class="front"><legend>Validate by URI</legend>
+      <fieldset class="front"><legend>Validate by URL</legend>
       <form method="get" action="check">
         <p>
           <label title="Address of page to Validate" for="uri">Address:
             <input id="uri" name="uri" size="40" /></label>
-          <label title="Submit URI for validation"><input type="submit" value="Check" /></label>
-          <input type="hidden" name="verbose" value="0" />
-          <!-- <input type="hidden" name="fussy" value="0" /> -->
+          <label title="Submit URL for validation"><input type="submit" value="Check" /></label>
         </p>
       </form>
       <p>
-        Enter the <abbr title="Uniform Resource Identifier">URI</abbr> of the page
+        Enter the <abbr title="Uniform Resource Locator">URL</abbr> of the page
         you want to check. Advanced options are available from the <a
           title="Extended Interface to the W3C Markup Validation Service"
           href="detailed.html">Extended Interface</a>.
@@ -39,8 +37,6 @@
           <label title="Choose a Local File to Upload and Validate" for="uploaded_file">Local File:
             <input type="file" id="uploaded_file" name="uploaded_file" size="30" /></label>
           <label title="Submit file for validation"><input type="submit" value="Check" /></label>
-          <input type="hidden" name="verbose" value="0" />
-          <!-- <input type="hidden" name="fussy" value="0" /> -->
         </p>
       </form>
       <p>
@@ -55,11 +51,24 @@
     <div id="recent">
       <h2>Recent Updates</h2>
       <dl>
-	<dt><a href="whatsnew.html#t2004-05-07">2004-05-07</a></dt>
-        <dd>Released version 0.6.5, a maintenance release easier to use and install,
-	 featuring new documentation, simpler navigation, new recovery mechanisms instead of fatal errors, 
-	and offering explanations in addition to error messages.</dd>
-        <dt><a href="whatsnew.html#t2002-12-01">2002-12-01</a></dt>
+        <dt><a href="whatsnew.html#t2004-05-21">2004-05-21</a>:
+          Markup Validator v0.6.6 Released</dt>
+        <dd>
+          Released version 0.6.6, a maintenance release that fixes a few minor
+          bugs, resurrects the whitespace-preserving source display, adds
+          explanations for additional error messages, and makes some slight
+          tweaks to the website style.
+        </dd>
+        <dt><a href="whatsnew.html#t2004-05-07">2004-05-07</a>:
+          Markup Validator v0.6.5 Released</dt>
+        <dd>
+          Released version 0.6.5, a maintenance release easier to use and
+          install, featuring new documentation, simpler navigation, new recovery
+          mechanisms instead of fatal errors, and offering explanations in
+          addition to error messages.
+        </dd>
+        <dt><a href="whatsnew.html#t2002-12-01">2002-12-01</a>:
+          Markup Validator v0.6.1 Released</dt>
         <dd>Released version 0.6.1, a maintenance release to fix minor bugs.</dd>
       </dl>
       <p class="intro">

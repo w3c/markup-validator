@@ -3,13 +3,13 @@
 # W3C Markup Validation Service
 # A CGI script to retrieve and validate a markup file
 #
-# Copyright 1995-2002 Gerald Oskoboiny <gerald@w3.org>
+# Copyright 1995-2004 Gerald Oskoboiny <gerald@w3.org>
 # for additional contributors, see http://dev.w3.org/cvsweb/validator/
 #
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.330 2004-05-21 15:42:50 link Exp $
+# $Id: check,v 1.331 2004-07-21 15:07:31 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -48,6 +48,7 @@ use File::Spec           qw();
 use HTML::Parser    3.25 qw(); # Need 3.25 for $p->ignore_elements.
 use HTML::Template  2.6  qw();
 use HTTP::Request        qw();
+use HTTP::Headers::Auth  qw(); # Needs to be imported after other HTTP::*.
 use IO::File             qw();
 use IPC::Open3           qw(open3);
 use LWP::UserAgent  1.90 qw(); # Need 1.90 for protocols_(allowed|forbidden)
@@ -77,6 +78,7 @@ use constant T_INFO  =>  2; # 0000 0010
 use constant T_WARN  =>  4; # 0000 0100
 use constant T_ERROR =>  8; # 0000 1000
 use constant T_FATAL => 16; # 0001 0000
+use constant T_FALL  => 32; # 0010 0000, Fallback in effect.
 
 #
 # Output flags for error processing
@@ -187,7 +189,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.330 $;
+  $VERSION    =  q$Revision: 1.331 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -316,6 +318,7 @@ if ($HAVE_SOAP_LITE) {
   # If ";debug" was given, let it overrule the value from the config file,
   # regardless of whether it's "0" or "1" (on or off).
   $DEBUG = $q->param('debug') if defined $q->param('debug');
+  $File->{Opt}->{Verbose} = TRUE if $DEBUG;
 
   &abort_if_error_flagged($File, O_NONE); # Too early to &print_table.
 
@@ -401,29 +404,37 @@ unless ($File->{Charset}->{Use}) {
   $File->{Charset}->{Use} = $File->{Charset}->{META};
 }
 
+#
+# Handle any Fallback or Override for the charset.
 if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
+  # charset=foo was given to the CGI and it wasn't "autodetect".
+
+  #
+  # Extract the user-requested charset from CGI param.
   my ($override, undef) = split(/\s/, $File->{Opt}->{Charset}, 2);
   $File->{Charset}->{Override} = lc($override);
-  unless ($File->{Charset}->{Use} and $File->{Opt}->{FB}->{Charset}) {
-    if ($File->{Opt}->{FB}->{Charset} and not $File->{Charset}->{Use}) {
+
+  if ($File->{Opt}->{FB}->{Charset}) {
+    unless ($File->{Charset}->{Use}) {
       &add_warning($File, 'fallback', 'No Character Encoding Found!', <<".EOF."); # Warn about fallback...
   Falling back to "$File->{Charset}->{Override}"
   (<a href="docs/users.html#fbc">explain...</a>).
 .EOF.
       $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
-    } else {
-      # Warn about Override...
-      unless ($File->{Charset}->{Override} eq $File->{Charset}->{Use}) {
-        my $cs_use = &ent($File->{Charset}->{Use});
-        my $cs_opt = &ent($File->{Charset}->{Override});
-        &add_warning($File, 'override', 'Character Encoding Override in effect!', <<".EOF.");
+      $File->{Charset}->{Use} = $File->{Charset}->{Override};
+    }
+  } else {
+    # Warn about Override unless it's the same as the real charset...
+    unless ($File->{Charset}->{Override} eq $File->{Charset}->{Use}) {
+      my $cs_use = &ent($File->{Charset}->{Use});
+      my $cs_opt = &ent($File->{Charset}->{Override});
+      &add_warning($File, 'override', 'Character Encoding Override in effect!', <<".EOF.");
       The detected character encoding "<code>$cs_use</code>"
       has been suppressed and "<code>$cs_opt</code>" used instead.
 .EOF.
-        $File->{Tentative} |= T_ERROR;
-      }
+      $File->{Tentative} |= T_ERROR;
+      $File->{Charset}->{Use} = $File->{Charset}->{Override};
     }
-    $File->{Charset}->{Use} = $File->{Charset}->{Override};
   }
 }
 
@@ -523,7 +534,7 @@ $File = &byte_error($File);
 
 #
 # Abort if an error was flagged during transcoding
-&abort_if_error_flagged($File, O_SOURCE);
+&abort_if_error_flagged($File, O_SOURCE|O_CHARSET);
 
 
 
@@ -719,8 +730,8 @@ sub parse (\$) {
   }
   undef $spout;
 
-  if ($File->{ESIS}->[-1] =~ /^C$/) {
-    undef $File->{ESIS}->[-1];
+  if (@{$File->{ESIS}} && $File->{ESIS}->[-1] =~ /^C$/) {
+    pop(@{$File->{ESIS}});
     $File->{'Is Valid'} = TRUE;
   } else {
     $File->{'Is Valid'} = FALSE;
@@ -735,6 +746,18 @@ sub parse (\$) {
   for (@{$File->{ESIS}}) {
     no warnings 'uninitialized';
     next unless /^AVERSION CDATA (.*)/;
+    if ($1 eq '-//W3C//DTD HTML Fallback//EN') {
+      $File->{Tentative} |= (T_ERROR | T_FALL);
+      &add_warning($File, 'fallback', 'DOCTYPE Fallback in effect!', <<".EOF.");
+      The DOCTYPE Declaration in your document was not recognized. This
+      probably means that the Formal Public Identifier contains a spelling
+      error, or that the Declaration is not using correct syntax. Validation
+      has been performed using a default "fallback" Document Type Definition
+      that closely resembles HTML 4.01 Transitional, but the document will not
+      be Valid until you have corrected the problem with the DOCTYPE
+      Declaration.
+.EOF.
+    }
     $File->{Version} = $1;
     last;
   }
@@ -976,29 +999,43 @@ sub doctype_spiel {
 
 #
 # Proxy authentication requests.
+# Note: expects the third argument to be a hash ref (see HTTP::Headers::Auth).
 sub authenticate {
   my $File       = shift;
   my $resource   = shift;
-  my $authHeader = shift;
+  my $authHeader = shift || {};
+
   my $realm = $resource;
   $realm =~ s([^\w\d.-]*){}g;
-  $authHeader =~ s( realm=([\'\"])?([^\1]+)\1){ realm="$realm-$2"};
+  $resource = &ent($resource);
 
-    print <<"EOF";
+  for my $scheme (keys(%$authHeader)) {
+    my $origrealm = $authHeader->{$scheme}->{realm};
+    if (!defined($origrealm) || lc($scheme) !~ /^(?:basic|digest)$/) {
+      delete($authHeader->{$scheme});
+      next;
+    }
+    $authHeader->{$scheme}->{realm} = "$realm-$origrealm";
+  }
+
+  my $headers = HTTP::Headers->new(Connection => 'close');
+  $headers->content_type('text/html; charset=utf-8');
+  $headers->www_authenticate(%$authHeader);
+  $headers = $headers->as_string();
+
+  print <<"EOF";
 Status: 401 Authorization Required
-WWW-Authenticate: $authHeader
-Connection: close
-Content-Type: text/html; charset=utf-8
+$headers
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
   "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
-<html lang="en" xml:lang="en">
+<html lang="en">
   <head><title>401 Authorization Required</title></head>
   <body>
     <h1>Authorization Required</h1>
-    <p>Sorry, I am not authorized to access the specified URI.</p>
+    <p>Sorry, I am not authorized to access the specified URL.</p>
     <p>
-      The URI you specified, &lt;<a href="$resource">$resource</a>&gt;,
+      The URL you specified, &lt;<a href="$resource">$resource</a>&gt;,
       returned a 401 "authorization required" response when I tried
       to download it.
     </p>
@@ -1062,14 +1099,14 @@ sub http_error {
   </blockquote>
 
   <p>
-    Please make sure you have entered the URI correctly.
+    Please make sure you have entered the URL correctly.
   </p>
 
 EOF
 }
 
 #
-# Fetch an URI and return the content and selected meta-info.
+# Fetch an URL and return the content and selected meta-info.
 sub handle_uri {
   my $q    = shift; # The CGI object.
   my $File = shift; # The master datastructure.
@@ -1117,7 +1154,8 @@ sub handle_uri {
 
   unless ($res->code == 200 || $File->{Opt}->{'No200'}) {
     if ($res->code == 401) {
-      &authenticate($File, $res->request->url, $res->www_authenticate);
+      my %auth = $res->www_authenticate(); # HTTP::Headers::Auth
+      &authenticate($File, $res->request->url, \%auth);
     } else {
       $File->{'Error Flagged'} = TRUE;
       $File->{'Error Message'} = &http_error($uri->as_string, $res->code, $res->message);
@@ -1378,8 +1416,11 @@ sub override_doctype {
 
   my $declaration = sub {
     $seen = TRUE;
+
     # No Override if Fallback was requested.
-    unless ($File->{Opt}->{FB}->{DOCTYPE}) {
+    if ($File->{Opt}->{FB}->{DOCTYPE}) {
+      $HTML .= $_[0]; # Stash it as is...
+    } else { # Comment it out and insert the new one...
       $HTML .= "$dtd\n" . '<!-- ' . $_[0] . ' -->';
       $org_dtd = &ent($_[0]);
     }
@@ -1450,11 +1491,17 @@ sub parse_errors ($$) {
     $err->{src}  = $errors[1];
     $err->{line} = $errors[2];
     $err->{char} = $errors[3];
+    # Workaround for onsgmls 1.5 sometimes reporting errors beyond EOL.
+    if ((my $l = length($File->{Content}->[$err->{line}-1])) < $err->{char}) {
+      $err->{char} = $l;
+    }
     $err->{num}  = $errors[4] || '';
     $err->{type} = $errors[5] || '';
     if ($err->{type} eq 'E' or $err->{type} eq 'X' or $err->{type} eq 'Q') {
       $err->{msg}  = join ':', @errors[6 .. $#errors];
     } elsif ($err->{type} eq 'W') {
+      &add_warning($File, 'fake', 'Warning:',
+        "Line $err->{line}, column $err->{char}: " . &ent($errors[6]));
       $err->{msg}  = join ':', @errors[6 .. $#errors];
     } else {
       $err->{type} = 'I';
@@ -1544,7 +1591,7 @@ sub report_errors ($) {
 
       #DEBUG: Print misc. vars relevant to source display.
       if ($DEBUG) {
-        $line .= "<br/> <strong>org length: $orglength - adj length: $adjlength - org col: $orgcol - adj col: $adjcol</strong>";
+        $line .= "<br /> <strong>org length: $orglength - adj length: $adjlength - org col: $orgcol - adj col: $adjcol</strong>";
       }
       #DEBUG;
 
@@ -1696,7 +1743,7 @@ sub outline {
     $heading =~ s/\\012/ /g;
     $heading =~ s/\\n/ /g;
     $heading =~ s/\s+/ /g;
-    $heading = substr($heading, 1); # chop the leading '-' or ' '.
+    $heading =~ s/^[- ]//;
     $heading = &ent($heading);
     $outline .= "    <li>$heading</li>\n";
   }
@@ -1722,8 +1769,11 @@ sub source {
   $File->{Content}->[0] =
     substr $File->{Content}->[0], ($File->{BOM} ? 3 : 0); # remove BOM
 
+  my $line    = 1;
+  my $maxhlen = length scalar @{$File->{Content}};
   for (@{$File->{Content}}) {
-    push @source, {file_source_i => $line, file_source_line => ent $_};
+    my $hline = (' ' x ($maxhlen - length("$line"))) . $line;
+    push @source, {file_source_i => $line, file_source_line => ent $hline};
     $line++;
   }
   return \@source;
@@ -1743,11 +1793,8 @@ sub parsetree {
   my $prevdata = '';
 
   foreach my $line (@{$File->{ESIS}}) {
-    if ($File->{Opt}->{'No Attributes'}) { # don't show attributes
-      next if $line =~ /^A/;
-      next if $line =~ /^\(A$/;
-      next if $line =~ /^\)A$/;
-    }
+
+    next if ($File->{Opt}->{'No Attributes'} && $line =~ /^A/);
 
     $line =~ s/\\n/ /g;
     $line =~ s/\\011/ /g;
@@ -1773,15 +1820,19 @@ sub parsetree {
 
     my $printme;
     chomp($printme = $line);
-    $printme =~ s{^([()])(.*)} # reformat and add links on HTML elements
-                 { my $close = '';
-                      $close = "/" if $1 eq ")"; # ")" -> close-tag
-                   "&lt;" . $close . "<a href=\"" .
-                   $CFG->{Element_Ref_URI} . $CFG->{Element_Map}->{lc($2)} .
-                   "\">$2<\/a>&gt;"
-                 }egx;
-    $printme =~ s,^A,  A,; # indent attributes a bit
+    if (my ($close, $elem) = $printme =~ /^([()])(.+)/) {
+      # reformat and add links on HTML elements
+      $close = ($close eq ')') ? '/' : ''; # ")" -> close-tag
+      if (my $u = $CFG->{'Element Map'}->{lc($elem)}) {
+        $elem = '<a href="' . $CFG->{'Element Ref URI'} . "$u\">$elem</a>";
+      }
+      $printme = "&lt;$close$elem&gt;";
+    } else {
+      $printme =~ s,^A,  A,; # indent attributes a bit
+    }
+
     $tree .= ' ' x $indent . $printme . "\n";
+
     if ($line =~ /^\(/) {
       $indent += 2;
     }
@@ -1895,7 +1946,7 @@ sub prepCGI {
     }
   }
 
-  # Futz the URI so "/referer" works.
+  # Futz the URL so "/referer" works.
   if ($q->path_info) {
     if ($q->path_info eq '/referer' or $q->path_info eq '/referrer') {
       if ($q->referer) {
@@ -1917,7 +1968,7 @@ sub prepCGI {
     $q->param('uri', $q->param('url'));
   }
 
-  # Munge the URI to include commonly omitted prefix.
+  # Munge the URL to include commonly omitted prefix.
   my $u = $q->param('uri');
   $q->param('uri', "http://$u") if $u && $u =~ m(^www)i;
 
@@ -1934,6 +1985,7 @@ sub prepCGI {
       $File->{'Error Flagged'} = TRUE;
       $File->{'Error Message'} = <<".EOF.";
       <div class="error">
+        <a id="skip" name="skip"></a>
         <h2><strong>No Referer header found!</strong></h2>
         <p>
           You have requested we check the referring page, but your browser did
@@ -1948,20 +2000,20 @@ sub prepCGI {
           Please use the form interface on the
           <a href="$CFG->{'Home Page'}">Validator Home Page</a> (or the
           <a href="detailed.html">Extended Interface</a>) to check the
-          page by URI.
+          page by URL.
         </p>
       </div>
 .EOF.
     }
   }
 
-  # Supersede URI with an uploaded file.
+  # Supersede URL with an uploaded file.
   if ($q->param('uploaded_file')) {
     $q->param('uri', 'upload://' . $q->param('uploaded_file'));
     $File->{'Is Upload'} = TRUE; # Tag it for later use.
   }
 
-  # Supersede URI with an uploaded fragment.
+  # Supersede URL with an uploaded fragment.
   if ($q->param('fragment')) {
     $q->param('uri', 'upload://Form Submission');
     $File->{'Is Upload'} = TRUE; # Tag it for later use.
@@ -2018,6 +2070,7 @@ sub ip_rejected {
   $msg = 'of ' . $msg if ($ip && $host ne $ip);
   return sprintf(<<".EOF.", &ent($msg));
     <div class="error">
+      <a id="skip" name="skip"></a>
       <p>
         Sorry, the IP address %s is not public.
         For security reasons, validating resources located at non-public IP
@@ -2029,26 +2082,27 @@ sub ip_rejected {
 
 
 #
-# Output errors for a rejected URI.
+# Output errors for a rejected URL.
 sub uri_rejected {
   my $scheme = shift || 'undefined';
 
   return sprintf(<<".EOF.", &ent($scheme));
     <div class="error">
+      <a id="skip" name="skip"></a>
       <p>
         Sorry, this type of
-        <a href="http://www.w3.org/Addressing/#terms">URI</a>
+        <a href="http://www.w3.org/Addressing/">URL</a>
         <a href="http://www.iana.org/assignments/uri-schemes">scheme</a>
         (<q>%s</q>) is not supported by this service. Please check
-        that you entered the URI correctly.
+        that you entered the URL correctly.
       </p>
-      <p>URIs should be in the form: <code>http://validator.w3.org/</code></p>
+      <p>URLs should be in the form: <code>http://validator.w3.org/</code></p>
       <p>
-        If you entered a valid URI using a scheme that we should support,
+        If you entered a valid URL using a scheme that we should support,
         please let us know as outlined on our
         <a href="feedback.html">Feedback page</a>. Make sure to include the
-        specific URI you would like us to support, and if possible provide a
-        reference to the relevant standards document describing the URI scheme
+        specific URL you would like us to support, and if possible provide a
+        reference to the relevant standards document describing the URL scheme
         in question.
       </p>
       <p class="tip">
@@ -2098,18 +2152,6 @@ sub charset_conflicts {
   my $cs_http = $File->{Charset}->{HTTP} ? &ent($File->{Charset}->{HTTP}) : '';
   my $cs_xml  = $File->{Charset}->{XML}  ? &ent($File->{Charset}->{XML})  : '';
   my $cs_meta = $File->{Charset}->{META} ? &ent($File->{Charset}->{META}) : '';
-
-  #
-  # warn about charset override
-  if ($File->{Charset}->{Override} &&
-      $File->{Charset}->{Override} ne $File->{Charset}->{Use}) {
-    &add_warning($File, 'override', 'Character Encoding Override in effect!', <<".EOF.");
-      The detected character encoding, "<code>$cs_use</code>", has been
-      suppressed and the character encoding "<code>$cs_opt</code>" used
-      instead.
-.EOF.
-    $File->{Tentative} |= T_ERROR;
-  }
 
   #
   # Add a warning if there was charset info conflict (HTTP header,
@@ -2191,14 +2233,15 @@ sub transcode {
     my $in = $_;
     $line++;
     $_ = $c->convert($_); # $_ is local!!
-    if ($in ne "" and $_ eq "") {
+    if ($in ne "" and (!defined($_) || $_ eq "")) {
       push @{$File->{Lines}}, $line;
       # try to decoded as much as possible of the line
       my $short = 0;               # longest okay
       my $long = (length $in) - 1; # longest unknown
       while ($long > $short) { # binary search
         my $try = int (($long+$short+1) / 2);
-        if ($c->convert(substr($in,0,$try)) eq "") {
+        my $converted = $c->convert(substr($in, 0, $try));
+        if (!defined($converted) || $converted eq "") {
           $long  = $try-1;
         } else {
           $short = $try;

@@ -4,7 +4,7 @@
    Copyright 2000-2004 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: navbar.css,v 1.7 2004-05-09 15:56:49 link Exp $
+   $Id: navbar.css,v 1.8 2004-07-21 15:06:55 link Exp $
 */
 
 html {
@@ -117,13 +117,12 @@ html {
   text-decoration: underline;
 }
 
-
 /* Jump Bar  - results page*/
 
 .jumpbar {
   float:            right;
   width: 8em;
-  margin-right: -.4em; /* FIXME - find the exact value - */
+/*  margin-right: -.4em; */ /* FIXME - find the exact value - */
   text-align:       left;
   text-decoration:  none;
   padding:          1ex;
@@ -132,20 +131,27 @@ html {
   border-bottom:    1px solid black;
   margin-top:       -1.3em; 
   font-size:        smaller;
+  font-weight:      bold;
 }
 
-div.jumpbar ul {
+.jumpbar ul {
   padding: 0;
   margin:  0;
 }
 
-div.jumpbar li {
+.jumpbar li {
   list-style-type: none;
+  text-align: right;
 }
 
-div.jumpbar li a:link, div.jumpbar li a:visited {
+div.jumpbar li a:hover {
+  background: #fff;
+  text-decoration: underline;
+}
+
+.jumpbar li a:link, .jumpbar li a:visited {
   text-decoration: none;
-  text-align: center;
+  text-align: right;
   display: block;
   width: 8em;
   padding: 2px 0px;
@@ -156,11 +162,7 @@ div.jumpbar li a:link, div.jumpbar li a:visited {
   border-top: dotted 1px black;
 }
 
-div.jumpbar li a:hover {
-  text-decoration: underline;
-}
-
-div.jumpbar li a#selected:link, div.jumpbar li a#selected:visited {
+.jumpbar li a#selected:link, .jumpbar li a#selected:visited {
   text-decoration: underline;
   background-color: #fff;
   color: #053188;

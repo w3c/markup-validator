@@ -26,7 +26,7 @@
   <xsl:template match="meta">
   <table id="meta" summary="Metadata concerning the page">
     <tbody>
-      <tr><th scope="row">URI</th>            <td><a><xsl:attribute name="href"><xsl:value-of select="uri"/></xsl:attribute></a></td></tr>
+      <tr><th scope="row">URL</th>            <td><a><xsl:attribute name="href"><xsl:value-of select="uri"/></xsl:attribute></a></td></tr>
       <tr><th scope="row">Last Modified</th>  <td><xsl:value-of select="modified"/></td></tr>
       <tr><th scope="row">Server</th>         <td><xsl:value-of select="server"/></td></tr>
       <tr><th scope="row">Content-Length</th> <td><xsl:value-of select="size"/></td></tr>

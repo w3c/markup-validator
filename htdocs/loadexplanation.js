@@ -6,7 +6,7 @@ if (w && d && d.getElementsByTagName){
 }
 function doubleUp() {
  glist=d.getElementsByTagName("DIV")
- upto(10)
+ upto(1)
 }
 function upto(n) {
  if (n<glist.length) {

@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.32 2004-05-09 15:56:49 link Exp $
+   $Id: base.css,v 1.33 2004-07-21 15:06:55 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -18,7 +18,7 @@ html, body {
   color:           black;
   background:      white;
   font-weight:     normal;
-  font-family:     "Bitstream Vera Sans", sans-serif;
+  font-family: "Bitstream Vera Sans", sans-serif;
   font-style:      normal;
   text-decoration: none;
   margin:  0;
@@ -43,22 +43,24 @@ dt {
 
 /* Fieldsets in general */
 fieldset {
-/*  max-width:     80%; */
+  background: #FCFCFC;
+  border: 1px dotted #053188;
   margin-left:   1em;
   margin-right:  1em;
+  padding:       1em;
 }
 
-/* The front-page fieldsets */
-fieldset.front {
-  background: inherit;
-  border: 1px dotted #053188;
-}
-
-fieldset.front legend {
+fieldset legend {
   color: #053188;
+  background: #FFF;
   font-variant: small-caps;
   padding: .1ex .5ex;
+  border-right: 1px solid gray;
+  border-bottom: 1px solid gray;
+  font-weight: bold;
 }
+
+
 
 .intro {
   font-style: italic;
@@ -86,7 +88,7 @@ abbr[title], acronym[title], span[title], strong[title] {
 }
 
 pre, code, tt {
-  font-family: monospace;
+  font-family: "Bitstream Vera Sans Mono", monospace;
   line-height: 100%;
   white-space: pre;
 }
@@ -144,7 +146,7 @@ address {
 }
 
 address {
-  background-image: url(images/footer);
+  background-image: url(images/footer.jpg);
   background-repeat: no-repeat;
   background-attachment: scroll;
   height: 50px;
@@ -160,7 +162,7 @@ p.copyright {
   text-transform: uppercase;
   margin-left:    auto;
   margin-right:   auto;
-  font-family:    monospace;
+  font-family: "Bitstream Vera Sans Mono", monospace;
   color:          #888;
   line-height:    120%;
 }
@@ -183,7 +185,7 @@ div.colophon em {
 
 /* Various header(ish) things. Definitions cribbed from the CORE Styles. */
 h1 {
-  font-family: sans-serif;
+  font-family: "Bitstream Vera Sans", sans-serif;
   font-size-adjust: .53;
   font-size: 2em;
   font-weight: bold;
@@ -195,7 +197,7 @@ h1 {
 display: inline}
 
 #banner {
-background-image: url(images/header);
+background-image: url(images/header.jpg); /* only jpg version - png too big! */
 background-repeat: no-repeat;
 background-attachment: scroll;
 height: 50px;
@@ -224,9 +226,13 @@ h1#title {
   color: red;
 }
 
-h2 {
-  font-family: sans-serif;
+h1, h2, h3, h4, h5, h6, dt {
+  font-family: "Bitstream Vera Sans", sans-serif;
   font-size-adjust: .53;
+  font-variant: small-caps;
+}
+
+h2 {
   font-size: 1.5em;
   text-align: center;
   font-weight: bold;
@@ -238,21 +244,17 @@ h2 {
 }
 
 h3 {
-  font-family: sans-serif;
-  font-size-adjust: .53;
   font-size: 1.3em;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: none;
   background-color: #eee;
   text-indent: 2em;
   padding: .2em;
   border-top: 1px dotted black;
-  font-weight: normal;
-  font-style: normal;
-  text-decoration: none;
 }
 
 h4 {
-  font-family: sans-serif;
-  font-size-adjust: .53;
   font-size: 1.1em;
   font-weight: 600;
   font-style: normal;
@@ -260,8 +262,6 @@ h4 {
 }
 
 h5, dt {
-  font-family: sans-serif;
-  font-size-adjust: .53;
   font-size: 1em;
   font-weight: bold;
   font-style: normal;
@@ -271,14 +271,12 @@ h5, dt {
 }
 
 h6 {
-  font-family: sans-serif;
-  font-size-adjust: .53;
-  color: #666;
-  text-indent: 1em;
   font-size: 1em;
   font-style: italic;
-  margin:0;
   text-decoration: none;
+  color: #666;
+  text-indent: 1em;
+  margin:0;
 }
 
 /* comma tools table */
@@ -286,13 +284,13 @@ h6 {
 td.comma-desc {
   background: #ffeecc;
   border : 1px solid black;
-  font-family: sans-serif
+  font-family: "Bitstream Vera Sans", sans-serif
 }
 
 td.comma-shortcut {
   background: #e7e7ff; 
   border : 1px solid black;
-  font-family: monospace;
+  font-family: "Bitstream Vera Sans Mono", monospace;
 }
 
 td.comma-tool {
@@ -321,40 +319,19 @@ input {
 
 input.reset {
   text-align: center;
-  font-family: monospace;
+  font-family: "Bitstream Vera Sans Mono", monospace;
 }
 
 input.default {
   text-align: center;
   font-weight: bold;
-  font-family: monospace;
+  font-family: "Bitstream Vera Sans Mono", monospace;
 }
 
-/* comma tools table */
-
-td.comma-desc { background: #ffeecc;  
-border : 1px solid black;
-font-family: sans-serif }
-td.comma-shortcut { background: #e7e7ff; 
-border : 1px solid black;
-font-family: monospace }
-td.comma-tool { background: #e7e7ff;  border : 1px solid black;}
-
-
-/* config param table */
-
-table.config tr th {
-  text-align: left;
-  background: #e7e7ff;
-}
-table.config tr td {
-  background: #ffeecc;  
-  border : 1px solid black;
-  font-family: sans-serif;
+div#recent {
+  margin-right: 5em;
 }
 
-table.config tr td.subtable {
-  background: white;
-  border: none;
+div#recent dt {
+  margin-top: 1em;
 }
-

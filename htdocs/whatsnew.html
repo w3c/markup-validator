@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.39 2004-05-09 15:56:49 link Exp $"
---><!--#set var="date" value="\$Date: 2004-05-09 15:56:49 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.40 2004-07-21 15:06:55 link Exp $"
+--><!--#set var="date" value="\$Date: 2004-07-21 15:06:55 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -15,31 +15,53 @@
       </p>
     </div>
     <dl>
+      <dt id="t2004-05-21">2004-05-21 &mdash; 0.6.6 Release:</dt>
+      <dd>
+        <p>
+          A maintenance release that fixes a 
+<a href="http://www.w3.org/Bugs/Public/buglist.cgi?product=Validator&amp;target_milestone=0.6.6">few minor bugs</a>, 
+	  resurrects the
+          whitespace-preserving source display, adds explanations for additional
+          error messages, and makes some slight tweaks to the website style.
+        </p>
+        <p>
+            This version also tentatively fixes a bug where, for Document Instances 
+	    with a Document Type Name of "html", but with
+            an incorrect Formal Public Identifier, the Validator would fall back
+            to HTML 4.01 Transitional and, if no other errors were found,
+            silently ignore the erroneous FPI.
+        </p>
+      </dd>
       <dt id="t2004-05-07">2004-05-07 &mdash; 0.6.5 Release:</dt>
       <dd>
-      <p>Stable release including all the fixes and improvements made in consecutive beta versions 
-	<a href="#t2004-04-30">0.6.5 Beta #3</a>, 
-	<a href="#t2004-04-15">0.6.5 Beta #2</a>, 
-	<a href="#t2003-08-26">0.6.5 Beta #1</a>,
-	<a href="http://lists.w3.org/Archives/Public/www-validator/2003Jun/0062.html">0.6.2 beta #2</a>, and
-	<a href="http://lists.w3.org/Archives/Public/www-validator/2003May/0069.html">0.6.2 beta #1</a>
-      </p>
+        <p>
+          Stable release including all the fixes and improvements made in
+          consecutive beta versions <a href="#t2004-04-30">0.6.5 Beta #3</a>,
+          <a href="#t2004-04-15">0.6.5 Beta #2</a>,
+          <a href="#t2003-08-26">0.6.5 Beta #1</a>,
+          <a href="http://lists.w3.org/Archives/Public/www-validator/2003Jun/0062.html">0.6.2 beta #2</a>,
+      and <a href="http://lists.w3.org/Archives/Public/www-validator/2003May/0069.html">0.6.2 beta #1</a>
+        </p>
       </dd>
       <dt id="t2004-04-30">2004-04-30 &mdash; 0.6.5 Beta #3:</dt>
       <dd>
         <p>
-	  Testing version 0.6.5 Beta #3 of the Markup Validator; an intermediary
-	  version including further layout, style and documentation improvements
-	  over version 0.6.5 Beta #2, based on discussion and comments during
-	  the testing phase of that version.
-	  Changes include:
-	</p>  
-	<ul>
-	  <li>Simpler navigation system - removed the "links" navigation bar</li>
-	  <li>More consistent layout</li>
-	  <li>A few issues with the way some agents were dealing with our Style Sheets
-	  were fixed. Other minor style fixes were also applied</li>
-	  <li>Cleanup of grammar issues and typos in a large part of the documentation.</li>
+          Testing version 0.6.5 Beta #3 of the Markup Validator; an intermediary
+          version including further layout, style and documentation improvements
+          over version 0.6.5 Beta #2, based on discussion and comments during
+          the testing phase of that version. Changes include:
+        </p>
+        <ul>
+          <li>Simpler navigation system - removed the "links" navigation bar</li>
+          <li>More consistent layout</li>
+          <li>
+            A few issues with the way some agents were dealing with our Style
+            Sheets were fixed. Other minor style fixes were also applied.
+          </li>
+          <li>
+            Cleanup of grammar issues and typos in a large part of the
+            documentation.
+          </li>
         </ul>
       </dd>
 
@@ -87,7 +109,7 @@
           <li>Update ISO-HTML DTD to TC1.</li>
           <li>Update SVG 1.0 DTD to current Errata.</li>
           <li>Added support for ISO-8859-16 Encoding.</li>
-          <li>Added support for the data: URI scheme.</li>
+          <li>Added support for the data: URL scheme.</li>
           <li>The Link Checker in command-line mode now supports bundling of options.</li>
           <li>The Validator RPMs now try to integrate with the system catalog.</li>
           <li>
@@ -365,7 +387,7 @@
       <dd>
         <p>
           Added support for a parameter to check the referring Web page for
-          mistakes. To use it, just link to the following URI when linking to
+          mistakes. To use it, just link to the following URL when linking to
           the service &lt;<a href="http://validator.w3.org/check/referer">http://validator.w3.org/check/referer</a>&gt;
           (you can try the link to see how it works).
         </p>

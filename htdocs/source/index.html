@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.30 2004-05-09 15:56:52 link Exp $"
---><!--#set var="date" value="\$Date: 2004-05-09 15:56:52 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.31 2004-07-21 15:07:26 link Exp $"
+--><!--#set var="date" value="\$Date: 2004-07-21 15:07:26 $"
 --><!--#set var="title" value="Source Code Availability for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -32,8 +32,8 @@
       terms of the <a
         href="http://www.w3.org/Consortium/Legal/copyright-software"><acronym
           title="World Wide Web Consortium">W3C</acronym>
-	Software License</a>. Tarballs of the source, and available binary
-      distributions, of the latest production version is always available at
+	Software License</a>. Source tarball of the latest production
+      version is always available at
       &lt;<a href="http://validator.w3.org/validator.tar.gz">http://validator.w3.org/validator.tar.gz</a>&gt;.
       Development code is only available from CVS.
     </p>
@@ -59,23 +59,24 @@
 	   <p>
             If you want a copy of all the files that make up the service, you
             can download a tarball of <a href="http://validator.w3.org/validator.tar.gz">the code</a>
-	    (~161kB) and <a href="http://validator.w3.org/sgml-lib.tar.gz">the <acronym
-              title="Document Type Definitions">DTDs</acronym></a> (~2.6MB).
+	    (~266kB) and <a href="http://validator.w3.org/sgml-lib.tar.gz">the <acronym
+              title="Document Type Definitions">DTDs</acronym></a> (~3.2MB).
           </p>
         <h4><a id="rpm" name="rpm"></a>RPM package</h4>
           <p>
             RPM packages are available, courtesy of Ville Skytt&auml;, at
-            &lt;<a href="http://cachalot.mine.nu/1/">http://cachalot.mine.nu/1/</a>&gt;.
+            Fedora Extras,
+            &lt;<a href="http://www.fedora.us/">http://www.fedora.us/</a>&gt;.
           </p>
           <p>
             The RPMs have only been tested on
-            <a href="http://fedora.redhat.com/">Fedora</a> Core 1,
+            <a href="http://fedora.redhat.com/">Fedora</a> Core 1 and 2,
             but should be adaptable to other RPM based systems.
           </p>
           <p>
             Note that the Validator RPMs have several dependencies, you'll
-            have to get at least the following RPMs (other dependencies are
-            included in the Fedora Core distribution):
+            have to get at least the following RPMs from Fedora Extras (other
+            dependencies are included in the Fedora Core distribution):
           </p>
           <ul>
             <li>w3c-markup-validator</li>
@@ -88,12 +89,12 @@
           <p>
             In addition, each of these may have further dependencies that must
             be satisfied. All the necessary RPMs are either included in
-            the Fedora Core distribution or are available from
-            &lt;<a href="http://cachalot.mine.nu/1/">http://cachalot.mine.nu/1/</a>&gt; or
-            &lt;<a href="http://www.fedora.us/">http://www.fedora.us/</a>&gt;.
-            Use of an automated package management tool, such as apt, up2date
-            or yum is strongly recommended.  See the links above for more
-            information about getting and configuring these tools.
+            the Fedora Core distribution(s) or are available from
+            <a href="http://www.fedora.us/">Fedora Extras</a>.
+            Use of an automated package management tool to install the
+            packages, such as apt, up2date or yum is <em>strongly</em>
+            recommended.  See the Fedora Extras documentation for information
+            about getting and configuring these tools.
           </p>
         <h4><a name="deb" id="deb"></a>Debian package</h4>
           <p>
@@ -137,7 +138,7 @@
     bash$ <kbd>cvs login</kbd>
     (Logging in to anonymous@dev.w3.org)
     CVS password: <kbd>anonymous</kbd>
-    bash$ <kbd>cvs get -r validator-0_6_5 validator</kbd>
+    bash$ <kbd>cvs get -r validator-0_6_6-release validator</kbd>
     cvs server: Updating validator
     cvs server: Updating validator/htdocs
     U validator/htdocs/about.html
