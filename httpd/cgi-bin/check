@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.122 2001-06-22 08:53:26 link Exp $
+# $Id: check,v 1.123 2001-06-23 01:09:01 link Exp $
 
 #
 # We need Perl 5.004.
@@ -77,9 +77,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.122 $;
+$VERSION    =  q$Revision: 1.123 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-22 08:53:26 $;
+$DATE       =  q$Date: 2001-06-23 01:09:01 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -567,7 +567,7 @@ EOHD
 if   ($?) {&process_errors($File)}
 else      {&report_valid($File)};
 
-&weblint($File)     if $q->param('weblint');
+&weblint()          if $q->param('weblint');
 &outline($File)     if $q->param('outline');
 &show_source($File) if $q->param('ss');
 &parse_tree($File)  if $q->param('sp');
@@ -1250,64 +1250,31 @@ EOHD
 }
 
 #
-# Run file through Neil Bower's "weblint". Legacy support. Deprecated!
+# Legacy support. Print blurb to clarify status of weblint support.
 sub weblint {
-  my $File = shift;
-  my $pedanticflags;
-  my $pedantic_blurb;
-
-  if ($q->param('pw')) {
-    $pedanticflags  = '-pedantic -e mailto-link';
-    $pedantic_blurb = ' (in "pedantic" mode)';
-  } else {
-    $pedanticflags = '';
-  }
-
   print <<"EOF";
-  <hr>
-  <h2><a name="weblint">Weblint Results</a></h2>
-
-  <p>
-    Below are the results of running <a
-    href="http://www.weblint.org/">Weblint</a>
-    on this document$pedantic_blurb:
-  </p>
-
-  <p>
-    <strong>Note</strong>:
-    Weblint is a useful HTML syntax and style checker, but does
-    not do true HTML validation.
-    Also, the version of weblint used by this service has not
-    been updated for some time, so some of the messages below may
-    be misleading or inaccurate.
-  </p>
+  <div class="mtb">
+    <hr>
+    <h2><a name="weblint">Weblint Doesnt Live Here Any More</a></h2>
+    <p>
+      <a href="http://www.weblint.org/">Weblint</a> is no longer beeing
+      maintained and has become badly out of date with the current state
+      of the web, and so this feature has been deprecated.
+    </p>
+    <p>
+      If you want to get the Weblint results you can use one of the web
+      frontends referenced from the
+      <a href="http://www.weblint.org/">Weblint</a> home page or install
+      a copy of it locally.
+    </p>
+    <p>
+      We are currently investigating alternative methods to replace the
+      Weblint feature in the Validator.
+      <a href="http://www.w3.org/People/Raggett/tidy/">Tidy</a> appears
+      to be a likely candidate at this point.
+    </p>
+  </div>
 EOF
-
-  open WEBLINT, "|$weblint -s $pedanticflags - 2>&1 >$temp.weblint"
-    or die "open($weblint) returned: $!\n";
-  for (@{$File->{Content}}) {print WEBLINT $_, "\n"};
-  close WEBLINT;
-
-  print "\n\n";
-  if ($?) {
-    print "  <ul>\n";
-    open WEBLINTOUT, "$temp.weblint"
-      or die "open($temp.weblint) returned: $!\n";
-
-    while (<WEBLINTOUT>) {
-      s/ \(use "-x <extension>" to allow this\)\.$/./go;
-      s/&/&amp;/go;
-      s/</&lt;/go;
-      s/>/&gt;/go;
-      print "    <li>$_";
-    }
-
-    close WEBLINTOUT or die "close($temp.weblint) returned: $!\n";
-    print "  </ul>\n";
-  } else {
-    print "\n  <blockquote>\n    Looks good to me!\n  </blockquote>\n";
-  }
-  print "\n\n";
 }
 
 #
