@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.58 2000-07-13 21:18:55 hugo Exp $
+# $Id: checklink.pl,v 2.59 2000-07-17 14:26:48 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -34,7 +34,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.58 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.59 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -1515,7 +1515,7 @@ sub html_header() {
 <!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">
 <html>
 <head>
-<title>W3C Link Ckecker: $uri</title>
+<title>W3C Link Checker: $uri</title>
 <style type=\"text/css\">
 
 body {
