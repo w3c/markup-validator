@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200 2002-03-02 00:58:29 link Exp $
+# $Id: check,v 1.200.2.1 2002-03-03 22:08:16 link Exp $
 
 #
 # We need Perl 5.004.
@@ -24,6 +24,8 @@ use URI::Escape;
 use CGI::Carp;
 use CGI qw(:cgi -newstyle_urls -private_tempfiles);
 use Text::Wrap;
+use IPC::Open3;
+use IO::File;
 use Text::Iconv; # on debian: apt-get install libtext-iconv-perl 
 use HTML::Parser 3.25; # Need 3.25 for $p->ignore_elements.
                        # DWC tweaks this in his local set-up.
@@ -95,9 +97,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200 $;
+$VERSION    =  q$Revision: 1.200.2.1 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2002-03-02 00:58:29 $;
+$DATE       =  q$Date: 2002-03-03 22:08:16 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -117,12 +119,6 @@ $element_uri = &read_cfg($elem_db); # Element -> URI fragment
 $file_type   = &read_cfg($type_db); # Content -> File -type
 $doctypes    = &read_cfg($dtds_db); # Name    -> doctype
 $charsets    = &read_cfg($chst_db); # charset -> iconv parameter
-
-#
-# Set up signal handlers.
-$SIG{TERM} = \&erase_stuff;
-$SIG{KILL} = \&erase_stuff;
-$SIG{PIPE} = 'IGNORE';
 
 #
 # delete() the, possibly tainted, $PATH.
@@ -577,22 +573,28 @@ if ($File->{Type} eq 'xhtml') {
   $xmlflags             .= ' -wno-valid' unless $File->{DOCTYPE};
 }
 
-my $command  = "$sp -f$temp -E0 $xmlflags -c $catalog";
+my $cmd = "$sp -c $catalog -E0 $xmlflags";
+&add_table("commandline", "<code>$cmd</code>") if $DEBUG;
 
-&add_table("nsgmls command line", "<code>$command</code>") if $DEBUG;
+my $spin  = IO::File->new;
+my $spout = IO::File->new_tmpfile;
+my $sperr = IO::File->new_tmpfile;
 
-open CHECKER, "|$command - >$temp.esis"
-  or &internal_error ("open(|$command - >$temp.esis) returned: $!");
+my $pid = do {
+  local(*SPOUT, *SPERR) = ($spout, $sperr);
+  open3($spin, ">&SPOUT", ">&SPERR", $cmd);
+};
 
-for (@{$File->{Content}}) {print CHECKER $_, "\n"};
-close CHECKER;
+for (@{$File->{Content}}) {print $spin $_, "\n"};
+close $spin;
+waitpid $pid, 0;
+seek $_, 0, 0 for $spout, $sperr;
 
-$File = &parse_errors($File, $temp); # Parse error output.
+$File = &parse_errors($File, $sperr); # Parse error output.
 
 $File->{ESIS} = [];
 my $elements_found = 0;
-open ESIS, "$temp.esis" or &internal_error("open($temp.esis) returned: $!");
-while (<ESIS>) {
+while (<$spout>) {
   push @{$File->{'DEBUG'}->{ESIS}}, $_;
   $elements_found++ if /^\(/;
 
@@ -610,7 +612,8 @@ while (<ESIS>) {
   chomp; # Removes trailing newlines
   push @{$File->{ESIS}}, $_;
 }
-close ESIS              or warn "close($temp.esis) returned: $!";
+undef $spout;
+
 
 my $fpi;
 my $version = 'unknown';
@@ -854,17 +857,7 @@ sub internal_error {
     Please contact <a href="mailto:$MAINTAINER">maintainer</a>.
 EOF
   &output_closing;
-  &erase_stuff;
   die "$dieMessage\n";
-}
-
-
-#
-# Delete temporary files.
-sub erase_stuff {
-  unlink $temp        or warn "unlink($temp) returned: $!\n";
-  unlink "$temp.esis" or warn "unlink($temp.esis) returned: $!\n";
-  unlink "$temp.weblint";
 }
 
 
@@ -872,7 +865,6 @@ sub erase_stuff {
 # Clean up and exit... :-)
 sub clean_up_and_exit {
   &output_closing;
-  &erase_stuff;
   exit;
 }
 
@@ -1364,12 +1356,11 @@ sub supress_doctype {
 # Parse errors reported by SP.
 sub parse_errors ($$) {
   my $File = shift;
-  my $file = shift;
+  my $fh   = shift;
 
   $File->{Errors} = []; # Initialize to an (empty) anonymous array ref.
 
-  open ERRORS, "<$file" or &internal_error("open($file) returned: $!");
-  for (<ERRORS>) {
+  for (<$fh>) {
     push @{$File->{'DEBUG'}->{Errors}}, $_;
     my($err, @errors);
     next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
@@ -1405,11 +1396,9 @@ sub parse_errors ($$) {
     }
     push @{$File->{Errors}}, $err;
   }
-  close ERRORS          or &internal_error("close($file) returned: $!\n");
-
+  undef $fh;
   return $File;
 }
-
 
 #
 # Generate a HTML report of detected errors.
