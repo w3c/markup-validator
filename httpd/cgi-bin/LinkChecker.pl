@@ -5,7 +5,7 @@
 # (c) 1999 World Wide Web Consortium
 # based on Renaud Bruyeron's checklin.pl
 #
-# $Id: LinkChecker.pl,v 1.5 1999-12-01 20:40:33 hugo Exp $
+# $Id: LinkChecker.pl,v 1.6 1999-12-01 21:52:54 hugo Exp $
 #
 # This program is licensed under the W3C License.
 
@@ -21,7 +21,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C LinkChecker';
-my $VERSION = '$Revision: 1.5 $ (c) 1999 W3C';
+my $VERSION = '$Revision: 1.6 $ (c) 1999 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -59,8 +59,8 @@ if ($#ARGV >= 0) {
     use CGI;
     $query = new CGI;
     $_cl = 0;
-#    $_quiet = 1;
     $_verbose = 0;
+    $_progress = 0;
     if ($query->param('summary')) {
         $_summary = 1;
     } else {
@@ -68,7 +68,6 @@ if ($#ARGV >= 0) {
     if (! $query->param('redirects')) {
         $_redirects = 0;
     }
-    $_progress = 0;
     $_html = 1;
     my $uri;
     if ($query->param('uri')) {
@@ -264,7 +263,8 @@ sub check_uri() {
         foreach $lines (keys %{$p->{Links}{$link}}) {
             my $canonical = URI->new($abs_link_uri->canonical());
             my $url = $canonical->scheme().':'.$canonical->opaque();
-            my $fragment = $canonical->fragment() ? $canonical->fragment() : $url;
+            my $fragment = $canonical->fragment()
+                ? $canonical->fragment() : $url;
             $links{$url}{$fragment}{$lines} = 1;
         }
     }
@@ -752,23 +752,23 @@ sub links_summary(\%,\%,\%) {
         }
     }
     foreach $u (@urls) {
-        my @fragments = keys %{$broken->{$u}};
+        my @fragments = keys %{$links->{$u}};
         my $n_fragments = $#fragments+1;
         my $redirected = &is_redirected($u, %$redirects);
         my $lines_list;
         if (defined($links->{$u}{$u}{-1})) {
-            $lines_list = '';
-            $n_fragments++;
+            $lines_list = '-';
         } else {
             $lines_list = join(', ',
                                sort {$a <=> $b} keys %{$links->{$u}{$u}});
         }
         if ($_html) {
-            printf("<tr><th rowspan=\"%d\">%s</th><th rowspan=\"%d\">%d%s</th><td>%s</td><td>%s</td></tr>\n",
+            printf("<tr><th rowspan=\"%d\">%s</th><th rowspan=\"%d\"%s>%d%s</th><td>%s</td><td>%s</td></tr>\n",
                    $n_fragments,
                    $redirected ? join('<br>-&gt; ',
                                       &get_redirects($u, %$redirects)) : $u,
                    $n_fragments,
+                   &bgcolor($results->{$u}{$u}{code}),
                    $results->{$u}{$u}{code},
                    $results->{$u}{$u}{message}
                    ? '<br>'.$results->{$u}{$u}{message}
@@ -812,16 +812,56 @@ sub html_header() {
     my $uri = HTML::Entities::encode($_[0]);
     print "Content-type: text/html
 
-<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\">
+<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">
 <html>
 <head>
 <title>W3C Link Ckecker: $uri</title>
 <style type=\"text/css\">
+
+BODY {
+  font-family: sans-serif;
+  color: black;
+  background: white;
+}
+
+A:link, A:active {
+  color: #00E;
+  background: transparent;
+}
+
+A:visited {
+  color: #529;
+  background: transparent;
+}
+
+PRE {
+  font-family: monospace
+}
+
 </style>
 </head>
 <body>
 <h1>W3C Link Checker: $uri</h1>
 \n";
+}
+
+sub bgcolor() {
+    my ($code) = @_;
+    my $color;
+    my $r = HTTP::Response->new($code);
+    if ($r->is_success()) {
+        return '';
+    }
+    if ($code == 300) {
+        return ' bgcolor="magenta"';
+    }
+    if ($r->is_redirect()) {
+        return ' bgcolor="yellow"';
+    }
+    if ($r->is_error()) {
+        return ' bgcolor="red"';
+    }
+    return ' bgcolor="grey"';
 }
 
 sub html_footer() {
