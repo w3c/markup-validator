@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.348 2004-10-10 15:23:21 ville Exp $
+# $Id: check,v 1.349 2004-10-16 20:51:40 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -227,7 +227,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.348 $;
+  $VERSION    =  q$Revision: 1.349 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1174,6 +1174,7 @@ sub handle_uri {
   my $uri = new URI (ref $q ? $q->param('uri') : $q);
 
   my $ua = new LWP::UserAgent;
+  $ua->env_proxy();
   $ua->agent("W3C_Validator/$VERSION " . $ua->agent);
   $ua->parse_head(0);  # Parse the http-equiv stuff ourselves. @@ Why?
 
