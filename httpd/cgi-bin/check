@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.259 2002-10-25 02:42:45 link Exp $
+# $Id: check,v 1.260 2002-10-25 05:58:43 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.259 $;
+  $VERSION    =  q$Revision: 1.260 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -156,7 +156,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-25 02:42:45 $,
+			      Date => q$Date: 2002-10-25 05:58:43 $,
 			     });
 
 #
@@ -1468,7 +1468,7 @@ sub report_errors ($) {
   my $File = shift;
 
   print <<"EOHD";
-    <h2 id="results" class="invalid">This Page Is <strong>NOT</strong> Valid $File->{Version}!</h2>
+    <h2 id="results" class="invalid">This page is <strong>not</strong> Valid $File->{Version}!</h2>
 EOHD
 
   if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 'svg' or $File->{Type} eq 'smil') {
