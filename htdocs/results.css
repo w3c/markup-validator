@@ -1,15 +1,38 @@
 
 /* style sheet for the validator's results page */
 
-/* $Id: results.css,v 1.2 1999-10-26 12:58:58 gerald Exp $ */
+/* $Id: results.css,v 1.3 2001-06-25 19:03:57 link Exp $ */
 
 .markup {
-color: red;
-font-weight: bolder;
+  color: red;
+  font-weight: bolder;
 }
 
 .input {
-color: black;
-background-color: #eeeeee; /* light grey */
+  color: black;
+  background-color: #eeeeee; /* light grey */
 }
 
+table.header {
+  background-color: silver;
+}
+
+th {
+  text-align: right;
+  padding-right: .5em;
+}
+
+/* This doesn't work in sufficient portions of browsers. :-(
+th:after {
+  content: ": ";
+}
+*/
+
+td {
+  text-align: left;
+  padding-left: .5em;
+}
+
+h1.title img {
+  vertical-align: middle;
+}

@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.131 2001-06-25 05:42:29 duerst Exp $
+# $Id: check,v 1.132 2001-06-25 19:03:57 link Exp $
 
 #
 # We need Perl 5.004.
@@ -79,9 +79,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.131 $;
+$VERSION    =  q$Revision: 1.132 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-25 05:42:29 $;
+$DATE       =  q$Date: 2001-06-25 19:03:57 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -190,7 +190,7 @@ $html40t_doctype
   </head>
 
   <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
-    <h1><a href="http://www.w3.org/"><img
+    <h1 class="title"><a href="http://www.w3.org/"><img
        src="http://www.w3.org/Icons/WWW/w3c_home"
        width=72 height=48 border="0" alt="W3C"></a>
       <a href="/">HTML Validation Service</a> Results</h1>
@@ -324,35 +324,35 @@ if ($File->{Charset} ne 'unknown' and $File->{Charset} ne 'us-ascii') {
 
 #
 # Print header and jump links.
-print $File->{Results}, qq(\n    <h2>Document Checked</h2>\n), &build_jump_links;
+print $File->{Results}, &build_jump_links;
 
 #
 # Print the list of meta data.
-print "  <ul>\n";
+print qq(  <form method="get" action="/check">\n    <table class="header">\n);
 
 #
 # Print different things if we got redirected or had a file upload.
 if (URI::eq("$File->{URI}", $q->param('uri'))) { # @@ Why do we need to stringify here?
-  print ' ' x 4, qq(<li><a href="$uri_def_uri">URI</a>: );
-  print '<a href="', ent($File->{URI}), '">', ent($File->{URI}), qq(</a>\n);
+  print ' ' x 4, qq(<tr><th><a href="$uri_def_uri">URI</a>: </th>);
+  print qq(<td><input type="text" name="uri" size="50" value="$File->{URI}" /></td></tr>);
 } elsif ($q->param('uploaded_file')) {
-  print ' ' x 4, '<li>File: ', $File->{URI}, "</li>\n";
+  print ' ' x 4, '<tr><th>File: </th><td>', $File->{URI}, "</td></tr>\n";
 } else {
-  print ' ' x 4, qq(<li><a href="$uri_def_uri">URI</a>: );
-  print '<a href="', $q->param('uri'), '">', $q->param('uri'), qq(</a>\n),
+  print ' ' x 4, qq(<tr><th><a href="$uri_def_uri">URI</a>: </th>);
+  print '<td><a href="', $q->param('uri'), '">', $q->param('uri'), qq(</a>\n),
   ' ' x 6, qq(<span class="note">), qq(I was redirected to &lt;URI:),
   '<a href="', $File->{URI}, '">', $File->{URI}, '</a>&gt;', qq(</span>\n),
-  ' ' x 4, qq(</li>\n);
+  ' ' x 4, qq(</td></tr>\n);
 }
 
-print(' ' x 4, q(<li>Last modified: ),  $File->{Modified}, qq(</li>\n))
+print(' ' x 4, q(<tr><th>Last Modified: </th><td>),  $File->{Modified}, qq(</td></tr>\n))
   if $File->{Modified};
-print(' ' x 4, q(<li>Server: ),         $File->{Server},   qq(</li>\n))
+print(' ' x 4, q(<tr><th>Server: </th><td>),         $File->{Server},   qq(</td></tr>\n))
   if $File->{Server};
-print(' ' x 4, q(<li>Content length: ), $File->{Size},     qq(</li>\n))
+print(' ' x 4, q(<tr><th>Content Length: </th><td>), $File->{Size},     qq(</td></tr>\n))
   if $File->{Size};
 
-print ' ' x 4, q(<li>Character encoding: ), $File->{Charset};
+print ' ' x 4, q(<tr><th>Character Encoding: </th><td>), $File->{Charset};
 if ($File->{HTTP_Charset} ne $File->{META_Charset}
     and $File->{HTTP_Charset} ne ''
     and $File->{META_Charset} ne ''
@@ -374,7 +374,7 @@ EOHD
       I will use "<code>$File->{Charset}</code>" for this validation.</span></em>
 EOHD
 }
-print ' ' x 4, qq(</li>\n);
+print ' ' x 4, qq(</td></tr>\n);
 
 {  # block for character conversion and checking
   my @lines;
@@ -464,7 +464,7 @@ if ($File->{Type} eq 'xhtml') {
 
 my $command  = "$sp -f$temp -E0 $xmlflags -c $catalog";
 
-print "\t<li>nsgmls command line: <code>$command</code>\n" if $DEBUG;
+print "\t<tr><th>nsgmls command line: </th><td><code>$command</code></td></tr>\n" if $DEBUG;
 
 open CHECKER, "|$command - >$temp.esis"
   or die "open(|$command - >$temp.esis) returned: $!\n";
@@ -516,34 +516,35 @@ if ($File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml') {
 $version = $pub_ids->{$fpi} || 'unknown';
 
 if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
-  print ' ' x 4, qq(<li>Document type: ), $version;
-  if ($File->{Type} eq 'xhtml'
-      and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
+  print ' ' x 4, qq(<tr><th>Document Type: </th><td>$version</td></tr>\n);
+  if ($File->{Type} eq 'xhtml' and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
     print "<br>warning: unknown namespace for text/html document!";
     if ($File->{Namespace} ne '') {
-      print qq{, <a href="$File->{Namespace}">$File->{Namespace}</a>};
+      print qq(<tr><th>Root Namespace: </th>),
+	qq(<td><a href="$File->{Namespace}">$File->{Namespace}</a>);
     }
-    print "\n";
+    print "<br>Warning: unknown namespace for text/html document!";
+    print "</td></tr>\n";
   } else {
     if ($File->{Namespace} ne '') {
-      print qq( with namespace <a href="$File->{Namespace}">$File->{Namespace}</a>);
+      print qq(<tr><th>Root Namespace: </th>),
+	qq(<td><a href="$File->{Namespace}">$File->{Namespace}</a></td></tr>);
     }
   }
 
   if (scalar keys %{$File->{Namespaces}} > 1) {
-    print "<br>Other namespaces in this document: ";
+    print "<tr><th>Other Namespaces: </th><td><ul>";
     for (keys %{$File->{Namespaces}}) {
       next if $_ eq $File->{Namespace}; # Don't repeat Root Namespace.
-      print qq(<a href="$_">$_</a>, ), "\n";
+      print qq(<li><a href="$_">$_</a></li>\n);
     }
+    print "</ul></td></tr>\n";
   }
-  print qq(</li>\n);
 } else {
-  print ' ' x 4, qq(<li>Document type: ), $version, qq(</li>\n);
+  print ' ' x 4, qq(<tr><th>Document Type: </th><td>), $version, qq(</td></tr>\n);
 }
-print ' ' x 2, qq(</ul>\n\n);
-
 &revalidate($q, $File);
+print ' ' x 2, qq(</table>\n</form>\n);
 
 if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
   my $xmlvalid = ($File->{DOCTYPE} ? ' and validity' : '');
@@ -1483,23 +1484,22 @@ sub revalidate {
   my $File = shift;
 
   print <<".EOF.";
-  <div id="controls">
-    <form method="get" action="/check">
+  <tr id="controls"><th>Options: </th>
+    <td>
       <input type="hidden" name="uri" value="$File->{URI}">
-      <p>
 .EOF.
   print " " x 8, '<input type="checkbox" value="" name="ss"',
     ($q->param('ss')      ? 'checked="checked"' : ''), ' />Show Source';
-  print " " x 8, '<input type="checkbox" value="" name="sp"',
-    ($q->param('sp')      ? 'checked="checked"' : ''), ' />Parse Tree';
   print " " x 8, '<input type="checkbox" value="" name="outline"',
     ($q->param('outline') ? 'checked="checked"' : ''), ' />Outline';
+  print " " x 8, '<input type="checkbox" value="" name="sp"',
+    ($q->param('sp')      ? 'checked="checked"' : ''), ' />Parse Tree';
   print " " x 8, '<input type="checkbox" value="" name="noatt"',
-    ($q->param('noatt')   ? 'checked="checked"' : ''), ' />...no attributes';
-  print "      </p>\n      <p>\n        Doctype: ";
+    ($q->param('noatt')   ? 'checked="checked"' : ''), ' />...no attributes</td>';
+  print "        <tr><th>Doctype: </th><td>";
   print $q->popup_menu(-name => 'doctype',
 		       -values => [
-				   'Inline',
+				   '(specified inline)',
 				   'XHTML 1.0 Strict',
 				   'XHTML 1.0 Transitional',
 				   'XHTML 1.0 Frameset',
@@ -1513,8 +1513,6 @@ sub revalidate {
 		      );
   print <<".EOF.";
         <input type="submit" value="Revalidate" />
-      </p>
-    </form>
-  </div>
+    </td></tr>
 .EOF.
 }
