@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.149 2001-07-18 20:41:43 link Exp $
+# $Id: check,v 1.150 2001-07-18 21:35:41 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.149 $;
+$VERSION    =  q$Revision: 1.150 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-18 20:41:43 $;
+$DATE       =  q$Date: 2001-07-18 21:35:41 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1137,6 +1137,12 @@ sub parse_errors ($$) {
     next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
     next if /numbers exceeding 65535 not supported/;
     next if /URL Redirected to/;
+    if (/character "(.)(.)(.)" not allowed in prolog/) {
+      if (ord($1) == 0xEF and ord($2) == 0xBB and ord($3) eq 0xBF) {
+	next; # Skip error on BOM in UTF-8; amended by XML 1.0 SE!
+      }
+    }
+
     my(@_err) = split /:/;
     if ($_err[1] =~ m(^<URL>)) {
       @errors = ($_err[0], join(':', $_err[1], $_err[2]), @_err[3..$#_err]);
