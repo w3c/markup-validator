@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.298 2002-11-19 11:51:41 link Exp $
+# $Id: check,v 1.299 2002-11-19 11:58:55 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.298 $;
+  $VERSION    =  q$Revision: 1.299 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-19 11:51:41 $,
+                              Date => q$Date: 2002-11-19 11:58:55 $,
                              });
 
 #
@@ -215,14 +215,16 @@ $File->{Opt}->{'No Attributes'}  = $q->param('noatt')   ? TRUE                  
 $File->{Opt}->{'Show ESIS'}      = $q->param('esis')    ? TRUE                   :  FALSE;
 $File->{Opt}->{'Show Errors'}    = $q->param('errors')  ? TRUE                   :  FALSE;
 $File->{Opt}->{'Verbose'}        = $q->param('verbose') ? TRUE                   :  FALSE;
-$File->{Opt}->{'Debug'}          = $q->param('debug')   ? TRUE                   :  FALSE;
 $File->{Opt}->{'No200'}          = $q->param('No200')   ? TRUE                   :  FALSE;
 $File->{Opt}->{'Charset'}        = $q->param('charset') ? lc $q->param('charset'):     '';
 $File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') ? $q->param('doctype')   :     '';
 $File->{Opt}->{'URI'}            = $q->param('uri')     ? $q->param('uri')       :     '';
 $File->{Opt}->{'Output'}         = $q->param('output')  ? $q->param('output')    : 'html';
 
-$DEBUG ||= $File->{Opt}->{Debug};
+#
+# If ";debug" was given, let it overrule the value from the config file,
+# regardless of whether it's "0" or "1" (on or off).
+$DEBUG = $q->param('debug') if $q->param('debug');
 
 &abort_if_error_flagged($File, 0);
 
