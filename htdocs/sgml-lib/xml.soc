@@ -4,7 +4,7 @@ OVERRIDE YES
 PUBLIC "-//W3C//DTD Specification V2.0//EN" "http://www.w3.org/XML/1998/06/xmlspec-v20.dtd"
 SYSTEM "spec.dtd" "http://www.w3.org/XML/1998/06/xmlspec-v20.dtd"
 
--- MathMLL 2.0 Catalog Data File --
+-- MathML 2.0 Catalog Data File --
 -- MathML 2.0 DTD driver --
 
 PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN"
