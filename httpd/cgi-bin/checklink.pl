@@ -2,7 +2,7 @@
 
 $|++;
 
-$VERSION= '$Id: checklink.pl,v 1.6 1998-09-03 00:20:23 renaudb Exp $ ';
+$VERSION= '$Id: checklink.pl,v 1.7 1998-09-03 18:34:18 renaudb Exp $ ';
 
 BEGIN {
     unshift@INC,('/usr/etc/apache/PerlLib');
@@ -57,8 +57,9 @@ sub main {
 	&checklinks($q->param('url'),$q);
     } else {
 	print "bof";
-	if($CGI) { print $q->h1('We are in a CGI'); }
+	print $q->h1('We are in a CGI');
     }
+    print $q->hr,$q->i($VERSION);
     print $q->end_html;
 }
 
@@ -137,7 +138,7 @@ sub checklinks {
 		$URL{Registered}{$abso->abs}="True";
 	    }
 	    $response = $ua->wait(10);
-	    &print_result();
+	    &print_result($url);
 	} else {
 	    # error handling if error on fetching document to be checklink-ed
 	    if($r->code == 401){
@@ -164,20 +165,22 @@ sub checklinks {
 # does not show 200s)
 # sorting by something is tricky. I'll look at it later. A nasty map-sort-map should do it
 sub print_result{
+    my $url = shift;
 
+    print $q->h2('Result for '.$q->a({href=>$url},$url));
     print "<table border=\"1\"><TR ALIGN=\"center\"><TD>Lines</TD><TD>URI</TD><TD>Code</TD><TD>Extra</TD></TR>\n" if($CGI);
     foreach my $resp (map {$response->{$_}->response} keys %$response){
 	if($resp->code ne "200"){
 	    print "<TR><TD ALIGN=\"center\">" if ($CGI);
 	    print join(",",sort keys %{$URL{$resp->request->url}});
-	    print "</TD><TD BGCOLOR=\"yellow\"><B>".$q->a({href=>$resp->request->url},$resp->request->url)."</B></TD><TD>",$resp->code,"</TD><TD>" if($CGI);
+	    print "</TD><TD BGCOLOR=\"yellow\"><B>".$q->a({href=>$resp->request->url},$resp->request->url)."</B></TD><TD ALIGN=\"center\">",$resp->code,"</TD><TD>" if($CGI);
 	    print " ",$resp->request->url, ": ",$resp->code," " if($VERBOSE);
 	    if($resp->code == 401){
 		print $resp->headers->www_authenticate;
 	    }
 	    print "</TD></TR>\n" if($CGI);
 	} else {
-	    print "<TR><TD ALIGN=\"center\">".join(",",sort keys %{$URL{$resp->request->url}})."</TD><TD>".$q->a({href=>$resp->request->url},$resp->request->url)."</TD><TD>",$resp->code,"</TD><TD></TD></TR>\n" if($CGI);
+	    print "<TR><TD ALIGN=\"center\">".join(",",sort keys %{$URL{$resp->request->url}})."</TD><TD>".$q->a({href=>$resp->request->url},$resp->request->url)."</TD><TD ALIGN=\"center\">ok</TD><TD></TD></TR>\n" if($CGI);
 	}
     }
     print "</table>\n" if($CGI);
@@ -189,7 +192,7 @@ sub print_result{
 sub html_header {
     $q = shift;
     print $q->header;
-    print $q->start_html(-title=>'W3C\'s Link Checker',-BGCOLOR=>'white');
+    print $q->start_html(-title=>(defined $q->param('url')?'Checking '.$q->param('url'):'W3C\'s Link Checker'),-BGCOLOR=>'white');
     print $query->a({href=>"http://www.w3.org"},$query->img({src=>"http://www.w3.org/Icons/w3c_home",alt=>"W3C",border=>"0"}));
     print $query->a({href=>"http://www.w3.org/Web"},$query->img({src=>"http://www.w3.org/Icons/WWW/web",border=>"0",alt=>"Web Team"}));
 }
