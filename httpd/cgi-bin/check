@@ -8,14 +8,16 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.40 1999-10-05 18:58:55 gerald Exp $
+# $Id: check,v 1.41 1999-10-25 06:10:03 gerald Exp $
 
 #
 # Load modules
+use strict;
 use LWP::UserAgent;
 use URI::Escape;
+use CGI::Carp;
 use CGI qw(:cgi -newstyle_urls -private_tempfiles);
-use strict;
+use Text::Wrap;
 
 #
 # Define global constants
@@ -27,8 +29,8 @@ use constant UNDEF => undef;
 # Constant definitions
 #############################################################################
 
-my $cvsrevision	= '$Revision: 1.40 $';
-my $cvsdate	= '$Date: 1999-10-05 18:58:55 $';
+my $cvsrevision	= '$Revision: 1.41 $';
+my $cvsdate	= '$Date: 1999-10-25 06:10:03 $';
 
 my $logfile	= "/var/log/httpd/val-svc";
 
@@ -201,7 +203,7 @@ if ($q->param('url') and not $q->param('uri')) {
 #
 # Send them to the homepage unless we can extract a URI from either of the
 # acceptable sources: uri, url or /referer.
-&redirect_to_home_page unless length( $q->param('uri') ) > 5;
+&redirect_to_home_page unless length($q->param('uri')) > 5;
 
 #
 # Munge the URI to include commonly omitted prefixes/suffixes.
@@ -421,38 +423,41 @@ $command  = "$codeconv $sp -E0 $xmlflags $catalog $decl";
 
 # print "  <li>nsgmls command line: <code>$command</code>\n";
 
-open( CHECKER, "| $command - >$temp.esis 2>$temp" )
-	|| die "couldn't open checker: $!";
+open CHECKER, "|$command - >$temp.esis 2>$temp"
+  or die "open(|$command - >$temp.esis 2>$temp) returned: $!\n";
 
 print CHECKER "$doctype\n" if $guessed_doctype;
 # this is a kludge for DOS users with their entire file on a single line
 # like http://bogo.w3.org/test/samuels.html
 if ( $#file == 0 ) {
-    @file = (split(//,$file[0]));
+    @file = (split(/
+/,$file[0]));
     for (0..$#file) {
 	$file[$_] .= "\n";
     }
 }
 # kludge for other DOS users with CRLFs
 for (@file) {
-    s/+$//;
+    s/
++$//;
     print CHECKER $_, "\n";
 }
-close( CHECKER ) or warn "couldn't close checker";
+close CHECKER                   or warn "close(CHECKER) returned: $!\n";
 
-open( ERRORS, "< $temp" )	|| die "couldn't open checker results: $!";
+open ERRORS, "<$temp"           or die  "open($temp) returned: $!\n";
 my @errors = <ERRORS>;
-close( ERRORS )			|| die "couldn't close checker results: $!";
+close ERRORS                    or warn "close(ERRORS) returned: $!\n";
 
 my @esis;
-open( ESIS, "$temp.esis" )	|| die "couldn't read parser output: $!";
+open ESIS, "$temp.esis"         or die  "open($temp.esis) returned: $!\n";
 while (<ESIS>) {
     next if / IMPLIED$/;
     next if /^ASDAFORM CDATA /;
     next if /^ASDAPREF CDATA /;
-    push(@esis,$_);
+    chomp; # Removes trailing newlines
+    push @esis, $_;
 }
-close( ESIS )			|| die "couldn't close parser output: $!";
+close ESIS                      or warn "close(ESIS) returned: $!";
 
 my $fpi;
 $version = "unknown";
@@ -813,64 +818,65 @@ EOF
     print "\n\n";
 }
 
-if ( $q->param('outline') ) {
-    print <<'EOF';
-  <hr>
-  <h2><a name="outline">Outline</a></h2>
-
-  <p>
-    Below is an outline for this document, automatically generated from the
-    heading tags (<code>&lt;H1&gt;</code> through <code>&lt;H6&gt;</code>.)
-  </p>
+if ($q->param('outline')) {
+  print <<'EOF';
+  <DIV id="outline" class="mtb">
+    <HR>
+    <H2><A name="outline">Outline</A></H2>
+    <P>
+      Below is an outline for this document, automatically generated from the
+      heading tags (<CODE>&lt;H1&gt;</CODE> through <CODE>&lt;H6&gt;</CODE>.)
+    </P>
 EOF
 
-    $prevlevel = 0;
-    $indent = 0;
-    for (1..$#esis) {
-	$line = $esis[$_];
-	next if / IMPLIED$/;
-	next if /^ASDAFORM CDATA /;
-	next if /^ASDAPREF CDATA /;
-	next unless $line =~ /^\(H[1-6]$/i;
-	$prevlevel = $level;
-	$level = substr( $line, 2, 1 );
+  my $prevlevel = 0;
+  my $indent    = 0;
+  my $level     = 0;
+  for (1 .. $#esis) {
+    my $line = $esis[$_];
+    next unless $line =~ /^\(H([1-6])$/i;
+    $prevlevel = $level;
+    $level     = $1;
 
-	print "    </ul>\n" x ( $prevlevel - $level     );  # perl is so cool.
-	if ( $level - $prevlevel == 1 ) {
-	    print "    <ul>\n";
-	}
-	foreach $i ( ($prevlevel+1) .. ($level-1)) {
-	    print "  <ul>\n    <li><em>A level $i heading is missing!</em>\n";
-	}
-	if ( $level - $prevlevel > 1 ) {
-	    print "    <ul>\n";
-	}
-
-	$line = "foo";
-	my $heading = "";
-	while ( substr( $line, 0, 3 ) !~ /^\)H$level/i ) {
-	    $line = $esis[$_++];
-	    if ( $line =~ /^-/ ) {
-		my $headcont = $line;
-		substr( $headcont, 0, 1 ) = " ";
-		$headcont =~ s/\\n/ /g;
-		$heading .= $headcont;
-	    }
-	}
-
-	$heading = substr( $heading, 1 );	# chop the leading '-'
-	$heading =~ s/&/&amp;/go; $heading =~ s/</&lt;/go;
-
-	print "    <li>$heading";
+    print "    </UL>\n" x ($prevlevel - $level); # perl is so cool.
+    if ($level - $prevlevel == 1) {
+      print "    <UL>\n";
     }
-    print "    </ul>\n" x ( $level );
-    print <<'EOF';
-    <p>
+    foreach my $i (($prevlevel + 1) .. ($level - 1)) {
+      print qq(  <UL>\n    <LI class="warning">A level $i heading is missing!\n);
+    }
+    if ($level - $prevlevel > 1) {
+      print "    <UL>\n";
+    }
+
+    $line       = '';
+    my $heading = '';
+    until (substr($line, 0, 3) =~ /^\)H$level/i) {
+      $line = $esis[$_++];
+      if ($line =~ /^-/) {
+	my $headcont = $line;
+	substr($headcont, 0, 1) = " ";
+	$headcont =~ s/\\n/ /g;
+	$heading .= $headcont;
+      } elsif ($line =~ /^AALT CDATA( .+)/) {
+	my $headcont = $1;
+	$headcont =~ s/\\n/ /g;
+	$heading .= $headcont;
+      }
+    }
+
+    $heading = substr($heading, 1); # chop the leading '-' or ' '.
+    $heading =~ s/&/&amp;/go; $heading =~ s/</&lt;/go;
+    print "    <LI>$heading</LI>\n";
+  }
+  print "    </UL>\n" x $level;
+  print <<'EOF';
+    <P>
       If this does not look like a real outline, it is likely that the
       heading tags are not being used properly. (Headings should reflect
       the logical structure of the document; they should not be used simply
       to add emphasis, or to change the font size.)
-    </p>
+    </P>
 EOF
 }
 
@@ -899,87 +905,81 @@ EOF
     print "</pre>\n";
 }
 
-if ( $q->param('sp') ) {
-    print <<'EOF';
-  <hr>
-  <h2><a name="parse">Parse Tree</a></h2>
-
-  <p>
-    Below is the parse tree for this document. <em>Note: this feature is
-    still under construction! I am trying to make this easier to read
-    somehow, with little success.
+if ($q->param('sp')) {
+  print <<'EOF';
+  <DIV id="parse" class="mtb">
+    <HR>
+    <H2><A name="parse">Parse Tree</A></H2>
+    <P class="note">
+      Note that this feature is still under construction! I am trying to make
+      this easier to read somehow, with little success.
+    </P>
 EOF
-
-    unless ( $q->param('noatt') ) {
-	print <<'EOF';
-    It helps a bit if you select the
-    "don't show attributes" option on the <a href="./#byURI">form</a>.
-EOF
-    }
-    print "</em>\n  </p>\n\n";
-
-    if ( $q->param('noatt') ) {
-	print <<'EOF';
-    <p>
+    if ($q->param('noatt')) {
+      print <<'EOF';
+    <P class="note">
       I am excluding the attributes, as you requested.
-    </p>
+    </P>
+EOF
+    } else {
+      print <<'EOF';
+    <P class="note">
+      It helps a bit if you select the "don't show attributes" option on the
+      <A href="./#byURI">form</A>.
+    </P>
 EOF
     }
 
-    $indent = 0;
-    print "<pre>\n";
-    for (@esis) {
-	if ( $q->param('noatt') ) {
-	    next if /^A/;
-	    next if /^\(A$/;
-	    next if /^\)A$/;
-	}
+  my $indent   = 0;
+  my $prevdata = '';
 
-# experimental: skip data if it is only newlines and space.
-# next if /^-(\\n|\s+)*$/;
-
-# another way to do the same thing:
-# experimental: skip data if it's only newlines and space.
-s/\\n/ /g; s/\\011/ /g; s/\s+/ /g;
-next if /^-\s*$/;
-
-if ( /^-/ ) {
-    chop;
-    substr( $_, 0, 1 ) = " ";
-# $_ = substr( $_, 1 );	# experimental. previous line works OK.
-    $prevdata .= $_;
-    next;
-}
-else {
-    $prevdata =~ s/&/&amp;/go;
-    $prevdata =~ s/</&lt;/go;
-    $prevdata =~ s/\s+/ /go;
-# should wrap this to 80 columns or whatever. check tchrist's wrapping hack from c.l.p.m.
-    print " " x $indent . "$prevdata\n";
-    undef $prevdata;
-}
-# end of experimental stuff
-
-
-#	next unless /^AHREF CDATA /;	# this is interesting when uncommented
-	s/&/&amp;/go;
-	s/</&lt;/go;
-	if ( /^\)/ ) {
-	   $indent -= 3;
-	}
-
-	my $printme;
-	chop( $printme = $_ );
-	$printme =~ s/^\((.*)/&lt;$1&gt;\n/;
-	$printme =~ s/^\)(.*)/&lt;\/$1&gt;/;
-	print " " x $indent . "$printme";
-#	print " " x $indent . "$_";
-
-	if ( /^\(/ ) {
-	   $indent += 3;
-	}
+  print "<PRE>\n";
+  foreach my $line (@esis) {
+    if ($q->param('noatt')) {
+      next if $line =~ /^A/;
+      next if $line =~ /^\(A$/;
+      next if $line =~ /^\)A$/;
     }
-    print "</pre>\n";
+
+    #
+    # Experimental: skip data if it's only newlines and space.
+    $line =~ s/\\n/ /g;
+    $line =~ s/\\011/ /g;
+    $line =~ s/\s+/ /g;
+    next if $line =~ /^-\s*$/;
+
+    if ($line =~ /^-/) {
+      substr($line, 0, 1) = ' ';
+      $prevdata .= $line;
+      next;
+    } elsif ($prevdata) {
+      $prevdata =~ s/&/&amp;/go;
+      $prevdata =~ s/</&lt;/go;
+      $prevdata =~ s/\s+/ /go;
+      print wrap(' ' x $indent, ' ' x $indent, $prevdata), "\n";
+      undef $prevdata;
+    }
+    # End of experimental stuff.
+    #
+
+    # This is interesting when uncommented
+    # next unless /^AHREF CDATA /;
+    $line =~ s/&/&amp;/go;
+    $line =~ s/</&lt;/go;
+    if ($line =~ /^\)/) {
+      $indent -= 2;
+    }
+
+    my $printme;
+    chomp($printme = $line);
+    $printme =~ s/^\((.*)/&lt;<STRONG>$1<\/STRONG>&gt;/;
+    $printme =~ s/^\)(.*)/&lt;\/<STRONG>$1<\/STRONG>&gt;/;
+    print ' ' x $indent, $printme, "\n";
+    if ($line =~ /^\(/) {
+      $indent += 2;
+    }
+  }
+  print "</pre>\n";
 }
 
 &clean_up_and_exit;
