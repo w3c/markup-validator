@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: favlets.html,v 1.5 2002-10-29 22:32:07 link Exp $"
---><!--#set var="date" value="\$Date: 2002-10-29 22:32:07 $"
+<!--#set var="revision" value="\$Id: favlets.html,v 1.6 2002-10-30 16:46:59 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-10-30 16:46:59 $"
 --><!--#set var="title" value="Favlets For The W3C MarkUp Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -88,7 +88,8 @@
             It simply submits the URL for the currently viewed page to the
             Validator for processing. Results appear in the same window.
           </dd>
-          <dt>"Validate <em>This</em> Page In New Window"</dt>
+          <dt>"<a href="javascript:window.open('http://validator.w3.org/check?uri='+location);void%200"
+                 title="Validate This Page In New Window">Validate <em>This</em> Page In New Window</a>"</dt>
           <dd>
             Like the last Favlet, this also submits the URL of the current
             page to the Validator for processing, but this version will show
@@ -101,7 +102,8 @@
             URL of a page you would like to Validate. The results appear in the
             current window.
           </dd>
-          <dt>"Validate Page In New Window..."</dt>
+          <dt>"<a href="javascript:void(q=prompt('Validate Page:',''));if(q)window.open('http://validator.w3.org/check?uri='+escape(q));void%200"
+                 title="Validate Page In New Window...">Validate Page In New Window...</a>"</dt>
           <dd>Same as above but shows results in a new window.</dd>
           <dt>"<a href="javascript:_is=document.createElement('iframe');_is.setAttribute('src','http://validator.w3.org:8001/favlets.html#'+location.href);_is.setAttribute('height','0');_is.setAttribute('width','0');_is.setAttribute('style','border:0;');document.body.appendChild(_is);void 0"
                  title="Is This Page Valid?">Is <em>This</em> Page Valid?</a>"</dt>
