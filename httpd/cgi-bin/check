@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.233 2002-09-14 13:48:10 ville Exp $
+# $Id: check,v 1.234 2002-09-29 22:46:34 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.233 $;
+  $VERSION    =  q$Revision: 1.234 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-09-14 13:48:10 $,
+			      Date => q$Date: 2002-09-29 22:46:34 $,
 			     });
 
 #
@@ -1399,10 +1399,19 @@ sub parse_errors ($$) {
       <h2>Fatal Error: No DOCTYPE specified!</h2>
       <p>
         I could not parse this document, because it does not include a
-        DOCTYPE Declaration and the detected document type does not permit this.
+        DOCTYPE Declaration. A DOCTYPE Declaration is mandatory for most
+        current markup languages and without such a Declaration it is
+        impossible Validate this document.
       </p>
 .EOF.
       $File->{'Error Message'} .= &doctype_spiel;
+      $File->{'Error Message'} .= <<".EOF.";
+      <p>
+        For a list of possible DOCTYPE Declarations, please see
+        the W3C QA Activity's
+        <a href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">List
+        List of Valid Doctypes</a>.
+.EOF.
       $File->{'Error Message'} .= "    </div>\n";
     }
 

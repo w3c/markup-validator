@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.9 2002-08-20 01:51:23 link Exp $ */
+/* $Id: results.css,v 1.10 2002-09-29 22:46:34 link Exp $ */
 
 .markup {
   color: red;
@@ -11,7 +11,7 @@
   background-color: #eeeeee; /* light grey */
 }
 
-table.header {
+fieldset {
   background-color: #eeeeee;
 }
 
@@ -25,10 +25,12 @@ div.meat {
   margin-right: 10em;
 }
 
+/*
 div.splash { 
   border: 1px solid blue; /* Used for debugging */
   background:  #eeeeee;
 }
+*/
 
 th {
   padding-right: .5em;
@@ -57,9 +59,9 @@ td {
   border-color: black;
 }
 
-.fatal {
+.fatal h2 {
   background: red;
-  border-color: black;
+  border: solid black 1px;
 }
 
 .valid {
