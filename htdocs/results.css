@@ -1,40 +1,11 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.31 2004-05-17 04:38:04 link Exp $ */
+/* $Id: results.css,v 1.13.2.32 2004-05-17 06:42:49 link Exp $ */
 
 .input {
   color: black;
   background-color: #eee;
   font-family: "Bitstream Vera Sans Mono", monospace;
   font-size: small;
-}
-
-/* The "Jump To" links in result pages. */
-.jumpbar {
-  float:            left;
-  width:            12ex;
-  text-align:       left;
-  text-decoration:  none;
-  padding:          1ex;
-  background-color: #eee;
-  border-top:       1px solid #eee;
-  border-right:     1px solid black;
-  border-bottom:    1px solid black;
-  margin-top:       -1.3em;
-  font-weight:      bolder;
-  font-size:        smaller;
-}
-
-div.jumpbar ul {
-  padding: 0;
-  margin:  0;
-}
-
-div.jumpbar li {
-  list-style-type: none;
-}
-
-p.jumpbar a:hover {
-  background: #ccc;
 }
 
 /* Error Messages Display */
@@ -104,22 +75,6 @@ ol#errors li {
   color: inherit;
   background-color: transparent;
   text-decoration: none;
-}
-
-
-fieldset {
-  color: black;
-  clear: left;
-  margin-left: auto;
-  margin-right: auto;
-  background-color: #eeeeee;
-}
-
-fieldset legend {
-  background-color: #eee;
-  border-right: 1px solid gray;
-  border-bottom: 1px solid gray;
-  font-weight: bold;
 }
 
 
