@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.7 2002-03-18 03:17:15 link Exp $
+# $Id: check,v 1.200.2.8 2002-03-18 03:37:21 link Exp $
 
 #
 # We need Perl 5.004.
@@ -64,7 +64,7 @@ $DEBUG += 1 if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.7 $;
+$VERSION    =  q$Revision: 1.200.2.8 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 #
@@ -789,7 +789,7 @@ sub output_closing {
      src="http://www.w3.org/Icons/valid-html401" height="31" width="88"
      align=right border="0" alt="Valid HTML 4.01!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</a><br>
-  Last modified: \$Date: 2002-03-18 03:17:15 $
+  Last modified: \$Date: 2002-03-18 03:37:21 $
 </address>
 
 </body>
@@ -1016,75 +1016,14 @@ EOHD
 
 
 sub print_tip_of_the_day{
-  my $File    = shift;
-  my $tips_db = shift;
-  my(%tips);
-  open TIPS, $tips_db
-    or &internal_error($File, "open($tips_db) returned $!");
-
-  # quick-n-dirty XML parser...
-  local($/) = '>';
-  my(@stack, $line, $top, $name, $l, $addr, $slug);
-
-  @stack = ();
-  $line = 1;
-  $slug = '';
-
-  while(<TIPS>){
-    if(m,/>$,){ # empty element
-      $slug .= $_ if $slug;
-    }
-    elsif(m,</(\w+),){
-      my($content, $tag);
-      $content = $`;
-      $tag = $& . $';
-      $slug .= $content if $slug;
-
-      $name = $1;
-      $top = pop(@stack);
-      $l = pop(@stack);
-      if($name ne $top){
-	print STDERR "@stack \n";
-	die "found /$name expecting /$top $l";
-      }
-
-      if($name eq 'a'){
-	$tips{$addr} = $slug;
-	$slug = '';
-      }
-
-      $slug .= $tag if $slug;
-
-    }
-    elsif(m,<(\w+),){
-      $slug .= $_ if $slug;
-
-      $name = $1;
-      push(@stack, $line);
-      push(@stack, $name);
-      if($name eq 'a'){
-	if(m,href=\"([^\"]+)\",){
-	  $addr = $1;
-	  $slug = ' ';
-	}
-      }
-    }
-    
-    while(s/\n//){
-      $line++;
-    }
-  }
-
-  my @tipAddrs = keys %tips;
-  my $tipQty = $#tipAddrs + 1;
+  my @tipAddrs = keys %{$CFG->{'Tips DB'}};
   srand(time());
-  my $whichTip = rand($tipQty);
-  my $tipAddr = $tipAddrs[$whichTip];
-  my $tipSlug = $tips{$tipAddr};
+  my $tipAddr = $tipAddrs[rand scalar @tipAddrs];
+  my $tipSlug = $CFG->{'Tips DB'}->{$tipAddr};
 
   print <<"EOHD";
   <div class="tip" align="center" style="text-align: center; background-color: yellow">
-    <strong><a href="http://www.w3.org/2001/06tips/">TIP</a>:</strong>
+    <strong><a href="http://www.w3.org/2001/06tips/">Tip Of The Day</a>:</strong>
     <a href="$tipAddr">$tipSlug</a>
   </div>
 EOHD
