@@ -5,7 +5,7 @@
 # (c) 1999-2002 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.98 2002-10-26 19:19:56 ville Exp $
+# $Id: checklink.pl,v 2.99 2002-10-26 21:49:16 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -26,25 +26,67 @@
 use strict;
 
 package W3C::UserAgent;
-use LWP::UserAgent;
-@W3C::UserAgent::ISA = qw(LWP::UserAgent);
+
+use LWP::UserAgent      qw();
+# @@@ Needs also W3C::CheckLink but can't use() it here...
+
+@W3C::UserAgent::ISA =  qw(LWP::UserAgent);
+
+sub simple_request
+{
+  my $self = shift;
+  my $response = $self->W3C::UserAgent::SUPER::simple_request(@_);
+  if (! defined($self->{FirstResponse})) {
+    $self->{FirstResponse} = $response->code();
+    $self->{FirstMessage} = $response->message();
+  }
+  return $response;
+}
+
+sub redirect_ok
+{
+  my ($self, $request) = @_;
+
+  if ($self->{Checklink_verbose_progress}) {
+    &W3C::CheckLink::hprintf("\n%s %s ", $request->method(), $request->uri());
+  }
+
+  # Build a map of redirects
+  $self->{Redirects}{$self->{fetching}} = $request->uri();
+  $self->{fetching} = $request->uri();
+
+  return ($request->method() eq 'POST') ? 0 : 1;
+}
+
+# -----------------------------------------------------------------------------
 
 package W3C::CheckLink;
-use HTML::Parser 3;
-@W3C::CheckLink::ISA = qw(HTML::Parser);
 
 use vars qw($PROGRAM $VERSION $REVISION
-            $Have_ReadKey);
+            $Have_ReadKey $DocType);
+
+use HTML::Entities      qw();
+use HTML::Parser   3.00 qw();
+use HTTP::Request       qw();
+use HTTP::Response      qw();
+use Time::HiRes         qw();
+use URI                 qw();
+use URI::Escape         qw();
+use URI::file           qw();
+
+@W3C::CheckLink::ISA =  qw(HTML::Parser);
 
 BEGIN
 {
   # Version info
   $PROGRAM  = 'W3C checklink';
-  $REVISION = q$Revision: 2.98 $ . '(c) 1999-2002 W3C';
+  $REVISION = q$Revision: 2.99 $ . '(c) 1999-2002 W3C';
   $VERSION  = sprintf('%d.%02d', $REVISION =~ /(\d+)\.(\d+)/);
 
   eval "use Term::ReadKey 2.00 qw(ReadMode)";
   $Have_ReadKey = !$@;
+
+  $DocType = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
 }
 
 # Autoflush
@@ -300,11 +342,7 @@ sub ask_password ()
 
 sub urize ($)
 {
-  use URI ();
-  use URI::Escape qw(uri_unescape);
-  use URI::file ();
-
-  my $u = URI->new_abs(uri_unescape($_[0]), URI::file->cwd());
+  my $u = URI->new_abs(URI::Escape::uri_unescape($_[0]), URI::file->cwd());
   return $u->as_string();
 }
 
@@ -351,7 +389,6 @@ sub check_uri ($$$)
   if ($_html) {
     print("</h2>\n");
     if (! $_summary) {
-      use URI::Escape ();
       printf("<p>Go to <a href='#%s'>the results</a>.</p>\n",
              $result_anchor);
       printf("<p>Check also:
@@ -411,8 +448,7 @@ Validity</a></p>
     my $abs_link_uri = URI->new_abs($link_uri, $base);
     if ($_masquerade) {
       if ($abs_link_uri =~ m|^$_remote_masqueraded_uri|) {
-        printf("processing %s in base $_local_dir %s\n",
-               $abs_link_uri);
+        printf("processing %s in base %s\n", $abs_link_uri, $_local_dir);
         my $nlink;
         $nlink = $abs_link_uri;
         $nlink =~
@@ -655,39 +691,12 @@ sub already_processed ($)
 # Get the content of a URI #
 ############################
 
-sub W3C::UserAgent::simple_request
-{
-  my $self = shift;
-  my $response = $self->W3C::UserAgent::SUPER::simple_request(@_);
-  if (! defined($self->{FirstResponse})) {
-    $self->{FirstResponse} = $response->code();
-    $self->{FirstMessage} = $response->message();
-  }
-  return $response;
-}
-
-sub W3C::UserAgent::redirect_ok
-{
-  my ($self, $request) = @_;
-
-  if (! ($_summary || (!$doc_count && $_html))) {
-    &hprintf("\n%s %s ", $request->method(), $request->uri());
-  }
-
-  # Build a map of redirects
-  $self->{Redirects}{$self->{fetching}} = $request->uri();
-  $self->{fetching} = $request->uri();
-
-  return 0 if $request->method() eq "POST";
-  return 1;
-}
-
 sub get_uri ($$;$\%$$$$)
 {
   # Here we have a lot of extra parameters in order not to lose information
   # if the function is called several times (401's)
-  my ($method, $uri, $start, $redirects, $code, $realm, $message,
-      $auth) = @_;
+  my ($method, $uri, $start, $redirects, $code, $realm, $message, $auth) = @_;
+
   # $method contains the method used
   # $uri contains the target of the request
   # $start is a timestamp (not defined the first time the function is
@@ -718,9 +727,11 @@ sub get_uri ($$;$\%$$$$)
     $ua->{Redirects} = $redirects;
   }
 
-  if (! ($_summary || (!$doc_count && $_html))) {
-    &hprintf("%s %s ", $method, $uri);
-  }
+  # Do we want printouts of progress?
+  my $verbose_progress = ! ($_summary || (!$doc_count && $_html));
+
+  &hprintf("%s %s ", $method, $uri) if $verbose_progress;
+
   my $request = new HTTP::Request($method, $uri);
   if ($_accept_language) {
     $request->header('Accept-Language' => 'en');
@@ -734,8 +745,13 @@ sub get_uri ($$;$\%$$$$)
       $request->authorization_basic($_user, $_password);
     }
   }
+
+  # Tell the user agent if we want progress reports (in redirects) or not.
+  $ua->{Checklink_verbose_progress} = $verbose_progress;
+
   # Do the query
   my $response = $ua->request($request);
+
   # Get the results
   # Record the very first response
   if (! defined($code)) {
@@ -752,9 +768,7 @@ sub get_uri ($$;$\%$$$$)
       $response->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
       $realm = $1;
     }
-    if (! ($_summary || (!$doc_count && $_html))) {
-      print "\n";
-    }
+    print "\n" if $verbose_progress;
     return &get_uri($method, $response->request->url,
                     $start, $ua->{Redirects},
                     $code, $realm, $message, 1);
@@ -762,9 +776,9 @@ sub get_uri ($$;$\%$$$$)
   # Record the redirects
   $response->{Redirects} = $ua->{Redirects};
   my $stop = &get_timestamp();
-  if (! ($_summary || (!$doc_count && $_html))) {
-    &hprintf(" fetched in %ss\n", &time_diff($start, $stop));
-  }
+  &hprintf(" fetched in %ss\n",
+           &time_diff($start, $stop)) if $verbose_progress;
+
   $response->{OriginalCode} = $code;
   $response->{OriginalMessage} = $message;
   if (defined($realm)) {
@@ -1155,7 +1169,6 @@ sub check_validity ($$\%\%)
 
 sub escape_match ($\%)
 {
-  use URI::Escape ();
   my ($a, $hash) = (URI::Escape::uri_unescape($_[0]), $_[1]);
   foreach $b (keys %$hash) {
     if ($a eq URI::Escape::uri_unescape($b)) {
@@ -1181,7 +1194,7 @@ sub authentication ($)
     print(STDERR "Use the -u and -p options to specify a username and password.\n");
   } else {
     printf("Status: 401 Authorization Required\nWWW-Authenticate: %s\nConnection: close\nContent-Language: en\nContent-Type: text/html\n\n", $r->headers->www_authenticate);
-    printf("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">
+    printf("%s
 <html lang=\"en\">
 <head>
 <title>401 Authorization Required</title>
@@ -1191,7 +1204,7 @@ sub authentication ($)
 <p>You need %s access to %s to perform Link Checking.</p>
 </body>
 </html>
-", &encode($realm), $r->request->url);
+", $DocType, &encode($realm), $r->request->url);
   }
 }
 
@@ -1201,7 +1214,6 @@ sub authentication ($)
 
 sub get_timestamp ()
 {
-  use Time::HiRes ();
   return pack('LL', Time::HiRes::gettimeofday());
 }
 
@@ -1674,20 +1686,22 @@ sub global_stats ()
 sub html_header ($;$)
 {
   my $uri = &encode($_[0]);
-  # Cache control?
-  if (defined($_[1])) {
-    print "Cache-Control: no-cache\nPragma: no-cache\n";
-  }
-  if (! $_cl) {
-    print "Content-Type: text/html; charset=iso-8859-1\nContent-Language: en";
-  }
-  my $title = ' Link Checker'.($uri eq '' ? '' : ': '.$uri);
-  print "
+  my $title = ' Link Checker' . ($uri eq '' ? '' : ': '.$uri);
 
-<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">
+  # mod_perl 1.99_05 doesn't seem to like if the "\n\n" isn't in the same
+  # print() statement as the last header...
+
+  my $headers =
+    defined($_[1]) ? "Cache-Control: no-cache\nPragma: no-cache\n" : '';
+  if (! $_cl) {
+    $headers .= "Content-Type: text/html; charset=iso-8859-1\n";
+    $headers .= "Content-Language: en\n\n";
+  }
+
+  print $headers, $DocType, "
 <html lang=\"en\">
 <head>
-<title>W3C".$title."</title>
+<title>W3C", $title, "</title>
 <style type=\"text/css\">
 
 body {
@@ -1733,7 +1747,7 @@ dt.report {
 </head>
 <body>
 <p><a href=\"http://www.w3.org/\" title=\"W3C\"><img alt=\"W3C\" src=\"http://www.w3.org/Icons/w3c_home\" height=\"48\" width=\"72\"></a></p>
-<h1>W3C<sup>&reg;</sup>".$title."</h1>
+<h1>W3C<sup>&reg;</sup>", $title, "</h1>
 \n";
 }
 
