@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.42 2000-05-04 22:58:23 hugo Exp $
+# $Id: checklink.pl,v 2.43 2000-05-04 23:33:58 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -31,7 +31,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.42 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.43 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -1218,8 +1218,13 @@ sub show_link_report {
         $c = &code_shown($u, $results);
         # What to do
         my $whattodo;
+        my $redirect_too;
         if ($todo) {
             $whattodo = $todo->{$c};
+            if (defined($redirects{$u}) && ($c != 301) && ($c != 302)) {
+                $redirect_too = 'The original resquest has been redirected too.';
+                $whattodo .= ' '.$redirect_too if (! $_html);
+            }
         } else {
             # Directory redirects
             $whattodo = 'Add a trailing slash to the URL.';
@@ -1238,7 +1243,7 @@ sub show_link_report {
             }
             printf("
 <dt%s>%s</dt>
-<dd>What to do: <strong%s>%s</strong><br>
+<dd>What to do: <strong%s>%s</strong>%s<br>
 <dd>HTTP Code returned: %d%s<br>
 HTTP Message: %s%s%s</dd>
 <dd>Lines: %s</dd>\n",
@@ -1251,6 +1256,8 @@ HTTP Message: %s%s%s</dd>
                    &bgcolor($c),
                    # What to do
                    $whattodo,
+                   # Redirect too?
+                   $redirect_too ? ' <span '.&bgcolor(301).'>'.$redirect_too.'</span>' : '',
                    # Original HTTP reply
                    $results->{$u}{location}{orig},
                    # Final HTTP reply
@@ -1469,7 +1476,7 @@ sub links_summary {
         }
         print("\nList of directory redirects:");
         if ($_html) {
-            print("</h3>\n");
+            print("</h3>\n<p>The links below are not broken, but the document does not use the exact URL.</p>");
         }
         &show_link_report($links, $results, $broken, $redirects,
                           \@dir_redirect_urls);
