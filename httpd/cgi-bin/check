@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.387 2005-02-04 21:05:54 link Exp $
+# $Id: check,v 1.388 2005-02-04 21:12:51 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -239,7 +239,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.387 $;
+  $VERSION    =  q$Revision: 1.388 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1416,7 +1416,7 @@ sub parse_content_type {
 
   my($ct, @param) = split /\s*;\s*/, lc $Content_Type;
 
-  $mode = $CFG->{MIME}->{$ct} || MODE_TBD;
+  $mode = $CFG->{MIME}->{$ct} || $ct;
 
   foreach my $param (@param) {
     my($p, $v) = split /\s*=\s*/, $param;
@@ -1427,7 +1427,7 @@ sub parse_content_type {
     }
   }
 
-  if ($mode == MODE_TBD) {
+  if ($mode =~ m(/)) { # a "/" means it's unknown or we'd have a mode here.
     if ($ct =~ m(text/css) and defined $url) {
       print redirect
         'http://jigsaw.w3.org/css-validator/validator?uri='
