@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.30 2004-05-16 07:08:59 link Exp $ */
+/* $Id: results.css,v 1.13.2.31 2004-05-17 04:38:04 link Exp $ */
 
 .input {
   color: black;
@@ -58,20 +58,17 @@ p.jumpbar a:hover {
   margin: 0;
 }
 
-.ve p.helpwanted {
-  float: right;
-  width: 30ex;
-  border: 1px solid black;
-  background: #eee;
-  font-size: smaller;
-  line-height: 120%;
-  padding: 1ex;
-  text-align: justify;
-  margin: 0;
+p.helpwanted {
+  margin-left:  auto;
+  margin-right: auto;
+  font-size: x-small;
+  color:        #888;
+  float:       right;
 }
 
-.helpwanted em {
-  font-weight: bolder;
+p.helpwanted a {
+  color: #88f;
+  text-decoration: none;
 }
 
 ol#errors code {

@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.126 2004-05-16 22:12:24 link Exp $
+# $Id: check,v 1.305.2.127 2004-05-17 04:38:04 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.126 $;
+  $VERSION    =  q$Revision: 1.305.2.127 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-16 22:12:24 $,
+                              Date => q$Date: 2004-05-17 04:38:04 $,
                              });
 
 #
@@ -1931,8 +1931,12 @@ EOHD
         } else {
           $Msgs{$num} = 1;
           print $RSRC->{msg}->{$num}->{verbose}
-            if $RSRC->{msg}->{$num};
+            if exists $RSRC->{msg}->{$num}
+            && exists $RSRC->{msg}->{$num}->{verbose};
         }
+        my $_msg = $RSRC->{msg}->{nomsg}->{verbose};
+        $_msg =~ s/<!--MID-->/$num/g;
+        print $_msg; # The send feedback plea.
       }
       print "</li>\n";
     }
