@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.319 2002-12-08 01:46:44 link Exp $
+# $Id: check,v 1.320 2002-12-08 17:51:46 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -144,7 +144,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.319 $;
+  $VERSION    =  q$Revision: 1.320 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 } # end of BEGIN block.
@@ -468,7 +468,8 @@ if (&is_xml($File)) {
   $catalog  = File::Spec->catfile($CFG->{SGML_Library}, 'xml.soc');
   push(@xmlflags, '-wxml');
   &add_warning($File, 'Note:', <<".EOF.");
-  The Validator XML support has <a href="http://openjade.sf.net/doc/xml.htm"
+  The Validator XML support has
+  <a href="http://openjade.sourceforge.net/doc/xml.htm"
     title="Limitations in Validator XML support">some limitations</a>.
 .EOF.
 }
