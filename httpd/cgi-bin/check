@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.366 2005-01-08 22:18:05 ville Exp $
+# $Id: check,v 1.367 2005-01-09 11:24:33 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -222,7 +222,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.366 $;
+  $VERSION    =  q$Revision: 1.367 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2314,33 +2314,34 @@ sub charset_conflicts {
 sub transcode {
   my $File = shift;
 
+  my $cs = $File->{Charset}->{Use};
   my ($command, $result_charset) = ('', '');
-  if ($CFG->{Charsets}->{$File->{Charset}->{Use}}) {
-    ($command, $result_charset) =
-      split(" ", $CFG->{Charsets}->{$File->{Charset}->{Use}}, 2);
+  if ($CFG->{Charsets}->{$cs}) {
+    ($command, $result_charset) = split(" ", $CFG->{Charsets}->{$cs}, 2);
   }
 
+  my $c;
   $result_charset = exact_charset($File, $result_charset);
+
   if ($command eq 'I') {
     # test if given charset is available
-    eval {my $c = Text::Iconv->new($result_charset, 'utf-8')};
+    eval { $c = Text::Iconv->new($result_charset, 'utf-8') };
     $command = '' if $@;
   } elsif ($command eq 'X') {
     $@ = "$File->{Charset}->{Use} undefined; replace by $result_charset";
   }
 
   if ($command ne 'I') {
-    my $cs = &ent($File->{Charset}->{Use});
+    my $error = $@ ? sprintf('<p>The error was: "%s".</p>', &ent($@)) : '';
     $File->{'Error Flagged'} = TRUE;
-    $File->{'Error Message'} = sprintf(<<".EOF.", $cs, &ent($@));
+    $File->{'Error Message'} = sprintf(<<".EOF.", &ent($cs), $error);
       <p>Sorry!
         A fatal error occurred when attempting to transcode the character
         encoding of the document. Either we do not support this character
-        encoding yet, or you have specified a non-existent character encoding
-        (often a misspelling).
+        encoding ("%s") yet, or you have specified a non-existent character
+        encoding (often a misspelling).
       </p>
-      <p>The detected character encoding was "%s".</p>
-      <p>The error was "%s".</p>
+      %s
       <p>
         If you believe the character encoding to be valid you can submit a
         request for that character encoding (see the
@@ -2352,7 +2353,6 @@ sub transcode {
     return $File;
   }
 
-  my $c = Text::Iconv->new($result_charset, 'utf-8');
   my $line = 0;
   for (@{$File->{Content}}) {
     my $in = $_;
@@ -2374,7 +2374,7 @@ sub transcode {
       }
       my $remain = (length $in) - $short;
       $_ = $c->convert(substr($in,0,$short))
-           . "#### $remain byte(s) unconvertable ####";
+           . "#### $remain byte(s) unconvertible ####";
     }
   }
   return $File;
