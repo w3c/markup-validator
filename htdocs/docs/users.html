@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: users.html,v 1.14.2.4 2003-05-06 12:00:26 ot Exp $"
---><!--#set var="date" value="\$Date: 2003-05-06 12:00:26 $"
+<!--#set var="revision" value="\$Id: users.html,v 1.14.2.5 2003-05-06 12:02:17 ot Exp $"
+--><!--#set var="date" value="\$Date: 2003-05-06 12:02:17 $"
 --><!--#set var="title" value="User Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -69,7 +69,7 @@
 	<dt id="option-charset">Encoding</dt>
 	<dd>
 	  This allows you to <strong>override</strong> the character encoding
-	  information about your document. You can use this option for test 
+	  information about your document. You may use this option for test 
 	  purposes, but you will eventually have to serve your document with the
 	  correct character encoding, or the validator will <a href="help#faq-charset">complain</a> 
 	  about it and you document will not be valid.
@@ -84,7 +84,7 @@
 	<dt id="option-doctype">Type</dt>
 	<dd>
 	  This allows you to <strong>override</strong> the DOCTYPE declaration for you
-	  document. ou can use this option for test 
+	  document. You may use this option for test 
           purposes, but you will eventually have to serve your document with the
           correct character encoding, or the validator will <a href="help#faq-doctype">complain</a>
           about it and you document will not be valid.
@@ -117,7 +117,8 @@
           constructs.
         </dd>
         <dt id="option-noatt">exclude attributes from the parse tree (<code>noatt</code>)</dt>
-        <dd>Suppress attributes from the parse tree to make it more readable.</dd>
+        <dd>Suppress attributes from the <a href="#option-sp">parse tree</a> to make it 
+	more readable.</dd>
 	<dt id="option-no200">Validate error pages</dt>
 	<dd>The Markup Validator will usually tell you if the page you tried to validate
 	could not be retrieved (for example, if the server gave a "404 not found" message.
