@@ -1,4 +1,8 @@
 #!/usr/local/bin/perl
+#
+# Link Checker
+# Renaud Bruyeron, September 1998
+
 use strict;
 $|++;
 
@@ -72,7 +76,7 @@ use CGI;
 ###############
 # Global Variables
 
-my $VERSION= '$Id: checklink.pl,v 1.18 1998-09-28 19:24:34 renaudb Exp $ ';
+my $VERSION= '$Id: checklink.pl,v 1.19 1998-11-13 01:10:39 renaudb Exp $ ';
 my %ALLOWED_SCHEMES = ( "http" => 1 );
 my %SCHEMES = (); # for report
 my %URL = ();
@@ -214,7 +218,9 @@ sub checklinks {
 		# register HTTP request
 		$ua->register(HTTP::Request->new(HEAD => $abso->abs),\&callback_check,undef,0) if($ALLOWED_SCHEMES{$abso->abs->scheme});
 		$URL{Registered}{$abso->abs}="True";
+		print $abso->abs,"\n" if($VERBOSE);
 	    }
+	    print "==============\n" if($VERBOSE);
 	    my $response = $ua->wait(10);
 	    &print_result($url,$response,$q);
 	} else {
