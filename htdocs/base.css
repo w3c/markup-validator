@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.31 2004-04-25 20:17:50 link Exp $
+   $Id: base.css,v 1.26.2.32 2004-04-26 00:35:32 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -28,7 +28,8 @@ html, body {
 
 div#main {
   padding-top: 1em;
-  margin-right: 7.6em;
+/*   margin-right: 7.6em; */ /* no need for this without the righthand bar */
+margin: 1em;
 }
 
 div#main p, div#main dt {
