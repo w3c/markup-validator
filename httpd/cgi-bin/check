@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.269 2002-10-27 08:00:55 link Exp $
+# $Id: check,v 1.270 2002-10-27 08:34:22 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.269 $;
+  $VERSION    =  q$Revision: 1.270 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-27 08:00:55 $,
+			      Date => q$Date: 2002-10-27 08:34:22 $,
 			     });
 
 #
@@ -1590,16 +1590,19 @@ sub report_valid {
   } elsif (&is_xml($File->{Type}) and not $File->{DOCTYPE}) {
     print qq(  <h2 class="valid">This document is well-formed XML.</h2>\n);
   } elsif (defined $File->{Tentative}) {
-    # don't say it validates and then say it would validate :-)
-    # print qq(<h2 class="valid">This Page Is Valid $File->{Version}!</h2>);
+    print qq(<h2 class="valid">This Page <em>Tentatively</em> Validates As $File->{Version}
+	     (Tentatively Valid)!</h2>);
     print &daily_tip($File, $CFG->{'Tips DB'});
     &print_warnings($File);
     print "
       <p>
         The document located at
         <code>&lt;URL:<a href='$File->{URI}'>$File->{URI}</a>&gt;</code>
-              would validate as $File->{Version} if you updated it to
-        match the Options used.
+        was tentatively found to be Valid. That means it would validate
+        as $File->{Version} if you updated the source document to match
+        the options used (typically this message indicates that you used
+        either the Document Type override or the Character Encoding
+        override).
       </p>\n";
   } else {
     print qq(  <h2 class="valid">This document validates as the document type specified!</h2>\n);
