@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.369 2005-01-09 19:19:20 ville Exp $
+# $Id: check,v 1.370 2005-01-09 19:24:22 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -222,7 +222,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.369 $;
+  $VERSION    =  q$Revision: 1.370 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -701,6 +701,8 @@ sub parse (\$) {
                       {name => 'SP_CHARSET_FIXED', value => &ent($ENV{SP_CHARSET_FIXED})},
                       {name => 'SP_ENCODING',      value => &ent($ENV{SP_ENCODING})},
                       {name => 'SP_BCTF',          value => &ent($ENV{SP_BCTF})},
+                      {name => 'Content-Encoding', value => &ent($File->{ContentEnc})},
+                      {name => 'Transfer-Encoding',value => &ent($File->{TransferEnc})},
                      ],
            );
 
@@ -1246,6 +1248,8 @@ sub handle_uri {
   $File->{Bytes}           = $res->content;
   $File->{Type}            = $type;
   $File->{ContentType}     = $ct;
+  $File->{ContentEnc}      = $res->content_encoding;
+  $File->{TransferEnc}     = $res->header('Client-Transfer-Encoding');
   $File->{Charset}->{HTTP} = lc $charset;
   $File->{Modified}        = $lastmod;
   $File->{Server}          = &ent(scalar $res->server);
