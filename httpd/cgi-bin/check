@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.62 2000-02-11 11:07:31 gerald Exp $
+# $Id: check,v 1.63 2000-02-24 20:44:33 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -73,9 +73,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.62 $;
+$VERSION    =  q$Revision: 1.63 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2000-02-11 11:07:31 $;
+$DATE       =  q$Date: 2000-02-24 20:44:33 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -342,6 +342,7 @@ if ($File->{Type} eq 'xhtml') {
   $ENV{SGML_SEARCH_PATH} = $sgmlstuff . '/REC-xhtml1-20000126/';
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'UTF-8';
+  $xmlflags              = '-wxml -wno-valid ';
   $decl                  = $xhtmldecl;
 } elsif ($guessed_doctype == 2) { # no doctype, with xmlns attr on 1st element
   $File->{Type} = 'xml';	# @@ probably a better way to do this
@@ -378,7 +379,8 @@ my @other_namespaces;
 open ESIS, "$temp.esis" or die  "open($temp.esis) returned: $!\n";
 while (<ESIS>) {
     $elements_found++ if ( /^\(/ );
-    if ( ($File->{Type} eq 'xml') &&	# look for xml namespaces
+						# look for xml namespaces
+    if ( ( ($File->{Type} eq 'xml') || ($File->{Type} eq 'xhtml')) &&
          ( (/^Axmlns() \w+ (.*)/) || (/^Axmlns:([^ ]+) \w+ (.*)/) ) ) {
         if ( ( ! defined $root_namespace ) &&
 	     ( $elements_found == 0 ) && ( $1 eq "" ) ) {
@@ -430,7 +432,7 @@ EOHD
 }
 print ' ' x 4, qq(</li>\n);
 
-if ($File->{Type} eq 'xml') {
+if (($File->{Type} eq 'xml') || ($File->{Type} eq 'xhtml')) {
 
     print ' ' x 4, qq(<li>Document type: ), $version;
     if ( ( $type eq "html" ) &&
@@ -460,7 +462,7 @@ else {
 }
 print ' ' x 2, qq(</ul>\n\n);
 
-if ($File->{Type} eq 'xml') {
+if (($File->{Type} eq 'xml') || ($File->{Type} eq 'xhtml')) {
 print <<"EOHD";
   <p>
     Below are the results of checking this document for <a
@@ -607,7 +609,7 @@ if ( $? || ($guessed_doctype == 1) ) {
     $validity="invalid";
 }
 else {
-    if ($File->{Type} eq 'xml') {
+    if (($File->{Type} eq 'xml') || ($File->{Type} eq 'xhtml')) {
 	print "\n  <pre>\n    No errors found! ";
 	print "<a href=\"#sp-lim\">*</a></pre>\n\n";
     }
@@ -722,7 +724,7 @@ EOHD
 EOHD
     }
     $validity="valid";
-    if ($File->{Type} eq 'xml') {
+    if (($File->{Type} eq 'xml') || ($File->{Type} eq 'xhtml')) {
       print qq{    <h2><a name="sp-lim">Caveat</a></h2>
       <p>
 	This validator is based on SP, which has <a
