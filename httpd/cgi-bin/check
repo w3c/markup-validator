@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.129 2004-05-17 07:52:14 link Exp $
+# $Id: check,v 1.305.2.130 2004-05-17 21:03:57 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.129 $;
+  $VERSION    =  q$Revision: 1.305.2.130 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-17 07:52:14 $,
+                              Date => q$Date: 2004-05-17 21:03:57 $,
                              });
 
 #
@@ -2202,9 +2202,7 @@ EOF
 #
 # Create a HTML representation of the document.
 sub show_source {
-  my $File  = shift;
-  my $line  = 1;
-  my $lines = scalar @{$File->{Content}};
+  my $File = shift;
 
   my $comment = '';
   if ($File->{'Error Flagged'}) {
@@ -2215,7 +2213,7 @@ sub show_source {
   $File->{Content}->[0] =
     substr $File->{Content}->[0], ($File->{BOM} ? 3 : 0); # remove BOM
 
-  print <<"EOF";
+  print <<".EOF.";
   <div id="source" class="mtb">
     <h2>Source Listing</h2>
 
@@ -2223,12 +2221,14 @@ sub show_source {
     $comment
     <div>
       <pre>
-EOF
+.EOF.
 
+  my $line    = 1;
+  my $maxhlen = length scalar @{$File->{Content}};
   for (@{$File->{Content}}) {
-    my $hline = (' ' x (length("$lines") - length("$line"))) . $line;
-    printf qq(<a id="line-%s"><strong>%s</strong>: %s</a>\n),
-      $line, $hline, ent $_;
+    my $hline = (' ' x ($maxhlen - length("$line"))) . $line;
+    printf qq(<a id="line-%s" name="line-%s"><strong>%s</strong>: %s</a>\n),
+      $line, $line, $hline, ent $_;
     $line++;
   }
   print "      </pre>\n    </div>\n  </div>";
