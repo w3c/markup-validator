@@ -1,19 +1,17 @@
 #!/usr/local/bin/perl
-
 $|++;
-
-$VERSION= '$Id: checklink.pl,v 1.7 1998-09-03 18:34:18 renaudb Exp $ ';
 
 BEGIN {
     unshift@INC,('/usr/etc/apache/PerlLib');
+{
     package ParseLink;
     use HTML::Parser;
     use vars qw(@ISA);
     @ISA = qw(HTML::Parser);
-sub new_line {
-    my $self=shift;
-    $self->{Line}++;
-}
+    sub new_line {
+	my $self=shift;
+	$self->{Line}++;
+    }
 sub start {
     my $self=shift;
     my ($tag,$attr)=@_;
@@ -25,12 +23,14 @@ sub start {
     }
 }
 }
+}
 
 use CGI qw(:standard);
 #use CGI::Carp qw(fatalsToBrowser);
 use W3CDebugCGI;
 use LWP::Parallel::UserAgent;
 
+$VERSION= '$Id: checklink.pl,v 1.8 1998-09-04 01:21:39 renaudb Exp $ ';
 %ALLOWED_SCHEMES = ( "http" => 1 );
 %SCHEMES = (); # for report
 
@@ -52,12 +52,13 @@ sub main {
     
     &html_header($q);
 
-    print $q->h1('Link Checker');
     if(defined $q->param('url')){
 	&checklinks($q->param('url'),$q);
     } else {
-	print "bof";
-	print $q->h1('We are in a CGI');
+	print $q->startform($q->url);
+	print "Enter a URI ",$q->textfield(-name=>'url',-size=>'50'),$q->br;
+	print $q->submit('Check the Links !');
+	print $q->endform;
     }
     print $q->hr,$q->i($VERSION);
     print $q->end_html;
@@ -112,8 +113,10 @@ sub checklinks {
     # prepare the request
     # Request document and parse it as it arrives via callback
     # Then get the UA ready for the requests in the foreach loop
-    if($q->param('username')){
-	$request->headers->authorization_basic($q->param('username'),$q->param('password'));
+    if($CGI){
+	if(defined $q->param('username')){
+	    $request->headers->authorization_basic($q->param('username'),$q->param('password'));
+	}
     }
     
     $ua->register($request, \&callback_parse);
@@ -167,7 +170,7 @@ sub checklinks {
 sub print_result{
     my $url = shift;
 
-    print $q->h2('Result for '.$q->a({href=>$url},$url));
+    print $q->h2('Result for '.$q->a({href=>$url},$url)) if($CGI);
     print "<table border=\"1\"><TR ALIGN=\"center\"><TD>Lines</TD><TD>URI</TD><TD>Code</TD><TD>Extra</TD></TR>\n" if($CGI);
     foreach my $resp (map {$response->{$_}->response} keys %$response){
 	if($resp->code ne "200"){
@@ -195,4 +198,5 @@ sub html_header {
     print $q->start_html(-title=>(defined $q->param('url')?'Checking '.$q->param('url'):'W3C\'s Link Checker'),-BGCOLOR=>'white');
     print $query->a({href=>"http://www.w3.org"},$query->img({src=>"http://www.w3.org/Icons/w3c_home",alt=>"W3C",border=>"0"}));
     print $query->a({href=>"http://www.w3.org/Web"},$query->img({src=>"http://www.w3.org/Icons/WWW/web",border=>"0",alt=>"Web Team"}));
+    print $q->h1('Link Checker');
 }
