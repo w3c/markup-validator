@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.277 2002-10-30 18:35:08 link Exp $
+# $Id: check,v 1.278 2002-10-30 18:54:49 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.277 $;
+  $VERSION    =  q$Revision: 1.278 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-30 18:35:08 $,
+			      Date => q$Date: 2002-10-30 18:54:49 $,
 			     });
 
 #
@@ -910,15 +910,20 @@ EOF
 #
 # Generate HTML for the "Jump to:" links in results.
 sub jump_links {
-  return <<".EOF.";
+  my $links = '';
+  $links .= <<".EOF.";
       <p id="skip" class="jumpbar">
-        Jump To:
-        [<a title="Result of Validation" href="#results">Results</a>]
-        [<a title="Listing of Source Input" href="#source">Source&nbsp;Listing</a>]
-        [<a title="Document Parse Tree" href="#parse">Parse&nbsp;Tree</a>]
-        [<a title="Document Outline" href="#outline">Outline</a>]
-      </p>
+        Jump To: [<a title="Result of Validation" href="#results">Results</a>]
 .EOF.
+
+  $links .= ' [<a title="Listing of Source Input" href="#source">Source&nbsp;Listing</a>]'
+    if $File->{Opt}->{'Show Source'};
+  $links .= ' [<a title="Document Parse Tree" href="#parse">Parse&nbsp;Tree</a>]'
+    if $File->{Opt}->{'Show Parsetree'};
+  $links .= ' [<a title="Document Outline" href="#outline">Outline</a>]'
+    if $File->{Opt}->{'Outline'};
+  $links .= "      </p>\n";
+  return $links;
 }
 
 
