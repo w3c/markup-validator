@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: help.html,v 1.13 2003-02-24 23:33:19 ville Exp $"
---><!--#set var="date" value="\$Date: 2003-02-24 23:33:19 $"
+<!--#set var="revision" value="\$Id: help.html,v 1.14 2003-05-24 20:32:46 link Exp $"
+--><!--#set var="date" value="\$Date: 2003-05-24 20:32:46 $"
 --><!--#set var="title" value="Help for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -48,6 +48,13 @@
   </li>
   <li>Miscellaneous (Very) Frequently Asked Questions
   <ul>
+	<li>
+		<a href="#faq-doctype">No DOCTYPE Declaration Found!</a>
+	</li>
+	<li>
+		<a href="#faq-charset">The validator is <q>not able to extract 
+		a character encoding</q></a> 
+	</li>
 	<li>
 		<a href="#faq-ampersand">The validator complains about "&amp;" in my URLs!</a>
 	</li>
@@ -196,6 +203,55 @@
 
 <div>
 <h2 id="very-faq">Miscellaneous (Very) Frequently Asked Questions</h2>
+<h3 id="faq-doctype">No DOCTYPE Declaration Found!</h3>
+  <p>
+        A DOCTYPE Declaration is mandatory for most current markup languages
+        and without one it is impossible to reliably validate a document.
+      </p>
+
+    <p>
+      One should place a DOCTYPE declaration as the very first thing in an
+      HTML document. For example, for a typical <a
+      href="http://www.w3.org/TR/xhtml1/">XHTML 1.0</a> document:
+    </p>
+    <pre>
+      &lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
+      &lt;html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"&gt;
+        &lt;head&gt;
+
+          &lt;title&gt;Title&lt;/title&gt;
+        &lt;/head&gt;
+
+        &lt;body&gt;
+          &lt;!-- ... body of document ... --&gt;
+        &lt;/body&gt;
+
+      &lt;/html&gt;
+    </pre>
+    <p>
+      For XML documents, you may also wish to include an "XML Declaration"
+      even before the DOCTYPE Declaration, but this is not well supported
+      in older browsers. More information about this can be found in the
+      <a href="http://www.w3.org/TR/xhtml1/">XHTML 1.0</a> Recommendation.
+    </p>
+      <p>
+        The W3C QA Activity maintains a <a
+          href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">List of
+            Valid Doctypes</a> that you can choose from, and the <acronym
+          title="Web Design Group">WDG</acronym> maintains a document on
+        "<a href="http://htmlhelp.com/tools/validator/doctype.html">Choosing
+           a DOCTYPE</a>".
+      </p>
+<h3 id="faq-charset">The validator is <q>not able to extract 
+a character encoding</q></h3>
+
+<p>An HTML document should be served along with its character encoding.</p>
+<p>WDG has some good documentation on 
+<a href="http://www.htmlhelp.com/tools/validator/charset.html">using
+character encodings</a> that will help you fix your document or the way it is served
+by adding the proper character encoding information.</p>
+
 <h3 id="faq-ampersand">The validator complains about "&amp;" in my URLs!</h3>
 <p>Most probably, you should read the <a 
 href="http://www.htmlhelp.com/tools/validator/problems.html#amp">ampersand section</a>

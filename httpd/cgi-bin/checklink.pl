@@ -2,10 +2,10 @@
 #
 # W3C Link Checker
 # by Hugo Haas <hugo@w3.org>
-# (c) 1999-2002 World Wide Web Consortium
+# (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6 2002-11-23 21:37:09 ville Exp $
+# $Id: checklink.pl,v 3.7 2003-05-24 20:32:50 link Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -65,16 +65,17 @@ sub redirect_ok
 package W3C::CheckLink;
 
 use vars qw($PROGRAM $AGENT $VERSION $CVS_VERSION $REVISION
-            $Have_ReadKey $DocType);
+            $Have_ReadKey $DocType $Accept $ContentTypes %Cfg);
 
-use HTML::Entities      qw();
-use HTML::Parser   3.00 qw();
-use HTTP::Request       qw();
-use HTTP::Response      qw();
-use Time::HiRes         qw();
-use URI                 qw();
-use URI::Escape         qw();
-use URI::file           qw();
+use Config::General 2.06 qw(); # Need 2.06 for -SplitPolicy
+use HTML::Entities       qw();
+use HTML::Parser    3.00 qw();
+use HTTP::Request        qw();
+use HTTP::Response       qw();
+use Time::HiRes          qw();
+use URI                  qw();
+use URI::Escape          qw();
+use URI::file            qw();
 # @@@ Needs also W3C::UserAgent but can't use() it here.
 
 @W3C::CheckLink::ISA =  qw(HTML::Parser);
@@ -84,46 +85,75 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.7 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
-  $REVISION      = sprintf('version %s (c) 1999-2002 W3C', $VERSION);
+  $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
 
   eval "use Term::ReadKey 2.00 qw(ReadMode)";
   $Have_ReadKey = !$@;
 
+  # Pull in mod_perl modules if applicable.
+  if ($ENV{MOD_PERL}) {
+    eval "require Apache::compat"; # For mod_perl 2
+    require Apache;
+  }
+
   $DocType = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
+
+  my @content_types = qw(application/xhtml+xml text/html);
+  $Accept = join(', ', @content_types) . ', */*;q=0.5';
+  my $re = join('|', map { s/\+/\\+/g; $_ } @content_types);
+  $ContentTypes = qr{\b(?:$re)\b}io;
+
+  my $defaultconfig = '/etc/w3c/checklink.conf';
+
+  eval {
+    my %config_opts =
+      ( -ConfigFile  => $ENV{W3C_CHECKLINK_CFG} || $defaultconfig,
+        -SplitPolicy => 'equalsign',
+      );
+    %Cfg = Config::General->new(%config_opts)->getall();
+  };
+  if ($@) {
+    die <<".EOF.";
+Couldn't read configuration.  Set the W3C_CHECKLINK_CFG environment variable
+or copy a configuration file into $defaultconfig and make sure it is
+readable by the user executing this script.  The reported error was:
+$@
+.EOF.
+  }
 }
 
 # Autoflush
 $| = 1;
 
-# Am I being run as a CGI or from the command line?
-my $_cl = ! ($ENV{GATEWAY_INTERFACE} && $ENV{GATEWAY_INTERFACE} =~ /^CGI/);
-
 # Different options specified by the user
-my $_quiet = 0;
-my $_summary = 0;
-my $_verbose = 0;
-my $_progress = 0;
-my $_html = 0;
-my $_timeout = 60;
-my $_redirects = 1;
-my $_dir_redirects = 1;
-my $_user;
-my $_password;
-my $_trusted = '\.w3\.org';
-my $_http_proxy;
-my $_accept_language = 1;
-my $_languages = '*';
-my $_base_location = '.';
-my $_masquerade = 0;
-my $_local_dir = my $_remote_masqueraded_uri = '';
-my $_hide_same_realm = 0;
-my $_depth = 0; # -1 means unlimited recursion
-
-# Restrictions for the online version
-my $_sleep_time = 3;
-my $_max_documents = 150;
+my %Opts =
+  ( Command_Line      =>
+    ! ($ENV{GATEWAY_INTERFACE} && $ENV{GATEWAY_INTERFACE} =~ /^CGI/),
+    Quiet             => 0,
+    Summary_Only      => 0,
+    Verbose           => 0,
+    Progress          => 0,
+    HTML              => 0,
+    Timeout           => 60,
+    Redirects         => 1,
+    Dir_Redirects     => 1,
+    Accept_Language   => 1,
+    Languages         => $ENV{HTTP_ACCEPT_LANGUAGE} || '*',
+    HTTP_Proxy        => undef,
+    Hide_Same_Realm   => 0,
+    Depth             => 0,    # -1 means unlimited recursion.
+    Sleep_Time        => 3,    # For the online version.
+    Max_Documents     => 150,  # Ditto.
+    User              => undef,
+    Password          => undef,
+    Base_Location     => '.',
+    Masquerade        => 0,
+    Masquerade_From   => '',
+    Masquerade_To     => '',
+    Trusted           => $Cfg{Trusted},
+  );
 
 # Global variables
 # What is our query?
@@ -139,32 +169,30 @@ my $doc_count = 0;
 # Time stamp
 my $timestamp = &get_timestamp;
 
-if ($_cl) {
+if ($Opts{Command_Line}) {
 
   # Parse command line
   &parse_arguments();
-  if ($_user && (! $_password)) {
-    &ask_password();
-  }
+  &ask_password() if ($Opts{User} && !$Opts{Password});
 
   my $first = 1;
   foreach my $uri (@ARGV) {
-    if (!$_summary) {
-      printf("%s %s\n", $PROGRAM, $REVISION) if (! $_html);
+    if (!$Opts{Summary_Only}) {
+      printf("%s %s\n", $PROGRAM, $REVISION) unless $Opts{HTML};
     } else {
-      $_verbose = 0;
-      $_progress = 0;
+      $Opts{Verbose} = 0;
+      $Opts{Progress} = 0;
     }
     # Transform the parameter into a URI
     $uri = &urize($uri);
-    &check_uri($uri, ($_html && $first), $_depth);
+    &check_uri($uri, ($Opts{HTML} && $first), $Opts{Depth});
     $first &&= 0;
   }
   undef $first;
 
-  if ($_html) {
+  if ($Opts{HTML}) {
     &html_footer();
-  } elsif (($doc_count > 0) && !$_summary) {
+  } elsif (($doc_count > 0) && !$Opts{Summary_Only}) {
     printf("\n%s\n", &global_stats());
   }
 
@@ -174,9 +202,9 @@ if ($_cl) {
   use CGI::Carp qw(fatalsToBrowser);
   $query = new CGI;
   # Set a few parameters in CGI mode
-  $_verbose  = 0;
-  $_progress = 0;
-  $_html     = 1;
+  $Opts{Verbose}   = 0;
+  $Opts{Progress}  = 0;
+  $Opts{HTML}      = 1;
 
   # Backwards compatibility
   if ($query->param('hide_dir_redirects')) {
@@ -196,36 +224,28 @@ if ($_cl) {
     }
   }
 
-  if ($query->param('summary')) {
-    $_summary = 1;
-  } else {
-  }
+  $Opts{Summary_Only} = 1 if $query->param('summary');
 
   if ($query->param('hide_redirects')) {
-    $_dir_redirects = 0;
+    $Opts{Dir_Redirects} = 0;
     if (my $type = $query->param('hide_type')) {
-      $_redirects = 0 if ($type ne 'dir');
+      $Opts{Redirects} = 0 if ($type ne 'dir');
     } else {
-      $_redirects = 0;
+      $Opts{Redirects} = 0;
     }
   }
 
-  if ($query->param('no_accept_language')) {
-    $_accept_language = 0;
-  }
-  if ($query->param('recursive')) {
-    if ($_depth == 0) {
-      $_depth = -1;
-    }
-  }
+  $Opts{Accept_Language} = 0 if ($query->param('no_accept_language'));
+
+  $Opts{Depth} = -1 if ($query->param('recursive') && $Opts{Depth} == 0);
   if ($query->param('depth') && ($query->param('depth') != 0)) {
-    $_depth = $query->param('depth');
+    $Opts{Depth} = $query->param('depth');
   }
 
   # Save, clear or leave cookie as is.
   my $cookie = '';
   if (my $action = $query->param('cookie')) {
-    my %cookie = $query->cookie($AGENT);
+    my %cookie = (-name => $AGENT);
     if ($action eq 'clear') {
       # Clear the cookie.
       $cookie{-value}   = '';
@@ -236,9 +256,11 @@ if ($_cl) {
       if ($action eq 'set') {
         # Set the options.
         my %options = $query->Vars();
-        delete($options{$_}) for ('url', 'uri', 'check'); # Non-persistent.
+        delete($options{$_}) for qw(url uri check cookie); # Non-persistent.
         $cookie{-value}   = \%options;
-        $cookie{-expires} = '+1M';
+      } else {
+        # Use the old values.
+        $cookie{-value} = { $query->cookie($AGENT) };
       }
     }
     $cookie = $query->cookie(%cookie);
@@ -255,6 +277,13 @@ if ($_cl) {
 
   undef $query; # Not needed any more.
 
+  # All Apache configurations don't set HTTP_AUTHORIZATION for CGI scripts.
+  # If we're under mod_perl, there is a way around it...
+  if ($ENV{MOD_PERL}) {
+    my $auth = Apache->request()->header_in('Authorization');
+    $ENV{HTTP_AUTHORIZATION} ||= $auth if $auth;
+  }
+
   $uri =~ s/^\s+//g;
   if ($uri =~ m/^file:/) {
     # Only the http scheme is allowed
@@ -267,7 +296,7 @@ if ($_cl) {
     }
   }
 
-  &check_uri($uri, 1, $_depth, $cookie);
+  &check_uri($uri, 1, $Opts{Depth}, $cookie);
   &html_footer();
 }
 
@@ -283,36 +312,43 @@ sub parse_arguments ()
   require Getopt::Long;
   Getopt::Long->require_version(2.17);
   Getopt::Long->import('GetOptions');
-  Getopt::Long::Configure('no_ignore_case');
+  Getopt::Long::Configure('bundling', 'no_ignore_case');
   my @masq = ();
 
   GetOptions('help'            => \&usage,
-             'q|quiet'         => sub { $_quiet = 1; $_summary = 1; },
-             's|summary'       => \$_summary,
-             'b|broken'        => sub { $_redirects = $_dir_redirects = 0; },
-             'e|dir-redirects' => sub { $_dir_redirects = 0; },
-             'v|verbose'       => \$_verbose,
-             'i|indicator'     => \$_progress,
-             'h|html'          => \$_html,
-             'n|noacclanguage' => sub { $_accept_language = 0; },
-             'r|recursive'     => sub { $_depth = -1 if $_depth == 0; },
-             'l|location=s'    => \$_base_location,
-             'u|user=s'        => \$_user,
-             'p|password=s'    => \$_password,
-             't|timeout=i'     => \$_timeout,
-             'L|languages=s'   => \$_languages,
-             'D|depth=i'       => sub { $_depth = $_[1] unless $_[1] == 0; },
-             'd|domain=s'      => \$_trusted,
-             'y|proxy=s'       => \$_http_proxy,
+             'q|quiet'         => sub { $Opts{Quiet} = 1;
+                                        $Opts{Summary_Only} = 1;
+                                      },
+             's|summary'       => \$Opts{Summary_Only},
+             'b|broken'        => sub { $Opts{Redirects} = 0;
+                                        $Opts{Dir_Redirects} = 0;
+                                      },
+             'e|dir-redirects' => sub { $Opts{Dir_Redirects} = 0; },
+             'v|verbose'       => \$Opts{Verbose},
+             'i|indicator'     => \$Opts{Progress},
+             'h|html'          => \$Opts{HTML},
+             'n|noacclanguage' => sub { $Opts{Accept_Language} = 0; },
+             'r|recursive'     => sub { $Opts{Depth} = -1
+                                          if $Opts{Depth} == 0; },
+             'l|location=s'    => \$Opts{Base_Location},
+             'u|user=s'        => \$Opts{User},
+             'p|password=s'    => \$Opts{Password},
+             't|timeout=i'     => \$Opts{Timeout},
+             'L|languages=s'   => \$Opts{Languages},
+             'D|depth=i'       => sub { $Opts{Depth} = $_[1]
+                                          unless $_[1] == 0; },
+             'd|domain=s'      => \$Opts{Trusted},
+             'y|proxy=s'       => \$Opts{HTTP_Proxy},
              'masquerade'      => \@masq,
-             'hide-same-realm' => \$_hide_same_realm,
+             'hide-same-realm' => \$Opts{Hide_Same_Realm},
              'V|version'       => \&version,
-            );
+            )
+    || usage(1);
 
   if (@masq) {
-    $_masquerade = 1;
-    $_local_dir = shift(@masq);
-    $_remote_masqueraded_uri = shift(@masq);
+    $Opts{Masquerade} = 1;
+    $Opts{Masquerade_To} = shift(@masq);
+    $Opts{Masquerade_From} = shift(@masq);
   }
 }
 
@@ -324,56 +360,61 @@ sub version ()
 
 sub usage ()
 {
+  my ($exitval) = @_;
+  $exitval = 0 unless defined($exitval);
+
+  my $langs = defined($Opts{Languages}) ? " (default: $Opts{Languages})" : '';
+  my $trust = defined($Opts{Trusted})   ? " (default: $Opts{Trusted})"   : '';
+
   print STDERR "$PROGRAM $REVISION
 
 Usage: checklink <options> <uris>
 Options:
-	-s/--summary		Result summary only.
-	-b/--broken		Show only the broken links, not the redirects.
-	-e/--directory		Hide directory redirects - e.g.
-				http://www.w3.org/TR -> http://www.w3.org/TR/
-	-r/--recursive		Check the documents linked from the first one.
-	-D/--depth n		Check the documents linked from the first one
-				to depth n.
-	-l/--location uri	Scope of the documents checked.
-				By default, for
-				http://www.w3.org/TR/html4/Overview.html
-				for example, it would be:
-				http://www.w3.org/TR/html4/
-	-n/--noacclanguage	Do not send an Accept-Language header.
-	-L/--languages		Languages accepted (default: '$_languages').
-	-q/--quiet		No output if no errors are found.
-	-v/--verbose		Verbose mode.
-	-i/--indicator		Show progress while parsing.
-	-u/--user username	Specify a username for authentication.
-	-p/--password password	Specify a password.
-	--hide-same-realm	Hide 401's that are in the same realm as the
-				document checked.
-	-t/--timeout value	Timeout for the HTTP requests.
-	-d/--domain domain	Regular expression describing the domain to
-				which the authetication information will be
-				sent (default: '$_trusted').
-	--masquerade local remote Masquerade local dir as a remote URI (e.g.
-				/home/hugo/MathML2/ is in fact
-				http://www.w3.org/TR/MathML2/).
-	-y/--proxy proxy	Specify an HTTP proxy server.
-	-h/--html		HTML output.
-	--help			Show this message.
-	-V/--version		Output version information.
+  -s/--summary              Result summary only.
+  -b/--broken               Show only the broken links, not the redirects.
+  -e/--directory            Hide directory redirects, for example
+                            http://www.w3.org/TR -> http://www.w3.org/TR/
+  -r/--recursive            Check the documents linked from the first one.
+  -D/--depth n              Check the documents linked from the first one
+                            to depth n.
+  -l/--location uri         Scope of the documents checked.
+                            By default, for example for
+                            http://www.w3.org/TR/html4/Overview.html
+                            it would be http://www.w3.org/TR/html4/
+  -n/--noacclanguage        Do not send an Accept-Language header.
+  -L/--languages            Languages accepted$langs.
+  -q/--quiet                No output if no errors are found.  Implies -s.
+  -v/--verbose              Verbose mode.
+  -i/--indicator            Show progress while parsing.
+  -u/--user username        Specify a username for authentication.
+  -p/--password password    Specify a password.
+  --hide-same-realm         Hide 401's that are in the same realm as the
+                            document checked.
+  -t/--timeout value        Timeout for HTTP requests.
+  -d/--domain domain        Regular expression describing the domain to
+                            which the authentication information will be
+                            sent$trust.
+  --masquerade base1 base2  Masquerade base URI base1 as base2
+                            (e.g. /home/hugo/MathML2/ is in fact
+                            http://www.w3.org/TR/MathML2/).
+  -y/--proxy proxy          Specify an HTTP proxy server.
+  -h/--html                 HTML output.
+  --help                    Show this message.
+  -V/--version              Output version information.
 
 Documentation at: http://www.w3.org/2000/07/checklink
 Please send bug reports and comments to the www-validator mailing list:
   www-validator\@w3.org (with 'checklink' in the subject)
   Archives are at: http://lists.w3.org/Archives/Public/www-validator/
 ";
-  exit(0);
+  exit $exitval;
 }
 
 sub ask_password ()
 {
-  printf(STDERR 'Enter the password for user %s: ', $_user);
+  printf(STDERR 'Enter the password for user %s: ', $Opts{User});
   $Have_ReadKey ? ReadMode('noecho',  *STDIN) : system('stty -echo');
-  chomp($_password = <STDIN>);
+  chomp($Opts{Password} = <STDIN>);
   $Have_ReadKey ? ReadMode('restore', *STDIN) : system('stty echo');
   print(STDERR "ok.\n");
 }
@@ -394,29 +435,24 @@ sub urize ($)
 # Check for broken links in a resource #
 ########################################
 
-sub check_uri ($$$)
+sub check_uri ($$$;$)
 {
   my ($uri, $html_header, $depth, $cookie) = @_;
   # If $html_header equals 1, we need to generate a HTML header (first
   # instance called in HTML mode).
 
-  my $start;
-  if (! $_quiet) {
-    $start = &get_timestamp();
-  }
+  my $start = &get_timestamp() unless $Opts{Quiet};
 
   # Get and parse the document
   my $response = &get_document('GET', $uri, $doc_count, \%redirects);
 
   # Can we check the resource? If not, we exit here...
-  if (defined($response->{Stop})) {
-    return(-1);
-  }
+  return -1 if defined($response->{Stop});
 
   # We are checking a new document
   $doc_count++;
 
-  if ($_html) {
+  if ($Opts{HTML}) {
     &html_header($uri, 0, $cookie) if $html_header;
     print('<h2>');
   }
@@ -426,17 +462,16 @@ sub check_uri ($$$)
   my $result_anchor = 'results'.$doc_count;
 
   printf("\nProcessing\t%s\n\n",
-         $_html ? &show_url(&encode($absolute_uri)) : $absolute_uri);
+         $Opts{HTML} ? &show_url(&encode($absolute_uri)) : $absolute_uri);
 
-  if ($_html) {
+  if ($Opts{HTML}) {
     print("</h2>\n");
-    if (! $_summary) {
+    if (! $Opts{Summary_Only}) {
       printf("<p>Go to <a href=\"#%s\">the results</a>.</p>\n",
              $result_anchor);
-      printf("<p>Check also:
-<a href=\"check?uri=%s\">HTML Validity</a> &amp;
-<a href=\"http://jigsaw.w3.org/css-validator/validator?uri=%s\">CSS
-Validity</a></p>
+      printf("<p>For reliable link checking results, check
+<a href=\"check?uri=%s\">HTML Validity</a> first.  See also
+<a href=\"http://jigsaw.w3.org/css-validator/validator?uri=%s\">CSS Validity</a>.</p>
 <p>Back to the <a href=\"checklink\">link checker</a>.</p>\n",
              map{&encode(URI::Escape::uri_escape($absolute_uri,
                                                  "^A-Za-z0-9."))}(1..2));
@@ -455,9 +490,8 @@ Validity</a></p>
   # Check anchors
   ###############
 
-  if (! $_summary) {
-    print("Checking anchors...\n");
-  }
+  print "Checking anchors...\n" unless $Opts{Summary_Only};
+
   my %errors;
   foreach my $anchor (keys %{$p->{Anchors}}) {
     my $times = 0;
@@ -465,17 +499,11 @@ Validity</a></p>
       $times += $p->{Anchors}{$anchor}{$l};
     }
     # They should appear only once
-    if ($times > 1) {
-      $errors{$anchor} = 1;
-    }
+    $errors{$anchor} = 1 if ($times > 1);
     # Empty IDREF's are not allowed
-    if ($anchor eq '') {
-      $errors{$anchor} = 1;
-    }
+    $errors{$anchor} = 1 if ($anchor eq '');
   }
-  if (! $_summary) {
-    print(" done.\n");
-  }
+  print " done.\n" unless $Opts{Summary_Only};
 
   # Check links
   #############
@@ -485,12 +513,13 @@ Validity</a></p>
   foreach my $link (keys %{$p->{Links}}) {
     my $link_uri = URI->new($link);
     my $abs_link_uri = URI->new_abs($link_uri, $base);
-    if ($_masquerade) {
-      if ($abs_link_uri =~ m|^$_remote_masqueraded_uri|) {
-        printf("processing %s in base %s\n", $abs_link_uri, $_local_dir);
+    if ($Opts{Masquerade}) {
+      if ($abs_link_uri =~ m|^$Opts{Masquerade_From}|) {
+        printf("processing %s in base %s\n",
+               $abs_link_uri, $Opts{Masquerade_To});
         my $nlink = $abs_link_uri;
         $nlink =~
-          s|^$_remote_masqueraded_uri|file://localhost$_local_dir|;
+          s|^$Opts{Masquerade_From}|$Opts{Masquerade_To}|;
         $abs_link_uri = URI->new($nlink);
       };
     }
@@ -511,25 +540,25 @@ Validity</a></p>
   # Build the list of broken URI's
   my %broken;
   foreach my $u (keys %links) {
+
     # Don't check mailto: URI's
     next if ($u =~ m/^mailto:/);
-    if (! $_summary) {
-      &hprintf("Checking link %s\n", $u);
-    }
+
+    &hprintf("Checking link %s\n", $u) unless $Opts{Summary_Only};
+
     # Check that a link is valid
     &check_validity($uri, $u, \%links, \%redirects);
-    if ($_verbose) {
-      &hprintf("\tReturn code: %s\n", $results{$u}{location}{code});
-    }
+    &hprintf("\tReturn code: %s\n", $results{$u}{location}{code})
+      if ($Opts{Verbose});
     if ($results{$u}{location}{success}) {
+
       # Even though it was not broken, we might want to display it
       # on the results page (e.g. because it required authentication)
-      if ($results{$u}{location}{display} >= 400) {
-        $broken{$u}{location} = 1;
-      }
+      $broken{$u}{location} = 1 if ($results{$u}{location}{display} >= 400);
+
       # List the broken fragments
       foreach my $fragment (keys %{$links{$u}{fragments}}) {
-        if ($_verbose) {
+        if ($Opts{Verbose}) {
           my @frags = sort keys %{$links{$u}{fragments}{$fragment}};
           &hprintf("\t\t%s %s - Line%s: %s\n",
                    $fragment,
@@ -552,57 +581,55 @@ Validity</a></p>
       }
     }
   }
-  if (! $_summary) {
-    &hprintf("Processed in %ss.\n", &time_diff($start, &get_timestamp()));
-  }
+  &hprintf("Processed in %ss.\n", &time_diff($start, &get_timestamp()))
+    unless $Opts{Summary_Only};
 
   # Display results
-  if ($_html) {
-    if (! $_summary) {
-      print("</pre>\n");
-      printf("<h2><a name=\"%s\">Results</a></h2>\n", $result_anchor);
-    }
+  if ($Opts{HTML} && !$Opts{Summary_Only}) {
+    print("</pre>\n");
+    printf("<h2><a name=\"%s\">Results</a></h2>\n", $result_anchor);
   }
-  if (! $_quiet) {
-    print "\n";
-  }
+  print "\n" unless $Opts{Quiet};
+
   &anchors_summary($p->{Anchors}, \%errors);
   &links_summary(\%links, \%results, \%broken, \%redirects);
 
   # Do we want to process other documents?
   if ($depth != 0) {
-    if ($_base_location eq '.') {
-      # Get the name of the original directory
-      # e.g. http://www.w3.org/TR/html4/Overview.html
-      #      should return http://www.w3.org/TR/html4/
-      $results{$uri}{parsing}{base} =~ m|^(.*/)[^/]*|;
-      $_base_location = $1;
+    if (! ref($Opts{Base_Location})) { # Not a URI object yet?
+      $Opts{Base_Location} = ($Opts{Base_Location} eq '.')
+        ? URI->new($results{$uri}{parsing}{base})->canonical() :
+          URI->new($Opts{Base_Location})->canonical();
     }
+
     foreach my $u (keys %links) {
-      next if (! (# Check if it's in our scope for recursion
-                  ($u =~ m|^$_base_location|) &&
-                  # and the link is not broken
-                  $results{$u}{location}{success} &&
-                  # And it is a text/html or application/xhtml+xml
-                  # resource
-                  (($results{$u}{location}{type} =~ m|text/html|) ||
-                   ($results{$u}{location}{type}
-                    =~ m|application/xhtml\+xml|))
-                 )
-              );
-      # Check if we have already processed the URI
-      next if (&already_processed($u) != 0);
+
+      next unless $results{$u}{location}{success};  # Broken link?
+
+      # Check if this link is in our recursion scope (see URI docs).
+      my $current = URI->new($u)->canonical();
+      my $rel = $current->rel($Opts{Base_Location}); # base -> current !
+      next if ($current eq $rel);                 # Relative path not possible?
+      next if ($rel =~ m|^(\.\.)?/|);    # Relative path starts with ../ or / ?
+      undef $current; undef $rel;
+
+      # Do we understand its content type?
+      next unless ($results{$u}{location}{type} =~ $ContentTypes);
+
+      # Have we already processed this URI?
+      next if &already_processed($u);
+
       # Do the job
       print "\n";
-      if (! $_html) {
+      if (! $Opts{HTML}) {
         print '-' x 40;
       } else {
         # For the online version, wait for a while to avoid abuses
-        if (!$_cl) {
-          if ($doc_count == $_max_documents) {
+        if (!$Opts{Command_Line}) {
+          if ($doc_count == $Opts{Max_Documents}) {
             print("<hr>\n<p><strong>Maximum number of documents reached!</strong></p>\n");
           }
-          if ($doc_count >= $_max_documents) {
+          if ($doc_count >= $Opts{Max_Documents}) {
             $doc_count++;
             print("<p>Not checking <strong>$u</strong></p>\n");
             $processed{$u} = 1;
@@ -610,7 +637,7 @@ Validity</a></p>
           }
         }
         print('<hr>');
-        sleep($_sleep_time);
+        sleep($Opts{Sleep_Time});
       }
       print "\n";
       if ($depth < 0) {
@@ -651,7 +678,7 @@ sub get_document ($$$;\%)
       if ($response->code() == 401) {
         &authentication($response);
       } else {
-        &html_header($uri) if $_html;
+        &html_header($uri) if $Opts{HTML};
         &hprintf("\nError: %d %s\n",
                  $response->code(), $response->message());
       }
@@ -667,20 +694,17 @@ sub get_document ($$$;\%)
 
   # Can we parse the document?
   my $failed_reason;
-  if (! (($response->header('Content-Type') =~ m|text/html|) ||
-         ($response->header('Content-Type') =~ m|application/xhtml\+xml|))
-     ) {
-    $failed_reason = "Content-Type is '".
-      $response->header('Content-Type')."'";
-  } elsif ($response->header('Content-Encoding')
-           && ($response->header('Content-Encoding') ne 'identity')) {
-    $failed_reason = "Content-Encoding is '".
-      $response->header('Content-encoding')."'";
+  if ((my $ct = $response->header('Content-Type')) !~ $ContentTypes) {
+    $failed_reason = "Content-Type is '$ct'";
+  } elsif ($response->header('Content-Encoding') &&
+           ((my $ce = $response->header('Content-Encoding')) ne 'identity')) {
+    # @@@ We could maybe handle gzip...
+    $failed_reason = "Content-Encoding is '$ce'";
   }
   if ($failed_reason) {
     # No, there is a problem...
     if (! $in_recursion) {
-      &html_header($uri) if $_html;
+      &html_header($uri) if $Opts{HTML};
       &hprintf("Can't check links: %s.\n", $failed_reason);
     }
     $response->{Stop} = 1;
@@ -696,20 +720,20 @@ sub get_document ($$$;\%)
 
 sub already_processed ($)
 {
-  my ($uri, %redirects) = @_;
+  my ($uri) = @_;
   # Don't be verbose for that part...
-  my $summary_value = $_summary;
-  $_summary = 1;
+  my $summary_value = $Opts{Summary_Only};
+  $Opts{Summary_Only} = 1;
   # Do a GET: if it fails, we stop, if not, the results are cached
   my $response = &get_document('GET', $uri, 1);
   # ... but just for that part
-  $_summary = $summary_value;
+  $Opts{Summary_Only} = $summary_value;
   # Can we process the resource?
-  return(-1) if (defined($response->{Stop}));
+  return -1 if defined($response->{Stop});
   # Have we already processed it?
-  return(1) if (defined($processed{$response->{absolute_uri}->as_string()}));
+  return  1 if defined($processed{$response->{absolute_uri}->as_string()});
   # It's not processed yet and it is processable: return 0
-  return(0);
+  return  0;
 }
 
 ############################
@@ -733,42 +757,39 @@ sub get_uri ($$;$\%$$$$)
   # $auth equals 1 if we want to send out authentication information
 
   # For timing purposes
-  if (! defined($start)) {
-    $start = &get_timestamp();
-  }
+  $start = &get_timestamp() unless defined($start);
 
   # Prepare the query
   my %lwpargs = ($LWP::VERSION >= 5.6) ? (keep_alive => 1) : ();
   my $ua = W3C::UserAgent->new(%lwpargs);
-  $ua->timeout($_timeout);
-  $ua->agent(sprintf('%s/%s %s', $AGENT, $VERSION, $ua->agent()));
+  $ua->timeout($Opts{Timeout});
+  $ua->agent(sprintf('%s/%s %s', $AGENT, $CVS_VERSION, $ua->agent()));
   $ua->env_proxy();
-  $ua->proxy('http', 'http://' . $_http_proxy) if ($_http_proxy);
+  $ua->proxy('http', 'http://' . $Opts{HTTP_Proxy}) if $Opts{HTTP_Proxy};
 
   # $ua->{fetching} contains the URI we originally wanted
   # $ua->{uri} is modified in the case of a redirect; this is used to
   # build $ua->{Redirects}
   $ua->{uri} = $ua->{fetching} = $uri;
-  if (defined($redirects)) {
-    $ua->{Redirects} = $redirects;
-  }
+  $ua->{Redirects} = $redirects if defined($redirects);
 
   # Do we want printouts of progress?
-  my $verbose_progress = ! ($_summary || (!$doc_count && $_html));
+  my $verbose_progress =
+    ! ($Opts{Summary_Only} || (!$doc_count && $Opts{HTML}));
 
   &hprintf("%s %s ", $method, $uri) if $verbose_progress;
 
   my $request = new HTTP::Request($method, $uri);
-  if ($_accept_language) {
-    $request->header('Accept-Language' => 'en');
+  if ($Opts{Accept_Language} && $Opts{Languages}) {
+    $request->header('Accept-Language' => $Opts{Languages});
   }
+  $request->header('Accept', $Accept);
   # Are we providing authentication info?
-  if (defined($auth)
-      && ($request->url->host =~ /$_trusted$/)) {
+  if ($auth && $request->url()->host() =~ /$Opts{Trusted}/i) {
     if (defined($ENV{HTTP_AUTHORIZATION})) {
       $request->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
-    } elsif (defined($_user) && defined($_password)) {
-      $request->authorization_basic($_user, $_password);
+    } elsif (defined($Opts{User}) && defined($Opts{Password})) {
+      $request->authorization_basic($Opts{User}, $Opts{Password});
     }
   }
 
@@ -785,12 +806,16 @@ sub get_uri ($$;$\%$$$$)
     $message = $ua->{FirstMessage};
   }
   # Authentication requested?
-  if (($response->code() == 401)
-      && (defined($ENV{HTTP_AUTHORIZATION})
-          || (defined($_user) && defined($_password)))
-      && !defined ($auth)) {
+  if ($response->code() == 401 &&
+      !defined($auth) &&
+      (defined($ENV{HTTP_AUTHORIZATION})
+       || (defined($Opts{User}) && defined($Opts{Password})))) {
+
+    # Set host as trusted domain unless we already have one.
+    $Opts{Trusted} ||= sprintf('^%s$', quotemeta($response->base()->host()));
+
     # Deal with authentication and avoid loops
-    if (! defined ($realm)) {
+    if (! defined($realm)) {
       $response->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
       $realm = $1;
     }
@@ -833,9 +858,7 @@ sub record_results ($$$)
   # Stores the authentication information
   if (defined($response->{Realm})) {
     $results{$uri}{location}{realm} = $response->{Realm};
-    if (! $_hide_same_realm) {
-      $results{$uri}{location}{display} = 401;
-    }
+    $results{$uri}{location}{display} = 401 unless $Opts{Hide_Same_Realm};
   }
   # What type of broken link is it? (stored in {record} - the {display}
   #              information is just for visual use only)
@@ -848,11 +871,10 @@ sub record_results ($$$)
   # Did it fail?
   $results{$uri}{location}{message} = $response->message();
   if (! $results{$uri}{location}{success}) {
-    if ($_verbose) {
-      &hprintf("Error: %d %s\n",
-               $results{$uri}{location}{code},
-               $results{$uri}{location}{message});
-    }
+    &hprintf("Error: %d %s\n",
+             $results{$uri}{location}{code},
+             $results{$uri}{location}{message})
+      if ($Opts{Verbose});
     return;
   }
 }
@@ -872,17 +894,17 @@ sub parse_document ($$$$;$)
     $p->{base} = $results{$uri}{parsing}{base};
     $p->{Anchors} = $results{$uri}{parsing}{Anchors};
     $p->{Links} = $results{$uri}{parsing}{Links};
-    return($p);
+    return $p;
   }
 
   my $start;
   $p = W3C::CheckLink->new();
   $p->{base} = $location;
-  if (! $_summary) {
+  if (! $Opts{Summary_Only}) {
     $start = &get_timestamp();
     print("Parsing...\n");
   }
-  if (!$_summary || $_progress) {
+  if (!$Opts{Summary_Only} || $Opts{Progress}) {
     $p->{Total} = ($document =~ tr/\n//);
   }
   # We only look for anchors if we are not interested in the links
@@ -894,17 +916,13 @@ sub parse_document ($$$$;$)
   # Processing instructions are not parsed by process, but in this case
   # it should be. It's expensive, it's horrible, but it's the easiest way
   # for right now.
-  if (!$p->{only_anchors}) {
-    $document =~ s/\<\?(xml:stylesheet.*?)\?\>/\<$1\>/;
-  }
+  $document =~ s/\<\?(xml:stylesheet.*?)\?\>/\<$1\>/ unless $p->{only_anchors};
 
   $p->parse($document);
 
-  if (! $_summary) {
+  if (! $Opts{Summary_Only}) {
     my $stop = &get_timestamp();
-    if ($_progress) {
-      print "\r";
-    }
+    print "\r" if $Opts{Progress};
     &hprintf(" done (%d lines in %ss).\n",
              $p->{Total}, &time_diff($start, $stop));
   }
@@ -914,14 +932,14 @@ sub parse_document ($$$$;$)
   $results{$uri}{parsing}{Anchors} = $p->{Anchors};
   $results{$uri}{parsing}{Links} = $p->{Links};
 
-  return($p);
+  return $p;
 }
 
 ###################################
 # Constructor for W3C::CheckLink #
 ###################################
 
-sub W3C::CheckLink::new
+sub new
 {
   my $p = HTML::Parser::new(@_, api_version => 3);
 
@@ -951,18 +969,15 @@ sub W3C::CheckLink::new
 # Record or return  the doctype of the document #
 #################################################
 
-sub W3C::CheckLink::doctype
+sub doctype
 {
   my ($self, $dc) = @_;
-  if (! $dc) {
-    return $self->{doctype};
-  }
+  return $self->{doctype} unless $dc;
   $_ = $self->{doctype} = $dc;
 
   # What to look for depending on the doctype
-  if ($_ eq '-//W3C//DTD XHTML Basic 1.0//EN') {
-    $self->{check_name} = 0;
-  }
+  $self->{check_name} = 0 if ($_ eq '-//W3C//DTD XHTML Basic 1.0//EN');
+
   # Check for the id tag
   if (
       # HTML 2.0 & 3.0
@@ -972,48 +987,39 @@ sub W3C::CheckLink::doctype
     $self->{check_id} = 0;
   }
   # Enable XML extensions
-  if (m%^-//W3C//DTD XHTML %) {
-    $self->xml_mode(1);
-  }
+  $self->xml_mode(1) if (m%^-//W3C//DTD XHTML %);
 }
 
 #######################################
 # Count the number of lines in a file #
 #######################################
 
-sub W3C::CheckLink::new_line
+sub new_line
 {
   my ($self, $string) = @_;
   my $count = ($string =~ tr/\n//);
   $self->{Line} = $self->{Line} + $count;
-  if ($_progress) {
-    printf("\r%4d%%", int($self->{Line}/$self->{Total}*100));
-  }
+  printf("\r%4d%%", int($self->{Line}/$self->{Total}*100)) if $Opts{Progress};
 }
 
 #############################
 # Extraction of the anchors #
 #############################
 
-sub W3C::CheckLink::get_anchor
+sub get_anchor
 {
   my ($self, $tag, $attr) = @_;
-  my $anchor;
 
-  if ($self->{check_id}) {
-    $anchor = $attr->{id};
-  }
+  my $anchor = $attr->{id} if $self->{check_id};
   if ($self->{check_name} && ($tag eq 'a')) {
     # @@@@ In XHTML, <a name="foo" id="foo"> is mandatory
     # Force an error if it's not the case (or if id's and name's values
     #                                      are different)
     # If id is defined, name if defined must have the same value
-    if (!$anchor) {
-      $anchor = $attr->{name};
-    }
+    $anchor ||= $attr->{name};
   }
 
-  return($anchor);
+  return $anchor;
 }
 
 ###########################
@@ -1023,10 +1029,7 @@ sub W3C::CheckLink::get_anchor
 sub add_link
 {
   my ($self, $uri) = @_;
-
-  if (defined($uri)) {
-    $self->{Links}{$uri}{$self->{Line}}++;
-  }
+  $self->{Links}{$uri}{$self->{Line}}++ if defined($uri);
 }
 
 sub start
@@ -1035,50 +1038,41 @@ sub start
 
   # Anchors
   my $anchor = $self->get_anchor($tag, $attr);
-  if (defined($anchor)) {
-    $self->{Anchors}{$anchor}{$self->{Line}}++;
-  }
+  $self->{Anchors}{$anchor}{$self->{Line}}++ if defined($anchor);
 
   # Links
   if (!$self->{only_anchors}) {
     # Here, we are checking too many things
     # The right thing to do is to parse the DTD...
     if ($tag eq 'base') {
-      if (defined($attr->{href})) {
+      # Treat <base> (without href) or <base href=""> as if it didn't exist.
+      if (defined($attr->{href}) && $attr->{href} ne '') {
         $self->{base} = $attr->{href};
       }
     } else {
       $self->add_link($attr->{href});
     }
     $self->add_link($attr->{src});
-    if ($tag eq 'object') {
-      $self->add_link($attr->{data});
-    }
-    if ($tag eq 'blockquote') {
-      $self->add_link($attr->{cite});
-    }
+    $self->add_link($attr->{data}) if ($tag eq 'object');
+    $self->add_link($attr->{cite}) if ($tag eq 'blockquote');
   }
 
   # Line counting
-  if ($text =~ m/\n/) {
-    $self->new_line($text);
-  }
+  $self->new_line($text) if ($text =~ m/\n/);
 }
 
 sub text
 {
   my ($self, $text) = @_;
-  if (!$_progress) {
+  if (!$Opts{Progress}) {
     # If we are just extracting information about anchors,
     # parsing this part is only cosmetic (progress indicator)
     return unless !$self->{only_anchors};
   }
-  if ($text =~ /\n/) {
-    $self->new_line($text);
-  }
+  $self->new_line($text) if ($text =~ /\n/);
 }
 
-sub W3C::CheckLink::declaration
+sub declaration
 {
   my ($self, $text) = @_;
   # Extract the doctype
@@ -1089,13 +1083,9 @@ sub W3C::CheckLink::declaration
     # Parse the doctype declaration
     $text =~ m/^DOCTYPE\s+html\s+PUBLIC\s+\"([^\"]*)\"(\s+\"([^\"]*)\")?\s*$/i;
     # Store the doctype
-    if ($1) {
-      $self->doctype($1);
-    }
+    $self->doctype($1) if $1;
     # If there is a link to the DTD, record it
-    if (!$self->{only_anchors} && $3) {
-      $self->{Links}{$3}{$self->{Line}}++;
-    }
+    $self->{Links}{$3}{$self->{Line}}++ if (!$self->{only_anchors} && $3);
   }
   return unless !$self->{only_anchors};
   $self->text($text);
@@ -1115,16 +1105,15 @@ sub check_validity ($$\%\%)
 
   # Checking file: URI's is not allowed with a CGI
   if ($testing ne $uri) {
-    if ((! $_cl) && (!($testing =~ m/^file:/)) && ($uri =~ m/^file:/)) {
+    if (!$Opts{Command_Line} && $testing !~ m/^file:/ && $uri =~ m/^file:/) {
+      my $msg = 'Error: \'file:\' URI not allowed';
       # Can't test? Return 400 Bad request.
-      $results{$uri}{location}{code} = 400;
+      $results{$uri}{location}{code}    = 400;
+      $results{$uri}{location}{record}  = 400;
+      $results{$uri}{location}{orig}    = 400;
       $results{$uri}{location}{success} = 0;
-      $results{$uri}{location}{message} = 'Error: \'file:\' URI not allowed';
-      if ($_verbose) {
-        &hprintf("Error: %d %s\n",
-                 $results{$uri}{location}{code},
-                 $results{$uri}{location}{message});
-      }
+      $results{$uri}{location}{message} = $msg;
+      &hprintf("Error: %d %s\n", 400, $msg) if $Opts{Verbose};
       return;
     }
   }
@@ -1154,16 +1143,11 @@ sub check_validity ($$\%\%)
   my $p;
   if ($being_processed) {
     # Can we really parse the document?
-    if (!defined($results{$uri}{location}{type})) {
-      return;
-    }
-    if (! (($results{$uri}{location}{type} =~ m|text/html|i) ||
-           ($results{$uri}{location}{type} =~ m|application/xhtml\+xml|i))
-       ) {
-      if ($_verbose) {
-        &hprintf("Can't check content: Content-type is '%s'.\n",
-                 $response->header('Content-type'));
-      }
+    return unless defined($results{$uri}{location}{type});
+    if ($results{$uri}{location}{type} !~ $ContentTypes) {
+      &hprintf("Can't check content: Content-Type is '%s'.\n",
+               $results{$uri}{location}{type})
+        if ($Opts{Verbose});
       return;
     }
     # Do it then
@@ -1188,11 +1172,9 @@ sub escape_match ($\%)
 {
   my ($a, $hash) = (URI::Escape::uri_unescape($_[0]), $_[1]);
   foreach my $b (keys %$hash) {
-    if ($a eq URI::Escape::uri_unescape($b)) {
-      return(1);
-    }
+    return 1 if ($a eq URI::Escape::uri_unescape($b));
   }
-  return(0);
+  return 0;
 }
 
 ##########################
@@ -1204,13 +1186,19 @@ sub authentication ($)
   my $r = $_[0];
   $r->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
   my $realm = $1;
-  my $authHeader = $r->headers->www_authenticate;
-  if ($_cl) {
-    printf(STDERR "\nAuthentication is required for %s.\n", $r->request->url);
-    printf(STDERR "The realm is %s.\n", $realm);
-    print(STDERR "Use the -u and -p options to specify a username and password.\n");
+
+  if ($Opts{Command_Line}) {
+    printf STDERR <<EOF, $r->request()->url(), $realm;
+
+Authentication is required for %s.
+The realm is %s.
+Use the -u and -p options to specify a username and password and the -d option
+to specify trusted domains.
+EOF
   } else {
-    printf("Status: 401 Authorization Required\nWWW-Authenticate: %s\nConnection: close\nContent-Language: en\nContent-Type: text/html\n\n", $r->headers->www_authenticate);
+
+    printf("Status: 401 Authorization Required\nWWW-Authenticate: %s\nConnection: close\nContent-Language: en\nContent-Type: text/html; charset=iso-8859-1\n\n", $r->headers->www_authenticate);
+
     printf("%s
 <html lang=\"en\">
 <head>
@@ -1218,10 +1206,18 @@ sub authentication ($)
 </head>
 <body>
 <h1>Authorization Required</h1>
-<p>You need %s access to %s to perform Link Checking.</p>
-</body>
-</html>
+<p>
+  You need %s access to %s to perform Link Checking.<br>
 ", $DocType, &encode($realm), $r->request->url);
+
+    if ($Opts{Trusted}) {
+      printf <<EOF, &encode($Opts{Trusted});
+  This service has been configured to send authentication only to hostnames
+  matching the regular expression <code>%s</code>
+EOF
+    }
+
+    print "</p>\n";
   }
 }
 
@@ -1299,33 +1295,33 @@ sub anchors_summary (\%\%)
 
   # Number of anchors found.
   my $n = scalar(keys(%$anchors));
-  if (! $_quiet) {
-    if ($_html) {
+  if (! $Opts{Quiet}) {
+    if ($Opts{HTML}) {
       print("<h3>Anchors</h3>\n<p>");
     } else {
       print("Anchors\n\n");
     }
     &hprintf("Found %d anchor%s.", $n, ($n == 1) ? '' : 's');
-    print('</p>') if $_html;
+    print('</p>') if $Opts{HTML};
     print("\n");
   }
   # List of the duplicates, if any.
   my @errors = keys %{$errors};
   if (! scalar(@errors)) {
-    print("<p>Valid anchors!</p>\n") if (! $_quiet && $_html && $n);
+    print("<p>Valid anchors!</p>\n") if (! $Opts{Quiet} && $Opts{HTML} && $n);
     return;
   }
   undef $n;
 
-  print('<p>') if $_html;
+  print('<p>') if $Opts{HTML};
   print('List of duplicate and empty anchors');
-  print("</p>\n<table border=\"1\">\n<tr><td><b>Anchors</b></td><td><b>Lines</b></td></tr>") if $_html;
+  print("</p>\n<table border=\"1\">\n<tr><td><b>Anchors</b></td><td><b>Lines</b></td></tr>") if $Opts{HTML};
   print("\n");
 
   foreach my $anchor (@errors) {
     my $format;
     my @unique = &sort_unique(keys %{$anchors->{$anchor}});
-    if ($_html) {
+    if ($Opts{HTML}) {
       $format = "<tr class=\"broken\"><td>%s</td><td>%s</td></tr>\n";
     } else {
       my $s = (scalar(@unique) > 1) ? 's' : '';
@@ -1336,19 +1332,19 @@ sub anchors_summary (\%\%)
            join(', ', @unique));
   }
 
-  print("</table>\n") if $_html;
+  print("</table>\n") if $Opts{HTML};
 }
 
 sub show_link_report (\%\%\%\%\@;$\%)
 {
   my ($links, $results, $broken, $redirects, $urls, $codes, $todo) = @_;
 
-  print("\n<dl class=\"report\">") if $_html;
+  print("\n<dl class=\"report\">") if $Opts{HTML};
   print("\n");
 
   # Process each URL
   my ($c, $previous_c);
-  foreach my $u (@{$urls}) {
+  foreach my $u (@$urls) {
     my @fragments = keys %{$broken->{$u}{fragments}};
     # Did we get a redirect?
     my $redirected = &is_redirected($u, %$redirects);
@@ -1358,9 +1354,7 @@ sub show_link_report (\%\%\%\%\@;$\%)
       push (@total_lines, $l);
     }
     foreach my $f (keys %{$links->{$u}{fragments}}) {
-      if ($f eq $u) {
-        next if (defined($links->{$u}{$u}{-1}));
-      }
+      next if ($f eq $u && defined($links->{$u}{$u}{-1}));
       foreach my $l (keys %{$links->{$u}{fragments}{$f}}) {
         push (@total_lines, $l);
       }
@@ -1373,7 +1367,7 @@ sub show_link_report (\%\%\%\%\@;$\%)
     my $redirect_too;
     if ($todo) {
       if ($u =~ m/^javascript:/) {
-        if ($_html) {
+        if ($Opts{HTML}) {
           $whattodo =
 'You must change this link: people using a browser without Javascript support
 will <em>not</em> be able to follow this link. See the
@@ -1396,9 +1390,10 @@ on how to solve this</a>.';
       } else {
         $whattodo = $todo->{$c};
       }
+      # @@@ 303 and 307 ???
       if (defined($redirects{$u}) && ($c != 301) && ($c != 302)) {
         $redirect_too = 'The original request has been redirected.';
-        $whattodo .= ' '.$redirect_too if (! $_html);
+        $whattodo .= ' '.$redirect_too unless $Opts{HTML};
       }
     } else {
       # Directory redirects
@@ -1410,7 +1405,7 @@ on how to solve this</a>.';
     my $s = (scalar(@unique) > 1) ? 's' : '';
     undef @unique;
 
-    if ($_html) {
+    if ($Opts{HTML}) {
       # Style stuff
       my $idref = '';
       if ($codes && (!defined($previous_c) || ($c != $previous_c))) {
@@ -1426,7 +1421,7 @@ on how to solve this</a>.';
       my $http_message;
       if ($results->{$u}{location}{message}) {
         $http_message = &encode($results->{$u}{location}{message});
-        if (($c == 404) || ($c == 500)) {
+        if ($c == 404 || $c == 500) {
           $http_message = '<span class="broken">'.
             $http_message.'</span>';
         }
@@ -1440,14 +1435,15 @@ HTTP Message: %s%s%s</dd>
              # Anchor for return codes
              $idref,
              # List of redirects
-             $redirected ? join(' redirected to<br>',
-                                @redirects_urls) : &show_url($u),
+             $redirected ?
+             join(' redirected to<br>', @redirects_urls) : &show_url($u),
              # Color
              &bgcolor($c),
              # What to do
              $whattodo,
              # Redirect too?
-             $redirect_too ? ' <span '.&bgcolor(301).'>'.$redirect_too.'</span>' : '',
+             $redirect_too ?
+             sprintf(' <span %s>%s</span>', &bgcolor(301), $redirect_too) : '',
              # Original HTTP reply
              $results->{$u}{location}{orig},
              # Final HTTP reply
@@ -1507,7 +1503,7 @@ HTTP Message: %s%s%s</dd>
     }
     # Fragments
     foreach my $f (@fragments) {
-      if ($_html) {
+      if ($Opts{HTML}) {
         printf("<dd>%s: %s</dd>\n",
                # Broken fragment
                &show_url($u, $f),
@@ -1525,11 +1521,11 @@ HTTP Message: %s%s%s</dd>
       }
     }
 
-    print("</dl></dd>\n") if ($_html && scalar(@fragments));
+    print("</dl></dd>\n") if ($Opts{HTML} && scalar(@fragments));
   }
 
   # End of the table
-  print("</dl>\n") if $_html;
+  print("</dl>\n") if $Opts{HTML};
 }
 
 sub code_shown ($$)
@@ -1551,11 +1547,14 @@ sub links_summary (\%\%\%\%)
                300 => 'It usually means that there is a typo in a link that triggers mod_speling action - this must be fixed!',
                301 => 'You should update the link.',
                302 => 'Usually nothing.',
+               303 => 'Usually nothing.',
+               307 => 'Usually nothing.',
                400 => 'Usually the sign of a malformed URL that cannot be parsed by the server.',
                401 => "The link is not public. You'd better specify it.",
                403 => 'The link is forbidden! This needs fixing. Usual suspects: a missing index.html or Overview.html, or a missing ACL.',
                404 => 'The link is broken. Fix it NOW!',
                405 => 'The server does not allow HEAD requests. Go ask the guys who run this server why. Check the link manually.',
+               406 => "The server isn't capable of responding according to the Accept* headers sent. Check it out.",
                407 => 'The link is a proxy, but requires Authentication.',
                408 => 'The request timed out.',
                410 => 'The resource is gone. You should remove this link.',
@@ -1576,7 +1575,7 @@ sub links_summary (\%\%\%\%)
   # List of the broken links
   my @urls = keys %{$broken};
   my @dir_redirect_urls = ();
-  if ($_redirects) {
+  if ($Opts{Redirects}) {
     # Add the redirected URI's to the report
     for my $l (keys %$redirects) {
       next unless (defined($results->{$l})
@@ -1596,8 +1595,8 @@ sub links_summary (\%\%\%\%)
 
   # Broken links and redirects
   if ($#urls < 0) {
-    if (! $_quiet) {
-      if ($_html) {
+    if (! $Opts{Quiet}) {
+      if ($Opts{HTML}) {
         print "<h3>Links</h3>\n";
         print "<p>Valid links!</p>";
       } else {
@@ -1606,9 +1605,9 @@ sub links_summary (\%\%\%\%)
       print "\n";
     }
   } else {
-    print('<h3>') if $_html;
+    print('<h3>') if $Opts{HTML};
     print("\nList of broken links");
-    print(' and redirects') if $_redirects;
+    print(' and redirects') if $Opts{Redirects};
 
     # Sort the URI's by HTTP Code
     my %code_summary;
@@ -1635,7 +1634,7 @@ sub links_summary (\%\%\%\%)
     @urls = @sorted;
     undef(@sorted); undef(@idx);
 
-    if ($_html) {
+    if ($Opts{HTML}) {
       print('</h3><p><i>Fragments listed are broken. See the table below to know what action to take.</i></p>');
 
       # Print a summary
@@ -1657,10 +1656,10 @@ sub links_summary (\%\%\%\%)
   }
 
   # Show directory redirects
-  if ($_dir_redirects && ($#dir_redirect_urls > -1)) {
-    print('<h3>') if $_html;
+  if ($Opts{Dir_Redirects} && ($#dir_redirect_urls > -1)) {
+    print('<h3>') if $Opts{HTML};
     print("\nList of directory redirects");
-    print("</h3>\n<p>The links below are not broken, but the document does not use the exact URL.</p>") if $_html;
+    print("</h3>\n<p>The links below are not broken, but the document does not use the exact URL.</p>") if $Opts{HTML};
     &show_link_report($links, $results, $broken, $redirects,
                       \@dir_redirect_urls);
   }
@@ -1675,7 +1674,8 @@ sub links_summary (\%\%\%\%)
 sub global_stats ()
 {
   my $stop = &get_timestamp();
-  my $n_docs = ($doc_count <= $_max_documents) ? $doc_count : $_max_documents;
+  my $n_docs =
+    ($doc_count <= $Opts{Max_Documents}) ? $doc_count : $Opts{Max_Documents};
   return sprintf('Checked %d document%s in %s seconds.',
                  $n_docs,
                  ($n_docs == 1) ? '' : 's',
@@ -1697,10 +1697,10 @@ sub html_header ($;$$)
   # print() statement as the last header...
 
   my $headers = '';
-  if (! $_cl) {
+  if (! $Opts{Command_Line}) {
     $headers .= "Cache-Control: no-cache\nPragma: no-cache\n" if $doform;
     $headers .= "Content-Type: text/html; charset=iso-8859-1\n";
-    $headers .= "Content-Script-Type: text/javascript\n";
+    $headers .= "Content-Script-Type: application/x-javascript\n";
     $headers .= "Set-Cookie: $cookie\n" if $cookie;
     $headers .= "Content-Language: en\n\n";
   }
@@ -1708,7 +1708,7 @@ sub html_header ($;$$)
   my $script = my $onload = '';
   if ($doform) {
     $script = "
-<script type=\"text/javascript\">
+<script type=\"application/x-javascript\">
 function uriOk()
 {
   var v = document.forms[0].uri.value;
@@ -1819,18 +1819,14 @@ sub bgcolor ($)
 sub show_url ($;$)
 {
   my ($url, $fragment) = @_;
-  if (defined($fragment)) {
-    $url .= '#'.$fragment;
-  }
+  $url .= '#' . $fragment if defined($fragment);
   return sprintf('<a href="%s">%s</a>',
                  $url, &encode(defined($fragment) ? $fragment : $url));
 }
 
 sub html_footer ()
 {
-  if (($doc_count > 0) && !$_quiet) {
-    printf("<p>%s</p>\n", &global_stats());
-  }
+  printf("<p>%s</p>\n", &global_stats()) if ($doc_count > 0 && !$Opts{Quiet});
 
   print "
 <address>
@@ -1880,12 +1876,12 @@ sub print_form ($)
   my $cookie_options = '';
   if ($q->cookie()) {
     $cookie_options = "
-    <label><input type=\"radio\" name=\"cookie\" value=\"nochanges\" checked=\"checked\"> Don't modify saved options</label>
-    <label><input type=\"radio\" name=\"cookie\" value=\"set\"> Save these options</label>
-    <label><input type=\"radio\" name=\"cookie\" value=\"clear\"> Clear saved options</label>";
+    <label for=\"cookie1\"><input type=\"radio\" id=\"cookie1\" name=\"cookie\" value=\"nochanges\" checked=\"checked\"> Don't modify saved options</label>
+    <label for=\"cookie2\"><input type=\"radio\" id=\"cookie2\" name=\"cookie\" value=\"set\"> Save these options</label>
+    <label for=\"cookie3\"><input type=\"radio\" id=\"cookie3\" name=\"cookie\" value=\"clear\"> Clear saved options</label>";
   } else {
     $cookie_options = "
-    <label><input type=\"checkbox\" name=\"cookie\" value=\"set\"> Save options in a <a href=\"http://www.w3.org/Protocols/rfc2109/rfc2109\">cookie</a></label>";
+    <label for=\"cookie\"><input type=\"checkbox\" id=\"cookie\" name=\"cookie\" value=\"set\"> Save options in a <a href=\"http://www.w3.org/Protocols/rfc2109/rfc2109\">cookie</a></label>";
   }
 
   print "<form action=\"", $q->self_url(), "\" method=\"get\" onsubmit=\"return uriOk()\">
@@ -1895,16 +1891,16 @@ of a document that you would like to check:</label></p>
 <fieldset>
   <legend>Options</legend>
   <p>
-    <label><input type=\"checkbox\" name=\"summary\" value=\"on\"", $sum, "> Summary only</label>
+    <label for=\"summary\"><input type=\"checkbox\" id=\"summary\" name=\"summary\" value=\"on\"", $sum, "> Summary only</label>
     <br>
-    <label><input type=\"checkbox\" name=\"hide_redirects\" value=\"on\"", $red, "> Hide <a href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.3\">redirects</a>:</label>
+    <label for=\"hide_redirects\"><input type=\"checkbox\" id=\"hide_redirects\" name=\"hide_redirects\" value=\"on\"", $red, "> Hide <a href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.3\">redirects</a>:</label>
     <label><input type=\"radio\" name=\"hide_type\" value=\"all\"", $all, "> all</label>
     <label><input type=\"radio\" name=\"hide_type\" value=\"dir\"", $dir, "> for directories only</label>
     <br>
-    <label><input type=\"checkbox\" name=\"no_accept_language\" value=\"on\"", $acc, "> Don't send <tt><a href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4\">Accept-Language</a></tt> headers</label>
+    <label for=\"no_accept_language\"><input type=\"checkbox\" id=\"no_accept_language\" name=\"no_accept_language\" value=\"on\"", $acc, "> Don't send <tt><a href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4\">Accept-Language</a></tt> headers</label>
     <br>
-    <label title=\"Check linked documents recursively (maximum: ", $_max_documents, " documents; sleeping ", $_sleep_time, " seconds between each document)\"><input type=\"checkbox\" name=\"recursive\" value=\"on\"", $rec, "> Check linked documents recursively</label>,
-    <label title=\"Depth of the recursion (-1 is the default and means unlimited)\">recursion depth: <input type=\"text\" size=\"3\" maxlength=\"3\" name=\"depth\" value=\"", $dep, "\"></label>
+    <label title=\"Check linked documents recursively (maximum: ", $Opts{Max_Documents}, " documents; sleeping ", $Opts{Sleep_Time}, " seconds between each document)\" for=\"recursive\"><input type=\"checkbox\" id=\"recursive\" name=\"recursive\" value=\"on\"", $rec, "> Check linked documents recursively</label>,
+    <label title=\"Depth of the recursion (-1 is the default and means unlimited)\" for=\"depth\">recursion depth: <input type=\"text\" size=\"3\" maxlength=\"3\" id=\"depth\" name=\"depth\" value=\"", $dep, "\"></label>
     <br><br>", $cookie_options, "
   </p>
 </fieldset>
@@ -1915,16 +1911,12 @@ of a document that you would like to check:</label></p>
 
 sub encode (@)
 {
-  if (! $_html) {
-    return @_;
-  } else {
-    return HTML::Entities::encode(@_);
-  }
+  return $Opts{HTML} ? HTML::Entities::encode(@_) : @_;
 }
 
 sub hprintf (@)
 {
-  if (! $_html) {
+  if (! $Opts{HTML}) {
     printf(@_);
   } else {
     print HTML::Entities::encode(sprintf($_[0], @_[1..@_-1]));

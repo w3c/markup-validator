@@ -1,98 +1,24 @@
-<!--#set var="revision" value="\$Id: detailed.html,v 1.15 2003-02-24 23:33:18 ville Exp $"
---><!--#set var="date" value="\$Date: 2003-02-24 23:33:18 $"
+<!--#set var="revision" value="\$Id: detailed.html,v 1.16 2003-05-24 20:32:45 link Exp $"
+--><!--#set var="date" value="\$Date: 2003-05-24 20:32:45 $"
 --><!--#set var="title" value="The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
 
   <p id="skip">
     This form allows you to enter a <acronym
-    title="Universal Resource Identifier">URI</acronym> or upload files from
-    your computer and have them validated.
+    title="Universal Resource Identifier">URI</acronym> 
+    and have it validated. If you want to validate a file on
+    your computer, you can use the <a href="file-upload.html">File
+    Upload Interface</a>.
   </p>
     <div>
-      <form method="post" enctype="multipart/form-data" action="check">
+      <form method="get" action="check">
         <table>
           <tr><th><label title="Address of page to Validate"
              for="uri">Address:</label></th><td colspan="2"><input id="uri"
-             name="uri" size="50" /> or...</td></tr>
-          <tr><th><label for="uploaded_file">Local File:</label></th><td
-          	colspan="2"><input type="file" id="uploaded_file"
-          	name="uploaded_file" size="50" /></td></tr>
-          <tr>
-            <th><label for="charset">Encoding:</label></th>
-            <td colspan="2">
-              <select id="charset" name="charset">
-                <option value="(detect automatically)">(detect automatically)</option>
-                <option value="utf-8 (Unicode, worldwide)">utf-8 (Unicode, worldwide)</option>
-                <option value="utf-16 (Unicode, worldwide)">utf-16 (Unicode, worldwide)</option>
-                <option value="iso-8859-1 (Western Europe)">iso-8859-1 (Western Europe)</option>
-                <option value="iso-8859-2 (Central Europe)">iso-8859-2 (Central Europe)</option>
-                <option value="iso-8859-3 (Southern Europe)">iso-8859-3 (Southern Europe)</option>
-                <option value="iso-8859-4 (Baltic Rim)">iso-8859-4 (Baltic Rim)</option>
-                <option value="iso-8859-5 (Cyrillic)">iso-8859-5 (Cyrillic)</option>
-                <option value="iso-8859-6-i (Arabic)">iso-8859-6-i (Arabic)</option>
-                <option value="iso-8859-7 (Greek)">iso-8859-7 (Greek)</option>
-                <option value="iso-8859-8-i (Hebrew)">iso-8859-8-i (Hebrew)</option>
-                <option value="iso-8859-9 (Turkish)">iso-8859-9 (Turkish)</option>
-                <option value="iso-8859-10 (Latin 6)">iso-8859-10 (Latin 6)</option>
-                <option value="iso-8859-13 (Latin 7)">iso-8859-13 (Latin 7)</option>
-                <option value="iso-8859-14 (Celtic)">iso-8859-14 (Celtic)</option>
-                <option value="iso-8859-15 (Latin 9)">iso-8859-15 (Latin 9)</option>
-                <option value="us-ascii (basic English)">us-ascii (basic English)</option>
-                <option value="euc-jp (Japanese, Unix)">euc-jp (Japanese, Unix)</option>
-                <option value="shift_jis (Japanese, Win/Mac)">shift_jis (Japanese, Win/Mac)</option>
-                <option value="iso-2022-jp (Japanese, email)">iso-2022-jp (Japanese, email)</option>
-                <option value="euc-kr (Korean)">euc-kr (Korean)</option>
-                <option value="gb2312 (Chinese, simplified)">gb2312 (Chinese, simplified)</option>
-                <option value="gb18030 (Chinese, simplified)">gb18030 (Chinese, simplified)</option>
-                <option value="big5 (Chinese, traditional)">big5 (Chinese, traditional)</option>
-                <option value="tis-620 (Thai)">tis-620 (Thai)</option>
-                <option value="koi8-r (Russian)">koi8-r (Russian)</option>
-                <option value="koi8-u (Ukrainian)">koi8-u (Ukrainian)</option>
-                <option value="macintosh (MacRoman)">macintosh (MacRoman)</option>
-                <option value="windows-1250 (Central Europe)">windows-1250 (Central Europe)</option>
-                <option value="windows-1251 (Cyrillic)">windows-1251 (Cyrillic)</option>
-                <option value="windows-1252 (Western Europe)">windows-1252 (Western Europe)</option>
-                <option value="windows-1253 (Greek)">windows-1253 (Greek)</option>
-                <option value="windows-1254 (Turkish)">windows-1254 (Turkish)</option>
-                <option value="windows-1255 (Hebrew)">windows-1255 (Hebrew)</option>
-                <option value="windows-1256 (Arabic)">windows-1256 (Arabic)</option>
-                <option value="windows-1257 (Baltic Rim)">windows-1257 (Baltic Rim)</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <th><label for="doctype">Type:</label></th>
-            <td colspan="2">
-              <select id="doctype" name="doctype">
-                <option value="Inline">(detect automatically)</option>
-                <option>XHTML 1.1</option>
-                <option>XHTML Basic 1.0</option>
-                <option>XHTML 1.0 Strict</option>
-                <option>XHTML 1.0 Transitional</option>
-                <option>XHTML 1.0 Frameset</option>
-                <option>HTML 4.01 Strict</option>
-                <option>HTML 4.01 Transitional</option>
-                <option>HTML 4.01 Frameset</option>
-                <option>HTML 3.2</option>
-                <option>HTML 2.0</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <th rowspan="3">Options:</th>
-            <td><label for="ss"><input id="ss" name="ss" type="checkbox" value="1" /> Show Source</label></td>
-            <td><label for="outline"><input id="outline" name="outline" type="checkbox" value="1" /> Show Outline</label></td>
-          </tr>
-          <tr>
-            <td><label for="sp"><input id="sp" name="sp" type="checkbox" value="1" /> Show Parse Tree</label></td>
-            <td><label for="noatt"><input id="noatt" name="noatt" type="checkbox" value="1" /> ...no attributes</label></td>
-          </tr>
-          <tr>
-            <td><label for="No200"><input id="No200" name="No200" type="checkbox" value="1" /> Validate error pages</label></td>
-	    <td><label for="verbose"><input id="verbose" name="verbose" type="checkbox" value="1" checked="checked" /> Verbose Output</label></td>
-          </tr>
-          <tr>
+             name="uri" size="50" /></td></tr>
+        <!--#include virtual="detailed-form.html" -->  
+	<tr>
             <td></td>
             <td><input type="submit" value="Validate this page" /></td>
 	    <td></td>

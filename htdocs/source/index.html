@@ -1,22 +1,26 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.28 2003-02-24 23:33:19 ville Exp $"
---><!--#set var="date" value="\$Date: 2003-02-24 23:33:19 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.29 2003-05-24 20:32:46 link Exp $"
+--><!--#set var="date" value="\$Date: 2003-05-24 20:32:46 $"
 --><!--#set var="title" value="Source Code Availability for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
 
     <p id="skip">
       The source code for the <a
-        href="../">W3C Markup Validation Service</a> is available under the
+        href="../"><acronym title="World Wide Web Consortium">W3C</acronym>
+	Markup Validation Service</a> is available under the
       terms of the <a
-        href="http://www.w3.org/Consortium/Legal/copyright-software">W3C
-      Software Copyright</a>.
+        href="http://www.w3.org/Consortium/Legal/copyright-software"><acronym
+          title="World Wide Web Consortium">W3C</acronym>
+	Software Copyright</a>. Tarballs of the source, and available binary
+      distributions, of the latest production version is always available at
+      &lt;<a href="http://validator.w3.org/dist/">http://validator.w3.org/dist/</a>&gt;.
+      Development code is only available from CVS.
     </p>
     <p>
       The purpose of making the source code available is partly to allow
       others to set up mirrors of the service (either publicly or within
       an intranet behind a firewall), but also to allow us to collaborate
-      on making the service better -- there are <a
-        href="../todo.html">many ways the service could be improved</a>!
+      on making the service better!
     </p>
 
     <div id="getting">
@@ -42,9 +46,37 @@
         </li>
         <li>
           <p>
-            If you want a copy of all the files that make up the
-            service, you can <a href="../validator.tar.gz">grab a tar
-              ball</a> (~2.8MB).
+            If you want a copy of all the files that make up the service, you
+            can download a tarball of <a href="../validator.tar.gz">the code</a>
+	    (~161kB) and the <a href="../sgml-lib.tar.gz">the <acronym
+              title="Document Type Definitions">DTDs</acronym></a> (~2.6MB).
+          </p>
+        </li>
+        <li id="rpm">
+          <p>
+            Experimental RPMs are available, courtesy of Ville Skytt&auml;, at
+            &lt;<a href="http://cachalot.ods.org/">http://cachalot.ods.org/</a>&gt;.
+          </p>
+          <p>
+            The RPMs have only been tested on <a href="http://www.redhat.com/">Red
+            Hat</a> 8.0, but should be adaptable to other RPM based systems.
+          </p>
+          <p>
+            Note that the Validator RPMs have several dependencies so you will
+            have to get at least the following RPMs:
+          </p>
+          <ul>
+            <li>w3c-validator</li>
+            <li>w3c-validator-libs</li>
+            <li>perl-Set-IntSpan</li>
+            <li>perl-Text-Iconv</li>
+            <li>opensp</li>
+          </ul>
+          <p>
+            In addition, each of these may have further dependencies that must
+            be satisfied. All the necessary RPMs should be either in Red Hat 8.0
+            or available from
+             &lt;<a href="http://cachalot.ods.org/">http://cachalot.ods.org/</a>&gt;.
           </p>
         </li>
         <li id="CVS">
@@ -67,12 +99,20 @@
     bash$ <kbd>cvs login</kbd>
     (Logging in to anonymous@dev.w3.org)
     CVS password: <kbd>anonymous</kbd>
-    bash$ <kbd>cvs get validator</kbd>
+    bash$ <kbd>cvs get -r validator-0_6_2-release validator</kbd>
     cvs server: Updating validator
     cvs server: Updating validator/htdocs
     U validator/htdocs/about.html
     ...
           </pre>
+          <p>
+            This will get you the current release version. For intermediate
+            updates, use the <code>validator-0_6_0-branch</code> branch tag
+            instead. Major new development is done in <code>HEAD</code> and
+            the trunk is more or less guaranteed to be in a state of greater
+            or lesser breakage at any given point in time. <em>Approach with
+            caution!</em>
+          </p>
         </li>
       </ul>
     </div>

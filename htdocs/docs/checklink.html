@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: checklink.html,v 1.5 2002-11-19 21:43:31 ville Exp $"
---><!--#set var="date" value="\$Date: 2002-11-19 21:43:31 $"
+<!--#set var="revision" value="\$Id: checklink.html,v 1.6 2003-05-24 20:32:46 link Exp $"
+--><!--#set var="date" value="\$Date: 2003-05-24 20:32:46 $"
 --><!--#set var="title" value="W3C Link Checker documentation"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -103,12 +103,20 @@
 	  <li><a href="http://search.cpan.org/dist/CGI.pm/">CGI.pm</a></li>
 	  <li><a href="http://search.cpan.org/dist/URI/">URI</a></li>
 	  <li><a href="http://search.cpan.org/dist/Time-HiRes/">Time-HiRes</a></li>
+          <li><a href="http://search.cpan.org/dist/Config-General/">Config-General</a> (version 2.06 or newer)</li>
           <li><a href="http://search.cpan.org/dist/TermReadKey/">TermReadKey</a> (optional but recommended for all platforms; required for password input in command line mode for systems that don't have the <code>stty</code> command, eg. Windows)</li>
 	</ul>
       </li>
       <li>
 	Download the link checker from
 	<a href="http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/checklink.pl">CVS</a>.
+      </li>
+      <li>
+        Download the configuration file from
+        <a href="http://dev.w3.org/cvsweb/validator/htdocs/config/checklink.conf">CVS</a>
+        and install it to <code>/etc/w3c/checklink.conf</code> or set the
+        <code>W3C_CHECKLINK_CFG</code> environment variable to the location
+        where you installed it.
       </li>
     </ol>
 

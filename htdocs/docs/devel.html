@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: devel.html,v 1.14 2003-02-24 23:33:18 ville Exp $"
---><!--#set var="date" value="\$Date: 2003-02-24 23:33:18 $"
+<!--#set var="revision" value="\$Id: devel.html,v 1.15 2003-05-24 20:32:46 link Exp $"
+--><!--#set var="date" value="\$Date: 2003-05-24 20:32:46 $"
 --><!--#set var="title" value="Developer Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -36,7 +36,7 @@
         can be found on <a href="http://www.cpan.org/">CPAN</a> (minimum
         versions in parenthesis after the name). The following
         list was complete when CVS spit out:
-        <code>$Date: 2003-02-24 23:33:18 $</code>. <tt>:-)</tt>
+        <code>$Date: 2003-05-24 20:32:46 $</code>. <tt>:-)</tt>
       </p>
       <dl>
         <dt><code>CGI (2.81)</code></dt>
@@ -178,6 +178,17 @@
           Maps error messages to an URI fragment identifier where an
           explanation of that error can be found.
         </dd>
+        <dt>type.cfg</dt>
+        <dd>
+          Maps MIME/HTTP Content-Types to an internal "document type" which
+          is used for treating HTML, XML, and XHTML in different ways.
+        </dd>
+        <dt>validator.conf</dt>
+        <dd>
+          Main configuration file. Gives various parameters (such as the
+          address of the maintainer and the URL for the "Home Page") and
+          the locations of the other configuration files and mapping tables.
+        </dd>
        </dl>
     </div>
     <div id="todo" class="stb">
@@ -200,7 +211,18 @@
         shouldn't dilute the value of the validator as an objective check.
       </p>
     </div>
+    <div id="bugzilla" class="stb">
+      <h2>Bugs and Issue Tracking</h2>
+      <p>
+        Bug and Issue Tracking for the Validator happens in the <a
+          href="http://www.w3.org/Bugs/Public/">W3C Public Bugzilla</a>
+        instance. Developers should feel free to set up an account
+        and report bugs, enhancement requests, patches, etc. directly there
+        (end users should continue to send stuff to the mailinglist).
+      </p>
+    </div>
 
 <!--#include virtual="../footer.html" -->
   </body>
 </html>
+

@@ -1,6 +1,6 @@
 
 	-- SGML catalog for the W3C Markup Validation Service --
-	-- $Id: sgml.soc,v 1.4 2003-02-24 23:33:19 ville Exp $ --
+	-- $Id: sgml.soc,v 1.5 2003-05-24 20:32:46 link Exp $ --
 
 OVERRIDE YES	-- prefer public identifiers to system identifiers --
 SGMLDECL sgml.dcl
@@ -151,3 +151,5 @@ PUBLIC "-//W3C//ENTITIES Symbolic//EN//HTML"	REC-html401-19991224/HTMLsymbol.ent
 PUBLIC "-//bebop.net//DTD HTML Apple Help 1.0//EN"	AppleHelp1.0.dtd
 
 
+	-- Fallback for HTML documents if no FPI is given. --
+DOCTYPE html REC-html401-19991224/loose.dtd

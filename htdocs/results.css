@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.16 2002-12-02 02:52:54 link Exp $ */
+/* $Id: results.css,v 1.17 2003-05-24 20:32:45 link Exp $ */
 
 .markup {
   color: red;
@@ -15,6 +15,13 @@
 fieldset {
   color: black;
   background-color: #eeeeee;
+}
+
+fieldset legend {
+  background-color: #eee;
+  border-right: 1px solid grey;
+  border-bottom: 1px solid grey;
+  font-weight: bold;
 }
 
 ul#Warnings {
@@ -121,7 +128,7 @@ h2.invalid {
 }
 
 .invalid a {
-  color: blue;
+  color: #0099ff;
 }
 
 .invalid a:visited {

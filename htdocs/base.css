@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.30 2003-02-24 23:33:18 ville Exp $
+   $Id: base.css,v 1.31 2003-05-24 20:32:45 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -16,10 +16,7 @@ body {
   color:           black;
   background:      white;
   font-weight:     normal;
-  word-spacing:    normal;
-  letter-spacing:  normal;
-  text-transform:  none;
-  font-family:     sans-serif;
+  font-family:     "Bitstream Vera Sans", sans-serif;
   font-style:      normal;
   text-decoration: none;
 }
@@ -104,6 +101,18 @@ address {
   clear:            right;
 }
 
+p.copyright {
+  margin-top: 5em;
+  padding-top: .5em;
+  font-size: xx-small;
+  max-width: 75ex;
+  text-align: justify;
+  text-transform: uppercase;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: monospace;
+}
+
 p.jumpbar {
   text-align: left;
   text-decoration: none;
@@ -143,10 +152,6 @@ h1 {
   font-weight: bold;
   font-style: normal;
   text-decoration: none;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
-  /* color: #005A9C; */
   color: #053188
 }
 
@@ -157,9 +162,6 @@ h2 {
   font-weight: 500;
   font-style: normal;
   text-decoration: none;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
 }
 
 h3 {
@@ -169,9 +171,6 @@ h3 {
   font-weight: 500;
   font-style: italic;
   text-decoration: none;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
 }
 
 h4 {
@@ -181,9 +180,6 @@ h4 {
   font-weight: 500;
   font-style: normal;
   text-decoration: none;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
 }
 
 h5, dt {
@@ -193,9 +189,6 @@ h5, dt {
   font-weight: 500;
   font-style: normal;
   text-decoration: none;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
   margin-top: 1em;
 }
 		
@@ -206,9 +199,6 @@ h6 {
   font-weight: 500;
   font-style: normal;
   text-decoration: none;
-  word-spacing: normal;
-  letter-spacing: normal;
-  text-transform: none;
 }
 
 /* documentation - table of contents */
@@ -273,3 +263,4 @@ table.config tr td.subtable {
   background: white;
   border: none;
 }
+
