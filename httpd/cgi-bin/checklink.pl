@@ -5,7 +5,7 @@
 # (c) 1999-2002 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.93 2002-08-22 01:03:43 link Exp $
+# $Id: checklink.pl,v 2.94 2002-10-23 04:33:09 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -38,7 +38,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.93 $ . '(c) 1999-2002 W3C';
+my $VERSION = q$Revision: 2.94 $ . '(c) 1999-2002 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -1169,7 +1169,7 @@ sub authentication() {
 <p>You need %s access to %s to perform Link Checking.</p>
 </body>
 </html>
-", $realm, $r->request->url);
+", &encode($realm), $r->request->url);
     }
 }
 
