@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.74 2003-07-30 02:11:33 link Exp $
+# $Id: check,v 1.305.2.75 2003-08-23 15:54:48 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -87,13 +87,20 @@ use constant O_NONE    =>  8; # 0000 1000
 #
 # Define global variables.
 use vars qw($DEBUG $CFG $RSRC $VERSION $HAVE_IPC_RUN);
+our $HAVE_SOAP_LITE;
 
 
 #
 # Things inside BEGIN don't happen on every request in persistent
 # environments, such as mod_perl.  So let's do globals, eg. read config here.
-BEGIN
-{
+BEGIN {
+
+  #
+  # Read Config Files.
+  $CFG = &read_cfg($ENV{W3C_VALIDATOR_CFG} || '/etc/w3c/validator.conf');
+  if (! -x $CFG->{'SGML Parser'}) {
+    die("Configured SGML Parser '$CFG->{'SGML Parser'}' not executable!");
+  }
 
   #
   # Use IPC::Run on mod_perl if it's available, IPC::Open3 otherwise.
@@ -111,12 +118,18 @@ BEGIN
     IPC::Open3->import('open3');
   }
 
+  #FIXME: This is just a framework and highly experimental!
   #
-  # Read Config Files.
-  $CFG = &read_cfg($ENV{W3C_VALIDATOR_CFG} || '/etc/w3c/validator.conf');
-  if (! -x $CFG->{'SGML Parser'}) {
-    die("Configured SGML Parser '$CFG->{'SGML Parser'}' not executable!");
+  # Load SOAP::Lite if available and allowed by config.
+  $HAVE_SOAP_LITE = FALSE;
+  if (exists $ENV{'HTTP_SOAPACTION'} and $CFG->{'Enable SOAP'} == TRUE) {
+    eval {
+      local $SIG{__DIE__};
+      require SOAP::Transport::HTTP;
+    };
+    $HAVE_SOAP_LITE = !$@;
   }
+  #FIXME;
 
   #
   # Read Resource files... (friendly error messages)
@@ -130,7 +143,7 @@ BEGIN
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.74 $;
+  $VERSION    =  q$Revision: 1.305.2.75 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -187,7 +200,10 @@ delete $ENV{PATH};
 
 #
 # Create a new CGI object.
-my $q = new CGI;
+my $q;
+unless ($HAVE_SOAP_LITE) {
+  $q = new CGI;
+}
 
 #
 # The data structure that will hold all session data.
@@ -202,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-07-30 02:11:33 $,
+                              Date => q$Date: 2003-08-23 15:54:48 $,
                              });
 
 #
@@ -222,7 +238,9 @@ $File->{'Results'} .= $File->{'Header'};
 
 #
 # The URL to this CGI Script.
-$File->{Env}->{'Self URI'} = $q->url(-query => 0);
+unless ($HAVE_SOAP_LITE) {
+  $File->{Env}->{'Self URI'} = $q->url(-query => 0);
+}
 
 #
 # Initialize parameters we'll need (and override) later.
@@ -249,49 +267,54 @@ $File->{Lines} = [];
 
 #
 # Preprocess the CGI parameters.
-$q = &prepCGI($File, $q);
+if ($HAVE_SOAP_LITE) {
+  SOAP::Transport::HTTP::CGI->dispatch_to('MySOAP')->handle;
+  exit; # SOAP calls do all the processing in the sub...
+} else {
+  $q = &prepCGI($File, $q);
 
-#
-# Set session switches.
-$File->{Opt}->{'Outline'}        = $q->param('outline') ? TRUE                   :  FALSE;
-$File->{Opt}->{'Show Source'}    = $q->param('ss')      ? TRUE                   :  FALSE;
-$File->{Opt}->{'Show Parsetree'} = $q->param('sp')      ? TRUE                   :  FALSE;
-$File->{Opt}->{'No Attributes'}  = $q->param('noatt')   ? TRUE                   :  FALSE;
-$File->{Opt}->{'Show ESIS'}      = $q->param('esis')    ? TRUE                   :  FALSE;
-$File->{Opt}->{'Show Errors'}    = $q->param('errors')  ? TRUE                   :  FALSE;
-$File->{Opt}->{'Verbose'}        = $q->param('verbose') ? TRUE                   :  FALSE;
-$File->{Opt}->{'Debug'}          = $q->param('debug')   ? TRUE                   :  FALSE;
-$File->{Opt}->{'No200'}          = $q->param('No200')   ? TRUE                   :  FALSE;
-$File->{Opt}->{'Fussy'}          = $q->param('fussy')   ? TRUE                   :  FALSE;
-$File->{Opt}->{'Charset'}        = $q->param('charset') ? lc $q->param('charset'):     '';
-$File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') ? $q->param('doctype')   :     '';
-$File->{Opt}->{'URI'}            = $q->param('uri')     ? $q->param('uri')       :     '';
-$File->{Opt}->{'Output'}         = $q->param('output')  ? $q->param('output')    : 'html';
-$File->{Opt}->{'Max Errors'}     = $q->param('me')      ? $q->param('me')        :     '';
+  #
+  # Set session switches.
+  $File->{Opt}->{'Outline'}        = $q->param('outline') ? TRUE                   :  FALSE;
+  $File->{Opt}->{'Show Source'}    = $q->param('ss')      ? TRUE                   :  FALSE;
+  $File->{Opt}->{'Show Parsetree'} = $q->param('sp')      ? TRUE                   :  FALSE;
+  $File->{Opt}->{'No Attributes'}  = $q->param('noatt')   ? TRUE                   :  FALSE;
+  $File->{Opt}->{'Show ESIS'}      = $q->param('esis')    ? TRUE                   :  FALSE;
+  $File->{Opt}->{'Show Errors'}    = $q->param('errors')  ? TRUE                   :  FALSE;
+  $File->{Opt}->{'Verbose'}        = $q->param('verbose') ? TRUE                   :  FALSE;
+  $File->{Opt}->{'Debug'}          = $q->param('debug')   ? TRUE                   :  FALSE;
+  $File->{Opt}->{'No200'}          = $q->param('No200')   ? TRUE                   :  FALSE;
+  $File->{Opt}->{'Fussy'}          = $q->param('fussy')   ? TRUE                   :  FALSE;
+  $File->{Opt}->{'Charset'}        = $q->param('charset') ? lc $q->param('charset'):     '';
+  $File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') ? $q->param('doctype')   :     '';
+  $File->{Opt}->{'URI'}            = $q->param('uri')     ? $q->param('uri')       :     '';
+  $File->{Opt}->{'Output'}         = $q->param('output')  ? $q->param('output')    : 'html';
+  $File->{Opt}->{'Max Errors'}     = $q->param('me')      ? $q->param('me')        :     '';
 
-#
-# "Fallback" info for Character Encoding (fbc), Content-Type (fbt),
-# and DOCTYPE (fbd). If TRUE, the Override values are treated as
-# Fallbacks instead of Overrides.
-$File->{Opt}->{FB}->{Charset} = $q->param('fbc') ? TRUE : FALSE;
-$File->{Opt}->{FB}->{Type}    = $q->param('fbt') ? TRUE : FALSE;
-$File->{Opt}->{FB}->{DOCTYPE} = $q->param('fbd') ? TRUE : FALSE;
+  #
+  # "Fallback" info for Character Encoding (fbc), Content-Type (fbt),
+  # and DOCTYPE (fbd). If TRUE, the Override values are treated as
+  # Fallbacks instead of Overrides.
+  $File->{Opt}->{FB}->{Charset} = $q->param('fbc') ? TRUE : FALSE;
+  $File->{Opt}->{FB}->{Type}    = $q->param('fbt') ? TRUE : FALSE;
+  $File->{Opt}->{FB}->{DOCTYPE} = $q->param('fbd') ? TRUE : FALSE;
 
-#
-# If ";debug" was given, let it overrule the value from the config file,
-# regardless of whether it's "0" or "1" (on or off).
-$DEBUG = $q->param('debug') if defined $q->param('debug');
+  #
+  # If ";debug" was given, let it overrule the value from the config file,
+  # regardless of whether it's "0" or "1" (on or off).
+  $DEBUG = $q->param('debug') if defined $q->param('debug');
 
-&abort_if_error_flagged($File, O_NONE); # Too early to &print_table.
+  &abort_if_error_flagged($File, O_NONE); # Too early to &print_table.
 
-#
-# Get the file and metadata.
-if ($q->param('uploaded_file')) {
-  $File = &handle_file($q, $File);
-} elsif ($q->param('fragment')) {
-  $File = &handle_frag($q, $File);
-} elsif ($q->param('uri')) {
-  $File = &handle_uri($q, $File);
+  #
+  # Get the file and metadata.
+  if ($q->param('uploaded_file')) {
+    $File = &handle_file($q, $File);
+  } elsif ($q->param('fragment')) {
+    $File = &handle_frag($q, $File);
+  } elsif ($q->param('uri')) {
+    $File = &handle_uri($q, $File);
+  }
 }
 
 
@@ -570,32 +593,37 @@ if ($File->{'Is Upload'}) {
              &ent($File->{Charset}->{Use}), &popup_charset);
 }
 
-
 #
-# By default, use SGML catalog file and SGML Declaration.
-my $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'sgml.soc');
-my @spopt = qw(
-                  -R
-                  -wvalid
-                  -wnon-sgml-char-ref
-                  -wno-duplicate
-                 );
+# Abandon all hope ye who enter here...
+$File = &parse($File);
+sub parse (\$) {
+  my $File = shift;
 
-#
-# Switch to XML semantics if file is XML.
-if (&is_xml($File->{Type})) {
-  $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'xml.soc');
-  push(@spopt, '-wxml');
-  &add_warning($File, 'note', 'Note:', <<".EOF.");
+  #
+  # By default, use SGML catalog file and SGML Declaration.
+  my $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'sgml.soc');
+  my @spopt = qw(
+		 -R
+		 -wvalid
+		 -wnon-sgml-char-ref
+		 -wno-duplicate
+		);
+
+  #
+  # Switch to XML semantics if file is XML.
+  if (&is_xml($File->{Type})) {
+    $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'xml.soc');
+    push(@spopt, '-wxml');
+    &add_warning($File, 'note', 'Note:', <<".EOF.");
   The Validator XML support has
   <a href="http://openjade.sourceforge.net/doc/xml.htm"
      title="Limitations in Validator XML support">some limitations</a>.
 .EOF.
-} else { # Only add these in SGML mode.
-  if ($File->{Opt}->{'Fussy'}) {
-    push @spopt, '-wmin-tagged';
-    push @spopt, '-wfully-tagged';
-    &add_warning($File, 'note', 'Note:', <<".EOF.");
+  } else { # Only add these in SGML mode.
+    if ($File->{Opt}->{'Fussy'}) {
+      push @spopt, '-wmin-tagged';
+      push @spopt, '-wfully-tagged';
+      &add_warning($File, 'note', 'Note:', <<".EOF.");
     The Validator is running in "Fussy" mode. In this mode it will generate
     warnings about some things that are not strictly forbidden in the HTML
     Recommendation, but that are known to be problematic in popular browsers.
@@ -603,132 +631,135 @@ if (&is_xml($File->{Type})) {
     if in doubt you can rerun the Validator in its lax mode to find out if it
     will pass your document then.
 .EOF.
-  }
-}
-
-
-#
-# Defaults for SP; turn off fixed charset mode and set encoding to UTF-8.
-$ENV{SP_CHARSET_FIXED} = 'NO';
-$ENV{SP_ENCODING}      = 'UTF-8';
-$ENV{SP_BCTF}          = 'UTF-8';
-
-#
-# Tell onsgmls about the SGML Library.
-$ENV{SGML_SEARCH_PATH} = $CFG->{'SGML Library'};
-
-#
-# Set the command to execute.
-my @cmd = ($CFG->{'SGML Parser'}, '-n', '-c', $catalog, @spopt);
-
-#FIXME: This needs a UI and testing!
-#
-# Set onsgmls' -E switch to the number of errors requested.
-if ($File->{Opt}->{'Max Errors'} =~ m(^all$)i) {
-  push @cmd, '-E0';
-} elsif ($File->{Opt}->{'Max Errors'} =~ m(^(\d+)$)) {
-  my $numErr = $1;
-  if ($numErr >= 200) {
-    $numErr = 200;
-  } elsif ($numErr <= 0) {
-    $numErr = 0; #FIXME: Should add feature to supress error output in this case.;
-  }
-  push @cmd, '-E' . $numErr;
-} else {
-  push @cmd, '-E' . ($CFG->{'Max Errors'} || 0); # "-E0" means "all".
-}
-#FIXME;
-
-if ($DEBUG) {
-  &add_table($File, 'Command',
-             [1, 2, &ent("@cmd")]);
-  &add_table($File, 'SP_CHARSET_FIXED',
-             [1, 2, '<code>' . &ent($ENV{SP_CHARSET_FIXED}) . '</code>']);
-  &add_table($File, 'SP_ENCODING',
-             [1, 2, '<code>' . &ent($ENV{SP_ENCODING})      . '</code>']);
-  &add_table($File, 'SP_BCTF',
-             [1, 2, '<code>' . &ent($ENV{SP_BCTF})          . '</code>']);
-}
-
-#
-# Temporary filehandles.
-my $spin  = IO::File->new_tmpfile;
-my $spout = IO::File->new_tmpfile;
-my $sperr = IO::File->new_tmpfile;
-
-#
-# Dump file to a temp file for parsing.
-for (@{$File->{Content}}) {
-  print $spin $_, "\n";
-}
-
-#
-# seek() to beginning of the file.
-seek $spin, 0, 0;
-
-#
-# Run it through SP, redirecting output to temporary files.
-if ($HAVE_IPC_RUN) {
-  local $^W = 0;
-  run(\@cmd, $spin, $spout, $sperr, timeout(60));
-  undef $spin;
-} else {
-  my $pid = do {
-    no warnings 'once';
-    local(*SPIN, *SPOUT, *SPERR)  = ($spin, $spout, $sperr);
-    open3("<&SPIN", ">&SPOUT", ">&SPERR", @cmd);
-  };
-  undef $spin;
-  waitpid $pid, 0;
-}
-
-#
-# Rewind temporary filehandles.
-seek $_, 0, 0 for $spout, $sperr;
-
-$File = &parse_errors($File, $sperr); # Parse error output.
-undef $sperr; # Get rid of no longer needed filehandle.
-
-$File->{ESIS} = [];
-my $elements_found = 0;
-while (<$spout>) {
-  push @{$File->{'DEBUG'}->{ESIS}}, $_;
-  $elements_found++ if /^\(/;
-
-  if (/^Axmlns() \w+ (.*)/ or /^Axmlns:([^ ]+) \w+ (.*)/) {
-    if (not $File->{Namespace} and $elements_found == 0 and $1 eq "") {
-      $File->{Namespace} = $2;
     }
-    $File->{Namespaces}->{$2}++;
   }
 
-  next if / IMPLIED$/;
-  next if /^ASDAFORM CDATA /;
-  next if /^ASDAPREF CDATA /;
-  chomp; # Removes trailing newlines
-  push @{$File->{ESIS}}, $_;
-}
-undef $spout;
 
-if ($File->{ESIS}->[-1] =~ /^C$/) {
-  undef $File->{ESIS}->[-1];
-  $File->{'Is Valid'} = TRUE;
-} else {
-  $File->{'Is Valid'} = FALSE;
-}
+  #
+  # Defaults for SP; turn off fixed charset mode and set encoding to UTF-8.
+  $ENV{SP_CHARSET_FIXED} = 'NO';
+  $ENV{SP_ENCODING}      = 'UTF-8';
+  $ENV{SP_BCTF}          = 'UTF-8';
+
+  #
+  # Tell onsgmls about the SGML Library.
+  $ENV{SGML_SEARCH_PATH} = $CFG->{'SGML Library'};
+
+  #
+  # Set the command to execute.
+  my @cmd = ($CFG->{'SGML Parser'}, '-n', '-c', $catalog, @spopt);
+
+  #FIXME: This needs a UI and testing!
+  #
+  # Set onsgmls' -E switch to the number of errors requested.
+  if ($File->{Opt}->{'Max Errors'} =~ m(^all$)i) {
+    push @cmd, '-E0';
+  } elsif ($File->{Opt}->{'Max Errors'} =~ m(^(\d+)$)) {
+    my $numErr = $1;
+    if ($numErr >= 200) {
+      $numErr = 200;
+    } elsif ($numErr <= 0) {
+      $numErr = 0; #FIXME: Should add feature to supress error output in this case.;
+    }
+    push @cmd, '-E' . $numErr;
+  } else {
+    push @cmd, '-E' . ($CFG->{'Max Errors'} || 0); # "-E0" means "all".
+  }
+  #FIXME;
+
+  if ($DEBUG) {
+    &add_table($File, 'Command',
+	       [1, 2, &ent("@cmd")]);
+    &add_table($File, 'SP_CHARSET_FIXED',
+	       [1, 2, '<code>' . &ent($ENV{SP_CHARSET_FIXED}) . '</code>']);
+    &add_table($File, 'SP_ENCODING',
+	       [1, 2, '<code>' . &ent($ENV{SP_ENCODING})      . '</code>']);
+    &add_table($File, 'SP_BCTF',
+	       [1, 2, '<code>' . &ent($ENV{SP_BCTF})          . '</code>']);
+  }
+
+  #
+  # Temporary filehandles.
+  my $spin  = IO::File->new_tmpfile;
+  my $spout = IO::File->new_tmpfile;
+  my $sperr = IO::File->new_tmpfile;
+
+  #
+  # Dump file to a temp file for parsing.
+  for (@{$File->{Content}}) {
+    print $spin $_, "\n";
+  }
+
+  #
+  # seek() to beginning of the file.
+  seek $spin, 0, 0;
+
+  #
+  # Run it through SP, redirecting output to temporary files.
+  if ($HAVE_IPC_RUN) {
+    local $^W = 0;
+    run(\@cmd, $spin, $spout, $sperr, timeout(60));
+    undef $spin;
+  } else {
+    my $pid = do {
+      no warnings 'once';
+      local(*SPIN, *SPOUT, *SPERR)  = ($spin, $spout, $sperr);
+      open3("<&SPIN", ">&SPOUT", ">&SPERR", @cmd);
+    };
+    undef $spin;
+    waitpid $pid, 0;
+  }
+
+  #
+  # Rewind temporary filehandles.
+  seek $_, 0, 0 for $spout, $sperr;
+
+  $File = &parse_errors($File, $sperr); # Parse error output.
+  undef $sperr; # Get rid of no longer needed filehandle.
+
+  $File->{ESIS} = [];
+  my $elements_found = 0;
+  while (<$spout>) {
+    push @{$File->{'DEBUG'}->{ESIS}}, $_;
+    $elements_found++ if /^\(/;
+
+    if (/^Axmlns() \w+ (.*)/ or /^Axmlns:([^ ]+) \w+ (.*)/) {
+      if (not $File->{Namespace} and $elements_found == 0 and $1 eq "") {
+	$File->{Namespace} = $2;
+      }
+      $File->{Namespaces}->{$2}++;
+    }
+
+    next if / IMPLIED$/;
+    next if /^ASDAFORM CDATA /;
+    next if /^ASDAPREF CDATA /;
+    chomp; # Removes trailing newlines
+    push @{$File->{ESIS}}, $_;
+  }
+  undef $spout;
+
+  if ($File->{ESIS}->[-1] =~ /^C$/) {
+    undef $File->{ESIS}->[-1];
+    $File->{'Is Valid'} = TRUE;
+  } else {
+    $File->{'Is Valid'} = FALSE;
+  }
 
 
-#
-# Set Version to be the FPI initially.
-$File->{Version} = $File->{DOCTYPE};
+  #
+  # Set Version to be the FPI initially.
+  $File->{Version} = $File->{DOCTYPE};
 
-#
-# Extract any version attribute from the ESIS.
-for (@{$File->{ESIS}}) {
-  no warnings 'uninitialized';
-  next unless /^AVERSION CDATA (.*)/;
-  $File->{Version} = $1;
-  last;
+  #
+  # Extract any version attribute from the ESIS.
+  for (@{$File->{ESIS}}) {
+    no warnings 'uninitialized';
+    next unless /^AVERSION CDATA (.*)/;
+    $File->{Version} = $1;
+    last;
+  }
+
+  return $File;
 }
 
 #
@@ -1275,7 +1306,7 @@ sub handle_uri {
   my $q    = shift; # The CGI object.
   my $File = shift; # The master datastructure.
 
-  my $uri = new URI $q->param('uri'); # The URI to fetch.
+  my $uri = new URI (ref $q ? $q->param('uri') : $q);
 
   my $ua = new LWP::UserAgent;
   $ua->agent("W3C_Validator/$VERSION " . $ua->agent);
@@ -3210,6 +3241,53 @@ sub self_url_file {
   $thispage .= ';No200=1'   if $File->{Opt}->{'No200'};
 
   return $thispage;
+}
+
+
+
+
+
+################################################################################
+# Abandon all hope ye who enter here... ########################################
+################################################################################
+
+#
+# This is where the SOAP magic happens.
+package MySOAP;
+
+sub check {
+  my $class = shift || '';
+  my $uri   = shift || '';
+  my $File  = &main::handle_uri($uri, {});
+  $File     = &main::find_xml_encoding($File);
+  if ($File->{Charset}->{HTTP}) { warn "HTTP";
+    $File->{Charset}->{Use} = $File->{Charset}->{HTTP};
+  } elsif ($File->{ContentType} =~ m(^text/([-.a-zA-Z0-9]\+)?xml$)) { warn "CT";
+    $File->{Charset}->{Use} = 'us-ascii';
+  } elsif ($File->{Charset}->{XML}) { warn "XML";
+    $File->{Charset}->{Use} = $File->{Charset}->{XML};
+  } elsif ($File->{Charset}->{Auto} =~ /^utf-16[bl]e$/ && $File->{BOM} == 2) { warn "autoBOM";
+    $File->{Charset}->{Use} = 'utf-16';
+  } elsif ($File->{ContentType} =~ m(^application/([-.a-zA-Z0-9]+\+)?xml$)) { warn "app+xml";
+    $File->{Charset}->{Use} = "utf-8";
+  } elsif (&main::is_xml($File->{Type}) and not $File->{ContentType} =~ m(^text/)) { warn "text";
+    $File->{Charset}->{Use} = 'utf-8';
+  }
+  $File->{Content} = &main::normalize_newlines($File->{Bytes},
+                       &main::exact_charset($File, $File->{Charset}->{Use}));
+  $File = &main::preparse($File);
+  unless ($File->{Charset}->{Use}) {
+    $File->{Charset}->{Use} = $File->{Charset}->{META};
+  }
+  $File->{Type} = 'xhtml+xml'  if $File->{DOCTYPE} =~ /xhtml/i;
+  $File->{Type} = 'mathml+xml' if $File->{DOCTYPE} =~ /mathml/i;
+  $File = &main::parse($File);
+  if ($File->{'Is Valid'}) {
+    return $File->{ESIS};
+  } else {
+    return $File->{Errors};
+#    return join '', map {"$_->{line}:$_->{char}:$_->{msg}\n"} @{$File->{Errors}};
+  }
 }
 
 # Local Variables:
