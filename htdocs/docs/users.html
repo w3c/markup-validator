@@ -1,8 +1,20 @@
-<!--#set var="revision" value="\$Id: users.html,v 1.8 2002-10-23 23:11:30 link Exp $"
---><!--#set var="date" value="\$Date: 2002-10-23 23:11:30 $"
+<!--#set var="revision" value="\$Id: users.html,v 1.9 2002-11-06 02:45:20 ot Exp $"
+--><!--#set var="date" value="\$Date: 2002-11-06 02:45:20 $"
 --><!--#set var="title" value="User Documentation for The W3C MarkUp Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
+    <div id="toc">
+      <h2 id="tableofcontents">Table of contents</h2>
+	<ul>
+	<li><a href="#Quickstart">Quick Start</a></li>
+	<li><a href="#Introduction">Introduction</a></li>
+	<li><a href="#Options">Validator's options</a></li>
+	<li><a href="#Calling">Calling/Linking to the Validator</a></li>
+	<li><a href="#Interpret">Interpreting the results</a></li>
+	<li><a href="#CommaTools">Comma Tools</a></li>
+	<li><a href="#Installing">Installing the Markup Validator Locally</a></li>
+	</ul>
+
 
     <div id="Quickstart">
       <h2 id="skip">Quick Start</h2>
@@ -77,7 +89,7 @@
     </div>
 
     <div id="Calling" class="stb">
-      <h2>Calling the Validator</h2>
+      <h2>Calling/Linking to the Validator</h2>
       <p>
         You can link directly to the Validator home page, or you can call the
         Validator CGI program. The home page is &lt;URL:<a
@@ -117,11 +129,19 @@
     <div id="Interpret" class="stb">
       <h2>Interpreting the results</h2>
       <p>
-        Interpreting the error messages isn't quite what you'd call easy. The
-        error messages are generated in the context of a full SGML environment
-        which demands a somewhat higher level of technical detail then your
-        average HTML document. We're working on ways to make the error messages
-        more friendly, but for now feel free to email the
+        In spite of our efforts,  interpreting the MarkUp Validator's error messages 
+	isn't quite what you'd call easy. The error messages are generated in the 
+	context of a full SGML environment which demands a somewhat higher level 
+	of technical detail then your average HTML document. We have set up a page 
+	listing <a href="errors.html">errors and their explanation</a>, which should
+	help you find out what meaning lies behind the cryptic messages, and fix
+	your markup.
+      </p>
+      <p>
+	We're working on ways to make the error messages more friendly, but for now,
+	if the <a href="errors.html">errors explanation page</a> doesn't work for you,
+	feel free to email the 
+	(<a href="http://lists.w3.org/Archives/Public/www-validator">publicly archived</a>)
         <a href="mailto:www-validator@w3.org">www-validator@w3.org</a>
         mailing list if you need help interpreting the results. This will have
         the added benefit of letting us know which error messages are causing
@@ -130,10 +150,104 @@
         we can validate to see for ourselves.
       </p>
     </div>
+
+    <div id="CommaTools">
+      <h2>Comma Tools / Site Tools</h2>
+      <p>
+	This site uses "comma tools", as does <a href="http://www.w3.org/,tools">W3C</a>
+	and other sites. This means you can append a string (starting with a comma, hence 
+	the name) to the URI (address) of any page on the site and trigger 
+	a few administrative or technical tools for this page.
+      </p>
+
+	<table class="comma">
+	<tr class="comma">
+	<th>What it does</th>
+	<th>Tool used</th>
+	<th>, shortcut</th>
+	</tr>
+
+	<tr class="comma">
+  	<td class="comma.desc">
+		A plain text version of the page.
+	</td>
+ 	<td class="comma.tool">
+		<a href="/Web/Tools/html2txt">HTML2Text</a>
+	</td>
+  	<td class="comma.shortcut">
+		,text
+	</td>
+	</tr>
+
+	<tr class="comma">
+  	<td class="comma.desc">
+		Validate the MarkUp.
+	</td>
+ 	<td class="comma.tool">
+		W3C Markup Validator
+	</td>
+  	<td class="comma.shortcut">
+		,validate
+	</td>
+	</tr>
+
+
+	<tr class="comma">
+  	<td class="comma.desc">
+		Check links (anchors).
+	</td>
+ 	<td class="comma.tool">
+		W3C Link Checker
+	</td>
+  	<td class="comma.shortcut">
+		,checklink or ,checklinks
+	</td>
+	</tr>
+
+
+	<tr class="comma">
+  	<td class="comma.desc">
+		Check links (recursively)
+	</td>
+ 	<td class="comma.tool">
+		W3C Link Checker
+	</td>
+  	<td class="comma.shortcut">
+		,rchecklink or ,rchecklinks
+	</td>
+	</tr>
+
+
+	<tr class="comma">
+  	<td class="comma.desc">
+		A version of the page with linearized tables.
+	</td>
+ 	<td class="comma.tool">
+		Tablin
+	</td>
+  	<td class="comma.shortcut">
+		,tablin
+	</td>
+	</tr>
+
+	<tr class="comma">
+  	<td class="comma.desc">
+		CVS history for the page or resource.
+	</td>
+ 	<td class="comma.tool">
+		CVSWeb
+	</td>
+  	<td class="comma.shortcut">
+		,cvs or ,cvslog
+	</td>
+	</tr>
+
+	</table>
+
     <div id="Installing" class="stb">
       <h2>Installing a local Validator</h2>
       <p>
-        You can download the Validator to tun on your own system, but it's not
+        You can download the Validator to run on your own system, but it's not
         recommended for average users as the process is rather complex and
         involves obscure incantations on the command line. <tt>:-)</tt>
       </p>

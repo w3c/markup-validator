@@ -1,17 +1,63 @@
-<!--#set var="revision" value="\$Id: help.html,v 1.7 2002-10-23 23:11:30 link Exp $"
---><!--#set var="date" value="\$Date: 2002-10-23 23:11:30 $"
+<!--#set var="revision" value="\$Id: help.html,v 1.8 2002-11-06 02:45:20 ot Exp $"
+--><!--#set var="date" value="\$Date: 2002-11-06 02:45:20 $"
 --><!--#set var="title" value="Help for The W3C MarkUp Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
 
-    <div id="skip">
-      <h2 id="what-is-it">What does The Validator do?</h2>
-        The Validator is sort of like <code>lint</code> for C. It compares
+<div id="toc">
+<h2>Table of contents</h2>
+<ul>
+  <li>About the Markup Validator
+  <ul>
+	<li>
+		<a href="#what-is-it">What is the Markup Validator and what does it do?</a>
+	</li>
+	<li>
+		<a href="#why-validate">Why validate?</a>
+	</li>
+	<li>
+		<a href="#others">What other validators are there?</a>
+	</li>
+	<li>
+		<a href="#how">How does The Validator work?</a>
+	</li>
+  </ul>
+  </li>
+  <li>Using this service
+  <ul>
+	<li>
+		<a href="#manual">How do I use the Markup validator?</a>
+	</li>	
+	<li>
+		<a href="#errors">What are these error messages?</a>
+	</li>	
+	<li>
+		<a href="#munged-doctype">Many error messages? Don't panic.</a>
+	</li>
+	<li>
+		<a href="#cleanup">I don't want error messages, I want you to clean up my page!</a>
+	</li>
+  </ul>
+  </li>
+
+</ul>
+
+
+
+<div id="skip">
+<h2 id=#about">About the Markup Validator</h2>
+      <h3 id="what-is-it">What is the Markup Validator and what does it do?</h3>
+      <p>
+	The Markup Validator is a free tool and service that checks the 
+	syntax of (X)HTML documents.</p> 
+      <p>
+	The Validator is sort of like <code>lint</code> for C. It compares
         your HTML document to the defined syntax of HTML and reports any
         discrepancies. 
-    </div>
-    <div>
-      <h2 id="why-validate">Why should I validate my HTML pages?</h2>
+      </p>
+      <p><a href="../about.html">Learn more</a> about the Markup Validator.</p>
+
+      <h3 id="why-validate">Why should I validate my HTML pages?</h3>
       <p>
         One of the important maxims of computer programming is: <q>Be
         conservative in what you produce; be liberal in what you accept.</q>
@@ -31,48 +77,82 @@
         sure your pages are legal HTML. The best way to do that is by
         running your documents through one or more HTML validators. 
       </p>
-    </div>
-    <div><h2 id="others">What other validators are there?</h2><p>FIXME</p></div>
-    <div>
-      <h2 id="how">How does The Validator work?</h2>
-        The Validator is based on <a href="http://www.jclark.com/">James
+      
+      <h3 id="others">What other validators are there?</h3>
+	<p>
+	We're doing our best to provide clear and reliable results as well as
+	a good interface with the Markup Validator, but for some reason you
+	may want to check other validators. Here are a few choices:
+	</p>
+	<ul>
+	<li><a href="http://valet.webthing.com/page/">Page Valet</a>, part of the
+	<a href="http://valet.webthing.com/">Site Valet</a> suite.</li>
+	<li><a href="http://www.htmlhelp.com/tools/validator/">WDG's HTML validator</a></li>
+	</ul>
+
+	<p>
+	Looking for validators at W3C, but not the Markup Validator?
+	Check out the list of <a href="http://www.w3.org/QA/Tools/#validators">validators at W3C</a>,
+	including well-known <a href="http://jigsaw.w3.org/css-validator/">CSS validator</a>,
+	<a href="http://validator.w3.org/checklink">link checker</a>, etc.
+	</p>
+	
+
+      <h3 id="how">How does The Validator work?</h3>
+      <p>
+	The Validator is based on <a href="http://www.jclark.com/">James
         Clark</a>'s <code><a href="http://www.jclark.com/sp/">nsgmls</a></code>
         SGML parser. The Validator itself is a CGI script that fetches your
         URL, passes it through <code>nsgmls</code>, and post-processes the
         resulting error list for easier reading. 
-    </div>
-    <div>
-      <h2 id="choosing-dtd">How do I set The Validator to validate in
-        HTML2/HTML3/Netscape mode?</h2>
-        Unlike WebTechs, The Validator does not allow you to select a document
-        type on the fly. If your document is not intended to be HTML
-        2.0-compliant, you must add a corresponding <code>DOCTYPE</code>
-        declaration to your document; see <a href="sgml.html#doctype">the
-        section on <code>DOCTYPE</code></a> for more information. If your
-        document does not have a <code>DOCTYPE</code> declaration, The
-        Validator will assume an HTML 4.0 document type (and will tell
-        you it is doing so).
-    </div>
-    <div>
-      <h2 id="munged-doctype">Help! The Validator spewed a zillion error
-            messages on my page!</h2>
-        <p>
-          Don't panic. Did The Validator complain about your
-          <code>DOCTYPE</code> declaration (or lack thereof)? Make sure your
-          document has a syntactically correct <code>DOCTYPE</code>
-          declaration, as described in the <a href="sgml.html#doctype">section
-          on <code>DOCTYPE</code></a>, and make sure it correctly identifies
-          the type of HTML you're using. Then run it through The Validator
-          again; if you're lucky, you should get a lot fewer errors.
-        </p>
-        <p>
-          If this doesn't help, then you may be experiencing a cascade failure
-          &mdash; one error that gets The Validator so confused that it can't
-          make sense of the rest of your page. Try correcting the first few
-          errors and running your page through The Validator again. 
-        </p>
-    </div>
+      </p>
+</div>
 
+
+
+
+<div>
+<h2 id="using">Using this service</h2>
+
+      <h3 id="manual">How do I use this service?</h3>
+      <p>
+	Most probably, you will want to use the online Markup Validation service.
+	Read the <a href="users.html">user's manual</a> for further help with this
+	service.
+      </p>
+      </p>
+	If, for some reason, you prefer running your own instance of the Markup Validator,
+	check out our <a href="devel.html">developer's documentation</a>.
+      </p>
+
+      <h3 id="errors">What are these error messages?</h3>
+
+      <h3 id="munged-doctype">Many error messages? Don't panic.</h3>
+      <p>
+        Don't panic. Did The Validator complain about your
+        <code>DOCTYPE</code> declaration (or lack thereof)? Make sure your
+        document has a syntactically correct <code>DOCTYPE</code>
+        declaration, as described in the <a href="sgml.html#doctype">section
+        on <code>DOCTYPE</code></a>, and make sure it correctly identifies
+        the type of HTML you're using. Then run it through The Validator
+        again; if you're lucky, you should get a lot fewer errors.
+      </p>
+      <p>
+        If this doesn't help, then you may be experiencing a cascade failure
+        &mdash; one error that gets The Validator so confused that it can't
+        make sense of the rest of your page. Try correcting the first few
+        errors and running your page through The Validator again. 
+      </p>
+      <p>
+	Be patient, with a little time and experience you will learn to use the 
+	Markup Validator to clean up your HTML documents in no time.
+      </p>
+
+      <h3 id="cleanup">I don't want error messages, I want you to clean up my page!</h3>
+       <p>The Markup Validator can not do this for you. You may want to have a look
+	at tools such as <a href="http://tidy.sourceforge.net">HTML Tidy</a>.</p>
+
+    </div>
 <!--#include virtual="../footer.html" -->
   </body>
 </html>
