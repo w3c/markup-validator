@@ -1,0 +1,1280 @@
+#!/usr/local/bin/perl
+#
+# W3C HTML Validation Service
+# A CGI script to retrieve and validate an HTML file
+#
+# Copyright 1995-1998 Gerald Oskoboiny <gerald@w3.org>
+#
+# This source code is available under the license at:
+#     http://www.w3.org/Consortium/Legal/copyright-software
+#
+# $Id: check,v 1.2 1998-07-24 22:13:05 gerald Exp $
+
+#############################################################################
+# Constant definitions
+#############################################################################
+
+$ENV{USER_AGENT} = 'W3C_Validator/1.0';
+
+$logfile	= "/usr/local/lib/httpd/logs/val-svc";
+$reflogfile	= "/usr/local/lib/httpd/logs/val-svc-referers";
+
+$faqloc		= "http://www.cs.duke.edu/~dsb/kgv-faq/";
+$faqerrloc	= "${faqloc}errors.html";
+$abs_svc_uri	= "http://validator.w3.org/";
+$rel_img_uri	= "/images/";
+$abs_img_uri	= "${abs_svc_uri}images/";
+
+$grabber	= "/usr/local/lib/libwww-perl/get";
+$sgmlstuff	= "/usr/local/lib/sgml";
+$sp		= "/usr/local/bin/nsgmls";
+$tidy		= "/usr/local/bin/tidy";
+
+$sgmldecl	= "$sgmlstuff/REC-html40-971218/HTML4.decl";
+
+# $testing = 1;
+
+# $notice		= "<p><strong>Note: This service will be intermittently unavailable for the next few hours for an operating system upgrade.</strong>";
+
+# use the new stuff only for me for testing
+if ( ( $ENV{REMOTE_ADDR} =~ /18\.29\.0\.60/i ) && ( $testing ) ) {
+    $sgmldecl	 =
+     "/usr/local/lib/sgml/html40-970917/HTML4.decl";
+}
+
+umask( 022 );
+$weblint	 = "/usr/local/bin/weblint";
+$html2_doctype	 = qq{<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">};
+$html32_doctype	 = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">};
+$nice_html40_doctype	 = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN\n            "http://www.w3.org/TR/REC-html40/strict.dtd">};
+$nice_html40t_doctype = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"\n            "http://www.w3.org/TR/REC-html40/loose.dtd">};
+$nice_html40f_doctype = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"\n            "http://www.w3.org/TR/REC-html40/frameset.dtd">};
+$html40_doctype	 = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN "http://www.w3.org/TR/REC-html40/strict.dtd">};
+$html40t_doctype = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">};
+$html40f_doctype = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN" "http://www.w3.org/TR/REC-html40/frameset.dtd">};
+$default_doctype = $html2_doctype;
+$temp		 = "/tmp/validate.$$";
+$lt		 = "\020";
+$gt		 = "\021";
+# $leftarrow	 = qq{${lt}tt${gt}${lt}img src="arrow_left.gif" alt="^"${gt}${lt}/tt${gt}};
+$leftarrow	 = "${lt}tt${gt}${lt}img src=\"/arrow_left.gif\" alt=\"^\"${gt}${lt}/tt${gt}";
+$rightarrow	 = "${lt}tt${gt}${lt}img src=\"/arrow_right.gif\" alt=\"^\"${gt}${lt}/tt${gt}";
+$contchars	 = "${lt}tt${gt}${lt}img src=\"/ellipsis.gif\" alt=\"[...]\"${gt}${lt}/tt${gt}";
+$gifborder       = " BORDER=0";
+
+@options = ( 'weblint', 'pw', 'outline', 'ss', 'sp', 'noatt' );
+# this doesn't work for some reason
+# qw{
+#     weblint pw outline ss sp noatt
+# };
+
+#############################################################################
+# Array of FPIs -> plain text version strings
+#############################################################################
+
+%pub_ids = (
+    '-//IETF//DTD HTML Level 0//EN//2.0', 'HTML 0.0',
+    '-//IETF//DTD HTML Strict Level 0//EN//2.0', 'Strict HTML 0.0',
+
+    '-//IETF//DTD HTML 2.0 Level 1//EN', 'HTML 1.0',
+    '-//IETF//DTD HTML 2.0 Strict Level 1//EN', 'Strict HTML 1.0',
+
+    '-//IETF//DTD HTML 2.0 Strict//EN', 'Strict HTML 2.0',
+    '-//IETF//DTD HTML 2.0//EN', 'HTML 2.0',
+    '-//IETF//DTD HTML 2.1E//EN', 'HTML 2.1E',
+
+  '-//AS//DTD HTML 3.0 asWedit + extensions//EN', 'HTML 3.0 (AdvaSoft version)',
+    '-//IETF//DTD HTML 3.0//EN', 'HTML 3.0 (Beta)',
+    '-//W3O//DTD W3 HTML Strict 3.0//EN//', 'Strict HTML 3.0 (Beta)',
+
+    '-//Sun Microsystems Corp.//DTD HotJava HTML//EN', 'Hotjava-HTML',
+'-//Sun Microsystems Corp.//DTD HotJava Strict HTML//EN', 'Strict Hotjava-HTML',
+    '-//WebTechs//DTD Mozilla HTML 2.0//EN', 'Netscape-HTML',
+    '-//Netscape Comm. Corp. Strict//DTD HTML//EN', 'Strict Netscape-HTML',
+    '-//Microsoft//DTD Internet Explorer 2.0 HTML//EN', 'MSIE-HTML',
+    '-//Microsoft//DTD Internet Explorer 2.0 HTML Strict//EN', 'Strict MSIE-HTML',
+    '-//Microsoft//DTD Internet Explorer 3.0 HTML//EN', 'MSIE 3.0 HTML',
+    '-//Microsoft//DTD Internet Explorer 3.0 HTML Strict//EN', 'Strict MSIE 3.0 HTML',
+    '-//OReilly and Associates//DTD HTML Extended 1.0//EN', 'O\'Reilly HTML Extended v1.0',
+    '-//OReilly and Associates//DTD HTML Extended Relaxed 1.0//EN', 'O\'Reilly HTML Extended Relaxed v1.0',
+
+    '-//IETF//DTD HTML V2.2//EN', 'HTML 2.2',
+    '-//W3C//DTD HTML 1996-01//EN', 'HTML 1996-01',
+    '-//W3C//DTD HTML 3.2 Final//EN', '<a href="http://www.w3.org/TR/REC-HTML32">HTML 3.2</a>',
+    '-//W3C//DTD HTML Experimental 970421//EN', '<a href="http://www.w3.org/TR/NOTE-html-970421.html">HTML 3.2 + Style</a>',
+    '+//Silmaril//DTD HTML Pro v0r11 19970101//EN', '<a href="http://www.ucc.ie/doc/www/html/dtds/htmlpro.html">HTML Pro</a>',
+    '-//Spyglass//DTD HTML 2.0 Extended//EN', 'Spyglass HTML 2.0 Extended',
+    'http://www.w3.org/MarkUp/Cougar/Cougar.dtd', '<a href="http://www.w3.org/MarkUp/Cougar/">HTML Level "Cougar"</a>',
+    '-//W3C//DTD HTML 4.0//EN', '<a href="http://www.w3.org/TR/REC-html40/">HTML 4.0</a>',
+    '-//W3C//DTD HTML 4.0 Transitional//EN', '<a href="http://www.w3.org/TR/REC-html40/">HTML 4.0</a> Transitional',
+    '-//W3C//DTD HTML 4.0 Frameset//EN', '<a href="http://www.w3.org/TR/REC-html40/">HTML 4.0</a> Frameset'
+
+);
+
+#############################################################################
+# Array of errors -> fragment identifiers for error explanation links
+#############################################################################
+
+%frag = (
+    'entity end not allowed in comment', 'unterm-comment-1',
+    'name start character invalid only s and comment allowed in comment declaration', 'unterm-comment-2',
+    'name character invalid only s and comment allowed in comment declaration', 'unterm-comment-2',
+    'unknown declaration type FOO', 'bad-comment',
+    'character FOO not allowed in attribute specification list', 'attr-char',
+    'an attribute value must be a literal unless it contains only name characters', 'attr-quoted',
+    'syntax of attribute value does not conform to declared value', 'bad-attr-char',
+    'length of attribute value must not exceed LITLEN less NORMSEP', 'name-length',
+    'element FOO undefined', 'undef-tag',
+    'element FOO not allowed here', 'not-allowed',
+    'there is no attribute FOO', 'undef-attr',
+    'FOO is not a member of the group specified in the declared value of this attribute', 'undef-attr-val',
+    'FOO is not a member of a group specified for any attribute', 'bad-abbrev-attr',
+    'end tag for FOO omitted but its declaration does not permit this', 'no-end-tag',
+    'end tag for element FOO which is not open', 'floating-close',
+    'end tag for FOO which is not finished', 'omitted-content',
+    'start tag for FOO omitted but its declaration does not permit this', 'no-start-tag',
+    'general entity FOO not defined and no default entity', 'bad-entity',
+    'non SGML character number', 'bad-char',
+    'cannot generate system identifier for entity FOO', 'bad-pub-id'
+
+#    'error', 'frag',
+#    'character data is not allowed here', 'frag',
+
+);
+
+#############################################################################
+# Set up some signal handlers in case we get killed (darned impatient people...)
+#############################################################################
+
+$SIG{'TERM'} = 'erase_stuff';
+$SIG{'KILL'} = 'erase_stuff';
+$SIG{'PIPE'} = 'IGNORE';
+# $SIG{'CHLD'} = 'erase_stuff';
+
+#############################################################################
+# Process CGI variables
+#############################################################################
+
+# this should be replaced with a 'referer' parameter.
+# if ( ( ( $ENV{HTTP_REFERER} =~ /tsd\.ml\.org/i ) ||
+#        ( $ENV{HTTP_REFERER} =~ /hwg\.org/i ) ) &&
+#        ( ! length( $ENV{QUERY_STRING} ) ) ) {
+# 	 $ENV{QUERY_STRING} = "uri=" . $ENV{HTTP_REFERER};
+# }
+
+# accept either check/foo or check?foo
+$parameters = $ENV{PATH_INFO} || $ENV{QUERY_STRING};
+
+if ( ! $parameters ) {
+    if ( $ENV{REQUEST_URI} =~ /check/ ) {
+        &redirect_to_home_page;
+    }
+    else {
+	&output_intro_spiel;
+	&clean_up_and_exit;
+    }
+}
+
+foreach $pair (split(/[&;,]/, $parameters)) {
+
+    # this referer handling probably needs fixing to handle strange cases
+    # (possibly tied to the explanation given when connections fail;
+    # the referer could be on an intranet, etc.)
+
+    if ( $pair eq "/referer" && $ENV{HTTP_REFERER} =~ m,^http://, ) {
+	$FORM{uri} = $ENV{HTTP_REFERER};
+	next;
+    }
+
+    ($name, $value) = split(/=/, $pair);
+    $value =~ tr/+/ /;
+    $value =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack("C", hex($1))/eg;
+
+    $FORM{$name} = $value || "true";
+}
+
+# accept "url=foo" for backwards compatibility (but uri=foo is preferred)
+$uri = $FORM{uri} || $FORM{url};
+
+if ( ( $uri eq "true" || length( $uri ) == 0 ) &&
+        ( $ENV{REQUEST_URI} =~ /check/ ) ) {
+    &redirect_to_home_page;
+}
+
+if ( $uri !~ /\// ) {
+    $uri .= "/";
+}
+
+if ( $uri =~ /^www/i ) {
+    $uri = "http://$uri";
+}
+
+#############################################################################
+# Output validation results
+#############################################################################
+
+print <<"EOF";
+Content-Type: text/html
+
+$html40t_doctype
+<html>
+
+  <head>
+    <title>W3C HTML Validation Service Results for $uri</title>
+    <link rev="made" href="mailto:gerald\@w3.org">
+  </head>
+
+  <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
+
+  <p>
+    <a href="http://www.w3.org/"><img
+       src="http://www.w3.org/Icons/WWW/w3c_home" height=48 border=0
+       alt="W3C"></a>
+  </p>
+
+  <h1>W3C HTML Validation Service Results</h1>
+
+$notice$debugmessage
+EOF
+
+print <<"EOF";
+  <p>
+    Here are the <a href="/">W3C HTML Validation Service</a> results
+    for the document at URI:
+  </p>
+
+  <blockquote>
+    <a href="$uri"><code>$uri</code></a>
+  </blockquote>
+
+EOF
+
+#############################################################################
+# Print the "Jump to: " line with fragment-ID links
+#############################################################################
+
+$count = 0;
+$count++ if $FORM{"ss"} eq "true";
+$count++ if $FORM{"sp"}  eq "true";
+$count++ if $FORM{"weblint"}     eq "true";
+$count++ if $FORM{"outline"}     eq "true";
+if ( $count ) {
+    print "  <p>\n    Jump to: ";
+    if ( $FORM{"weblint"} eq "true" ) {
+	print "<a\n      href=\"#weblint\">Weblint Results</a>";
+	$count--;
+	print " or " if ( $count == 1 );
+	print ", "   if ( $count >  1 );
+    }
+    if ( $FORM{"outline"} eq "true" ) {
+	print "<a\n      href=\"#outline\">Outline</a>";
+	$count--;
+	print " or " if ( $count == 1 );
+	print ", "   if ( $count >  1 );
+    }
+    if ( $FORM{"ss"} eq "true" ) {
+	print "<a\n      href=\"#source\">Source Listing</a>";
+	$count--;
+	print " or " if ( $count == 1 );
+	print ", "   if ( $count >  1 );
+    }
+    if ( $FORM{"sp"} eq "true" ) {
+	print "<a\n      href=\"#parse\">Parse Tree</a>";
+    }
+    print ".\n  </p>\n\n";
+}
+
+if ( $uri !~ m#^http://# ) {
+    print <<"EOF";
+<p>
+  Sorry, this type of URI is not supported by this service.
+</p>
+
+<p>
+  URIs should be in the form:
+</p>
+
+<blockquote>
+  <code>$abs_svc_uri</code>
+</blockquote>
+
+<p>
+  (There are other types of URIs, too, but only <code>http://</code> URIs
+  are currently supported by this service.)
+</p>
+
+EOF
+
+    &clean_up_and_exit;
+}
+
+# @@ is this completely safe!?
+$uri_escaped = $uri;
+$uri_escaped =~ s/\$/\\\$/g;
+open( URI, "$grabber \"$uri_escaped\" |" ) || die "couldn't retrieve uri: $!";
+@file = <URI>;
+close( URI ) || die "couldn't close uri retrieval pipe: $!";
+
+# skip the request headers
+while ( $_ = shift( @file ) ) {
+    chop;
+    last if /^$/;
+}
+
+# check the response headers
+while ( $_ = shift( @file ) ) {
+    chop;
+    if (/^HTTP\/[0-9\.]+ [0-9][0-9][0-9] .*/ ) {
+	( ( $httpversion, $response, $message ) =
+	    ( /^(HTTP\/[0-9\.]+) ([0-9][0-9][0-9]) (.*)/ ) );
+    }
+    if (/^Location: / ) {
+	( ( $redirect_uri ) = ( /^Location: (.*)/ ) );
+	$redirect_uri =~ s/\s*$//g;	# it has a trailing space sometimes (?)
+    }
+    last if /^$/;
+}
+	
+if ( $response != 200 ) {
+    print "<p>\n  I got the following unexpected response when trying to ";
+    print "retrieve $uri:\n";
+    print "</p>\n\n<blockquote>  <code>$response $message</code>\n</blockquote>\n";
+    $optionstring = &build_options;
+    if ( ( $response == "302" ) || ( $response == "301" ) ){
+        # this (server name grabbing) should be moved elsewhere, probably.
+	($server_name) = ($uri =~ /^http:\/\/([^\/]*)/i);
+
+        if ( $redirect_uri !~ /:\/\// ) {
+	    $whiney_location_message = qq{
+<p>
+  <strong>Note</strong>: the HTTP server at $server_name is returning broken
+  "Location:" headers. According to <a
+  href="http://www.w3.org/Protocols/">the HTTP specifications</a>,
+  the Location header should be an absolute URI; this server is returning
+  relative URIs instead. If you are the maintainer of this server,
+  please arrange for this bug to be fixed.
+</p>
+};
+	    $redirect_uri = "http://$server_name$redirect_uri";
+        }
+
+	print <<"EOF";
+
+<p>
+  This indicates that the server has redirected the request to a different
+  URI.
+</p>
+$whiney_location_message
+<p>
+  The URI it was redirected to is:
+</p>
+
+<blockquote>
+  <a href="/check?uri=$redirect_uri$optionstring">$redirect_uri</a>
+</blockquote>
+
+EOF
+
+    }
+    elsif ( $response == "401" ) {
+	print <<"EOF";
+
+<p>
+  Sorry, I am not authorized to access the specified URI.
+</p>
+
+<p>
+  This service can only validate pages which are available somewhere
+  on the publicly-accessible Internet. In the future this service may
+  be enhanced to accept a username/password combination to be proxied
+  to your server for authentication purposes.
+</p>
+EOF
+
+    }
+    else {
+	print "<p>\n  Please make sure you have entered the URI correctly.\n</p>";
+    }
+    &clean_up_and_exit;
+}
+
+print <<'EOF';
+  <hr>
+  <h2><a name="validation">HTML Validation Results</a></h2>
+
+  <p>
+    Below are the results of attempting to parse this document with
+    an SGML parser.
+  </p>
+EOF
+
+$no_doctype=1;
+foreach $line (@file) {
+    if ( $line =~ /<[a-z].*<!doctype/i ) {
+	$no_doctype = 1;
+	last;
+    }
+    if ( $line =~ /<!doctype/i ) {
+	$no_doctype = 0;
+	last;
+    }
+    if ( $line =~ /<[a-z]/i ) {
+	$no_doctype = 1;
+	last;
+    }
+}
+
+# do several loops of increasing lengths to avoid iterating over
+# the whole file if possible.
+#
+# these heuristics could be improved a lot.
+if ( $no_doctype ) {
+    foreach $line (@file[0..20]) {
+        if ( $line =~ /<frame/i ) {
+	    $default_doctype = $html40f_doctype;
+            $guessed_doctype_already = 1;
+	    last;
+	}
+    }
+}
+
+if ( $no_doctype && ! $guessed_doctype_already ) {
+    foreach $line (@file[0..20]) {
+        if ( $line =~ /<table/i ) {
+	    $default_doctype = $html40t_doctype;
+            $guessed_doctype_already = 1;
+	    last;
+	}
+        if ( $line =~ /<body /i ) {
+	    $default_doctype = $html40t_doctype;
+            $guessed_doctype_already = 1;
+	    last;
+	}
+    }
+}
+
+if ( $no_doctype && ! $guessed_doctype_already ) {
+    foreach $line (@file) {
+        if ( $line =~ /<table/i ) {
+	    $default_doctype = $html40t_doctype;
+            $guessed_doctype_already = 1;
+	    last;
+	}
+        if ( $line =~ /<body /i ) {
+	    $default_doctype = $html40t_doctype;
+            $guessed_doctype_already = 1;
+	    last;
+	}
+    }
+}
+
+if ( $no_doctype && ! $guessed_doctype_already ) {
+    foreach $line (@file) {
+        if ( $line =~ /<center>/i ) {
+	    $default_doctype = $html32_doctype;
+	    last;
+	}
+        if ( $line =~ /<[h0-9p]*\s*align\s*=\s*center>/i ) {
+	    $default_doctype = $html32_doctype;
+	    last;
+	}
+    }
+}
+
+if ( $FORM{tidy} eq "true" ) {
+    open( CHECKER,
+       "| $tidy | $sp -E0 -m $sgmlstuff/catalog $sgmldecl - >$temp.esis 2>$temp" )
+	    || die "couldn't open checker: $!";
+}
+else {
+    open( CHECKER,
+       "| $sp -E0 -m $sgmlstuff/catalog $sgmldecl - >$temp.esis 2>$temp" )
+	    || die "couldn't open checker: $!";
+}
+
+print CHECKER "$default_doctype\n" if $no_doctype;
+# this is a kludge for DOS users with their entire file on a single line
+# like http://bogo.w3.org/test/samuels.html
+if ( $#file == 0 ) {
+    @file = (split(//,$file[0]));
+    for (0..$#file) {
+	$file[$_] .= "\n";
+    }
+}
+# kludge for other DOS users with CRLFs
+for (@file) {
+    s/+$//;
+    print CHECKER;
+}
+# print CHECKER @file;
+close( CHECKER ) || "couldn't close checker";
+
+open( ERRORS, "< $temp" )	|| die "couldn't open checker results: $!";
+@errors = <ERRORS>;
+close( ERRORS )			|| die "couldn't close checker results: $!";
+
+open( ESIS, "$temp.esis" )	|| die "couldn't read parser output: $!";
+while (<ESIS>) {
+    next if / IMPLIED$/;
+    next if /^ASDAFORM CDATA /;
+    next if /^ASDAPREF CDATA /;
+    push(@esis,$_);
+}
+close( ESIS )			|| die "couldn't close parser output: $!";
+
+for (@esis) {
+		# grab the doctype, etc.
+    next unless /^AVERSION CDATA (.*)/;
+    $fpi = $1;
+}
+$version = $pub_ids{$fpi} || "unknown";
+
+if ( $no_doctype ) {
+    push( @fake_errors, "nsgmls:<OSFD>0:2:1:E: Missing DOCTYPE declaration at start of document\n" );
+}
+
+if ( $no_doctype ) {
+
+        $escaped_doctype = $default_doctype;
+	$escaped_doctype =~ s/" "/"\n            "/;
+	$escaped_doctype =~ s/&/\&amp;/g;
+	$escaped_doctype =~ s/</\&lt;/g;
+
+	print <<"EOF";
+    <p>
+      <strong>Note</strong>: This document didn't start with the required
+      DOCTYPE declaration, so I inserted the following doctype before
+      attempting to validate the page:
+    </p>
+
+    <pre>
+    $escaped_doctype
+    </pre>
+
+    <p>
+      This document needs a doctype before it will be valid.
+    </p>
+EOF
+}
+
+print "\n  <p>\n    Version of HTML selected: <b>$version</b>.\n  </p>\n";
+
+if ( $? || $no_doctype ) {
+    print "<pre>\n";
+    for ((@fake_errors,@errors)) {
+	next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
+	next if / numbers exceeding 65535 not supported$/;
+	s/.*<OSFD>//g;
+	if ( ! (($line, $col, $type, $msg)=(/^[^:]*:([0-9]+):([0-9]+):([A-Z]?):? (.*)/))) {
+	    print "Uh oh! I got the following unknown error:\n\n   $_\n\n";
+	    print "Please make sure you specified the DOCTYPE properly!\n\n";
+	    &output_doctype_spiel;
+	    last;
+	}
+	if ( $msg =~ /^cannot generate system identifier for entity / ) {
+	    print "   <b>Fatal error</b>! $msg\n";
+	    print "</pre>\n<p>I couldn't parse this document, because it " .
+		  "uses a public\n    identifier that's not in my <a\n " .
+		  "    href=\"lib/catalog\">catalog</a>!\n  </p>\n";
+	    &output_doctype_spiel;
+	    print "<pre>";	# so the </pre> we print later gets re-started
+	    last;
+	}
+	if ( $msg =~ /^cannot open / ) {
+	    print "   Fatal error! $msg\n";
+	    print "</pre>\n<p>I couldn't parse this document, because it " .
+		  "makes reference to\n    a system-specific file instead of " .
+		  "simply using a public identifier\n    to specify the " .
+		  "level of HTML being used.\n  </p>\n";
+	    &output_doctype_spiel;
+	    print "<pre>";	# so the </pre> we print later gets re-started
+	    last;
+	}
+	$extraspaces = "";	# in case we put "(truncated)" gif on LHS
+	$line-- if $no_doctype;
+	$newline = $file[$line-1];
+
+	# make sure there's no ^P or ^Q's in the file, since we need to use
+	# them to represent '<' and '>' temporarily.
+	$newline =~ s/${lt}/P/go; $newline =~ s/${gt}/Q/g;
+
+	if ( length( $newline ) > 70 ) {
+	    if ( $col < 25 ) {
+		# truncate source line at 70 chars (truncate right side only)
+		$newline = substr( $newline, 0, 70 ) . "$contchars" . "\n";
+	    }
+	    elsif ( $col > 70 ) {
+		# keep rightmost 70 chars; adjust $col accordingly
+		# (truncate left side only)
+		$diff = $col - 50;
+		$newline = "$contchars" . substr( $newline, $diff, 70 );
+		if ( length( $newline ) == (70 + length( "$contchars" )) ) {
+		    $newline .= "$contchars" . "\n";
+		}
+		if ( $col > $diff ) {
+		    $col -= $diff;
+		}
+		else {
+		    $col -= 70;
+		}
+		$extraspaces = " " x 8;
+	    }
+	    else {
+		# truncate source line on both sides; leave more source text
+		# on left, and about 30 chars on right side. Also, adjust $col.
+		if ( $col < 35 ) {
+		    $newline = "$contchars" . substr( $newline, 0, 60 );
+		}
+		else {
+		    $newline = "$contchars" . substr( $newline, $col - 35, 60 );
+		    $col = 35;
+		}
+		if ( length( $newline ) == ( 60 + length( "$contchars" ))) {
+		    $newline .= "$contchars" . "\n";
+		}
+		$extraspaces = " " x 8;
+	    }
+	}
+
+	# figure out the index into the %frag associative array for the
+	# "explanation..." links to the KGV FAQ.
+	$msgindex = $msg;
+	$msgindex =~ s/"[^"]+"/FOO/g;
+	$msgindex =~ s/[^A-Za-z ]//;
+
+	$out = "${lt}hr${gt}\n\nError at line $line:\n   $newline";
+	if ( length( $msg ) < $col ) {    # does it fit in front?
+	    $out .= "$extraspaces " . ' ' x ($col-length($msg)) .
+		"$msg $rightarrow";
+	}
+	else {
+	    if ( ( length( $msg ) + $col ) > 60 ) {
+		if ( $msg =~ /,/ ) {
+		    $msg =~ s/,/,\n         /;
+		}
+		else {
+		    if ( ( (length( $msg ) / 2) + $col ) > 60 ) {
+			$pos = index( $msg, ' ', length($msg)/4 );
+			$indent = " " x (65-length($msg)*3/4);
+		    }
+		    else {
+			$pos = index( $msg, ' ', length($msg)/2 );
+			$indent = " " x ($col + 4);
+		    }
+		    $msg = substr( $msg, 0, $pos ) .
+			"\n$indent" . substr( $msg, $pos );
+		}
+	    }
+	    $out .= "$extraspaces   " . ' ' x ($col-1) . "$leftarrow $msg";
+	}
+
+	if ( defined $frag{$msgindex} ) {
+	    $out .=
+  " (${lt}a href=\"$faqerrloc#$frag{$msgindex}\"${gt}explanation...${lt}/a${gt})";
+	}
+	else { # remember msgindexes without frags, to get the KGV FAQ updated.
+	    $undef_frag{$msgindex} = 1;
+	}
+
+	$out .= "\n";
+	$out =~ s/&/&amp;/go; $out =~ s/</&lt;/go; $out =~ s/>/&gt;/go;
+# the following kludge is so the <img src>s don't get sgml-proofed above
+	$out =~ s/${lt}/</g; $out =~ s/${gt}/>/g;
+	print $out;
+    }
+    print "</pre>\n";
+    print "<hr>\n";
+    if ( $version eq "unknown" ) {
+	print "\n  <p>\n    Sorry, I can't validate this document.\n  </p>\n";
+    }
+    else {
+	print "\n  <p>\n    Sorry, this document does not validate as $version.\n  </p>\n";
+    }
+    $validity="invalid";
+}
+else {
+    print "\n  <pre>\n    No errors found!</pre>\n";
+    if ( $version ne "unknown" ) {
+	if ( $version =~ /^HTML 2\.0$/ ) {
+	    $gifname = "vh20.gif";
+	    $alttext = "Valid HTML 2.0!";
+            $gifborder = "";
+	}
+	elsif ( $version =~ /HTML 3\.2</ ) {
+	    $gifname = "vh32.gif";
+	    $alttext = "Valid HTML 3.2!";
+            $gifhw   = " HEIGHT=31 WIDTH=88";
+	}
+	elsif ( $version =~ /HTML 4\.0<\/a>$/ ) {
+	    $gifname = "vh40.gif";
+	    $alttext = "Valid HTML 4.0!";
+            $gifborder = "";
+            $gifhw   = " HEIGHT=31 WIDTH=88";
+	}
+	elsif ( $version =~ /HTML 4\.0<\/a> / ) {
+	    $gifname = "vh40.gif";
+	    $alttext = "Valid HTML 4.0!";
+            $gifhw   = " HEIGHT=31 WIDTH=88";
+	}
+	elsif ( $version =~ /HTML 3\.0/ ) {
+	    $gifname = "vh30.gif";
+	    $alttext = "Valid HTML 3.0!";
+	}
+	elsif ( $version =~ /Netscape/ ) {
+	    $gifname = "vhns.gif";
+	    $alttext = "Valid Netscape-HTML!";
+	}
+	elsif ( $version =~ /Hotjava/ ) {
+	    $gifname = "vhhj.gif";
+	    $alttext = "Valid Hotjava-HTML!";
+	}
+	if ( defined $gifname ) {
+	    $nicegifname = $gifname;
+	    $nicegifname =~ s/</\&lt;/g; $nicegifname =~ s/&/\&amp;/g;
+	    print <<"EOHD";
+  <p>
+    <img src="$rel_img_uri$gifname" alt="$alttext"> Congratulations, this
+    document validates as $version!
+  </p>
+
+  <p>
+    To show your readers that you've taken the care to create an
+    interoperable Web page, you may display this icon on any page
+    that validates. Here is the HTML you could use to add this icon
+    to your Web page:
+  </p>
+  <pre>
+  &lt;P&gt;&lt;A HREF="$abs_svc_uri"&gt;&lt;IMG$gifborder
+     SRC="$abs_img_uri$nicegifname"
+     ALT="$alttext"$gifhw&gt;&lt;/A&gt;</pre>
+  <p>
+    If you like, you can <a href="$rel_img_uri$gifname">download a copy of this
+    image</a> to keep in your local web directory, and change the HTML fragment
+    above to reference your local image rather than the one on this server.
+  </p>
+EOHD
+	}
+    }
+    if ( ( $version eq "unknown" ) || ( ! defined $gifname ) ) {
+	print "  <p>\n    Congratulations, this document validates as the document type specified! (I don't have an icon for this one yet, sorry.)\n  </p>\n";
+    }
+
+    $escaped_uri = $uri;
+    $escaped_uri =~  s/=/%3D/g;
+    $escaped_uri =~ s/\&/%26/g;
+    $escaped_uri =~  s/;/%3B/g;
+    $escaped_uri =~  s/,/%2C/g;
+	# ugh
+
+    $thispage = "${abs_svc_uri}check?uri=$escaped_uri";
+    $thispage .= &build_options;
+    print <<"EOHD";
+
+  <p>
+    If you would like to create a link to <em>this</em> page (i.e., this
+    validation result) to make it easier to re-validate this page in the
+    future or to allow others to validate your page, the URI is:
+  </p>
+
+  <blockquote>
+    <code>$thispage</code>
+  </blockquote>
+
+  <p>
+    (Or, you can just add the current page to your bookmarks or hotlist.)
+  </p>
+
+EOHD
+
+    $validity="valid";
+}
+
+$validation_return_code = $?;
+
+if ( $FORM{"weblint"} eq "true" ) {
+
+    if ( $FORM{"pw"} eq "true" ) {
+	$pedanticflags = "-pedantic -e mailto-link";
+	$pedantic_blurb = " (in \"pedantic\" mode)";
+    }
+    else {
+	$pedanticflags = "";
+    }
+
+    print <<"EOF";
+  <hr>
+  <h2><a name="weblint">Weblint Results</a></h2>
+
+  <p>
+    Below are the results of running <a
+    href="http://www.cre.canon.co.uk/~neilb/weblint/">Weblint</a>
+    on this document$pedantic_blurb:
+  </p>
+EOF
+
+    open( WEBLINT,
+	"| $weblint -s $pedanticflags - 2>&1 >$temp.weblint" )
+	    || die "couldn't open weblint: $!";
+    print WEBLINT @file;
+    close( WEBLINT ) || "couldn't close weblint: $!";
+
+    print "\n\n";
+    if ( $? ) {
+	print "  <ul>\n";
+
+	    open( WEBLINTOUT, "$temp.weblint" )
+		|| die "couldn't open weblint results in $temp: $!";
+
+	    while (<WEBLINTOUT>) {
+		s/ \(use "-x <extension>" to allow this\)\.$/./go;
+		s/&/&amp;/go;
+		s/</&lt;/go;
+		s/>/&gt;/go;
+		print "    <li>$_";
+	    }
+
+	    close( WEBLINTOUT ) || die "couldn't close weblint results: $!";
+	    print "  </ul>\n";
+    }
+    else {
+	print "\n  <blockquote>\n    Looks good to me!\n  </blockquote>\n";
+    }
+    print "\n\n";
+}
+
+if ( $FORM{"outline"} eq "true" ) {
+    print <<'EOF';
+  <hr>
+  <h2><a name="outline">Outline</a></h2>
+
+  <p>
+    Below is an outline for this document, automatically generated from the
+    heading tags (<code>&lt;H1&gt;</code> through <code>&lt;H6&gt;</code>.)
+  </p>
+EOF
+
+    $prevlevel = 0;
+    $indent = 0;
+    for (1..$#esis) {
+	$line = $esis[$_];
+	next if / IMPLIED$/;
+	next if /^ASDAFORM CDATA /;
+	next if /^ASDAPREF CDATA /;
+	next unless $line =~ /^\(H[1-6]$/;
+	$prevlevel = $level;
+	$level = substr( $line, 2, 1 );
+
+	print "    </ul>\n" x ( $prevlevel - $level     );  # perl is so cool.
+	if ( $level - $prevlevel == 1 ) {
+	    print "    <ul>\n";
+	}
+	foreach $i ( ($prevlevel+1) .. ($level-1)) {
+	    print "  <ul>\n    <li><em>A level $i heading is missing!</em>\n";
+	}
+	if ( $level - $prevlevel > 1 ) {
+	    print "    <ul>\n";
+	}
+
+	$line = "foo"; $heading = "";
+	while ( substr( $line, 0, 3 ) ne ")H$level" ) {
+	    $line = $esis[$_++];
+	    if ( $line =~ /^-/ ) {
+		$headcont = $line;
+		substr( $headcont, 0, 1 ) = " ";
+		$headcont =~ s/\\n/ /g;
+		$heading .= $headcont;
+	    }
+	}
+
+	$heading = substr( $heading, 1 );	# chop the leading '-'
+	$heading =~ s/&/&amp;/go; $heading =~ s/</&lt;/go;
+
+	print "    <li>$heading";
+    }
+    print "    </ul>\n" x ( $level );
+    print <<'EOF';
+    <p>
+      If this doesn't look like a real outline, it is likely that the
+      heading tags are not being used properly. (Headings should reflect
+      the logical structure of the document; they should not be used simply
+      to add emphasis, or to change the font size.)
+    </p>
+EOF
+}
+
+if ( $FORM{"ss"} eq "true" ) {
+    print <<'EOF';
+  <hr>
+  <h2><a name="source">Source Listing</a></h2>
+
+  <p>
+    Below is the source input I used for this validation:
+  </p>
+EOF
+
+    print "<pre>\n";
+    if ( $no_doctype ) {
+	$dd = "$default_doctype\n";
+	$dd =~ s/&/&amp;/go; $dd =~ s/</&lt;/go; # $dd =~ s/>/&gt;/go;
+	printf "%4d: %s", 0, $dd;
+    }
+    $line = 1;
+    for (@file) {
+	s/&/&amp;/go; s/</&lt;/go; # s/>/&gt;/go;
+	printf "%4d: %s", $line, $_;
+	$line++;
+    }
+    print "</pre>\n";
+}
+
+if ( $FORM{"sp"} eq "true" ) {
+    print <<'EOF';
+  <hr>
+  <h2><a name="parse">Parse Tree</a></h2>
+
+  <p>
+    Below is the parse tree for this document. <em>Note: this feature is
+    still under construction! I'm trying to make this easier to read
+    somehow, with little success.
+EOF
+    
+    if ( $FORM{"noatt"} ne "true" ) {
+	print <<'EOF';
+    It helps a bit if you select the
+    "don't show attributes" option on the <a href="./#byURI">form</a>.
+EOF
+    }
+    print "</em>\n  </p>\n\n";
+
+    if ( $FORM{"noatt"} eq "true" ) {
+	print <<'EOF';
+    <p>
+      I'm excluding the attributes, as you requested.
+    </p>
+EOF
+    }
+
+    $indent = 0;
+    print "<pre>\n";
+    for (@esis) {
+	if ( $FORM{"noatt"} eq "true" ) {
+	    next if /^A/;
+	    next if /^\(A$/;
+	    next if /^\)A$/;
+	}
+
+# experimental: skip data if it's only newlines and space.
+# next if /^-(\\n|\s+)*$/;
+
+# another way to do the same thing:
+# experimental: skip data if it's only newlines and space.
+s/\\n/ /g; s/\\011/ /g; s/\s+/ /g;
+next if /^-\s*$/;
+
+if ( /^-/ ) {
+    chop;
+    substr( $_, 0, 1 ) = " ";
+# $_ = substr( $_, 1 );	# experimental. previous line works OK.
+    $prevdata .= $_;
+    next;
+}
+else {
+    $prevdata =~ s/&/&amp;/go;
+    $prevdata =~ s/</&lt;/go;
+    $prevdata =~ s/\s+/ /go;
+# should wrap this to 80 columns or whatever. check tchrist's wrapping hack from c.l.p.m.
+    print " " x $indent . "$prevdata\n";
+    undef $prevdata;
+}
+# end of experimental stuff
+
+
+#	next unless /^AHREF CDATA /;	# this is interesting when uncommented
+	s/&/&amp;/go;
+	s/</&lt;/go;
+	if ( /^\)/ ) {
+	   $indent -= 3;
+	}
+
+	chop( $printme = $_ );
+	$printme =~ s/^\((.*)/&lt;$1&gt;\n/;
+	$printme =~ s/^\)(.*)/&lt;\/$1&gt;/;
+	print " " x $indent . "$printme";
+#	print " " x $indent . "$_";
+
+	if ( /^\(/ ) {
+	   $indent += 3;
+	}
+    }
+    print "</pre>\n";
+}
+
+&clean_up_and_exit;
+
+sub output_doctype_spiel {
+
+    print <<"EOF";
+
+    <p>
+      You should make the first line of your HTML document a DOCTYPE
+      declaration, like this:
+    </p>
+
+    <pre>
+      &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN"&gt;
+      &lt;HTML&gt;
+	&lt;HEAD&gt;
+	  &lt;TITLE&gt;Title&lt;/TITLE&gt;
+	&lt;/HEAD&gt;
+
+	&lt;BODY&gt;
+	  &lt;-- ... body of document ... --&gt;
+	&lt;/BODY&gt;
+      &lt;/HTML&gt;</pre>
+
+    <p>
+      Or, if you are using features from <a
+      href="http://www.w3.org/TR/REC-html40/">HTML 4.0</a>,
+      one of these:
+    </p>
+
+    <pre>
+      &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"&gt;
+      &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;
+      &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"&gt;</pre>
+
+EOF
+
+}
+
+sub output_intro_spiel {
+
+    print <<"EOF";
+Content-Type: text/html
+
+$html40t_doctype
+<html>
+
+<head>
+  <title>W3C HTML Validation Service</title>
+  <link rev="made" href="mailto:gerald\@w3.org">
+  <meta name="keywords" content="HTML, Hypertext Markup Language, Validation,
+    W3C HTML Validation Service">
+  <meta name="description" content="W3C's easy-to-use
+    HTML validation service, based on an SGML parser.">
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
+
+  <p>
+    <a href="http://www.w3.org/"><img
+       src="http://www.w3.org/Icons/WWW/w3c_home" height=48 border=0
+       alt="W3C"></a>
+  </p>
+
+  <h1>W3C HTML Validation Service</h1>
+
+  <p>
+    Welcome to the W3C HTML Validation Service!
+    See <a href="whatsnew.html"><strong>what's new</strong></a>. (updated
+    June 19, 1998)
+  </p>
+$notice
+  <p>
+    This is an easy-to-use HTML validation service based on an SGML
+    parser. It checks HTML documents for compliance with W3C HTML
+    Recommendations and other HTML standards.
+  </p>
+
+  <p>
+    To use the <a
+    href="http://www.w3.org/TR/REC-html40/">W3C HTML 4.0 Recommendation</a>,
+    start your document with one of the following doctype declarations:
+  </p>
+
+  <pre>
+    &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+            "http://www.w3.org/TR/REC-html40/strict.dtd"&gt;
+    &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd"&gt;
+    &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"
+            "http://www.w3.org/TR/REC-html40/frameset.dtd"&gt;
+  </pre>
+
+  <hr>
+  <h2><a name="byURI">Validate Documents by URI</a></h2>
+
+  <p>
+    Enter the URI of a document you would like validated:
+  </p>
+
+  <form method=GET action="/check">
+    URI: <input name="uri" size=50><br>
+    <input name="weblint" type=checkbox value="">Include <a
+    href="http://www.cre.canon.co.uk/~neilb/weblint/">Weblint</a>
+    results
+    <input name="pw" type=checkbox value="">run Weblint
+    in "pedantic" mode<br>
+    <input name="ss" type=checkbox value="">Show source input
+    <input name="outline" type=checkbox value="">Show an outline of this
+    document<br>
+    <input name="sp" type=checkbox value="">Show parse tree
+    <input name="noatt" type=checkbox value="">don't show
+    attributes in the parse tree<br>
+    <input type="submit" value="Submit this URI for validation">
+    <input type="reset" value="Reset this form">
+  </form>
+
+  <hr>
+  <h2><a name="otherInfo">Other sources of information</a></h2>
+
+  <ul>
+    <li><a href="whatsnew.html">Recent changes to this service</a></li>
+    <li><a href="news:comp.infosystems.www.authoring.html">The HTML
+      authoring newsgroup</a> (for help with HTML)
+    <li><a href="lib/catalog">DTDs (document types) supported by this
+      service</a> (the SGML catalog)</li>
+    <li>The <a href="http://www.w3.org/TR/REC-html40/">W3C HTML 4.0
+      Recommendation</a>
+    <li>The <a href="http://www.w3.org/TR/REC-html32">W3C HTML 3.2
+      Recommendation</a>
+
+  </ul>
+
+  <h2><a name="comingSoon">Coming soon</a></h2>
+
+  <ul>
+
+    <li>A comprehensive user manual.
+
+    <li>A feature to allow the DOCTYPE to be temporarily overriden
+      by a user-selectable DTD.
+
+    <li>Support for <a
+      href="http://www.ics.uci.edu/pub/ietf/html/rfc1867.txt">Form-based
+      File upload</a>.</li>
+
+    <li>A text area in which to enter HTML code to be tested.</li>
+
+  </ul>
+
+  <h2><a name="credits">Credits</a></h2>
+
+  <p>
+    This service uses:
+  </p>
+
+  <ul>
+
+    <li>
+      <a href="about.html">Hardware/network connectivity</a> provided by <a
+      href="http://www.compaq.com/">Compaq Computer Corporation</a>.
+    </li>
+
+    <li>
+      <a href="http://www.jclark.com/">James Clark</a>'s excellent <a
+      href="http://www.jclark.com/sp/">SGML parser</a>,
+    </li>
+
+    <li>
+      <a href="http://www.ics.uci.edu/~fielding/">Roy T. Fielding</a>'s <a
+      href="http://www.ics.uci.edu/pub/websoft/libwww-perl/">libwww-perl</a>
+      to retrieve documents,
+    </li>
+
+    <li>
+      <a href="http://www.cre.canon.co.uk/~neilb/">Neil Bowers</a>' HTML
+      style checker, <a
+      href="http://www.cre.canon.co.uk/~neilb/weblint/">Weblint</a>.
+    </li>
+
+    <li>
+      SGML <a href="http://www.cs.duke.edu/~dsb/kgv-faq/errors.html">error
+      explanations</a> maintained by <a
+      href="http://www.cs.duke.edu/~dsb/index.html">Scott Bigham</a>.
+
+  </ul>
+
+EOF
+
+}
+
+sub output_closing {
+
+    print <<"EOF";
+
+<hr>
+
+<address>
+  <a href="http://validator.w3.org/check/referer"><img
+     src="http://validator.w3.org/images/vh40.gif" height=31 width=88
+     align=right border=0 alt="Valid HTML 4.0!"></a>
+  <a href="http://www.w3.org/People/Gerald/">Gerald Oskoboiny</A><br><A
+     href="http://www.w3.org/Help/Webmaster">Webmaster</A><br>
+     \$Date: 1998-07-24 22:13:05 $ \
+</address>
+
+</body>
+
+</html>
+EOF
+
+}
+
+sub build_options {
+
+    $optionstring = "";
+    foreach $option (@options) {
+        $optionstring .= ";$option" if $FORM{$option} eq "true";
+    }
+    $optionstring;
+
+}
+
+sub erase_stuff {
+
+    unlink $temp;
+    unlink "$temp.esis";
+    unlink "$temp.weblint";
+
+}
+
+sub make_log_entry {
+
+    open(LOG,">>$logfile") || die "couldn't append to log: $!";
+    print LOG "$ENV{REMOTE_HOST}\t$validity $version\t$uri\n";
+    foreach $msgindex (keys %undef_frag) {
+	print LOG "frag not defined for msgindex: $msgindex\n";
+    }
+    close( LOG ) || die "couldn't close log: $!";
+
+    if ( length( $ENV{HTTP_REFERER} ) ) {
+	open(RLOG,">>$reflogfile") || die "couldn't append to rlog: $!";
+	print RLOG "$ENV{HTTP_REFERER} -> $ENV{REQUEST_URI}\n";
+	close( RLOG ) || die "couldn't close rlog: $!";
+    }
+
+}
+
+sub clean_up_and_exit {
+
+    &output_closing;
+    &erase_stuff;
+    &make_log_entry;
+    exit;
+
+}
+
+sub redirect_to_home_page {
+
+    print "Status: 302 Moved Permanently\n";
+    print "Content-Type: text/html\n";
+    print "Location: http://validator.w3.org/\n\n";
+    print "<title>Moved!</title>\n";
+    print "<p>\n";
+    print "  Please see <a href=\"http://validator.w3.org/\">the validation service's home page.</a>\n";
+    print "</p>\n";
+
+    &clean_up_and_exit;
+
+}
