@@ -40,7 +40,7 @@ use vars qw(@ISA);
 sub on_return {
     my $self = shift;
     my ($request,$response,$content) = @_;
-    if($response->code == 301){
+    if($response->code == 301 || $response->code == 302){
 	$self->{URL}{Redirect}{$request->url} = $response->headers->header('Location');
 	unless(defined $self->{URL}{Registered}{$response->headers->header('Location')}){
 	    $self->register(HTTP::Request->new(HEAD => $response->headers->header('Location')),\&callback_check,undef,0);
@@ -55,7 +55,7 @@ use CGI qw(:standard);
 ###############
 # Global Variables
 
-my $VERSION= '$Id: checklink.pl,v 1.13 1998-09-09 20:38:17 renaudb Exp $ ';
+my $VERSION= '$Id: checklink.pl,v 1.14 1998-09-10 00:33:57 renaudb Exp $ ';
 my %ALLOWED_SCHEMES = ( "http" => 1 );
 my %SCHEMES = (); # for report
 my %URL = ();
@@ -217,7 +217,7 @@ sub print_result{
 		if ($CGI){
 		    print "</TD><TD".$COLORS{$resp->code}.">";
 		    print "<B>".$q->a({href=>$resp->request->url},$resp->request->url)."</B>";
-		    print $q->br.&recurse_redirect($resp->request->url,$q) if($resp->code == 301);
+		    print $q->br.&recurse_redirect($resp->request->url,$q) if($resp->code == 301 || $resp->code == 302);
 		    print "</TD><TD ALIGN=\"center\">".$resp->code."</TD><TD>";
 		}
 		print " ",$resp->request->url, ": ",$resp->code," " if($VERBOSE);
