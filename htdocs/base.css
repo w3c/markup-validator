@@ -4,7 +4,7 @@
   Copyright © 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
   See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-  $Id: base.css,v 1.12 2001-09-06 23:16:16 link Exp $
+  $Id: base.css,v 1.13 2001-09-14 00:14:15 link Exp $
 */
 
 @import url(non-netscape.css);
@@ -57,6 +57,7 @@ address {
   margin-top:  3em;
   border-top-style: solid;
   border-top-color: black;
+  clear: both;
 }
 
 p.navbar a {

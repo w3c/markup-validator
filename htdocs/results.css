@@ -1,7 +1,9 @@
 
 /* style sheet for the validator's results page */
 
-/* $Id: results.css,v 1.5 2001-07-24 10:18:30 link Exp $ */
+/* $Id: results.css,v 1.6 2001-09-14 00:14:15 link Exp $ */
+
+@import url(base.css);
 
 .markup {
   color: red;
@@ -31,13 +33,15 @@ h1.title img {
   vertical-align: middle;
 }
 
-
-.Warning {
+#Notice {
   width: 75ex;
-  background: yellow;
   border: solid;
-  border-color: black;
   margin: .2em;
   padding: .5em;
   text-align: justify;
 }
+
+.Info    {background: white;  border-color: gray;}
+.Warning {background: silver; border-color: gray;}
+.Error   {background: yellow; border-color: black;}
+.Fatal   {background: red;    border-color: black;}

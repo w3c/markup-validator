@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.177 2001-09-09 21:07:55 link Exp $
+# $Id: check,v 1.178 2001-09-14 00:14:15 link Exp $
 
 #
 # We need Perl 5.004.
@@ -38,6 +38,14 @@ use constant TRUE  => 1;
 use constant FALSE => 0;
 use constant UNDEF => undef;
 use constant DEBUG => 0;
+
+#
+# Tentative Validation Severeties.
+use constant T_INFO  => 1; # 0001
+use constant T_WARN  => 2; # 0010
+use constant T_ERROR => 4; # 0100
+use constant T_FATAL => 8; # 1000
+
 
 #
 # Define global variables
@@ -80,9 +88,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.177 $;
+$VERSION    =  q$Revision: 1.178 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-09-09 21:07:55 $;
+$DATE       =  q$Date: 2001-09-14 00:14:15 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -278,7 +286,7 @@ if (defined $q->param('doctype')
   inserted instead. The document will not be Valid until you alter the source
   file to reflect this new DOCTYPE.
 .EOF.
-  $File->{Tentative} = TRUE; # Tag it as Invalid.
+  $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
 }
 
 #
@@ -415,7 +423,7 @@ if ($File->{Use_Charset} ne $File->{Charset}) {
       character encoding (&#171;<code>$File->{Use_Charset}</code>&#187;)
       used instead.
 EOHD
-  $File->{Tentative} = TRUE;
+  $File->{Tentative} |= T_ERROR;
 }
 if ($File->{Use_Charset} eq 'unknown') {
   &add_warning(<<"EOHD");
@@ -426,7 +434,7 @@ if ($File->{Use_Charset} eq 'unknown') {
       <a href='http://www.w3.org/International/O-charset.html'>Further
       explanations</a>.
 EOHD
-  $File->{Tentative} = TRUE;
+  $File->{Tentative} |= T_WARN;
 }
 
 {  # block for character conversion and checking
@@ -648,8 +656,21 @@ EOHD
 }
 
 if (defined $File->{Tentative}) {
+  my $class = '';
+#     $class = $File->{Tentative} & T_FATAL ? 'Fatal'
+#            : $File->{Tentative} & T_ERROR ? 'Error'
+#            : $File->{Tentative} & T_WARN  ? 'Warning'
+#            : $File->{Tentative} & T_INFO  ? 'Info'
+#            : 'Info';
+
+     $class .= ($File->{Tentative} & T_INFO  ? ' Info'    :'');
+     $class .= ($File->{Tentative} & T_WARN  ? ' Warning' :'');
+     $class .= ($File->{Tentative} & T_ERROR ? ' Error'   :'');
+     $class .= ($File->{Tentative} & T_FATAL ? ' Fatal'   :'');
+
+
   print <<".EOF.";
-  <p class="Warning">
+  <p id="Notice" class="$class">
     Please note that you have chosen one or more options that alter the content
     of the document before validation, or have not provided enough information
     to accurately validate the document. Even if no errors are reported below,
@@ -756,8 +777,6 @@ EOF
 # Spit out some closing HTML at the end of output.
 sub output_closing {
   print <<"EOF";
-<hr>
-
 <address>
   <a href="${abs_svc_uri}check/referer"><img
      src="http://www.w3.org/Icons/valid-html401" height="31" width="88"
