@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.352 2004-11-12 07:43:02 ot Exp $
+# $Id: check,v 1.353 2004-11-12 07:44:30 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -227,7 +227,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.352 $;
+  $VERSION    =  q$Revision: 1.353 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1154,7 +1154,7 @@ sub http_error {
   my $suggestion = 'Please make sure you have entered the URL correctly.';
   if ($code eq "500")
   { 
-    $suggestion = $suggestion.'If you made recent changes to your domain name (DNS) configuration, you may also want to <a href="http://www.squish.net/dnscheck/">check that your domain records are correct, or ask your hosting company to do so.'
+    $suggestion = $suggestion.'If you made recent changes to your domain name (DNS) configuration, you may also want to <a href="http://www.squish.net/dnscheck/">check that your domain records are correct</a>, or ask your hosting company to do so.'
   }
   return <<"EOF";
   <p>
