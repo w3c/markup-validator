@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.41 1999-10-25 06:10:03 gerald Exp $
+# $Id: check,v 1.42 1999-10-25 06:19:21 gerald Exp $
 
 #
 # Load modules
@@ -29,8 +29,8 @@ use constant UNDEF => undef;
 # Constant definitions
 #############################################################################
 
-my $cvsrevision	= '$Revision: 1.41 $';
-my $cvsdate	= '$Date: 1999-10-25 06:10:03 $';
+my $cvsrevision	= '$Revision: 1.42 $';
+my $cvsdate	= '$Date: 1999-10-25 06:19:21 $';
 
 my $logfile	= "/var/log/httpd/val-svc";
 
@@ -428,7 +428,7 @@ open CHECKER, "|$command - >$temp.esis 2>$temp"
 
 print CHECKER "$doctype\n" if $guessed_doctype;
 # this is a kludge for DOS users with their entire file on a single line
-# like http://bogo.w3.org/test/samuels.html
+# like http://validator.w3.org/dev/tests/no-newlines.html
 if ( $#file == 0 ) {
     @file = (split(/
 /,$file[0]));
@@ -442,14 +442,14 @@ for (@file) {
 +$//;
     print CHECKER $_, "\n";
 }
-close CHECKER                   or warn "close(CHECKER) returned: $!\n";
+close CHECKER			or warn "close(CHECKER) returned: $!\n";
 
-open ERRORS, "<$temp"           or die  "open($temp) returned: $!\n";
+open ERRORS, "<$temp"		or die  "open($temp) returned: $!\n";
 my @errors = <ERRORS>;
-close ERRORS                    or warn "close(ERRORS) returned: $!\n";
+close ERRORS			or warn "close(ERRORS) returned: $!\n";
 
 my @esis;
-open ESIS, "$temp.esis"         or die  "open($temp.esis) returned: $!\n";
+open ESIS, "$temp.esis"		or die  "open($temp.esis) returned: $!\n";
 while (<ESIS>) {
     next if / IMPLIED$/;
     next if /^ASDAFORM CDATA /;
@@ -457,7 +457,7 @@ while (<ESIS>) {
     chomp; # Removes trailing newlines
     push @esis, $_;
 }
-close ESIS                      or warn "close(ESIS) returned: $!";
+close ESIS			or warn "close(ESIS) returned: $!";
 
 my $fpi;
 $version = "unknown";
@@ -820,13 +820,13 @@ EOF
 
 if ($q->param('outline')) {
   print <<'EOF';
-  <DIV id="outline" class="mtb">
-    <HR>
-    <H2><A name="outline">Outline</A></H2>
-    <P>
+  <div id="outline" class="mtb">
+    <hr>
+    <h2><a name="outline">Outline</a></h2>
+    <p>
       Below is an outline for this document, automatically generated from the
-      heading tags (<CODE>&lt;H1&gt;</CODE> through <CODE>&lt;H6&gt;</CODE>.)
-    </P>
+      heading tags (<code>&lt;H1&gt;</code> through <code>&lt;H6&gt;</code>.)
+    </p>
 EOF
 
   my $prevlevel = 0;
@@ -838,15 +838,15 @@ EOF
     $prevlevel = $level;
     $level     = $1;
 
-    print "    </UL>\n" x ($prevlevel - $level); # perl is so cool.
+    print "    </ul>\n" x ($prevlevel - $level); # perl is so cool.
     if ($level - $prevlevel == 1) {
-      print "    <UL>\n";
+      print "    <ul>\n";
     }
     foreach my $i (($prevlevel + 1) .. ($level - 1)) {
-      print qq(  <UL>\n    <LI class="warning">A level $i heading is missing!\n);
+      print qq(  <ul>\n    <li class="warning">A level $i heading is missing!\n);
     }
     if ($level - $prevlevel > 1) {
-      print "    <UL>\n";
+      print "    <ul>\n";
     }
 
     $line       = '';
@@ -867,16 +867,16 @@ EOF
 
     $heading = substr($heading, 1); # chop the leading '-' or ' '.
     $heading =~ s/&/&amp;/go; $heading =~ s/</&lt;/go;
-    print "    <LI>$heading</LI>\n";
+    print "    <li>$heading</li>\n";
   }
-  print "    </UL>\n" x $level;
+  print "    </ul>\n" x $level;
   print <<'EOF';
-    <P>
+    <p>
       If this does not look like a real outline, it is likely that the
       heading tags are not being used properly. (Headings should reflect
       the logical structure of the document; they should not be used simply
       to add emphasis, or to change the font size.)
-    </P>
+    </p>
 EOF
 }
 
@@ -907,33 +907,29 @@ EOF
 
 if ($q->param('sp')) {
   print <<'EOF';
-  <DIV id="parse" class="mtb">
-    <HR>
-    <H2><A name="parse">Parse Tree</A></H2>
-    <P class="note">
-      Note that this feature is still under construction! I am trying to make
-      this easier to read somehow, with little success.
-    </P>
+  <div id="parse" class="mtb">
+    <hr>
+    <h2><a name="parse">Parse Tree</a></h2>
 EOF
     if ($q->param('noatt')) {
       print <<'EOF';
-    <P class="note">
+    <p class="note">
       I am excluding the attributes, as you requested.
-    </P>
+    </p>
 EOF
     } else {
       print <<'EOF';
-    <P class="note">
+    <p class="note">
       It helps a bit if you select the "don't show attributes" option on the
-      <A href="./#byURI">form</A>.
-    </P>
+      <a href="./#byURI">form</a>.
+    </p>
 EOF
     }
 
   my $indent   = 0;
   my $prevdata = '';
 
-  print "<PRE>\n";
+  print "<pre>\n";
   foreach my $line (@esis) {
     if ($q->param('noatt')) {
       next if $line =~ /^A/;
@@ -972,8 +968,8 @@ EOF
 
     my $printme;
     chomp($printme = $line);
-    $printme =~ s/^\((.*)/&lt;<STRONG>$1<\/STRONG>&gt;/;
-    $printme =~ s/^\)(.*)/&lt;\/<STRONG>$1<\/STRONG>&gt;/;
+    $printme =~ s/^\((.*)/&lt;<strong>$1<\/strong>&gt;/;
+    $printme =~ s/^\)(.*)/&lt;\/<strong>$1<\/strong>&gt;/;
     print ' ' x $indent, $printme, "\n";
     if ($line =~ /^\(/) {
       $indent += 2;
@@ -1030,7 +1026,7 @@ sub output_closing {
   <a href="http://validator.w3.org/check/referer"><img
      src="http://validator.w3.org/images/vh40" height=31 width=88
      align=right border=0 alt="Valid HTML 4.0!"></a>
-  <a href="/feedback.html">Gerald Oskoboiny</A><br>
+  <a href="/feedback.html">Gerald Oskoboiny</a><br>
   $cvsdate
 </address>
 
