@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.28 2002-05-30 02:52:27 link Exp $
+# $Id: check,v 1.200.2.29 2002-05-30 05:22:05 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -41,7 +41,7 @@ use LWP::UserAgent 1.90;    # Need 1.90 for protocols_(allowed|forbidden)
 use Text::Iconv;            # Debian: apt-get install libtext-iconv-perl
 use Text::Wrap;
 use URI;
-use URI::Escape;
+use URI::Escape qw(uri_escape);
 
 
 ###############################################################################
@@ -78,7 +78,7 @@ $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.28 $;
+$VERSION    =  q$Revision: 1.200.2.29 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 #
@@ -107,7 +107,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-05-30 02:52:27 $,
+			      Date => q$Date: 2002-05-30 05:22:05 $,
 			     });
 
 #
@@ -1687,10 +1687,13 @@ sub prepCGI {
   }
 
   # Futz the URI so "/referer" works.
-  $q->param('uri', $q->referer) if $q->path_info eq '/referer';
+  $q->param('uri', 'referer') if $q->path_info eq '/referer';
 
-  # USe HTTP Referer if uri=referer.
-  $q->param('uri', $q->referer) if $q->param('uri') =~ m(referer)i;
+  # Issue a redirect for uri=referer.
+  if ($q->param('uri') eq 'referer') {
+    print $q->redirect($q->url() . '?uri=' . uri_escape($q->referer));
+    exit;
+  }
 
   # Use "url" unless a "uri" was also given.
   $q->param('uri', $q->param('url')) if $q->param('url') and not $q->param('uri');
