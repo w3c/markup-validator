@@ -5,9 +5,15 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: LinkChecker.pl,v 1.24 2000-01-26 23:04:59 hugo Exp $
+# $Id: LinkChecker.pl,v 1.25 2000-01-28 21:19:17 hugo Exp $
 #
 # This program is licensed under the W3C(r) License.
+#
+# See the CVSweb interface at:
+#	http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/LinkChecker.pl
+#
+# An online version is available at:
+#	http://validator.w3.org/checklink
 
 package W3C::LinkChecker;
 require HTML::Parser;
@@ -21,7 +27,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C LinkChecker';
-my $VERSION = q$Revision: 1.24 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 1.25 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
