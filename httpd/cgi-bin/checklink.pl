@@ -1,11 +1,11 @@
 #! /usr/bin/perl -w
 #
 # W3C Link Checker
-# by Hugo Haas
-# (c) 1999-2000 World Wide Web Consortium
+# by Hugo Haas <hugo@w3.org>
+# (c) 1999-2001 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.67 2000-09-25 17:38:35 hugo Exp $
+# $Id: checklink.pl,v 2.68 2001-01-18 21:58:04 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -34,7 +34,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.67 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.68 $ . '(c) 1999-2001 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -56,6 +56,9 @@ my $_accept_language = 1;
 my $_languages = '*';
 my $_base_location = '.';
 my $_contact_address = 'hugo@w3.org';
+my $_masquerade = 0;
+my $_local_dir = my $_remote_masqueraded_uri = '';
+my $_hide_same_realm = 0;
 
 # Restrictions for the online version
 my $_sleep_time = 3;
@@ -90,6 +93,7 @@ if ($#ARGV >= 0) {
             $_verbose = 0;
             $_progress = 0;
         }
+        # Transform the parameter into a URI
         $uri = urize($uri);
         &check_uri($uri);
     }
@@ -100,6 +104,7 @@ if ($#ARGV >= 0) {
     use CGI;
     use CGI::Carp qw(fatalsToBrowser);
     $query = new CGI;
+    # Set a few parameters in CGI mode
     $_cl = 0;
     $_verbose = 0;
     $_progress = 0;
@@ -130,11 +135,17 @@ if ($#ARGV >= 0) {
     }
     $uri =~ s/^\s+//g;
     if ($uri =~ m/^file:/) {
+        # Only the http scheme is allowed
         &file_uri($uri);
     } elsif (!($uri =~ m/:/)) {
-        $uri = 'http://'.$uri;
+        if ($uri =~ m|^//|) {
+            $uri = 'http:'.$uri;
+        } else {
+            $uri = 'http://'.$uri;
+        }
     }
     &check_uri($uri, 1);
+    &html_footer();
 }
 
 ###############################################################################
@@ -215,6 +226,12 @@ sub parse_arguments() {
             $_trusted = shift(@ARGV);
         } elsif (m/^-y|--proxy$/) {
             $_http_proxy = shift(@ARGV);
+        } elsif (m/^--masquerade$/) {
+            $_masquerade = 1;
+            $_local_dir = shift(@ARGV);
+            $_remote_masqueraded_uri = shift(@ARGV);
+        } elsif (m/^--hide-same-realm$/) {
+            $_hide_same_realm = 1;
         } else {
             push(@uris, $_);
         }
@@ -244,10 +261,15 @@ Options:
 	-i/--indicator		Show progress while parsing.
 	-u/--user username	Specify a username for authentication.
 	-p/--password password	Specify a password.
+	--hide-same-real	Hide 401's that are in the same realm as the
+				document checked.
 	-t/--timeout value	Timeout for the HTTP requests.
 	-d/--domain domain	Regular expression describing the domain to
 				which the authetication information will be
 				sent (default: '$_trusted').
+	--masquerade local remote Masquerade local dir as a remote URI (e.g.
+				/home/hugo/MathML2/ is in fact
+				http://www.w3.org/TR/MathML2/).
 	-y/--proxy proxy	Specify an HTTP proxy server.
 	-h/--html		HTML output.
 	--help			Show this message.
@@ -256,7 +278,7 @@ Options:
 }
 
 sub ask_password() {
-    print(STDERR 'Enter your password: ');
+    print(STDERR 'Enter the password for user '.$_user.': ');
     # Will only work on Unix...
     system('stty -echo');
     chomp($_password = <STDIN>);
@@ -277,7 +299,7 @@ sub urize() {
     my $res = $_;
     if (m/:/) {
         $base = URI->new($_);
-    } elsif (m/^\//) {
+    } elsif (m|^/|) {
         $base = URI->new('file://localhost');
     } else {
         my $pwd;
@@ -289,21 +311,24 @@ sub urize() {
     return($result->as_string());
 }
 
-#######################
-# Do the job on a URI #
-#######################
+########################################
+# Check for broken links in a resource #
+########################################
 
 sub check_uri() {
     my ($uri, $html_header) = @_;
+    # If $html_header equals 1, we need to generate a HTML header (first
+    # instance called in HTML mode).
 
     my $start;
     if (! $_quiet) {
         $start = &get_timestamp();
     }
 
-    # Get the document
+    # Get and parse the document
     my $response = &get_document('GET', $uri, $doc_count, \%redirects);
 
+    # Can we check the resource? If not, we exit here...
     if (defined($response->{Stop})) {
         return(-1);
     }
@@ -334,12 +359,15 @@ sub check_uri() {
         }
     }
 
+    # Record that we have processed this resource
     $processed{$absolute_uri} = 1;
+    # Parse the document
     my $p = &parse_document($uri, $absolute_uri,
                             $response->content(), 1);
     my $base = URI->new($p->{base});
 
     # Check anchors
+    ###############
 
     if (! $_summary) {
         print("Checking anchors:\n");
@@ -352,9 +380,11 @@ sub check_uri() {
         foreach $l (keys %{$p->{Anchors}{$anchor}}) {
             $times += $p->{Anchors}{$anchor}{$l};
         }
+        # They should appear only once
         if ($times > 1) {
             $errors{$anchor} = 1;
         }
+        # Empty IDREF's are not allowed
         if ($anchor eq '') {
             $errors{$anchor} = 1;
         }
@@ -364,21 +394,35 @@ sub check_uri() {
     }
 
     # Check links
+    #############
 
     my %links;
-    # Record all the links
+    # Record all the links found
     my $link;
     foreach $link (keys %{$p->{Links}}) {
         my $link_uri = URI->new($link);
         my $abs_link_uri = URI->new_abs($link_uri, $base);
+        if ($_masquerade) {
+            if ($abs_link_uri =~ m|^$_remote_masqueraded_uri|) {
+                printf("processing %s in base $_local_dir %s\n",
+                       $abs_link_uri);
+                my $nlink;
+                $nlink = $abs_link_uri;
+                $nlink =~
+                    s|^$_remote_masqueraded_uri|file://localhost$_local_dir|;
+                $abs_link_uri = URI->new($nlink);
+            };
+        }
         my $lines;
         foreach $lines (keys %{$p->{Links}{$link}}) {
             my $canonical = URI->new($abs_link_uri->canonical());
             my $url = $canonical->scheme().':'.$canonical->opaque();
             my $fragment = $canonical->fragment();
             if (! $fragment) {
+                # Document without fragment
                 $links{$url}{location}{$lines} = 1;
             } else {
+                # Resource with a fragment
                 $links{$url}{fragments}{$fragment}{$lines} = 1;
             }
         }
@@ -393,15 +437,19 @@ sub check_uri() {
         if (! $_summary) {
             &hprintf("Checking link %s\n", $u);
         }
+        # Check that a link is valid
         &check_validity($uri, $u, \%links, \%redirects);
         if ($_verbose) {
             &hprintf("\tReturn code: %s\n", $results{$u}{location}{code});
         }
         if ($results{$u}{location}{success}) {
             my $fragment;
+            # Even though it was not broken, we might want to display it
+            # on the results page (e.g. because it required authentication)
             if ($results{$u}{location}{display} >= 400) {
                 $broken{$u}{location} = 1;
             }
+            # List the broken fragments
             foreach $fragment (keys %{$links{$u}{fragments}}) {
                 if ($_verbose) {
                     &hprintf("\t\t%s %s - Lines: %s\n",
@@ -420,6 +468,7 @@ sub check_uri() {
         } else {
             # Couldn't find the document
             $broken{$u}{location} = 1;
+            # All the fragments associated are hence broken
             my $fragment;
             foreach $fragment (keys %{$links{$u}{fragments}}) {
                 $broken{$u}{fragments}{$fragment}++;
@@ -450,14 +499,17 @@ sub check_uri() {
             # Get the name of the original directory
             # e.g. http://www.w3.org/TR/html4/Overview.html
             #      should return http://www.w3.org/TR/html4/
-            $results{$uri}{parsing}{base} =~ m/^(.*\/)[^\/]*/;
+            $results{$uri}{parsing}{base} =~ m|^(.*/)[^/]*|;
             $_base_location = $1;
         }
         foreach $u (keys %links) {
             next if (! (# Check if it's in our scope for recursion
-                        ($u =~ m/^$_base_location/) &&
+                        ($u =~ m|^$_base_location|) &&
                         # and the link is not broken
-                        $results{$u}{location}{success})
+                        $results{$u}{location}{success} &&
+                        # And it is a text/html resource
+                        ($results{$u}{location}{type} =~ m|text/html|)
+                        )
                      );
             # Check if we have already processed the URI
             next if (&already_processed($u) != 0);
@@ -490,18 +542,31 @@ sub check_uri() {
     }
 }
 
-#############################
-# Get a document to process #
-#############################
+#######################################
+# Get and parse a resource to process #
+#######################################
 
 sub get_document() {
     my ($method, $uri, $in_recursion, $redirects) = @_;
+    # $method contains the HTTP method the use (GET or HEAD)
+    # $uri contains the identifier of the resource
+    # $in_recursion equals 1 if we are in recursion mode (i.e. it is at least
+    #                        the second resource checked)
+    # $redirects is a pointer to the hash containing the map of the redirects
 
-    # Get the document
-    my $response = &get_uri($method, $uri);
-    &record_results($uri, $method, $response);
+    # Get the resource
+    my $response;
+    if (defined($results{$uri}{response})
+        && !(($method eq 'GET') && ($results{$uri}{method} eq 'HEAD'))) {
+        $response = $results{$uri}{response};
+    } else {
+        $response = &get_uri($method, $uri);
+        &record_results($uri, $method, $response);
+        &record_redirects($redirects, $response->{Redirects});
+    }
     if (! $response->is_success()) {
         if (! $in_recursion) {
+            # Is it too late to request authentication?
             if ($response->code() == 401) {
                 &authentication($response);
             } else {
@@ -510,25 +575,20 @@ sub get_document() {
                 }
                 &hprintf("\nError: %d %s\n",
                          $response->code(), $response->message());
-                if ($_html) {
-                    &html_footer();
-                }
             }
         }
         $response->{Stop} = 1;
         return($response);
     }
 
-    &record_redirects($redirects, $response->{Redirects});
-
-    # What URI are we processing by the way?
+    # What is the URI of the resource that we are processing by the way?
     my $base_uri = URI->new($response->base());
     my $request_uri = URI->new($response->request->url);
     $response->{absolute_uri} = $base_uri->abs($request_uri);
 
-    # Parse the document
+    # Can we parse the document?
     my $failed_reason;
-    if (! ($response->header('Content-Type') =~ m/text\/html/)) {
+    if (! ($response->header('Content-Type') =~ m|text/html|)) {
         $failed_reason = "Content-Type is '".
             $response->header('Content-Type')."'";
     } elsif ($response->header('Content-Encoding')
@@ -537,6 +597,7 @@ sub get_document() {
             $response->header('Content-encoding')."'";
     }
     if ($failed_reason) {
+        # No, there is a problem...
         if (! $in_recursion) {
             if ($_html) {
                 &html_header($uri);
@@ -557,15 +618,18 @@ sub get_document() {
 
 sub already_processed($) {
     my ($uri, %redirects) = @_;
-    # Don't be verbose for that part
+    # Don't be verbose for that part...
     my $summary_value = $_summary;
     $_summary = 1;
-    # Do a HEAD
-    my $response = &get_document('HEAD', $uri, 1);
+    # Do a GET: if it fails, we stop, if not, the results are cached
+    my $response = &get_document('GET', $uri, 1);
+    # ... but just for that part
     $_summary = $summary_value;
-    # Have we already processed it?
+    # Can we process the resource?
     return(-1) if (defined($response->{Stop}));
+    # Have we already processed it?
     return(1) if (defined($processed{$response->{absolute_uri}->as_string()}));
+    # It's not processed yet and it is processable: return 0
     return(0);
 }
 
@@ -590,6 +654,7 @@ sub W3C::UserAgent::redirect_ok {
         &hprintf("\n%s %s ", $request->method(), $request->uri());
     }
 
+    # Build a map of redirects
     $self->{Redirects}{$self->{fetching}} = $request->uri();
     $self->{fetching} = $request->uri();
 
@@ -600,7 +665,19 @@ sub W3C::UserAgent::redirect_ok {
 sub get_uri() {
     # Here we have a lot of extra parameters in order not to lose information
     # if the function is called several times (401's)
-    my ($method, $uri, $start, $redirects, $code, $realm, $message, $tested) = @_;
+    my ($method, $uri, $start, $redirects, $code, $realm, $message,
+        $auth) = @_;
+    # $method contains the method used
+    # $uri contains the target of the request
+    # $start is a timestamp (not defined the first time the function is
+    #                        called)
+    # $redirects is a map of redirects
+    # $code is the first HTTP return code
+    # $realm is the realm of the request
+    # $message is the HTTP message received
+    # $auth equals 1 if we want to send out authentication information
+
+    # For timing purposes
     if (! defined($start)) {
         $start = &get_timestamp();
     }
@@ -611,13 +688,14 @@ sub get_uri() {
     if ($_http_proxy) {
         $ua->proxy('http', 'http://'.$_http_proxy);
     }
-    $ua->{uri} = $uri;
-    $ua->{fetching} = $uri;
+    # $ua->{fetching} contains the URI we originally wanted
+    # $ua->{uri} is modified in the case of a redirect; this is used to
+    # build $ua->{Redirects}
+    $ua->{uri} = $ua->{fetching} = $uri;
     if (defined($redirects)) {
         $ua->{Redirects} = $redirects;
     }
-    my $count = 0;
-    my $response;
+
     if (! ($_summary || (!$doc_count && $_html))) {
         &hprintf("%s %s ", $method, $uri);
     }
@@ -626,7 +704,7 @@ sub get_uri() {
         $request->header('Accept-Language' => 'en');
     }
     # Are we providing authentication info?
-    if (defined($tested)
+    if (defined($auth)
         && ($request->url->netloc =~ /$_trusted$/)) {
         if (defined($ENV{HTTP_AUTHORIZATION})) {
             $request->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
@@ -635,19 +713,18 @@ sub get_uri() {
         }
     }
     # Do the query
-    $response = $ua->request($request);
+    my $response = $ua->request($request);
     # Get the results
+    # Record the very first response
     if (! defined($code)) {
         $code = $ua->{FirstResponse};
-    }
-    if (! defined($message)) {
         $message = $ua->{FirstMessage};
     }
     # Authentication requested?
     if (($response->code() == 401)
         && (defined($ENV{HTTP_AUTHORIZATION})
             || (defined($_user) && defined($_password)))
-        && !defined ($tested)) {
+        && !defined ($auth)) {
         # Deal with authentication and avoid loops
         if (! defined ($realm)) {
             $response->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
@@ -680,6 +757,7 @@ sub get_uri() {
 
 sub record_results() {
     my ($uri, $method, $response) = @_;
+    $results{$uri}{response} = $response;
     $results{$uri}{method} = $method;
     $results{$uri}{location}{code} = $response->code();
     $results{$uri}{location}{type} = $response->header('Content-type');
@@ -694,8 +772,12 @@ sub record_results() {
     # Stores the authentication information
     if (defined($response->{Realm})) {
         $results{$uri}{location}{realm} = $response->{Realm};
-        $results{$uri}{location}{display} = 401;
+        if (! $_hide_same_realm) {
+            $results{$uri}{location}{display} = 401;
+        }
     }
+    # What type of broken link is it? (stored in {record} - the {display}
+    #              information is just for visual use only)
     if (($results{$uri}{location}{display} == 401)
         && ($results{$uri}{location}{code} == 404)) {
         $results{$uri}{location}{record} = 404;
@@ -773,9 +855,9 @@ sub parse_document() {
     return($p);
 }
 
-####################################
+###################################
 # Constructor for W3C::CheckLink #
-####################################
+###################################
 
 sub W3C::CheckLink::new() {
     my $p = HTML::Parser::new(@_, api_version => 3);
@@ -820,13 +902,13 @@ sub W3C::CheckLink::doctype() {
     # Check for the id tag
     if (
         # HTML 2.0 & 3.0
-        m/^-\/\/IETF\/\/DTD HTML [23]\.0\/\// ||
+        m%^-//IETF//DTD HTML [23]\.0//% ||
         # HTML 3.2
-        m/^-\/\/W3C\/\/DTD HTML 3\.2\/\//) {
+        m%^-//W3C//DTD HTML 3\.2//%) {
         $self->{check_id} = 0;
     }
     # Enable XML extensions
-    if (m/^-\/\/W3C\/\/DTD XHTML /) {
+    if (m%^-//W3C//DTD XHTML %) {
         $self->xml_mode(1);
     }
 }
@@ -856,11 +938,12 @@ sub W3C::CheckLink::get_anchor() {
         $anchor = $attr->{id};
     }
     if ($self->{check_name} && ($tag eq 'a')) {
+        # @@@@ In XHTML, <a name="foo" id="foo"> is mandatory
+        # Force an error if it's not the case (or if id's and name's values
+        #                                      are different)
         # If id is defined, name if defined must have the same value
         if (!$anchor) {
             $anchor = $attr->{name};
-        } else {
-            # @@@ Issue a warning
         }
     }
 
@@ -951,6 +1034,10 @@ sub W3C::CheckLink::declaration() {
 sub check_validity() {
     use HTTP::Status;
     my ($testing, $uri, $links, $redirects) = @_;
+    # $testing is the URI of the document checked
+    # $uri is the URI of the target that we are verifying
+    # $links is a hash of the links in the documents checked
+    # $redirects is a map of the redirects encountered
 
     # Checking file: URI's is not allowed with a CGI
     if ($testing ne $uri) {
@@ -971,6 +1058,8 @@ sub check_validity() {
     # Get the document with the appropriate method
     my $method;
     my @fragments = keys %{$links->{$uri}{fragments}};
+    # Only use GET if there are fragments. HEAD is enough if it's not the
+    # case.
     if ($#fragments == -1) {
         $method = 'HEAD';
     } else {
@@ -983,12 +1072,13 @@ sub check_validity() {
         || (($method eq 'GET') && ($results{$uri}{method} eq 'HEAD'))) {
         $being_processed = 1;
         $response = &get_uri($method, $uri);
-        # Record the redirects
-        &record_redirects($redirects, $response->{Redirects});
         # Get the information back from get_uri()
         &record_results($uri, $method, $response);
+        # Record the redirects
+        &record_redirects($redirects, $response->{Redirects});
     }
 
+    # We got the response of the HTTP request. Stop here if it was a HEAD.
     if ($#fragments == -1) {
         return;
     }
@@ -999,7 +1089,7 @@ sub check_validity() {
         if (!defined($results{$uri}{location}{type})) {
             return;
         }
-        if (! ($results{$uri}{location}{type} =~ m/text\/html/i)) {
+        if (! ($results{$uri}{location}{type} =~ m|text/html|i)) {
             if ($_verbose) {
                 &hprintf("Can't check content: Content-type is '%s'.\n",
                          $response->header('Content-type'));
@@ -1219,7 +1309,17 @@ sub show_link_report {
         my $whattodo;
         my $redirect_too;
         if ($todo) {
-            $whattodo = $todo->{$c};
+            if ($c == 500) {
+                # 500's could be a real 500 or a DNS lookup problem
+                if ($results->{$u}{location}{message} =~
+                    m/Bad hostname '[^\']*'/) {
+                    $whattodo = 'The hostname could not be resolved. This link needs to be fixed.';
+                } else {
+                    $whattodo = 'This is a server-side problem. Check the URI.';
+                }
+            } else {
+                $whattodo = $todo->{$c};
+            }
             if (defined($redirects{$u}) && ($c != 301) && ($c != 302)) {
                 $redirect_too = 'The original resquest has been redirected.';
                 $whattodo .= ' '.$redirect_too if (! $_html);
@@ -1232,7 +1332,7 @@ sub show_link_report {
             # Style stuff
             my $idref = '';
             if ($codes && (!defined($previous_c) || ($c != $previous_c))) {
-                $idref = ' id="code_'.$c.'"';
+                $idref = ' id="d'.$doc_count.'code_'.$c.'"';
                 $previous_c = $c;
             }
             # Main info
@@ -1367,20 +1467,22 @@ sub links_summary {
 
     my %todo = ( 200 => 'There are broken fragments which must be fixed.',
                  300 => 'It usually means that there is a typo in a link that triggers mod_speling action - this must be fixed!',
-                 301 => 'Usually nothing. You may want to update the link though.',
+                 301 => 'You should update the link.',
                  302 => 'Usually nothing.',
                  400 => 'Usually the sign of a malformed URL that cannot be parsed by the server.',
-                 401 => 'The link is not public. You had better specify it.',
-                 403 => 'The link is forbidden! This needs fixing. Usual suspect: a missing Overview.html or index.html, or bad access control.',
+                 401 => "The link is not public. You'd better specify it.",
+                 403 => 'The link is forbidden! This needs fixing. Usual suspects: a missing index.html or Overview.html, or a missing ACL.',
                  404 => 'The link is broken. Fix it NOW!',
-                 405 => 'The server does not allow HEAD requests. Go ask the guys who run this server why.',
+                 405 => 'The server does not allow HEAD requests. Go ask the guys who run this server why. Check the link manually.',
                  407 => 'The link is a proxy, but requires Authentication.',
-                 408 => 'The request timed out',
+                 408 => 'The request timed out.',
+                 410 => 'The resource is gone. You should remove this link.',
                  415 => 'The media type is not supported.',
-                 500 => 'Either the hostname is incorrect or it is a server side problem.',
+                 500 => 'Either the hostname is incorrect or it is a server side problem. Check the detailed list.',
                  501 => 'Could not check this link: method not implemented or scheme not supported.',
                  503 => 'The server cannot service the request, for some unknown reason.');
-    my %priority = ( 404 => 1,
+    my %priority = ( 410 => 1,
+                     404 => 2,
                      403 => 5,
                      200 => 10,
                      300 => 15,
@@ -1465,7 +1567,8 @@ sub links_summary {
             my $code;
             foreach $code (sort(keys(%code_summary))) {
                 printf('<tr%s>', &bgcolor($code));
-                printf('<td><a href="#code_%s">%s</a></td>', $code, $code);
+                printf('<td><a href="#d%scode_%s">%s</a></td>',
+                       $doc_count, $code, $code);
                 printf('<td>%s</td>', $code_summary{$code});
                 printf('<td>%s</td>', $todo{$code});
                 print "</tr>\n";
@@ -1516,7 +1619,7 @@ sub html_header() {
         print "Cache-Control: no-cache\nPragma: no-cache\n";
     }
     if (! $_cl) {
-        print 'Content-type: text/html';
+        print "Content-Type: text/html\nContent-Language: en";
     }
     print "
 
