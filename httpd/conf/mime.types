@@ -1,7 +1,7 @@
 #
 # mime.types for validator.w3.org
 #
-# $Id: mime.types,v 1.1 1998-07-24 22:23:57 gerald Exp $
+# $Id: mime.types,v 1.1.4.1 2004-04-30 07:08:02 ot Exp $
 #
 
 # This file controls what MIME types are sent to the client for the
@@ -73,6 +73,7 @@ audio/x-realaudio		ra
 audio/x-wav			wav
 chemical/x-pdb			pdb xyz
 image/gif			gif
+image/svg+xml                 svg
 image/ief			ief
 image/jpeg			jpeg jpg jpe
 image/png			png
