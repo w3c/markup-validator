@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.4 2002-11-27 08:47:21 link Exp $
+# $Id: check,v 1.305.2.5 2002-11-27 13:00:52 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -100,7 +100,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.4 $;
+  $VERSION    =  q$Revision: 1.305.2.5 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -162,7 +162,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-27 08:47:21 $,
+                              Date => q$Date: 2002-11-27 13:00:52 $,
                              });
 
 #
@@ -437,9 +437,9 @@ $File = &charset_conflicts($File);
 #
 # Add metadata iff asked for.
 if ($File->{Opt}->{Verbose}) {
-  &add_table($File, "Modified", &ent($File->{Modified})) if $File->{Modified};
-  &add_table($File, "Server",   &ent($File->{Server}))   if $File->{Server};
-  &add_table($File, "Size",     &ent($File->{Size}))     if $File->{Size};
+  &add_table($File, "Modified", [1, 2, &ent($File->{Modified})]) if $File->{Modified};
+  &add_table($File, "Server",   [1, 2, &ent($File->{Server})  ]) if $File->{Server};
+  &add_table($File, "Size",     [1, 2, &ent($File->{Size})    ]) if $File->{Size};
 }
 
 if ($File->{'Is Upload'}) {
@@ -686,24 +686,46 @@ if ($File->{Opt}->{Output} eq 'xml') {
 } else {
   print $File->{Results};
   print qq(    <div class="meat">\n);
+
   print &jump_links($File);
+
+  if ($File->{Opt}->{Verbose}) {
+    print qq(<div class="splash">\n);
+    &print_table($File);
+    &print_warnings($File);
+    print qq(</div>\n);
+  } else {
+    if ($File->{'Is Valid'} and not $File->{'Is Upload'}) {
+      my $thispage = $File->{Env}->{'Self URI'};
+      my $escaped_uri = uri_escape($File->{URI});
+      $thispage .= qq(?uri=$escaped_uri);
+      $thispage .= ';ss=1'      if $File->{Opt}->{'Show Source'};
+      $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
+      $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
+      $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
+
+      &add_warning($File, <<".EOF.");
+<em>Note</em>: You can also view <a href="$thispage;verbose=1">verbose
+results</a> by setting the corresponding option on the <a
+  href="detailed.html">Extended Interface</a>.
+.EOF.
+    }
+  }
 
   if ($File->{'Is Valid'}) {
     &report_valid($File);
   } else {
     $File->{Opt}->{'Show Source'} = TRUE;
-    print qq(<div class="splash">\n);
-    &print_table($File);
-    &print_warnings($File);
-    print qq(</div>\n);
     &report_errors($File);
   }
 
-  &outline($File)     if $File->{Opt}->{'Outline'};
-  &show_source($File) if $File->{Opt}->{'Show Source'};
-  &parse_tree($File)  if $File->{Opt}->{'Show Parsetree'};
-  &show_esis($File)   if $File->{Opt}->{'Show ESIS'};
-  &show_errors($File) if $File->{Opt}->{'Show Errors'};
+  if (not $File->{'Is Valid'} or $File->{Opt}->{Verbose}) {
+    &outline($File)     if $File->{Opt}->{'Outline'};
+    &show_source($File) if $File->{Opt}->{'Show Source'};
+    &parse_tree($File)  if $File->{Opt}->{'Show Parsetree'};
+    &show_esis($File)   if $File->{Opt}->{'Show ESIS'};
+    &show_errors($File) if $File->{Opt}->{'Show Errors'};
+  }
 
   print qq(</div> <!-- End of "meat". -->\n); # End of "Meat".
   print $File->{'Footer'};
@@ -807,12 +829,15 @@ sub print_table {
            );
   add_table($Options, '',
             # Validate error pages?
-            [1, $File->{Table}->{Max},
              q(<label title="Validate also pages for which the HTTP status code indicates an error"><input type="checkbox" value="1" name="No200" ) .
              # @@@ accesskey missing
              ($File->{Opt}->{'No200'}         ? q(checked="checked" ) : '') .
-             q(/>Validate&nbsp;error&nbsp;pages</label>)
-            ]
+             q(/>Validate&nbsp;error&nbsp;pages</label>),
+            # Verbose output?
+             q(<label title="Show Verbose Output"><input type="checkbox" value="1" name="verbose" ) .
+             # @@@ accesskey missing
+             ($File->{Opt}->{'Verbose'}         ? q(checked="checked" ) : '') .
+             q(/>Verbose&nbsp;Output</label>)
            );
 
   add_table(
@@ -947,7 +972,7 @@ sub jump_links {
   my $links = '';
   $links .= <<".EOF.";
       <p id="skip" class="jumpbar">
-        Jump To: [<a title="Result of Validation" href="#results">Results</a>]
+        Jump To: [<a title="Result of Validation" href="#result">Results</a>]
 .EOF.
 
   $links .= ' [<a title="Listing of Source Input" href="#source">Source&nbsp;Listing</a>]'
@@ -1490,7 +1515,7 @@ sub report_errors ($) {
   my $File = shift;
 
   print <<"EOHD";
-    <h2 id="results" class="invalid">This page is <strong>not</strong> Valid $File->{Version}!</h2>
+    <h2 id="result" class="invalid">This page is <strong>not</strong> Valid $File->{Version}!</h2>
 EOHD
 
   if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 'svg' or $File->{Type} eq 'smil') {
@@ -1618,13 +1643,13 @@ sub report_valid {
     }
 
     if ($File->{Version}) {
-      print qq(<h2 id="skip" class="valid">This Page Is Valid $File->{Version}!</h2>\n);
+      print qq(<h2 id="result" class="valid">This Page Is Valid $File->{Version}!</h2>\n);
     } else {
-      print qq(<h2 id="skip" class="valid">This Page Is Valid!</h2>\n);
+      print qq(<h2 id="result" class="valid">This Page Is Valid!</h2>\n);
     }
 
     print &daily_tip($File, $CFG->{'Tips DB'});
-    &print_warnings($File);
+    &print_warnings($File) unless $File->{Opt}->{Verbose};
 
     print <<".EOF.";
     <p>
@@ -1700,6 +1725,7 @@ sub report_valid {
     $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
     $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
     $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
+    $thispage .= ';verbose=1' if $File->{Opt}->{'Verbose'};
 
     &output_css_validator_blurb($URI);
 
@@ -2781,6 +2807,7 @@ sub self_url {
      $thispage .= ';noatt=1'   if $q->param('noatt');
      $thispage .= ';outline=1' if $q->param('outline');
      $thispage .= ';No200=1'   if $q->param('No200');
+     $thispage .= ';verbose=1' if $q->param('verbose');
   if ($q->param('doctype')
       and not $q->param('doctype') =~ /(Inline|detect)/i) {
     $thispage .= ';doctype=' . uri_escape($q->param('doctype'));
