@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.176 2001-09-09 15:20:45 link Exp $
+# $Id: check,v 1.177 2001-09-09 21:07:55 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.176 $;
+$VERSION    =  q$Revision: 1.177 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-09-09 15:20:45 $;
+$DATE       =  q$Date: 2001-09-09 21:07:55 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -651,15 +651,15 @@ if (defined $File->{Tentative}) {
   print <<".EOF.";
   <p class="Warning">
     Please note that you have chosen one or more options that alter the content
-    of the document before Validation, or have not provided enough information
+    of the document before validation, or have not provided enough information
     to accurately validate the document. Even if no errors are reported below,
-    the document will not be Valid until you manually make the changes we have
+    the document will not be valid until you manually make the changes we have
     performed automatically. Specifically, if you used some of the options
     that override a property of the document (e.g. the DOCTYPE or Character
-    Encoding), you must make the same change to the source document or its
+    Encoding), you must make the same change to the source document or the
     server setup before it can be valid. You will also need to insert an
     appropriate DOCTYPE Declaration or Character Encoding (the "charset"
-    parameter for the COntent-Type HTTP header) if any of those are missing.
+    parameter for the Content-Type HTTP header) if any of those are missing.
   </p>
 .EOF.
 }
@@ -870,7 +870,7 @@ sub authenticate {
   my $authHeader = shift;
   my $realm = $resource;
   $realm =~ s([^\w\d.-]*){}g;
-  $authHeader =~ s( realm=([\'\"])?([^\1]+)\1?){ realm="$realm-$2"};
+  $authHeader =~ s( realm=([\'\"])?([^\1]+)\1){ realm="$realm-$2"};
 
     print <<"EOF";
 Status: 401 Authorization Required
