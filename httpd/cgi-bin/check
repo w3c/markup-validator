@@ -8,14 +8,14 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.11 1999-02-25 04:21:32 gerald Exp $
+# $Id: check,v 1.12 1999-02-25 05:13:34 gerald Exp $
 
 #############################################################################
 # Constant definitions
 #############################################################################
 
-$cvsrevision	= '$Revision: 1.11 $';
-$cvsdate	= '$Date: 1999-02-25 04:21:32 $';
+$cvsrevision	= '$Revision: 1.12 $';
+$cvsdate	= '$Date: 1999-02-25 05:13:34 $';
 
 $logfile	= "/var/log/httpd/val-svc";
 $reflogfile	= "/var/log/httpd/val-svc-referers";
@@ -271,9 +271,9 @@ while ( $_ = shift( @file ) ) {
 while ( $_ = shift( @file ) ) {
     chop;
     s/\r$//;
-    if (/^HTTP\/[0-9\.]+ [0-9][0-9][0-9] .*/ ) {
+    if (/^HTTP\/[0-9\.]+ [0-9][0-9][0-9] ?.*/ ) {
 	( ( $httpversion, $response, $message ) =
-	    ( /^(HTTP\/[0-9\.]+) ([0-9][0-9][0-9]) (.*)/ ) );
+	    ( /^(HTTP\/[0-9\.]+) ([0-9][0-9][0-9]) ?(.*)/ ) );
     }
     if (/^Last-Modified: /i ) {
 	( $lastmod ) = ( /^Last-Modified: (.*)/i );
@@ -492,7 +492,7 @@ if ( $guessed_doctype ) {
     $escaped_doctype =~ s/</\&lt;/g;
 }
 
-print qq{  <li>Character encoding: $http_charset\n};
+print qq{  <li>Character encoding: $effective_charset\n};
 
 if ( $charsets_differ ) {
     print <<"EOHD";
