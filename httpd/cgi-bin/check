@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.16 2002-12-02 23:59:39 link Exp $
+# $Id: check,v 1.305.2.17 2002-12-03 01:54:33 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -78,6 +78,7 @@ use constant T_FATAL => 16; # 0001 0000
 use constant O_SOURCE  =>  1; # 0000 0001
 use constant O_CHARSET =>  2; # 0000 0010
 use constant O_DOCTYPE =>  4; # 0000 0100
+use constant O_NONE    =>  8; # 0000 1000
 
 
 #
@@ -103,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.16 $;
+  $VERSION    =  q$Revision: 1.305.2.17 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -165,7 +166,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-12-02 23:59:39 $,
+                              Date => q$Date: 2002-12-03 01:54:33 $,
                              });
 
 #
@@ -235,7 +236,7 @@ $File->{Opt}->{'Output'}         = $q->param('output')  ? $q->param('output')   
 # regardless of whether it's "0" or "1" (on or off).
 $DEBUG = $q->param('debug') if defined $q->param('debug');
 
-&abort_if_error_flagged($File, 0);
+&abort_if_error_flagged($File, O_NONE); # Too early to &print_table.
 
 #
 # Get the file and metadata.
@@ -260,7 +261,7 @@ untie *STDIN;
 
 #
 # Abort if an error was flagged during initialization.
-&abort_if_error_flagged($File, 0);
+&abort_if_error_flagged($File, O_NONE); # Too early to &print_table.
 
 
 ###############################################################################
@@ -2041,13 +2042,20 @@ sub prepCGI {
   # Futz the URI so "/referer" works.
   if ($q->path_info) {
     if ($q->path_info eq '/referer' or $q->path_info eq '/referrer') {
-      $q->param('uri', 'referer');
+      if ($q->referer) {
+	print redirect $q->url() . '?uri=' . uri_escape($q->referer);
+	exit;
+      } else {
+	print redirect $q->url() . '?uri=' . 'referer';
+	exit;
+      }
     } else {
       my $thispage = &self_url($q);
       print redirect $thispage;
       exit;
     }
   }
+
   # Use "url" unless a "uri" was also given.
   if ($q->param('url') and not $q->param('uri')) {
     $q->param('uri', $q->param('url'));
@@ -2059,8 +2067,35 @@ sub prepCGI {
 
   # Issue a redirect for uri=referer.
   if ($q->param('uri') and $q->param('uri') eq 'referer') {
-    print redirect $q->url() . '?uri=' . uri_escape($q->referer);
-    exit;
+    if ($q->referer) {
+      print redirect $q->url() . '?uri=' . uri_escape($q->referer);
+      exit;
+    } else {
+      # Redirected from /check/referer to /check?uri=referer because
+      # the browser didn't send a Referer header, or the request was
+      # for /check?uri=referer but no Referer header was found.
+      $File->{'Error Flagged'} = TRUE;
+      $File->{'Error Message'} = <<".EOF.";
+      <div class="error">
+        <h2><strong>No Referer header found!</strong></h2>
+        <p>
+          You have requested we check the referring page, but your browser did
+          not send the HTTP "Referer" header field. This can be for several
+          reasons, but most commonly it is because your browser does not
+          know about this header, has been configured not to send one, or is
+          behind a proxy or firewall that strips it out of the request before
+          it reaches us.
+        </p>
+        <p>This is <em>not</em> an error in the referring page!</p>
+        <p>
+          Please use the form interface on the
+          <a href="$CFG->{'Home Page'}">Validator Home Page</a> (or the
+          <a href="detailed.html">Extended Interface</a>) to check the
+          page by URI.
+        </p>
+      </div>
+.EOF.
+    }
   }
 
   # Supersede URI with an uploaded file.
@@ -2728,8 +2763,7 @@ sub abort_if_error_flagged {
                  @data);
     }
 
-
-    &print_table($File);
+    &print_table($File) unless $Flags & O_NONE;
     print $File->{'Error Message'};
     if ($File->{Opt}->{'Show Source'} and $Flags & O_SOURCE) {
       &show_source($File);
