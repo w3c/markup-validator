@@ -4,65 +4,60 @@
    Copyright 2000-2004 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: navbar.css,v 1.3.2.6 2004-02-02 06:06:44 ot Exp $
+   $Id: navbar.css,v 1.3.2.7 2004-02-17 01:01:36 link Exp $
 */
 
-
-navbar {
-}
-
-
 html {
-min-width: 55em;
+  min-width: 55em;
 }
 
 #menu {
-min-width: 63em;
-list-style-type: none;
-padding: 0;
-margin: 0;
-height: 1.5em;
-background-color: #eee;
-border-bottom: solid 1px black;
+  min-width: 63em;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  height: 1.5em;
+  background-color: #eee;
+  border-bottom: solid 1px black;
 }
 
 #menu li {
-display: inline;
-padding: 0;
-margin: 0;
+  display: inline;
+  padding: 0;
+  margin: 0;
 }
 
 #menu li a:link, #menu li a:visited {
-text-decoration: none;
-text-align: center;
-float: left;
-display: block;
-width: 8em;
-padding: 2px 0px;
-margin: 0;
-background-color: #eee;
-color: #053188;
-font-size: smaller;
-border-right: solid 1px #ddd;
-border-bottom: solid 1px #ddd;
+  text-decoration: none;
+  text-align: center;
+  float: left;
+  display: block;
+  width: 8em;
+  padding: 2px 0px;
+  margin: 0;
+  background-color: #eee;
+  color: #053188;
+  font-size: smaller;
+  border-right: solid 1px #ddd;
+  border-bottom: solid 1px #ddd;
 }
 
 #menu li a#selected:link, #menu li a#selected:visited {
-text-decoration: underline;
-background-color: #fff;
-color: #053188;
+  text-decoration: underline;
+  background-color: #fff;
+  color: #053188;
 }
 
 #menu li a:hover {
-text-decoration: underline;
-background-color: #fff;
-color: #053188;
+  text-decoration: underline;
+  background-color: #fff;
+  color: #053188;
 }
 
 #menu li a:active {
-background-color: #fff;
-color: #053188;
-border-right: solid 1px #ddd;
+  background-color: #fff;
+  color: #053188;
+  border-right: solid 1px #ddd;
 }
 
 
@@ -96,22 +91,22 @@ border-right: solid 1px #ddd;
 }
 
 #misclinks li a:link, #misclinks li a:visited, div.jumpbar li a:link, div.jumpbar li a:visited {
-text-decoration: none;
-display: block;
-width: 8em;
-padding: 2px 0px;
-margin: 0;
-background-color: #eee;
-color: #053188;
-font-size: smaller;
+  text-decoration: none;
+  display: block;
+  width: 8em;
+  padding: 2px 0px;
+  margin: 0;
+  background-color: #eee;
+  color: #053188;
+  font-size: smaller;
 }
 
 #misclinks li a:hover {
-text-decoration: underline;
+  text-decoration: underline;
 }
 
 #misclinks li a#selected:link, div.jumpbar li a#selected:visited {
-text-decoration: underline;
+  text-decoration: underline;
 }
 
 
@@ -141,27 +136,27 @@ div.jumpbar li {
 }
 
 div.jumpbar li a:link, div.jumpbar li a:visited {
-text-decoration: none;
-text-align: center;
-display: block;
-width: 8em;
-padding: 2px 0px;
-margin: 0;
-background-color: #eee;
-color: #053188;
-font-size: smaller;
-border-top: dotted 1px black;
+  text-decoration: none;
+  text-align: center;
+  display: block;
+  width: 8em;
+  padding: 2px 0px;
+  margin: 0;
+  background-color: #eee;
+  color: #053188;
+  font-size: smaller;
+  border-top: dotted 1px black;
 }
 
 div.jumpbar li a:hover {
-text-decoration: underline;
+  text-decoration: underline;
 }
 
 div.jumpbar li a#selected:link, div.jumpbar li a#selected:visited {
-text-decoration: underline;
-background-color: #fff;
-color: #053188;
-border-right: solid 1px #ddd;
-border-bottom: solid 1px #fff;
+  text-decoration: underline;
+  background-color: #fff;
+  color: #053188;
+  border-right: solid 1px #ddd;
+  border-bottom: solid 1px #fff;
 }
 
