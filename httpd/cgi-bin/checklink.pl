@@ -5,7 +5,7 @@
 # (c) 1999-2001 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.85 2001-09-17 20:23:39 hugo Exp $
+# $Id: checklink.pl,v 2.86 2001-09-21 14:15:53 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -38,7 +38,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.85 $ . '(c) 1999-2001 W3C';
+my $VERSION = q$Revision: 2.86 $ . '(c) 1999-2001 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -384,7 +384,7 @@ sub check_uri() {
 Validity</a></p>
 <p>Back to the <a href=\"checklink\">link checker</a>.</p>\n",
                    map{&encode(URI::Escape::uri_escape($absolute_uri,
-                               "^A-Za-z"))}(1..2));
+                               "^A-Za-z0-9."))}(1..2));
             print("<pre>\n");
         }
     }
