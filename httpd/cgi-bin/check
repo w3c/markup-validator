@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.184 2001-09-17 00:32:52 link Exp $
+# $Id: check,v 1.185 2001-09-20 18:22:43 link Exp $
 
 #
 # We need Perl 5.004.
@@ -91,9 +91,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.184 $;
+$VERSION    =  q$Revision: 1.185 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-09-17 00:32:52 $;
+$DATE       =  q$Date: 2001-09-20 18:22:43 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -198,14 +198,27 @@ $html40t_doctype
   <head>
     <title>W3C HTML Validation Service Results</title>
     <link rev="made" href="mailto:$MAINTAINER">
-    <link rel="stylesheet" href="/results.css" media="screen">
+    <style type="text/css" media="screen">\@import "/results.css";</style>
   </head>
 
-  <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
-    <h1 class="title"><a href="http://www.w3.org/"><img
-       src="http://www.w3.org/Icons/WWW/w3c_home"
-       width=72 height=48 border="0" alt="W3C"></a>
-      <a href="/">HTML Validation Service</a> Results</h1>
+  <body>
+    <p class="navbar">
+      <span class="hideme"><a href="#skip" title="Skip past navigation to main part of page">Skip Navigation</a> |</span>
+      <a href="/about.html" title="Information About this Service">About...</a> <span class="hideme">|</span>
+      <a href="/feedback.html" title="How to provide feedback on this service">Feedback</a> <span class="hideme">|</span>
+      <a href="/whatsnew.html" title="The changes made to this service recently">What's&nbsp;New</a> <span class="hideme">|</span>
+      <a href="/file-upload.html" title="File Upload Interface to this Service">Upload&nbsp;Files</a> <span class="hideme">|</span>
+      <a href="/source/" title="Information on Source Availability">Source&nbsp;Code</a> <span class="hideme">|</span>
+      <a href="/docs/" title="Documentation for this Service">Documentation</a> <span class="hideme">|</span>
+      <a href="http://jigsaw.w3.org/css-validator/" class="offsite" title="The W3C CSS Validator">CSS&nbsp;Validator</a> <span class="hideme">|</span>
+      <a href="/checklink" class="offsite" title="The W3C Link Checker">Link&nbsp;Checker</a> <span class="hideme">|</span>
+      <a href="http://www.w3.org/MarkUp/" class="offsite" title="The W3C HTML Home Page">HTML&nbsp;Home</a> <span class="hideme">|</span>
+      <a href="http://www.w3.org/People/Raggett/tidy/" class="offsite" title="The HTML Tidy Home Page">HTML&nbsp;Tidy</a> <span class="hideme">|</span>
+      <a href="http://www.w3.org/TR/xhtml1/" class="offsite" title="The XHTML 1.0 Reccommendation">XHTML&nbsp;1.0</a> <span class="hideme">|</span>
+      <a href="http://www.w3.org/TR/html401/" class="offsite" title="The HTML 4.01 Reccommendation">HTML&nbsp;4.01</a> <span class="hideme">|</span>
+    </p>
+      <h1 id="title"><a href="http://www.w3.org/"><img height="48" alt="W3C" id="logo"
+         src="http://www.w3.org/Icons/WWW/w3c_home" /></a> HTML Validation Service Results</h1>
     $NOTICE
 EOF
 
@@ -271,7 +284,8 @@ EOF
 # Detect and remove a UTF-8 BOM.
 $File->{Content}[0] =~ s/^\xEF\xBB\xBF//
   and &add_warning(<<".EOF.");
-     UTF-8 'BOM' detected and removed. (See the
+     <em>Note:</em> UTF-8 'BOM' detected and removed. (This message is
+     informational. See the
      <a href="$faqerrloc#utf8-bom">explanation</a> for details.)
 .EOF.
 
@@ -334,18 +348,24 @@ print $File->{Results}, &build_jump_links;
 
 #
 # Print different things if we got redirected or had a file upload.
-if (URI::eq("$File->{URI}", $q->param('uri'))) { # @@ Why do we need to stringify here?
-  &add_table("<a href='$uri_def_uri'>URI</a>",
-      "<input type='text' name='uri' size='50' value='$File->{URI}' />");
+if (URI::eq("$File->{URI}", $q->param('uri'))) { # @@ Need to stringify here?
+  &add_table(qq(<label title="Address of Page to Validate" for="uri">Address</label>),
+	     '<input type="text" id="uri" name="uri" size="'
+	     . (length($File->{URI}) + 2)
+	     . '" value="' . $File->{URI} . '" />'
+             . ' [<a title="Go to the entered URI" href="' . $File->{URI} . '">Go to...</a>]');
 } elsif ($q->param('uploaded_file')) {
   &add_table("File", $File->{URI});
 } else {
-  &add_table("<a href='$uri_def_uri'>URI</a>",
-      "<input type='text' name='uri' size='50' value='$File->{URI}' />");
-  &add_warning('Note that the URI you gave me (&#171;<code>' .
-	       $q->param('uri') . '</code>&#187;) ' .
-	       'returned a redirect to a new URI ' .
-	       '(&#171;<code>' . $File->{URI} . '</code>&#187;).');
+  &add_table(qq(<label title="Address of Page to Validate" for="uri"><a href="$uri_def_uri">URI</a></label>),
+	     '<input type="text" id="uri" name="uri" size="'
+	     . (length($File->{URI}) + 2)
+	     . '" value="' . $File->{URI} . '" />'
+             . ' [<a href="' . $File->{URI} . '">Go to URI</a>]');
+  &add_warning('<em>Note:</em> The URI you gave me, &#171;<code>' .
+	       $q->param('uri') . '</code>&#187;, ' .
+	       'returned a redirect to ' .
+	       '&#171;<code>' . $File->{URI} . '</code>&#187;.');
 }
 
 &add_table("Last Modified", $File->{Modified})  if $File->{Modified};
@@ -354,46 +374,48 @@ if (URI::eq("$File->{URI}", $q->param('uri'))) { # @@ Why do we need to stringif
 &add_table("Detected Character Encoding", "<code>$File->{Charset}</code>");
 &add_table("Used Character Encoding", "<code>$File->{Use_Charset}</code>")
     unless $File->{Charset} eq $File->{Use_Charset};
-&add_table("Select Character Encoding",
-        $q->popup_menu(-name => 'charset',
-                       -values => [
-                                   '(detect automatically)',
-                                   'utf-8 (Unicode, worldwide)',
-                                   'iso-8859-1 (Western Europe)',
-                                   'iso-8859-2 (Central Europe)',
-                                   'iso-8859-3 (Maltese)',
-                                   'iso-8859-4 (Baltic Rim)',
-                                   'iso-8859-5 (Cyrillic)',
-                                   'iso-8859-6-i (Arabic)',
-                                   'iso-8859-7 (Greek)',
-                                   'iso-8859-8-i (Hebrew)',
-                                   'iso-8859-9 (Turkish)',
-                                   'iso-8859-10 (Latin 6)',
-                                   'iso-8859-13 (Latin 7)',
-                                   'iso-8859-14 (Celtic)',
-                                   'iso-8859-15 (Latin 9)',
-                                   'us-ascii (basic English)',
-                                   'euc-jp (Japanese, Unix)',
-                                   'shift_jis (Japanese, Win/Mac)',
-                                   'iso-2022-jp (Japanese, email)',
-                                   'euc-kr (Korean)',
-                                   'gb2312 (Chinese, simplified)',
-                                   'big5 (Chinese, traditional)',
-                                   'tis-620 (Thai)',
-                                   'koi8-r (Russian)',
-                                   'koi8-u (Ukrainian)',
-                                   'macintosh (MacRoman)',
-                                   'windows-1250 (Central Europe)',
-                                   'windows-1251 (Cyrillic)',
-                                   'windows-1252 (Western Europe)',
-                                   'windows-1253 (Greek)',
-                                   'windows-1254 (Turkish)',
-                                   'windows-1255 (Hebrew)',
-                                   'windows-1256 (Arabic)',
-                                   'windows-1257 (Baltic Rim)',
-                                  ],
-                   #   -default => $q->param('doctype'),
-        ));
+unless ($q->param('uploaded_file')) {
+  &add_table(qq(<label title="Select Character Encoding" for="charset">Select Character Encoding</label>),
+	     $q->popup_menu(-name => 'charset', -id => 'charset',
+			    -values => [
+					'(detect automatically)',
+					'utf-8 (Unicode, worldwide)',
+					'iso-8859-1 (Western Europe)',
+					'iso-8859-2 (Central Europe)',
+					'iso-8859-3 (Maltese)',
+					'iso-8859-4 (Baltic Rim)',
+					'iso-8859-5 (Cyrillic)',
+					'iso-8859-6-i (Arabic)',
+					'iso-8859-7 (Greek)',
+					'iso-8859-8-i (Hebrew)',
+					'iso-8859-9 (Turkish)',
+					'iso-8859-10 (Latin 6)',
+					'iso-8859-13 (Latin 7)',
+					'iso-8859-14 (Celtic)',
+					'iso-8859-15 (Latin 9)',
+					'us-ascii (basic English)',
+					'euc-jp (Japanese, Unix)',
+					'shift_jis (Japanese, Win/Mac)',
+					'iso-2022-jp (Japanese, email)',
+					'euc-kr (Korean)',
+					'gb2312 (Chinese, simplified)',
+					'big5 (Chinese, traditional)',
+					'tis-620 (Thai)',
+					'koi8-r (Russian)',
+					'koi8-u (Ukrainian)',
+					'macintosh (MacRoman)',
+					'windows-1250 (Central Europe)',
+					'windows-1251 (Cyrillic)',
+					'windows-1252 (Western Europe)',
+					'windows-1253 (Greek)',
+					'windows-1254 (Turkish)',
+					'windows-1255 (Hebrew)',
+					'windows-1256 (Arabic)',
+					'windows-1257 (Baltic Rim)',
+				       ],
+			   )
+	    );
+}
 
 if ($File->{HTTP_Charset} ne $File->{META_Charset}
     and $File->{HTTP_Charset} ne ''
@@ -623,23 +645,30 @@ if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
 } else {
   &add_table("Current Doctype", $version); # is this current or detected???
 }
-&add_table("Select Doctype",
-        $q->popup_menu(-name => 'doctype',
-                       -values => [
-                                   '(detect automatically)',
-                                   'XHTML 1.0 Strict',
-                                   'XHTML 1.0 Transitional',
-                                   'XHTML 1.0 Frameset',
-                                   'HTML 4.01 Strict',
-                                   'HTML 4.01 Transitional',
-                                   'HTML 4.01 Frameset',
-                                   'HTML 3.2',
-                                   'HTML 2.0',
-                                  ],
-                       -default => $q->param('doctype'),
-        ));
+
+unless ($q->param('uploaded_file')) {
+  &add_table(qq(<label title="Select Doctype" for="doctype">Select Doctype</label>),
+	     $q->popup_menu(-name => 'doctype', -id => 'doctype',
+			    -values => [
+					'(detect automatically)',
+					'XHTML 1.0 Strict',
+					'XHTML 1.0 Transitional',
+					'XHTML 1.0 Frameset',
+					'HTML 4.01 Strict',
+					'HTML 4.01 Transitional',
+					'HTML 4.01 Frameset',
+					'HTML 3.2',
+					'HTML 2.0',
+				       ],
+			    -default => $q->param('doctype'),
+			   )
+	    );
+}
+
 &print_table;
 &print_warnings;
+
+print "<h2>Validation Results</h2>\n";
 
 if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 'svg' or $File->{Type} eq 'smil') {
   my $xmlvalid = ($File->{DOCTYPE} ? ' and validity' : '');
@@ -662,10 +691,10 @@ EOHD
 
 if (defined $File->{Tentative}) {
   my $class = '';
-     $class .= ($File->{Tentative} & T_INFO  ? ' Info'    :'');
-     $class .= ($File->{Tentative} & T_WARN  ? ' Warning' :'');
-     $class .= ($File->{Tentative} & T_ERROR ? ' Error'   :'');
-     $class .= ($File->{Tentative} & T_FATAL ? ' Fatal'   :'');
+     $class .= ($File->{Tentative} & T_INFO  ? ' info'    :'');
+     $class .= ($File->{Tentative} & T_WARN  ? ' warning' :'');
+     $class .= ($File->{Tentative} & T_ERROR ? ' error'   :'');
+     $class .= ($File->{Tentative} & T_FATAL ? ' fatal'   :'');
 
   unless ($File->{Tentative} == T_DEBUG) {
     print <<".EOF.";
@@ -715,21 +744,23 @@ sub add_table {push @{$File->{Table}}, { Head => $_[0], Tail => $_[1]}};
 # Print the table containing the metadata about the Document Entity.
 sub print_table {
   my $tableEntry;
-  add_table("Options",
-      '         <input type="checkbox" value="" name="ss"' .
-      ($q->param('ss')      ? 'checked="checked"' : '') . " />Show Source\n" .
-      '         <input type="checkbox" value="" name="outline"' .
-      ($q->param('outline') ? 'checked="checked"' : '') . " />Outline\n" .
-      '         <input type="checkbox" value="" name="sp"' .
-      ($q->param('sp')      ? 'checked="checked"' : '') . " />Parse Tree\n" .
-      '         <input type="checkbox" value="" name="noatt"' .
-      ($q->param('noatt')   ? 'checked="checked"' : '') . " />...no attributes\n"
-    );
+  unless ($q->param('uploaded_file')) {
+    add_table("Options",
+	      '         <label title="Show Page Source"><input type="checkbox" value="" name="ss"' .
+	      ($q->param('ss')      ? 'checked="checked"' : '') . " />Show Source</label>\n" .
+	      '         <label title="Show an Outline of the document"><input type="checkbox" value="" name="outline"' .
+	      ($q->param('outline') ? 'checked="checked"' : '') . " />Outline</label>\n" .
+	      '         <label title="Show Parse Tree"><input type="checkbox" value="" name="sp"' .
+	      ($q->param('sp')      ? 'checked="checked"' : '') . " />Parse Tree</label>\n" .
+	      '         <label title="Exclude Attributes from Parse Tree"><input type="checkbox" value="" name="noatt"' .
+	      ($q->param('noatt')   ? 'checked="checked"' : '') . " />...no attributes</label>\n"
+	     );
+  }
   print "  <form method='get' action='/check'><table class='header'>\n";
   for $tableEntry (@{$File->{Table}}) {
     print "    <tr>\n";
     print ' ' x 6, "<th>", $$tableEntry{Head}, ": </th>\n";
-    print ' ' x 6, "<td>", $$tableEntry{Tail}, "</td>\n";
+    print ' ' x 6, "<td colspan='3'>", $$tableEntry{Tail}, "</td>\n";
     print "    </tr>\n";
   }
   print "    <tr><th><input type='submit' value='Revalidate' /></th><td>&nbsp;</td>\n";
@@ -744,8 +775,8 @@ sub add_warning {push @{$File->{Warnings}}, shift};
 # Print out a list of warnings.
 sub print_warnings {
   return unless defined @{$File->{Warnings}};
-  print "  <div><h2>Warnings</h2>\n  <ul>\n";
-  print qq(    <li>Warning: $_</li>\n) for @{$File->{Warnings}};
+  print qq(  <div id="skip"><h2>Notes &amp; Warnings</h2>\n  <ul>\n);
+  print qq(    <li>$_</li>\n) for @{$File->{Warnings}};
   print "  </ul></div>\n";
 }
 
@@ -839,7 +870,6 @@ Location: $abs_svc_uri
 .EOF.
   &clean_up_and_exit;
 }
-
 
 #
 # Generate HTML for the "Jump to:" links in results.
@@ -999,7 +1029,6 @@ sub print_charset_error {
   my $charset = shift;
 
   print <<".EOF.";
-  </ul>
   <p>Sorry!
     A fatal error occurred when attempting to transcode the character encoding
     of the document. Either we do not support this character encoding yet, or you 
@@ -1254,6 +1283,7 @@ sub parse_errors ($$) {
     next if /URL Redirected to/;
 
     my(@_err) = split /:/;
+    next unless $_err[1] eq '<OSFD>0';
     if ($_err[1] =~ m(^<URL>)) {
       @errors = ($_err[0], join(':', $_err[1], $_err[2]), @_err[3..$#_err]);
     } else {
@@ -1263,7 +1293,7 @@ sub parse_errors ($$) {
     $err->{line} = $errors[2];
     $err->{char} = $errors[3];
     $err->{type} = $errors[4];
-    if ($err->{type} eq 'W' or $err->{type} eq 'E') {
+    if ($err->{type} eq 'W' or $err->{type} eq 'E' or $err->{type} eq 'X') {
       $err->{msg}  = $errors[5];
     } else {
       $err->{type} = 'I';
@@ -1313,7 +1343,6 @@ sub report_errors ($) {
       last;
     }
 
-
     my($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $err->{char});
 
     # Strip curlies from lq-nsgmls output.
@@ -1327,21 +1356,17 @@ sub report_errors ($) {
     $line = &ent($line); # Entity encode.
     $line =~ s/\t/ /g;   # Collapse TABs.
 
-    print qq(  <li>Line <a href="#line-$err->{line}">$err->{line}</a>, column $col:\n);
-
-    print "<pre>  <code class=input>$line</code>\n";
-    print " " x ($col + 2); # 2 is the number of spaces before <code> above
-    print " " x 4 if $col != $err->{char}; # only for truncated lines
-    print "<span class=markup>^</span></pre>\n<p>\n";
-
-    print qq{<span class="error">Error: $err->{msg}</span>};
+    print qq(  <li><em>Line <a href="#line-$err->{line}">$err->{line}</a>, column $col</em>: );
+    print qq{<span class="msg">$err->{msg}</span>};
 
     if (defined $frag->{$err->{idx}}) {
       print qq{ (<a href="$faqerrloc#$frag->{$err->{idx}}">explanation...</a>)};
     }
 
-    print "</p>\n";
-
+    print "\n<pre>  <code class=input>$line</code>\n";
+    print " " x ($col + 2); # 2 is the number of spaces before <code> above
+    print " " x 4 if $col != $err->{char}; # only for truncated lines
+    print "<span class=markup>^</span></pre>\n";
   }
   print "</ul>\n";
   print "<hr>\n";
@@ -1366,7 +1391,7 @@ sub report_valid {
 
   if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
     print "\n  <pre>\n    No errors found! ";
-    print "<a href=\"#sp-lim\">*</a></pre>\n\n";
+    print '<a title="Caveat" href="#sp-lim">*</a></pre>', "\n\n";
   } else {
     print "\n  <pre>\n    No errors found!</pre>\n\n";
   }
