@@ -1,11 +1,11 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.23 2005-02-16 23:28:37 ot Exp $ */
+/* $Id: results.css,v 1.24 2005-03-01 16:47:14 ot Exp $ */
 
 .input {
   color: black;
   background-color: #eee;
   font-family: "Bitstream Vera Sans Mono", monospace;
-  font-size: 10px;
+  font-size: small;
 }
 
 /* Various Bits of the Table Header */
@@ -72,11 +72,11 @@ p.helpwanted a {
   text-decoration: none;
 }
 
-ol#errors code {
+code.input {
   margin-bottom: 2ex;
 }
 
-ol#errors li p code strong {
+code.input strong {
   color: red;
   padding-left: .5ex;
   padding-right: .5ex;
@@ -93,7 +93,7 @@ ol#errors li {
 #source div {
   font-family: "Bitstream Vera Sans Mono", monospace;
   font-size: smaller;
-  background: #eee;
+  background: 1#eee;
   border: 1px solid black;
   margin: 1em;
 }
@@ -112,76 +112,34 @@ ol#errors li {
 /*
 */
 
-div.Warnings {
+dl#warnings {
   clear: left;
   padding: 0;
-  margin-right: 1em;
+  margin-right: 20px;
+  margin-left: 20px;
 }
 
 /* "Fatal" warnings... */
-div.Warnings div.fatal h3 {
-  background: #FCC;
-  border-top: 1px solid black;
-  border-right: 1px solid black;
-  border-bottom: 1px solid black;
+dl#warnings dt {
+  background: #FA9084; /* based on color for .invalid, but washed out */
   padding: .5ex;
   margin: 0;
-  margin-bottom: 1em;
   float: left;
+  display: inline;
   font-size: small;
   font-weight: bolder;
 }
 
-div.Warnings div.fatal {
-  margin: 0 0 1ex 0;
-  padding: 0;
+dl#warnings dd {
   clear: left;
+  border-left: 2px solid #FA9084; /* based on color for dl#warnings dt */
+  margin-top: 0;
+  margin-left: 0;
+  padding-top: .5em;
 }
 
-div.Warnings div.fatal div {
-  border: 5px solid #FCC;
-  margin: 0 0 0 1em;
-  padding: .5em 1em;
-}
-
-div.Warnings div.fatal p:first-child {
-  font-weight: bold;
-/*  font-size: normal; */
-  clear: left;
-}
-
-/* "note" warnings... */
-div.Warnings div.note h3 {
-  background: #053188;
-  color: white;
-  border-top: 1px solid black;
-  border-right: 1px solid black;
-  border-bottom: 1px solid black;
-  padding: .5ex;
-  margin: 0;
-  margin-bottom: 1em;
-  margin-right:  1em;
-  float: left;
-  font-size: small;
-  font-weight: bolder;
-}
-
-div.Warnings div.note {
-  margin: 0 0 1ex 0;
-  padding: 0;
-  clear: left;
-}
-
-div.Warnings div.note div {
-  margin: 0 0 0 1em;
-  padding: .5em 1em;
-}
-/* Not all warnings have a "p", but if they
-   do, the first one should be emphasized. */
-div.Warnings div.note p:first-child {
-  font-weight: bold;
-/*  font-size: normal; */
-  clear:       left;
+dl#warnings dd p:first-child {
+  /* font-weight: bold; */
 }
 
 
