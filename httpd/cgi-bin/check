@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.60 2000-01-26 16:17:03 gerald Exp $
+# $Id: check,v 1.61 2000-02-01 23:17:01 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -73,9 +73,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.60 $;
+$VERSION    =  q$Revision: 1.61 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2000-01-26 16:17:03 $;
+$DATE       =  q$Date: 2000-02-01 23:17:01 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -743,6 +743,15 @@ if ( $q->param('weblint') ) {
     Below are the results of running <a
     href="http://www.weblint.org/">Weblint</a>
     on this document$pedantic_blurb:
+  </p>
+
+  <p>
+    <strong>Note</strong>:
+    Weblint is a useful HTML syntax and style checker, but does
+    not do true HTML validation.
+    Also, the version of weblint used by this service has not
+    been updated for some time, so some of the messages below may
+    be misleading or inaccurate.
   </p>
 EOF
 
