@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.50 2003-05-24 11:03:55 link Exp $
+# $Id: check,v 1.305.2.51 2003-05-24 12:30:50 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.50 $;
+  $VERSION    =  q$Revision: 1.305.2.51 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -172,7 +172,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-05-24 11:03:55 $,
+                              Date => q$Date: 2003-05-24 12:30:50 $,
                              });
 
 #
@@ -413,7 +413,7 @@ unless ($File->{Charset}->{Use}) { # No charset given...
     <p class="note">
       Specifying a character encoding is normally done in the web server
       configuration file or administration program. The <a
-        href="http://www.w3.org/><abbr
+        href="http://www.w3.org/"><abbr
           title="World Wide Web Consortium">W3C</abbr></a> <a
         href="http://www.w3.org/International/"><abbr
           title="Internationalization">I18N</abbr> Activity</a> has collected
@@ -2923,14 +2923,15 @@ sub popup_charset {
                                       'iso-8859-1 (Western Europe)',
                                       'iso-8859-2 (Central Europe)',
                                       'iso-8859-3 (Southern Europe)',
-                                      'iso-8859-4 (Baltic Rim)',
+                                      'iso-8859-4 (North European)',
                                       'iso-8859-5 (Cyrillic)',
-                                      'iso-8859-6-i (Arabic)',
+                                      'iso-8859-6 (Arabic)',
                                       'iso-8859-7 (Greek)',
-                                      'iso-8859-8-i (Hebrew)',
+                                      'iso-8859-8 (Hebrew, visual)',
+                                      'iso-8859-8-i (Hebrew, logical)',
                                       'iso-8859-9 (Turkish)',
                                       'iso-8859-10 (Latin 6)',
-                                      'iso-8859-13 (Latin 7)',
+                                      'iso-8859-13 (Baltic Rim)',
                                       'iso-8859-14 (Celtic)',
                                       'iso-8859-15 (Latin 9)',
                                       'us-ascii (basic English)',
@@ -2944,6 +2945,7 @@ sub popup_charset {
                                       'tis-620 (Thai)',
                                       'koi8-r (Russian)',
                                       'koi8-u (Ukrainian)',
+                                      'iso-ir-111 (Cyrillic KOI-8)',
                                       'macintosh (MacRoman)',
                                       'windows-1250 (Central Europe)',
                                       'windows-1251 (Cyrillic)',
