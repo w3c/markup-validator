@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.28 2003-03-01 09:25:14 ville Exp $
+# $Id: check,v 1.305.2.29 2003-03-01 18:04:38 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.28 $;
+  $VERSION    =  q$Revision: 1.305.2.29 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -166,7 +166,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-03-01 09:25:14 $,
+                              Date => q$Date: 2003-03-01 18:04:38 $,
                              });
 
 #
@@ -329,8 +329,6 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
 
 $File->{Content} = &normalize_newlines($File->{Bytes},
                        exact_charset($File, $File->{Charset}->{Use}));
-$File->{Content}->[0] = substr $File->{Content}->[0], $File->{BOM}; # remove BOM
-#### add warning about BOM in UTF-8
 
 #
 # Try to extract META charset
@@ -1842,10 +1840,12 @@ sub show_source {
   my $line = 1;
 
   my $comment = '';
-
   if ($File->{'Error Flagged'}) {
     $comment = "<p>I have marked lines that I haven't been able to decode.</p>\n";
   }
+
+  # Remove any BOM since we're not at BOT anymore...
+  $File->{Content}->[0] = substr $File->{Content}->[0], $File->{BOM}; # remove BOM
 
   print <<"EOF";
   <div id="source" class="mtb">
@@ -2359,6 +2359,15 @@ sub check_utf8 {
     }
     $count += 0; # Force numeric.
     $File->{Offsets}->[$i + 1] = [$count, $File->{Offsets}->[$i]->[1] + $count];
+  }
+
+  # Add a warning if doc is UTF-8 and contains a BOM.
+  if ($File->{Content}->[0] =~ m(^\xEF\xBB\xBF)) {
+    &add_warning($File, <<".EOF.">);
+      The Unicode Byte-Order Mark (BOM) in UTF-8 encoded files is known to cause
+      problems for some text editors and older browsers. You may want to consider
+      avoiding it's use until it is better supported.
+.EOF.
   }
   return $File;
 }
