@@ -1,17 +1,11 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.11 2003-07-23 22:21:08 link Exp $ */
-
-.markup {
-  color: red;
-  background: white;
-  font-weight: bolder;
-  font-family: "Bitstream Vera Mono", monospace;
-}
+/* $Id: results.css,v 1.13.2.12 2003-07-24 02:53:18 link Exp $ */
 
 .input {
   color: black;
-  background-color: #eeeeee; /* light grey */
+  background-color: #eee;
   font-family: "Bitstream Vera Mono", monospace;
+  font-size: small;
 }
 
 .msg {
@@ -20,23 +14,28 @@
 
 .ve {
   font-size: smaller;
-  margin-right: 1em;
+  clear: left;
+  padding: 0;
+  width: 100%;
 }
 
 .ve p {
+  line-height: 100%;
+  font-style: italic;
+  font-size: small;
   margin: 0;
 }
 
-.helpwanted {
+.ve p.helpwanted {
   float: right;
   width: 30ex;
   border: 1px solid black;
   background: #eee;
   font-size: smaller;
   line-height: 120%;
-  padding-left: 2em;
-  padding-right: 1em;
+  padding: 1ex;
   text-align: justify;
+  margin: 0;
 }
 
 .helpwanted em {
@@ -64,7 +63,22 @@
 
 ol#errors li {
   clear: right;
-  padding-top: 2em;
+}
+
+ol#errors code {
+  float: left;
+  margin-bottom: 2ex;
+}
+
+ol#errors li {
+  clear: both;
+}
+
+ol#errors li p code strong {
+  color: red;
+  padding-left: .5ex;
+  padding-right: .5ex;
+  font-weight: bolder;
 }
 
 

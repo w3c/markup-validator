@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.61 2003-07-23 22:21:08 link Exp $
+# $Id: check,v 1.305.2.62 2003-07-24 02:53:18 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -130,7 +130,7 @@ BEGIN
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.61 $;
+  $VERSION    =  q$Revision: 1.305.2.62 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -202,7 +202,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-07-23 22:21:08 $,
+                              Date => q$Date: 2003-07-24 02:53:18 $,
                              });
 
 #
@@ -1732,17 +1732,17 @@ EOHD
     foreach my $err (@{$File->{Errors}}) {
       my($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $err->{char});
 
-      $line = &ent($line); # Entity encode.
-      $line =~ s/\t/ /g;   # Collapse TABs.
+      my $left  = &ent(substr $line,        0,          $col);
+      my $right = &ent(substr $line, $col + 1, length($line) - 1);
+      my $char  = &ent(substr $line, $col    ,                 1);
+      $char = qq(<strong title="Position where error was detected.">$char</strong>);
+      $line = $left . $char . $right;
 
       my $msg = &ent($err->{msg}); # Entity encode error message.
 
-      print qq(  <li><em>Line <a href="#line-$err->{line}">$err->{line}</a>, column $err->{char}</em>: );
-      print qq{<span class="msg">$msg</span>};
-
-      print qq(\n<pre>  <code class="input">$line</code>\n);
-      print ' ' x ($col + 2); # 2 is the number of spaces before <code> above
-      print qq(<span class="markup">^</span></pre>\n);
+      print qq(  <li><p><em>Line <a href="#line-$err->{line}">$err->{line}</a>, column $err->{char}</em>: );
+      print qq{<span class="msg">$msg</span></p>};
+      print qq(<p><code class="input">$line</code></p>\n);
 
       if ($err->{num} and $File->{Opt}->{Verbose}) {
 	my(undef, $num) = split /\./, $err->{num};
