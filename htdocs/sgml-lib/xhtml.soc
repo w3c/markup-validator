@@ -1,0 +1,36 @@
+--  XHTML 1.0/1.1/Basic Catalog Data File --
+
+-- SGML declaration associated with XHTML --
+OVERRIDE YES
+SGMLDECL "xhtml.dcl"
+
+
+-- XHTML 1.1 DTD modular driver file --
+-- note that this uses the local, flattened version of the DTD. If you want
+   your catalog to use the master version of the XHTML Modules, change the 
+   entry to reference xhtml11.dtd instead of xhtml11-flat.dtd
+--
+
+PUBLIC "-//W3C//DTD XHTML 1.1//EN" "REC-xhtml11-20010531/xhtml11-flat.dtd"
+
+
+-- XHTML 1.1 framework modules --
+PUBLIC "-//W3C//ENTITIES XHTML 1.1 Document Model 1.0//EN" "REC-xhtml11-20010531/xhtml11-model-1.mod"
+
+        -- Oasis entity catalog for Extensible HTML 1.0 --
+
+PUBLIC  "-//W3C//DTD XHTML 1.0 Strict//EN"       "REC-xhtml1-20000126/xhtml1-strict.dtd"
+PUBLIC  "-//W3C//DTD XHTML 1.0 Transitional//EN" "REC-xhtml1-20000126/xhtml1-transitional.dtd"
+PUBLIC  "-//W3C//DTD XHTML 1.0 Frameset//EN"     "REC-xhtml1-20000126/xhtml1-frameset.dtd"
+
+        -- ISO latin 1 entity set for Extensible HTML (XML 1.0 format) --
+
+PUBLIC	"-//W3C//ENTITIES Latin 1 for XHTML//EN" "REC-xhtml1-20000126/xhtml-lat1.ent"
+PUBLIC	"-//W3C//ENTITIES Symbols for XHTML//EN" "REC-xhtml1-20000126/xhtml-symbol.ent"
+PUBLIC	"-//W3C//ENTITIES Special for XHTML//EN" "REC-xhtml1-20000126/xhtml-special.ent"
+
+        -- XHTML Basic DTD modular driver file --
+PUBLIC "-//W3C//DTD XHTML Basic 1.0//EN" "REC-xhtml-basic-20001219/xhtml-basic10.dtd"
+
+        -- XHTML Basic framework module --
+PUBLIC "-//W3C//ENTITIES XHTML Basic 1.0 Document Model 1.0//EN" "REC-xhtml-basic-20001219/xhtml-basic10-model-1.mod"
