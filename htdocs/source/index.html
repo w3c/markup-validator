@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.22 2002-11-25 01:46:47 link Exp $"
---><!--#set var="date" value="\$Date: 2002-11-25 01:46:47 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.23 2002-11-29 22:41:56 ville Exp $"
+--><!--#set var="date" value="\$Date: 2002-11-29 22:41:56 $"
 --><!--#set var="title" value="Source Code Availability for The W3C MarkUp Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -36,7 +36,7 @@
               CGI script called "check"</a> that does pretty much everything,
             and possibly also <a
               href="http://dev.w3.org/cgi-bin/cvsweb/validator/httpd/conf/httpd.conf">the
-              httpd.conf</a>. (select the topmost revision numbers on these
+              httpd.conf</a>. (Select the topmost revision numbers on these
             pages to see the most recent revision of each file.)
           </p>
         </li>
@@ -63,14 +63,14 @@
             authentication a la:
           </p>
           <pre>
-    bash$ <kbd>export CVSROOT=":pserver:anonymous@dev.w3.org:/sources/public"</kbd><br />
-    bash$ <kbd>cvs login</kbd><br />
-    (Logging in to anonymous@dev.w3.org)<br />
-    CVS password: <kbd>anonymous</kbd><br />
-    bash$ <kbd>cvs get validator</kbd><br />
-    cvs server: Updating validator<br />
-    cvs server: Updating validator/htdocs<br />
-    U validator/htdocs/about.html<br />
+    bash$ <kbd>export CVSROOT=":pserver:anonymous@dev.w3.org:/sources/public"</kbd>
+    bash$ <kbd>cvs login</kbd>
+    (Logging in to anonymous@dev.w3.org)
+    CVS password: <kbd>anonymous</kbd>
+    bash$ <kbd>cvs get validator</kbd>
+    cvs server: Updating validator
+    cvs server: Updating validator/htdocs
+    U validator/htdocs/about.html
     ...
           </pre>
         </li>
@@ -90,28 +90,63 @@
             Solaris, FreeBSD, HP-UX, and Digital UNIX. If you try it on other
             systems and get it to work, please <a href="../feedback.html">let
             us know</a> (and <a href="../feedback.html">send us patches</a>,
-            if they are needed to get it to work elsewhere.)
+            if they are needed to get it to work elsewhere).
          </li>
          <li>
-           <a href="http://openjade.sf.net/">OpenSP 1.5</a>.
-           OpenSP is the SGML and XML parser used by the service.
+           <a href="http://openjade.sourceforge.net/">OpenSP</a>, version 1.5
+           or newer.  OpenSP is the SGML and XML parser used by the service.
          </li>
          <li>
            <a href="../sgml-lib.tar.gz">A collection of DTDs and other
              files</a> to validate against. (You do not need to download this
            if you mirror everything using <a href="#CVS">CVS</a>.)
          </li>
-         <li>The <a href="http://www.linpro.no/lwp/">LWP Perl module</a></li>
          <li>
            A web server: we are currently running <a
              href="httpd://httpd.apache.org/">Apache</a> version 1.3.27, but
            likely any version will work, and other web servers may work as
-           well with some tweaking.
+           well with some tweaking.  In particular, the server needs to be
+           able to run <a href="http://www.w3.org/CGI/"><acronym
+           title="Common Gateway Interface">CGI</acronym></a> scripts and
+           have support for
+           <a href="http://httpd.apache.org/docs/howto/ssi.html"><acronym
+           title="Server Side Includes">SSI</acronym></a>.
          </li>
          <li>
            <a href="http://www.perl.org/">Perl</a>: the <a
              href="http://dev.w3.org/cgi-bin/cvsweb/validator/httpd/cgi-bin/check">main
              CGI script</a> that does everything is written in Perl.
+             You'll need version 5.6.0 or newer.  Additionally, the following
+             <a href="http://www.cpan.org/"><acronym
+             title="Comprehensive Perl Archive Network">CPAN</acronym></a>
+             distributions are needed:
+          <ul>
+           <li>
+            <a href="http://search.cpan.org/dist/CGI.pm/">CGI.pm</a>,
+            version 2.81 or newer
+           </li>
+           <li>
+            <a href="http://search.cpan.org/dist/Config-General/">Config-General</a>,
+            version 2.06 or newer
+           </li>
+           <li>
+            <a href="http://search.cpan.org/dist/HTML-Parser/">HTML-Parser</a>,
+            version 3.25 or newer
+           </li>
+           <li>
+            <a href="http://search.cpan.org/dist/libwww-perl/">libwww-perl</a>,
+            version 5.60 or newer
+           </li>
+           <li>
+            <a href="http://search.cpan.org/dist/Set-IntSpan/">Set-IntSpan</a>
+           </li>
+           <li>
+            <a href="http://search.cpan.org/dist/Text-Iconv/">Text-Iconv</a>
+           </li>
+           <li>
+            <a href="http://search.cpan.org/dist/Text-Iconv/">URI</a>
+           </li>
+          </ul>
          </li>
        </ul>
        <p>
