@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.320 2002-12-08 17:51:46 ville Exp $
+# $Id: check,v 1.321 2003-01-03 20:21:55 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -144,7 +144,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.320 $;
+  $VERSION    =  q$Revision: 1.321 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 } # end of BEGIN block.
@@ -732,6 +732,7 @@ sub prep_template ($$) {
   $T->param(opt_show_parsetree => $File->{Opt}->{'Show Parsetree'});
   $T->param(opt_show_noatt     => $File->{Opt}->{'No Attributes'});
   $T->param(opt_verbose        => $File->{Opt}->{'Verbose'});
+  $T->param(opt_no200          => $File->{Opt}->{'No200'});
 
   #
   # Tip of the Day...
