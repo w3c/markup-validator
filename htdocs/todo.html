@@ -1,11 +1,13 @@
-<!--#set var="revision" value="\$Id: todo.html,v 1.49.2.8 2002-05-10 18:14:09 link Exp $"
---><!--#set var="date" value="\$Date: 2002-05-10 18:14:09 $"
+<!--#set var="revision" value="\$Id: todo.html,v 1.49.2.9 2002-06-16 01:00:01 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-06-16 01:00:01 $"
 --><!--#set var="title" value="TODO List for The W3C HTML Validation Service"
 --><!--#include virtual="/header.html" -->
     <p class="intro">
-      This page has the to-do list for the <a href="/">W3C HTML Validation
-      Service</a>, including bugs that need fixing and general wishlist items.
-      See also the
+      This page has the to-do list for the <a href="/"><acronym
+      	title="World Wide Web Consortium">W3C</acronym> <acronym
+      	title="HyperText Markup Language">HTML</acronym>
+      	Validation Service</a>, including bugs that need fixing and general
+      	wishlist items. See also the
       <a href="http://lists.w3.org/Archives/Public/www-validator/">www-validator
         mailing list archives</a> for recent discussion that may not be
       reflected on this page.
@@ -53,7 +55,8 @@
 	  Add "check.cfg" configuration file to avoid path hacking (replace
 	  mjd's regex ;D).
         </li>
-        <li class="done">Add first cut at XML output!</li>
+        <li class="done">Add first cut at
+        	<acronym title="eXtensible Markup Language">XML</acronym> output!</li>
         <li class="done">Add count of errors found in page.</li>
       </ul>
     </div>
@@ -64,15 +67,20 @@
         <ul>
           <li>
             Investigate how, if, and when, to use Nick Kew's most excellent
-            XMLMessageReporter patch to OpenSP.
+            <code>XMLMessageReporter</code> patch to OpenSP.
           </li>
-          <li>Figure out <em>some</em> way to avoid inlining so much static HTML!</li>
-          <li>Finish up the textarea for testing short HTML fragments.</li>
+          <li>Figure out <em>some</em> way to avoid inlining so much static
+          <acronym title="HyperText Markup Language">HTML</acronym>!</li>
+          <li>Finish up the textarea for testing short
+          	<acronym title="HyperText Markup Language">HTML</acronym> fragments.</li>
         <li>
-          Add an HTML pretty-printer feature, using
+          Add an <acronym title="HyperText Markup Language">HTML</acronym>
+          pretty-printer feature, using
           <a href="http://www.w3.org/People/Raggett/tidy/">tidy</a> and/or Enscript?
         </li>
-        <li>Add support for https:// (TLS/SSL) using Ville's patches.</li>
+        <li>Add support for https:// (<acronym
+        	title="Transport Layer Security">TLS</acronym>/<acronym
+        	title="Secure Sockets Layer">SSL</acronym>) using Ville's patches.</li>
         <li>
           Pay attention to Accept-Charset (cf. <a href="http://lists.w3.org/Archives/Public/www-validator/2001JanMar/0255.html">this</a>
           message from "brewhaha").
@@ -99,15 +107,22 @@
           Thanks Clemens!)
         </li>
         <li>
-          Write documentation for the SGML catalog, point out good DOCTYPEs to use,
-          and make it easy to find if your editor won't insert them for you.
+          Write documentation for the <acronym
+          title="Standard Generalized Markup Language">SGML</acronym> catalog,
+          point out good DOCTYPEs to use, and make it easy to find if your editor
+          won't insert them for you.
         </li>
         <li>
-          Add system requirements for NT/W2K. Bug Bjoern about his "Installing the
-          Validator on NT" doc. Link to ActiveState Text::Iconv and friends.
+          Add system requirements for
+          <abbrev title="Microsoft Windows NT">NT<abbrev>/<acronym
+          	title="Microsoft Windows 2000">W2K</acronym>.
+          	Bug Bjoern about his "Installing the Validator on
+          	<abbrev title="Microsoft Windows NT">NT<abbrev>" doc.
+          	Link to ActiveState <code>Text::Iconv</code> and friends.
         </li>
-        <li>Add docs on editing DTDs.</li>
-        <li>Document how to add new DOCTYPEs to the Validator.</li>
+        <li>Add docs on editing
+        		<acronym title="Document Type Definitions">DTDs</acronym>.</li>
+        <li>Document how to add new <code>DOCTYPEs</code> to the Validator.</li>
         <li>Write documentation for Content Negotiation of Badges</li>
         </ul>
       </div>
@@ -116,7 +131,8 @@
         <ul>
         <li>
           Add catalogue of online tools and other validators. In particular, link to
-          the WDG tools and Nick Kew's most excellent *Valet tools.
+          the <acronym title="Web Design Group">WDG</acronym>
+          tools and Nick Kew's most excellent <code>*Valet</code> tools.
         </li>
         <li>
           Link to Jukka's pages; both in general and to specific pages.
@@ -132,11 +148,13 @@
         <h3>Core Changes</h3>
         <ul>
         <li>
-          Add a "fix my HTML for me" option using <a
-          href="http://www.w3.org/People/Raggett/tidy/">Tidy</a>.
+          Add a "fix my <acronym title="HyperText Markup Language">HTML</acronym>
+          for me" option using <a href="http://www.w3.org/People/Raggett/tidy/">Tidy</a>.
         </li>
         <li>
-          Finish adding support for XML validation (see also:
+          Finish adding support for <acronym
+          	title="eXtensible Markup Language">XML</acronym>
+          	validation (see also:
           <a href="dev/tests/#xml">test cases</a>, or
           <a href="http://www.hcrc.ed.ac.uk/~richard/xml-check.html">an
           existing service</a>).
@@ -151,7 +169,8 @@
           and offer an option to display them inline with the errors.
         </li>
         <li>
-          Incorporate CSS validation directly into this service; either
+          Incorporate <acronym title="Cascading Style Sheets">CSS</acronym>
+          validation directly into this service; either
           directly or by some form of linking to the existing service on
           Jigsaw.
 	</li>
@@ -167,7 +186,7 @@
         </li>
         <li>
           Add a "document meta-information" section to the report, to encourage
-          people to use META tags appropriately?
+          people to use <code>META</code> tags appropriately?
         </li>
         <li>
           Figure out what's going on with <a href="http://lists.w3.org/Archives/Public/www-validator/2001JanMar/0150.html">this</a>.
@@ -175,11 +194,14 @@
           Taylor-Harper</a> for catching this!).
         </li>
         <li>
-          Investigate validation of <a href="http://www.openhealth.org/RDDL/">RDDL</a>.
+          Investigate validation of <a
+          	href="http://www.openhealth.org/RDDL/"><acronym
+          		title="Resource Directory Description Language">RDDL</acronym></a>.
         </li>
         <li>
           Fix directories differing only in name case in
-          sgml-lib/pro/usr/local/lib/sgml/. We have both "ietf" and "IETF" in there.
+          <code>sgml-lib/pro/usr/local/lib/sgml/</code>.
+          We have both "ietf" and "IETF" in there.
         </li>
         </ul>
       </div>
@@ -189,7 +211,8 @@
         <li>
           Write documentation, describing each feature and option of the
           validator and answering questions like "What's the difference between
-          an SGML parser and Weblint?", "Which DOCTYPE should I use?",
+          an <acronym title="Standard Generalized Markup Language">SGML</acronym>
+          parser and Weblint?", "Which <code>DOCTYPE</code> should I use?",
           content negotiation, ...
         </li>
         </ul>
@@ -198,7 +221,7 @@
         <h3>Website Changes</h3>
         <ul>
         <li>
-          Update <a href="/sgml-lib.tar.gz">sgml-lib.tar.gz</a>;
+          Update <a href="/sgml-lib.tar.gz"><code>sgml-lib.tar.gz</code></a>;
           automate the updates.
         </li>
         </ul>
@@ -215,38 +238,52 @@
       <ol>
         <li>
           Make lists of "most frequently validated invalid pages"
-          and "most frequently validated (non-W3C?) valid pages"
-          (need to start logging stuff first, including IPs to compare
+          and "most frequently validated (non-<acronym
+          	title="World Wide Web Consortium">W3C</acronym>?) valid pages"
+          (need to start logging stuff first, including <acronym
+          	title="Internet Protocol Addresses">IPs</acronym> to compare
           uniqueness).
         </li>
         <li>
-          Install and play with HTML::Validator, link to it from somewhere:
-          <a href="http://www.hut.fi/~samzait/HTML-Validator/">http://www.hut.fi/~samzait/HTML-Validator/</a>
-          <a href="http://www.cpan.org/modules/by-authors/id/S/SA/SAIT/">http://www.cpan.org/modules/by-authors/id/S/SA/SAIT/</a>
+          Install and play with <code>HTML::Validator</code>, link to it from somewhere:
+          <a href="http://www.hut.fi/~samzait/HTML-Validator/"><code>HTML::Validator</code>
+          	Home Page</a>
+          <a href="http://www.cpan.org/modules/by-authors/id/S/SA/SAIT/">Sami Itkonen's
+          <acronym title="Comprehensive Perl Archive Network">CPAN</acronym> directory</a>
         </li>
         <li>
-          Give errors/warnings related to markup that is technically valid SGML,
+          Give errors/warnings related to markup that is technically valid
+          <acronym title="Standard Generalized Markup Language">SGML</acronym>,
           but error prone, such as things found in
           <a href="http://www.w3.org/TR/REC-html40/appendix/notes.html#h-B.3">"B.3
-          SGML implementation notes"</a> in the
-          <a href="http://www.w3.org/TR/REC-html40/">HTML 4.0 spec</a>.
+          <acronym title="Standard Generalized Markup Language">SGML</acronym>
+          implementation notes"</a> in the
+          <a href="http://www.w3.org/TR/REC-html40/"><acronym
+          	title="HyperText Markup Language">HTML</acronym> 4.0 spec</a>.
           (these things really belong in something like
-          <a href="http://www.weblint.org/">weblint</a>).
+          <a href="http://tidy.sf.net/">Tidy</a>).
         </li>
         <li>
           Make an "elements found" section a la Webtechs, with links from each
-          element to the appropriate place in either the DTD tree listing
-          produced with dtd2html (after running dtd2html with all DTDs in the
-          catalog), or the HTML 3.2/4.0 specs, or htmlhelp.com stuff, ...
+          element to the appropriate place in either the <acronym
+          	title="Document Type Definition">DTD</acronym> tree listing
+          produced with dtd2html (after running dtd2html with all <acronym
+          title="Document Type Definitions">DTDs</acronym> in the
+          catalog), or the <acronym title="HyperText Markup Language">HTML</acronym>
+          3.2/4.0 specs, or htmlhelp.com stuff, ...
         </li>
         <li>
-          Add a "recommend a DTD for me" feature (check a document against all
+          Add a "recommend a <acronym title="Document Type Definition">DTD</acronym>
+          for me" feature (check a document against all
           available DTDs, report which one has the fewest errors)
         </li>
         <li>
-          Start caching validation results locally and doing an If-Modified-Since
-          HTTP request to only download and re-validate URLs if they actually
-          changed since their last validation
+          Start caching validation results locally and doing an
+          <code>If-Modified-Since</code>
+          <acronym title="HyperText Transfer Protocol">HTTP</acronym>
+          request to only download and re-validate
+          <acronym title="Uniform Resource Locators">URLs</acronym>
+          if they actually changed since their last validation
         </li>
         <li>
           Site walker/validator: need to add a "registered user" feature first,
@@ -254,39 +291,49 @@
           short period of time)?
         </li>
         <li>
-          URL-minder service: "remind me if this page or set of pages ever
-          ceases to validate"
+          <acronym title="Uniform Resource Locator">URL</acronym>-minder service:
+          "remind me if this page or set of pages ever ceases to validate".
           <ul>
             <li>
               "registered user" feature is also necessary for this (to prevent
               unwanted e-mail)
             </li>
             <li>
-              "registered users" could have a list of URLs they're interested in,
+              "registered users" could have a list of <acronym
+              	title="Uniform Resource Locators">URLs</acronym> they're interested in,
               and whenever they return to the service they can modify this list,
               and e-mail can be sent whenever any of them cease to validate
             </li>
             <li>
-              Right now someone could probably use the existing URL-minder
-              service instead of writing a new one (tell it to "mind" the URL
+              Right now someone could probably use the existing <acronym
+              	title="Uniform Resource Locator">URL</acronym>-minder
+              service instead of writing a new one (tell it to "mind" the
+              <acronym title="Uniform Resource Locator">URL</acronym>
               that points to the validation result for a page?) But I'm not sure
-              how regularly URL-minder checks for changes; it seemed to be
-              weekly or something, which isn't frequent enough, IMO. Doing an
-              If-Modified-Since GET every day doesn't cost much if pages don't
-              change. Some of these features should only be enabled if the page
-              consistently returns a Last-Modified header, maybe.
+              how regularly
+              <acronym title="Uniform Resource Locator">URL</acronym>-minder
+              checks for changes; it seemed to be
+              weekly or something, which isn't frequent enough, <acronym
+              title="In My Opinion">IMO</acronym>. Doing an
+              <code>If-Modified-Since</code> </code>GET</code> every day doesn't
+              cost much if pages don't change. Some of these features should only
+              be enabled if the page consistently returns a <code>Last-Modified</code>
+              header, maybe.
             </li>
           </ul>
         </li>
         <li>Provide messages in different languages?</li>
         <li>
           Add a graphical representation of the document's structure,
-          using GIFs-mixed-with-text, or an entire GIF?
+          using images mixed with text, or just an image?
         </li>
-        <li>Add a section with PICS info?</li>
+        <li>Add a section with
+        	<acronym title="Platform For Internet Content Selection">PICS</acronym>
+        	info?</li>
         <li>
-          Issue PICS labels for documents that do/don't conform?
-          Or for editing tools that don't conform?
+          Issue <acronym title="Platform For Internet Content Selection">PICS</acronym>
+          labels for documents that do/don't conform? Or for editing tools that don't
+          conform?
         </li>
       </ol>
     </div>
