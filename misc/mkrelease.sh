@@ -4,9 +4,9 @@
 #   mkdir foo
 #   cd foo
 #   export CVSROOT=:pserver:anonymous@dev.w3.org:/sources/public
-#   cvs -z3 export -r validator-0_6_5 validator
+#   cvs -z3 export -r validator-0_6_6-release validator
 #   cd validator
-#   misc/mkrelease.sh 0.6.5
+#   misc/mkrelease.sh 0.6.6
 
 version="$1"
 if [ -z "$version" ] ; then
@@ -34,7 +34,9 @@ cp -pR $topdir/{htdocs,httpd,misc,README.cvs} $tmpdir/validator-$version
 cd $tmpdir
 
 find validator-$version -type d -name CVS | xargs -r rm -rf
-find validator-$version -name .cvsignore | xargs -r rm -rf
+find validator-$version -name .cvsignore  | xargs -r rm -rf
+find validator-$version -name "*~"        | xargs -r rm -rf
+find validator-$version -name ".#*"       | xargs -r rm -rf
 rm -f validator-$version/misc/mkrelease.sh
 
 find . -type d | xargs -r chmod 755
