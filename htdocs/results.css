@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.8.2.8 2002-05-13 22:36:42 link Exp $ */
+/* $Id: results.css,v 1.8.2.9 2002-06-27 04:10:47 link Exp $ */
 
 .markup {
   color: red;
@@ -24,7 +24,7 @@ ul#Warnings {
 
 div.meat { 
 /*  border: 1px solid red; */
-  margin-right: 16ex;
+  margin-right: 10em;
 }
 
 div.splash { 
