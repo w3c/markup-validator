@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.63 2000-02-24 20:44:33 gerald Exp $
+# $Id: check,v 1.64 2000-02-24 22:00:48 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -73,9 +73,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.63 $;
+$VERSION    =  q$Revision: 1.64 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2000-02-24 20:44:33 $;
+$DATE       =  q$Date: 2000-02-24 22:00:48 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -421,6 +421,7 @@ if ($guessed_doctype == 1) {
 
 print ' ' x 4, q(<li>Character encoding: ), $File->{Charset};
 if ($File->{HTTP_Charset} ne $File->{META_Charset}
+    and $File->{HTTP_Charset} ne ''
     and $File->{META_Charset} ne ''
     and $File->{Charset} ne 'unknown') {
   print <<"EOHD";
