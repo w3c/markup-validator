@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.14 2000-01-17 22:16:02 hugo Exp $
+# $Id: checklink.pl,v 2.15 2000-01-17 22:16:36 hugo Exp $
 #
 # This program is licensed under the W3C License.
 
@@ -21,7 +21,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.14 $ . '(c) 1999 W3C';
+my $VERSION = q$Revision: 2.15 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
