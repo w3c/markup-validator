@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.222 2002-08-30 07:39:39 duerst Exp $
+# $Id: check,v 1.223 2002-08-30 08:17:45 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.222 $;
+  $VERSION    =  q$Revision: 1.223 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-30 07:39:39 $,
+			      Date => q$Date: 2002-08-30 08:17:45 $,
 			     });
 
 #
@@ -186,6 +186,10 @@ $File->{Charset}->{Override}=''# From override.
 #
 # Array (ref) used to store character offsets for the XML report.
 $File->{Offsets}->[0] = [0, 0]; # The first item isn't used...
+
+#
+# List to hold line numbers for encoding errors
+@{$File->{Lines}} = ();
 
 
 #########################################
@@ -325,7 +329,13 @@ unless ($File->{Charset}->{Use}) {
 
 #
 # Check the detected Encoding and transcode.
-$File = &transcode_and_check($File);
+unless (&conflict($File->{Charset}->{Use}, 'utf-8')) {
+  $File = &transcode($File);
+  &abort_if_error_flagged($File, 0);
+}
+
+$File = &check_utf8($File);
+$File = &byte_error($File);
 
 #
 # Abort if an error was flagged during transcoding
@@ -2067,81 +2077,91 @@ sub charset_conflicts {
 
 
 #
-# Check Encoding and Transcode.
-sub transcode_and_check {
+# Transcode to UTF-8
+sub transcode {
   my $File = shift;
 
-  my @lines;
+  my ($command, $result_charset) = split " ", $CFG->{Charsets}->{$File->{Charset}->{Use}}, 2;
 
-  unless ($File->{Charset}->{Use} eq 'utf-8') {
-    my ($command, $result_charset) = split " ", $CFG->{Charsets}->{$File->{Charset}->{Use}}, 2;
-
-    if ($result_charset eq 'utf-16' && $File->{Charset}->{Auto} =~ m/^utf-16[bl]e$/) {
-      $result_charset = $File->{Charset}->{Auto}; # for per-line conversion, need to be exact
-    }
-    if ($command eq 'I') {
-      # test if given charset is available
-      eval {my $c = Text::Iconv->new($result_charset, 'utf-8')};
-      $command = '' if $@;
-    } elsif ($command eq 'X') {
-      $@ = "$File->{Charset}->{Use} undefined; replace by $result_charset";
-    }
-
-    if ($command ne 'I') {
-      $File->{'Error Flagged'} = TRUE;
-      $File->{'Error Message'} = <<"      .EOF.";
-        <p>Sorry!
-          A fatal error occurred when attempting to transcode the character encoding
-          of the document. Either we do not support this character encoding yet, or you
-          have specified a non-existent character encoding (often a misspelling).
-        </p>
-        <p>The detected character encoding was "$File->{Charset}->{Use}".</p>
-        <p>The error was "$@".</p>
-        <p>
-          If you believe the character encoding to be valid you can submit a request for
-          that character encoding (see the <a href="feedback.html">feedback page</a>
-          for details) and we will look into supporting it in the future.
-        </p>
-      .EOF.
-      return $File;
-    }
-
-    my $c = Text::Iconv->new($result_charset, 'utf-8');
-    my $line = 0;
-    for (@{$File->{Content}}) {
-      my $in = $_;
-      $line++;
-      $_ = $c->convert($_); # $_ is local!!
-      if ($in ne "" and $_ eq "") {
-        push @lines, $line;
-        $_ = "#### encoding problem on this line, not shown ####";
-      }
-    }
+  if ($result_charset eq 'utf-16' && $File->{Charset}->{Auto} =~ m/^utf-16[bl]e$/) {
+    $result_charset = $File->{Charset}->{Auto}; # for per-line conversion, need to be exact
+  }
+  if ($command eq 'I') {
+    # test if given charset is available
+    eval {my $c = Text::Iconv->new($result_charset, 'utf-8')};
+    $command = '' if $@;
+  } elsif ($command eq 'X') {
+    $@ = "$File->{Charset}->{Use} undefined; replace by $result_charset";
   }
 
-  # check correctness of UTF-8 both for UTF-8 input and for conversion results
-  if ($File->{Charset}->{Use}) {  #### this check seems to be unnecessary
-    for (my $i = 0; $i < $#{$File->{Content}}; $i++) {
-      # substitution needed for very long lines (>32K), to avoid backtrack
-      # stack overflow. Handily, this also happens to count characters.
-      local $_ = $File->{Content}->[$i];
-      my $count =
-      s/  [\x00-\x7F]                           # ASCII
-        | [\xC2-\xDF]        [\x80-\xBF]        # non-overlong 2-byte sequences
-        |  \xE0[\xA0-\xBF]   [\x80-\xBF]        # excluding overlongs
-        | [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}     # straight 3-byte sequences
-        |  \xED[\x80-\x9F]   [\x80-\xBF]        # excluding surrogates
-        |  \xF0[\x90-\xBF]   [\x80-\xBF]{2}     # planes 1-3
-        | [\xF1-\xF3]        [\x80-\xBF]{3}     # planes 4-15
-        |  \xF4[\x80-\x8F][\x80-\xBF]{2}        # plane 16
-       //xg;
-      push @lines, ($i+1) if length;
-      $count += 0; # Force numeric.
-      $File->{Offsets}->[$i + 1] = [$count, $File->{Offsets}->[$i]->[1] + $count];
-      #### replace invalid line with some dummy text
-    }
+  if ($command ne 'I') {
+    $File->{'Error Flagged'} = TRUE;
+    $File->{'Error Message'} = <<"      .EOF.";
+      <p>Sorry!
+        A fatal error occurred when attempting to transcode the character encoding
+        of the document. Either we do not support this character encoding yet, or you
+        have specified a non-existent character encoding (often a misspelling).
+      </p>
+      <p>The detected character encoding was "$File->{Charset}->{Use}".</p>
+      <p>The error was "$@".</p>
+      <p>
+        If you believe the character encoding to be valid you can submit a request for
+        that character encoding (see the <a href="feedback.html">feedback page</a>
+        for details) and we will look into supporting it in the future.
+      </p>
+    .EOF.
+    return $File;
   }
 
+  my $c = Text::Iconv->new($result_charset, 'utf-8');
+  my $line = 0;
+  for (@{$File->{Content}}) {
+    my $in = $_;
+    $line++;
+    $_ = $c->convert($_); # $_ is local!!
+    if ($in ne "" and $_ eq "") {
+      push @{$File->{Lines}}, $line;
+      $_ = "#### encoding problem on this line, not shown ####";
+    }
+  }
+  return $File;
+}
+
+#
+# Check correctness of UTF-8 both for UTF-8 input and for conversion results
+sub check_utf8 {
+  my $File = shift;
+
+  for (my $i = 0; $i < $#{$File->{Content}}; $i++) {
+    # substitution needed for very long lines (>32K), to avoid backtrack
+    # stack overflow. Handily, this also happens to count characters.
+    local $_ = $File->{Content}->[$i];
+    my $count =
+    s/  [\x00-\x7F]                           # ASCII
+      | [\xC2-\xDF]        [\x80-\xBF]        # non-overlong 2-byte sequences
+      |  \xE0[\xA0-\xBF]   [\x80-\xBF]        # excluding overlongs
+      | [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}     # straight 3-byte sequences
+      |  \xED[\x80-\x9F]   [\x80-\xBF]        # excluding surrogates
+      |  \xF0[\x90-\xBF]   [\x80-\xBF]{2}     # planes 1-3
+      | [\xF1-\xF3]        [\x80-\xBF]{3}     # planes 4-15
+      |  \xF4[\x80-\x8F][\x80-\xBF]{2}        # plane 16
+     //xg;
+    if (length) {
+      push @{$File->{Lines}}, ($i+1);
+      $File->{Content}->[$i] = "#### encoding problem on this line, not shown ####";
+      $count = 50; # length of above text
+    }
+    $count += 0; # Force numeric.
+    $File->{Offsets}->[$i + 1] = [$count, $File->{Offsets}->[$i]->[1] + $count];
+  }
+  return $File;
+}
+
+#
+# byte error analysis
+sub byte_error {
+  my $File = shift;
+  my @lines = @{$File->{Lines}};
   if (scalar @lines) {
     $File->{'Error Flagged'} = TRUE;
     my $s = $#lines ? 's' : '';
@@ -2157,36 +2177,9 @@ sub transcode_and_check {
         encoding indication.
       </p>
     .EOF.
-    return $File;
   }
   return $File;
 }
-
-#### not used
-#
-# Transcode into UTF-8.
-#sub transcode {
-#  my $File = shift;
-#  my $from = shift;
-#
-#  my @Result = ();
-#  my @lines  = ();
-#
-#  eval {my $c = Text::Iconv->new($from, 'utf-8')};
-#  if ($@) {
-#    return FALSE;
-#  } else {
-#    my $c = Text::Iconv->new($from, 'utf-8');
-#    my $line = 0;
-#    foreach my $in (@{$File->{Content}}) {
-#      $line++;
-#      my $out = $c->convert($in);
-#      push @lines, $line if ($in and not $out);
-#      push @Result, $out;
-#    }
-#  }
-#  return {Data => \@Result, Lines => \@lines};
-#}
 
 
 #
