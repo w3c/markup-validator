@@ -1,10 +1,10 @@
-<!--#set var="revision" value="\$Id: devel.html,v 1.5.2.2 2002-06-16 20:42:09 link Exp $"
---><!--#set var="date" value="\$Date: 2002-06-16 20:42:09 $"
+<!--#set var="revision" value="\$Id: devel.html,v 1.5.2.3 2002-06-16 20:58:28 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-06-16 20:58:28 $"
 --><!--#set var="title" value="Developer Documentation for The W3C HTML Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="/header.html" -->
 
-    <p>
+    <p id="skip">
       The W3C HTML Validation Service consists of an SGML Parser, an SGML
       catalog, a CGI program and it's configuration files. In addition it
       relies on a moderately large set of Perl modules for it's operation.
@@ -40,7 +40,7 @@
         for the "check" CGI script. There is a bunch of lines that of the form
         "use Foo::Bar" where each "Foo::Bar" represents a module. Most modules
         can be found on <a href="http://www.cpan.org/">CPAN</a>. The following
-        list was complete when CVS spit out: <code>$Date: 2002-06-16 20:42:09 $</code>. <tt>:-)</tt>
+        list was complete when CVS spit out: <code>$Date: 2002-06-16 20:58:28 $</code>. <tt>:-)</tt>
       </p>
       <dl>
         <dt><code>LWP::UserAgent</code></dt>
