@@ -8,17 +8,27 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.36 1999-09-29 00:50:41 gerald Exp $
+# $Id: check,v 1.37 1999-10-04 17:08:36 gerald Exp $
 
+#
+# Load modules
 use LWP::UserAgent;
+use URI::Escape;
+use CGI qw(:cgi -newstyle_urls -private_tempfiles);
 use strict;
+
+#
+# Define global constants
+use constant TRUE  => 1;
+use constant FALSE => 0;
+use constant UNDEF => undef;
 
 #############################################################################
 # Constant definitions
 #############################################################################
 
-my $cvsrevision	= '$Revision: 1.36 $';
-my $cvsdate	= '$Date: 1999-09-29 00:50:41 $';
+my $cvsrevision	= '$Revision: 1.37 $';
+my $cvsdate	= '$Date: 1999-10-04 17:08:36 $';
 
 my $logfile	= "/var/log/httpd/val-svc";
 
@@ -42,8 +52,7 @@ my $revision	= $cvsrevision;
    $revision	=~ s/^\$Revision: //;
    $revision	=~ s/ \$$//;
 
-my ( $uri,
-    $validity, $version, $document_type, $xmlflags, %FORM, %undef_frag,
+my ( $uri, $validity, $version, $document_type, $xmlflags, %undef_frag,
     $meta_charset, $http_charset, $effective_charset, $charsets_differ,
     $codeconv, $lastmod, $decl, $catalog, $command, @fake_errors,
     $guessed_doctype, $doctype, $line, $col, $type, $msg, $extraspaces, $diff,
@@ -55,8 +64,7 @@ my $notice		= '';
 
 umask( 022 );
 my $weblint		= "/usr/bin/weblint";
-my $html32_doctype	=
-			qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">};
+my $html32_doctype	= qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">};
 my $html40t_doctype	= qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">};
 my $html40f_doctype	= qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN" "http://www.w3.org/TR/REC-html40/frameset.dtd">};
 my $xhtmlt_doctype	= qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"};
@@ -164,47 +172,41 @@ $SIG{'PIPE'} = 'IGNORE';
 # Process CGI variables
 #############################################################################
 
-# accept either check/foo or check?foo
-my $parameters = $ENV{PATH_INFO} || $ENV{QUERY_STRING};
+#
+# Create a new CGI object.
+my $q = new CGI;
 
-if ( ! $parameters ) {
-    &redirect_to_home_page;
-}
-
-my $pair;
-foreach $pair (split(/[&;,]/, $parameters)) {
-
-    # this referer handling probably needs fixing to handle strange cases
-    # (possibly tied to the explanation given when connections fail;
-    # the referer could be on an intranet, etc.)
-
-    if ( $pair eq "/referer" && $ENV{HTTP_REFERER} =~ m,^http://, ) {
-	$FORM{uri} = $ENV{HTTP_REFERER};
-	next;
+#
+# Backwards compatibility; see
+# http://lists.w3.org/Archives/Public/www-validator/1999JulSep/0197
+# http://lists.w3.org/Archives/Public/www-validator/1999JulSep/0212
+if (scalar $q->param) {
+    foreach my $param ($q->param) {
+        $q->param($param, TRUE) unless $q->param($param);
     }
-
-    my ($name, $value) = split(/=/, $pair);
-    $value =~ tr/+/ /;
-    $value =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack("C", hex($1))/eg;
-
-    $FORM{$name} = $value || "true";
 }
 
-# accept "url=foo" for backwards compatibility (but uri=foo is preferred)
-$uri = URI::URL->new($FORM{uri} || $FORM{url});
-
-if ( ( $uri eq "true" || length( $uri ) == 0 ) &&
-        ( $ENV{REQUEST_URI} =~ /check/ ) ) {
-    &redirect_to_home_page;
+#
+# Futz the URI so "/referer" works.
+if ($q->path_info eq '/referer') {
+    $q->param('uri', $q->referer);
 }
 
-if ( $uri !~ /\// ) {
-    $uri .= "/";
+#
+# Use "url" unless a "uri" was also given.
+if ($q->param('url') and not $q->param('uri')) {
+    $q->param('uri', $q->param('url'));
 }
 
-if ( $uri =~ /^www/i ) {
-    $uri = "http://$uri";
-}
+#
+# Send them to the homepage unless we can extract a URI from either of the
+# acceptable sources: uri, url or /referer.
+&redirect_to_home_page unless length( $q->param('uri') ) > 5;
+
+#
+# Munge the URI to include commonly omitted prefixes/suffixes.
+$q->param('uri', $q->param('uri') . '/')   unless $q->param('uri') =~ m(/);
+$q->param('uri', 'http://' . $q->param('uri')) if $q->param('uri') =~ m(^www)i;
 
 #############################################################################
 # Output validation results
@@ -234,7 +236,7 @@ $html40t_doctype
 $notice
 EOF
 
-if ( $uri !~ m#^http://# ) {
+unless($q->param('uri') =~ m(^http://)) {
      print $header;
      print <<"EOF";
 <p>
@@ -262,7 +264,7 @@ EOF
 my $ua = new LWP::UserAgent;
 $ua->agent( "W3C_Validator/$revision " . $ua->agent );
 $ua->parse_head(0);  # we want to parse the http-equiv stuff ourselves, for now
-my $request = new HTTP::Request(GET => $uri);
+my $request = new HTTP::Request(GET => $q->param('uri'));
 
 # if we got a Authorization header from the client, it means
 # that the client is back at it after being prompted for
@@ -274,7 +276,6 @@ if($ENV{HTTP_AUTHORIZATION}){
 my $response = $ua->request($request);
 
 if ( $response->code != 200 ) {
-    my $optionstring = &build_options;
     if ( $response->code == 401 ) {
 	$response->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
 	my $realm = $1;
@@ -284,7 +285,7 @@ if ( $response->code != 200 ) {
     }
     else {
 	print $header;
-	&print_unknown_http_error_message( $uri, $response->code,
+	&print_unknown_http_error_message( $q->param('uri'), $response->code,
 	    $response->message );
     }
     &clean_up_and_exit;
@@ -293,6 +294,8 @@ if ( $response->code != 200 ) {
 my $content_type = $response->headers->content_type;
 
 if ( ( $content_type =~ /text\/xml/i ) ||
+     ( $content_type =~ /image\/svg/i ) ||
+     ( $content_type =~ /application\/smil/i ) ||
      ( $content_type =~ /application\/xml/i ) ) {
     $document_type = "xml";
 }
@@ -304,7 +307,7 @@ else {
     print <<"EOF";
 
 <p>
-  Sorry, I can't validate this document because its returned
+  Sorry, I am unable to validate this document because its returned
   content-type was <code>$content_type</code>, which is not
   currently supported by this service.
 </p>
@@ -378,7 +381,8 @@ else {
     $codeconv = "";
 }
 
-print qq{<ul>\n  <li><a href="$uri_def_uri">URI</a>: <a href="$uri">$uri</a>\n};
+print qq(<ul>\n  <li><a href="$uri_def_uri">URI</a>: ),
+    '<a href="', $q->param('uri'), '">', $q->param('uri'), qq(</a>\n);
 
 if ( $lastmod = $response->headers->header("Last-Modified") ) {
     print qq{  <li>Last modified: $lastmod\n};
@@ -498,10 +502,10 @@ if ( $document_type eq "xml" ) {
 print <<"EOHD";
   <p>
     <strong>Note: experimental XML support was added to this service
-    on Aug 31, 1999, but it isn't quite working yet; stay tuned to <a
+    on Aug 31, 1999, but it is not quite working yet; stay tuned to <a
     href="http://lists.w3.org/Archives/Public/www-validator/">the
     <code>www-validator</code> mailing list</a> for updates, and
-    please don't trust this service's output for XML documents
+    please do not trust this service\'s output for XML documents
     in the meantime.</strong>
   </p>
 EOHD
@@ -708,7 +712,7 @@ else {
   </p>
 
   <p>
-    To show your readers that you've taken the care to create an
+    To show your readers that you have taken the care to create an
     interoperable Web page, you may display this icon on any page
     that validates. Here is the HTML you could use to add this icon
     to your Web page:
@@ -731,15 +735,8 @@ EOHD
 	print "  <p>\n    Congratulations, this document validates as the document type specified! (I don't have an icon for this one yet, sorry.)\n  </p>\n";
     }
 
-    my $escaped_uri = $uri;
-    $escaped_uri =~  s/=/%3D/g;
-    $escaped_uri =~ s/\&/%26/g;
-    $escaped_uri =~  s/;/%3B/g;
-    $escaped_uri =~  s/,/%2C/g;
-	# ugh
+    my $thispage = $q->self_url;
 
-    my $thispage = "${abs_svc_uri}check?uri=$escaped_uri";
-    $thispage .= &build_options;
     print <<"EOHD";
 
   <p>
@@ -761,16 +758,13 @@ EOHD
     $validity="valid";
 }
 
-my $validation_return_code = $?;
-
-if ( $FORM{"weblint"} eq "true" ) {
-
-    if ( $FORM{"pw"} eq "true" ) {
-	$pedanticflags = "-pedantic -e mailto-link";
-	$pedantic_blurb = " (in \"pedantic\" mode)";
+if ( $q->param('weblint') ) {
+    if ( $q->param('pw') ) {
+	$pedanticflags  = '-pedantic -e mailto-link';
+	$pedantic_blurb = ' (in "pedantic" mode)';
     }
     else {
-	$pedanticflags = "";
+	$pedanticflags = '';
     }
 
     print <<"EOF";
@@ -816,7 +810,7 @@ EOF
     print "\n\n";
 }
 
-if ( $FORM{"outline"} eq "true" ) {
+if ( $q->param('outline') ) {
     print <<'EOF';
   <hr>
   <h2><a name="outline">Outline</a></h2>
@@ -869,7 +863,7 @@ EOF
     print "    </ul>\n" x ( $level );
     print <<'EOF';
     <p>
-      If this doesn't look like a real outline, it is likely that the
+      If this does not look like a real outline, it is likely that the
       heading tags are not being used properly. (Headings should reflect
       the logical structure of the document; they should not be used simply
       to add emphasis, or to change the font size.)
@@ -877,7 +871,7 @@ EOF
 EOF
 }
 
-if ( $FORM{"ss"} eq "true" ) {
+if ( $q->param('ss') ) {
     print <<'EOF';
   <hr>
   <h2><a name="source">Source Listing</a></h2>
@@ -902,18 +896,18 @@ EOF
     print "</pre>\n";
 }
 
-if ( $FORM{"sp"} eq "true" ) {
+if ( $q->param('sp') ) {
     print <<'EOF';
   <hr>
   <h2><a name="parse">Parse Tree</a></h2>
 
   <p>
     Below is the parse tree for this document. <em>Note: this feature is
-    still under construction! I'm trying to make this easier to read
+    still under construction! I am trying to make this easier to read
     somehow, with little success.
 EOF
 
-    if ( $FORM{"noatt"} ne "true" ) {
+    unless ( $q->param('noatt') ) {
 	print <<'EOF';
     It helps a bit if you select the
     "don't show attributes" option on the <a href="./#byURI">form</a>.
@@ -921,10 +915,10 @@ EOF
     }
     print "</em>\n  </p>\n\n";
 
-    if ( $FORM{"noatt"} eq "true" ) {
+    if ( $q->param('noatt') ) {
 	print <<'EOF';
     <p>
-      I'm excluding the attributes, as you requested.
+      I am excluding the attributes, as you requested.
     </p>
 EOF
     }
@@ -932,13 +926,13 @@ EOF
     $indent = 0;
     print "<pre>\n";
     for (@esis) {
-	if ( $FORM{"noatt"} eq "true" ) {
+	if ( $q->param('noatt') ) {
 	    next if /^A/;
 	    next if /^\(A$/;
 	    next if /^\)A$/;
 	}
 
-# experimental: skip data if it's only newlines and space.
+# experimental: skip data if it is only newlines and space.
 # next if /^-(\\n|\s+)*$/;
 
 # another way to do the same thing:
@@ -1044,22 +1038,11 @@ EOF
 
 }
 
-sub build_options {
-
-    my $optionstring = "";
-    my $option;
-    foreach $option (@options) {
-        $optionstring .= ";$option" if $FORM{$option} eq "true";
-    }
-    return $optionstring;
-
-}
-
 sub erase_stuff {
 
-    unlink $temp;
-    unlink "$temp.esis";
-    unlink "$temp.weblint";
+    unlink $temp           or warn "unlink($temp) returned: $!\n";
+    unlink "$temp.esis"    or warn "unlink($temp.esis) returned: $!\n";
+    unlink "$temp.weblint" or warn "unlink($temp.weblint) returned: $!\n";
 
 }
 
@@ -1068,7 +1051,7 @@ sub make_log_entry {
     my $msgindex;
 
     open(LOG,">>$logfile") || die "couldn't append to log: $!";
-    print LOG "$ENV{REMOTE_HOST}\t$validity $version\t$uri\n";
+    print LOG "$ENV{REMOTE_HOST}\t$validity $version\t", $q->param('uri'), "\n";
     foreach $msgindex (keys %undef_frag) {
 	print LOG "frag not defined for msgindex: $msgindex\n";
     }
@@ -1104,32 +1087,32 @@ sub build_jump_links {
     my $text;
     my $count = 0;
 
-    $count++ if $FORM{ss}      eq "true";
-    $count++ if $FORM{sp}      eq "true";
-    $count++ if $FORM{weblint} eq "true";
-    $count++ if $FORM{outline} eq "true";
+    $count++ if $q->param('ss');
+    $count++ if $q->param('sp');
+    $count++ if $q->param('weblint');
+    $count++ if $q->param('outline');
 
     if ( $count ) {
 	$text .= "  <p>\n    Jump to: ";
-	if ( $FORM{"weblint"} eq "true" ) {
+	if ( $q->param('weblint') ) {
 	    $text .= "<a\n      href=\"#weblint\">Weblint Results</a>";
 	    $count--;
 	    $text .= " or " if ( $count == 1 );
 	    $text .= ", "   if ( $count >  1 );
 	}
-	if ( $FORM{"outline"} eq "true" ) {
+	if ( $q->param('outline') ) {
 	    $text .= "<a\n      href=\"#outline\">Outline</a>";
 	    $count--;
 	    $text .= " or " if ( $count == 1 );
 	    $text .= ", "   if ( $count >  1 );
 	}
-	if ( $FORM{"ss"} eq "true" ) {
+	if ( $q->param('ss') ) {
 	    $text .= "<a\n      href=\"#source\">Source Listing</a>";
 	    $count--;
 	    $text .= " or " if ( $count == 1 );
 	    $text .= ", "   if ( $count >  1 );
 	}
-	if ( $FORM{"sp"} eq "true" ) {
+	if ( $q->param('sp') ) {
 	    $text .= "<a\n      href=\"#parse\">Parse Tree</a>";
 	}
 	$text .= ".\n  </p>\n\n";
