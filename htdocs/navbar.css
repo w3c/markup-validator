@@ -4,12 +4,12 @@
    Copyright 2000-2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: navbar.css,v 1.16 2005-02-16 03:28:54 ot Exp $
+   $Id: navbar.css,v 1.17 2005-02-16 03:50:27 ot Exp $
 */
 
 
 #menu {
-        background-color: #036;
+        background-color: #005A9C;
         margin: 0;
         padding: 0;
         margin-left: 42px;
