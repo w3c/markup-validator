@@ -3,9 +3,9 @@
 # W3C Link Checker
 # by Hugo Haas
 # (c) 1999 World Wide Web Consortium
-# based on Renaud Bruyeron's checklin.pl
+# based on Renaud Bruyeron's checklink.pl
 #
-# $Id: LinkChecker.pl,v 1.6 1999-12-01 21:52:54 hugo Exp $
+# $Id: LinkChecker.pl,v 1.7 1999-12-02 01:42:59 hugo Exp $
 #
 # This program is licensed under the W3C License.
 
@@ -16,12 +16,14 @@ package W3C::UserAgent;
 require LWP::UserAgent;
 @W3C::UserAgent::ISA = qw(LWP::UserAgent);
 
+use CGI::Carp qw(fatalsToBrowser);
+
 # Autoflush
 $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C LinkChecker';
-my $VERSION = '$Revision: 1.6 $ (c) 1999 W3C';
+my $VERSION = '$Revision: 1.7 $ (c) 1999 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -204,28 +206,32 @@ sub urize() {
 
 sub check_uri() {
     my $uri = $_[0];
+    my $start;
+    if ((! $_summary) && (! $_html)) {
+        $start = &get_timestamp();
+        printf("\nProcessing\t%s\n", $uri);
+    }
+    # Get the document
+    my $response = &get_uri('GET', $uri);
+    if (! $response->is_success()) {
+        if ($response->code() == 401) {
+            &authentication($response);
+        } else {
+            if ($_html) {
+                &html_header($uri);
+            }
+            printf("Error: %d %s\n", $response->code(), $response->message());
+            if ($_html) {
+                &html_footer();
+            }
+        }
+        exit(-1);
+    }
     if ($_html) {
         &html_header($uri);
         if (! $_summary) {
             print "<pre>\n";
         }
-    }
-    my $start;
-    if (! $_summary) {
-        $start = &get_timestamp();
-        printf("\nProcessing\t%s\n", $uri);
-    }
-    # Get the document
-    my $response = &get_uri('GET', $uri, 1);
-    if (! $response->is_success()) {
-        printf("Error: %d %s\n", $response->code(), $response->message());
-        if ($response->code() == 401) {
-            &authentication($response);
-        }
-        if ($_html) {
-            &html_footer();
-        }
-        exit(-1);
     }
     my %redirects;
     &record_redirects(\%redirects, $response->{Redirects});
@@ -327,6 +333,15 @@ sub check_uri() {
 # Get the content of a URI #
 ############################
 
+sub W3C::UserAgent::simple_request() {
+    my $self = shift;
+    my $response = $self->SUPER::simple_request(@_);
+    if (! defined($self->{FirstResponse})) {
+        $self->{FirstResponse} = $response->code();
+    }
+    return $response;
+}
+
 sub W3C::UserAgent::redirect_ok {
     my ($self, $request) = @_;
     
@@ -342,7 +357,7 @@ sub W3C::UserAgent::redirect_ok {
 }
 
 sub get_uri() {
-    my ($method, $uri, $authentication) = @_;
+    my ($method, $uri, $code) = @_;
     my $start = &get_timestamp();
     my $ua = new W3C::UserAgent;
     $ua->timeout($_timeout);
@@ -355,16 +370,29 @@ sub get_uri() {
         printf("%s %s ", $method, $uri);
     }
     my $request = new HTTP::Request($method, $uri);
+    if (($request->url->netloc =~ /\.w3\.org$/) && defined($ENV{HTTP_AUTHORIZATION})) {
+        $request->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
+    }
     $response = $ua->request($request);
-    if (($response->code() == 401) && $authentication) {
-        # Deal with authentication
-        # Either with LWP::UserAgent or HTTP::Request
+    if (!defined($code)) {
+        $code = $ua->{FirstResponse};
+    }
+    if (($response->code() == 401)
+        && defined($ENV{HTTP_AUTHORIZATION})
+        && ($uri ne $response->request->url)) {
+        # Deal with authentication and avoid loops
+        if (defined($code)) {
+            &get_uri($method, $response->request->url, $code);
+        } else {
+            &get_uri($method, $response->request->url, 401);
+        }
     }
     $response->{Redirects} = $ua->{Redirects};
     my $stop = &get_timestamp();
     if (! $_summary) {
         printf(" fetched in %ss\n", &time_diff($start,$stop));
     }
+    $response->{OriginalCode} = $code;
     return $response;
 }
 
@@ -536,6 +564,7 @@ sub check_validity($, $, \%, \%, \%, \%, $) {
         # Parse the document if necessary and possible
         $results->{$uri}{$uri}{code} = $response->code();
         $results->{$uri}{$uri}{success} = $response->is_success();
+        $results->{$uri}{$uri}{orig} = $response->{OriginalCode};
         if (! $results->{$uri}{$uri}{success}) {
             $results->{$uri}{$uri}{message} = $response->message();
             if ($_verbose) {
@@ -593,13 +622,24 @@ sub authentication() {
     my $r = $_[0];
     $r->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
     my $realm = $1;
+    my $authHeader = $r->headers->www_authenticate;                                 
     if ($_cl) {
         printf(STDERR "Authentication is required for %s.\n", $r->request->url);
         printf(STDERR "The realm is %s.\n", $realm);
         print(STDERR "Use the -u and -p options to specify a username and password.\n");
     } else {
-        &html_header();
-        &html_footer();
+        printf("Status: 401 Authorization Required\nWWW-Authenticate: %s\nConnection: close\nContent-Type: text/html\n\n", $r->headers->www_authenticate);
+        printf("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\">
+<html>
+<head>
+<title>401 Authorization Required</title>
+</head>
+<body>
+<h1>Authorization Required</h1>
+<p>You need %s access to %s to perform Link Checking.</p>
+</body>
+</html>
+", $realm, $r->request->url);
     }
 }
 
@@ -763,17 +803,18 @@ sub links_summary(\%,\%,\%) {
                                sort {$a <=> $b} keys %{$links->{$u}{$u}});
         }
         if ($_html) {
-            printf("<tr><th rowspan=\"%d\">%s</th><th rowspan=\"%d\"%s>%d%s</th><td>%s</td><td>%s</td></tr>\n",
+            printf("<tr><th rowspan=\"%d\">%s</th><th rowspan=\"%d\"%s>%d%s</th><td>%s</td><td%s>%s</td></tr>\n",
                    $n_fragments,
                    $redirected ? join('<br>-&gt; ',
                                       &get_redirects($u, %$redirects)) : $u,
                    $n_fragments,
-                   &bgcolor($results->{$u}{$u}{code}),
-                   $results->{$u}{$u}{code},
+                   &bgcolor($results->{$u}{$u}{orig}),
+                   $results->{$u}{$u}{orig},
                    $results->{$u}{$u}{message}
                    ? '<br>'.$results->{$u}{$u}{message}
                    : '',
                    '',
+                   &bgcolor($results->{$u}{$u}{code}),
                    $lines_list);
         } else {
             printf("\n%s\t%s\n  Code: %d%s\n",
@@ -785,16 +826,18 @@ sub links_summary(\%,\%,\%) {
         }
         foreach $f (@fragments) {
             next if ($f eq $u);
-            my $format;
             if ($_html) {
-                $format = "<tr><td>%s</td><td>%s</td></tr>\n";
+                printf("<tr><td>%s</td><td%s>%s</td></tr>\n",
+                       $f,
+                       &bgcolor($results->{$u}{$u}{code}),
+                       join(', ',
+                            sort {$a <=> $b} keys %{$links->{$u}{$f}}));
             } else {
-                $format = "\t%s\tLines: %s\n";
+                printf("\t%s\tLines: %s\n",
+                       $f,
+                       join(', ',
+                            sort {$a <=> $b} keys %{$links->{$u}{$f}}));
             }
-            printf($format,
-                   $f,
-                   join(', ',
-                        sort {$a <=> $b} keys %{$links->{$u}{$f}}));
         }
     }
     if ($_html) {
@@ -854,6 +897,9 @@ sub bgcolor() {
     }
     if ($code == 300) {
         return ' bgcolor="magenta"';
+    }
+    if ($code == 401) {
+        return ' bgcolor="aqua"';
     }
     if ($r->is_redirect()) {
         return ' bgcolor="yellow"';
