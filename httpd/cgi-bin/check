@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.230 2002-09-12 05:43:56 ville Exp $
+# $Id: check,v 1.231 2002-09-12 20:46:42 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -61,7 +61,7 @@ use constant TRUE  => 1;
 use constant FALSE => 0;
 
 #
-# Tentative Validation Severeties.
+# Tentative Validation Severities.
 use constant T_DEBUG =>  1; # 0000 0001
 use constant T_INFO  =>  2; # 0000 0010
 use constant T_WARN  =>  4; # 0000 0100
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.230 $;
+  $VERSION    =  q$Revision: 1.231 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-09-12 05:43:56 $,
+			      Date => q$Date: 2002-09-12 20:46:42 $,
 			     });
 
 #
@@ -177,7 +177,7 @@ $File->{Env}->{'Self URI'} = $q->url(-query => 0);
 # Initialize parameters we'll need (and override) later.
 # (casing policy: lowercase early)
 $File->{Charset}->{Use}      = ''; # The charset used for validation.
-$File->{Charset}->{Auto}     = ''; # Autodetion using XML rules (Appendix F).
+$File->{Charset}->{Auto}     = ''; # Autodetection using XML rules (Appendix F)
 $File->{Charset}->{HTTP}     = ''; # From HTTP's "charset" parameter.
 $File->{Charset}->{META}     = ''; # From HTML's <meta http-equiv>.
 $File->{Charset}->{XML}      = ''; # From the XML Declaration.
@@ -257,14 +257,17 @@ $File = &find_xml_encoding ($File);
 # Decide on a charset to use (first part)
 #
 if ($File->{Charset}->{HTTP}) {
-  $File->{Charset}->{Use} = $File->{Charset}->{HTTP}; # HTTP, if given, is authorative.
+  # HTTP, if given, is authoritative.
+  $File->{Charset}->{Use} = $File->{Charset}->{HTTP};
 } elsif ($File->{Type} =~ m(^text/\w+\+xml$)) {
-  $File->{Charset}->{Use} = 'us-ascii'; # Act as if $http_charset was 'us-ascii'. (MIME rules)
+  # Act as if $http_charset was 'us-ascii'. (MIME rules)
+  $File->{Charset}->{Use} = 'us-ascii';
   &add_warning($File, <<".EOF.");
       <em>Note:</em>
       The HTTP Content-Type field did not contain a "charset" attribute,
       but the Content-Type was one of the XML text/* sub-types. The relevant
-      specification (RFC 3023) specifies a strong default of "us-ascii" for such documents so
+      specification (RFC 3023) specifies a strong default of "us-ascii" for
+      such documents so
       we will use this value regardless of any encoding you may have indicated
       elsewhere. If you would like to use a different encoding, you should
       arrange to have your server send this new encoding information.
@@ -359,14 +362,14 @@ $File = &byte_error($File);
 # Override DOCTYPE if user asked for it.
 if ($File->{Opt}->{DOCTYPE}
     and not $File->{Opt}->{DOCTYPE} =~ /(Inline|detect)/i) {
-  $File->{Content} = &supress_doctype($File->{Content});
+  $File->{Content} = &suppress_doctype($File->{Content});
   unshift @{$File->{Content}}, $CFG->{'Doctypes'}->{$File->{Opt}->{DOCTYPE}};
   my $dtd = ent($File->{Opt}->{DOCTYPE});
   &add_warning($File, <<".EOF.");
   <strong>DOCTYPE Override in effect!</strong> Any DOCTYPE Declaration in the
-  document has been supressed and the DOCTYPE for &#171;<code>$dtd</code>&#187;
-  inserted instead. The document will not be Valid until you alter the source
-  file to reflect this new DOCTYPE.
+  document has been suppressed and the DOCTYPE for
+  &#171;<code>$dtd</code>&#187; inserted instead. The document will not be
+  Valid until you alter the source file to reflect this new DOCTYPE.
 .EOF.
   $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
 }
@@ -624,11 +627,10 @@ if (&is_xml($File->{Type}) and not $File->{DOCTYPE}) {
 # Get the pretty text version of the FPI if a mapping exists.
 $File->{Version} = $CFG->{'FPI to Text'}->{$File->{Version}} || $File->{Version};
 
-
 if ($File->{'Is Upload'}) {
   &add_table($File, 'Doctype', $File->{Version});
 } else {
-  &add_table($File, qq(<label accesskey="3" for="doctype" title="Document Type of Validate Page  (accesskey: 3)">Doctype</label>),
+  &add_table($File, qq(<label accesskey="3" for="doctype" title="Document Type (accesskey: 3)">Doctype</label>),
 	     $File->{Version},
 	     &CGI::popup_menu(
 			      -name => 'doctype',
@@ -838,7 +840,7 @@ sub print_table {
 #
 # Serialize a table datastructure ($th, @td) into HTML.
 # Takes two arguments; the datastructure, and a CSS class name for the table.
-# Returns a reference to an array of lines (to enable reindentation).
+# Returns a reference to an array of lines (to enable re-indentation).
 sub serialize_table {
   my $table = shift;
   my $class = shift;
@@ -1012,7 +1014,7 @@ Content-Type: text/html; charset=utf-8
       Due to the way HTTP Authentication works there is no way we can
       avoid this. We are using some "tricks" to fool your client into
       not sending this information in the first place, but there is no
-      guarantee this will work. If security is a conern to you, you
+      guarantee this will work. If security is a concern to you, you
       may wish to avoid validating protected resources or take extra
       precautions to prevent your browser from sending authentication
       information when validating other servers.
@@ -1297,8 +1299,8 @@ sub truncate_line {
 
 
 #
-# Supress any existing DOCTYPE by commenting it out.
-sub supress_doctype {
+# Suppress any existing DOCTYPE by commenting it out.
+sub suppress_doctype {
   no strict 'vars';
   my $file = shift;
   local $HTML = '';
@@ -1844,7 +1846,7 @@ sub preparse {
     if ($attr->{xmlns}) {$File->{Namespace} = $attr->{xmlns}};
   };
 
-  my $p =  HTML::Parser->new(api_version => 3);
+  my $p = HTML::Parser->new(api_version => 3);
   $p->xml_mode(TRUE);
   $p->ignore_elements('BODY');
   $p->ignore_elements('body');
@@ -2028,9 +2030,9 @@ sub charset_conflicts {
     &add_warning($File, <<".EOF.");
       <strong>Character Encoding Override in effect!</strong>
       The detected character encoding,
-      &#171;<code>$File->{Charset}->{Use}</code>&#187;, has been supressed and the
-      character encoding &#171;<code>$File->{Opt}->{Charset}</code>&#187; is
-      used instead.
+      &#171;<code>$File->{Charset}->{Use}</code>&#187;, has been suppressed and
+      the character encoding &#171;<code>$File->{Opt}->{Charset}</code>&#187;
+      is used instead.
 .EOF.
     $File->{Tentative} |= T_ERROR;
   }
@@ -2455,7 +2457,7 @@ sub find_base_encoding {
 
 #
 # Find encoding in document according to XML rules
-# Only meaningfull if file contains a BOM, or for well-formed XML!
+# Only meaningful if file contains a BOM, or for well-formed XML!
 sub find_xml_encoding {
   my $File = shift;
   my ($CodeUnitSize, $Pattern);
