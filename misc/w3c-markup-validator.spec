@@ -1,21 +1,21 @@
 # RPM Spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.1.2.10 2003-08-23 19:30:41 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.1.2.11 2003-08-28 23:03:42 ville Exp $
 
 %{!?apxs: %{expand:   %%define apxs %{_sbindir}/apxs}}
 %define httpd_confdir %(test -d %{_sysconfdir}/httpd/conf.d && echo %{_sysconfdir}/httpd/conf.d || %{apxs} -q SYSCONFDIR)
 %define sgmldir       %{_datadir}/sgml
 
 Name:           w3c-markup-validator
-Version:        0.6.2
-Release:        5w3c
+Version:        0.6.5
+Release:        0.beta1.1
 Epoch:          0
 Summary:        W3C Markup Validator
 
 Group:          Applications/Internet
 License:        W3C Software License
 URL:            http://validator.w3.org/
-Source0:        http://validator.w3.org/dist/validator-0_6_2.tar.gz
-Source1:        http://validator.w3.org/dist/sgml-lib-0_6_2.tar.gz
+Source0:        http://validator.w3.org:8001/dist/validator-0_6_5b1.tar.gz
+Source1:        http://validator.w3.org:8001/dist/sgml-lib-0_6_5b1.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
@@ -42,16 +42,19 @@ SGML and XML DTDs for the W3C Markup Validator.
 
 
 %prep
-%setup -q -a 1 -n validator
+%setup -q -a 1 -n validator-0.6.5b1
+mv validator-0.6.5b1/htdocs/sgml-lib .
 
 # Localize config files
-perl -pi -e 's|\bwww-validator\@w3\.org\b|root\@localhost| ;
-             s|/validator\.w3\.org/|/localhost/%{name}/| ;
-             s|/usr/local/validator/htdocs/config/|%{_sysconfdir}/w3c/| ;
-             s|/usr/local/validator/htdocs/|%{_datadir}/%{name}/| ;
-             s|^(SGML\s+Library\s+).*|${1}%{sgmldir}/%{name}|' \
+perl -pi -e \
+  's|\bwww-validator\@w3\.org\b|root\@localhost| ;
+   s|/validator\.w3\.org/|/localhost/%{name}/| ;
+   s|/usr/local/validator/htdocs/config/|%{_sysconfdir}/w3c/| ;
+   s|/usr/local/validator/htdocs/|%{_datadir}/%{name}/| ;
+   s|^(SGML\s+Library\s+).*|${1}%{sgmldir}/%{name}|' \
   htdocs/config/validator.conf
-perl -pi -e 's|/usr/share/w3c-markup-validator|%{_datadir}/%{name}|g' \
+perl -pi -e \
+  's|/usr/share/w3c-markup-validator|%{_datadir}/%{name}|g' \
   httpd/conf/httpd.conf
 
 # Cleanup of unused files
@@ -68,6 +71,11 @@ rename .pl '' httpd/cgi-bin/checklink.pl
 find . -type d -exec chmod 0755 {} ';'
 find . -type f -exec chmod 0644 {} ';'
 chmod 0755 httpd/cgi-bin/check*
+
+# Point to validator.w3.org for source code
+perl -pi -e \
+  's|<!--\#echo var="relroot"\s*-->source/|http://validator.w3.org/source/|' \
+  htdocs/header.html
 
 
 %build
@@ -142,6 +150,9 @@ fi
 
 
 %changelog
+* Fri Aug 29 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.5-0.beta1.1
+- Update to 0.6.5 beta 1.
+
 * Sat Aug 23 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.2-5w3c
 - Requires openjade >= 0:1.3.2 (Red Hat packages OpenSP 1.5 there).
 
