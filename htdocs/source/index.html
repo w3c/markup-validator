@@ -8,7 +8,7 @@
     W3C HTML Validation Service, Source Code">
   <meta name="description" content="Source Code for W3C's Validation Service.">
   <meta name="revision"
-    content="$Id: index.html,v 1.4 1998-08-27 03:22:31 gerald Exp $">
+    content="$Id: index.html,v 1.5 1998-11-29 22:31:43 gerald Exp $">
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
@@ -26,6 +26,15 @@
   href="../">W3C HTML Validation Service</a> is available under the terms
   of the <a href="http://www.w3.org/Consortium/Legal/copyright-software">W3C
   Software Copyright</a>.
+</p>
+
+<p>
+  The purpose of making the source code available is partly to allow
+  others to set up mirrors of the service (either publicly or within
+  an intranet behind a firewall), but also to allow us to collaborate
+  on making the service better -- there are <a
+  href="/todo.html">many ways the service could be improved</a> but I
+  only have a small amount of time to work on it myself.
 </p>
 
 <p>
@@ -61,26 +70,27 @@
   href="http://www.loria.fr/~molli/">Pascal Molli</a>.</p>
 
   <p>
-  Our CVS base is available read-only, using the CVS pserver authentification: 
+  Our CVS base is available read-only, using CVS pserver authentication
+  a la:
 
-  <blockquote><code>
-  CVSROOT=:pserver:anonymous@dev.w3.org:/sources/public
-  </code></blockquote>
+  <blockquote><samp>
+    bash$ <kbd><b>export
+      CVSROOT=":pserver:anonymous@dev.w3.org:/sources/public"</b></kbd><br>
+    bash$ <kbd><b>cvs login</b></kbd><br>
+    (Logging in to anonymous@dev.w3.org)<br>
+    CVS password: <kbd><b>anonymous</b></kbd><br>
+    bash$ <kbd><b>cvs get validator</b></kbd><br>
+    cvs server: Updating validator<br>
+    cvs server: Updating validator/htdocs<br>
+    U validator/htdocs/about.html<br>
+    ...
+  </samp></blockquote>
 
-  <blockquote><code>
-  password: anonymous
-  </code></blockquote>
+  <!-- using <b> above is evil, but the default kbd style in Netscape is
+   goofy, and having that text boldfaced is ever so much clearer. - Gerald
+    -->
 
 </ul>
-
-<p>
-  The purpose of making the source code available is partly to allow
-  others to set up mirrors of the service (either publicly or within
-  an intranet behind a firewall), but also to allow us to collaborate
-  on making the service better -- there are <a
-  href="/todo.html">many ways the service could be improved</a> but I
-  only have a small amount of time to work on it myself.
-</p>
 
 <h2>Prerequisites</h2>
 
@@ -145,7 +155,7 @@
      src="http://validator.w3.org/images/vh40.gif" height=31 width=88
      align=right border=0 alt="Valid W3C HTML 4.0!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</A><br>
-     $Date: 1998-08-27 03:22:31 $
+     $Date: 1998-11-29 22:31:43 $
 </address>
 
 </body>
