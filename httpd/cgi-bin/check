@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.310 2002-12-02 02:11:23 link Exp $
+# $Id: check,v 1.311 2002-12-02 11:37:51 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -133,7 +133,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.310 $;
+  $VERSION    =  q$Revision: 1.311 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 } # end of BEGIN block.
@@ -257,28 +257,22 @@ $T->param(is_upload     => $File->{'Is Upload'});
 ###############################################################################
 
 #
-# Print different things if we got redirected or had a file upload.
-if ($File->{'Is Upload'}) {
-  &add_table($File, 'File', &ent($File->{URI}));
-} else {
-  my $size = (length($File->{Opt}->{URI}) || 38) + 2;
-  $size = 70 if $size > 70;
-
-  if (URI::eq("$File->{Opt}->{URI}", $File->{URI})) {
-    &add_table($File, qq(<label title="Address of Page to Validate (accesskey: 1)" for="uri">Address</label>),
-               [1, 2, '<input accesskey="1" type="text" id="uri" name="uri" size="' . $size
-             . '" value="' . &ent($File->{Opt}->{URI}) . '" />']);
-  } else {
-    my $furi = &ent($File->{URI});
-    &add_table($File, qq(<label title="Address of Page to Validate (accesskey: 1)" for="uri">URI</label>),
-               '<input accesskey="1" type="text" id="uri" name="uri" size="' . $size
-             . '" value="' . $furi . '" />');
-    &add_warning($File, sprintf('<em>Note:</em> The URI you gave me, &lt;%s&gt;, returned a redirect to &lt;%s&gt;.', &ent($File->{Opt}->{URI}), $furi));
-  }
+# Add warning if we were redirected.
+$T->param(file_uri => &ent($File->{URI}));
+unless (URI::eq("$File->{Opt}->{URI}", $File->{URI}) and not $File->{'Is Upload'}) {
+  &add_warning(
+	       $File, 'Note:',
+	       sprintf(
+		       'The URI you gave me, &lt;%s&gt;, returned a redirect to &lt;%s&gt;.',
+		       &ent($File->{Opt}->{URI}),
+		       &ent($File->{URI}),
+		      )
+	      );
 }
 
-
-$File = &find_xml_encoding ($File);
+#
+# Find the XML Encoding.
+$File = &find_xml_encoding($File);
 
 #
 # Decide on a charset to use (first part)
@@ -294,8 +288,7 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
   } else {
     @_source = ('returned by your web server', ($File->{Server}||'unknown'), 'server return');
   }
-  &add_warning($File, <<".EOF.");
-      <em>Note:</em>
+  &add_warning($File, 'Note:', <<".EOF.");
       The HTTP Content-Type header $_source[0] ($_source[1]) did not contain
       a "charset" parameter, but the Content-Type was one of the XML text/*
       sub-types (<code>$File->{ContentType}</code>). The relevant
@@ -311,7 +304,7 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
   $File->{Charset}->{Use} = 'utf-16';
 } elsif ($File->{ContentType} =~ m(^application/([-.a-zA-Z0-9]+\+)?xml$)) {
   $File->{Charset}->{Use} = "utf-8";
-}
+} # @@@FIXME: Need case for image/svg+xml etc.
 
 $File->{Content} = &normalize_newlines($File->{Bytes},
                        exact_charset($File, $File->{Charset}->{Use}));
@@ -334,7 +327,7 @@ if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
 
 unless ($File->{Charset}->{Use}) {
   $File->{'Error Flagged'} = TRUE;
-  $File->{'Error Message'} = <<".EOF." . iana_charset_blurb();
+  $File->{'Error Message'} = <<".EOF.";
     <p>
       I was not able to extract a character encoding labeling from any of
       the valid sources for such information. Without encoding information it
@@ -355,11 +348,6 @@ unless ($File->{Charset}->{Use}) {
       able to validate this document. Sorry. Please make sure you specify the
       character encoding in use.
     </p>
-.EOF.
-}
-
-sub iana_charset_blurb () {
-  return <<EOF;
     <p>
       <a href="http://www.iana.org/"><acronym
       title="Internet Assigned Numbers Authority">IANA</acronym></a>
@@ -367,7 +355,7 @@ sub iana_charset_blurb () {
       href="http://www.iana.org/assignments/character-sets">official
       names for character sets</a>.
     </p>
-EOF
+.EOF.
 }
 
 #
@@ -410,10 +398,9 @@ if ($File->{Opt}->{DOCTYPE}
     and not $File->{Opt}->{DOCTYPE} =~ /(Inline|detect)/i) {
   $File = &override_doctype($File);
   my $dtd = ent($File->{Opt}->{DOCTYPE});
-  &add_warning($File, <<".EOF.");
-  <strong>DOCTYPE Override in effect!</strong> Any DOCTYPE Declaration in the
-  document has been suppressed and the DOCTYPE for
-  &#171;<code>$dtd</code>&#187; inserted instead. The document will not be
+  &add_warning($File, 'DOCTYPE Override in effect!', <<".EOF.");
+  Any DOCTYPE Declaration in the document has been suppressed and the DOCTYPE
+  for &#171;<code>$dtd</code>&#187; inserted instead. The document will not be
   Valid until you alter the source file to reflect this new DOCTYPE.
 .EOF.
   $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
@@ -437,24 +424,6 @@ $File->{Type} = 'mathml+xml' if $File->{DOCTYPE} =~ /mathml/i;
 $File = &charset_conflicts($File);
 
 #
-# Add metadata iff asked for.
-if ($File->{Opt}->{Verbose}) {
-  &add_table($File, "Modified",     [1, 2, &ent($File->{Modified})   ]) if $File->{Modified};
-  &add_table($File, "Server",       [1, 2, &ent($File->{Server})     ]) if $File->{Server};
-  &add_table($File, "Size",         [1, 2, &ent($File->{Size})       ]) if $File->{Size};
-  &add_table($File, "Content-Type", [1, 2, &ent($File->{ContentType})]) if $File->{ContentType};
-}
-
-if ($File->{'Is Upload'}) {
-  &add_table($File, 'Encoding', &ent($File->{Charset}->{Use}));
-} else {
-  &add_table($File,
-             qq(<label accesskey="2" title="Character Encoding (accesskey: 2)" for="charset">Encoding</label>),
-             &ent($File->{Charset}->{Use}), &popup_charset);
-}
-
-
-#
 # By default, use SGML catalog file and SGML Declaration.
 my $catalog  = File::Spec->catfile($CFG->{SGML_Library}, 'sgml.soc');
 my @xmlflags = qw(
@@ -469,10 +438,9 @@ my @xmlflags = qw(
 if (&is_xml($File)) {
   $catalog  = File::Spec->catfile($CFG->{SGML_Library}, 'xml.soc');
   push(@xmlflags, '-wxml');
-  &add_warning($File, <<".EOF.");
-  <em>Note</em>: The Validator XML support has
-  <a href="http://openjade.sf.net/doc/xml.htm"
-     title="Limitations in Validator XML support">some limitations</a>.
+  &add_warning($File, 'Note:', <<".EOF.");
+  The Validator XML support has <a href="http://openjade.sf.net/doc/xml.htm"
+    title="Limitations in Validator XML support">some limitations</a>.
 .EOF.
 }
 
@@ -487,37 +455,22 @@ $ENV{SP_BCTF}          = 'UTF-8';
 # Tell onsgmls about the SGML Library.
 $ENV{SGML_SEARCH_PATH} = $CFG->{SGML_Library};
 
-
-##
-## HTML. Turn back to SGML semantics.
-#if (&is_html($File)) {
-#  $ENV{SP_CHARSET_FIXED} = 'YES';
-#  $ENV{SP_ENCODING}      = 'UTF-8';
-#  $catalog  = File::Spec->catfile($CFG->{SGML_Library}, 'catalog');
-#  @xmlflags = '-wnon-sgml-char-ref';
-#}
-
-##
-## MathML and XHTML. Must be here because they're usually served as text/html
-## to deal with braindead browsers. In other words, these override the check for &is_html.
-#$catalog = File::Spec->catfile($CFG->{SGML_Library}, 'xhtml.soc')
-#  if &is_xhtml($File);
-#$catalog = File::Spec->catfile($CFG->{SGML_Library}, 'mathml.soc')
-#  if &is_mathml($File);
-
-
+#
+# Set final command to use.
 my @cmd = ($CFG->{SGML_Parser}, '-c', $catalog, '-E0', @xmlflags);
 
-if ($DEBUG) {
-  &add_table($File, 'Command',
-             [1, 2, &ent("@cmd")]);
-  &add_table($File, 'SP_CHARSET_FIXED',
-             [1, 2, '<code>' . &ent($ENV{SP_CHARSET_FIXED}) . '</code>']);
-  &add_table($File, 'SP_ENCODING',
-             [1, 2, '<code>' . &ent($ENV{SP_ENCODING})      . '</code>']);
-  &add_table($File, 'SP_BCTF',
-             [1, 2, '<code>' . &ent($ENV{SP_BCTF})          . '</code>']);
-}
+#
+# Set debug info for HTML report.
+$T->param(is_debug => $DEBUG);
+$T->param(
+	  debug => [
+		    {name => 'Command',          value => &ent("@cmd")},
+		    {name => 'SP_CHARSET_FIXED', value => &ent($ENV{SP_CHARSET_FIXED})},
+		    {name => 'SP_ENCODING',      value => &ent($ENV{SP_ENCODING})},
+		    {name => 'SP_BCTF',          value => &ent($ENV{SP_BCTF})},
+		   ],
+	 );
+
 
 #
 # Temporary filehandles.
@@ -574,13 +527,18 @@ while (<$spout>) {
 }
 undef $spout;
 
+#
+# Check whether the parser thought it was Valid.
 if ($File->{ESIS}->[-1] =~ /^C$/) {
-  undef $File->{ESIS}->[-1];
+  delete $File->{ESIS}->[-1];
   $File->{'Is Valid'} = TRUE;
 } else {
   $File->{'Is Valid'} = FALSE;
 }
 
+#
+# Extract the Namespaces.
+$File->{Namespaces} = [map {name => '', uri => $_}, keys %{$File->{Namespaces}}];
 
 #
 # Set Version to be the FPI initially.
@@ -604,12 +562,6 @@ if (&is_xml($File) and not $File->{DOCTYPE}) {
   $File->{Version} = $File->{DOCTYPE} unless $File->{Version};
 }
 
-
-#$File->{Version} = $File->{DOCTYPE} if &is_xhtml($File);
-#$File->{Version} = $File->{DOCTYPE} if &is_mathml($File);
-#$File->{Version} = $File->{DOCTYPE} if &is_svg($File);
-#$File->{Version} = $File->{DOCTYPE} if &is_smil($File);
-
 #
 # Get the pretty text version of the FPI if a mapping exists.
 if (my $prettyver = $CFG->{FPI_to_Text}->{$File->{Version}}) {
@@ -618,34 +570,20 @@ if (my $prettyver = $CFG->{FPI_to_Text}->{$File->{Version}}) {
   $File->{Version} = &ent($File->{Version});
 }
 
-if ($File->{'Is Upload'}) {
-  &add_table($File, 'Doctype', $File->{Version});
-} else {
-  &add_table($File, qq(<label accesskey="3" for="doctype" title="Document Type (accesskey: 3)">Doctype</label>),
-             $File->{Version}, &popup_doctype);
-}
-
-
+#
+# Warn about unknown Namespaces.
 if (&is_xml($File) and $File->{Namespace}) {
-  my $rns = &ent($File->{Namespace});
+  my $ns = &ent($File->{Namespace});
   if (&is_xhtml($File) and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
-    &add_warning($File, "Unknown namespace (&#171;<code>$rns</code>&#187;) for text/html document!");
+    &add_warning(
+		 $File, 'Warning:',
+		 "Unknown namespace (&#171;<code>$ns</code>&#187;) for text/html document!"
+		);
   } elsif (&is_svg($File) and $File->{Namespace} ne 'http://www.w3.org/2000/svg') {
-    &add_warning($File, "Unknown namespace (&#171;<code>$rns</code>&#187;) for SVG document!");
-  }
-
-  &add_table($File, 'Root Namespace', qq(<a href="$rns">$rns</a>))
-    if $File->{Opt}->{Verbose};
-
-  if (scalar keys %{$File->{Namespaces}} > 1) {
-    my $namespaces = '<ul>';
-    for (keys %{$File->{Namespaces}}) {
-      my $ns = &ent($_);
-      $namespaces .= qq(\t<li><a href="$ns">$ns</a></li>\n)
-          unless $_ eq $File->{Namespace}; # Don't repeat Root Namespace.
-    }
-    &add_table($File, 'Other Namespaces', $namespaces . '</ul>')
-      if $File->{Opt}->{Verbose};
+    &add_warning(
+		 $File, 'Warning:',
+		 "Unknown namespace (&#171;<code>$ns</code>&#187;) for SVG document!"
+		);
   }
 }
 
@@ -675,6 +613,23 @@ if (defined $File->{Tentative}) {
   }
 }
 
+unless ($File->{Opt}->{Verbose}) {
+  unless ($File->{'Is Upload'}) {
+    my $thispage = $File->{Env}->{'Self URI'};
+    my $escaped_uri = uri_escape($File->{URI});
+    $thispage .= qq(?uri=$escaped_uri);
+    $thispage .= ';ss=1'      if $File->{Opt}->{'Show Source'};
+    $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
+    $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
+    $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
+
+    &add_warning($File, 'Note:', <<".EOF.");
+        You can enable <a href="$thispage;verbose=1">verbose results</a> from
+        the <a href="detailed.html">Extended Interface</a>.
+.EOF.
+  }
+}
+
 
 if ($File->{Opt}->{Output} eq 'xml') {
   &report_xml($File);
@@ -683,32 +638,25 @@ if ($File->{Opt}->{Output} eq 'xml') {
 } elsif ($File->{Opt}->{Output} eq 'n3') {
   &report_n3($File);
 } else {
-  $T->param(is_xml => &is_xml($File));
+  &report_html($File);
 
-  $T->param(opt_show_source    => $File->{Opt}->{'Show Source'});
-  $T->param(opt_show_outline   => $File->{Opt}->{'Outline'});
-  $T->param(opt_show_parsetree => $File->{Opt}->{'Show Parsetree'});
-  $T->param(opt_show_noatt     => $File->{Opt}->{'No Attributes'});
-
-  my $tip = &get_tip;
-  $T->param(tip_uri  => $tip->[0]);
-  $T->param(tip_slug => $tip->[1]);
-
-  if ($File->{'Is Valid'} and not $DEBUG) {
+  if ($File->{'Is Valid'}) {
     $T->param(VALID => TRUE);
     &report_valid($File, $T);
   } else {
     $T->param(VALID => FALSE);
     $File->{Opt}->{'Show Source'} = TRUE;
-    # &print_table($File);
-    # &print_warnings($File);
     $T->param(file_errors => &report_errors($File));
-    $T->param(file_outline => &outline($File));
-    $T->param(file_source  => &source($File));
-    $T->param(file_parsetree => &parsetree($File));
-    #    &show_esis($File)   if $File->{Opt}->{'Show ESIS'};
-    #    &show_errors($File) if $File->{Opt}->{'Show Errors'};
   }
+
+  #@@@ &print_table($File);
+
+  $T->param(file_warnings  => $File->{Warnings});
+  $T->param(file_outline   => &outline($File));
+  $T->param(file_source    => &source($File));
+  $T->param(file_parsetree => &parsetree($File));
+  #    &show_esis($File)   if $File->{Opt}->{'Show ESIS'};
+  #    &show_errors($File) if $File->{Opt}->{'Show Errors'};
 
   print $T->output;
 }
@@ -722,6 +670,44 @@ exit;
 #############################################################################
 # Subroutine definitions
 #############################################################################
+
+#
+# Generate HTML report.
+sub report_html {
+  my $File = shift;
+
+  #
+  # XML mode...
+  $T->param(is_xml => &is_xml($File));
+
+  #
+  # Metadata...
+  $T->param(file_modified    => $File->{Modified});
+  $T->param(file_server      => $File->{Server});
+  $T->param(file_size        => $File->{Size});
+  $T->param(file_contenttype => $File->{ContentType});
+  $T->param(file_charset     => $File->{Charset}->{Use});
+
+  #
+  # Output options...
+  $T->param(opt_show_source    => $File->{Opt}->{'Show Source'});
+  $T->param(opt_show_outline   => $File->{Opt}->{'Outline'});
+  $T->param(opt_show_parsetree => $File->{Opt}->{'Show Parsetree'});
+  $T->param(opt_show_noatt     => $File->{Opt}->{'No Attributes'});
+  $T->param(opt_verbose        => $File->{Opt}->{'Verbose'});
+
+  #
+  # Tip of the Day...
+  my $tip = &get_tip;
+  $T->param(tip_uri  => $tip->[0]);
+  $T->param(tip_slug => $tip->[1]);
+
+  #
+  # Namespaces...
+  $T->param(file_namespace  => &ent($File->{Namespace}));
+  $T->param(file_namespaces => $File->{Namespaces});
+}
+
 #
 # Output "This page is Valid" report.
 sub report_valid {
@@ -985,18 +971,8 @@ sub serialize_table {
 
 #
 # Add a waring message to the output.
-sub add_warning {push @{shift->{Warnings}}, shift};
+sub add_warning ($$$) {push @{shift->{Warnings}}, {title => shift, text => shift}};
 
-
-#
-# Print out a list of warnings.
-sub print_warnings {
-  my $File = shift;
-  return unless defined @{$File->{Warnings}};
-  print qq(  <ul id="Warnings">\n);
-  print qq(    <li>$_</li>\n) for @{$File->{Warnings}};
-  print "  </ul>\n";
-}
 
 #
 # Print HTML explaining why/how to use a DOCTYPE Declaration.
@@ -1456,7 +1432,10 @@ sub parse_errors ($$) {
     if ($err->{type} eq 'E' or $err->{type} eq 'X' or $err->{type} eq 'Q') {
       $err->{msg}  = $errors[5];
     } elsif ($err->{type} eq 'W') {
-      &add_warning($File, "Line $err->{line}, column $err->{char}: $errors[5]");
+      &add_warning(
+		   $File, 'Warning:',
+		   "Line $err->{line}, column $err->{char}: $errors[5]"
+		  );
       $err->{msg}  = $errors[5];
     } else {
       $err->{type} = 'I';
@@ -1525,7 +1504,6 @@ sub parse_errors ($$) {
 .EOF.
       $File->{'Error Message'} .= "    </div>\n";
     }
-
 
     &abort_if_error_flagged($File, O_DOCTYPE);
     push @{$File->{Errors}}, $err;
@@ -1934,11 +1912,9 @@ sub charset_conflicts {
   #
   # Handle the case where there was no charset to be found.
   unless ($File->{Charset}->{Use}) {
-    &add_warning($File, <<".EOF.");
-      <strong>No Character Encoding detected!</strong>
-      To ensure correct validation, processing, and display,
-      it is important that the character encoding is properly
-      labeled.
+    &add_warning($File, 'No Character Encoding detected!', <<".EOF.");
+      To ensure correct validation, processing, and display, it is important
+      that the character encoding is properly labeled.
       <a href="http://www.w3.org/International/O-charset.html">More
       information...</a>
 .EOF.
@@ -1955,12 +1931,10 @@ sub charset_conflicts {
   # warn about charset override
   if ($File->{Charset}->{Override} &&
       $File->{Charset}->{Override} ne $File->{Charset}->{Use}) {
-    &add_warning($File, <<".EOF.");
-      <strong>Character Encoding Override in effect!</strong>
-      The detected character encoding,
-      &#171;<code>$cs_use</code>&#187;, has been suppressed and
-      the character encoding &#171;<code>$cs_opt</code>&#187;
-      is used instead.
+    &add_warning($File, 'Character Encoding Override in effect!', <<".EOF.");
+      The detected character encoding, &#171;<code>$cs_use</code>&#187;, has
+      been suppressed and the character encoding
+      &#171;<code>$cs_opt</code>&#187; used instead.
 .EOF.
     $File->{Tentative} |= T_ERROR;
   }
@@ -1969,38 +1943,26 @@ sub charset_conflicts {
   # Add a warning if there was charset info conflict (HTTP header,
   # XML declaration, or <meta> element).
   if (&conflict($File->{Charset}->{HTTP}, $File->{Charset}->{XML})) {
-    &add_warning($File, <<".EOF.");
-      <strong>Character Encoding mismatch!</strong>
-      The character encoding specified in the
-        HTTP header (<code>$cs_http</code>)
-      is different from the value in the
-        XML declaration (<code>$cs_xml</code>).
-      I will use the value from the
-        HTTP header (<code>$cs_use</code>)
-      for this validation.
+    &add_warning($File, 'Character Encoding mismatch!', <<".EOF.");
+      The character encoding from the HTTP header (<code>$cs_http</code>)
+      is different from the value in the XML declaration
+      (<code>$cs_xml</code>). I will use the value from the HTTP header
+      (<code>$cs_use</code>) for this validation.
 .EOF.
   } elsif (&conflict($File->{Charset}->{HTTP}, $File->{Charset}->{META})) {
-    &add_warning($File, <<".EOF.");
-      <strong>Character Encoding mismatch!</strong>
-      The character encoding specified in the
-        HTTP header (<code>$cs_http</code>)
-      is different from the value in the
-        <code>&lt;meta&gt;</code> element (<code>$cs_meta</code>).
-      I will use the value from the
-        HTTP header (<code>$cs_use</code>)
-      for this validation.
+    &add_warning($File, 'Character Encoding mismatch!', <<".EOF.");
+      The character encoding from the HTTP header (<code>$cs_http</code>)
+      is different from the value in the <code>&lt;meta&gt;</code> element
+      (<code>$cs_meta</code>). I will use the value from the HTTP header
+      (<code>$cs_use</code>) for this validation.
 .EOF.
   }
   elsif (&conflict($File->{Charset}->{XML}, $File->{Charset}->{META})) {
-    &add_warning($File, <<".EOF.");
-      <strong>Character Encoding mismatch!</strong>
-      The character encoding specified in the
-        XML declaration (<code>$cs_xml</code>)
-      is different from the value in the
-        <code>&lt;meta&gt;</code> element (<code>$cs_meta</code>).
-      I will use the value from the
-        XML declaration (<code>$cs_xml</code>)
-      for this validation.
+    &add_warning($File, 'Character Encoding mismatch!', <<".EOF.");
+      The character encoding from the XML declaration (<code>$cs_xml</code>)
+      is different from the value in the <code>&lt;meta&gt;</code> element
+      (<code>$cs_meta</code>). I will use the value from the XML declaration
+      (<code>$cs_xml</code>) for this validation.
 .EOF.
     $File->{Tentative} |= T_WARN;
   }
@@ -2044,7 +2006,15 @@ sub transcode {
         look into supporting it in the future.
       </p>
 .EOF.
-    $File->{'Error Message'} .= iana_charset_blurb();
+    $File->{'Error Message'} .= <<'.EOF.';
+    <p>
+      <a href="http://www.iana.org/"><acronym
+      title="Internet Assigned Numbers Authority">IANA</acronym></a>
+      maintains the list of <a
+      href="http://www.iana.org/assignments/character-sets">official
+      names for character sets</a>.
+    </p>
+.EOF.
     return $File;
   }
 
@@ -2172,10 +2142,10 @@ X-W3C-Validator-Errors: $errs
   </meta>
 );
 
-  &add_warning($File, <<".EOF.");
+  &add_warning($File, 'Warning:', <<".EOF.");
       This interface is highly experimental and the output *will* change
       -- probably even several times -- before finished. Do *not* rely on it!
-      See http://validator.w3.org:8001/docs/users.html#api-warning
+      See http://validator.w3.org/docs/users.html#api-warning
 .EOF.
 
   if (defined $File->{Warnings} and scalar @{$File->{Warnings}}) {
@@ -2440,6 +2410,7 @@ sub find_xml_encoding {
 
   ($File->{Charset}->{Auto}, $File->{BOM}, $CodeUnitSize, $Pattern)
     = &find_base_encoding($File->{Bytes});
+  warn qq("$File->{Charset}->{Auto}" "$File->{BOM}" "$CodeUnitSize" "$Pattern");
   my $someBytes = substr $File->{Bytes}, $File->{BOM}, ($CodeUnitSize * 100);
   my $someText = '';                  # 100 arbitrary, but enough in any case
 

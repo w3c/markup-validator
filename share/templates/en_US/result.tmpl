@@ -3,12 +3,8 @@
     <div id="main">
       <div id="head">
         <TMPL_INCLUDE name="jumpbar.tmpl">
-        <TMPL_IF NAME="file_opt_verbose">
+        <TMPL_IF NAME="opt_verbose">
           <TMPL_INCLUDE NAME="table.tmpl">
-        </TMPL_IF>
-        <TMPL_IF NAME="file_opt_warnings">
-          <ul id="Warnings">
-          </ul>
         </TMPL_IF>
       </div><!-- end of "head" -->
 

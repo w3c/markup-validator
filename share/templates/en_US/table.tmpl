@@ -1,62 +1,74 @@
 <form id="form" method="get" action="check">
   <table class="header">
-  <tr>
-    <th><label title="Address of Page to Validate (accesskey: 1)" for="uri">Address</label>: </th>
-    <td colspan="2"><input accesskey="1" type="text" id="uri" name="uri" size="20" value="http://www.w3.org/" /></td>
-  </tr>
-  <tr>
-    <th>Modified: </th>
-    <td colspan="2">Wed Nov 27 05:01:35 2002</td>
-  </tr>
-  <tr>
-    <th>Server: </th>
-    <td colspan="2">Apache/1.3.26 (Unix) PHP/3.0.18</td>
-  </tr>
-  <tr>
-    <th>Size: </th>
-    <td colspan="2">20946</td>
-  </tr>
-  <tr>
-    <th>Content-Type: </th>
-    <td colspan="2">text/html</td>
-  </tr>
-  <tr>
-    <th><label accesskey="2" title="Character Encoding (accesskey: 2)" for="charset">Encoding</label>: </th>
-    <td>us-ascii</td>
-    <td><TMPL_INCLUDE NAME="popup_charset.tmpl"></td>
-  </tr>
-  <tr>
-    <th><label accesskey="3" for="doctype" title="Document Type (accesskey: 3)">Doctype</label>: </th>
-    <td><a href="http://www.w3.org/TR/2000/REC-xhtml1-20000126/">XHTML 1.0</a> Transitional</td>
-    <td><TMPL_INCLUDE NAME="popup_doctype.tmpl"></td>
-  </tr>
-  <tr>
-    <th>Root Namespace: </th>
-    <td><a href="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</a></td>
-  </tr>
+    <tr>
+<TMPL_IF NAME="is_upload">
+      <th>File:</th><td colspan="2"><TMPL_VAR NAME="file_uri"></td>
+<TMPL_ELSE>
+      <th><label title="Address of Page to Validate (accesskey: 1)" for="uri">Address</label>:</th>
+      <td colspan="2"><input accesskey="1" type="text" id="uri" name="uri" value="<TMPL_VAR NAME="file_uri">" /></td>
+</TMPL_IF>
+    </tr>
+    <tr><th>Modified:</th><td colspan="2"><TMPL_VAR NAME="file_modified"></td></tr>
+    <tr><th>Server:</th><td colspan="2"><TMPL_VAR NAME="file_server"></td></tr>
+    <tr><th>Size:</th><td colspan="2"><TMPL_VAR NAME="file_size"></td></tr>
+    <tr><th>Content-Type:</th><td colspan="2"><TMPL_VAR NAME="file_contenttype"></td></tr>
+<TMPL_IF NAME="is_debug">
+  <TMPL_LOOP NAME="debug">
+    <tr><th><TMPL_VAR NAME="name"></th><td colspan="2"><TMPL_VAR NAME="value"></td></tr>
+  </TMPL_LOOP>
+</TMPL_IF>
+<TMPL_IF NAME="is_upload">
+    <tr><th>Encoding:</th><td colspan="2"><TMPL_VAR NAME="file_charset"></td></tr>
+    <tr><th>Doctype:</th><td colspan="2"><TMPL_VAR NAME="file_version"></td></tr>
+<TMPL_ELSE>
+    <tr>
+      <th><label accesskey="2" title="Character Encoding (accesskey: 2)" for="charset">Encoding</label>:</th>
+      <td><TMPL_VAR NAME="file_charset"></td><td><TMPL_INCLUDE NAME="popup_charset.tmpl"></td>
+    </tr>
+    <tr>
+      <th><label accesskey="3" for="doctype" title="Document Type (accesskey: 3)">Doctype</label>:</th>
+      <td><TMPL_VAR NAME="file_version"></td><td><TMPL_INCLUDE NAME="popup_doctype.tmpl"></td>
+    </tr>
+</TMPL_IF>
+<TMPL_IF NAME="file_namespace">
+    <tr>
+      <th>Root Namespace:</th>
+      <td><a href="<TMPL_VAR NAME="file_namespace">"><TMPL_VAR NAME="file_namespace"></a></td>
+    </tr>
+</TMPL_IF>
+<TMPL_IF NAME="file_namespaces">
+    <tr>
+      <th>Other Namepsaces</th>
+      <td>
+        <ul>
+          <TMPL_LOOP NAME="file_namespaces"><li><TMPL_VAR NAME="uri"></li></TMPL_LOOP>
+        </ul>
+      </td>
+    </tr>
+</TMPL_IF>
   </table>
   <fieldset>
     <legend accesskey="4">Revalidate With Options</legend>
     <table class="header">
-    <tr>
-      <th><input type="submit" value="Revalidate" accesskey="9" title="Revalidate file (accesskey: 9)" />: </th>
-      <td colspan="2">
-        <table class="options">
-          <tr>
-            <td><label title="Show Page Source (accesskey: 5)"><input type="checkbox" value="1" name="ss" accesskey="5" />Show&nbsp;Source</label></td>
-            <td><label title="Show an Outline of the document (accesskey: 6)"><input type="checkbox" value="1" name="outline" accesskey="6" />Outline</label></td>
-          </tr>
-          <tr>
-            <td><label title="Show Parse Tree (accesskey: 7)"><input type="checkbox" value="1" name="sp" accesskey="7" />Parse&nbsp;Tree</label></td>
-            <td><label title="Exclude Attributes from Parse Tree (accesskey: 8)"><input type="checkbox" value="1" name="noatt" accesskey="8" />...no&nbsp;attributes</label></td>
-          </tr>
-          <tr>
-            <td><label title="Validate also pages for which the HTTP status code indicates an error"><input type="checkbox" value="1" name="No200" />Validate&nbsp;error&nbsp;pages</label></td>
-            <td><label title="Show Verbose Output"><input type="checkbox" value="1" name="verbose" checked="checked" />Verbose&nbsp;Output</label></td>
-          </tr>
-        </table>
-      </td>
-    </tr>
+      <tr>
+        <th><input type="submit" value="Revalidate" accesskey="9" title="Revalidate file (accesskey: 9)" />: </th>
+        <td colspan="2">
+          <table class="options">
+            <tr>
+              <td><label title="Show Page Source (accesskey: 5)"><input type="checkbox" value="1" name="ss" accesskey="5" />Show&nbsp;Source</label></td>
+              <td><label title="Show an Outline of the document (accesskey: 6)"><input type="checkbox" value="1" name="outline" accesskey="6" />Outline</label></td>
+            </tr>
+            <tr>
+              <td><label title="Show Parse Tree (accesskey: 7)"><input type="checkbox" value="1" name="sp" accesskey="7" />Parse&nbsp;Tree</label></td>
+              <td><label title="Exclude Attributes from Parse Tree (accesskey: 8)"><input type="checkbox" value="1" name="noatt" accesskey="8" />...no&nbsp;attributes</label></td>
+            </tr>
+            <tr>
+              <td><label title="Validate also pages for which the HTTP status code indicates an error"><input type="checkbox" value="1" name="No200" />Validate&nbsp;error&nbsp;pages</label></td>
+              <td><label title="Show Verbose Output"><input type="checkbox" value="1" name="verbose" checked="checked" />Verbose&nbsp;Output</label></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
     </table>
   </fieldset>
 </form>

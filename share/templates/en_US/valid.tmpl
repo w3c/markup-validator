@@ -8,6 +8,16 @@
     <dt><a href="http://www.w3.org/2001/06tips/">Tip Of The Day</a>:</dt>
     <dd><a href="<TMPL_VAR NAME="tip_uri">"><TMPL_VAR NAME="tip_slug"></a></dd>
   </dl>
+<TMPL_IF NAME="file_warnings">
+  <dl id="warnings">
+<TMPL_LOOP NAME="file_warnings">
+    <dt><TMPL_VAR NAME="title"></dt>
+    <dd>
+      <TMPL_VAR NAME="text">
+    </dd>
+</TMPL_LOOP>
+  </dl>
+</TMPL_IF>
   <p>
     The document located at
     &lt;<a href="<TMPL_VAR NAME="file_uri">"><TMPL_VAR NAME="file_uri"></a>&gt;
