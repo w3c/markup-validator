@@ -5,9 +5,9 @@
 # (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.11 2003-06-15 21:41:03 ville Exp $
+# $Id: checklink.pl,v 3.6.2.12 2003-07-23 20:08:18 ville Exp $
 #
-# This program is licensed under the W3C(r) License:
+# This program is licensed under the W3C(r) Software License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
 #
 # The documentation is at:
@@ -85,7 +85,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.11 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.12 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
 
@@ -418,6 +418,9 @@ Documentation at: http://www.w3.org/2000/07/checklink
 Please send bug reports and comments to the www-validator mailing list:
   www-validator\@w3.org (with 'checklink' in the subject)
   Archives are at: http://lists.w3.org/Archives/Public/www-validator/
+
+The full manual page can be displayed with:
+  perldoc $0
 ";
   exit $exitval;
 }
@@ -1934,3 +1937,180 @@ sub hprintf (@)
     print HTML::Entities::encode(sprintf($_[0], @_[1..@_-1]));
   }
 }
+
+=head1 NAME
+
+checklink - check the validity of links in an HTML or XHTML document
+
+=head1 SYNOPSIS
+
+B<checklink>  [ I<options> ] I<URI> ...
+
+=head1 DESCRIPTION
+
+This manual page documents briefly the B<checklink> command.
+
+B<checklink> is a program that reads an HTML or XHTML document,
+extracts a list of anchors and lists and checks that no anchor is
+defined twice and that all the links are dereferenceable, including
+the fragments. It warns about HTTP redirects, including directory
+redirects, and can check recursively a part of a web site.
+
+The program can be used either as a command-line version or as a CGI script.
+
+=head1 OPTIONS
+
+This program follow the usual GNU command line syntax, with long options
+starting with two dashes (`-'). A summary of options is included below.
+
+=over 5
+
+=item B<-?, --help>
+
+Show summary of options.
+
+=item B<-V, --version>
+
+Output version information.
+
+=item B<-s, --summary>
+
+Result summary only.
+
+=item B<-b, --broken>
+
+Show only the broken links, not the redirects.
+
+=item B<-e, --directory>
+
+Hide directory redirects - e.g. L<http://www.w3.org/TR> ->
+L<http://www.w3.org/TR/>.
+
+=item B<-r, --recursive>
+
+Check the documents linked from the first one.
+
+=item B<-D, --depth n>
+
+Check the documents linked from the first one to depth n
+(implies --recursive).
+
+=item B<-l, --location uri>
+
+Scope of the documents checked in recursive mode. By default, for
+L<http://www.w3.org/TR/html4/Overview.html> for example, it would be
+L<http://www.w3.org/TR/html4/>.
+
+=item B<-n, --noacclanguage>
+
+Do not send an Accept-Language header.
+
+=item B<-L, --languages>
+
+Languages accepted (default: '*').
+
+=item B<-q, --quiet>
+
+No output if no errors are found.
+
+=item B<-v, --verbose>
+
+Verbose mode.
+
+=item B<-i, --indicator>
+
+Show progress while parsing.
+
+=item B<-u, --user username>
+
+Specify a username for authentication.
+
+=item B<-p, --password password>
+
+Specify a password.
+
+=item B<--hide-same-realm>
+
+Hide 401's that are in the same realm as the document checked.
+
+=item B<-t, --timeout value>
+
+Timeout for the HTTP requests.
+
+=item B<-d, --domain domain>
+
+Regular expression describing the domain to which the authentication
+information will be sent.  The default value can be specified in the
+checklink configuration file.
+
+=item B<--masquerade local remote>
+
+Masquerade local dir as a remote URI
+(e.g. /home/hugo/MathML2/ is in fact L<http://www.w3.org/TR/MathML2/>).
+
+=item B<-y, --proxy proxy>
+
+Specify an HTTP proxy server.
+
+=item B<-h, --html>
+
+HTML output.
+
+=back
+
+=head1 FILES
+
+=over 5
+
+=item F</etc/w3c/checklink.conf>
+
+The main configuration file.  You can use the L<W3C_CHECKLINK_CFG> environment
+variable to override the default location.
+
+Currently the only configurable option is a regular expression for
+matching trusted domains (ie. domains where HTTP basic authentication, if
+any, will be sent).  For example, the following configures only the w3.org
+domain as trusted:
+
+    Trusted = \.w3\.org$
+
+=back
+
+=head1 ENVIRONMENT
+
+checklink uses the libwww-perl library which has a number of environment
+variables affecting its behaviour.  See L</"SEE ALSO"> for some
+pointers.
+
+=over 5
+
+=item B<W3C_CHECKLINK_CFG>
+
+If set, overrides the path to the configuration file.
+
+=back
+
+=head1 SEE ALSO
+
+The documentation for this program is available on the web at
+L<http://www.w3.org/2000/07/checklink>.
+
+LWP(3), L<Net::FTP(3)>, L<Net::NNTP(3)>.
+
+=head1 AUTHOR
+
+This program was originally written by Hugo Haas <hugo@w3.org>, based on
+Renaud Bruyeron's F<checklink.pl>; there have been numerous contributors
+since.  Use the <www-validator@w3.org> mailing list for feedback, see
+L<http://validator.w3.org/docs/checklink.html#csb> for more information.
+
+This manual page was written by FrE<233>dE<233>ric SchE<252>tz
+<schutz@mathgen.ch>, for the Debian GNU/Linux system (but may be used by
+others).
+
+=head1 COPYRIGHT
+
+This program is licensed under the W3CE<174> Software License,
+L<http://www.w3.org/Consortium/Legal/copyright-software>.
+
+=cut
