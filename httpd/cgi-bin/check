@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.126 2001-06-23 01:24:24 link Exp $
+# $Id: check,v 1.127 2001-06-23 02:25:55 link Exp $
 
 #
 # We need Perl 5.004.
@@ -43,7 +43,8 @@ use constant DEBUG => 0;
 use vars qw($VERSION $DATE $MAINTAINER $NOTICE);               # Strings.
 use vars qw($frag $pub_ids $element_uri $file_type $doctypes $charsets);
                                                                # Cfg hashes.
-use vars qw($DEBUG);
+use vars qw($DEBUG); # Switch to turn debugging on and off.
+use vars qw($File);  # Global var to hold all metadata for this validation.
 
 $DEBUG += 1 unless $ENV{SERVER_PORT} == 80;
 
@@ -77,9 +78,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.126 $;
+$VERSION    =  q$Revision: 1.127 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-23 01:24:24 $;
+$DATE       =  q$Date: 2001-06-23 02:25:55 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -222,10 +223,9 @@ EOF
 
 #
 # Get the file and metadata.
-my $File;
-if    ($q->param('uploaded_file')) {$File = &handle_file($q)}
-elsif ($q->param('fragment'))      {$File = &handle_frag($q)}
-elsif ($q->param('uri'))           {$File = &handle_uri($q)};
+if    ($q->param('uploaded_file')) {$File = &handle_file($q, $File)}
+elsif ($q->param('fragment'))      {$File = &handle_frag($q, $File)}
+elsif ($q->param('uri'))           {$File = &handle_uri( $q, $File)};
 
 #
 # Abort if there was no document type mapping for this Content-Type, in which
@@ -835,7 +835,9 @@ sub read_cfg {
 #
 # Fetch an URI and return the content and selected meta-info.
 sub handle_uri {
-  my $q   = shift;
+  my $q    = shift; # The CGI object.
+  my $File = shift; # The master datastructure.
+
   my $uri = $q->param('uri'); # The URI to fetch.
 
   my $ua = new LWP::UserAgent;
@@ -868,19 +870,24 @@ sub handle_uri {
     $lastmod = scalar(gmtime($res->last_modified));
   }
 
-  return {Content       => &normalize_newlines($res->content),
-	  Type          => $type,
-	  HTTP_Charset  => $charset,
-	  Modified      => $lastmod,
-	  Server        => scalar($res->server),
-	  Size          => scalar($res->content_length),
-	  URI           => scalar($res->request->url)};
+  $File->{Content}      = &normalize_newlines($res->content);
+  $File->{Type}         = $type;
+  $File->{HTTP_Charset} = $charset;
+  $File->{Modified}     = $lastmod;
+  $File->{Server}       = scalar($res->server);
+  $File->{Size}         = scalar($res->content_length);
+  $File->{URI}          = scalar($res->request->url);
+
+  return $File;
+
 }
 
 #
 # Handle uploaded file and return the content and selected meta-info.
 sub handle_file {
-  my $q = shift; # The CGI object.
+  my $q    = shift; # The CGI object.
+  my $File = shift; # The master datastructure.
+
   my $f = $q->param('uploaded_file');
   my $h = $q->uploadInfo($f);
   my $file;
@@ -888,25 +895,32 @@ sub handle_file {
   while (not eof $f) {$file .= <$f>};
   my($type, $charset) = &parse_content_type($h->{'Content-Type'});
 
-  return {Content      => &normalize_newlines($file),
-	  Type         => $type,
-	  HTTP_Charset => $charset,
-	  Modified     => $h->{'Last-Modified'},
-	  Server       => $h->{'Server'},
-	  Size         => $h->{'Content-Length'},
-	  URI          => $q->param('uploaded_file')};
+  $File->{Content}      = &normalize_newlines($file);
+  $File->{Type}         = $type;
+  $File->{HTTP_Charset} = $charset;
+  $File->{Modified}     = $h->{'Last-Modified'};
+  $File->{Server}       = $h->{'Server'};
+  $File->{Size}         = $h->{'Content-Length'};
+  $File->{URI}          = $q->param('uploaded_file');
+
+  return $File;
 }
 
 #
 # Handle uploaded file and return the content and selected meta-info.
 sub handle_frag {
-  return {Content      => &normalize_newlines(shift->param('fragment')),
-	  Type         => 'html',
-	  HTTP_Charset => '',
-	  Modified     => '',
-	  Server       => '',
-	  Size         => '',
-	  URI          => 'upload://Form Submission'};
+  my $q    = shift; # The CGI object.
+  my $File = shift; # The master datastructure.
+
+  $File->{Content}      = &normalize_newlines(shift->param('fragment'));
+  $File->{Type}         = 'html';
+  $File->{HTTP_Charset} = '';
+  $File->{Modified}     = '';
+  $File->{Server}       = '';
+  $File->{Size}         = '';
+  $File->{URI}          = 'upload://Form Submission';
+
+  return $File;
 }
 
 #
