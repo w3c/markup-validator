@@ -1,13 +1,13 @@
-<!--#set var="revision" value="\$Id: todo.html,v 1.54 2002-10-27 15:36:19 ville Exp $"
---><!--#set var="date" value="\$Date: 2002-10-27 15:36:19 $"
+<!--#set var="revision" value="\$Id: todo.html,v 1.55 2002-11-25 01:46:47 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-11-25 01:46:47 $"
 --><!--#set var="title" value="TODO List for The W3C MarkUp Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
     <p id="skip" class="intro">
       This page has the to-do list for the <a href="./"><acronym
-      	title="World Wide Web Consortium">W3C</acronym> MarkUp
-      	Validation Service</a>, including bugs that need fixing and general
-      	wish list items. See also the
+        title="World Wide Web Consortium">W3C</acronym> MarkUp
+        Validation Service</a>, including bugs that need fixing and general
+        wish list items. See also the
       <a href="http://lists.w3.org/Archives/Public/www-validator/">www-validator
         mailing list archives</a> for recent discussion that may not be
       reflected on this page.
@@ -23,51 +23,16 @@
     <p>
       As a result, you will find several lists on this page now; one for each
       planned version and one for general "some time when I get a round tuit"
-      stuff. As releases are made, the TODO items for that release
-      <em>may</em> get moved to a separate "Changelog/Release Notes" page, but
-      if lazyness wins out they may just stay here after all. <code>:-)</code>
+      stuff. As releases are made, the TODO items for that release are removed
+      (see <a href="whatsnew.html">What's New</a> and CVS for details) or moved
+      to the next release if delayed.
     </p>
-    <div id="validator-0_6_0">
-      <h2>Validator v0.6.0</h2>
-      <ul>
-        <li class="done">
-          Fix up all absolute URIs to be relative (to aid local installations).
-          Thanks to Alex Holst for the reminder. Thanks to Ville Skytt&auml; for the
-	  patch.
-        </li>
-        <li class="done">
-          Fix up Validators temp file handling to use secure temporary files.
-          Thanks to Alex Holst for the prod... <code>:-)</code>
-        </li>
-        <li class="done">
-          Fix up Validator to be "-T" clean.
-          Thanks (again) to Alex Holst for the prod... <code>:-)</code>
-        </li>
-        <li class="done">Make it run under mod_perl.</li>
-        <li class="done">
-          Apply Ville Skytt&auml;'s
-          <a href="http://cachalot.ods.org/patches/w3c-validator/">patches</a>.
-        </li>
-        <li class="done">
-          Move entirely to OpenSP instead of a custom hacked version of
-          Liam Quinn's lq-nsgmls (OpenSP includes Liam's patches).
-        </li>
-        <li class="done">
-	  Add "check.cfg" configuration file to avoid path hacking (replace
-	  mjd's regex ;D).
-        </li>
-        <li class="done">Add first cut at
-        	<acronym title="eXtensible Markup Language">XML</acronym> output!</li>
-        <li class="done">Add count of errors found in page.</li>
-        <li>Add icon for ISO-HTML.</li>
-        <li>Bring back the Root Namespace in results.</li>
-      </ul>
-    </div>
     <div id="validator-0_7_0">
-      <h2>Validator v0.7.0 (tentative)</h2>
+      <h2>Validator v0.7.0</h2>
       <div id="validator-0_7_0-core">
         <h3>Core Changes</h3>
         <ul>
+          <li>Bring back the Root Namespace in results.</li>
           <li>
             Investigate how, if, and when, to use Nick Kew's most excellent
             <code>XMLMessageReporter</code> patch to OpenSP.
@@ -75,15 +40,15 @@
           <li>Figure out <em>some</em> way to avoid inlining so much static
           <acronym title="HyperText Markup Language">HTML</acronym>!</li>
           <li>Finish up the textarea for testing short
-          	<acronym title="HyperText Markup Language">HTML</acronym> fragments.</li>
+            <acronym title="HyperText Markup Language">HTML</acronym> fragments.</li>
         <li>
           Add an <acronym title="HyperText Markup Language">HTML</acronym>
           pretty-printer feature, using
           <a href="http://www.w3.org/People/Raggett/tidy/">tidy</a> and/or Enscript?
         </li>
         <li>Add support for https:// (<acronym
-        	title="Transport Layer Security">TLS</acronym>/<acronym
-        	title="Secure Sockets Layer">SSL</acronym>) using Ville's patches.</li>
+          title="Transport Layer Security">TLS</acronym>/<acronym
+          title="Secure Sockets Layer">SSL</acronym>) using Ville's patches.</li>
         <li>
           Pay attention to Accept-Charset (cf. <a href="http://lists.w3.org/Archives/Public/www-validator/2001JanMar/0255.html">this</a>
           message from "brewhaha").
@@ -118,13 +83,13 @@
         <li>
           Add system requirements for
           <abbr title="Microsoft Windows NT">NT</abbr>/<acronym
-          	title="Microsoft Windows 2000">W2K</acronym>.
-          	Bug Bjoern about his "Installing the Validator on
-          	<abbr title="Microsoft Windows NT">NT</abbr>" doc.
-          	Link to ActiveState <code>Text::Iconv</code> and friends.
+            title="Microsoft Windows 2000">W2K</acronym>.
+            Bug Bjoern about his "Installing the Validator on
+            <abbr title="Microsoft Windows NT">NT</abbr>" doc.
+            Link to ActiveState <code>Text::Iconv</code> and friends.
         </li>
         <li>Add docs on editing
-        		<acronym title="Document Type Definitions">DTDs</acronym>.</li>
+          <acronym title="Document Type Definitions">DTDs</acronym>.</li>
         <li>Document how to add new <code>DOCTYPEs</code> to the Validator.</li>
         <li>Write documentation for Content Negotiation of Badges</li>
         </ul>
@@ -132,16 +97,10 @@
       <div id="validator-0_7_0-site">
         <h3>Website Changes</h3>
         <ul>
-        <li>
-          Add catalog of online tools and other validators. In particular, link to
-          the <acronym title="Web Design Group">WDG</acronym>
-          tools and Nick Kew's most excellent <code>*Valet</code> tools.
-        </li>
-        <li>
-          Link to Jukka's pages; both in general and to specific pages.
-          Ask him about mirroring some of the stuff on validator.w3.org.
-        </li>
-        <li>Include some Bookmarklets for the Validator</li>
+          <li>
+            Link to Jukka's pages; both in general and to specific pages.
+            Ask him about mirroring some of the stuff on validator.w3.org.
+          </li>
         </ul>
       </div>
     </div>
@@ -156,8 +115,8 @@
         </li>
         <li>
           Finish adding support for <acronym
-          	title="eXtensible Markup Language">XML</acronym>
-          	validation (see also:
+            title="eXtensible Markup Language">XML</acronym>
+          validation (see also:
           <a href="dev/tests/#xml">test cases</a>, or
           <a href="http://www.hcrc.ed.ac.uk/~richard/xml-check.html">an
           existing service</a>).
@@ -176,7 +135,7 @@
           validation directly into this service; either
           directly or by some form of linking to the existing service on
           Jigsaw.
-	</li>
+        </li>
         <li>
           Make e.g. <code>http://validator.w3.org/check/referer;imgonly</code>
           return only an image showing the validation status of the referring
@@ -198,8 +157,8 @@
         </li>
         <li>
           Investigate validation of <a
-          	href="http://www.openhealth.org/RDDL/"><acronym
-          		title="Resource Directory Description Language">RDDL</acronym></a>.
+            href="http://www.openhealth.org/RDDL/"><acronym
+              title="Resource Directory Description Language">RDDL</acronym></a>.
         </li>
         <li>
           Fix directories differing only in name case in
@@ -242,15 +201,15 @@
         <li>
           Make lists of "most frequently validated invalid pages"
           and "most frequently validated (non-<acronym
-          	title="World Wide Web Consortium">W3C</acronym>?) valid pages"
+            title="World Wide Web Consortium">W3C</acronym>?) valid pages"
           (need to start logging stuff first, including <acronym
-          	title="Internet Protocol Addresses">IPs</acronym> to compare
+            title="Internet Protocol Addresses">IPs</acronym> to compare
           uniqueness).
         </li>
         <li>
           Install and play with <code>HTML::Validator</code>, link to it from somewhere:
           <a href="http://www.hut.fi/~samzait/HTML-Validator/"><code>HTML::Validator</code>
-          	Home Page</a>
+            Home Page</a>
           <a href="http://www.cpan.org/modules/by-authors/id/S/SA/SAIT/">Sami Itkonen's
           <acronym title="Comprehensive Perl Archive Network">CPAN</acronym> directory</a>
         </li>
@@ -262,14 +221,14 @@
           <acronym title="Standard Generalized Markup Language">SGML</acronym>
           implementation notes"</a> in the
           <a href="http://www.w3.org/TR/REC-html40/"><acronym
-          	title="HyperText Markup Language">HTML</acronym> 4.0 spec</a>.
+            title="HyperText Markup Language">HTML</acronym> 4.0 spec</a>.
           (these things really belong in something like
           <a href="http://tidy.sf.net/">Tidy</a>).
         </li>
         <li>
           Make an "elements found" section a la Webtechs, with links from each
           element to the appropriate place in either the <acronym
-          	title="Document Type Definition">DTD</acronym> tree listing
+            title="Document Type Definition">DTD</acronym> tree listing
           produced with dtd2html (after running dtd2html with all <acronym
           title="Document Type Definitions">DTDs</acronym> in the
           catalog), or the <acronym title="HyperText Markup Language">HTML</acronym>
@@ -303,13 +262,13 @@
             </li>
             <li>
               "registered users" could have a list of <acronym
-              	title="Uniform Resource Locators">URLs</acronym> they're interested in,
+                title="Uniform Resource Locators">URLs</acronym> they're interested in,
               and whenever they return to the service they can modify this list,
               and e-mail can be sent whenever any of them cease to validate
             </li>
             <li>
               Right now someone could probably use the existing <acronym
-              	title="Uniform Resource Locator">URL</acronym>-minder
+                title="Uniform Resource Locator">URL</acronym>-minder
               service instead of writing a new one (tell it to "mind" the
               <acronym title="Uniform Resource Locator">URL</acronym>
               that points to the validation result for a page?) But I'm not sure
@@ -331,12 +290,17 @@
           using images mixed with text, or just an image?
         </li>
         <li>Add a section with
-        	<acronym title="Platform For Internet Content Selection">PICS</acronym>
-        	info?</li>
+          <acronym title="Platform For Internet Content Selection">PICS</acronym>
+          info?</li>
         <li>
           Issue <acronym title="Platform For Internet Content Selection">PICS</acronym>
           labels for documents that do/don't conform? Or for editing tools that don't
           conform?
+        </li>
+        <li>
+          Investigate possibility of modifying OpenSP's messages for e.g.
+          invalid attributes to include name of current element and version
+          and type of markup in use.
         </li>
       </ol>
     </div>
