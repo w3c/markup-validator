@@ -5,7 +5,7 @@
 # (c) 1999-2001 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.87 2001-11-26 18:18:49 hugo Exp $
+# $Id: checklink.pl,v 2.88 2002-01-11 12:36:59 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -38,7 +38,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.87 $ . '(c) 1999-2001 W3C';
+my $VERSION = q$Revision: 2.88 $ . '(c) 1999-2001 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -538,8 +538,11 @@ Validity</a></p>
                         ($u =~ m|^$_base_location|) &&
                         # and the link is not broken
                         $results{$u}{location}{success} &&
-                        # And it is a text/html resource
-                        ($results{$u}{location}{type} =~ m|text/html|)
+                        # And it is a text/html or application/xhtml+xml
+			# resource
+                        (($results{$u}{location}{type} =~ m|text/html|) ||
+			 ($results{$u}{location}{type}
+			  =~ m|application/xhtml\+xml|))
                         )
                      );
             # Check if we have already processed the URI
@@ -623,7 +626,9 @@ sub get_document() {
 
     # Can we parse the document?
     my $failed_reason;
-    if (! ($response->header('Content-Type') =~ m|text/html|)) {
+    if (! (($response->header('Content-Type') =~ m|text/html|) ||
+	   ($response->header('Content-Type') =~ m|application/xhtml\+xml|))
+	) {
         $failed_reason = "Content-Type is '".
             $response->header('Content-Type')."'";
     } elsif ($response->header('Content-Encoding')
@@ -1129,7 +1134,9 @@ sub check_validity() {
         if (!defined($results{$uri}{location}{type})) {
             return;
         }
-        if (! ($results{$uri}{location}{type} =~ m|text/html|i)) {
+        if (! (($results{$uri}{location}{type} =~ m|text/html|i) ||
+	       ($results{$uri}{location}{type} =~ m|application/xhtml\+xml|i))
+	    ) {
             if ($_verbose) {
                 &hprintf("Can't check content: Content-type is '%s'.\n",
                          $response->header('Content-type'));
