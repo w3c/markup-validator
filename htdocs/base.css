@@ -4,13 +4,14 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.33 2004-07-21 15:06:55 link Exp $
+   $Id: base.css,v 1.34 2004-11-16 05:19:49 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
 @import url(navbar.css);  /* CSS for navigation menu. */
 @import url(tips.css);    /* CSS for Quality Tips. */
 @import url(docs.css);    /* CSS for the Documentation. */
+/* the print CSS is at the end of this document, imported after everything else */
 
 
 html, body {
@@ -335,3 +336,6 @@ div#recent {
 div#recent dt {
   margin-top: 1em;
 }
+
+@import url(print.css) print;
+

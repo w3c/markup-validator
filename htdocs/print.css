@@ -1,0 +1,16 @@
+#menu, .jumpbar, address, .copyright, #revalidate { 
+    display: none 
+    }
+
+body {
+    font-size: 12pt; 
+    }
+
+#banner { 
+    background: white; 
+    }
+
+/* trying to avoid having the source drool out of the paper */
+#source div pre { white-space: normal }
+/* ... yet have something legible */
+#source div pre a {display: block }
