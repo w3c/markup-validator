@@ -4,10 +4,11 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.20.2.9 2002-05-10 18:14:09 link Exp $
+   $Id: base.css,v 1.20.2.10 2002-05-12 20:52:29 link Exp $
 */
 
-@import url(results.css); /* CSS for validation results. */
+@import url(/results.css); /* CSS for validation results. */
+@import url(/navbar.css);  /* CSS for navigation menu. */
 
 body {
   color:          black;
@@ -81,27 +82,6 @@ address {
   clear: both;
 }
 
-p.navbar a {
-  display: block;;
-}
-
-p.navbar a:hover {
-  background: #ccc;
-}
-
-p.navbar {
-  float: right;
-  text-align: right;
-  text-decoration: none;
-  margin: .1ex .1ex .1ex 1ex;
-  padding: 1ex;
-  width:     13ex;
-  background-color: #eee;
-  border: .1ex dashed #999;
-  clear:both;
-}
-
-
 p.jumpbar {
   float: left;
   clear: left;
@@ -127,10 +107,6 @@ p.jumpbar a:hover {
 }
 
 .stb {clear: left}
-
-/* p {
-  max-width: 75ex;
-} */
 
 
 div.colophon {
