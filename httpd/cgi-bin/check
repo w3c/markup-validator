@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.261 2002-10-25 06:06:11 link Exp $
+# $Id: check,v 1.262 2002-10-25 17:39:09 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.261 $;
+  $VERSION    =  q$Revision: 1.262 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-25 06:06:11 $,
+			      Date => q$Date: 2002-10-25 17:39:09 $,
 			     });
 
 #
@@ -267,14 +267,20 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
 } elsif ($File->{ContentType} =~ m(^text/([-.a-zA-Z0-9]\+)?xml$)) {
   # Act as if $http_charset was 'us-ascii'. (MIME rules)
   $File->{Charset}->{Use} = 'us-ascii';
+  if ($File->{'Is Upload'}) {
+    my @_source = ('sent by your web browser', 'browser send');
+  } else {
+    my @_source = ('returned by your web server', 'server return');
+  }
   &add_warning($File, <<".EOF.");
       <em>Note:</em>
-      The HTTP Content-Type field did not contain a "charset" attribute,
-      but the Content-Type was one of the XML text/* sub-types. The relevant
+      The HTTP Content-Type field $_source[0] did not contain
+      a "charset" attribute, but the Content-Type was one of the XML text/*
+      sub-types (<code>$File->{ContentType}</code>). The relevant
       specification (RFC 3023) specifies a strong default of "us-ascii" for
       such documents so we will use this value regardless of any encoding you
       may have indicated elsewhere. If you would like to use a different
-      encoding, you should arrange to have your server send this new encoding
+      encoding, you should arrange to have your $_source[1] this new encoding
       information.
 .EOF.
 } elsif ($File->{Charset}->{XML}) {
