@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.162 2001-07-25 00:37:11 link Exp $
+# $Id: check,v 1.163 2001-07-26 12:29:30 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.162 $;
+$VERSION    =  q$Revision: 1.163 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-25 00:37:11 $;
+$DATE       =  q$Date: 2001-07-26 12:29:30 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -294,7 +294,7 @@ $File->{Type} = 'mathml' if $File->{DOCTYPE} =~ /mathml/i;
 
 
 # If we have a charset field in the request, we use it
-if ($q->param('charset')) {
+if ($q->param('charset') and not $q->param('charset') =~ m(unknown)i) {
   $q->param('charset') =~ /^([^ ]*)/;
   $File->{Form_Charset} = lc $1;
 }
