@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.77 2002-08-19 05:11:19 link Exp $
+# $Id: check,v 1.200.2.78 2002-08-20 01:03:34 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.200.2.77 $;
+  $VERSION    =  q$Revision: 1.200.2.78 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-19 05:11:19 $,
+			      Date => q$Date: 2002-08-20 01:03:34 $,
 			     });
 
 #
@@ -485,7 +485,13 @@ if ($File->{'Is Upload'}) {
 #
 # By default, use SGML catalog file and SGML Declaration.
 my $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'sgml.soc');
-my @xmlflags = ('-R', '-wvalid', '-wnon-sgml-char-ref', '-wno-duplicate');
+my @xmlflags = qw(
+		  -R
+		  -wvalid
+		  -wnon-sgml-char-ref
+		  -wno-duplicate
+		  -wunclosed
+		 );
 
 #
 # Switch to XML semantics if file is XML.
