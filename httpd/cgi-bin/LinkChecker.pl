@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: LinkChecker.pl,v 1.29 2000-02-08 23:11:20 hugo Exp $
+# $Id: LinkChecker.pl,v 1.30 2000-02-09 15:41:34 hugo Exp $
 #
 # This program is licensed under the W3C(r) License.
 #
@@ -29,7 +29,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C LinkChecker';
-my $VERSION = q$Revision: 1.29 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 1.30 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -951,9 +951,7 @@ sub links_summary(\%,\%,\%) {
     print('links:');
     if ($_html) {
         print('<br>Broken fragments appear in red</p>');
-    }
-    if ($_html) {
-        print("</p>\n<table border=\"1\">\n<tr><td><b>Location</b></td><td><b>Code</b></td><td><b>Fragment</b></td><td><b>Lines</b></td></tr>");
+        print("\n<table border=\"1\">\n<tr><td><b>Location</b></td><td><b>Code</b></td><td><b>Fragment</b></td><td><b>Lines</b></td></tr>");
     }
     print("\n");
     my $u;
