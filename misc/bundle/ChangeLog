@@ -1,0 +1,5 @@
+2004-05-05  ville
+
+	* README, lib/Bundle/W3C/Validator.pm, t/00load.t: First release,
+	for the W3C Markup Validator 0.6.5.
+
