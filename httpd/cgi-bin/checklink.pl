@@ -5,7 +5,7 @@
 # (c) 1999-2002 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6 2002-11-23 21:37:09 ville Exp $
+# $Id: checklink.pl,v 3.6.2.1 2002-12-07 19:55:26 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -84,7 +84,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.1 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2002 W3C', $VERSION);
 
@@ -114,7 +114,8 @@ my $_password;
 my $_trusted = '\.w3\.org';
 my $_http_proxy;
 my $_accept_language = 1;
-my $_languages = '*';
+my $_languages = $ENV{HTTP_ACCEPT_LANGUAGE} || '*';
+my $_accept = 'application/xhtml+xml, text/html, */*;q=0.5';
 my $_base_location = '.';
 my $_masquerade = 0;
 my $_local_dir = my $_remote_masqueraded_uri = '';
@@ -759,9 +760,10 @@ sub get_uri ($$;$\%$$$$)
   &hprintf("%s %s ", $method, $uri) if $verbose_progress;
 
   my $request = new HTTP::Request($method, $uri);
-  if ($_accept_language) {
-    $request->header('Accept-Language' => 'en');
+  if ($_accept_language && $_languages) {
+    $request->header('Accept-Language' => $_languages);
   }
+  $request->header('Accept', $_accept);
   # Are we providing authentication info?
   if (defined($auth)
       && ($request->url->host =~ /$_trusted$/)) {
@@ -921,7 +923,7 @@ sub parse_document ($$$$;$)
 # Constructor for W3C::CheckLink #
 ###################################
 
-sub W3C::CheckLink::new
+sub new
 {
   my $p = HTML::Parser::new(@_, api_version => 3);
 
@@ -951,7 +953,7 @@ sub W3C::CheckLink::new
 # Record or return  the doctype of the document #
 #################################################
 
-sub W3C::CheckLink::doctype
+sub doctype
 {
   my ($self, $dc) = @_;
   if (! $dc) {
@@ -981,7 +983,7 @@ sub W3C::CheckLink::doctype
 # Count the number of lines in a file #
 #######################################
 
-sub W3C::CheckLink::new_line
+sub new_line
 {
   my ($self, $string) = @_;
   my $count = ($string =~ tr/\n//);
@@ -995,7 +997,7 @@ sub W3C::CheckLink::new_line
 # Extraction of the anchors #
 #############################
 
-sub W3C::CheckLink::get_anchor
+sub get_anchor
 {
   my ($self, $tag, $attr) = @_;
   my $anchor;
@@ -1078,7 +1080,7 @@ sub text
   }
 }
 
-sub W3C::CheckLink::declaration
+sub declaration
 {
   my ($self, $text) = @_;
   # Extract the doctype
@@ -1396,6 +1398,7 @@ on how to solve this</a>.';
       } else {
         $whattodo = $todo->{$c};
       }
+      # @@@ 303 and 307 ???
       if (defined($redirects{$u}) && ($c != 301) && ($c != 302)) {
         $redirect_too = 'The original request has been redirected.';
         $whattodo .= ' '.$redirect_too if (! $_html);
@@ -1551,11 +1554,14 @@ sub links_summary (\%\%\%\%)
                300 => 'It usually means that there is a typo in a link that triggers mod_speling action - this must be fixed!',
                301 => 'You should update the link.',
                302 => 'Usually nothing.',
+               303 => 'Usually nothing.',
+               307 => 'Usually nothing.',
                400 => 'Usually the sign of a malformed URL that cannot be parsed by the server.',
                401 => "The link is not public. You'd better specify it.",
                403 => 'The link is forbidden! This needs fixing. Usual suspects: a missing index.html or Overview.html, or a missing ACL.',
                404 => 'The link is broken. Fix it NOW!',
                405 => 'The server does not allow HEAD requests. Go ask the guys who run this server why. Check the link manually.',
+               406 => "The server isn't capable of responding according to the Accept* headers sent. Check it out.",
                407 => 'The link is a proxy, but requires Authentication.',
                408 => 'The request timed out.',
                410 => 'The resource is gone. You should remove this link.',
@@ -1880,12 +1886,12 @@ sub print_form ($)
   my $cookie_options = '';
   if ($q->cookie()) {
     $cookie_options = "
-    <label><input type=\"radio\" name=\"cookie\" value=\"nochanges\" checked=\"checked\"> Don't modify saved options</label>
-    <label><input type=\"radio\" name=\"cookie\" value=\"set\"> Save these options</label>
-    <label><input type=\"radio\" name=\"cookie\" value=\"clear\"> Clear saved options</label>";
+    <label for=\"cookie1\"><input type=\"radio\" id=\"cookie1\" name=\"cookie\" value=\"nochanges\" checked=\"checked\"> Don't modify saved options</label>
+    <label for=\"cookie2\"><input type=\"radio\" id=\"cookie2\" name=\"cookie\" value=\"set\"> Save these options</label>
+    <label for=\"cookie3\"><input type=\"radio\" id=\"cookie3\" name=\"cookie\" value=\"clear\"> Clear saved options</label>";
   } else {
     $cookie_options = "
-    <label><input type=\"checkbox\" name=\"cookie\" value=\"set\"> Save options in a <a href=\"http://www.w3.org/Protocols/rfc2109/rfc2109\">cookie</a></label>";
+    <label for=\"cookie\"><input type=\"checkbox\" id=\"cookie\" name=\"cookie\" value=\"set\"> Save options in a <a href=\"http://www.w3.org/Protocols/rfc2109/rfc2109\">cookie</a></label>";
   }
 
   print "<form action=\"", $q->self_url(), "\" method=\"get\" onsubmit=\"return uriOk()\">
@@ -1895,16 +1901,16 @@ of a document that you would like to check:</label></p>
 <fieldset>
   <legend>Options</legend>
   <p>
-    <label><input type=\"checkbox\" name=\"summary\" value=\"on\"", $sum, "> Summary only</label>
+    <label for=\"summary\"><input type=\"checkbox\" id=\"summary\" name=\"summary\" value=\"on\"", $sum, "> Summary only</label>
     <br>
-    <label><input type=\"checkbox\" name=\"hide_redirects\" value=\"on\"", $red, "> Hide <a href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.3\">redirects</a>:</label>
+    <label for=\"hide_redirects\"><input type=\"checkbox\" id=\"hide_redirects\" name=\"hide_redirects\" value=\"on\"", $red, "> Hide <a href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.3\">redirects</a>:</label>
     <label><input type=\"radio\" name=\"hide_type\" value=\"all\"", $all, "> all</label>
     <label><input type=\"radio\" name=\"hide_type\" value=\"dir\"", $dir, "> for directories only</label>
     <br>
-    <label><input type=\"checkbox\" name=\"no_accept_language\" value=\"on\"", $acc, "> Don't send <tt><a href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4\">Accept-Language</a></tt> headers</label>
+    <label for=\"no_accept_language\"><input type=\"checkbox\" id=\"no_accept_language\" name=\"no_accept_language\" value=\"on\"", $acc, "> Don't send <tt><a href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4\">Accept-Language</a></tt> headers</label>
     <br>
-    <label title=\"Check linked documents recursively (maximum: ", $_max_documents, " documents; sleeping ", $_sleep_time, " seconds between each document)\"><input type=\"checkbox\" name=\"recursive\" value=\"on\"", $rec, "> Check linked documents recursively</label>,
-    <label title=\"Depth of the recursion (-1 is the default and means unlimited)\">recursion depth: <input type=\"text\" size=\"3\" maxlength=\"3\" name=\"depth\" value=\"", $dep, "\"></label>
+    <label title=\"Check linked documents recursively (maximum: ", $_max_documents, " documents; sleeping ", $_sleep_time, " seconds between each document)\" for=\"recursive\"><input type=\"checkbox\" id=\"recursive\" name=\"recursive\" value=\"on\"", $rec, "> Check linked documents recursively</label>,
+    <label title=\"Depth of the recursion (-1 is the default and means unlimited)\" for=\"depth\">recursion depth: <input type=\"text\" size=\"3\" maxlength=\"3\" id=\"depth\" name=\"depth\" value=\"", $dep, "\"></label>
     <br><br>", $cookie_options, "
   </p>
 </fieldset>
