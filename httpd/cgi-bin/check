@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.337 2004-09-05 10:27:13 link Exp $
+# $Id: check,v 1.338 2004-09-08 16:10:56 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -225,7 +225,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.337 $;
+  $VERSION    =  q$Revision: 1.338 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1784,10 +1784,9 @@ sub outline {
     $heading =~ s/\s+/ /g;
     $heading =~ s/^[- ]//;
     $heading = &ent($heading);
-    $outline .= "    <li>$heading</li>\n";
+    $outline .= "    <li>$heading\n";
   }
-  $outline .= "    </ul>\n" x $level;
-
+  $outline .= "    </li></ul>\n" x $level;
   return $outline;
 }
 
