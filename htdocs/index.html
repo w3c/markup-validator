@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.46 2001-10-06 13:38:34 link Exp $" -->
-<!--#set var="date" value="\$Date: 2001-10-06 13:38:34 $" -->
+<!--#set var="revision" value="\$Id: index.html,v 1.47 2001-10-20 10:33:18 link Exp $" -->
+<!--#set var="date" value="\$Date: 2001-10-20 10:33:18 $" -->
 <!--#set var="title" value="The W3C HTML Validation Service" -->
 <!--#include virtual="/header.html" -->
 
@@ -28,6 +28,28 @@
       </p>
     </div>
     <div>
+      <h2>Validate Files</h2>
+      <p>
+        You can enter a URI in the <code>Address</code> field below, or choose
+        a file to upload. There is also an <a title="Extended Interface to the
+        W3C HTML Validation Service" href="/detailed.html">Extended
+        Interface</a> available if you want to set any advanced options.
+      </p>
+      <form method="get" action="/check">
+      <p>
+        <label title="Address of page to Validate">Address: <input id="uri" name="uri" size="50" /></label>
+	<input type="submit" value="Validate URI..." />
+      </p>
+      </form>
+      <form method="post" enctype="multipart/form-data" action="/check">
+      <p>    
+        <label title="Choose a Local File to Upload and Validate">Local File: <input type="file" name="uploaded_file" size="50" /></label>
+        <input type="submit" value="Validate File..." />
+      </p>
+      </form>
+    </div>
+
+    <div>
       <h2><a name="recent">Recent Updates</a></h2>
       <p class="intro">
         These are the most recent major changes to this service. See
@@ -40,32 +62,9 @@
       <dd>Added experimental support for SVG 1.0 and spec-prod 2.0.</dd>
       <dt><a href="whatsnew.html#2001-09-13">September 13, 2001</a></dt>
       <dd>Added support for XHTML 1.1, XHTML Basic 1.0, and MathML 2.0.</dd>
-      <dt><a href="whatsnew.html#2001-06-22">June 22, 2001</a></dt>
-      <dd>Improved and expanded Character Encoding support.</dd>
     </dl>
    </div>
 
-    <div>
-      <h2>Validate Files</h2>
-      <p>
-        You can enter a URI in the <code>Address</code> field below, or choose
-        a file to upload. There is also an <a title="Extended Interface to the
-        W3C HTML Validation Service" href="/detailed.html">Extended
-        Interface</a> available if you want to set any advanced options.
-      </p>
-      <form method="get" action="/check">
-      <p>
-        <label title="Address of page to Validate">Address (URI): <input id="uri" name="uri" size="50" /></label>
-	<input type="submit" value="Validate URI..." />
-      </p>
-      </form>
-      <form method="post" enctype="multipart/form-data" action="/check">
-      <p>    
-        <label title="Choose a Local File to Upload and Validate">Local File: <input type="file" name="uploaded_file" size="50" /></label>
-        <input type="submit" value="Validate File..." />
-      </p>
-      </form>
-    </div>
 <!--#include virtual="/footer.html" -->
   </body>
 </html>
