@@ -3,10 +3,9 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 >
 
-  <xsl:output method="html" />
+  <xsl:output method="html" doctype-public="-//W3C//DTD HTML 4.01//EN"/>
 
   <xsl:template match="result">
-    <xsl:text disable-output-escaping="yes">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"&gt;</xsl:text>
 <html lang="en">
   <head>
     <title>Report</title>
