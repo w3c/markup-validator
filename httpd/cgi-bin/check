@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.42 1999-10-25 06:19:21 gerald Exp $
+# $Id: check,v 1.43 1999-10-25 08:20:17 gerald Exp $
 
 #
 # Load modules
@@ -29,8 +29,8 @@ use constant UNDEF => undef;
 # Constant definitions
 #############################################################################
 
-my $cvsrevision	= '$Revision: 1.42 $';
-my $cvsdate	= '$Date: 1999-10-25 06:19:21 $';
+my $cvsrevision	= '$Revision: 1.43 $';
+my $cvsdate	= '$Date: 1999-10-25 08:20:17 $';
 
 my $logfile	= "/var/log/httpd/val-svc";
 
@@ -54,9 +54,9 @@ my $revision	= $cvsrevision;
    $revision	=~ s/^\$Revision: //;
    $revision	=~ s/ \$$//;
 
-my ( $validity, $version, $document_type, $xmlflags, %undef_frag,
-    $meta_charset, $http_charset, $effective_charset, $charsets_differ,
-    $codeconv, $lastmod, $decl, $catalog, $command, @fake_errors,
+my ( $validity, $version, $document_type, %undef_frag,
+    $effective_charset, $charsets_differ,
+    $lastmod, $catalog, $command, @fake_errors,
     $guessed_doctype, $doctype, $line, $col, $type, $msg, $extraspaces, $diff,
     $pos, $indent, $gifname, $alttext, $gifhw, $nicegifname, $pedanticflags,
     $pedantic_blurb, $level, $prevlevel, $i, $prevdata );
@@ -337,6 +337,7 @@ if ( $doctype =~ /xhtml/i ) {
     $document_type = "xhtml";
 }
 
+my $meta_charset = '';
 foreach $line (@file) {
     # @@ needs to handle meta elements that span more than one line
     if ( $line =~ /<meta/i ) {
@@ -347,16 +348,21 @@ foreach $line (@file) {
     }
 }
 
-( $http_charset ) = ( $content_type =~ /;\s*charset=(.*)/i );
+my $http_charset = '';
+
+if ( $content_type =~ /;\s*charset=(.*)/i ) {
+    $http_charset = $1;
+    $http_charset =~ s/;.*//;
+    $http_charset =~ s/\s*//g;
+}
+
 $content_type =~ s/;.*$//;
 $content_type =~ s/\s*$//g;
-$http_charset =~ s/;.*//;
-$http_charset =~ s/\s*//g;
 
 if ( $http_charset ne '' ) {
     $effective_charset = $http_charset;
     if ( $meta_charset ne '' && $http_charset !~ /$meta_charset/i ) {
-    	    # @@ the above needs work
+	    # @@ the above needs work
         $charsets_differ = 1;
     }
 }
@@ -369,6 +375,7 @@ else {
     }
 }
 
+my $codeconv = '';
 if ( $effective_charset =~ /iso-2022-jp/i ) {
     $codeconv = "$nkf -Jex | ";
 }
@@ -398,6 +405,8 @@ if ( defined $response->content_length ) {
     print "  <li>Content length: " . $response->content_length . "\n";
 }
 
+my $xmlflags = '';
+my $decl = '';
 if ( $document_type eq "xhtml" ) {
     $ENV{SP_CATALOG_FILES} = "$sgmlstuff/PR-xhtml1-19990824/xhtml.soc";
     $ENV{SGML_SEARCH_PATH} = "$sgmlstuff/PR-xhtml1-19990824/";
@@ -853,6 +862,7 @@ EOF
     my $heading = '';
     until (substr($line, 0, 3) =~ /^\)H$level/i) {
       $line = $esis[$_++];
+      $line =~ s/\\011/ /g;
       if ($line =~ /^-/) {
 	my $headcont = $line;
 	substr($headcont, 0, 1) = " ";
@@ -867,7 +877,7 @@ EOF
 
     $heading = substr($heading, 1); # chop the leading '-' or ' '.
     $heading =~ s/&/&amp;/go; $heading =~ s/</&lt;/go;
-    print "    <li>$heading</li>\n";
+    print "    <li>$heading\n";
   }
   print "    </ul>\n" x $level;
   print <<'EOF';
@@ -877,6 +887,7 @@ EOF
       the logical structure of the document; they should not be used simply
       to add emphasis, or to change the font size.)
     </p>
+    </div>
 EOF
 }
 
@@ -920,8 +931,8 @@ EOF
     } else {
       print <<'EOF';
     <p class="note">
-      It helps a bit if you select the "don't show attributes" option on the
-      <a href="./#byURI">form</a>.
+      You can also view this parse tree without attributes by selecting the
+      appropriate option on <a href="./#byURI">the form</a>.
     </p>
 EOF
     }
@@ -931,14 +942,12 @@ EOF
 
   print "<pre>\n";
   foreach my $line (@esis) {
-    if ($q->param('noatt')) {
+    if ($q->param('noatt')) {	# don't show attributes
       next if $line =~ /^A/;
       next if $line =~ /^\(A$/;
       next if $line =~ /^\)A$/;
     }
 
-    #
-    # Experimental: skip data if it's only newlines and space.
     $line =~ s/\\n/ /g;
     $line =~ s/\\011/ /g;
     $line =~ s/\s+/ /g;
@@ -955,11 +964,7 @@ EOF
       print wrap(' ' x $indent, ' ' x $indent, $prevdata), "\n";
       undef $prevdata;
     }
-    # End of experimental stuff.
-    #
 
-    # This is interesting when uncommented
-    # next unless /^AHREF CDATA /;
     $line =~ s/&/&amp;/go;
     $line =~ s/</&lt;/go;
     if ($line =~ /^\)/) {
@@ -968,14 +973,21 @@ EOF
 
     my $printme;
     chomp($printme = $line);
-    $printme =~ s/^\((.*)/&lt;<strong>$1<\/strong>&gt;/;
-    $printme =~ s/^\)(.*)/&lt;\/<strong>$1<\/strong>&gt;/;
+    $printme =~ s{^([()])(.*)}	# reformat and add links on HTML elements
+		 { my $close = '';
+		      $close = "/" if $1 eq ")";	# ")" -> close-tag
+		   "&lt;" . $close . "<a href=\"" .
+		   &html_element_ref($2) .
+		   "\">$2<\/a>>"
+		 }egx;
+    $printme =~ s,^A.*,  <small>$&</small>,;
     print ' ' x $indent, $printme, "\n";
     if ($line =~ /^\(/) {
       $indent += 2;
     }
   }
   print "</pre>\n";
+  print "</div>\n";
 }
 
 &clean_up_and_exit;
@@ -1041,7 +1053,7 @@ sub erase_stuff {
 
     unlink $temp           or warn "unlink($temp) returned: $!\n";
     unlink "$temp.esis"    or warn "unlink($temp.esis) returned: $!\n";
-    unlink "$temp.weblint" or warn "unlink($temp.weblint) returned: $!\n";
+    unlink "$temp.weblint";
 
 }
 
@@ -1291,5 +1303,115 @@ sub output_css_validator_blurb {
 
 EOHD
 
+}
+
+sub html_element_ref {
+
+    # returns a URI pointing to docs on the HTML element given as $1
+
+    my $element = shift;
+
+    # the following hash was produced with:
+    #
+    # GET http://www.htmlhelp.com/reference/html40/alist.html > /tmp/e
+    # egrep '^  <li' /tmp/e | \
+    #     perl -pe 's|.*href="([^"]*)">(.*)</a>.*|\t"\L$2\E" => "$1",|'
+
+    my %html_element_hash = (
+	"a" => "special/a.html",
+	"abbr" => "phrase/abbr.html",
+	"acronym" => "phrase/acronym.html",
+	"address" => "block/address.html",
+	"applet" => "special/applet.html",
+	"area" => "special/area.html",
+	"b" => "fontstyle/b.html",
+	"base" => "head/base.html",
+	"basefont" => "special/basefont.html",
+	"bdo" => "special/bdo.html",
+	"big" => "fontstyle/big.html",
+	"blockquote" => "block/blockquote.html",
+	"body" => "html/body.html",
+	"br" => "special/br.html",
+	"button" => "forms/button.html",
+	"caption" => "tables/caption.html",
+	"center" => "block/center.html",
+	"cite" => "phrase/cite.html",
+	"code" => "phrase/code.html",
+	"col" => "tables/col.html",
+	"colgroup" => "tables/colgroup.html",
+	"dd" => "lists/dd.html",
+	"del" => "phrase/del.html",
+	"dfn" => "phrase/dfn.html",
+	"dir" => "lists/dir.html",
+	"div" => "block/div.html",
+	"dl" => "lists/dl.html",
+	"dt" => "lists/dt.html",
+	"em" => "phrase/em.html",
+	"fieldset" => "forms/fieldset.html",
+	"font" => "special/font.html",
+	"form" => "forms/form.html",
+	"frame" => "frames/frame.html",
+	"frameset" => "frames/frameset.html",
+	"h1" => "block/h1.html",
+	"h2" => "block/h2.html",
+	"h3" => "block/h3.html",
+	"h4" => "block/h4.html",
+	"h5" => "block/h5.html",
+	"h6" => "block/h6.html",
+	"head" => "head/head.html",
+	"hr" => "block/hr.html",
+	"html" => "html/html.html",
+	"i" => "fontstyle/i.html",
+	"iframe" => "special/iframe.html",
+	"img" => "special/img.html",
+	"input" => "forms/input.html",
+	"ins" => "phrase/ins.html",
+	"isindex" => "block/isindex.html",
+	"kbd" => "phrase/kbd.html",
+	"label" => "forms/label.html",
+	"legend" => "forms/legend.html",
+	"li" => "lists/li.html",
+	"link" => "head/link.html",
+	"map" => "special/map.html",
+	"menu" => "lists/menu.html",
+	"meta" => "head/meta.html",
+	"noframes" => "frames/noframes.html",
+	"noscript" => "block/noscript.html",
+	"object" => "special/object.html",
+	"ol" => "lists/ol.html",
+	"optgroup" => "forms/optgroup.html",
+	"option" => "forms/option.html",
+	"p" => "block/p.html",
+	"param" => "special/param.html",
+	"pre" => "block/pre.html",
+	"q" => "special/q.html",
+	"s" => "fontstyle/s.html",
+	"samp" => "phrase/samp.html",
+	"script" => "special/script.html",
+	"select" => "forms/select.html",
+	"small" => "fontstyle/small.html",
+	"span" => "special/span.html",
+	"strike" => "fontstyle/strike.html",
+	"strong" => "phrase/strong.html",
+	"style" => "head/style.html",
+	"sub" => "special/sub.html",
+	"sup" => "special/sup.html",
+	"table" => "tables/table.html",
+	"tbody" => "tables/tbody.html",
+	"td" => "tables/td.html",
+	"textarea" => "forms/textarea.html",
+	"tfoot" => "tables/tfoot.html",
+	"th" => "tables/th.html",
+	"thead" => "tables/thead.html",
+	"title" => "head/title.html",
+	"tr" => "tables/tr.html",
+	"tt" => "fontstyle/tt.html",
+	"u" => "fontstyle/u.html",
+	"ul" => "lists/ul.html",
+	"var" => "phrase/var.html"
+    );
+
+    return "http://www.htmlhelp.com/reference/html40/" .
+        $html_element_hash{"\L$element"};
 }
 
