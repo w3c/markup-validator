@@ -1,53 +1,8 @@
-<!--#set var="revision" value="\$Id: favelets.html,v 1.1.2.8 2003-04-11 08:59:52 ville Exp $"
---><!--#set var="date" value="\$Date: 2003-04-11 08:59:52 $"
+<!--#set var="revision" value="\$Id: favelets.html,v 1.1.2.9 2003-04-17 16:50:15 link Exp $"
+--><!--#set var="date" value="\$Date: 2003-04-17 16:50:15 $"
 --><!--#set var="title" value="Favelets For The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
-
-    <script type="text/javascript">
-<!--
-      var xmlhttp
-    /*@cc_on @*/
-    /*@if (@_jscript_version >= 5)
-        try {
-          xmlhttp=new ActiveXObject("Msxml2.XMLHTTP")
-        } catch (e) {
-          try {
-            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP")
-          } catch (E) {
-            xmlhttp=false
-          }
-        }
-      @else
-        xmlhttp=false
-      @end @*/
-      if (!xmlhttp) {
-        try {
-          xmlhttp = new XMLHttpRequest()
-        } catch (e) {
-          xmlhttp=false
-        }
-      }
-      if (xmlhttp && window.location.hash && window.location.hash.substr) {
-        var hsh=window.location.hash.substr(1)
-        if (hsh.indexOf('http://')==0) {
-          url="http://validator.w3.org/check?uri="+escape(hsh)+";output=xml";
-          xmlhttp.open("HEAD",url,true);
-          xmlhttp.onreadystatechange=function() {
-          if (xmlhttp.readyState==4) {
-           if (xmlhttp.getResponseHeader('X-W3C-Validator-Status')!='') {
-            alert(hsh+' is '+xmlhttp.getResponseHeader('X-W3C-Validator-Status')+'\nErrors: '+xmlhttp.getResponseHeader('X-W3C-Validator-Errors'));
-           } else {
-            alert("Validation result not found, this may be for a number of reasons, including url not being available, or a character coding not detected.") 
-           }
-          }
-         }
-        xmlhttp.setRequestHeader('User-Agent','Validator+Favlet');
-        xmlhttp.send("")
-      }
-    }
-// -->
-    </script>
 
     <div id="skip">
       <h2><a href="http://favelets.com/">Favelets</a>
@@ -119,18 +74,6 @@
           <dd>Same as above but shows results in a new window.</dd>
           <dt>"<a href="javascript:_is=document.createElement('iframe');_is.setAttribute('src','http://validator.w3.org/favelets.html#'+window.location.href);_is.setAttribute('height','0');_is.setAttribute('width','0');_is.setAttribute('style','border:0;');document.body.appendChild(_is);void 0"
                  title="Is This Page Valid?">Is <em>This</em> Page Valid?</a>"</dt>
-          <dd>
-            From the Head Of The "JavaScript Juju" Department,
-            <a href="http://jibbering.com/">Jim Ley</a>, comes this gem.
-            When invoked, this <a href="http://favelets.com/">Favelet</a> will
-            submit the
-            <acronym title="Universal Resource Identifier">URL</acronym>
-            for the current page to the Validator for processing and pop up
-            a dialog that shows whether the page is Valid and how many errors
-            where found in the page. As with all Jim does, this Black Magic is
-            so deep I'm <em>afraid</em> to ask him how it works.
-            <q>Here There Be Dragons!</q>
-          </dd>
         </dl>
       </div>
     </div>
