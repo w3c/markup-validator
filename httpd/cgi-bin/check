@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.111 2001-06-06 09:07:32 duerst Exp $
+# $Id: check,v 1.112 2001-06-06 09:43:58 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -74,9 +74,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.111 $;
+$VERSION    =  q$Revision: 1.112 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-06 09:07:32 $;
+$DATE       =  q$Date: 2001-06-06 09:43:58 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -374,11 +374,7 @@ if ($File->{Type} eq 'xhtml') {
   $xmlflags              = '-wxml';
 }
 
-my $command  = "$sp -f$temp -E0 $xmlflags -c $catalog";
-
-print "\t<li>nsgmls command line: <code>$command</code>\n" if $DEBUG;
-
-unless (   $File->{Charset} eq 'utf-8' $File->{Charset} eq 'unknown') {
+unless ($File->{Charset} eq 'utf-8' or $File->{Charset} eq 'unknown') {
   # workaround for windows-nnnn charsets missing from glibc<2.2
   my $temp_charset = $File->{Charset};
   $temp_charset =~ s/^windows-(\d+)$/CP$1/i;
@@ -388,12 +384,24 @@ unless (   $File->{Charset} eq 'utf-8' $File->{Charset} eq 'unknown') {
   eval {my $c = Text::Iconv->new($temp_charset, 'utf-8')};
   if (not $@) {
     my $c = Text::Iconv->new($temp_charset, 'utf-8');
-    for (@{$File->{Content}}) {$_ = $c->convert($_)}; # $_ is local!!
+    my $line = 0;
+    my @lines;
+    for (@{$File->{Content}}) {
+      my $in = $_;
+      $line++;
+      $_ = $c->convert($_); # $_ is local!!
+      push @lines, $line if ($in ne "" and $_ eq "");
+    }
+    ##@@ write error message if we found some lines with problems
   } else {
     &print_charset_error($@, $File->{Charset});
     &clean_up_and_exit;
   }
 }
+
+my $command  = "$sp -f$temp -E0 $xmlflags -c $catalog";
+
+print "\t<li>nsgmls command line: <code>$command</code>\n" if $DEBUG;
 
 open CHECKER, "|$command - >$temp.esis"
   or die "open(|$command - >$temp.esis) returned: $!\n";
