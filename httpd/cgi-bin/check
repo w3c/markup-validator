@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.134 2001-06-27 08:50:58 duerst Exp $
+# $Id: check,v 1.135 2001-06-28 09:53:26 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.134 $;
+$VERSION    =  q$Revision: 1.135 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-27 08:50:58 $;
+$DATE       =  q$Date: 2001-06-28 09:53:26 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -318,7 +318,7 @@ if ($File->{HTTP_Charset}) {
 
 #
 # Setup SP environment for the charset.
-if ($File->{Charset} ne 'unknown' and $File->{Charset} ne 'us-ascii') {
+if ($File->{Charset} ne 'unknown') {
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'utf-8';
 }
