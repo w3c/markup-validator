@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.55 2003-06-15 21:32:49 ville Exp $
+# $Id: check,v 1.305.2.56 2003-06-19 22:42:55 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -29,7 +29,7 @@ use strict;
 use warnings;
 
 #
-# Modules.
+# Modules.  See also the BEGIN block further down below.
 #
 # Version numbers given where we absolutely need a minimum version of a given
 # module (gives nicer error messages). By default, add an empty import list
@@ -47,7 +47,6 @@ use File::Spec          qw();
 use HTML::Parser   3.25 qw(); # Need 3.25 for $p->ignore_elements.
 use HTTP::Request       qw();
 use IO::File            qw();
-use IPC::Open3          qw(open3);
 use LWP::UserAgent 1.90 qw(); # Need 1.90 for protocols_(allowed|forbidden)
 use Set::IntSpan        qw();
 use Text::Iconv         qw();
@@ -83,13 +82,30 @@ use constant O_NONE    =>  8; # 0000 1000
 
 #
 # Define global variables.
-use vars qw($DEBUG $CFG $VERSION);
+use vars qw($DEBUG $CFG $VERSION $HAVE_IPC_RUN);
 
 
 #
 # Things inside BEGIN don't happen on every request in persistent
 # environments, such as mod_perl.  So let's do globals, eg. read config here.
-BEGIN {
+BEGIN
+{
+
+  #
+  # Use IPC::Run on mod_perl if it's available, IPC::Open3 otherwise.
+  $HAVE_IPC_RUN = 0;
+  if ($ENV{MOD_PERL}) {
+    eval {
+      local $SIG{__DIE__};
+      require IPC::Run;
+      IPC::Run->import('run', 'timeout');
+    };
+    $HAVE_IPC_RUN = !$@;
+  }
+  unless ($HAVE_IPC_RUN) {
+    require IPC::Open3;
+    IPC::Open3->import('open3');
+  }
 
   #
   # Read Config Files.
@@ -104,7 +120,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.55 $;
+  $VERSION    =  q$Revision: 1.305.2.56 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -176,7 +192,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-06-15 21:32:49 $,
+                              Date => q$Date: 2003-06-19 22:42:55 $,
                              });
 
 #
@@ -617,17 +633,22 @@ seek $spin, 0, 0;
 
 #
 # Run it through SP, redirecting output to temporary files.
-my $pid = do {
-  no warnings 'once';
-  local(*SPIN, *SPOUT, *SPERR)  = ($spin, $spout, $sperr);
-  open3("<&SPIN", ">&SPOUT", ">&SPERR", @cmd);
-};
-
+if ($HAVE_IPC_RUN) {
+  local $^W = 0;
+  run(\@cmd, $spin, $spout, $sperr, timeout(60));
+  undef $spin;
+} else {
+  my $pid = do {
+    no warnings 'once';
+    local(*SPIN, *SPOUT, *SPERR)  = ($spin, $spout, $sperr);
+    open3("<&SPIN", ">&SPOUT", ">&SPERR", @cmd);
+  };
+  undef $spin;
+  waitpid $pid, 0;
+}
 
 #
-# Close input file, reap the kid, and rewind temporary filehandles.
-undef $spin;
-waitpid $pid, 0;
+# Rewind temporary filehandles.
 seek $_, 0, 0 for $spout, $sperr;
 
 $File = &parse_errors($File, $sperr); # Parse error output.
@@ -1058,6 +1079,7 @@ sub doctype_spiel {
 #
 # Generate HTML for the "Jump to:" links in results.
 sub jump_links {
+  my ($File) = @_;
   my $links = '';
   my $me = &uri_escape(&self_url_file($File));
 
@@ -2177,7 +2199,7 @@ sub prepCGI {
 	exit;
       }
     } else {
-      my $thispage = &self_url_q($q);
+      my $thispage = &self_url_q($q, $File);
       print redirect $thispage;
       exit;
     }
@@ -2239,7 +2261,7 @@ sub prepCGI {
 
   # Redirect to a GETable URL if method is POST without a file upload.
   if ($q->request_method eq 'POST' and not $File->{'Is Upload'}) {
-    my $thispage = &self_url_q($q);
+    my $thispage = &self_url_q($q, $File);
     print redirect $thispage;
     exit;
   }
@@ -2981,7 +3003,7 @@ sub popup_charset {
 #
 # Construct a self-referential URL from a CGI.pm $q object.
 sub self_url_q {
-  my $q = shift;
+  my ($q, $File) = @_;
   my $thispage = $File->{Env}->{'Self URI'};
      $thispage .= '?uri='       . uri_escape($q->param('uri'));
      $thispage .= ';ss=1'      if $q->param('ss');
