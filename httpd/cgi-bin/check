@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.69 2003-07-28 07:43:31 ot Exp $
+# $Id: check,v 1.305.2.70 2003-07-28 08:37:45 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -130,7 +130,7 @@ BEGIN
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.69 $;
+  $VERSION    =  q$Revision: 1.305.2.70 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -202,7 +202,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-07-28 07:43:31 $,
+                              Date => q$Date: 2003-07-28 08:37:45 $,
                              });
 
 #
@@ -467,6 +467,11 @@ unless ($File->{Charset}->{Use}) { # No charset given...
     </p>
 .EOF.
   }
+ else {
+   $message .= <<".EOF.";
+   <p>So what should I do? <a href="docs/help.html#faq-charset">Tell me more...</a></p>
+.EOF.
+ }
   my $title = 'No Character Encoding Found! Falling back to UTF-8.';
   &add_warning($File, 'fatal', $title, $message);
   $File->{Tentative} |= T_ERROR; # Can never be valid.
@@ -1686,6 +1691,11 @@ sub parse_errors ($$) {
       </p>
 .EOF.
       }
+ else {
+   $message .= <<".EOF.";
+   <p>So what should I do? <a href="docs/help.html#faq-doctype">Tell me more...</a></p>
+.EOF.
+ }
       &add_warning($File, $class, $title, $message);
       next; # Don't report this as a normal error.
     }
