@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.49 1999-12-01 01:10:18 gerald Exp $
+# $Id: check,v 1.50 1999-12-01 01:28:21 gerald Exp $
 
 #
 # Load modules
@@ -19,84 +19,101 @@ use CGI::Carp qw(fatalsToBrowser);
 use CGI qw(:cgi -newstyle_urls -private_tempfiles);
 use Text::Wrap;
 
-#
-# Define global constants
-use constant TRUE  => 1;
-use constant FALSE => 0;
-use constant UNDEF => undef;
 
 #############################################################################
 # Constant definitions
 #############################################################################
 
-my $cvsrevision	= '$Revision: 1.49 $';
-my $cvsdate	= '$Date: 1999-12-01 01:10:18 $';
+#
+# Define global constants
+use constant TRUE  => 1;
+use constant FALSE => 0;
+use constant UNDEF => undef;
+use constant DEBUG => 0;
 
-my $logfile	= "/var/log/httpd/val-svc";
+#
+# Paths and file locations
+my $logfile	= '/var/log/httpd/val-svc';
+my $sgmlstuff	= '/usr/local/src/validator/htdocs/sgml-lib';
+my $sgmldecl	= $sgmlstuff . '/REC-html40-19980424/HTML4.decl';
+my $xhtmldecl	= $sgmlstuff . '/PR-xhtml1-19990824/xhtml1.dcl';
+my $xmldecl	= $sgmlstuff . '/sp-1.3/pubtext/xml.dcl';
+my $temp	= "/tmp/validate.$$";
 
-my $base_path = '/usr/local/src/validator/';
-my $fpis_db   = $base_path . 'htdocs/config/fpis.cfg';
-my $frag_db   = $base_path . 'htdocs/config/frag.cfg';
-my $elem_db   = $base_path . 'htdocs/config/eref.cfg';
+#
+# Executables and binaries
+my $sp		= '/usr/local/bin/nsgmls';
+my $nkf		= '/usr/local/bin/nkf';
+my $weblint	= '/usr/bin/weblint';
 
-my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
-my $uri_def_uri	= "http://www.w3.org/Addressing/#terms";
-my $faqloc	= "http://www.cs.duke.edu/~dsb/kgv-faq/";
-my $faqerrloc	= "${faqloc}errors.html";
-my $abs_svc_uri	= "http://validator.w3.org/";
-my $rel_img_uri	= "/images/";
-my $abs_img_uri	= "${abs_svc_uri}images/";
-my $maintainer	= 'gerald@w3.org';
+#
+# URIs and fragments
+my $abs_svc_uri	= 'http://validator.w3.org/';
+my $uri_def_uri	= 'http://www.w3.org/Addressing/#terms';
+my $faqloc	= 'http://www.cs.duke.edu/~dsb/kgv-faq/';
+my $rel_img_uri	= '/images/';
+my $faqerrloc	= $faqloc . 'errors.html';
+my $abs_img_uri	= $abs_svc_uri . 'images/';
 
-my $sgmlstuff	= "/usr/local/src/validator/htdocs/sgml-lib";
-my $sp		= "/usr/local/bin/nsgmls";
-my $nkf		= "/usr/local/bin/nkf";
+my $base_path	= '/usr/local/src/validator/';
+my $fpis_db	= $base_path . 'htdocs/config/fpis.cfg';
+my $frag_db	= $base_path . 'htdocs/config/frag.cfg';
+my $elem_db	= $base_path . 'htdocs/config/eref.cfg';
 
-my $sgmldecl	= "$sgmlstuff/REC-html40-19980424/HTML4.decl";
-my $xhtmldecl	= "$sgmlstuff/PR-xhtml1-19990824/xhtml1.dcl";
-my $xmldecl	= "$sgmlstuff/sp-1.3/pubtext/xml.dcl";
+my $element_ref	= 'http://www.htmlhelp.com/reference/html40/';
 
-my $revision	= $cvsrevision;
-   $revision	=~ s/^\$Revision: //;
-   $revision	=~ s/ \$$//;
+#
+# Strings
+my $revision	=  q$Revision: 1.50 $;
+   $revision	=~ s/Revision: ([\d\.]+) /$1/;
+my $cvsdate	=  q$Date: 1999-12-01 01:28:21 $;
+my $maintainer	=  'gerald@w3.org';
+my $notice	=  ''; # "<p><strong>Note: This service will be ...</strong>";
 
-my ( $validity, $version, $document_type, %undef_frag,
-    $effective_charset, $charsets_differ,
-    $lastmod, $catalog, $command, @fake_errors,
-    $guessed_doctype, $doctype, $line, $col, $type, $msg, $diff,
-    $pos, $indent, $gifname, $alttext, $gifhw, $nicegifname, $pedanticflags,
-    $pedantic_blurb, $level, $prevlevel, $i, $prevdata );
+#
+# DOCTYPEs
+my $html32_doctype  = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">);
+my $html40t_doctype = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">);
+my $html40f_doctype = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN" "http://www.w3.org/TR/REC-html40/frameset.dtd">);
+my $xhtmlt_doctype  = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN");
 
-my $notice		= '';
-			# "<p><strong>Note: This service will be ...</strong>";
+#
+# HTML fragments
+my $lt        = "\020";
+my $gt        = "\021";
+my $gifborder = ' border=0';
 
-umask( 022 );
-my $weblint		= "/usr/bin/weblint";
-my $html32_doctype	= qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">};
-my $html40t_doctype	= qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">};
-my $html40f_doctype	= qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN" "http://www.w3.org/TR/REC-html40/frameset.dtd">};
-my $xhtmlt_doctype	= qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"};
-my $temp		= "/tmp/validate.$$";
-my $lt			= "\020";
-my $gt			= "\021";
-my $gifborder		= " border=0";
-
+#
+# The option names
 my @options = qw(weblint pw outline ss sp noatt);
 
 #
+# Stopgap to shut -w up. It won't actually fix anything, but it'll keep us
+# running without warnings until we can fix the problems.
+my ($validity, $version, $document_type, %undef_frag, $effective_charset,
+    $charsets_differ, $lastmod, $catalog, $command, @fake_errors,
+    $guessed_doctype, $doctype, $line, $col, $type, $msg, $diff, $pos, $indent,
+    $gifname, $alttext, $gifhw, $nicegifname, $pedanticflags, $pedantic_blurb,
+    $level, $prevlevel, $i, $prevdata);
+
+
+#
 # Read configuration files.
-my $frag        = &read_cfg($frag_db); # FPIs    -> plain text version string
-my $pub_ids     = &read_cfg($fpis_db); # Errors  -> fragment identifier
-my $element_uri = &read_cfg($elem_db); # Element -> URI fragment
+my $frag	= &read_cfg($frag_db); # FPIs    -> plain text version string
+my $pub_ids	= &read_cfg($fpis_db); # Errors  -> fragment identifier
+my $element_uri	= &read_cfg($elem_db); # Element -> URI fragment
 
-#############################################################################
-# Set up some signal handlers in case we get killed before exiting naturally
-#############################################################################
+#
+# Set up signal handlers.
+$SIG{TERM} = \&erase_stuff;
+$SIG{KILL} = \&erase_stuff;
+$SIG{PIPE} = 'IGNORE';
+# $SIG{CHLD} = \&erase_stuff;
 
-$SIG{'TERM'} = 'erase_stuff';
-$SIG{'KILL'} = 'erase_stuff';
-$SIG{'PIPE'} = 'IGNORE';
-# $SIG{'CHLD'} = 'erase_stuff';
+#
+# delete() the, possibly tainted, $PATH.
+delete $ENV{PATH};
+
 
 #############################################################################
 # Process CGI variables
@@ -380,7 +397,7 @@ for (@file) {
 +$//;
     print CHECKER $_, "\n";
 }
-close CHECKER			or warn "close(CHECKER) returned: $!\n";
+close CHECKER;
 
 open ERRORS, "<$temp"		or die  "open($temp) returned: $!\n";
 my @errors = <ERRORS>;
