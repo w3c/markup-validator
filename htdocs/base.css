@@ -5,9 +5,9 @@
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
 <<<<<<< base.css
-   $Id: base.css,v 1.26.2.15 2003-07-24 22:43:57 ot Exp $
+   $Id: base.css,v 1.26.2.16 2003-07-28 07:34:39 ot Exp $
 =======
-   $Id: base.css,v 1.26.2.15 2003-07-24 22:43:57 ot Exp $
+   $Id: base.css,v 1.26.2.16 2003-07-28 07:34:39 ot Exp $
 >>>>>>> 1.26.2.14
 */
 
@@ -30,7 +30,7 @@ html, body {
 
 div#main {
   /*padding-left: 2em;*/
-  padding-top: 1em;
+  /*padding-top: 1em;*/
 }
 
 div#main p, div#main dt {
@@ -201,47 +201,58 @@ h1 {
 h2 {
   font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
   font-size-adjust: .53;
-  font-size: 1.75em;
-  font-weight: 500;
+  font-size: 1.5em;
+  text-align: center;
+  font-weight: bold;
   font-style: normal;
   text-decoration: none;
-  padding-left: .2em;
+  margin-top : 2em;
+  
 }
 
 h3 {
   font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
   font-size-adjust: .53;
-  font-size: 1.58em;
-  font-weight: 500;
-  font-style: italic;
+  font-size: 1.3em;
+  background-color: #eee;
+  text-indent: 2em;
+  padding: .2em;
+  border-top: 1px dotted black;
+  font-weight: normal;
+  font-style: normal;
   text-decoration: none;
 }
 
 h4 {
   font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
   font-size-adjust: .53;
-  font-size: 1.33em;
-  font-weight: 500;
+  font-size: 1.1em;
+  font-weight: 600;
   font-style: normal;
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 h5, dt {
   font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
   font-size-adjust: .53;
-  font-size: 1.17em;
-  font-weight: 500;
+  font-size: 1em;
+  font-weight: bold;
   font-style: normal;
   text-decoration: none;
+  text-indent: .5em;
+  margin:0;
+}
+dt {
   margin-top: 1em;
 }
-
 h6 {
   font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
   font-size-adjust: .53;
+  color: #666;
+  text-indent: 1em;
   font-size: 1em;
-  font-weight: 500;
-  font-style: normal;
+  font-style: italic;
+  margin:0;
   text-decoration: none;
 }
 
@@ -267,7 +278,6 @@ td.comma-tool {
 
 /* documentation - table of contents */
 #toc {
-  border-bottom : 2px dotted black;
   font-size: .8em;
 }
 
