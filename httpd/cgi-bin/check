@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.285 2002-11-03 15:04:20 link Exp $
+# $Id: check,v 1.286 2002-11-03 16:53:30 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.285 $;
+  $VERSION    =  q$Revision: 1.286 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-11-03 15:04:20 $,
+			      Date => q$Date: 2002-11-03 16:53:30 $,
 			     });
 
 #
@@ -293,19 +293,19 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
   $File->{Charset}->{Use} = 'us-ascii';
   my @_source;
   if ($File->{'Is Upload'}) {
-    @_source = ('sent by your web browser', 'browser send');
+    @_source = ('sent by your web browser', ($File->{Server}||'unknown'), 'browser send');
   } else {
-    @_source = ('returned by your web server', 'server return');
+    @_source = ('returned by your web server', ($File->{Server}||'unknown'), 'server return');
   }
   &add_warning($File, <<".EOF.");
       <em>Note:</em>
-      The HTTP Content-Type field $_source[0] did not contain
+      The HTTP Content-Type field $_source[0] ($_source[1]) did not contain
       a "charset" parameter, but the Content-Type was one of the XML text/*
       sub-types (<code>$File->{ContentType}</code>). The relevant
       specification (RFC 3023) specifies a strong default of "us-ascii" for
       such documents so we will use this value regardless of any encoding you
       may have indicated elsewhere. If you would like to use a different
-      encoding, you should arrange to have your $_source[1] this new encoding
+      encoding, you should arrange to have your $_source[2] this new encoding
       information.
 .EOF.
 } elsif ($File->{Charset}->{XML}) {
@@ -1119,7 +1119,7 @@ sub handle_uri {
   $File->{ContentType}     = $ct;
   $File->{Charset}->{HTTP} = lc $charset;
   $File->{Modified}        = $lastmod;
-  $File->{Server}          = scalar $res->server;
+  $File->{Server}          = &ent(scalar $res->server);
   $File->{Size}            = scalar $res->content_length;
   $File->{URI}             = scalar $res->request->url;
   $File->{'Is Upload'}     = FALSE;
@@ -1148,7 +1148,7 @@ sub handle_file {
   $File->{ContentType}     = $ct;
   $File->{Charset}->{HTTP} = lc $charset;
   $File->{Modified}        = $h->{'Last-Modified'};
-  $File->{Server}          = $h->{'Server'};
+  $File->{Server}          = &ent($h->{'User-Agent'}); # Fake a "server". :-)
   $File->{Size}            = $h->{'Content-Length'};
   $File->{URI}             = "$f"; # Need to stringify because we want ref
                                    # to return false later in add_table.  This
@@ -2293,7 +2293,7 @@ X-W3C-Validator-Errors: $errs
   <meta>
     <uri>), &ent($File->{URI}), qq(</uri>
     <modified>), &ent($File->{Modified}), qq(</modified>
-    <server>), &ent($File->{Server}), qq(</server>
+    <server>), $File->{Server}, qq(</server>
     <size>), &ent($File->{Size}), qq(</size>
     <encoding>), &ent($File->{Charset}->{Use}), qq(</encoding>
     <doctype>), &ent($File->{DOCTYPE}), qq(</doctype>
