@@ -5,9 +5,9 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: LinkChecker.pl,v 1.22 2000-01-26 22:24:26 hugo Exp $
+# $Id: LinkChecker.pl,v 1.23 2000-01-26 22:29:38 hugo Exp $
 #
-# This program is licensed under the W3C License.
+# This program is licensed under the W3C(r) License.
 
 package W3C::LinkChecker;
 require HTML::Parser;
@@ -21,7 +21,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C LinkChecker';
-my $VERSION = q$Revision: 1.22 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 1.23 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -1025,7 +1025,7 @@ PRE {
 </style>
 </head>
 <body>
-<h1>W3C Link Checker: $uri</h1>
+<h1>W3C<sup>&reg;</sup> Link Checker: $uri</h1>
 \n";
 }
 
