@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.141 2004-06-04 06:47:23 ville Exp $
+# $Id: check,v 1.305.2.142 2004-06-18 16:55:32 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.141 $;
+  $VERSION    =  q$Revision: 1.305.2.142 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-06-04 06:47:23 $,
+                              Date => q$Date: 2004-06-18 16:55:32 $,
                              });
 
 #
@@ -1724,8 +1724,7 @@ sub parse_errors ($$) {
       $err->{msg}  = join ':', @errors[6 .. $#errors];
     } elsif ($err->{type} eq 'W') {
       &add_warning($File, 'fake', 'Warning:',
-        "Line $err->{line}, column $err->{char}: $errors[6]",
-      );
+        "Line $err->{line}, column $err->{char}: " . &ent($errors[6]));
       $err->{msg}  = join ':', @errors[6 .. $#errors];
     } else {
       $err->{type} = 'I';
