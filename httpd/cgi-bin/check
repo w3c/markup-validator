@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.5 1998-07-25 00:59:15 gerald Exp $
+# $Id: check,v 1.6 1998-07-25 01:18:32 gerald Exp $
 
 #############################################################################
 # Constant definitions
@@ -1069,7 +1069,7 @@ $html40t_doctype
   <p>
     Welcome to the W3C HTML Validation Service!
     See <a href="whatsnew.html"><strong>what's new</strong></a>. (updated
-    June 19, 1998)
+    July 24, 1998)
   </p>
 $notice
   <p>
@@ -1203,7 +1203,7 @@ sub output_closing {
      align=right border=0 alt="Valid HTML 4.0!"></a>
   <a href="http://www.w3.org/People/Gerald/">Gerald Oskoboiny</A><br><A
      href="http://www.w3.org/Help/Webmaster">Webmaster</A><br>
-     \$Date: 1998-07-25 00:59:15 $ \
+     \$Date: 1998-07-25 01:18:32 $ \
 </address>
 
 </body>
