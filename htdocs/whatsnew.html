@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.34.2.22 2004-05-20 11:40:28 link Exp $"
---><!--#set var="date" value="\$Date: 2004-05-20 11:40:28 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.34.2.23 2004-05-21 00:07:44 ot Exp $"
+--><!--#set var="date" value="\$Date: 2004-05-21 00:07:44 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -18,25 +18,19 @@
       <dt id="t2004-05-21">2004-05-21 &mdash; 0.6.6 Release:</dt>
       <dd>
         <p>
-          A maintenance release that fixes a few minor bugs, resurrects the
+          A maintenance release that fixes a 
+<a href="http://www.w3.org/Bugs/Public/buglist.cgi?product=Validator&amptarget_milestone=0.6.6">few minor bugs</a>, 
+	  resurrects the
           whitespace-preserving source display, adds explanations for additional
           error messages, and makes some slight tweaks to the website style.
         </p>
-        <div class="note">
-          <p>
-            <strong>Known Issue</strong>:
-            In Document Instances with a Document Type Name of "html", but with
-            an incorrect Formal Public Identifier, the Validator will fall back
-            to HTML 4.01 Transitional and, if no other errors are found,
-            <em>silently</em> ignore the erroneous FPI.
-          </p>
-          <p>
-             This issue has been present since version 0.6.5 Beta #1, but was
-             only discovered immediately prior to the release of version 0.6.6;
-             hence no fix or workaround is available at this time. We expect to
-             issue a new release which addresses this problem as soon as possible.
-          </p>
-        </div>
+        <p>
+            This version also tentatively fixes a bug where, for Document Instances 
+	    with a Document Type Name of "html", but with
+            an incorrect Formal Public Identifier, the Validator would fall back
+            to HTML 4.01 Transitional and, if no other errors were found,
+            silently ignore the erroneous FPI.
+        </p>
       </dd>
       <dt id="t2004-05-07">2004-05-07 &mdash; 0.6.5 Release:</dt>
       <dd>
