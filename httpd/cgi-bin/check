@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.63 2003-07-24 03:10:01 link Exp $
+# $Id: check,v 1.305.2.64 2003-07-24 12:24:29 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -130,7 +130,7 @@ BEGIN
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.63 $;
+  $VERSION    =  q$Revision: 1.305.2.64 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -202,7 +202,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-07-24 03:10:01 $,
+                              Date => q$Date: 2003-07-24 12:24:29 $,
                              });
 
 #
@@ -424,6 +424,9 @@ unless ($File->{Charset}->{Use}) { # No charset given...
       to the "UTF-8" encoding and will attempt to perform the validation,
       but this is likely to fail for all non-trivial documents.
     </p>
+.EOF.
+  if ($File->{Opt}->{Verbose}) {
+    $message .= <<".EOF.";
     <p>The sources I tried to find encoding information include:</p>
     <ul>
       <li>The HTTP Content-Type field.</li>
@@ -452,8 +455,8 @@ unless ($File->{Charset}->{Use}) { # No charset given...
           tips on how to do this</a> in popular web server implementations.
     </p>
 .EOF.
-  $message .= &iana_charset_blurb();
-  $message .= <<".EOF.";
+    $message .= &iana_charset_blurb();
+    $message .= <<".EOF.";
     <p>
       To quickly check whether the document would validate after addressing
       the missing character encoding information, you can use the "Encoding"
@@ -463,6 +466,7 @@ unless ($File->{Charset}->{Use}) { # No charset given...
       common encodings if you are not sure what encoding to choose.
     </p>
 .EOF.
+  }
   my $title = 'No Character Encoding Found! Falling back to UTF-8.';
   &add_warning($File, 'fatal', $title, $message);
   $File->{Tentative} |= T_ERROR; # Can never be valid.
@@ -1042,15 +1046,15 @@ sub add_warning ($$$$) {
 sub print_warnings {
   my $File = shift;
   return unless (defined $File->{Warnings} and scalar @{$File->{Warnings}});
-  print qq(  <dl id="Warnings">\n);
+  print qq(  <div id="Warnings">\n);
   for (@{$File->{Warnings}}) {
     if ($_->{Class} eq 'fake' and not $File->{'Is Valid'}) {
       next; # Don't report twice if file is invalid.
     }
-    printf qq(    <dt class="%s">%s</dt>), $_->{Class}, $_->{Title};
-    printf qq(    <dd class="%s">%s</dd>), $_->{Class}, $_->{Message};
+    printf qq(    <div class="%s">\n      <h3>%s</h3>\n), $_->{Class}, $_->{Title};
+    printf qq(      <div>\n%s      </div>\n    </div>), $_->{Message};
   }
-  print qq(  </dl>\n);
+  print qq(  </div>\n);
 }
 
 #
@@ -1658,9 +1662,8 @@ sub parse_errors ($$) {
     # No DOCTYPE.
     if ($err->{msg} =~ m(prolog can\'t be omitted)) {
       my $class = 'fatal';
-      my $title = 'No DOCTYPE Declaration Found! Falling Back to HTML 4.01 Transitional';
+      my $title = 'No DOCTYPE Found! Falling Back to HTML 4.01 Transitional';
       my $message = <<".EOF.";
-    <div>
       <p>
         A DOCTYPE Declaration is mandatory for most current markup languages
         and without one it is impossible to reliably validate this document.
@@ -1669,6 +1672,7 @@ sub parse_errors ($$) {
         spurious error messages for most non-trivial documents.
       </p>
 .EOF.
+      if ($File->{Opt}->{Verbose}) {
 	$message .= &doctype_spiel();
 	$message .= <<".EOF.";
       <p>
@@ -1679,9 +1683,8 @@ sub parse_errors ($$) {
         "<a href="http://htmlhelp.com/tools/validator/doctype.html">Choosing
            a DOCTYPE</a>".
       </p>
-    </div>
 .EOF.
-
+      }
       &add_warning($File, $class, $title, $message);
       next; # Don't report this as a normal error.
     }
@@ -1705,29 +1708,30 @@ sub report_errors ($) {
 
 
   print <<"EOHD";
-    <h2 id="result" class="invalid">This page is <strong>not</strong> Valid $File->{Version}!</h2>
+    <div id="result">
+      <h2 class="invalid">This page is <strong>not</strong> Valid $File->{Version}!</h2>
 EOHD
 
   if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 'svg' or $File->{Type} eq 'smil') {
     my $xmlvalid = ($File->{DOCTYPE} ? ' and validity' : '');
     print <<"EOHD";
-    <p>
-      Below are the results of checking this document for <a
-      href="http://www.w3.org/TR/REC-xml#sec-conformance">XML
-      well-formedness</a>$xmlvalid.
-    </p>
+      <p>
+        Below are the results of checking this document for <a
+        href="http://www.w3.org/TR/REC-xml#sec-conformance">XML
+        well-formedness</a>$xmlvalid.
+      </p>
 EOHD
   } else {
     print <<"EOHD";
-  <p>
-    Below are the results of attempting to parse this document with
-    an SGML parser.
-  </p>
+      <p>
+        Below are the results of attempting to parse this document with
+        an SGML parser.
+      </p>
 EOHD
   }
 
   if (scalar @{$File->{Errors}}) {
-    print qq(  <ol id="errors">\n);
+    print qq(      <ol id="errors">\n);
 
     foreach my $err (@{$File->{Errors}}) {
       my($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $err->{char});
@@ -1740,14 +1744,15 @@ EOHD
 
       my $msg = &ent($err->{msg}); # Entity encode error message.
 
-      print qq(  <li><p><em>Line <a href="#line-$err->{line}">$err->{line}</a>, column $err->{char}</em>: );
+      print ' ' x 8; # Indent markup...
+      print qq(<li><p><em>Line <a href="#line-$err->{line}">$err->{line}</a>, column $err->{char}</em>: );
       print qq{<span class="msg">$msg</span></p>};
-      print qq(<p><code class="input">$line</code></p>\n);
+      print qq(<p><code class="input">$line</code></p>);
 
       if ($err->{num} and $File->{Opt}->{Verbose}) {
 	my(undef, $num) = split /\./, $err->{num};
 	if (exists $Msgs{$num}) {
-	  print qq(<div class="hidden mid-$num"></div>\n);
+	  print qq(\n<div class="hidden mid-$num"></div>\n);
 	} else {
 	  $Msgs{$num} = 1;
 	  print $RSRC->{msg}->{$num}->{verbose}
@@ -1758,6 +1763,7 @@ EOHD
     }
     print qq(  </ol>\n);
   }
+  print "    </div><!-- End of #result -->\n\n";
 }
 
 
