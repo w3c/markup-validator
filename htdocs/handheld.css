@@ -1,0 +1,24 @@
+@media handheld { 
+/* should not be necessary to wrap this way, but safer is better */
+
+   html, body, #menu, #banner, .jumpbar, address, .copyright, #revalidate { 
+        background:white !important;
+        }
+
+    body {
+        padding: 0;
+        }
+    
+    #banner, #main, #address {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    #banner {
+        height: auto;
+        }
+
+    #source div pre { white-space: normal }
+    #source div pre a {display: block }
+
+}

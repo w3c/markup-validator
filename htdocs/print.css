@@ -1,16 +1,28 @@
-#menu, .jumpbar, address, .copyright, #revalidate { 
-    display: none 
+@media print 
+/* should not be necessary to wrap this way, but safer is better */
+{
+    #menu, .jumpbar, address, .copyright, #revalidate { 
+        display: none 
+        }
+
+    html {
+        background: white;
     }
 
-body {
-    font-size: 12pt; 
-    }
 
-#banner { 
-    background: white; 
-    }
+    body {
+        font-size: 12pt; 
+        background: white;
+        padding: 0;
+        }
 
-/* trying to avoid having the source drool out of the paper */
-#source div pre { white-space: normal }
-/* ... yet have something legible */
-#source div pre a {display: block }
+    #banner { 
+        background: white; 
+        }
+
+    /* trying to avoid having the source drool out of the paper */
+    #source div pre { white-space: normal }
+    /* ... yet have something legible */
+    #source div pre a {display: block }
+
+}
