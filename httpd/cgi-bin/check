@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.32 1999-09-10 22:39:06 gerald Exp $
+# $Id: check,v 1.33 1999-09-10 22:56:39 gerald Exp $
 
 use LWP::UserAgent;
 use strict;
@@ -17,8 +17,8 @@ use strict;
 # Constant definitions
 #############################################################################
 
-my $cvsrevision	= '$Revision: 1.32 $';
-my $cvsdate	= '$Date: 1999-09-10 22:39:06 $';
+my $cvsrevision	= '$Revision: 1.33 $';
+my $cvsdate	= '$Date: 1999-09-10 22:56:39 $';
 
 my $logfile	= "/var/log/httpd/val-svc";
 
@@ -847,7 +847,7 @@ EOF
 
 	$line = "foo";
 	my $heading = "";
-	while ( substr( $line, 0, 3 ) ne ")H$level" ) {
+	while ( substr( $line, 0, 3 ) !~ /^\)H$level/i ) {
 	    $line = $esis[$_++];
 	    if ( $line =~ /^-/ ) {
 		my $headcont = $line;
