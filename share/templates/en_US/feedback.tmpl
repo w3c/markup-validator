@@ -143,8 +143,17 @@
       <li><a href="http://www.w3.org/Bugs/Public/buglist.cgi?product=Validator">All Markup Validator issues</a></li>
       <li><a href="http://www.w3.org/Bugs/Public/query.cgi?product=Validator">Search Markup Validator issues</a></li>
       <li><a href="http://www.w3.org/Bugs/Public/enter_bug.cgi?product=Validator">New Markup Validator issue</a></li>
-
     </ul>
+
+      <form method="get" action="http://www.w3.org/Bugs/Public">
+      <p>You may also search the bug database directly:<br />
+      <input name="bug_status" type="hidden" value="__all__" />
+      <input name="product" type="hidden" value="Validator" />
+      <input name="content" type="text" size="40" maxlength="100" value="" />
+      <input type="submit" name="search" value="Search Bug database" />
+      </p>      
+</form>
+
 </div>
 
 
