@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.143 2001-07-16 09:38:27 link Exp $
+# $Id: check,v 1.144 2001-07-16 23:23:03 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.143 $;
+$VERSION    =  q$Revision: 1.144 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-16 09:38:27 $;
+$DATE       =  q$Date: 2001-07-16 23:23:03 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -508,6 +508,7 @@ $File->{ESIS} = [];
 my $elements_found = 0;
 open ESIS, "$temp.esis" or &internal_error("open($temp.esis) returned: $!");
 while (<ESIS>) {
+  push @{$File->{'DEBUG'}->{ESIS}}, $_;
   $elements_found++ if /^\(/;
 
   if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
@@ -618,6 +619,8 @@ if (scalar @{$File->{Errors}}) {
 &outline($File)     if $q->param('outline');
 &show_source($File) if $q->param('ss');
 &parse_tree($File)  if $q->param('sp');
+&show_esis($File)   if $q->param('esis');
+&show_errors($File) if $q->param('errors');
 
 &clean_up_and_exit;
 
@@ -1124,6 +1127,7 @@ sub parse_errors ($$) {
 
   open ERRORS, "<$file" or &internal_error("open($file) returned: $!");
   for (<ERRORS>) {
+    push @{$File->{'DEBUG'}->{Errors}}, $_;
     my $err;
     next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
     next if /numbers exceeding 65535 not supported/;
@@ -1589,3 +1593,28 @@ sub preparse {
   return $File;
 }
 
+#
+# @@FIXME@@ Add description.
+sub show_esis ($) {
+  print <<'EOF';
+  <div id="raw_esis" class="mtb">
+    <hr>
+    <h2><a name="raw_esis">Raw ESIS Output</a></h2>
+    <pre>
+EOF
+  for (@{shift->{'DEBUG'}->{ESIS}}) {print ent $_};
+  print "    </pre>\n  </div>";
+}
+
+#
+# @@FIXME@@ Add description.
+sub show_errors ($) {
+  print <<'EOF';
+  <div id="raw_errors" class="mtb">
+    <hr>
+    <h2><a name="raw_errors">Raw Error Output</a></h2>
+    <pre>
+EOF
+  for (@{shift->{'DEBUG'}->{Errors}}) {print ent $_};
+  print "    </pre>\n  </div>";
+}
