@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.43 2000-05-04 23:33:58 hugo Exp $
+# $Id: checklink.pl,v 2.44 2000-05-05 15:13:19 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -31,7 +31,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.43 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.44 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -1241,6 +1241,15 @@ sub show_link_report {
             for (@redirects_urls) {
                 $_ = &show_url($_);
             }
+            # HTTP message
+            my $http_message;
+            if ($results->{$u}{location}{message}) {
+                $http_message = &encode($results->{$u}{location}{message});
+                if ($_html && (($c == 404) || ($c == 500))) {
+                    $http_message = '<span class="broken">'.
+                        $http_message.'</span>';
+                }
+            }
             printf("
 <dt%s>%s</dt>
 <dd>What to do: <strong%s>%s</strong>%s<br>
@@ -1276,9 +1285,7 @@ HTTP Message: %s%s%s</dd>
                    ' <span title="redirected to">-&gt;</span> ' 
                    : '',
                    # HTTP final message
-                   $results->{$u}{location}{message}
-                   ? &encode($results->{$u}{location}{message})
-                   : '',
+                   $http_message,
                    # List of lines
                    $lines_list);
             if ($#fragments >= 0) {
@@ -1319,10 +1326,7 @@ HTTP Message: %s%s%s</dd>
         # Fragments
         foreach $f (@fragments) {
             if ($_html) {
-                printf("<dd%s>%s: %s</dd>\n",
-                       ($broken->{$u}{fragments}{$f} > 1) ?
-                       &bgcolor(404) :
-                       &bgcolor($results->{$u}{location}{code}),
+                printf("<dd>%s: %s</dd>\n",
                        # Broken fragment
                        &show_url($u, $f),
                        # List of lines
@@ -1374,7 +1378,7 @@ sub links_summary {
                  407 => 'The link is a proxy, but requires Authentication.',
                  408 => 'The request timed out',
                  415 => 'The media type is not supported.',
-                 500 => 'The server failed. It is a server side problem.',
+                 500 => 'Either the hostname is incorrect or it is a server side problem.',
                  501 => 'HEAD or GET is not implemented on this server... What kind of server is that?',
                  503 => 'The server cannot service the request, for some unknown reason.');
     my %priority = ( 404 => 1,
