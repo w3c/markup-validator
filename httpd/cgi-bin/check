@@ -3,18 +3,19 @@
 # W3C HTML Validation Service
 # A CGI script to retrieve and validate an HTML file
 #
-# Copyright 1995-1998 Gerald Oskoboiny <gerald@w3.org>
+# Copyright 1995-1999 Gerald Oskoboiny <gerald@w3.org>
 #
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.9 1998-12-16 11:29:17 gerald Exp $
+# $Id: check,v 1.10 1999-01-21 08:43:28 gerald Exp $
 
 #############################################################################
 # Constant definitions
 #############################################################################
 
-$ENV{USER_AGENT} = 'W3C_Validator/1.0';
+$cvsrevision	= '$Revision: 1.10 $';
+$cvsdate	= '$Date: 1999-01-21 08:43:28 $';
 
 $logfile	= "/var/log/httpd/val-svc";
 $reflogfile	= "/var/log/httpd/val-svc-referers";
@@ -29,8 +30,15 @@ $grabber	= "/usr/local/lib/libwww-perl/get";
 $sgmlstuff	= "/usr/local/src/validator/htdocs/sgml-lib";
 $sp		= "/usr/local/bin/nsgmls";
 $tidy		= "/usr/local/bin/tidy";
+$nkf		= "/usr/local/bin/nkf";
 
 $sgmldecl	= "$sgmlstuff/REC-html40-971218/HTML4.decl";
+
+$revision	= $cvsrevision;
+$revision	=~ s/^\$Revision: //;
+$revision	=~ s/ \$$//;
+
+$ENV{USER_AGENT} = "W3C_Validator/$revision";
 
 # $notice		= "<p><strong>Note: This service will be intermittently unavailable for the next few hours for an operating system upgrade.</strong>";
 
@@ -146,13 +154,6 @@ $SIG{'PIPE'} = 'IGNORE';
 #############################################################################
 # Process CGI variables
 #############################################################################
-
-# this should be replaced with a 'referer' parameter.
-# if ( ( ( $ENV{HTTP_REFERER} =~ /tsd\.ml\.org/i ) ||
-#        ( $ENV{HTTP_REFERER} =~ /hwg\.org/i ) ) &&
-#        ( ! length( $ENV{QUERY_STRING} ) ) ) {
-# 	 $ENV{QUERY_STRING} = "uri=" . $ENV{HTTP_REFERER};
-# }
 
 # accept either check/foo or check?foo
 $parameters = $ENV{PATH_INFO} || $ENV{QUERY_STRING};
@@ -316,6 +317,7 @@ while ( $_ = shift( @file ) ) {
 # check the response headers
 while ( $_ = shift( @file ) ) {
     chop;
+    s/\r$//;
     if (/^HTTP\/[0-9\.]+ [0-9][0-9][0-9] .*/ ) {
 	( ( $httpversion, $response, $message ) =
 	    ( /^(HTTP\/[0-9\.]+) ([0-9][0-9][0-9]) (.*)/ ) );
@@ -324,9 +326,18 @@ while ( $_ = shift( @file ) ) {
 	( ( $redirect_uri ) = ( /^Location: (.*)/ ) );
 	$redirect_uri =~ s/\s*$//g;	# it has a trailing space sometimes (?)
     }
+    if (/^Content-Type: /i) {
+        ( ( $content_type ) = ( /^Content-Type: (.*)/i ) );
+        ( ( $charset ) = ( $content_type =~ /;\s*charset=(.*)/i ) );
+        $content_type =~ s/;.*$//;
+        $content_type =~ s/\s*$//g;
+	$charset =~ s/;.*//;
+        $charset =~ s/\s*//g;
+    }
+
     last if /^$/;
 }
-	
+
 if ( $response != 200 ) {
     print "<p>\n  I got the following unexpected response when trying to ";
     print "retrieve $uri:\n";
@@ -387,6 +398,19 @@ EOF
     else {
 	print "<p>\n  Please make sure you have entered the URI correctly.\n</p>";
     }
+    &clean_up_and_exit;
+}
+
+unless ($content_type =~ /text\/html/i) {
+    print <<"EOF";
+
+<p>
+  Sorry, I can't validate this document because its returned
+  content-type was not "text/html", the media type for HTML
+  documents.
+</p>
+EOF
+
     &clean_up_and_exit;
 }
 
@@ -473,16 +497,46 @@ if ( $no_doctype && ! $guessed_doctype_already ) {
     }
 }
 
-if ( $FORM{tidy} eq "true" ) {
-    open( CHECKER,
-       "| $tidy | $sp -E0 -m $sgmlstuff/catalog $sgmldecl - >$temp.esis 2>$temp" )
-	    || die "couldn't open checker: $!";
+foreach $line (@file) {
+    # @@ needs to handle meta elements that span more than one line
+    if ( $line =~ /<meta/i ) { 
+	if ( $line =~ /charset\s*=[\s"]*([^\s;">]*)/i ) {
+	    $meta_charset = $1;
+	    last;
+	}
+    }
+}
+
+print "<p>\n  debug: [$charset],[$meta_charset]\n</p>";
+
+if ($charset ne '') {
+    if ($meta_charset ne '' && $charset !~ /$meta_charset/i) {
+        print "<p>\n  <strong>Warning:</strong> Charset in HTTP header and in META tag are different.\n</p>";
+        print "<p>\n  $charset != $meta_charset\n</p>";
+    }
+} else {
+    if ($meta_charset ne '') {
+        $charset = $meta_charset;
+    } else {
+        print "<p>\n  <strong>Note:</strong> Charset is unknown.\n</p>";
+    }
+}
+
+if ( $charset =~ /iso-2022-jp/i ) {
+    $codeconv = "$nkf -Jex | ";
+}
+elsif ( $charset =~ /Shift_JIS/i ) {
+    $codeconv = "$nkf -Sex | ";
 }
 else {
-    open( CHECKER,
-       "| $sp -E0 -m $sgmlstuff/catalog $sgmldecl - >$temp.esis 2>$temp" )
-	    || die "couldn't open checker: $!";
+    $codeconv = "";
 }
+
+print "<p>\n  debug: [$charset],[$codeconv]\n</p>";
+
+open( CHECKER,
+   "| $codeconv $sp -E0 -m $sgmlstuff/catalog - >$temp.esis 2>$temp" )
+	|| die "couldn't open checker: $!";
 
 print CHECKER "$default_doctype\n" if $no_doctype;
 # this is a kludge for DOS users with their entire file on a single line
@@ -929,7 +983,7 @@ if ( $FORM{"sp"} eq "true" ) {
     still under construction! I'm trying to make this easier to read
     somehow, with little success.
 EOF
-    
+
     if ( $FORM{"noatt"} ne "true" ) {
 	print <<'EOF';
     It helps a bit if you select the
@@ -1190,7 +1244,7 @@ sub output_closing {
      src="http://validator.w3.org/images/vh40.gif" height=31 width=88
      align=right border=0 alt="Valid HTML 4.0!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</A><br>
-     \$Date: 1998-12-16 11:29:17 $ \
+  $cvsdate
 </address>
 
 </body>
