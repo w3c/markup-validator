@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.69 2000-10-21 06:15:27 gerald Exp $
+# $Id: check,v 1.70 2000-10-21 06:39:19 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -71,9 +71,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.69 $;
+$VERSION    =  q$Revision: 1.70 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2000-10-21 06:15:27 $;
+$DATE       =  q$Date: 2000-10-21 06:39:19 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -156,7 +156,7 @@ if ($q->param('url') and not $q->param('uri')) {
 #
 # Supercede URI with an uploaded file.
 if ($q->param('uploaded_file')) {
-  $q->param('uri', 'file://' . $q->param('uploaded_file'));
+  $q->param('uri', 'upload://' . $q->param('uploaded_file'));
 }
 
 #
@@ -201,7 +201,7 @@ $header .= $notice;
 #
 # Punt if we don't recognize this URI scheme.
 # @@ LWP does a whole bunch more: transparently!
-unless ($q->param('uri') =~ m(^(http|file)://)) {
+unless ($q->param('uri') =~ m(^(http|upload)://)) {
   print $header;
   print <<"EOF";
   <p>
