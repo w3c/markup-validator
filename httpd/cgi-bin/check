@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.62 2002-08-17 14:18:32 link Exp $
+# $Id: check,v 1.200.2.63 2002-08-17 14:25:05 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.200.2.62 $;
+  $VERSION    =  q$Revision: 1.200.2.63 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-17 14:18:32 $,
+			      Date => q$Date: 2002-08-17 14:25:05 $,
 			     });
 
 #
@@ -1038,7 +1038,7 @@ EOF
 
 #
 # Complain about unknown HTTP responses.
-sub print_unknown_http_error_message {
+sub http_error {
   my $uri = shift;
   my $code = shift;
   my $message = shift;
@@ -1079,13 +1079,13 @@ EOHD
 }
 
 
-sub print_tip_of_the_day{
+sub daily_tip {
   my @tipAddrs = keys %{$CFG->{'Tips DB'}};
   srand(time());
   my $tipAddr = $tipAddrs[rand scalar @tipAddrs];
   my $tipSlug = $CFG->{'Tips DB'}->{$tipAddr};
 
-  print <<"EOHD";
+  return <<"EOHD";
   <dl class="tip">
     <dt><a href="http://www.w3.org/2001/06tips/">Tip Of The Day</a>:</dt>
     <dd><a href="$tipAddr">$tipSlug</a></dd>
@@ -1134,11 +1134,7 @@ sub handle_uri {
       &authenticate($File, $res->request->url, $res->www_authenticate);
     } else {
       print $File->{Results};
-      &print_unknown_http_error_message(
-					$uri->as_string,
-					$res->code,
-					$res->message
-				       );
+      &http_error($uri->as_string, $res->code, $res->message);
     }
     print $File->{'Footer'};
     exit;
@@ -1556,8 +1552,10 @@ sub report_valid {
     } else {
       print qq(<h2 id="skip" class="valid">This Page Is Valid!</h2>\n);
     }
-    &print_tip_of_the_day($File, $CFG->{'Tips DB'});
+
+    print &daily_tip($File, $CFG->{'Tips DB'});
     &print_warnings($File);
+
     print <<".EOF.";
     <p>
       The document located at
@@ -1596,21 +1594,32 @@ sub report_valid {
   } elsif (defined $File->{Tentative}) {
     print qq(<h2 class="valid">This Page Is Valid $File->{Version}!</h2>);
     if ($File->{Tentative} == T_CHARSET_KLUDGE) {
-      print "  <p>\n    This document would validate as $File->{Version} if you updated it to specify the Character Encoding used.\n  </p>\n";
+      print &daily_tip($File, $CFG->{'Tips DB'});
+      &print_warnings($File);
+      print "
+    <p>
+      This document would validate as $File->{Version} if you updated it to
+      specify the Character Encoding used.
+    </p>\n";
     } else {
-      print "  <p>\n    This document would validate as $File->{Version} if you updated it to match the Options used.\n  </p>\n";
+      print &daily_tip($File, $CFG->{'Tips DB'});
+      &print_warnings($File);
+      print "
+    <p>
+      This document would validate as $File->{Version} if you updated it to
+      match the Options used.
+    </p>\n";
     }
   } else {
     print qq(  <h2 class="valid">This document validates as the document type specified!</h2>\n);
     print <<".EOF.";
     <p>
       The document located at
-      <code>&lt;URL:<a href="$File->{URI}">$File->{URI}</a>&gt;</code>
-      was checked and found to be valid $File->{Version}. This means that
-      the resource in question identified itself as
-      &ldquo;$File->{Version}&rdquo; and that we successfully performed a
-      formal validation using an SGML or XML Parser (depending on the
-      markup language used).
+      &lt;URL:<a href="$File->{URI}">$File->{URI}</a>&gt; was checked and found
+      to be valid $File->{Version}. This means that the resource in question
+      identified itself as &ldquo;$File->{Version}&rdquo; and that we
+      successfully performed a formal validation using an SGML or XML Parser
+      (depending on the markup language used).
     </p>
 .EOF.
   }
