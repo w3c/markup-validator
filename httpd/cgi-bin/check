@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.147 2004-06-24 19:33:30 ville Exp $
+# $Id: check,v 1.305.2.148 2004-07-21 10:24:06 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -76,6 +76,7 @@ use constant T_INFO  =>  2; # 0000 0010
 use constant T_WARN  =>  4; # 0000 0100
 use constant T_ERROR =>  8; # 0000 1000
 use constant T_FATAL => 16; # 0001 0000
+use constant T_FALL  => 32; # 0010 0000, Fallback in effect.
 
 #
 # Output flags for error processing
@@ -144,7 +145,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.147 $;
+  $VERSION    =  q$Revision: 1.305.2.148 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -219,7 +220,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-06-24 19:33:30 $,
+                              Date => q$Date: 2004-07-21 10:24:06 $,
                              });
 
 #
@@ -767,6 +768,18 @@ sub parse (\$) {
   for (@{$File->{ESIS}}) {
     no warnings 'uninitialized';
     next unless /^AVERSION CDATA (.*)/;
+    if ($1 eq '-//W3C//DTD HTML Fallback//EN') {
+      $File->{Tentative} |= (T_ERROR | T_FALL);
+      &add_warning($File, 'fallback', 'DOCTYPE Fallback in effect!', <<".EOF.");
+      The DOCTYPE Declaration in your document was not recognized. This
+      probably means that the Formal Public Identifier contains a spelling
+      error, or that the Declaration is not using correct syntax. Validation
+      has been performed using a default "fallback" Document Type Definition
+      that closely resembles HTML 4.01 Transitional, but the document will not
+      be Valid until you have corrected the problem with the DOCTYPE
+      Declaration.
+.EOF.
+    }
     $File->{Version} = $1;
     last;
   }

@@ -1,6 +1,6 @@
 
 	-- SGML catalog for the W3C MarkUp Validation Service --
-	-- $Id: sgml.soc,v 1.3.2.3 2004-05-21 08:40:42 link Exp $ --
+	-- $Id: sgml.soc,v 1.3.2.4 2004-07-21 10:24:01 link Exp $ --
 
 OVERRIDE YES	-- prefer public identifiers to system identifiers --
 SGMLDECL sgml.dcl
@@ -155,4 +155,4 @@ PUBLIC "-//bebop.net//DTD HTML Apple Help 1.0//EN"	AppleHelp1.0.dtd
 OVERRIDE NO
 
 	-- Fallback for HTML documents if no FPI is given. --
-DOCTYPE html REC-html401-19991224/loose.dtd
+DOCTYPE html sgml.dtd
