@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.20 2003-09-01 01:31:52 link Exp $ */
+/* $Id: results.css,v 1.13.2.21 2003-09-09 08:34:29 ot Exp $ */
 
 .input {
   color: black;
@@ -83,8 +83,8 @@ fieldset {
 
 fieldset legend {
   background-color: #eee;
-  border-right: 1px solid grey;
-  border-bottom: 1px solid grey;
+  border-right: 1px solid gray;
+  border-bottom: 1px solid gray;
   font-weight: bold;
 }
 
@@ -127,7 +127,7 @@ div#Warnings div.fatal div {
 
 div#Warnings div.fatal p:first-child {
   font-weight: bold;
-  font-size: normal;
+/*  font-size: normal; */
   clear: left;
 }
 
@@ -161,7 +161,7 @@ div#Warnings div.note div {
    do, the first one should be emphasized. */
 div#Warnings div.note p:first-child {
   font-weight: bold;
-  font-size: normal;
+/*  font-size: normal; */
   clear:       left;
 }
 
