@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.276 2002-10-30 01:50:11 link Exp $
+# $Id: check,v 1.277 2002-10-30 18:35:08 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.276 $;
+  $VERSION    =  q$Revision: 1.277 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-30 01:50:11 $,
+			      Date => q$Date: 2002-10-30 18:35:08 $,
 			     });
 
 #
@@ -399,8 +399,7 @@ $File = &byte_error($File);
 # Override DOCTYPE if user asked for it.
 if ($File->{Opt}->{DOCTYPE}
     and not $File->{Opt}->{DOCTYPE} =~ /(Inline|detect)/i) {
-  $File->{Content} = &suppress_doctype($File->{Content});
-  unshift @{$File->{Content}}, $CFG->{'Doctypes'}->{$File->{Opt}->{DOCTYPE}};
+  $File = &override_doctype($File);
   my $dtd = ent($File->{Opt}->{DOCTYPE});
   &add_warning($File, <<".EOF.");
   <strong>DOCTYPE Override in effect!</strong> Any DOCTYPE Declaration in the
@@ -1292,15 +1291,25 @@ sub truncate_line {
 
 #
 # Suppress any existing DOCTYPE by commenting it out.
-sub suppress_doctype {
+sub override_doctype {
   no strict 'vars';
-  my $file = shift;
+  my $File    = shift;
+  local $dtd  = $CFG->{'Doctypes'}->{$File->{Opt}->{DOCTYPE}};
   local $HTML = '';
+  local $seen = FALSE;
+
+  my $declaration = sub {
+    $seen = TRUE;
+    $HTML .= "$dtd\n" . '<!-- ' . $_[0] . ' -->';
+  };
 
   HTML::Parser->new(default_h     => [sub {$HTML .= shift}, 'text'],
-		    declaration_h => [sub {$HTML .= '<!-- ' . $_[0] . ' -->'}, 'text']
-		   )->parse(join "\n", @{$file})->eof();
-  return [split /\n/, $HTML];
+		    declaration_h => [$declaration, 'text']
+		   )->parse(join "\n", @{$File->{Content}})->eof();
+
+  $File->{Content} = [split /\n/, $HTML];
+  unshift @{$File->{Content}}, $dtd unless $seen;
+  return $File;
 }
 
 
