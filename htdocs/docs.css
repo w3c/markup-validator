@@ -4,7 +4,7 @@
    Copyright 2003 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See <http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright>
  
-   $Id: docs.css,v 1.1.2.1 2004-03-27 14:36:58 link Exp $
+   $Id: docs.css,v 1.1.2.2 2004-04-30 06:23:21 ot Exp $
 */
 
 /*
@@ -19,14 +19,9 @@
 /* Margins common (relative) to multiple block elements. */
 .doc h4, .doc h5, .doc p, .doc pre, .doc ul, .doc table
 {
- margin-left: 2em;
- margin-right: 20%;
-}
-
-/* Disable margins on certain elements. */
-.doc div#toc ul, .doc dd p{
-  margin-left:  0;
-  margin-right: 0;
+ margin-left: 1em;
+ /* margin-right: 20%; */
+margin-right: 1em;
 }
 
 /* Set line height to 1.5x to allow for various inline decoration. */
@@ -34,13 +29,14 @@
   line-height: 150%;
 }
 
-/* Make code snippets stand out. */
-.doc code {
-}
-
 /* documentation - table of contents */
 #toc {
   font-size: .8em;
+}
+
+.doc div#toc ul {
+  margin-left:  0;
+  margin-right: 0;
 }
 
 /* documentation - error explanations */
@@ -55,6 +51,9 @@ dl#expl dt {
   margin-bottom: 1em;
 }
 
+.doc dd {
+  margin-right: 0; /* no need for the extra margin if we nicely put the text of the dd in a paragraph */
+}
 .doc var { /* headings for an error */
   color: #006;
 }
