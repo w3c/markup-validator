@@ -5,7 +5,7 @@
 # (c) 1999-2001 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.69 2001-01-19 13:52:46 hugo Exp $
+# $Id: checklink.pl,v 2.70 2001-01-19 13:59:31 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -34,7 +34,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.69 $ . '(c) 1999-2001 W3C';
+my $VERSION = q$Revision: 2.70 $ . '(c) 1999-2001 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -1621,12 +1621,13 @@ sub html_header() {
     if (! $_cl) {
         print "Content-Type: text/html\nContent-Language: en";
     }
+    my $title = ' Link Checker'.($uri eq '' ? '' : ': '.$uri);
     print "
 
 <!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">
 <html>
 <head>
-<title>W3C Link Checker".($uri eq '' ? '' : ': '.$uri)."</title>
+<title>W3C".$title."</title>
 <style type=\"text/css\">
 
 body {
@@ -1672,7 +1673,7 @@ dt.report {
 </head>
 <body>
 <a href=\"http://www.w3.org/\"><img alt=\"W3C\" src=\"http://www.w3.org/Icons/w3c_home\" height=\"48\" width=\"72\"></a>
-<h1>W3C<sup>&reg;</sup> Link Checker: $uri</h1>
+<h1>W3C<sup>&reg;</sup>".$title."</h1>
 \n";
 }
 
@@ -1736,7 +1737,8 @@ sub print_form() {
     my ($q) = @_;
     &html_header('', 1);
     print "<form action=\"".$q->self_url()."\" method=\"get\">
-<p>Enter the URI that you want to check:</p>
+<p>Enter the address (<a href='http://www.w3.org/Addressing/#terms'>URL</a>)
+of a document that you would like to check:</p>
 <p><input type=\"text\" size=\"50\" name=\"uri\"></p>
 <p>Options:</p>
 <p>
