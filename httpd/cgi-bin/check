@@ -8,14 +8,14 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.14 1999-03-04 10:40:23 gerald Exp $
+# $Id: check,v 1.15 1999-03-04 10:41:01 gerald Exp $
 
 #############################################################################
 # Constant definitions
 #############################################################################
 
-$cvsrevision	= '$Revision: 1.14 $';
-$cvsdate	= '$Date: 1999-03-04 10:40:23 $';
+$cvsrevision	= '$Revision: 1.15 $';
+$cvsdate	= '$Date: 1999-03-04 10:41:01 $';
 
 $logfile	= "/var/log/httpd/val-svc";
 $reflogfile	= "/var/log/httpd/val-svc-referers";
@@ -464,7 +464,7 @@ else {
 
 $command  = "$codeconv $sp -E0 $xmlflags $catalog $decl";
 
-print "  <li>nsgmls command line: $command\n";
+# print "  <li>nsgmls command line: $command\n";
 
 open( CHECKER, "| $command - >$temp.esis 2>$temp" )
 	|| die "couldn't open checker: $!";
