@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.44 1999-10-25 12:21:23 gerald Exp $
+# $Id: check,v 1.45 1999-10-26 13:36:25 gerald Exp $
 
 #
 # Load modules
@@ -29,8 +29,8 @@ use constant UNDEF => undef;
 # Constant definitions
 #############################################################################
 
-my $cvsrevision	= '$Revision: 1.44 $';
-my $cvsdate	= '$Date: 1999-10-25 12:21:23 $';
+my $cvsrevision	= '$Revision: 1.45 $';
+my $cvsdate	= '$Date: 1999-10-26 13:36:25 $';
 
 my $logfile	= "/var/log/httpd/val-svc";
 
@@ -1063,7 +1063,7 @@ sub clean_up_and_exit {
 
 sub redirect_to_home_page {
 
-    print "Status: 302 Moved Permanently\n";
+    print "Status: 301 Moved Permanently\n";
     print "Content-Type: text/html\n";
     print "Location: http://validator.w3.org/\n\n";
     print "<title>Moved!</title>\n";
