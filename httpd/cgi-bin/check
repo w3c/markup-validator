@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.46 2002-06-16 20:13:28 link Exp $
+# $Id: check,v 1.200.2.47 2002-06-16 20:42:09 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -90,7 +90,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.200.2.46 $;
+  $VERSION    =  q$Revision: 1.200.2.47 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -150,7 +150,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-06-16 20:13:28 $,
+			      Date => q$Date: 2002-06-16 20:42:09 $,
 			     });
 
 #
@@ -721,7 +721,7 @@ sub print_table {
     &add_table($File, 'Errors', scalar(@{$File->{Errors}}));
   }
 
-  print qq(  <form id="form" method="get" action="/check">\n)
+  print qq(  <form id="form" method="get" action="check">\n)
     unless $File->{'Is Upload'};
 
   print join '', @{&serialize_table($File, 'header')};
@@ -1317,7 +1317,7 @@ EOHD
     <li class="fatal"><strong>Fatal Error: $err->{msg}</strong>
     <p>
       I could not parse this document, because it uses a public identifier that
-      is not in my <a href="/sgml-lib/catalog">catalog</a>.
+      is not in my <a href="sgml-lib/catalog">catalog</a>.
     </p>
     .EOF.
       &output_doctype_spiel;
@@ -1831,6 +1831,9 @@ sub prepSSI {
   $ssi =~ s/<!--\#echo\s+var="revision"\s+-->/$opt->{Revision}/g
     if defined $opt->{Revision};
 
+  # No need to parametrize this one, it's always "./" in this context.
+  $ssi =~ s|<!--\#echo\s+var="relroot"\s+-->|./|g;
+
   return $ssi;
 }
 
@@ -1852,7 +1855,7 @@ sub uri_rejected {
       <p>
         If you entered a valid URI using a scheme that we should support,
         please let us know as outlined on our
-        <a href="/feedback.html">Feedback page</a>. Make sure to include the
+        <a href="feedback.html">Feedback page</a>. Make sure to include the
         specific URI you would like us to support, and if possible provide a
         reference to the relevant standards document describing the URI scheme
         in question.
@@ -1981,7 +1984,7 @@ sub validate_encoding {
         <p>The Use Charset was "$File->{Charset}->{Use}".</p>
         <p>
           If you believe the character encoding to be valid you can submit a request for
-          that character encoding (see the <a href="/feedback.html">feedback page</a>
+          that character encoding (see the <a href="feedback.html">feedback page</a>
           for details) and we will look into supporting it in the future.
         </p>
       .EOF.

@@ -4,12 +4,12 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.20.2.16 2002-06-16 19:38:27 link Exp $
+   $Id: base.css,v 1.20.2.17 2002-06-16 20:42:08 link Exp $
 */
 
-@import url(/results.css); /* CSS for validation results. */
-@import url(/navbar.css);  /* CSS for navigation menu. */
-@import url(/tips.css);    /* CSS for Quality Tips. */
+@import url(results.css); /* CSS for validation results. */
+@import url(navbar.css);  /* CSS for navigation menu. */
+@import url(tips.css);    /* CSS for Quality Tips. */
 
 body {
   color:          black;
