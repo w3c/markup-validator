@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.27 2002-05-30 02:47:25 link Exp $
+# $Id: check,v 1.200.2.28 2002-05-30 02:52:27 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -78,7 +78,7 @@ $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.27 $;
+$VERSION    =  q$Revision: 1.200.2.28 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 #
@@ -107,7 +107,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-05-30 02:47:25 $,
+			      Date => q$Date: 2002-05-30 02:52:27 $,
 			     });
 
 #
@@ -422,6 +422,7 @@ seek $spin, 0, 0;
 #
 # Run it through SP, redirecting output to temporary files.
 my $pid = do {
+  no warnings 'once';
   local(*SPIN, *SPOUT, *SPERR)  = ($spin, $spout, $sperr);
   open3("<&SPIN", ">&SPOUT", ">&SPERR", @cmd);
 };
