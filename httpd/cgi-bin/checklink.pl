@@ -5,7 +5,7 @@
 # (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.23 2003-11-22 15:40:20 ville Exp $
+# $Id: checklink.pl,v 3.6.2.24 2003-11-24 19:11:21 ville Exp $
 #
 # This program is licensed under the W3C(r) Software License:
 #       http://www.w3.org/Consortium/Legal/copyright-software
@@ -87,7 +87,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.23 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.24 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
 
@@ -524,7 +524,7 @@ sub check_uri ($$$;$)
   my $result_anchor = 'results'.$doc_count;
 
   printf("\nProcessing\t%s\n\n",
-         $Opts{HTML} ? &show_url(&encode($absolute_uri)) : $absolute_uri);
+         $Opts{HTML} ? &show_url($absolute_uri) : $absolute_uri);
 
   if ($Opts{HTML}) {
     print("</h2>\n");
@@ -1937,9 +1937,14 @@ sub bgcolor ($)
 sub show_url ($;$)
 {
   my ($url, $fragment) = @_;
-  $url .= '#' . $fragment if defined($fragment);
+  if (defined($fragment)) {
+    my $u = URI->new($url);
+    $u->fragment($fragment);
+    $url = $u->as_string();
+  }
+  $url = &encode($url);
   return sprintf('<a href="%s">%s</a>',
-                 $url, &encode(defined($fragment) ? $fragment : $url));
+                 $url, defined($fragment) ? &encode($fragment) : $url);
 }
 
 sub html_footer ()
