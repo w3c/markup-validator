@@ -8,8 +8,8 @@
     <link rel="stylesheet" type="text/css" href="/base.css" />
     <meta name="keywords" content="HTML, Hypertext Markup Language, Validation, W3C HTML Validation Service" />
     <meta name="description" content="W3C's easy-to-use HTML validation service, based on an SGML parser." />
-    <meta name="revision" content="$Id: errors.html,v 1.1 2001-02-23 09:06:49 link Exp $" />
-    <meta name="modified" content="$Date: 2001-02-23 09:06:49 $" />
+    <meta name="revision" content="$Id: errors.html,v 1.2 2001-03-06 07:01:47 link Exp $" />
+    <meta name="modified" content="$Date: 2001-03-06 07:01:47 $" />
   </head>
 
   <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
@@ -210,23 +210,7 @@
           corresponding end tag is also missing</a>.
         </p>
       </dd>
-      <dt id="not-allowed-contained">"document type does not allow element "FOO" here; assuming missing "BAR" start-tag"</dt>
-      <dd>
-        <p>
-          Similar to the <a href="#not-allowed">previous error</a>, but more
-          specific: in this case, you have a FOO element that is not contained
-          in a BAR element when FOO is not allowed outside of BAR. Probably the
-          most common cause of this error is the use of the <code>DD</code>
-          element as a fake paragraph indent; <code>DD</code> is not allowed
-          outside of a <code>DL</code> element.
-        </p>
-        <p>
-          The Validator has inserted a BAR start tag where it thinks there needs
-          to be one; it will probably complain later on that <a
-          href="#no-end-tag">the corresponding end tag is also missing</a>.
-        </p>
-      </dd>
-      <dt id="undef-attr">"there is no attribute `FOO'"</dt>
+      <dt id="attr-undef">"there is no attribute `FOO' for this element (in this HTML version)"</dt>
       <dd>
         <p>
           You have used an attribute with an element that is defined not to have
@@ -238,7 +222,7 @@
       <dt id="undef-attr-val">"`FOO' is not a member of the group specified in the declared value of this attribute"</dt>
       <dd>
         <p>
-          Similar to the <a href="#undef-attr">previous error</a>; this time,
+          Similar to the <a href="#attr-undef">previous error</a>; this time,
           you're using an attribute that is defined for the element, but with a
           value that isn't defined for the attribute. For instance, the Netscape
           extension <code>&lt;IMG ALIGN=ABSMIDDLE&gt;</code> will cause this
@@ -278,7 +262,7 @@
           which means that <code>&lt;TD WIDTH="50%"&gt;</code> is not allowed.
         </p>
       </dd>
-      <dt id="bad-name-attr">"value of attribute "FOO" invalid: "#" cannot start a name"</dt>
+      <dt id="attr-bad-name">"value of attribute "FOO" invalid: "#" cannot start a name"</dt>
       <dd>
       	<p>
 	        A special case of <a href="#bad-attr-char">the previous error</a>; the
@@ -309,14 +293,15 @@
           error, referring to the "attribute value" <code>JOE.GIF</code>.
         </p>
       </dd>
-      <dt id="missing-attr">"required attribute `FOO' not specified"</dt>
+      <dt id="attr-missing">"required attribute `FOO' not specified"</dt>
       <dd>
         <p>
           You left off a required attribute of the indicated element. The most
           common such omitted attribute is the <code>ALT</code> attribute of the
-          <code>AREA</code> element; browsers will typically use these to build
-          a menu equivalent to your client-side imagemap if the user has
-          disabled image loading, so you'll want to use a meaningful value here.
+          <code>AREA</code> or <code>IMG</code> element; browsers will typically
+          use these to build a menu equivalent to your client-side imagemap if
+          the user has disabled image loading, so you'll want to use a
+          meaningful value here.
         </p>
       </dd>
       <dt id="no-end-tag">"end tag for `FOO' omitted, but its declaration does not permit this"</dt>
@@ -542,6 +527,21 @@
           Note that all of the rest of the errors you received are meaningless;
           The Validator was unable to find a <a href="sgml.html#dtd">DTD</a> to
           work from, and thus could not validate your document.
+        </p>
+      </dd>
+      <dt id="missing-subel">"missing a required sub-element of `FOO'"</dt>
+      <dd>
+        <p>
+          The element "FOO" is defined to <em>require</em> one or more
+          sub-elements. One example is TR which requires one or more TD or TH
+          elements.
+        </p>
+      </dd>
+      <dt id="start-tag">"start tag was here"</dt>
+      <dd>
+        <p>
+          Not an error, but rather a pointer to the start tag of the element
+          the previous error referred to.
         </p>
       </dd>
     </dl>

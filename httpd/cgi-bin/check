@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.83 2001-03-06 00:06:00 link Exp $
+# $Id: check,v 1.84 2001-03-06 07:01:48 link Exp $
 
 #
 # We need Perl 5.004.
@@ -43,7 +43,6 @@ use vars qw($frag $pub_ids $element_uri $file_type); # Cfg hashes.
 
 #
 # Paths and file locations
-my $logfile   = '/var/log/httpd/val-svc';
 my $base_path = '/usr/local/validator/';
 if ( $ENV{SERVER_PORT} eq "8000" ) {
     $base_path = '/home/gerald/validator/';
@@ -68,15 +67,15 @@ my $weblint = '/usr/bin/weblint';
 # URIs and fragments
 my $abs_svc_uri	= 'http://validator.w3.org/';
 my $uri_def_uri	= 'http://www.w3.org/Addressing/#terms';
-my $faqloc	= 'http://www.cs.duke.edu/~dsb/kgv-faq/';
+my $faqloc	= '/docs/';
 my $faqerrloc	= $faqloc . 'errors.html';
 my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.83 $;
+$VERSION    =  q$Revision: 1.84 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-03-06 00:06:00 $;
+$DATE       =  q$Date: 2001-03-06 07:01:48 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -102,7 +101,7 @@ my @options = qw(weblint pw outline ss sp noatt);
 #
 # Stopgap to shut -w up. It won't actually fix anything, but it'll keep us
 # running without warnings until we can fix the problems.
-my ($validity, %undef_frag, $effective_charset, $catalog,
+my ($validity, $effective_charset, $catalog,
     @fake_errors, $doctype, $line, $col, $type, $msg, $diff,
     $pos, $indent, $image_uri, $alttext, $gifhw, $pedanticflags,
     $pedantic_blurb, $level, $prevlevel, $prevdata);
@@ -119,7 +118,6 @@ $file_type   = &read_cfg($type_db); # Content -> File -type
 $SIG{TERM} = \&erase_stuff;
 $SIG{KILL} = \&erase_stuff;
 $SIG{PIPE} = 'IGNORE';
-# $SIG{CHLD} = \&erase_stuff;
 
 #
 # delete() the, possibly tainted, $PATH.
@@ -258,6 +256,7 @@ EOF
 #
 
 my $guessed_doctype = 2;
+
 #
 # Try to extract or guess the DOCTYPE for HTML and XHTML files.
 if ($File->{Type} eq 'html' or $File->{Type} eq 'xhtml'
@@ -610,7 +609,7 @@ if ( $? || ($guessed_doctype == 1) ) {
 	# "explanation..." links to the KGV FAQ.
 	my $msgindex = $msg;
 	$msgindex =~ s/"[^"]+"/FOO/g;
-	$msgindex =~ s/[^A-Za-z ]//;
+	$msgindex =~ s/[^A-Za-z ]//g;
 
 	$newline =~ s/&/&amp;/go; $newline =~ s/</&lt;/go;
 	$newline =~ s/${lt}/</g; $newline =~ s/${gt}/>/g;
@@ -631,13 +630,8 @@ if ( $? || ($guessed_doctype == 1) ) {
 
         print qq{<span class=error>Error: $msg</span>};
 
-	if ( defined $frag->{$msgindex} ) {
-	    # temporarily commented out due to broken links
-	    # print qq{ (<a
-	    #     href="$faqerrloc#$frag->{$msgindex}">explanation...</a>)};
-	}
-	else { # remember msgindexes without frags, to get the KGV FAQ updated.
-	    $undef_frag{$msgindex} = 1;
+	if (defined $frag->{$msgindex}) {
+	  print qq{ (<a href="$faqerrloc#$frag->{$msgindex}">explanation...</a>)};
 	}
 
 	print "</p>\n";
@@ -1064,33 +1058,15 @@ EOF
 }
 
 sub erase_stuff {
-
-    unlink $temp           or warn "unlink($temp) returned: $!\n";
-    unlink "$temp.esis"    or warn "unlink($temp.esis) returned: $!\n";
-    unlink "$temp.weblint";
-
-}
-
-sub make_log_entry {
-
-    my $msgindex;
-
-    open(LOG,">>$logfile") || die "couldn't append to log: $!";
-    print LOG "$ENV{REMOTE_HOST}\t$validity $version\t", $q->param('uri'), "\n";
-    foreach $msgindex (keys %undef_frag) {
-	print LOG "frag not defined for msgindex: $msgindex\n";
-    }
-    close( LOG ) || die "couldn't close log: $!";
-
+  unlink $temp        or warn "unlink($temp) returned: $!\n";
+  unlink "$temp.esis" or warn "unlink($temp.esis) returned: $!\n";
+  unlink "$temp.weblint";
 }
 
 sub clean_up_and_exit {
-
-    &output_closing;
-    &erase_stuff;
-#    &make_log_entry;
-    exit;
-
+  &output_closing;
+  &erase_stuff;
+  exit;
 }
 
 sub redirect_to_home_page {
@@ -1164,7 +1140,7 @@ sub check_for_doctype {
 
     # does an HTML element precede the doctype on the same line?
     if ( $line =~ /<[a-z].*<!doctype/i ) {
-	if ( $line =~ /<[a-z]+ xmlns=['"]([^ '"]*)/i ) {# look for an xmlns attr
+	if ( $line =~ /<[a-z]+ xmlns=['"]([^ "']*)/i ) {# look for an xmlns attr
 	    return 2, $1;
 	}
 	last;
@@ -1181,7 +1157,7 @@ sub check_for_doctype {
     # Strip comments, so the next line doesn't find commented-out markup etc.
     # (this doesn't handle multi-line comments, unfortunately)
     if ( $line =~ /<[a-z]/i ) {	# found an element
-	if ( $line =~ /<[a-z]+ xmlns=['"]([^ '"]*)/i ) {# look for an xmlns attr
+	if ( $line =~ /<[a-z]+ xmlns=['"]([^ "']*)/i ) {# look for an xmlns attr
 	    return 2, $1;
 	}
 	last;
@@ -1286,9 +1262,10 @@ sub print_charset_error {
 
   print <<".EOF.";
   <p>
-    A fatal error occurred when attempting to transliterate the document charset.
-    Either we do not support this charset yet, or you have specified a non-existant
-    character set (typically a misspelling such as "iso8859-1" for "iso-8859-1").
+    A fatal error occurred when attempting to transliterate the document
+    charset. Either we do not support this character encoding yet, or you have
+    specified a non-existent character set (typically a misspelling such as
+    "iso8859-1" for "iso-8859-1").
   </p>
   <p>The detected charset was "$charset".</p>
   <p>The error was "$error".</p>
