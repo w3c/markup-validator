@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.146 2004-06-24 19:32:45 ville Exp $
+# $Id: check,v 1.305.2.147 2004-06-24 19:33:30 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -144,7 +144,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.146 $;
+  $VERSION    =  q$Revision: 1.305.2.147 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -219,7 +219,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-06-24 19:32:45 $,
+                              Date => q$Date: 2004-06-24 19:33:30 $,
                              });
 
 #
@@ -1216,7 +1216,7 @@ sub authenticate {
 
   for my $scheme (keys(%$authHeader)) {
     my $origrealm = $authHeader->{$scheme}->{realm};
-    if (!defined($realm) || lc($scheme) !~ /^(?:basic|digest)$/) {
+    if (!defined($origrealm) || lc($scheme) !~ /^(?:basic|digest)$/) {
       delete($authHeader->{$scheme});
       next;
     }
