@@ -1,5 +1,5 @@
 	-- SGML catalog for the W3C Markup Validation Service --
-	-- $Id: sgml.soc,v 1.7 2004-09-12 20:27:36 link Exp $ --
+	-- $Id: sgml.soc,v 1.8 2004-09-12 20:30:46 link Exp $ --
 
 OVERRIDE YES	-- prefer public identifiers to system identifiers --
 SGMLDECL sgml.dcl
@@ -24,10 +24,6 @@ PUBLIC  "-//IETF//DTD HTML 3.0//EN"             html-3.dtd
 PUBLIC  "-//IETF//DTD HTML 3.0//EN//"           html-3.dtd
 PUBLIC  "-//IETF//DTD HTML Level 3//EN"		html-3.dtd
 PUBLIC  "-//IETF//DTD HTML Level 3//EN//3.0"	html-3.dtd
-
-	-- AdvaSoft's more up-to-date DTD for 3.0; see html-3-as.dtd for info --
-PUBLIC  "-//AS//DTD HTML 3.0 asWedit + extensions//EN"            html-3-as.dtd
-PUBLIC  "-//AdvaSoft Ltd//DTD HTML 3.0 asWedit + extensions//EN"  html-3-as.dtd
 
 	-- Ways to refer to strict Level 3: most general to most specific --
 PUBLIC  "-//IETF//DTD HTML Strict//EN//3.0"		html-3s.dtd
@@ -70,53 +66,14 @@ PUBLIC  "-//IETF//DTD HTML 2.0 Strict Level 1//EN"	html-1s.dtd
 PUBLIC  "-//IETF//DTD HTML Strict Level 0//EN"		html-0s.dtd
 PUBLIC  "-//IETF//DTD HTML Strict Level 0//EN//2.0"	html-0s.dtd
 
-	-- Ways to refer to Netscape extensions HTML --
-PUBLIC "-//WebTechs//DTD Mozilla HTML//EN"		html-mcom.dtd
-PUBLIC "-//WebTechs//DTD Mozilla HTML 2.0//EN"		html-mcom.dtd
-PUBLIC "-//Netscape Comm. Corp.//DTD HTML//EN"		html-mcom.dtd
-PUBLIC "-//Netscape Comm. Corp.//DTD HTML//EN"		html-mcom.dtd
-PUBLIC "-//Netscape Comm. Corp.//DTD Strict HTML//EN"	html-mcoms.dtd
-
-	-- Ways to refer to Microsoft extensions HTML --
-PUBLIC "-//Microsoft//DTD Internet Explorer 2.0 HTML//EN"	iehtml.dtd
-PUBLIC "-//Microsoft//DTD Internet Explorer 2.0 HTML Strict//EN" iehtml-s.dtd
-PUBLIC "-//Microsoft//DTD Internet Explorer 2.0 Tables//EN"	ietables.dtd
-PUBLIC "-//Microsoft//DTD Internet Explorer 3.0 HTML//EN"	ie30.dtd
-PUBLIC "-//Microsoft//DTD Internet Explorer 3.0 HTML Strict//EN" ie30-s.dtd
-PUBLIC "-//Microsoft//DTD Internet Explorer 3.0 Tables//EN"	ie30tables.dtd
-
-	-- Ways to refer to Sun Microsystems HotJava extensions --
-PUBLIC "-//Sun Microsystems Corp.//DTD HotJava HTML//EN"	html-hj.dtd
-PUBLIC "-//Sun Microsystems Corp.//DTD HotJava Strict HTML//EN"	html-hjs.dtd
-
 	-- Ways to refer to HTML 2.1 variants --
 PUBLIC "-//IETF//DTD HTML 2.1E//EN"			html-2.1e.dtd
-
-	-- O'Reilly & Associates DTD; see http://www.ora.com/standards/html/ --
-PUBLIC "-//O'Reilly and Associates//DTD HTML Extended 1.0//EN"		oreilly-html.dtd
-PUBLIC "-//O'Reilly and Associates//DTD HTML Extended Relaxed 1.0//EN"	oreilly-html-relaxed.dtd
-PUBLIC "-//O'Reilly and Associates//DTD HTML 2.0//EN"			oreilly-rfc1866.dtd
-PUBLIC "-//O'Reilly and Associates//ELEMENTS Table Fragment 1.0//EN"	oreilly-draft-table.elements
-PUBLIC "-//O'Reilly and Associates//ENTITIES Additional HTML 1.0//EN"	oreilly-additional.entities
-
-	-- Ways to Refer to SoftQuad HTML 2.0 + extensions --
-PUBLIC "-//SQ//DTD HTML 2.0 HoTMetaL + extensions//EN"	html-sq.dtd
-
-	-- Spyglass HTML 2.0 Extended DTD --
-PUBLIC "-//Spyglass//DTD HTML 2.0 Extended//EN"			spyglass/html2x.dtd
-PUBLIC "ISO/IEC 10179:1995//NOTATION DSSSL Style Language//EN"	spyglass/dsssl.not
-PUBLIC "-//IETF//NOTATION W3C Style Language//EN"		spyglass/w3csty.not
-PUBLIC "-//IETF//NOTATION Cascading Style Sheet Language//EN"	spyglass/css.not
 
 	-- "HTML Pro" --
 PUBLIC "ISO 8879-1986//ENTITIES Added Latin 2//EN"	pro/usr/local/lib/sgml/iso_8879-1986/entities/added_latin_2
 PUBLIC "ISO 8879-1986//ENTITIES Publishing//EN"		pro/usr/local/lib/sgml/iso_8879-1986/entities/publishing
 PUBLIC "ISO 8879-1986//ENTITIES General Technical//EN"	pro/usr/local/lib/sgml/iso_8879-1986/entities/general_technical
 PUBLIC "ISO 8879-1986//ENTITIES Numeric and Special Graphic//EN"	pro/usr/local/lib/sgml/iso_8879-1986/entities/numeric_and_special_graphic
-PUBLIC "+//Silmaril//DTD HTML Pro v0r11 19970101//EN"	pro/html/dtds/htmlpro.dtd
-
-	-- experimental DTDs --
-PUBLIC "-//W3C//DTD HTML Experimental 19960712//EN"	pro/usr/local/lib/sgml/w3c/dtd/html_experimental_19960712
 
 	-- HTML 3.2 --
 PUBLIC "-//W3C//DTD HTML 3.2//EN"			html-3.2.dtd
@@ -146,8 +103,6 @@ PUBLIC "ISO/IEC 15445:2000//DTD HyperText Markup Language//EN"	ISO-HTML/15445.dt
 PUBLIC "ISO/IEC 15445:2000//DTD HTML//EN"	ISO-HTML/15445.dtd
 PUBLIC "-//W3C//ENTITIES Full Latin 1//EN//HTML"	REC-html401-19991224/HTMLlat1.ent
 PUBLIC "-//W3C//ENTITIES Symbolic//EN//HTML"	REC-html401-19991224/HTMLsymbol.ent
-
-PUBLIC "-//bebop.net//DTD HTML Apple Help 1.0//EN"	AppleHelp1.0.dtd
 
 
         -- Do not prefer document type name over a SYSTEM Identifier. --
