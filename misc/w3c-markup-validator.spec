@@ -1,5 +1,5 @@
 # RPM Spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.1.2.6 2003-07-17 18:58:13 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.1.2.7 2003-07-23 20:19:39 ville Exp $
 
 %{!?apxs: %{expand:   %%define apxs %{_sbindir}/apxs}}
 %define httpd_confdir %(test -d %{_sysconfdir}/httpd/conf.d && echo %{_sysconfdir}/httpd/conf.d || %{apxs} -q SYSCONFDIR)
@@ -7,17 +7,20 @@
 
 # -----------------------------------------------------------------------------
 
-Summary:        W3C Markup Validator
 Name:           w3c-markup-validator
 Version:        0.6.2
-Release:        3w3c
+Release:        4w3c
 Epoch:          0
+Summary:        W3C Markup Validator
+
+Group:          Applications/Internet
+License:        W3C Software License
 URL:            http://validator.w3.org/
-License:        http://www.w3.org/Consortium/Legal/copyright-software
 Source0:        http://validator.w3.org/dist/validator-0_6_2.tar.gz
 Source1:        http://validator.w3.org/dist/sgml-lib-0_6_2.tar.gz
-Group:          Applications/Internet
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch:      noarch
+
 BuildRequires:  perl, %{apxs}
 Requires:       httpd, %{name}-libs = %{epoch}:%{version}
 Requires:       perl >= 5.6, perl-HTML-Parser >= 3.25, perl-libwww-perl
@@ -25,7 +28,6 @@ Requires:       perl-URI, perl-Text-Iconv, perl(CGI) >= 2.81, perl(Time::HiRes)
 Requires:       perl(Set::IntSpan), perl(Config::General) >= 2.06
 Requires:       perl(Net::IP), opensp >= 1.5
 Obsoletes:      w3c-validator
-BuildArch:      noarch
 
 %description
 The W3C Markup Validator checks documents like HTML and XHTML for
@@ -69,7 +71,9 @@ chmod 0755 httpd/cgi-bin/check*
 # -----------------------------------------------------------------------------
 
 %build
-# Nothing here.
+
+# Create the manual pages.
+pod2man --center="W3C Link Checker" httpd/cgi-bin/checklink > checklink.1
 
 # -----------------------------------------------------------------------------
 
@@ -94,6 +98,10 @@ cp -a htdocs/* $RPM_BUILD_ROOT%{_datadir}/%{name}
 mkdir -p $RPM_BUILD_ROOT{%{sgmldir},%{_sysconfdir}/sgml}
 cp -pr sgml-lib $RPM_BUILD_ROOT%{sgmldir}/%{name}
 > $RPM_BUILD_ROOT%{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat
+
+# Man pages
+mkdir -p $RPM_BUILD_ROOT%{_mandir}/man1
+cp -p checklink.1 $RPM_BUILD_ROOT%{_mandir}/man1
 
 # -----------------------------------------------------------------------------
 
@@ -130,6 +138,7 @@ fi
 %config(noreplace) %{_sysconfdir}/w3c
 %{_datadir}/%{name}
 %{_bindir}/checklink
+%{_mandir}/man1/checklink.1*
 
 %files libs
 %defattr(0644,root,root,0755)
@@ -139,6 +148,10 @@ fi
 # -----------------------------------------------------------------------------
 
 %changelog
+* Wed Jul 23 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.2-4w3c
+- Include checklink manual page.
+- Some spec file cleanups.
+
 * Thu Jul 17 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.2-3w3c
 - Requires perl(Net::IP).
 
