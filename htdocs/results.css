@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.4 2002-11-30 23:52:02 link Exp $ */
+/* $Id: results.css,v 1.13.2.5 2002-12-03 06:53:24 link Exp $ */
 
 .markup {
   color: red;
@@ -125,7 +125,7 @@ h2.invalid {
 }
 
 .invalid a {
-  color: blue;
+  color: #0099ff;
 }
 
 .invalid a:visited {
