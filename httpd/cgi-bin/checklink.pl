@@ -5,7 +5,7 @@
 # (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.18 2003-09-12 17:49:45 ville Exp $
+# $Id: checklink.pl,v 3.6.2.19 2003-09-15 18:31:20 ville Exp $
 #
 # This program is licensed under the W3C(r) Software License:
 #       http://www.w3.org/Consortium/Legal/copyright-software
@@ -87,7 +87,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.18 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.19 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
 
@@ -336,7 +336,7 @@ sub parse_arguments ()
   Getopt::Long->require_version(2.17);
   Getopt::Long->import('GetOptions');
   Getopt::Long::Configure('bundling', 'no_ignore_case');
-  my @masq = ();
+  my $masq = '';
 
   GetOptions('help|?'          => sub { usage(0) },
              'q|quiet'         => sub { $Opts{Quiet} = 1;
@@ -362,16 +362,23 @@ sub parse_arguments ()
                                           unless $_[1] == 0; },
              'd|domain=s'      => \$Opts{Trusted},
              'y|proxy=s'       => \$Opts{HTTP_Proxy},
-             'masquerade'      => \@masq,
+             'masquerade=s'    => \$masq,
              'hide-same-realm' => \$Opts{Hide_Same_Realm},
              'V|version'       => \&version,
             )
     || usage(1);
 
-  if (@masq) {
+  if ($masq) {
     $Opts{Masquerade} = 1;
-    $Opts{Masquerade_To} = shift(@masq);
-    $Opts{Masquerade_From} = shift(@masq);
+    my @masq = split(/\s+/, $masq);
+    if (scalar(@masq) != 2 ||
+        !defined($masq[0]) || $masq[0] !~ /\S/ ||
+        !defined($masq[1]) || $masq[1] !~ /\S/) {
+      usage(1, "Error: --masquerade takes two whitespace separated URIs.");
+    } else {
+      $Opts{Masquerade_From} = $masq[0];
+      $Opts{Masquerade_To}   = $masq[1];
+    }
   }
 }
 
@@ -383,47 +390,47 @@ sub version ()
 
 sub usage ()
 {
-  my ($exitval) = @_;
+  my ($exitval, $msg) = @_;
   $exitval = 0 unless defined($exitval);
+  $msg = $msg ? "$msg\n\n" : '';
 
   my $langs = defined($Opts{Languages}) ? " (default: $Opts{Languages})" : '';
   my $trust = defined($Opts{Trusted})   ? " (default: $Opts{Trusted})"   : '';
 
-  print STDERR "$PROGRAM $REVISION
+  print STDERR "$msg$PROGRAM $REVISION
 
 Usage: checklink <options> <uris>
 Options:
-  -s/--summary              Result summary only.
-  -b/--broken               Show only the broken links, not the redirects.
-  -e/--directory            Hide directory redirects, for example
-                            http://www.w3.org/TR -> http://www.w3.org/TR/
-  -r/--recursive            Check the documents linked from the first one.
-  -D/--depth n              Check the documents linked from the first one
-                            to depth n (implies --recursive).
-  -l/--location uri         Scope of the documents checked in recursive mode.
-                            By default, for example for
-                            http://www.w3.org/TR/html4/Overview.html
-                            it would be http://www.w3.org/TR/html4/
-  -n/--noacclanguage        Do not send an Accept-Language header.
-  -L/--languages            Languages accepted$langs.
-  -q/--quiet                No output if no errors are found.  Implies -s.
-  -v/--verbose              Verbose mode.
-  -i/--indicator            Show progress while parsing.
-  -u/--user username        Specify a username for authentication.
-  -p/--password password    Specify a password.
-  --hide-same-realm         Hide 401's that are in the same realm as the
-                            document checked.
-  -t/--timeout value        Timeout for HTTP requests.
-  -d/--domain domain        Regular expression describing the domain to
-                            which the authentication information will be
-                            sent$trust.
-  --masquerade base1 base2  Masquerade base URI base1 as base2
-                            (e.g. /home/hugo/MathML2/ is in fact
-                            http://www.w3.org/TR/MathML2/).
-  -y/--proxy proxy          Specify an HTTP proxy server.
-  -h/--html                 HTML output.
-  -?/--help                 Show this message.
-  -V/--version              Output version information.
+  -s/--summary                Result summary only.
+  -b/--broken                 Show only the broken links, not the redirects.
+  -e/--directory              Hide directory redirects, for example
+                              http://www.w3.org/TR -> http://www.w3.org/TR/
+  -r/--recursive              Check the documents linked from the first one.
+  -D/--depth n                Check the documents linked from the first one
+                              to depth n (implies --recursive).
+  -l/--location uri           Scope of the documents checked in recursive mode.
+                              By default, for example for
+                              http://www.w3.org/TR/html4/Overview.html
+                              it would be http://www.w3.org/TR/html4/
+  -n/--noacclanguage          Do not send an Accept-Language header.
+  -L/--languages              Languages accepted$langs.
+  -q/--quiet                  No output if no errors are found.  Implies -s.
+  -v/--verbose                Verbose mode.
+  -i/--indicator              Show progress while parsing.
+  -u/--user username          Specify a username for authentication.
+  -p/--password password      Specify a password.
+  --hide-same-realm           Hide 401's that are in the same realm as the
+                              document checked.
+  -t/--timeout value          Timeout for HTTP requests.
+  -d/--domain domain          Regular expression describing the domain to
+                              which the authentication information will be
+                              sent$trust.
+  --masquerade \"base1 base2\"  Masquerade base URI base1 as base2.  See manual
+                              page for more information.
+  -y/--proxy proxy            Specify an HTTP proxy server.
+  -h/--html                   HTML output.
+  -?/--help                   Show this message.
+  -V/--version                Output version information.
 
 See \"perldoc Net::FTP\" for information about various environment variables
 affecting FTP connections and \"perldoc Net::NNTP\" for setting a default
@@ -738,11 +745,11 @@ sub get_document ($$$;\%)
   # Can we parse the document?
   my $failed_reason;
   if ((my $ct = $response->header('Content-Type')) !~ $ContentTypes) {
-    $failed_reason = "Content-Type is '$ct'";
+    $failed_reason = "Content-Type for '$request_uri' is '$ct'";
   } elsif ($response->header('Content-Encoding') &&
            ((my $ce = $response->header('Content-Encoding')) ne 'identity')) {
     # @@@ We could maybe handle gzip...
-    $failed_reason = "Content-Encoding is '$ce'";
+    $failed_reason = "Content-Encoding for '$request_uri' is '$ce'";
   }
   if ($failed_reason) {
     # No, there is a problem...
@@ -1192,8 +1199,8 @@ sub check_validity ($$\%\%)
     # Can we really parse the document?
     return unless defined($results{$uri}{location}{type});
     if ($results{$uri}{location}{type} !~ $ContentTypes) {
-      &hprintf("Can't check content: Content-Type is '%s'.\n",
-               $results{$uri}{location}{type})
+      &hprintf("Can't check content: Content-Type for '%s' is '%s'.\n",
+               $uri, $results{$uri}{location}{type})
         if ($Opts{Verbose});
       return;
     }
@@ -1605,11 +1612,13 @@ sub code_shown ($$)
 # Checks whether we're allowed to retrieve the document based on it's IP
 # address.  Takes an URI object and returns a HTTP::Response containing the
 # appropriate status and error message if the IP was disallowed, undef
-# otherwise.
+# otherwise.  URIs without hostname or IP address are always allowed.
 #
 sub ip_allowed ($)
 {
   my ($uri) = @_;
+  return undef unless $uri->host();
+
   my $addr = my $iptype = my $resp = undef;
   if (my $host = gethostbyname($uri->host())) {
     $addr = inet_ntoa($host->addr()) if $host->addr();
@@ -2119,10 +2128,16 @@ Regular expression describing the domain to which the authentication
 information will be sent.  The default value can be specified in the
 checklink configuration file.
 
-=item B<--masquerade local remote>
+=item B<--masquerade "local remote">
 
-Masquerade local dir as a remote URI
-(e.g. /home/hugo/MathML2/ is in fact L<http://www.w3.org/TR/MathML2/>).
+Masquerade local dir as a remote URI.  For example, the following results in
+/my/local/dir/ being "mapped" to http://some/remote/uri/
+
+  --masquerade "/my/local/dir http://some/remote/uri/"
+
+As of revision 3.6.2.19 of checklink, --masquerade takes a single
+argument consisting of two URIs, separated by whitespace.  One usual way of
+providing a value with embedded whitespace is to enclose it in quotes.
 
 =item B<-y, --proxy proxy>
 
