@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.25 2004-03-15 21:33:17 ot Exp $ */
+/* $Id: results.css,v 1.13.2.26 2004-04-18 01:44:06 ot Exp $ */
 
 .input {
   color: black;
@@ -83,6 +83,10 @@ ol#errors li p code strong {
   padding-left: .5ex;
   padding-right: .5ex;
   font-weight: bolder;
+}
+
+ol#errors li {
+  clear: both; 
 }
 
 /* Source Code Display */
