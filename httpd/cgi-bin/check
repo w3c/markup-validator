@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.117 2004-05-15 16:21:04 link Exp $
+# $Id: check,v 1.305.2.118 2004-05-16 02:29:46 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.117 $;
+  $VERSION    =  q$Revision: 1.305.2.118 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-15 16:21:04 $,
+                              Date => q$Date: 2004-05-16 02:29:46 $,
                              });
 
 #
@@ -413,29 +413,37 @@ unless ($File->{Charset}->{Use}) {
   $File->{Charset}->{Use} = $File->{Charset}->{META};
 }
 
+#
+# Handle any Fallback or Override for the charset.
 if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
+  # charset=foo was given to the CGI and it wasn't "autodetect".
+
+  #
+  # Extract the user-requested charset from CGI param.
   my ($override, undef) = split(/\s/, $File->{Opt}->{Charset}, 2);
   $File->{Charset}->{Override} = lc($override);
-  unless ($File->{Charset}->{Use} and $File->{Opt}->{FB}->{Charset}) {
-    if ($File->{Opt}->{FB}->{Charset} and not $File->{Charset}->{Use}) {
+
+  if ($File->{Opt}->{FB}->{Charset} and not ) {
+    unless ($File->{Charset}->{Use}) {
       &add_warning($File, 'fallback', 'No Character Encoding Found!', <<".EOF."); # Warn about fallback...
   Falling back to "$File->{Charset}->{Override}"
   (<a href="docs/users.html#fbc">explain...</a>).
 .EOF.
       $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
-    } else {
-      # Warn about Override...
-      unless ($File->{Charset}->{Override} eq $File->{Charset}->{Use}) {
-        my $cs_use = &ent($File->{Charset}->{Use});
-        my $cs_opt = &ent($File->{Charset}->{Override});
-        &add_warning($File, 'override', 'Character Encoding Override in effect!', <<".EOF.");
+      $File->{Charset}->{Use} = $File->{Charset}->{Override};
+    }
+  } else {
+    # Warn about Override unless it's the same as the real charset...
+    unless ($File->{Charset}->{Override} eq $File->{Charset}->{Use}) {
+      my $cs_use = &ent($File->{Charset}->{Use});
+      my $cs_opt = &ent($File->{Charset}->{Override});
+      &add_warning($File, 'override', 'Character Encoding Override in effect!', <<".EOF.");
       The detected character encoding "<code>$cs_use</code>"
       has been suppressed and "<code>$cs_opt</code>" used instead.
 .EOF.
-        $File->{Tentative} |= T_ERROR;
-      }
+      $File->{Tentative} |= T_ERROR;
+      $File->{Charset}->{Use} = $File->{Charset}->{Override};
     }
-    $File->{Charset}->{Use} = $File->{Charset}->{Override};
   }
 }
 
@@ -1636,8 +1644,11 @@ sub override_doctype {
 
   my $declaration = sub {
     $seen = TRUE;
+
     # No Override if Fallback was requested.
-    unless ($File->{Opt}->{FB}->{DOCTYPE}) {
+    if ($File->{Opt}->{FB}->{DOCTYPE}) {
+      $HTML .= $_[0]; # Stash it as is...
+    } else { # Comment it out and insert the new one...
       $HTML .= "$dtd\n" . '<!-- ' . $_[0] . ' -->';
       $org_dtd = &ent($_[0]);
     }
@@ -2603,18 +2614,6 @@ sub charset_conflicts {
   my $cs_http = $File->{Charset}->{HTTP} ? &ent($File->{Charset}->{HTTP}) : '';
   my $cs_xml  = $File->{Charset}->{XML}  ? &ent($File->{Charset}->{XML})  : '';
   my $cs_meta = $File->{Charset}->{META} ? &ent($File->{Charset}->{META}) : '';
-
-  #
-  # warn about charset override
-  if ($File->{Charset}->{Override} &&
-      $File->{Charset}->{Override} ne $File->{Charset}->{Use}) {
-    &add_warning($File, 'override', 'Character Encoding Override in effect!', <<".EOF.");
-      The detected character encoding, "<code>$cs_use</code>", has been
-      suppressed and the character encoding "<code>$cs_opt</code>" used
-      instead.
-.EOF.
-    $File->{Tentative} |= T_ERROR;
-  }
 
   #
   # Add a warning if there was charset info conflict (HTTP header,
