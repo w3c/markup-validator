@@ -1,7 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.8 2001-09-20 18:12:13 link Exp $ */
-
-@import url(base.css);
+/* $Id: results.css,v 1.8.2.1 2002-03-30 22:45:45 link Exp $ */
 
 .markup {
   color: red;
@@ -13,12 +11,21 @@
   background-color: #eeeeee; /* light grey */
 }
 
+.tip {
+  text-align: center;
+  background-color: yellow;
+  clear: both;
+}
+
 table.header {
-  background-color: silver;
+  background-color: #eeeeee;
+  
 }
 
 th {
   padding-right: .5em;
+  text-align: right;
+  vertical-align: middle;
 }
 
 td {
@@ -26,19 +33,60 @@ td {
   padding-left: .5em;
 }
 
-h1.title img {
-  vertical-align: middle;
+.info {
+  background: white;
+  border-color: gray;
 }
 
-#Notice {
-  width: 75ex;
-  border: solid;
-  margin: .2em;
-  padding: .5em;
-  text-align: justify;
+.warning {
+  background: silver;
+  border-color: gray;
 }
 
-.info    {background: white;  border-color: gray;}
-.warning {background: silver; border-color: gray;}
-.error   {background: yellow; border-color: black;}
-.fatal   {background: red;    border-color: black;}
+.error {
+  background: yellow;
+  border-color: black;
+}
+
+.fatal {
+  background: red;
+  border-color: black;
+}
+
+.valid {
+  background:		blue;
+  color:		white;
+  font-family:		Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
+  font-size-adjust:	.53;
+  font-size:		1.5em;
+  font-weight:		500;
+  font-style:		normal;
+  text-decoration:	none;
+  word-spacing:		normal;
+  letter-spacing:	normal;
+  text-transform:	none;
+  border-color:		black;
+}
+
+.valid a {
+  color: yellow;
+}
+
+.invalid {
+  background:		red;
+  color:		white;
+  font-family:		Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
+  font-size-adjust:	.53;
+  font-size:		1.5em;
+  font-weight:		500;
+  font-style:		normal;
+  text-decoration:	none;
+  word-spacing:		normal;
+  letter-spacing:	normal;
+  text-transform:	none;
+  border-color: 	black;
+}
+
+.invalid a {
+  color: yellow;
+}
