@@ -8,14 +8,18 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.50 1999-12-01 01:28:21 gerald Exp $
+# $Id: check,v 1.51 1999-12-01 02:17:10 gerald Exp $
+
+#
+# We need Perl 5.004.
+require 5.004;
 
 #
 # Load modules
 use strict;
 use LWP::UserAgent;
 use URI::Escape;
-use CGI::Carp qw(fatalsToBrowser);
+use CGI::Carp;
 use CGI qw(:cgi -newstyle_urls -private_tempfiles);
 use Text::Wrap;
 
@@ -32,19 +36,30 @@ use constant UNDEF => undef;
 use constant DEBUG => 0;
 
 #
+# Define global variables
+use vars qw($VERSION $DATE $MAINTAINER);             # Strings we need.
+use vars qw($frag $pub_ids $element_uri $file_type); # Cfg hashes.
+
+#
 # Paths and file locations
-my $logfile	= '/var/log/httpd/val-svc';
-my $sgmlstuff	= '/usr/local/src/validator/htdocs/sgml-lib';
-my $sgmldecl	= $sgmlstuff . '/REC-html40-19980424/HTML4.decl';
-my $xhtmldecl	= $sgmlstuff . '/PR-xhtml1-19990824/xhtml1.dcl';
-my $xmldecl	= $sgmlstuff . '/sp-1.3/pubtext/xml.dcl';
-my $temp	= "/tmp/validate.$$";
+my $logfile   = '/var/log/httpd/val-svc';
+my $base_path = '/usr/local/src/validator/';
+my $html_path = $base_path . 'htdocs/';
+my $elem_db   = $html_path . 'config/eref.cfg';
+my $fpis_db   = $html_path . 'config/fpis.cfg';
+my $frag_db   = $html_path . 'config/frag.cfg';
+my $type_db   = $html_path . 'config/type.cfg';
+my $sgmlstuff = $html_path . 'sgml-lib';
+my $sgmldecl  = $sgmlstuff . '/REC-html40-19980424/HTML4.decl';
+my $xhtmldecl = $sgmlstuff . '/PR-xhtml1-19990824/xhtml1.dcl';
+my $xmldecl   = $sgmlstuff . '/sp-1.3/pubtext/xml.dcl';
+my $temp      = "/tmp/validate.$$"; # @@ Use POSIX/IO::File tmpfiles instead!
 
 #
 # Executables and binaries
-my $sp		= '/usr/local/bin/nsgmls';
-my $nkf		= '/usr/local/bin/nkf';
-my $weblint	= '/usr/bin/weblint';
+my $sp      = '/usr/local/bin/nsgmls';
+my $nkf     = '/usr/local/bin/nkf';
+my $weblint = '/usr/bin/weblint';
 
 #
 # URIs and fragments
@@ -54,25 +69,20 @@ my $faqloc	= 'http://www.cs.duke.edu/~dsb/kgv-faq/';
 my $rel_img_uri	= '/images/';
 my $faqerrloc	= $faqloc . 'errors.html';
 my $abs_img_uri	= $abs_svc_uri . 'images/';
-
-my $base_path	= '/usr/local/src/validator/';
-my $fpis_db	= $base_path . 'htdocs/config/fpis.cfg';
-my $frag_db	= $base_path . 'htdocs/config/frag.cfg';
-my $elem_db	= $base_path . 'htdocs/config/eref.cfg';
-
-my $element_ref	= 'http://www.htmlhelp.com/reference/html40/';
+my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-my $revision	=  q$Revision: 1.50 $;
-   $revision	=~ s/Revision: ([\d\.]+) /$1/;
-my $cvsdate	=  q$Date: 1999-12-01 01:28:21 $;
-my $maintainer	=  'gerald@w3.org';
-my $notice	=  ''; # "<p><strong>Note: This service will be ...</strong>";
+$VERSION    =  q$Revision: 1.51 $;
+$VERSION    =~ s/Revision: ([\d\.]+) /$1/;
+$DATE       =  q$Date: 1999-12-01 02:17:10 $;
+$MAINTAINER =  'gerald@w3.org';
+my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
 #
 # DOCTYPEs
 my $html32_doctype  = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">);
+my $html40s_doctype = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">);
 my $html40t_doctype = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">);
 my $html40f_doctype = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN" "http://www.w3.org/TR/REC-html40/frameset.dtd">);
 my $xhtmlt_doctype  = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN");
@@ -90,18 +100,17 @@ my @options = qw(weblint pw outline ss sp noatt);
 #
 # Stopgap to shut -w up. It won't actually fix anything, but it'll keep us
 # running without warnings until we can fix the problems.
-my ($validity, $version, $document_type, %undef_frag, $effective_charset,
-    $charsets_differ, $lastmod, $catalog, $command, @fake_errors,
-    $guessed_doctype, $doctype, $line, $col, $type, $msg, $diff, $pos, $indent,
-    $gifname, $alttext, $gifhw, $nicegifname, $pedanticflags, $pedantic_blurb,
-    $level, $prevlevel, $i, $prevdata);
-
+my ($validity, %undef_frag, $effective_charset, $catalog,
+    @fake_errors, $guessed_doctype, $doctype, $line, $col, $type, $msg, $diff,
+    $pos, $indent, $gifname, $alttext, $gifhw, $nicegifname, $pedanticflags,
+    $pedantic_blurb, $level, $prevlevel, $prevdata);
 
 #
 # Read configuration files.
-my $frag	= &read_cfg($frag_db); # FPIs    -> plain text version string
-my $pub_ids	= &read_cfg($fpis_db); # Errors  -> fragment identifier
-my $element_uri	= &read_cfg($elem_db); # Element -> URI fragment
+$frag        = &read_cfg($frag_db); # FPIs    -> plain text version string
+$pub_ids     = &read_cfg($fpis_db); # Errors  -> fragment identifier
+$element_uri = &read_cfg($elem_db); # Element -> URI fragment
+$file_type   = &read_cfg($type_db); # Content -> File -type
 
 #
 # Set up signal handlers.
@@ -128,21 +137,27 @@ my $q = new CGI;
 # http://lists.w3.org/Archives/Public/www-validator/1999JulSep/0197
 # http://lists.w3.org/Archives/Public/www-validator/1999JulSep/0212
 if (scalar $q->param) {
-    foreach my $param ($q->param) {
-        $q->param($param, TRUE) unless $q->param($param);
-    }
+  foreach my $param ($q->param) {
+    $q->param($param, TRUE) unless $q->param($param);
+  }
 }
 
 #
 # Futz the URI so "/referer" works.
 if ($q->path_info eq '/referer') {
-    $q->param('uri', $q->referer);
+  $q->param('uri', $q->referer);
 }
 
 #
 # Use "url" unless a "uri" was also given.
 if ($q->param('url') and not $q->param('uri')) {
-    $q->param('uri', $q->param('url'));
+  $q->param('uri', $q->param('url'));
+}
+
+#
+# Supercede URI with an uploaded file.
+if ($q->param('uploaded_file')) {
+  $q->param('uri', 'file://' . $q->param('uploaded_file'));
 }
 
 #
@@ -155,227 +170,178 @@ if ($q->param('url') and not $q->param('uri')) {
 $q->param('uri', $q->param('uri') . '/')   unless $q->param('uri') =~ m(/);
 $q->param('uri', 'http://' . $q->param('uri')) if $q->param('uri') =~ m(^www)i;
 
+
 #############################################################################
 # Output validation results
 #############################################################################
 
+#
+# A string containing the HTML header for validation results.
+# We save it in a string instead of printing it in case we need to abort before
+# we have any meaningfull results to report. @@ May not be necessary!
 my $header = <<"EOF";
 Content-Type: text/html
 
-$html40t_doctype
+$html40s_doctype
 <html>
-
   <head>
     <title>W3C HTML Validation Service Results</title>
-    <link rev="made" href="mailto:$maintainer">
+    <link rev="made" href="mailto:$MAINTAINER">
     <link rel="stylesheet" href="/results.css" media="screen">
   </head>
 
-  <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
+  <body>
+    <h1><a href="http://www.w3.org/"><img
+       src="http://www.w3.org/Icons/WWW/w3c_home"
+       width=72 height=48 border=0 alt="W3C"></a>
+      <a href="/">HTML Validation Service</a> Results</h1>
+EOF
 
+$header .= $notice;
+
+#
+# Punt if we don't recognize this URI scheme.
+# @@ LWP does a whole bunch more: transparently!
+unless ($q->param('uri') =~ m(^(http|file)://)) {
+  print $header;
+  print <<"EOF";
   <p>
-    <a href="http://www.w3.org/"><img
-       src="http://www.w3.org/Icons/WWW/w3c_home" height=48 border=0
-       alt="W3C"></a>
+    Sorry, this type of URI is not supported by this service.
   </p>
-
-  <h1><a href="/">W3C HTML Validation Service</a> Results</h1>
-
-$notice
+  <p>
+    URIs should be in the form:
+  </p>
+  <blockquote>
+    <code>$abs_svc_uri</code>
+  </blockquote>
+  <p>
+    (There are other types of URIs, too, but only <code>http://</code> URIs
+    are currently supported by this service.)
+  </p>
 EOF
+  &clean_up_and_exit;
+}
 
-unless($q->param('uri') =~ m(^http://)) {
-     print $header;
-     print <<"EOF";
-<p>
-  Sorry, this type of URI is not supported by this service.
-</p>
+#
+# Get the file and metadata.
+my $File = ($q->param('uploaded_file') ? &handle_file($q) : &handle_uri($q));
 
-<p>
-  URIs should be in the form:
-</p>
-
-<blockquote>
-  <code>$abs_svc_uri</code>
-</blockquote>
-
-<p>
-  (There are other types of URIs, too, but only <code>http://</code> URIs
-  are currently supported by this service.)
-</p>
-
+#
+# Abort if there was no document type mapping for this Content-Type, in which
+# case the document type will be equal to the content type (contains a "/").
+if ($File->{'Type'} =~ m(/)) {
+  print $header;
+  print <<"EOF";
+    <p class="error">
+      Sorry, I am unable to validate this document because its returned
+      content-type was <code>$File->{Type}</code>, which is not
+      currently supported by this service.
+    </p>
 EOF
-
-    &clean_up_and_exit;
+  &clean_up_and_exit;
 }
 
-my $ua = new LWP::UserAgent;
-$ua->agent( "W3C_Validator/$revision " . $ua->agent );
-$ua->parse_head(0);  # we want to parse the http-equiv stuff ourselves, for now
-my $request = new HTTP::Request(GET => $q->param('uri'));
-$request->headers->header('Accept' => 'text/html;q=1.0 text/*, */*;q=0.2');
-
-# if we got a Authorization header from the client, it means
-# that the client is back at it after being prompted for
-# a password: let's insert the header as is in the outgoing request
-if($ENV{HTTP_AUTHORIZATION}){
-    $request->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
+#
+# Try to extract or guess the DOCTYPE for HTML and XHTML files.
+if ($File->{Type} eq 'html' or $File->{Type} eq 'xhtml') {
+  ($guessed_doctype, $doctype) = &check_for_doctype($File->{Content});
 }
 
-my $response = $ua->request($request);
+#
+# Set document type to XHTML if the DOCTYPE was for XHTML. This happens when
+# a XHTML file is served as text/html (damn fool idea, if you ask me! -link).
+if ($doctype =~ /xhtml/i) {
+  $File->{Type} = 'xhtml';
+}
 
-if ( $response->code != 200 ) {
-    if ( $response->code == 401 ) {
-	$response->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
-	my $realm = $1;
-	my $resource = $response->request->url;
-	my $authHeader = $response->headers->www_authenticate;
-	&print_401_auth_required_message( $resource, $realm, $authHeader );
+#
+# If we find a META element with charset information, we take it into account.
+foreach my $line (@{$File->{Content}}) {
+  # @@ needs to handle meta elements that span more than one line
+  if ($line =~ /<meta/i) {
+    if ($line =~ /charset\s*=[\s\"]*([^\s;\">]*)/i) {
+      $File->{META_Charset} = lc $1;
+      last;
     }
-    else {
-	print $header;
-	&print_unknown_http_error_message( $q->param('uri'), $response->code,
-	    $response->message );
-    }
-    &clean_up_and_exit;
+  }
 }
 
-my $content_type = $response->headers->header("Content-Type");
-
-if ( ( $content_type =~ /text\/xml/i ) ||
-     ( $content_type =~ /image\/svg/i ) ||
-     ( $content_type =~ /application\/smil/i ) ||
-     ( $content_type =~ /application\/xml/i ) ) {
-    $document_type = "xml";
-}
-elsif ($content_type =~ /text\/html/i) {
-    $document_type = "html";
-}
-else {
-    print $header;
-    print <<"EOF";
-
-<p>
-  Sorry, I am unable to validate this document because its returned
-  content-type was <code>$content_type</code>, which is not
-  currently supported by this service.
-</p>
-EOF
-
-    &clean_up_and_exit;
+#
+# Figure out which charset to use for the validation.
+if ($File->{HTTP_Charset}) {
+  $File->{Charset} = $File->{HTTP_Charset};
+} elsif ($File->{META_Charset}) {
+  $File->{Charset} = $File->{META_Charset};
+} else {
+  $File->{Charset} = 'unknown';
 }
 
-my $jump_links = &build_jump_links;
-my $count = 1; # @@ should loop over many uris instead
 
-print $header;
-print <<"EOF";
-<h2><a name="doc$count">Document Checked</a></h2>
-
-$jump_links
-EOF
-
-my @file = split '\n',$response->content;
-if ( ( $document_type eq "html" ) || ( $document_type eq "xhtml" ) ) {
-    ( $guessed_doctype, $doctype ) = &check_for_doctype( \@file );
-}
-
-if ( $doctype =~ /xhtml/i ) {
-    $document_type = "xhtml";
-}
-
-my $meta_charset = '';
-foreach $line (@file) {
-    # @@ needs to handle meta elements that span more than one line
-    if ( $line =~ /<meta/i ) {
-	if ( $line =~ /charset\s*=[\s"]*([^\s;">]*)/i ) {
-	    $meta_charset = $1;
-	    last;
-	}
-    }
-}
-
-my $http_charset = '';
-
-if ( $content_type =~ /;\s*charset=(.*)/i ) {
-    $http_charset = $1;
-    $http_charset =~ s/;.*//;
-    $http_charset =~ s/\s*//g;
-}
-
-$content_type =~ s/;.*$//;
-$content_type =~ s/\s*$//g;
-
-if ( $http_charset ne '' ) {
-    $effective_charset = $http_charset;
-    if ( $meta_charset ne '' && $http_charset !~ /$meta_charset/i ) {
-	    # @@ the above needs work
-        $charsets_differ = 1;
-    }
-}
-else {
-    if ( $meta_charset ne '' ) {
-        $effective_charset = $meta_charset;
-    }
-    else {
-        $effective_charset = "unknown";
-    }
-}
-
+#
+# Setup conversion filter and SP environment for the effective charset.
 my $codeconv = '';
-if ( $effective_charset =~ /iso-2022-jp/i ) {
-    $codeconv = "$nkf -Jex | ";
-}
-elsif ( $effective_charset =~ /utf-8/i ) {
-    $ENV{SP_CHARSET_FIXED}="YES";
-    $ENV{SP_ENCODING}="utf-8";
-}
-elsif ( $effective_charset =~ /Shift_JIS/i ) {
-    $codeconv = "$nkf -Sex | ";
-}
-else {
-    $codeconv = "";
+if ($File->{Charset} eq 'iso-2022-jp') {
+  $codeconv = "$nkf -Jex | ";
+} elsif ($File->{Charset} eq 'utf-8') {
+  $ENV{SP_CHARSET_FIXED} = 'YES';
+  $ENV{SP_ENCODING}      = 'utf-8';
+} elsif ($File->{Charset} eq 'shift_jis') {
+  $codeconv = "$nkf -Sex | ";
 }
 
-print qq(<ul>\n  <li><a href="$uri_def_uri">URI</a>: ),
-    '<a href="', $q->param('uri'), '">', $q->param('uri'), qq(</a>\n);
+#
+# Print header and jump links.
+print $header, qq(\n    <h2>Document Checked</h2>\n), &build_jump_links;
 
-if ( $lastmod = $response->headers->header("Last-Modified") ) {
-    print qq{  <li>Last modified: $lastmod\n};
+#
+# Print the list of meta data.
+print "  <ul>\n";
+
+#
+# Print different things if we got redirected or had a file upload.
+if ($File->{URI} eq $q->param('uri')) {
+  print ' ' x 4, qq(<li><a href="$uri_def_uri">URI</a>: );
+  print '<a href="', $File->{URI}, '">', $File->{URI}, qq(</a>\n);
+} elsif ($q->param('uploaded_file')) {
+  print ' ' x 4, '<li>File: ', $File->{URI}, "</li>\n";
+} else {
+  print ' ' x 4, qq(<li><a href="$uri_def_uri">URI</a>: );
+  print '<a href="', $q->param('uri'), '">', $q->param('uri'), qq(</a>\n),
+  ' ' x 6, qq(<span class="note">), qq(I was redirected to &lt;URI:),
+  '<a href="', $File->{URI}, '">', $File->{URI}, '</a>&gt;', qq(</span>\n),
+  ' ' x 4, qq(</li>\n);
 }
 
-if ( defined $response->headers->server ) {
-    print "  <li>Server: " . $response->headers->server . "\n";
-}
+print(' ' x 4, q(<li>Last modified: ),  $File->{Modified}, qq(</li>\n))
+  if $File->{Modified};
+print(' ' x 4, q(<li>Server: ),         $File->{Server},   qq(</li>\n))
+  if $File->{Server};
+print(' ' x 4, q(<li>Content length: ), $File->{Size},     qq(</li>\n))
+  if $File->{Size};
 
-if ( defined $response->content_length ) {
-    print "  <li>Content length: " . $response->content_length . "\n";
-}
 
 my $xmlflags = '';
 my $decl = '';
-if ( $document_type eq "xhtml" ) {
-    $ENV{SP_CATALOG_FILES} = "$sgmlstuff/PR-xhtml1-19990824/xhtml.soc";
-    $ENV{SGML_SEARCH_PATH} = "$sgmlstuff/PR-xhtml1-19990824/";
-    $ENV{SP_CHARSET_FIXED}="YES";
-    $ENV{SP_ENCODING}="XML";
-    $xmlflags = "-wxml ";
-    $decl = $xhtmldecl;
-}
-elsif ( $document_type eq "xml" ) {
-    $ENV{SP_CATALOG_FILES} = "$sgmlstuff/sp-1.3/pubtext/xml.soc";
-    $ENV{SGML_SEARCH_PATH} = "$sgmlstuff/sp-1.3/pubtext/";
-    $ENV{SP_CHARSET_FIXED}="YES";
-    $ENV{SP_ENCODING}="XML";
-    $xmlflags = "-wxml -wno-valid ";
-    $decl = $xmldecl;
-}
-else {			# must be HTML (for now)
-    $decl = $sgmldecl;
-    $catalog = "-c $sgmlstuff/catalog";
+if ($File->{Type} eq 'xhtml') {
+  $ENV{SP_CATALOG_FILES} = $sgmlstuff . '/PR-xhtml1-19990824/xhtml.soc';
+  $ENV{SGML_SEARCH_PATH} = $sgmlstuff . '/PR-xhtml1-19990824/';
+  $ENV{SP_CHARSET_FIXED} = 'YES';
+  $ENV{SP_ENCODING}      = 'XML';
+  $xmlflags              = '-wxml ';
+  $decl                  = $xhtmldecl;
+} elsif ($File->{Type} eq 'xml') {
+  $ENV{SP_CATALOG_FILES} = $sgmlstuff . '/sp-1.3/pubtext/xml.soc';
+  $ENV{SGML_SEARCH_PATH} = $sgmlstuff . '/sp-1.3/pubtext/';
+  $ENV{SP_CHARSET_FIXED} = 'YES';
+  $ENV{SP_ENCODING}      = 'XML';
+  $xmlflags              = '-wxml -wno-valid ';
+  $decl                  = $xmldecl;
+} else { # must be HTML (for now)
+  $decl    = $sgmldecl;
+  $catalog = "-c $sgmlstuff/catalog";
 }
 
-$command  = "$codeconv $sp -E0 $xmlflags $catalog $decl";
+my $command  = "$codeconv $sp -E0 $xmlflags $catalog $decl";
 
 # print "  <li>nsgmls command line: <code>$command</code>\n";
 
@@ -383,28 +349,15 @@ open CHECKER, "|$command - >$temp.esis 2>$temp"
   or die "open(|$command - >$temp.esis 2>$temp) returned: $!\n";
 
 print CHECKER "$doctype\n" if $guessed_doctype;
-# this is a kludge for DOS users with their entire file on a single line
-# like http://validator.w3.org/dev/tests/no-newlines.html
-if ( $#file == 0 ) {
-    @file = (split(//,$file[0]));
-    for (0..$#file) {
-	$file[$_] .= "\n";
-    }
-}
-# kludge for other DOS users with CRLFs
-for (@file) {
-    s/
-+$//;
-    print CHECKER $_, "\n";
-}
+for (@{$File->{Content}}) {print CHECKER $_, "\n"}
 close CHECKER;
 
-open ERRORS, "<$temp"		or die  "open($temp) returned: $!\n";
+open ERRORS, "<$temp"   or die  "open($temp) returned: $!\n";
 my @errors = <ERRORS>;
-close ERRORS			or warn "close(ERRORS) returned: $!\n";
+close ERRORS            or warn "close($temp) returned: $!\n";
 
 my @esis;
-open ESIS, "$temp.esis"		or die  "open($temp.esis) returned: $!\n";
+open ESIS, "$temp.esis" or die  "open($temp.esis) returned: $!\n";
 while (<ESIS>) {
     next if / IMPLIED$/;
     next if /^ASDAFORM CDATA /;
@@ -412,53 +365,45 @@ while (<ESIS>) {
     chomp; # Removes trailing newlines
     push @esis, $_;
 }
-close ESIS			or warn "close(ESIS) returned: $!";
+close ESIS              or warn "close($temp.esis) returned: $!";
 
 my $fpi;
-$version = "unknown";
-if ( $document_type eq "xhtml" ) {
-    $fpi = $doctype;
+my $version = 'unknown';
+if ($File->{Type} eq 'xhtml') {
+  $fpi = $doctype;
+} elsif ($File->{Type} eq 'xml') {
+  $fpi = 'XML';
+} else {
+  for (@esis) {
+    next unless /^AVERSION CDATA (.*)/;
+    $fpi = $1;
+    last;
+  }
+  # Needed for HTML4 Strict, which has no version attribute on the HTML element
+  if (length $doctype and not defined $fpi) {$fpi = $doctype};
 }
-elsif ( $document_type eq "xml" ) {
-    $fpi = "XML";
-}
-else {
-    for (@esis) {
-	next unless /^AVERSION CDATA (.*)/;
-	$fpi = $1;
-	last;
-    }
-    if ( ! defined $fpi && length( $doctype) ) {
-	    # this is needed for HTML 4 strict, which doesn't have a
-	    # version attribute on the HTML element
-        $fpi = $doctype;
-    }
-}
-$version = $pub_ids->{$fpi} || "unknown";
+$version = $pub_ids->{$fpi} || 'unknown';
 
-if ( $guessed_doctype ) {
-    push( @fake_errors, "$sp:<OSFD>0:2:1:E: Missing DOCTYPE declaration at start of document (<a href=\"http://www.htmlhelp.org/tools/validator/doctype.html\">explanation...</a>)\n" );
+if ($guessed_doctype) {
+  push( @fake_errors, "$sp:<OSFD>0:2:1:E: Missing DOCTYPE declaration at start of document (<a href=\"http://www.htmlhelp.org/tools/validator/doctype.html\">explanation...</a>)\n" );
 }
 
-print qq{  <li>Character encoding: $effective_charset\n};
-
-if ( $charsets_differ ) {
-    print <<"EOHD";
-<br>
-  <strong>Warning:</strong> the character encoding specified in the HTTP header
-  (<code>$http_charset</code>) is different from the one specified in the META
-  element (<code>$meta_charset</code>).
-  I will use <code>$effective_charset</code> for this validation.
-
+print ' ' x 4, q(<li>Character encoding: ), $File->{Charset};
+if ($File->{HTTP_Charset} ne $File->{META_Charset}
+    and $File->{Charset} ne 'unknown') {
+  print <<"EOHD";
+      <em><span class="warning">The character encoding specified in the HTTP
+      header ("<code>$File->{HTTP_Charset}</code>") is different from the one
+      specified in the META element ("<code>$File->{META_Charset}</code>").
+      I will use "<code>$File->{Charset}</code>" for this validation.</span></em>
 EOHD
-
 }
+print ' ' x 4, qq(</li>\n);
 
-print "  <li>Document type: <b>$version</b>.\n";
+print ' ' x 4, qq(<li>Document type: <em>), $version, qq(</em></li>\n);
+print ' ' x 2, qq(</ul>\n\n);
 
-print "</ul>\n\n";
-
-if ( $document_type eq "xml" ) {
+if ($File->{Type} eq 'xml') {
 print <<"EOHD";
   <p>
     <strong>Note: experimental XML support was added to this service
@@ -486,7 +431,7 @@ if ( $? || $guessed_doctype ) {
 	next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
 	next if / numbers exceeding 65535 not supported$/;
 	next if /:W: SGML declaration was not implied$/ &&
-	    ( $document_type =~ /^x(ht)?ml$/ );
+	    ($File->{Type} =~ /^x(ht)?ml$/);
 	s/^$sp:<OSFD>//g;
 	if ( ! (($line, $col, $type, $msg)=(/^[^:]*:([0-9]+):([0-9]+):([A-Z]?):? (.*)/))) {
 	    print "Uh oh! I got the following unknown error:\n\n   $_\n\n";
@@ -512,8 +457,8 @@ if ( $? || $guessed_doctype ) {
 	    last;
 	}
 	$line-- if $guessed_doctype;
-	my $newline = $file[$line-1];
-
+	my $newline = $File->{Content}->[$line - 1];
+	
 	# make sure there are no ^P's or ^Q's in the file, since we need to use
 	# them to represent '<' and '>' temporarily. We'll just change them to
 	# literal P's and Q's for a lack of anything better to do with them.
@@ -684,11 +629,12 @@ EOHD
 	print "  <p>\n    Congratulations, this document validates as the document type specified! (I don't have an icon for this one yet, sorry.)\n  </p>\n";
     }
 
-    my $thispage = $q->self_url;
+    unless ($q->param('uploaded_file')) {
+      my $thispage = $q->self_url;
 
-    &output_css_validator_blurb( $q->param('uri') );
+      &output_css_validator_blurb($q->param('uri'));
 
-    print <<"EOHD";
+      print <<"EOHD";
   <p>
     If you would like to create a link to <em>this</em> page (i.e., this
     validation result) to make it easier to re-validate this page in the
@@ -696,15 +642,14 @@ EOHD
   </p>
 
   <blockquote>
-    <code>$thispage</code>
+    <code><a href="$thispage">$thispage</a></code>
   </blockquote>
 
   <p>
     (Or, you can just add the current page to your bookmarks or hotlist.)
   </p>
-
 EOHD
-
+    }
     $validity="valid";
 }
 
@@ -728,13 +673,10 @@ if ( $q->param('weblint') ) {
   </p>
 EOF
 
-    open( WEBLINT,
-	"| $weblint -s $pedanticflags - 2>&1 >$temp.weblint" )
-	    || die "couldn't open weblint: $!";
-    for (@file) {
-	print WEBLINT $_, "\n";
-    }
-    close( WEBLINT ) or warn "couldn't close weblint: $!";
+    open WEBLINT, "|$weblint -s $pedanticflags - 2>&1 >$temp.weblint"
+      or die "open($weblint) returned: $!\n";
+    for (@{$File->{Content}}) {print WEBLINT $_, "\n"};
+    close WEBLINT;
 
     print "\n\n";
     if ( $? ) {
@@ -841,7 +783,7 @@ EOF
 	printf "%4d: %s", 0, $gd;
     }
     $line = 1;
-    for (@file) {
+    for (@{$File->{Content}}) {
 	s/&/&amp;/go; s/</&lt;/go;
 	printf "<a name=\"line-%s\">%4d</a>: %s\n", $line, $line, $_;
 	$line++;
@@ -911,7 +853,7 @@ EOF
 		      $close = "/" if $1 eq ")";	# ")" -> close-tag
 		   "&lt;" . $close . "<a href=\"" .
 		   $element_ref . $element_uri->{lc($2)} .
-		   "\">$2<\/a>>"
+		   "\">$2<\/a>&gt;"
 		 }egx;
     $printme =~ s,^A,  A,;	# indent attributes a bit
     print ' ' x $indent, $printme, "\n";
@@ -924,6 +866,11 @@ EOF
 }
 
 &clean_up_and_exit;
+
+
+#############################################################################
+# Subroutine definitions
+#############################################################################
 
 sub output_doctype_spiel {
 
@@ -972,7 +919,7 @@ sub output_closing {
      src="http://validator.w3.org/images/vh40" height=31 width=88
      align=right border=0 alt="Valid HTML 4.0!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</a><br>
-  $cvsdate
+  $DATE
 </address>
 
 </body>
@@ -1064,11 +1011,11 @@ sub build_jump_links {
     return $text;
 
 }
+
 #
 # Check if the document has a doctype; if it doesn't, try to guess an
 # appropriate one given the elements used. Returns 2 values. First value is 0
 # if there was a DOCTYPE and 1 otherwise. The Second value is the doctype.
-
 sub check_for_doctype {
   my $file = shift; # a reference to @file, for efficiency
 
@@ -1104,11 +1051,9 @@ sub check_for_doctype {
 }
 
 
-sub print_401_auth_required_message {
-
-    my $resource = shift;
-    my $realm = shift;
-    my $authHeader = shift;
+sub authenticate {
+  my $resource   = shift;
+  my $authHeader = shift;
 
     print <<"EOF";
 Status: 401 Authorization Required
@@ -1162,7 +1107,6 @@ Content-Type: text/html
   goes across the network unencrypted.
 </p>
 EOF
-
 }
 
 sub print_unknown_http_error_message {
@@ -1190,21 +1134,16 @@ EOF
 }
 
 sub output_css_validator_blurb {
-
-    my $uri = shift;
-
-    print <<"EOHD";
+  my $uri = shift;
+  print <<"EOHD";
   <p>
-    If you use <a href="http://www.w3.org/Style/css/">CSS</a>
-    in your document, you should also <a
-    href="http://jigsaw.w3.org/css-validator/validator?uri=$uri">check
-    it for validity</a> using W3C's <a
-    href="http://jigsaw.w3.org/css-validator/">CSS
-    Validation Service</a>.
+    If you use <a href="http://www.w3.org/Style/css/">CSS</a> in your document,
+    you should also <a
+    href="http://jigsaw.w3.org/css-validator/validator?uri=$uri">check it for
+    validity</a> using the W3C <a
+    href="http://jigsaw.w3.org/css-validator/">CSS Validation Service</a>.
   </p>
-
 EOHD
-
 }
 
 
@@ -1224,4 +1163,99 @@ sub read_cfg {
   }
   close CFG;
   return \%cfg;
+}
+
+#
+# Fetch an URI and return the content and selected meta-info.
+sub handle_uri {
+  my $q   = shift;
+  my $uri = $q->param('uri'); # The URI to fetch.
+
+  my $ua = new LWP::UserAgent;
+  $ua->agent("W3C_Validator/$VERSION " . $ua->agent);
+  $ua->parse_head(0);  # Parse the http-equiv stuff ourselves. @@ Why?
+  my $req = new HTTP::Request(GET => $uri);
+
+  # If we got a Authorization header, the client is back at it after being
+  # prompted for a password so we insert the header as is in the request.
+  if($ENV{HTTP_AUTHORIZATION}){
+    $req->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
+  }
+
+  my $res = $ua->request($req);
+
+  unless ($res->code == 200) {
+    if ($res->code == 401) {
+      &authenticate($res->request->url, $res->www_authenticate);
+    } else {
+      print $header;
+      &print_unknown_http_error_message($uri, $res->code, $res->message);
+    }
+    &clean_up_and_exit;
+  }
+  
+  my($type, $charset) = &parse_content_type($res->header('Content-Type'));
+
+  return {Content       => &normalize_newlines($res->content),
+	  Type          => $type,
+	  HTTP_Charset  => $charset,
+	  Modified      => gmtime($res->last_modified),
+	  Server        => $res->server,
+	  Size          => $res->content_length,
+	  URI           => $res->request->url};
+}
+
+#
+# Handle uploaded file and return the content and selected meta-info.
+sub handle_file {
+  my $q = shift; # The CGI object.
+  my $f = $q->param('uploaded_file');
+  my $h = $q->uploadInfo($f);
+  my $file;
+
+  while (not eof $f) {$file .= <$f>};
+  my($type, $charset) = &parse_content_type($h->{'Content-Type'});
+
+  return {Content      => &normalize_newlines($file),
+	  Type         => $type,
+	  HTTP_Charset => $charset,
+	  Modified     => $h->{'Last-Modified'},
+	  Server       => $h->{'Server'},
+	  Size         => $h->{'Content-Length'},
+	  URI          => $q->param('uploaded_file')};
+}
+
+#
+# Parse a Content-Type and parameters. Return document type and charset.
+sub parse_content_type {
+  my $Content_Type = shift;
+  my $charset;
+  
+  my($ct, @param) = split /\s*;\s*/, lc $Content_Type;
+
+  if (exists $file_type->{$ct}) {
+    $type = $file_type->{$ct};
+  }
+  
+  foreach my $param (@param) {
+    my($p, $v) = split /\s*=\s*/, $param;
+    next unless $p =~ m(charset)i;
+    if ($v =~ m/([\'\"]?)(\S+)\1/i) {
+      $charset = lc $1;
+      last;
+    }
+  }
+
+  return $type, $charset;
+}
+
+#
+# Normalize newlines of form CRLF or CR to LF.
+sub normalize_newlines {
+  my $file = shift;
+
+  $file =~ s(\015\012){\n}g; # Turn ASCII CRLF into native newline.
+  $file =~ s(\015)    {\n}g; # Turn ASCII CR   into native newline.
+
+  return [split /\n/, $file];
 }
