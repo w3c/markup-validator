@@ -5,9 +5,9 @@
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
 <<<<<<< base.css
-   $Id: base.css,v 1.26.2.16 2003-07-28 07:34:39 ot Exp $
+   $Id: base.css,v 1.26.2.17 2003-07-28 12:20:57 ot Exp $
 =======
-   $Id: base.css,v 1.26.2.16 2003-07-28 07:34:39 ot Exp $
+   $Id: base.css,v 1.26.2.17 2003-07-28 12:20:57 ot Exp $
 >>>>>>> 1.26.2.14
 */
 
@@ -30,11 +30,19 @@ html, body {
 
 div#main {
   /*padding-left: 2em;*/
-  /*padding-top: 1em;*/
+  padding-top: 1em;
 }
 
 div#main p, div#main dt {
 padding-left: 1em;
+}
+
+dt {
+  margin-top: 1em;
+}
+
+dl.tip {
+ margin-top: 2em;
 }
 
 fieldset {
@@ -206,7 +214,8 @@ h2 {
   font-weight: bold;
   font-style: normal;
   text-decoration: none;
-  margin-top : 2em;
+  margin-top : 1em;
+ margin-bottom : 2em;
   
 }
 
@@ -242,9 +251,9 @@ h5, dt {
   text-indent: .5em;
   margin:0;
 }
-dt {
-  margin-top: 1em;
-}
+
+
+
 h6 {
   font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
   font-size-adjust: .53;
