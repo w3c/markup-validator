@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.223 2002-08-30 08:17:45 duerst Exp $
+# $Id: check,v 1.224 2002-08-30 08:27:51 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.223 $;
+  $VERSION    =  q$Revision: 1.224 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-30 08:17:45 $,
+			      Date => q$Date: 2002-08-30 08:27:51 $,
 			     });
 
 #
@@ -334,7 +334,8 @@ unless (&conflict($File->{Charset}->{Use}, 'utf-8')) {
   &abort_if_error_flagged($File, 0);
 }
 
-$File = &check_utf8($File);
+
+$File = &check_utf8($File) unless $File->{Charset}->{Use};
 $File = &byte_error($File);
 
 #
@@ -2083,8 +2084,13 @@ sub transcode {
 
   my ($command, $result_charset) = split " ", $CFG->{Charsets}->{$File->{Charset}->{Use}}, 2;
 
-  if ($result_charset eq 'utf-16' && $File->{Charset}->{Auto} =~ m/^utf-16[bl]e$/) {
-    $result_charset = $File->{Charset}->{Auto}; # for per-line conversion, need to be exact
+  if ($result_charset eq 'utf-16') { # for per-line conversion, need to be exact
+    if ($File->{Charset}->{Auto} =~ m/^utf-16[bl]e$/) {
+      $result_charset = $File->{Charset}->{Auto};
+    }
+    else {
+      $result_charset = 'utf-16be'; # BE is default for UTF-16
+    }                               # (applies only for HTML)
   }
   if ($command eq 'I') {
     # test if given charset is available
