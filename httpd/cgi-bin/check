@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.48 1999-12-01 00:59:31 gerald Exp $
+# $Id: check,v 1.49 1999-12-01 01:10:18 gerald Exp $
 
 #
 # Load modules
@@ -29,11 +29,17 @@ use constant UNDEF => undef;
 # Constant definitions
 #############################################################################
 
-my $cvsrevision	= '$Revision: 1.48 $';
-my $cvsdate	= '$Date: 1999-12-01 00:59:31 $';
+my $cvsrevision	= '$Revision: 1.49 $';
+my $cvsdate	= '$Date: 1999-12-01 01:10:18 $';
 
 my $logfile	= "/var/log/httpd/val-svc";
 
+my $base_path = '/usr/local/src/validator/';
+my $fpis_db   = $base_path . 'htdocs/config/fpis.cfg';
+my $frag_db   = $base_path . 'htdocs/config/frag.cfg';
+my $elem_db   = $base_path . 'htdocs/config/eref.cfg';
+
+my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 my $uri_def_uri	= "http://www.w3.org/Addressing/#terms";
 my $faqloc	= "http://www.cs.duke.edu/~dsb/kgv-faq/";
 my $faqerrloc	= "${faqloc}errors.html";
@@ -77,86 +83,11 @@ my $gifborder		= " border=0";
 
 my @options = qw(weblint pw outline ss sp noatt);
 
-#############################################################################
-# Array of FPIs -> plain text version strings
-#############################################################################
-
-my %pub_ids = (
-    '-//IETF//DTD HTML Level 0//EN//2.0', 'HTML 0.0',
-    '-//IETF//DTD HTML Strict Level 0//EN//2.0', 'Strict HTML 0.0',
-
-    '-//IETF//DTD HTML 2.0 Level 1//EN', 'HTML 1.0',
-    '-//IETF//DTD HTML 2.0 Strict Level 1//EN', 'Strict HTML 1.0',
-
-    '-//IETF//DTD HTML 2.0 Strict//EN', 'Strict HTML 2.0',
-    '-//IETF//DTD HTML 2.0//EN', 'HTML 2.0',
-    '-//IETF//DTD HTML 2.1E//EN', 'HTML 2.1E',
-
-  '-//AS//DTD HTML 3.0 asWedit + extensions//EN', 'HTML 3.0 (AdvaSoft version)',
-    '-//IETF//DTD HTML 3.0//EN', 'HTML 3.0 (Beta)',
-    '-//W3O//DTD W3 HTML Strict 3.0//EN//', 'Strict HTML 3.0 (Beta)',
-
-    '-//Sun Microsystems Corp.//DTD HotJava HTML//EN', 'Hotjava-HTML',
-'-//Sun Microsystems Corp.//DTD HotJava Strict HTML//EN', 'Strict Hotjava-HTML',
-    '-//WebTechs//DTD Mozilla HTML 2.0//EN', 'Netscape-HTML',
-    '-//Netscape Comm. Corp. Strict//DTD HTML//EN', 'Strict Netscape-HTML',
-    '-//Microsoft//DTD Internet Explorer 2.0 HTML//EN', 'MSIE-HTML',
-    '-//Microsoft//DTD Internet Explorer 2.0 HTML Strict//EN', 'Strict MSIE-HTML',
-    '-//Microsoft//DTD Internet Explorer 3.0 HTML//EN', 'MSIE 3.0 HTML',
-    '-//Microsoft//DTD Internet Explorer 3.0 HTML Strict//EN', 'Strict MSIE 3.0 HTML',
-    '-//OReilly and Associates//DTD HTML Extended 1.0//EN', 'O\'Reilly HTML Extended v1.0',
-    '-//OReilly and Associates//DTD HTML Extended Relaxed 1.0//EN', 'O\'Reilly HTML Extended Relaxed v1.0',
-
-    '-//IETF//DTD HTML V2.2//EN', 'HTML 2.2',
-    '-//W3C//DTD HTML 1996-01//EN', 'HTML 1996-01',
-    '-//W3C//DTD HTML 3.2 Final//EN', '<a href="http://www.w3.org/TR/REC-html32">HTML 3.2</a>',
-    '-//W3C//DTD HTML Experimental 970421//EN', '<a href="http://www.w3.org/TR/NOTE-html-970421.html">HTML 3.2 + Style</a>',
-    '+//Silmaril//DTD HTML Pro v0r11 19970101//EN', '<a href="http://www.ucc.ie/doc/www/html/dtds/htmlpro.html">HTML Pro</a>',
-    '-//Spyglass//DTD HTML 2.0 Extended//EN', 'Spyglass HTML 2.0 Extended',
-    'http://www.w3.org/MarkUp/Cougar/Cougar.dtd', '<a href="http://www.w3.org/MarkUp/Cougar/">HTML Level "Cougar"</a>',
-    '-//W3C//DTD HTML 4.0//EN', '<a href="http://www.w3.org/TR/REC-html40/">HTML 4.0</a> Strict',
-    '-//W3C//DTD HTML 4.0 Transitional//EN', '<a href="http://www.w3.org/TR/REC-html40/">HTML 4.0</a> Transitional',
-    '-//W3C//DTD HTML 4.0 Frameset//EN', '<a href="http://www.w3.org/TR/PR-html40/">HTML 4.0</a> Frameset',
-    '-//W3C//DTD HTML 4.01//EN', '<a href="http://www.w3.org/TR/1999/PR-html40-19990824/">HTML 4.01</a> Strict',
-    '-//W3C//DTD HTML 4.01 Transitional//EN', '<a href="http://www.w3.org/TR/1999/PR-html40-19990824/">HTML 4.01</a> Transitional',
-    '-//W3C//DTD HTML 4.01 Frameset//EN', '<a href="http://www.w3.org/TR/1999/PR-html40-19990824/">HTML 4.01</a> Frameset',
-    '-//W3C//DTD XHTML 1.0 Strict//EN', '<a href="http://www.w3.org/TR/1999/PR-xhtml1-19990824/">XHTML 1.0</a> Strict',
-    '-//W3C//DTD XHTML 1.0 Transitional//EN', '<a href="http://www.w3.org/TR/1999/PR-xhtml1-19990824/">XHTML 1.0</a> Transitional',
-    '-//W3C//DTD XHTML 1.0 Frameset//EN', '<a href="http://www.w3.org/TR/1999/PR-xhtml1-19990824/">XHTML 1.0</a> Frameset',
-    'XML', '<a href="http://www.w3.org/TR/REC-xml">XML</a>'
-
-);
-
-#############################################################################
-# Array of errors -> fragment identifiers for error explanation links
-#############################################################################
-
-my %frag = (
-    'entity end not allowed in comment', 'unterm-comment-1',
-    'name start character invalid only s and comment allowed in comment declaration', 'unterm-comment-2',
-    'name character invalid only s and comment allowed in comment declaration', 'unterm-comment-2',
-    'unknown declaration type FOO', 'bad-comment',
-    'character FOO not allowed in attribute specification list', 'attr-char',
-    'an attribute value must be a literal unless it contains only name characters', 'attr-quoted',
-    'syntax of attribute value does not conform to declared value', 'bad-attr-char',
-    'length of attribute value must not exceed LITLEN less NORMSEP', 'name-length',
-    'element FOO undefined', 'undef-tag',
-    'element FOO not allowed here', 'not-allowed',
-    'there is no attribute FOO', 'undef-attr',
-    'FOO is not a member of the group specified in the declared value of this attribute', 'undef-attr-val',
-    'FOO is not a member of a group specified for any attribute', 'bad-abbrev-attr',
-    'end tag for FOO omitted but its declaration does not permit this', 'no-end-tag',
-    'end tag for element FOO which is not open', 'floating-close',
-    'end tag for FOO which is not finished', 'omitted-content',
-    'start tag for FOO omitted but its declaration does not permit this', 'no-start-tag',
-    'general entity FOO not defined and no default entity', 'bad-entity',
-    'non SGML character number', 'bad-char',
-    'cannot generate system identifier for entity FOO', 'bad-pub-id'
-
-#    'error', 'frag',
-#    'character data is not allowed here', 'frag',
-
-);
+#
+# Read configuration files.
+my $frag        = &read_cfg($frag_db); # FPIs    -> plain text version string
+my $pub_ids     = &read_cfg($fpis_db); # Errors  -> fragment identifier
+my $element_uri = &read_cfg($elem_db); # Element -> URI fragment
 
 #############################################################################
 # Set up some signal handlers in case we get killed before exiting naturally
@@ -486,7 +417,7 @@ else {
         $fpi = $doctype;
     }
 }
-$version = $pub_ids{$fpi} || "unknown";
+$version = $pub_ids->{$fpi} || "unknown";
 
 if ( $guessed_doctype ) {
     push( @fake_errors, "$sp:<OSFD>0:2:1:E: Missing DOCTYPE declaration at start of document (<a href=\"http://www.htmlhelp.org/tools/validator/doctype.html\">explanation...</a>)\n" );
@@ -633,9 +564,9 @@ if ( $? || $guessed_doctype ) {
 
         print qq{<span class=error>Error: $msg</span>};
 
-	if ( defined $frag{$msgindex} ) {
+	if ( defined $frag->{$msgindex} ) {
 	    print qq{ (<a
-	        href="$faqerrloc#$frag{$msgindex}">explanation...</a>)};
+	        href="$faqerrloc#$frag->{$msgindex}">explanation...</a>)};
 	}
 	else { # remember msgindexes without frags, to get the KGV FAQ updated.
 	    $undef_frag{$msgindex} = 1;
@@ -962,7 +893,7 @@ EOF
 		 { my $close = '';
 		      $close = "/" if $1 eq ")";	# ")" -> close-tag
 		   "&lt;" . $close . "<a href=\"" .
-		   &html_element_ref($2) .
+		   $element_ref . $element_uri->{lc($2)} .
 		   "\">$2<\/a>>"
 		 }egx;
     $printme =~ s,^A,  A,;	# indent attributes a bit
@@ -1259,113 +1190,21 @@ EOHD
 
 }
 
-sub html_element_ref {
 
-    # returns a URI pointing to docs on the HTML element given as $1
+#
+# Read TAB-delimited configuration files. Returns a hash reference.
+sub read_cfg {
+  my $file = shift;
+  my %cfg;
 
-    my $element = shift;
-
-    # the following hash was produced with:
-    #
-    # GET http://www.htmlhelp.com/reference/html40/alist.html > /tmp/e
-    # egrep '^  <li' /tmp/e | \
-    #     perl -pe 's|.*href="([^"]*)">(.*)</a>.*|\t"\L$2\E" => "$1",|'
-
-    my %html_element_hash = (
-	"a" => "special/a.html",
-	"abbr" => "phrase/abbr.html",
-	"acronym" => "phrase/acronym.html",
-	"address" => "block/address.html",
-	"applet" => "special/applet.html",
-	"area" => "special/area.html",
-	"b" => "fontstyle/b.html",
-	"base" => "head/base.html",
-	"basefont" => "special/basefont.html",
-	"bdo" => "special/bdo.html",
-	"big" => "fontstyle/big.html",
-	"blockquote" => "block/blockquote.html",
-	"body" => "html/body.html",
-	"br" => "special/br.html",
-	"button" => "forms/button.html",
-	"caption" => "tables/caption.html",
-	"center" => "block/center.html",
-	"cite" => "phrase/cite.html",
-	"code" => "phrase/code.html",
-	"col" => "tables/col.html",
-	"colgroup" => "tables/colgroup.html",
-	"dd" => "lists/dd.html",
-	"del" => "phrase/del.html",
-	"dfn" => "phrase/dfn.html",
-	"dir" => "lists/dir.html",
-	"div" => "block/div.html",
-	"dl" => "lists/dl.html",
-	"dt" => "lists/dt.html",
-	"em" => "phrase/em.html",
-	"fieldset" => "forms/fieldset.html",
-	"font" => "special/font.html",
-	"form" => "forms/form.html",
-	"frame" => "frames/frame.html",
-	"frameset" => "frames/frameset.html",
-	"h1" => "block/h1.html",
-	"h2" => "block/h2.html",
-	"h3" => "block/h3.html",
-	"h4" => "block/h4.html",
-	"h5" => "block/h5.html",
-	"h6" => "block/h6.html",
-	"head" => "head/head.html",
-	"hr" => "block/hr.html",
-	"html" => "html/html.html",
-	"i" => "fontstyle/i.html",
-	"iframe" => "special/iframe.html",
-	"img" => "special/img.html",
-	"input" => "forms/input.html",
-	"ins" => "phrase/ins.html",
-	"isindex" => "block/isindex.html",
-	"kbd" => "phrase/kbd.html",
-	"label" => "forms/label.html",
-	"legend" => "forms/legend.html",
-	"li" => "lists/li.html",
-	"link" => "head/link.html",
-	"map" => "special/map.html",
-	"menu" => "lists/menu.html",
-	"meta" => "head/meta.html",
-	"noframes" => "frames/noframes.html",
-	"noscript" => "block/noscript.html",
-	"object" => "special/object.html",
-	"ol" => "lists/ol.html",
-	"optgroup" => "forms/optgroup.html",
-	"option" => "forms/option.html",
-	"p" => "block/p.html",
-	"param" => "special/param.html",
-	"pre" => "block/pre.html",
-	"q" => "special/q.html",
-	"s" => "fontstyle/s.html",
-	"samp" => "phrase/samp.html",
-	"script" => "special/script.html",
-	"select" => "forms/select.html",
-	"small" => "fontstyle/small.html",
-	"span" => "special/span.html",
-	"strike" => "fontstyle/strike.html",
-	"strong" => "phrase/strong.html",
-	"style" => "head/style.html",
-	"sub" => "special/sub.html",
-	"sup" => "special/sup.html",
-	"table" => "tables/table.html",
-	"tbody" => "tables/tbody.html",
-	"td" => "tables/td.html",
-	"textarea" => "forms/textarea.html",
-	"tfoot" => "tables/tfoot.html",
-	"th" => "tables/th.html",
-	"thead" => "tables/thead.html",
-	"title" => "head/title.html",
-	"tr" => "tables/tr.html",
-	"tt" => "fontstyle/tt.html",
-	"u" => "fontstyle/u.html",
-	"ul" => "lists/ul.html",
-	"var" => "phrase/var.html"
-    );
-
-    return "http://www.htmlhelp.com/reference/html40/" .
-        $html_element_hash{"\L$element"};
+  open CFG, $file or die "open($file) returned: $!\n";
+  while (<CFG>) {
+    next if /^\s*$/;
+    next if /^\s*#/;
+    chomp;
+    my($k, $v) = split /\t+/, $_;
+    $cfg{$k} = $v;
+  }
+  close CFG;
+  return \%cfg;
 }
-
