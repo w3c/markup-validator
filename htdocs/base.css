@@ -4,7 +4,7 @@
   Copyright © 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
   See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-  $Id: base.css,v 1.8 2001-07-27 11:28:59 link Exp $
+  $Id: base.css,v 1.9 2001-07-27 14:53:15 link Exp $
 */
 
 body {
@@ -69,7 +69,7 @@ address {
 
 p.navbar {
 	float: right;
-	text-align: right;
+	margin-left: 2em;
 }
 
 table th {
@@ -82,8 +82,9 @@ div.stb {
 }
 
 .intro {
-	width: 75ex;
+	max-width: 75ex;
 	margin-left: 2em;
+	text-align: justify;
 }
 
 
