@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.185 2001-09-20 18:22:43 link Exp $
+# $Id: check,v 1.186 2001-09-20 19:45:24 link Exp $
 
 #
 # We need Perl 5.004.
@@ -91,9 +91,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.185 $;
+$VERSION    =  q$Revision: 1.186 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-09-20 18:22:43 $;
+$DATE       =  q$Date: 2001-09-20 19:45:24 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1753,8 +1753,9 @@ sub preparse {
     if ($File->{Root}) {
       if (lc $tag eq 'meta') {
 	if (lc $attr{'http-equiv'} eq 'content-type') {
-	  $attr{content} =~ m(charset\s*=[\s\"\']*([^\s;\"\'>]*))si;
-	  $File->{META_Charset} = lc $1;
+	  if ($attr{content} =~ m(charset\s*=[\s\"\']*([^\s;\"\'>]*))si) {
+	    $File->{META_Charset} = lc $1;
+          }
 	}
       }
       return unless $tag eq $File->{Root};
