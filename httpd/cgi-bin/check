@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.130 2004-05-17 21:03:57 link Exp $
+# $Id: check,v 1.305.2.131 2004-05-18 00:32:32 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.130 $;
+  $VERSION    =  q$Revision: 1.305.2.131 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-17 21:03:57 $,
+                              Date => q$Date: 2004-05-18 00:32:32 $,
                              });
 
 #
@@ -1919,16 +1919,16 @@ EOHD
       if ($err->{num} and $File->{Opt}->{Verbose}) {
         my(undef, $num) = split /\./, $err->{num};
         if (exists $Msgs{$num}) {
-          print qq(\n<div class="hidden mid-$num"></div>\n);
+          print qq(\n    <div class="hidden mid-$num"></div>\n);
         } else {
           $Msgs{$num} = 1;
-          print $RSRC->{msg}->{$num}->{verbose}
+          print "\n    $RSRC->{msg}->{$num}->{verbose}\n"
             if exists $RSRC->{msg}->{$num}
             && exists $RSRC->{msg}->{$num}->{verbose};
         }
         my $_msg = $RSRC->{msg}->{nomsg}->{verbose};
         $_msg =~ s/<!--MID-->/$num/g;
-        print $_msg; # The send feedback plea.
+        print "    $_msg\n"; # The send feedback plea.
       }
       print "</li>\n";
     }
