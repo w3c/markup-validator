@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: checklink.html,v 1.5.2.2 2003-06-15 14:57:48 ville Exp $"
---><!--#set var="date" value="\$Date: 2003-06-15 14:57:48 $"
+<!--#set var="revision" value="\$Id: checklink.html,v 1.5.2.3 2003-06-15 21:41:03 ville Exp $"
+--><!--#set var="date" value="\$Date: 2003-06-15 21:41:03 $"
 --><!--#set var="title" value="W3C Link Checker documentation"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -133,8 +133,18 @@
     </p>
 
     <p>
-      There are multiple alternatives for configuring the default NNTP server
-      for use with <code>news:</code> URIs without explicit hostnames, see
+      Some environment variables affect the way how the link checker uses
+      <a href="http://www.ietf.org/rfc/rfc959.txt"><abbr title="File Transfer Protocol">FTP</abbr></a>.
+      In particular, passive mode is the default.  See
+      <a href="http://search.cpan.org/dist/libnet/Net/FTP.pm#CONSTRUCTOR">Net::FTP(3)</a>
+      for more information.
+    </p>
+
+    <p>
+      There are multiple alternatives for configuring the default
+      <a href="http://www.ietf.org/rfc/rfc977.txt"><abbr title="Network News Transfer Protocol">NNTP</a>
+      server for use with <code>news:</code> URIs without explicit hostnames,
+      see
       <a href="http://search.cpan.org/dist/libnet/Net/NNTP.pm#CONSTRUCTOR">Net::NNTP(3)</a>
       for more information.
     </p>

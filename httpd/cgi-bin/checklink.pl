@@ -5,7 +5,7 @@
 # (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.10 2003-06-15 14:56:00 ville Exp $
+# $Id: checklink.pl,v 3.6.2.11 2003-06-15 21:41:03 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -85,7 +85,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.10 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.11 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
 
@@ -123,10 +123,13 @@ $@
 .EOF.
   }
 
-  # Trusted environment variables.
+  # Trusted environment variables that need laundering in taint mode.
   foreach (qw(NNTPSERVER NEWSHOST)) {
     ($ENV{$_}) = ($ENV{$_} =~ /^(.*)$/) if $ENV{$_};
   }
+
+  # Use passive FTP by default, see Net::FTP(3).
+  $ENV{FTP_PASSIVE} = 1 unless exists($ENV{FTP_PASSIVE});
 }
 
 # Autoflush
@@ -406,6 +409,10 @@ Options:
   -h/--html                 HTML output.
   -?/--help                 Show this message.
   -V/--version              Output version information.
+
+See \"perldoc Net::FTP\" for information about various environment variables
+affecting FTP connections and \"perldoc Net::NNTP\" for setting a default
+NNTP server for news: URIs.
 
 Documentation at: http://www.w3.org/2000/07/checklink
 Please send bug reports and comments to the www-validator mailing list:
