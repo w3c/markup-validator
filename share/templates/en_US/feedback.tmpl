@@ -27,22 +27,21 @@
       your query have already been given. </p>
 	
       <TMPL_ELSE>
+      <form method="get" action="http://www.w3.org/Search/Mail/Public/search">
       <p>Before you send this message, we encourage you to 
       search the archives for www-validator
       in case your feedback has already been sent, or answers to 
-      your query have already been given. </p>
-      <form method="get" action="http://www.w3.org/Search/Mail/Public/search">
-        <p>
+      your query have already been given.
         <input id="type-index" name="type-index" type="hidden" value="www-validator" />
         <input id="index-type" name="index-type" type="hidden" value="t" /> 
         <label>Search: <input name="keywords" type="text" size=
         "42" maxlength="100" value="" accesskey="f" /></label>
-        <input type="submit" name="search" value="Search" />
-        </p>
-      </form>
-	  
+        <input type="submit" name="search" value="Search Mail Archives" />
+      </form></p>
       </TMPL_IF>
 
+      
+      <div id="feedbackfrombox" style="border: 2px solid black"><!-- FIXME -->
 
       <form method="post" action="sendfeedback">
       <p>
@@ -80,6 +79,8 @@
       &nbsp;|&nbsp;<input value="Reset" type="reset" />
       </p>
       </form>
+      </div>
+
 
     </div><!-- end of "main" -->
 
