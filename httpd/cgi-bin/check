@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.91 2001-03-08 01:57:52 link Exp $
+# $Id: check,v 1.92 2001-04-17 02:29:36 link Exp $
 
 #
 # We need Perl 5.004.
@@ -74,9 +74,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.91 $;
+$VERSION    =  q$Revision: 1.92 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-03-08 01:57:52 $;
+$DATE       =  q$Date: 2001-04-17 02:29:36 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1094,7 +1094,7 @@ sub redirect_to_home_page {
 
 sub build_jump_links {
 
-    my $text;
+    my $text  = '';
     my $count = 0;
 
     $count++ if $q->param('ss');
