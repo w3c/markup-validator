@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.263 2002-10-25 18:41:46 link Exp $
+# $Id: check,v 1.264 2002-10-26 00:59:45 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.263 $;
+  $VERSION    =  q$Revision: 1.264 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-25 18:41:46 $,
+			      Date => q$Date: 2002-10-26 00:59:45 $,
 			     });
 
 #
@@ -267,10 +267,11 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
 } elsif ($File->{ContentType} =~ m(^text/([-.a-zA-Z0-9]\+)?xml$)) {
   # Act as if $http_charset was 'us-ascii'. (MIME rules)
   $File->{Charset}->{Use} = 'us-ascii';
+  my @_source;
   if ($File->{'Is Upload'}) {
-    my @_source = ('sent by your web browser', 'browser send');
+    @_source = ('sent by your web browser', 'browser send');
   } else {
-    my @_source = ('returned by your web server', 'server return');
+    @_source = ('returned by your web server', 'server return');
   }
   &add_warning($File, <<".EOF.");
       <em>Note:</em>
