@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.27 1999-08-25 03:03:02 gerald Exp $
+# $Id: check,v 1.28 1999-08-31 22:49:16 gerald Exp $
 
 use LWP::UserAgent;
 
@@ -16,8 +16,8 @@ use LWP::UserAgent;
 # Constant definitions
 #############################################################################
 
-$cvsrevision	= '$Revision: 1.27 $';
-$cvsdate	= '$Date: 1999-08-25 03:03:02 $';
+$cvsrevision	= '$Revision: 1.28 $';
+$cvsdate	= '$Date: 1999-08-31 22:49:16 $';
 
 $logfile	= "/var/log/httpd/val-svc";
 
@@ -33,7 +33,8 @@ $sp		= "/usr/local/bin/nsgmls";
 $nkf		= "/usr/local/bin/nkf";
 
 $sgmldecl	= "$sgmlstuff/REC-html40-971218/HTML4.decl";
-$xhtmldecl	= "$sgmlstuff/WD-html-in-xml-19990304/DTD/xhtml1.dcl";
+$xhtmldecl	= "$sgmlstuff/PR-xhtml1-19990824/xhtml1.dcl";
+$xmldecl	= "/usr/local/src/validator/htdocs/sgml-lib/sp-1.3/pubtext/xml.dcl";
 
 $revision	= $cvsrevision;
 $revision	=~ s/^\$Revision: //;
@@ -110,9 +111,10 @@ $gifborder       = " border=0";
     '-//W3C//DTD HTML 4.01//EN', '<a href="http://www.w3.org/TR/1999/PR-html40-19990824/">HTML 4.01</a>',
     '-//W3C//DTD HTML 4.01 Transitional//EN', '<a href="http://www.w3.org/TR/1999/PR-html40-19990824/">HTML 4.01</a> Transitional',
     '-//W3C//DTD HTML 4.01 Frameset//EN', '<a href="http://www.w3.org/TR/1999/PR-html40-19990824/">HTML 4.01</a> Frameset',
-    '-//W3C//DTD XHTML 1.0 Strict//EN', '<a href="http://www.w3.org/TR/WD-html-in-xml/">XHTML 1.0</a> Strict',
-    '-//W3C//DTD XHTML 1.0 Transitional//EN', '<a href="http://www.w3.org/TR/WD-html-in-xml/">XHTML 1.0</a> Transitional',
-    '-//W3C//DTD XHTML 1.0 Frameset//EN', '<a href="http://www.w3.org/TR/WD-html-in-xml/">XHTML 1.0</a> Frameset'
+    '-//W3C//DTD XHTML 1.0 Strict//EN', '<a href="http://www.w3.org/TR/1999/PR-xhtml1-19990824/">XHTML 1.0</a> Strict',
+    '-//W3C//DTD XHTML 1.0 Transitional//EN', '<a href="http://www.w3.org/TR/1999/PR-xhtml1-19990824/">XHTML 1.0</a> Transitional',
+    '-//W3C//DTD XHTML 1.0 Frameset//EN', '<a href="http://www.w3.org/TR/1999/PR-xhtml1-19990824/">XHTML 1.0</a> Frameset',
+    'XML', '<a href="http://www.w3.org/TR/REC-xml">XML</a>'
 
 );
 
@@ -270,120 +272,38 @@ $response = $ua->request($request);
 
 if ( $response->code != 200 ) {
     $optionstring = &build_options;
-    if ( ( $response->code == "302" ) || ( $response->code == "301" ) ){
-        # this (server name grabbing) should be moved elsewhere, probably.
-	($server_name) = ($uri =~ /^http:\/\/([^\/]*)/i);
-
-        if ( $redirect_uri !~ /:\/\// ) {
-	    $whiney_location_message = qq{
-<p>
-  <strong>Note</strong>: the HTTP server at $server_name is returning broken
-  "Location:" headers. According to <a
-  href="http://www.w3.org/Protocols/">the HTTP specifications</a>,
-  the Location header should be an absolute URI; this server is returning
-  relative URIs instead. If you are the maintainer of this server,
-  please arrange for this bug to be fixed.
-</p>
-};
-	    $redirect_uri = "http://$server_name$redirect_uri";
-        }
-
-	print $header;
-	print "<p>\n  I got the following unexpected response when trying to ";
-	print "retrieve $uri:\n";
-	print "</p>\n\n<blockquote>  <code>".$response->code." ".$response->message."</code>\n</blockquote>\n";
-	print <<"EOF";
-
-<p>
-  This indicates that the server has redirected the request to a different
-  URI.
-</p>
-$whiney_location_message
-<p>
-  The URI it was redirected to is:
-</p>
-
-<blockquote>
-  <a href="/check?uri=$redirect_uri$optionstring">$redirect_uri</a>
-</blockquote>
-
-EOF
-
-    }
-    elsif ( $response->code == 401 ) {
+    if ( $response->code == 401 ) {
 	$response->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
 	my $realm = $1;
 	my $resource = $response->request->url;
 	my $authHeader = $response->headers->www_authenticate;
-	print <<"EOF";
-Status: 401 Authorization Required
-WWW-Authenticate: $authHeader
-Connection: close
-Content-Type: text/html
-
-<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">
-<HTML><HEAD>
-<TITLE>401 Authorization Required</TITLE>
-</HEAD><BODY>
-<H1>Authorization Required</H1>
-<p>
-  Sorry, I am not authorized to access the specified URI.
-</p>
-
-<p>
-  The URI you specified,
-</p>
-
-<blockquote>
-  <code><a href="$resource">$resource</a></code>
-</blockquote>
-
-<p>
-  returned a 401 "authorization required" response when I tried
-  to download it.
-</p>
-
-<p>
-  You should have been prompted by your browser for a
-  username/password pair; if you had supplied this information, I
-  would have forwarded it to your server for authorization to
-  access the resource. You can use your browser's "reload" function
-  to try again, if you wish.
-</p>
-
-<p>
-  Of course, you may not want to trust me with this information,
-  which is fine. I can tell you that I don't log it or do
-  anything else nasty with it, and you can <a
-  href="http://validator.w3.org/source/">download the source for
-  this service</a> to see what it does, but you have no guarantee
-  that this is actually the code I'm using; you basically have to
-  decide whether to trust me or not. :-)
-</p>
-
-<p>
-  Note that you shouldn't use HTTP Basic Authentication for
-  anything which really needs to be private, since the password
-  goes across the network unencrypted.
-</p>
-EOF
-
+	&print_401_auth_required_message( $resource, $realm, $authHeader );
     }
     else {
 	print $header;
-	print "<p>\n  Please make sure you have entered the URI correctly.\n</p>";
+	&print_unknown_http_error_message( $uri, $response->code,
+	    $response->message );
     }
     &clean_up_and_exit;
 }
 
-unless ($response->headers->content_type =~ /text\/html/i) {
+$content_type = $response->headers->content_type;
+
+if ( ( $content_type =~ /text\/xml/i ) ||
+     ( $content_type =~ /application\/xml/i ) ) {
+    $xml = 1;
+}
+elsif ($content_type =~ /text\/html/i) {
+    $html = 1;
+}
+else {
     print $header;
     print <<"EOF";
 
 <p>
   Sorry, I can't validate this document because its returned
-  content-type was not "text/html", the media type for HTML
-  documents.
+  content-type was <code>$content_type</code>, which is not
+  currently supported by this service.
 </p>
 EOF
 
@@ -401,7 +321,9 @@ $jump_links
 EOF
     
 @file = split '\n',$response->content;
-( $guessed_doctype, $doctype ) = &check_for_doctype( \@file );
+if ( $html || $xhtml ) {
+    ( $guessed_doctype, $doctype ) = &check_for_doctype( \@file );
+}
 
 if ( $doctype =~ /xhtml/i ) {
     $xhtml = 1;
@@ -417,7 +339,6 @@ foreach $line (@file) {
     }
 }
 
-$content_type = $response->headers->header("Content-Type");
 ( $http_charset ) = ( $content_type =~ /;\s*charset=(.*)/i );
 $content_type =~ s/;.*$//;
 $content_type =~ s/\s*$//g;
@@ -472,14 +393,22 @@ if ( $xhtml ) {
     $xmlflags = "-wxml ";
     $decl = $xhtmldecl;
 }
-else {
+elsif ( $xml ) {
+    $ENV{SP_CATALOG_FILES} = "$sgmlstuff/sp-1.3/pubtext/xml.soc";
+    $ENV{SGML_SEARCH_PATH} = "$sgmlstuff/sp-1.3/pubtext/";
+    $ENV{SP_CHARSET_FIXED}="YES";
+    $ENV{SP_ENCODING}="XML";
+    $xmlflags = "-wxml -wno-valid ";
+    $decl = $xmldecl;
+}
+else {			# must be HTML (for now)
     $decl = $sgmldecl;
     $catalog = "-c $sgmlstuff/catalog";
 }
 
 $command  = "$codeconv $sp -E0 $xmlflags $catalog $decl";
 
-# print "  <li>nsgmls command line: $command\n";
+# print "  <li>nsgmls command line: <code>$command</code>\n";
 
 open( CHECKER, "| $command - >$temp.esis 2>$temp" )
 	|| die "couldn't open checker: $!";
@@ -517,6 +446,9 @@ $version = "unknown";
 if ( $xhtml ) {
     $fpi = $doctype;
 }
+elsif ( $xml ) {
+    $fpi = "XML";
+}
 else {
     for (@esis) {
 	next unless /^AVERSION CDATA (.*)/;
@@ -524,7 +456,7 @@ else {
 	last;
     }
 }
-$version = $pub_ids{$fpi};
+$version = $pub_ids{$fpi} || "unknown";
 
 if ( $guessed_doctype ) {
     push( @fake_errors, "nsgmls:<OSFD>0:2:1:E: Missing DOCTYPE declaration at start of document (${lt}a href=\"http://www.htmlhelp.org/tools/validator/doctype.html\"${gt}explanation...${lt}/a${gt})\n" );
@@ -551,9 +483,23 @@ EOHD
 
 }
 
-print "  <li>Level of HTML: <b>$version</b>.\n";
+print "  <li>Document type: <b>$version</b>.\n";
 
 print "</ul>\n\n";
+
+if ( $xml ) {
+print <<"EOHD";
+  <p>
+    <strong>Note: experimental XML support was added to this service
+    on Aug 31, 1999, but it isn't quite working yet; stay tuned to <a
+    href="http://lists.w3.org/Archives/Public/www-validator/">the
+    <code>www-validator</code> mailing list</a> for updates, and
+    please don't trust this service's output for XML documents
+    in the meantime.</strong>
+  </p>
+EOHD
+
+}
 
 print <<"EOHD";
   <p>
@@ -1213,7 +1159,7 @@ sub check_for_doctype {
 	    return 0, "";	# doc does have a doctype
 	}
 
-	$line =~ s/<!--([^-]|-[^-])*--\s*>//go;	# strip comments,
+	$line =~ s/<!(?:--(?:[^-]|-[^-])*--\s*)+>//go;	# strip comments,
 	    # so the next line doesn't find commented-out markup etc.
 	    # (this doesn't handle multi-line comments, unfortunately)
 
@@ -1250,6 +1196,91 @@ sub check_for_doctype {
 
     # no luck earlier; guess HTML 4.0 transitional
     return 1, $html40t_doctype;
+
+}
+
+sub print_401_auth_required_message {
+
+    my $resource = shift;
+    my $realm = shift;
+    my $authHeader = shift;
+
+    print <<"EOF";
+Status: 401 Authorization Required
+WWW-Authenticate: $authHeader
+Connection: close
+Content-Type: text/html
+
+<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">
+<HTML><HEAD>
+<TITLE>401 Authorization Required</TITLE>
+</HEAD><BODY>
+<H1>Authorization Required</H1>
+<p>
+  Sorry, I am not authorized to access the specified URI.
+</p>
+
+<p>
+  The URI you specified,
+</p>
+
+<blockquote>
+  <code><a href="$resource">$resource</a></code>
+</blockquote>
+
+<p>
+  returned a 401 "authorization required" response when I tried
+  to download it.
+</p>
+
+<p>
+  You should have been prompted by your browser for a
+  username/password pair; if you had supplied this information, I
+  would have forwarded it to your server for authorization to
+  access the resource. You can use your browser's "reload" function
+  to try again, if you wish.
+</p>
+
+<p>
+  Of course, you may not want to trust me with this information,
+  which is fine. I can tell you that I don't log it or do
+  anything else nasty with it, and you can <a
+  href="http://validator.w3.org/source/">download the source for
+  this service</a> to see what it does, but you have no guarantee
+  that this is actually the code I'm using; you basically have to
+  decide whether to trust me or not. :-)
+</p>
+
+<p>
+  Note that you shouldn't use HTTP Basic Authentication for
+  anything which really needs to be private, since the password
+  goes across the network unencrypted.
+</p>
+EOF
+
+}
+
+sub print_unknown_http_error_message {
+
+    my $uri = shift;
+    my $code = shift;
+    my $message = shift;
+
+    print <<"EOF";
+  <p>
+    I got the following unexpected response when trying to
+    retrieve <code><a href="$uri">$uri</a></code>:
+  </p>
+
+  <blockquote>
+    <code>$code $message</code>
+  </blockquote>
+
+  <p>
+    Please make sure you have entered the URI correctly.
+  </p>
+
+EOF
 
 }
 
