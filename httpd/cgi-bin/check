@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.52 2002-07-05 22:17:59 link Exp $
+# $Id: check,v 1.200.2.53 2002-07-07 21:52:58 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.200.2.52 $;
+  $VERSION    =  q$Revision: 1.200.2.53 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-07-05 22:17:59 $,
+			      Date => q$Date: 2002-07-07 21:52:58 $,
 			     });
 
 #
@@ -1818,7 +1818,7 @@ sub prepCGI {
   $q->param('uri', 'referer') if $q->path_info eq '/referer';
 
   # Issue a redirect for uri=referer.
-  if ($q->param('uri') eq 'referer') {
+  if ($q->param('uri') and $q->param('uri') eq 'referer') {
     print $q->redirect($q->url() . '?uri=' . uri_escape($q->referer));
     exit;
   }
@@ -1826,13 +1826,13 @@ sub prepCGI {
   # Use "url" unless a "uri" was also given.
   $q->param('uri', $q->param('url')) if $q->param('url') and not $q->param('uri');
 
-  # Supercede URI with an uploaded file.
+  # Supersede URI with an uploaded file.
   if ($q->param('uploaded_file')) {
     $q->param('uri', 'upload://' . $q->param('uploaded_file'));
     $File->{'Is Upload'} = TRUE; # Tag it for later use.
   }
 
-  # Supercede URI with an uploaded fragment.
+  # Supersede URI with an uploaded fragment.
   if ($q->param('fragment')) {$q->param('uri', 'upload://Form Submission')};
 
   # Munge the URI to include commonly omitted prefix.
