@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.22 2005-01-25 21:35:49 ot Exp $ */
+/* $Id: results.css,v 1.23 2005-02-16 23:28:37 ot Exp $ */
 
 .input {
   color: black;
@@ -233,7 +233,7 @@ h2.valid, h2.invalid {
 
 
 .valid {
-  background:		#053188;
+  background:		#55B05A;
   color:		white;
   font-family: "Bitstream Vera Sans", sans-serif;
   font-size-adjust:	.53;
@@ -271,7 +271,7 @@ h2.valid, h2.invalid {
 
 
 .invalid {
-  background:		#A51C1C;
+  background:		#D23D24;
   color:		white;
   font-family: "Bitstream Vera Sans", sans-serif;
   font-size-adjust:	.53;
