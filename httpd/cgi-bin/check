@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.57 1999-12-10 18:47:31 gerald Exp $
+# $Id: check,v 1.58 2000-01-26 15:13:24 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -51,7 +51,7 @@ my $frag_db   = $html_path . 'config/frag.cfg';
 my $type_db   = $html_path . 'config/type.cfg';
 my $sgmlstuff = $html_path . 'sgml-lib';
 my $sgmldecl  = $sgmlstuff . '/REC-html40-19980424/HTML4.decl';
-my $xhtmldecl = $sgmlstuff . '/PR-xhtml1-19991210/xhtml1.dcl';
+my $xhtmldecl = $sgmlstuff . '/REC-xhtml1-20000126/xhtml1.dcl';
 my $xmldecl   = $sgmlstuff . '/sp-1.3/pubtext/xml.dcl';
 my $temp      = "/tmp/validate.$$"; # @@ Use POSIX/IO::File tmpfiles instead!
 
@@ -73,9 +73,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.57 $;
+$VERSION    =  q$Revision: 1.58 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 1999-12-10 18:47:31 $;
+$DATE       =  q$Date: 2000-01-26 15:13:24 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -242,6 +242,18 @@ EOF
 }
 
 #
+# Overall parsing algorithm for documents returned as text/html:
+#
+# For documents that come to us as text/html,
+#
+#  1. check if there's a doctype
+#  2. if there is a doctype, parse/validate against that DTD
+#  3. if no doctype, check for xml well-formedness
+#  4. if xml is well-formed, check and report xmlns= attribute (anything else?)
+#  5. if xml is not well-formed, report errors
+#
+
+#
 # Try to extract or guess the DOCTYPE for HTML and XHTML files.
 if ($File->{Type} eq 'html' or $File->{Type} eq 'xhtml') {
   ($guessed_doctype, $doctype) = &check_for_doctype($File->{Content});
@@ -322,13 +334,15 @@ print(' ' x 4, q(<li>Content length: ), $File->{Size},     qq(</li>\n))
 
 my $xmlflags = '';
 my $decl = '';
+
 if ($File->{Type} eq 'xhtml') {
-  $ENV{SGML_CATALOG_FILES} = $sgmlstuff . '/PR-xhtml1-19991210/xhtml.cat';
-  $ENV{SGML_SEARCH_PATH} = $sgmlstuff . '/PR-xhtml1-19991210/';
+  $ENV{SGML_CATALOG_FILES} = $sgmlstuff . '/REC-xhtml1-20000126/xhtml.soc';
+  $ENV{SGML_SEARCH_PATH} = $sgmlstuff . '/REC-xhtml1-20000126/';
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'UTF-8';
   $decl                  = $xhtmldecl;
-} elsif ($File->{Type} eq 'xml') {
+} elsif ($guessed_doctype) {	# no doctype was present; parse as xml/xhtml
+  $File->{Type} = 'xml';	# @@ probably a better way to do this
   $ENV{SGML_CATALOG_FILES} = $sgmlstuff . '/sp-1.3/pubtext/xml.soc';
   $ENV{SGML_SEARCH_PATH} = $sgmlstuff . '/sp-1.3/pubtext/';
   $ENV{SP_CHARSET_FIXED} = 'YES';
@@ -342,12 +356,11 @@ if ($File->{Type} eq 'xhtml') {
 
 my $command  = "$codeconv $sp -E0 $xmlflags $catalog $decl";
 
-# print "  <li>nsgmls command line: <code>$command</code>\n";
+# print "    <li>nsgmls command line: <code>$command</code>\n";
 
 open CHECKER, "|$command - >$temp.esis 2>$temp"
   or die "open(|$command - >$temp.esis 2>$temp) returned: $!\n";
 
-print CHECKER "$doctype\n" if $guessed_doctype;
 for (@{$File->{Content}}) {print CHECKER $_, "\n"}
 close CHECKER;
 
@@ -356,8 +369,22 @@ my @errors = <ERRORS>;
 close ERRORS            or warn "close($temp) returned: $!\n";
 
 my @esis;
+my $elements_found = 0;
+my $root_namespace;
+my @other_namespaces;
 open ESIS, "$temp.esis" or die  "open($temp.esis) returned: $!\n";
 while (<ESIS>) {
+    $elements_found++ if ( /^\(/ );
+    if ( ($File->{Type} eq 'xml') &&	# look for xml namespaces
+         ( (/^Axmlns() \w+ (.*)/) || (/^Axmlns:([^ ]+) \w+ (.*)/) ) ) {
+        if ( ( ! defined $root_namespace ) &&
+	     ( $elements_found == 0 ) && ( $1 eq "" ) ) {
+	    $root_namespace = $2;
+	}
+	else {
+	    push( @other_namespaces, $2 );
+	}
+    }
     next if / IMPLIED$/;
     next if /^ASDAFORM CDATA /;
     next if /^ASDAPREF CDATA /;
@@ -383,10 +410,6 @@ if ($File->{Type} eq 'xhtml') {
 }
 $version = $pub_ids->{$fpi} || 'unknown';
 
-if ($guessed_doctype) {
-  push( @fake_errors, "$sp:<OSFD>0:2:1:E: Missing DOCTYPE declaration at start of document (<a href=\"http://www.htmlhelp.org/tools/validator/doctype.html\">explanation...</a>)\n" );
-}
-
 print ' ' x 4, q(<li>Character encoding: ), $File->{Charset};
 if ($File->{HTTP_Charset} ne $File->{META_Charset}
     and $File->{META_Charset} ne ''
@@ -400,23 +423,48 @@ EOHD
 }
 print ' ' x 4, qq(</li>\n);
 
-print ' ' x 4, qq(<li>Document type: <em>), $version, qq(</em></li>\n);
+if ($File->{Type} eq 'xml') {
+
+    print ' ' x 4, qq(<li>Document type: ), $version;
+    if ( ( $type eq "html" ) &&
+         ( $root_namespace ne "http://www.w3.org/1999/xhtml" ) ) {
+	print "<br>warning: unknown namespace for text/html document!";
+	if ( $root_namespace ne '' ) {
+	    print qq{, <a href="$root_namespace">$root_namespace</a>};
+	}
+	print "\n";
+    }
+    else {
+	if ( $root_namespace ne '' ) {
+	    print qq( with namespace <a href="$root_namespace">$root_namespace</a>);
+	}
+    }
+
+    if ( $#other_namespaces >= 0 ) {
+        print "<br>Other namespaces in this document: ";
+        for (@other_namespaces) {
+	    print qq(<a href="$_">$_</a>, ), "\n";
+	}
+    }
+    print qq(</li>\n);
+}
+else {
+    print ' ' x 4, qq(<li>Document type: ), $version, qq(</li>\n);
+}
 print ' ' x 2, qq(</ul>\n\n);
 
 if ($File->{Type} eq 'xml') {
 print <<"EOHD";
   <p>
-    <strong>Note: experimental XML support was added to this service
-    on Aug 31, 1999, but it is not quite working yet; stay tuned to <a
-    href="http://lists.w3.org/Archives/Public/www-validator/">the
-    <code>www-validator</code> mailing list</a> for updates, and
-    please do not trust this service\'s output for XML documents
-    in the meantime.</strong>
+    Below are the results of checking this document for <a
+    href="http://www.w3.org/TR/REC-xml#sec-conformance">XML
+    well-formedness</a>.
   </p>
+
 EOHD
 
 }
-
+else {
 print <<"EOHD";
   <p>
     Below are the results of attempting to parse this document with
@@ -425,7 +473,9 @@ print <<"EOHD";
 
 EOHD
 
-if ( $? || $guessed_doctype ) {
+}
+
+if ( $? ) {
     print "<ul>\n";
     for ((@fake_errors,@errors)) {
 	next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
@@ -456,7 +506,6 @@ if ( $? || $guessed_doctype ) {
 	    &output_doctype_spiel;
 	    last;
 	}
-	$line-- if $guessed_doctype;
 	my $newline = $File->{Content}->[$line - 1];
 	
 	# make sure there are no ^P's or ^Q's in the file, since we need to use
@@ -549,7 +598,13 @@ if ( $? || $guessed_doctype ) {
     $validity="invalid";
 }
 else {
-    print "\n  <pre>\n    No errors found!</pre>\n\n";
+    if ($File->{Type} eq 'xml') {
+	print "\n  <pre>\n    No errors found! ";
+	print "<a href=\"#sp-lim\">*</a></pre>\n\n";
+    }
+    else {
+	print "\n  <pre>\n    No errors found!</pre>\n\n";
+    }
     if ( $version ne "unknown" ) {
 	if ( $version =~ /^HTML 2\.0$/ ) {
 	    $gifname = "vh20";
@@ -573,14 +628,19 @@ else {
             $gifhw   = " height=31 width=88";
 	}
 	elsif ( $version =~ /HTML 4\.01<\/a> Strict$/ ) {
-	    $gifname = "vh40";
+	    $gifname = "vh401";
 	    $alttext = "Valid HTML 4.01!";
             $gifborder = "";
             $gifhw   = " height=31 width=88";
 	}
 	elsif ( $version =~ /HTML 4\.01<\/a> / ) {
-	    $gifname = "vh40";
+	    $gifname = "vh401";
 	    $alttext = "Valid HTML 4.01!";
+            $gifhw   = " height=31 width=88";
+	}
+	elsif ( $version =~ /XHTML 1\.0<\/a> / ) {
+	    $gifname = "vxhtml10";
+	    $alttext = "Valid XHTML 4.01!";
             $gifhw   = " height=31 width=88";
 	}
 	elsif ( $version =~ /HTML 3\.0/ ) {
@@ -651,6 +711,15 @@ EOHD
 EOHD
     }
     $validity="valid";
+    if ($File->{Type} eq 'xml') {
+      print qq{    <h2><a name="sp-lim">Caveat</a></h2>
+      <p>
+	This validator is based on SP, which has <a
+	href="http://www.jclark.com/sp/xml.htm">some limitations
+	in its support for XML</a>.
+      </p>
+      };
+    }
 }
 
 if ( $q->param('weblint') ) {
@@ -777,11 +846,6 @@ if ( $q->param('ss') ) {
 EOF
 
     print "<pre>\n";
-    if ( $guessed_doctype ) {
-	my $gd = "$doctype\n";
-	$gd =~ s/&/&amp;/go; $gd =~ s/</&lt;/go;
-	printf "%4d: %s", 0, $gd;
-    }
     $line = 1;
     for (@{$File->{Content}}) {
 	s/&/&amp;/go; s/</&lt;/go;
@@ -1039,7 +1103,6 @@ sub check_for_doctype {
   }
 
   for (@{$file}[0 .. 20]) {
-    return 1, $xhtmlt_doctype  if /xmlns\s*=/i;
     return 1, $html40f_doctype if /<frame/i;
   }
   for (@{$file}) {
