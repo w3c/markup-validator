@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.66 2000-06-30 20:33:50 gerald Exp $
+# $Id: check,v 1.67 2000-09-29 09:19:07 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -66,16 +66,14 @@ my $weblint = '/usr/bin/weblint';
 my $abs_svc_uri	= 'http://validator.w3.org/';
 my $uri_def_uri	= 'http://www.w3.org/Addressing/#terms';
 my $faqloc	= 'http://www.cs.duke.edu/~dsb/kgv-faq/';
-my $rel_img_uri	= '/images/';
 my $faqerrloc	= $faqloc . 'errors.html';
-my $abs_img_uri	= $abs_svc_uri . 'images/';
 my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.66 $;
+$VERSION    =  q$Revision: 1.67 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2000-06-30 20:33:50 $;
+$DATE       =  q$Date: 2000-09-29 09:19:07 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -103,7 +101,7 @@ my @options = qw(weblint pw outline ss sp noatt);
 # running without warnings until we can fix the problems.
 my ($validity, %undef_frag, $effective_charset, $catalog,
     @fake_errors, $guessed_doctype, $doctype, $line, $col, $type, $msg, $diff,
-    $pos, $indent, $gifname, $alttext, $gifhw, $nicegifname, $pedanticflags,
+    $pos, $indent, $image_uri, $alttext, $gifhw, $pedanticflags,
     $pedantic_blurb, $level, $prevlevel, $prevdata);
 
 #
@@ -629,62 +627,60 @@ else {
     }
     if ( $version ne "unknown" ) {
 	if ( $version =~ /^HTML 2\.0$/ ) {
-	    $gifname = "vh20";
+	    $image_uri = "http://validator.w3.org/images/vh20";
 	    $alttext = "Valid HTML 2.0!";
             $gifborder = "";
 	}
 	elsif ( $version =~ /HTML 3\.2</ ) {
-	    $gifname = "vh32";
+	    $image_uri = "http://www.w3.org/Icons/valid-html32";
 	    $alttext = "Valid HTML 3.2!";
             $gifhw   = " height=31 width=88";
 	}
 	elsif ( $version =~ /HTML 4\.0<\/a> Strict$/ ) {
-	    $gifname = "vh40";
+	    $image_uri = "http://www.w3.org/Icons/valid-html40";
 	    $alttext = "Valid HTML 4.0!";
             $gifborder = "";
             $gifhw   = " height=31 width=88";
 	}
 	elsif ( $version =~ /HTML 4\.0<\/a> / ) {
-	    $gifname = "vh40";
+	    $image_uri = "http://www.w3.org/Icons/valid-html40";
 	    $alttext = "Valid HTML 4.0!";
             $gifhw   = " height=31 width=88";
 	}
 	elsif ( $version =~ /HTML 4\.01<\/a> Strict$/ ) {
-	    $gifname = "vh401";
+	    $image_uri = "http://www.w3.org/Icons/valid-html401";
 	    $alttext = "Valid HTML 4.01!";
             $gifborder = "";
             $gifhw   = " height=31 width=88";
 	}
 	elsif ( $version =~ /HTML 4\.01<\/a> / ) {
-	    $gifname = "vh401";
+	    $image_uri = "http://www.w3.org/Icons/valid-html401";
 	    $alttext = "Valid HTML 4.01!";
             $gifhw   = " height=31 width=88";
 	}
 	elsif ( $version =~ /XHTML 1\.0<\/a> / ) {
-	    $gifname = "vxhtml10";
+	    $image_uri = "http://www.w3.org/Icons/valid-xhtml10";
 	    $alttext = "Valid XHTML 1.0!";
             $gifborder = "";
             $gifhw   = ' height="31" width="88"';
 	    $xhtmlendtag = " /";
 	}
 	elsif ( $version =~ /HTML 3\.0/ ) {
-	    $gifname = "vh30";
+	    $image_uri = "http://validator.w3.org/images/vh30";
 	    $alttext = "Valid HTML 3.0!";
 	}
 	elsif ( $version =~ /Netscape/ ) {
-	    $gifname = "vhns";
+	    $image_uri = "http://validator.w3.org/images/vhns";
 	    $alttext = "Valid Netscape-HTML!";
 	}
 	elsif ( $version =~ /Hotjava/ ) {
-	    $gifname = "vhhj";
+	    $image_uri = "http://validator.w3.org/images/vhhj";
 	    $alttext = "Valid Hotjava-HTML!";
 	}
-	if ( defined $gifname ) {
-	    $nicegifname = $gifname;
-	    $nicegifname =~ s/</\&lt;/g; $nicegifname =~ s/&/\&amp;/g;
+	if ( defined $image_uri ) {
 	    print <<"EOHD";
   <p>
-    <img src="$rel_img_uri$gifname" alt="$alttext"> Congratulations, this
+    <img src="$image_uri" alt="$alttext"> Congratulations, this
     document validates as $version!
   </p>
 
@@ -697,19 +693,20 @@ else {
   <pre>
   &lt;p&gt;
     &lt;a href="${abs_svc_uri}check/referer"&gt;&lt;img$gifborder
-        src="$abs_img_uri$nicegifname"
+        src="$image_uri"
         alt="$alttext"$gifhw$xhtmlendtag&gt;&lt;/a&gt;
   &lt;/p&gt;</pre>
   <p>
-    If you like, you can <a href="$rel_img_uri$gifname">download a copy of this
-    image</a> to keep in your local web directory, and change the HTML fragment
+    If you like, you can download a copy of this image (in <a
+    href="${image_uri}.png">PNG</a> or <a href="${image_uri}.gif">GIF</a>
+    format) to keep in your local web directory, and change the HTML fragment
     above to reference your local image rather than the one on this server.
   </p>
 
 EOHD
 	}
     }
-    if ( ( $version eq "unknown" ) || ( ! defined $gifname ) ) {
+    if ( ( $version eq "unknown" ) || ( ! defined $image_uri ) ) {
       if ( $guessed_doctype != 0 ) {	# if no doctype, only checked wf-ness
 	print "  <p>\n    Congratulations, this document is well-formed XML.\n  </p>\n";
       }
@@ -1023,7 +1020,7 @@ sub output_closing {
 
 <address>
   <a href="http://validator.w3.org/check/referer"><img
-     src="http://validator.w3.org/images/vh40" height=31 width=88
+     src="http://www.w3.org/Icons/valid-html40" height=31 width=88
      align=right border=0 alt="Valid HTML 4.0!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</a><br>
   Last modified: $DATE
