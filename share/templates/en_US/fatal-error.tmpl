@@ -69,7 +69,6 @@
 </TMPL_IF>
 
 <TMPL_IF NAME="fatal_ip_error">
-  return sprintf(<<".EOF.", &ent($msg));
       <p>
         Sorry, the IP address <TMPL_IF NAME="fatal_ip_hostname">of</TMPL_IF>
         <TMPL_VAR NAME="fatal_ip_host"> is not public.
