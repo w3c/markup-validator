@@ -80,7 +80,7 @@ use CGI;
 ###############
 # Global Variables
 
-my $VERSION= '$Id: checklink.pl,v 1.27 1999-04-28 19:31:03 renaudb Exp $ ';
+my $VERSION= '$Id: checklink.pl,v 1.28 1999-05-05 06:43:34 renaudb Exp $ ';
 my $CVSINFO= 'http://dev.w3.org/cgi-bin/cvsweb/validator/httpd/cgi-bin/checklink.pl';
 my $CVSSERVER= 'http://dev.w3.org/';
 my %ALLOWED_SCHEMES = ( "http" => 1 );
@@ -235,7 +235,8 @@ sub checklinks {
 		}
 		next if($URL{Registered}{$abso->abs}); # next if already registered
 		# register HTTP request
-		$ua->register(HTTP::Request->new(HEAD => $abso->abs),\&callback_check,undef,0) if($ALLOWED_SCHEMES{$abso->abs->scheme});
+		my $request = HTTP::Request->new(HEAD => $abso->abs);
+		$ua->register($request,\&callback_check,undef,0) if($ALLOWED_SCHEMES{$abso->abs->scheme});
 		$URL{Registered}{$abso->abs}="True";
 		print $abso->abs,"\n" if($VERBOSE);
 	    }
