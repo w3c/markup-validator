@@ -1,5 +1,5 @@
 # RPM Spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.1.2.7 2003-07-23 20:19:39 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.1.2.8 2003-07-30 09:39:32 ville Exp $
 
 %{!?apxs: %{expand:   %%define apxs %{_sbindir}/apxs}}
 %define httpd_confdir %(test -d %{_sysconfdir}/httpd/conf.d && echo %{_sysconfdir}/httpd/conf.d || %{apxs} -q SYSCONFDIR)
@@ -58,7 +58,11 @@ perl -pi -e 's|/usr/share/w3c-markup-validator|%{_datadir}/%{name}|g' \
   httpd/conf/httpd.conf
 
 # Cleanup of unused files
-rm -rf httpd/cgi-bin/[Lprt]* htdocs/p3p.html htdocs/source
+rm -rf \
+  httpd/cgi-bin/[Lprt]* \
+  htdocs/p3p.html \
+  htdocs/source \
+  htdocs/config/verbosemsg.rc
 
 # Rename checklink
 rename .pl '' httpd/cgi-bin/checklink.pl
