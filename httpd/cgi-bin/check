@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.108 2001-05-27 15:45:02 link Exp $
+# $Id: check,v 1.109 2001-05-27 16:23:53 link Exp $
 
 #
 # We need Perl 5.004.
@@ -74,9 +74,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.108 $;
+$VERSION    =  q$Revision: 1.109 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-05-27 15:45:02 $;
+$DATE       =  q$Date: 2001-05-27 16:23:53 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -261,24 +261,18 @@ if (defined $q->param('doctype') and not $q->param('doctype') =~ /Inline/i) {
 #
 # Try to extract or guess the DOCTYPE for HTML and XHTML files.
 my $doctype;
-my $guessed_doctype = 2;
 if ($File->{Type} eq 'html' or $File->{Type} eq 'xhtml'
     or $q->param('uploaded_file') ) {
-  ($guessed_doctype, $doctype) = &check_for_doctype($File->{Content});
+  $doctype = &get_doctype($File->{Content});
 }
 
 #
 # Set document type to XHTML if the DOCTYPE was for XHTML.
-# This happens when a XHTML file is served as text/html
-if ($doctype =~ /xhtml/i && $guessed_doctype != 2) {
-  $File->{Type} = 'xhtml';
-}
-
-#
 # Set document type to MathML if the DOCTYPE was for MathML.
-if ($doctype =~ /mathml/i && $guessed_doctype != 2) {
-  $File->{Type} = 'mathml';
-}
+# This happens when the file is served as text/html
+$File->{Type} = 'xhtml'  if $doctype =~ /xhtml/i;
+$File->{Type} = 'mathml' if $doctype =~ /mathml/i;
+
 
 #
 # If we find a XML declaration with charset information,
@@ -365,22 +359,19 @@ if ($File->{Type} eq 'xhtml') {
   $catalog               = $sgmlstuff . '/REC-xhtml1-20000126/xhtml.soc';
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'UTF-8';
-  $xmlflags              = '-wxml ';
-  if ( $guessed_doctype != 0 ) {	# if no doctype, don't validate
-    $xmlflags            .= '-wno-valid ';
-  }
+  $xmlflags              = '-wxml';
 } elsif ($File->{Type} eq 'mathml') {
   $catalog               = $sgmlstuff . '/CR-MathML2-20001113/catalog';
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'XML';
   $xmlflags              = '-wxml ';
-} elsif ($File->{Type} eq 'xml' or $guessed_doctype == 2) {
+} elsif ($File->{Type} eq 'xml') {
   # no doctype, with xmlns attr on 1st element
   $File->{Type} = 'xml'; # @@ probably a better way to do this
   $catalog               = $sgmlstuff . '/sp-1.3/pubtext/xml.soc';
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'XML';
-  $xmlflags              = '-wxml -wno-valid ';
+  $xmlflags              = '-wxml';
 }
 
 my $command  = "$sp -f$temp -E0 $xmlflags -c $catalog";
@@ -390,7 +381,6 @@ print "\t<li>nsgmls command line: <code>$command</code>\n" if $DEBUG;
 open CHECKER, "|$command - >$temp.esis"
   or die "open(|$command - >$temp.esis) returned: $!\n";
 
-print CHECKER $doctype, "\n" if $guessed_doctype == 1;
 if (   $File->{Charset} eq 'utf-8'
     or $File->{Charset} eq 'us-ascii'
     or $File->{Charset} eq 'unknown') {
@@ -459,10 +449,6 @@ if (($File->{Type} eq 'xhtml') || ($File->{Type} eq 'mathml')) {
 }
 $version = $pub_ids->{$fpi} || 'unknown';
 
-if ($guessed_doctype == 1) {
-  unshift @errors, "$sp:<OSFD>0:2:1:E: Missing DOCTYPE declaration at start of document (<a href=\"http://www.htmlhelp.org/tools/validator/doctype.html\">explanation...</a>)\n";
-}
-
 print ' ' x 4, q(<li>Character encoding: ), $File->{Charset};
 if ($File->{HTTP_Charset} ne $File->{META_Charset}
     and $File->{HTTP_Charset} ne ''
@@ -515,42 +501,30 @@ if ($File->{Type} eq 'xml' || 'xhtml') {
 print ' ' x 2, qq(</ul>\n\n);
 
 if (($File->{Type} eq 'xml') || ($File->{Type} eq 'xhtml')) {
-  my $validity_blurb = "";
-  if ( $guessed_doctype == 0 ) {
-    $validity_blurb = " and validity";
-  }
-
-print <<"EOHD";
+  print <<"EOHD";
   <p>
     Below are the results of checking this document for <a
     href="http://www.w3.org/TR/REC-xml#sec-conformance">XML
-    well-formedness</a>${validity_blurb}.
+    well-formedness</a> and validity.
   </p>
 
 EOHD
-
-}
-else {
-print <<"EOHD";
+} else {
+  print <<"EOHD";
   <p>
     Below are the results of attempting to parse this document with
     an SGML parser.
   </p>
 
 EOHD
-
 }
 
-if ( $? || ($guessed_doctype == 1) ) {
+if ($?) {
   my($line, $col, $type, $msg);
     print "<ul>\n";
     for (@errors) {
 	next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
 	next if / numbers exceeding 65535 not supported$/;
-	# @@ could maybe replace the following statement with an SGMLDECL
-	# setting in the catalog, like mathml2?
-	next if /:W: SGML declaration was not implied$/ &&
-	    ($File->{Type} =~ /^x(ht)?ml$/);
 	next if /^$sp:\(invalid location\):W: URL Redirected to/;
 	s/^$sp:<OSFD>//g;
 	if ( ! (($line, $col, $type, $msg)=(/^[^:]*:([0-9]+):([0-9]+):([A-Z]?):? (.*)/))) {
@@ -594,7 +568,6 @@ if ( $? || ($guessed_doctype == 1) ) {
 	    last;
 	}
 
-	$line-- if ( $guessed_doctype == 1 );
 	my $newline = $File->{Content}->[$line - 1];
 	
 	# make sure there are no ^P's or ^Q's in the file, since we need to use
@@ -751,13 +724,8 @@ if ( $? || ($guessed_doctype == 1) ) {
 EOHD
 	}
     }
-    if ( ( $version eq "unknown" ) || ( ! defined $image_uri ) ) {
-      if ( $guessed_doctype != 0 ) {	# if no doctype, only checked wf-ness
-	print "  <p>\n    Congratulations, this document is well-formed XML.\n  </p>\n";
-      }
-      else {	# checked validity
-	print "  <p>\n    Congratulations, this document validates as the document type specified! (I don't have an icon for this one yet, sorry.)\n  </p>\n";
-      }
+    if ($version eq 'unknown' or not defined $image_uri) {
+      print "  <p>\n    Congratulations, this document validates as the document type specified! (I don't have an icon for this one yet, sorry.)\n  </p>\n";
     }
 
     unless ($q->param('uploaded_file')) {
@@ -930,11 +898,6 @@ if ($q->param('ss')) {
     <pre>
 EOF
 
-  if ($guessed_doctype == 1) {
-    my $gd = $doctype . "\n";
-    $gd =~ s/&/&amp;/go; $gd =~ s/</&lt;/go;
-    printf "%4d: %s", 0, $gd;
-  }
   for (@{$File->{Content}}) {
     s/&/&amp;/go; s/</&lt;/go;
     printf "<a name=\"line-%s\">%4d</a>: %s\n", $line, $line, $_;
@@ -1133,54 +1096,6 @@ sub build_jump_links {
     }
     return $text;
 
-}
-
-#
-# Check if the document has a doctype; if it doesn't, try to guess
-# an appropriate one given the elements used. Returns 2 values.
-# The first value is:
-#   0 if there was a DOCTYPE,
-#   1 if there was no doctype and no xmlns= attribute
-#       on the first element in the document, or
-#   2 if there was no doctype and there IS an xmlns= attribute
-#       on the first element
-# The Second value is the doctype or namespace, if any.
-sub check_for_doctype {
-  my $file = shift; # a reference to @file, for efficiency
-
-  foreach my $count (0 .. scalar @{$file}) {
-    my $line = $file->[$count];
-
-    # does an HTML element precede the doctype on the same line?
-    if ( $line =~ /<[a-z].*<!doctype/i ) {
-	if ( $line =~ /<[a-z]+ xmlns=['"]([^ "']*)/i ) {# look for an xmlns attr
-	    return 2, $1;
-	}
-	last;
-    }
-
-    if ($line =~ /<!doctype/i) { # found a doctype
-      my $dttext = join '', @{$file}[$count .. $count + 5];
-      $dttext =~ s/\n//g;
-      $dttext =~ s/.*?doctype\s+(html|math)\s+public\s*([\'\"])([^\2]+?)\2.*/$3/i;
-      return 0, $dttext;
-    }
-
-    $line =~ s/<!(?:--(?:[^-]|-[^-])*--\s*)+>//go;
-    # Strip comments, so the next line doesn't find commented-out markup etc.
-    # (this doesn't handle multi-line comments, unfortunately)
-    if ( $line =~ /<[a-z]/i ) {	# found an element
-	if ( $line =~ /<[a-z]+ xmlns=['"]([^ "']*)/i ) {# look for an xmlns attr
-	    return 2, $1;
-	}
-	last;
-    }
-  }
-
-  for (@{$file}[0 .. 20]) {
-    return 1, $html40f_doctype if /<frame/i;
-  }
-  return 1, $html40t_doctype; # no luck earlier; guess HTML 4 transitional
 }
 
 
@@ -1488,4 +1403,16 @@ sub supress_doctype {
 		    declaration_h => [sub {$HTML .= '<!-- ' . $_[0] . ' -->'}, 'text']
 		   )->parse(join "\n", @{$file});
   return [split /\n/, $HTML];
+}
+
+#
+# Extract a DOCTYPE to determine what kind of document this is.
+sub get_doctype {
+  no strict 'vars';
+  my $file = shift;
+  local $dtd = '';
+
+  HTML::Parser->new(declaration_h => [sub {$dtd = $_[0]}, 'text'])->parse(join "\n", @{$file});
+  $dtd =~ s(<!DOCTYPE\s+\w+\s+PUBLIC\s+"([^\"]+)".*>){$1}si;
+  return $dtd;
 }
