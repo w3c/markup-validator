@@ -1,0 +1,9 @@
+<!DOCTYPE Plane20Char[
+  <!ELEMENT Plane20Char (#PCDATA)>
+  <!ENTITY aopf "&#x140000;" >
+]>
+<Plane20Char>
+  &aopf;
+  &#x140000;
+</Plane20Char>
+
