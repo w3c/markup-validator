@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.106 2001-05-27 11:47:51 link Exp $
+# $Id: check,v 1.107 2001-05-27 11:58:52 link Exp $
 
 #
 # We need Perl 5.004.
@@ -41,13 +41,15 @@ use constant DEBUG => 0;
 # Define global variables
 use vars qw($VERSION $DATE $MAINTAINER $NOTICE);               # Strings.
 use vars qw($frag $pub_ids $element_uri $file_type $doctypes); # Cfg hashes.
+use vars qw($DEBUG);
+
+$DEBUG += 1 unless $ENV{SERVER_PORT} == 80;
 
 #
 # Paths and file locations
 my $base_path = '/usr/local/validator/';
-if ( $ENV{SERVER_PORT} eq "8000" ) {
-    $base_path = '/home/gerald/validator/';
-}
+   $base_path = '/home/gerald/validator/' if $DEBUG;
+
 my $html_path = $base_path . 'htdocs/';
 my $elem_db   = $html_path . 'config/eref.cfg';
 my $fpis_db   = $html_path . 'config/fpis.cfg';
@@ -74,9 +76,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.106 $;
+$VERSION    =  q$Revision: 1.107 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-05-27 11:47:51 $;
+$DATE       =  q$Date: 2001-05-27 11:58:52 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -389,9 +391,7 @@ if ($File->{Type} eq 'xhtml') {
 
 my $command  = "$sp -f$temp -E0 $xmlflags -c $catalog -D $path $decl";
 
-if ( $ENV{SERVER_PORT} eq "8000" ) {	# running on the test server?
-    print "    <li>nsgmls command line: <code>$command</code>\n";
-}
+print "\t<li>nsgmls command line: <code>$command</code>\n" if $DEBUG;
 
 open CHECKER, "|$command - >$temp.esis"
   or die "open(|$command - >$temp.esis) returned: $!\n";
