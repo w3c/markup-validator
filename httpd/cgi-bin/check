@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.397 2005-02-13 15:27:29 link Exp $
+# $Id: check,v 1.398 2005-02-13 18:50:09 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -224,7 +224,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.397 $;
+  $VERSION    =  q$Revision: 1.398 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -552,7 +552,7 @@ unless ($File->{Charset}->{Use}) { # No charset given...
 
 
 #
-# @@FIXME: This should be dead code when &add_warning gets templatified.;
+#@@FIXME: This should be dead code when &add_warning gets templatified.
 sub iana_charset_blurb () {
   return <<".EOF.";
     <p>
@@ -567,6 +567,8 @@ sub iana_charset_blurb () {
     </p>
 .EOF.
 }
+#@@FIXME;
+
 
 #
 # Abort if an error was flagged while finding the encoding.
