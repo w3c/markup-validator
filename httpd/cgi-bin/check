@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.328 2004-05-10 13:32:07 link Exp $
+# $Id: check,v 1.329 2004-05-11 17:48:21 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -43,7 +43,7 @@ use CGI             2.81 qw(
                            ); # 2.81 for XHTML, and import redirect() function.
 
 use CGI::Carp            qw(carp croak fatalsToBrowser);
-use Config::General 2.06 qw(); # Need 2.06 for -SplitPolicy
+use Config::General 2.19 qw(); # Need 2.19 for -AutoLaunder
 use File::Spec           qw();
 use HTML::Parser    3.25 qw(); # Need 3.25 for $p->ignore_elements.
 use HTML::Template  2.6  qw();
@@ -187,7 +187,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.328 $;
+  $VERSION    =  q$Revision: 1.329 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
