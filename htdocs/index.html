@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.43 2001-09-19 07:43:39 link Exp $" -->
-<!--#set var="date" value="\$Date: 2001-09-19 07:43:39 $" -->
+<!--#set var="revision" value="\$Id: index.html,v 1.44 2001-09-20 16:59:12 link Exp $" -->
+<!--#set var="date" value="\$Date: 2001-09-20 16:59:12 $" -->
 <!--#include virtual="/header.html" -->
 
     <div class="intro">
@@ -33,13 +33,13 @@
       </ul>
     </div>
 
-    <div class="stb">
-      <h2><a name="byURI">Validate by URI</a></h2>
+    <div id="skip" class="stb">
+      <h2><a id="byURI" name="byURI">Validate by URI</a></h2>
       <form method="get" action="/check">
         <table>
-          <tr><th><label for="uri">Address:</label></th><td colspan="2"><input id="uri" name="uri" size="50" /></td></tr>
+          <tr><th><label title="Address of page to Validate" for="uri">Address:</label></th><td colspan="2"><input id="uri" name="uri" size="50" /></td></tr>
           <tr>
-            <th><label for="charset">Character Encoding:</label></th>
+            <th><label title="Character Encoding" for="charset">Character Encoding:</label></th>
             <td colspan="2">
               <select id="charset" name="charset">
                 <option value="(detect automatically)">(detect automatically)</option>
@@ -80,7 +80,7 @@
             </td>
           </tr>
           <tr>
-            <th><label for="doctype">Document Type:</label></th>
+            <th><label title="Document Type" for="doctype">Document Type:</label></th>
             <td colspan="2">
               <select id="doctype" name="doctype">
                 <option value="Inline">(detect automatically)</option>
@@ -97,12 +97,12 @@
           </tr>
           <tr>
             <th rowspan="2">Options:</th>
-            <td><label><input name="ss" type="checkbox" value="" /> Show Source</label></td>
-            <td><label><input name="sp" type="checkbox" value="" /> Show Parse Tree</label></td>
+            <td><label title="Show Page Source"><input name="ss" type="checkbox" value="" /> Show Source</label></td>
+            <td><label title="Show Parse Tree"><input name="sp" type="checkbox" value="" /> Show Parse Tree</label></td>
           </tr>
           <tr>
-            <td><label><input name="outline" type="checkbox" value="" /> Show Outline</label></td>
-            <td><label><input name="noatt" type="checkbox" value="" /> ...exclude attributes</label></td>
+            <td><label title="Show an Outline of the document"><input name="outline" type="checkbox" value="" /> Show Outline</label></td>
+            <td><label title="Exclude Attributes from Parse Tree"><input name="noatt" type="checkbox" value="" /> ...exclude attributes</label></td>
           </tr>
           <tr><td />
             <td><input type="submit" value="Validate this page" /></td>
