@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.48 2000-05-10 18:32:51 hugo Exp $
+# $Id: checklink.pl,v 2.49 2000-05-11 15:44:29 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -31,7 +31,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.48 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.49 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -227,7 +227,7 @@ sub parse_arguments() {
 
 sub usage() {
     print STDERR "$PROGRAM $VERSION
-Usage: LinkCheck.pl <options> <uris>
+Usage: checklink <options> <uris>
 Options:
 	-s/--summary		Result summary only.
 	-b/--broken		Show only the broken links, not the redirects.
@@ -611,7 +611,7 @@ sub get_uri() {
     # Prepare the query
     my $ua = new W3C::UserAgent;
     $ua->timeout($_timeout);
-    $ua->agent('W3Cchecklink/'.$REVISION.' '.$ua->agent());
+    $ua->agent('W3C-checklink/'.$REVISION.' '.$ua->agent());
     if ($_http_proxy) {
         $ua->proxy('http', 'http://'.$_http_proxy);
     }
