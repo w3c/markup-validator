@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.345 2004-09-22 00:48:37 duerst Exp $
+# $Id: check,v 1.346 2004-09-22 00:53:54 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -225,7 +225,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.345 $;
+  $VERSION    =  q$Revision: 1.346 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2168,15 +2168,9 @@ sub is_mathml {shift->{Type} =~ m(mathml\+xml$)};
 
 #
 # Do an initial parse of the Document Entity to extract charset from HTML <meta>.
-# (still also extracts FPI)
+# (still also extracts FPI, at least to some extent)
 sub preparse_meta {
   my $File = shift;
-
-  #
-  # Reset DOCTYPE, Root, and Charset (for second invocation).
-  $File->{Charset}->{META} = '';
-  $File->{DOCTYPE}         = '';
-  $File->{Root}            = '';
 
   my $dtd = sub {
     return if $File->{Root};
@@ -2200,7 +2194,6 @@ sub preparse_meta {
     } else {
       $File->{Root} = $tag;
     }
-    if ($attr->{xmlns}) {$File->{Namespace} = $attr->{xmlns}};
   };
 
   my $p = HTML::Parser->new(api_version => 3);
@@ -2210,11 +2203,6 @@ sub preparse_meta {
   $p->handler(declaration => $dtd, 'text');
   $p->handler(start => $start, 'tag,attr');
   $p->parse(join "\n", @{$File->{Content}});
-
-  $File->{DOCTYPE} = '' unless defined $File->{DOCTYPE};
-  $File->{DOCTYPE} =~ s(^\s+){ }g;
-  $File->{DOCTYPE} =~ s(\s+$){ }g;
-  $File->{DOCTYPE} =~ s(\s+) { }g;
 
   return $File;
 }
