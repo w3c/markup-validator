@@ -1,9 +1,9 @@
 # RPM spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.1.2.14 2004-04-17 10:12:48 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.1.2.15 2004-04-24 17:04:58 ville Exp $
 
 Name:           w3c-markup-validator
 Version:        0.6.5
-Release:        0.beta2.1
+Release:        0.beta2.2
 Epoch:          0
 Summary:        W3C Markup Validator
 
@@ -34,8 +34,8 @@ SGML and XML DTDs for the W3C Markup Validator.
 
 
 %prep
-%setup -q -a 1 -n validator-0.6.5b1
-mv validator-0.6.5b1/htdocs/sgml-lib .
+%setup -q -a 1 -n validator-0.6.5b2
+mv validator-0.6.5b2/htdocs/sgml-lib .
 
 # Localize config files
 perl -pi -e \
@@ -101,6 +101,14 @@ touch $RPM_BUILD_ROOT%{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat
 rm -rf $RPM_BUILD_ROOT
 
 
+%post
+if [ $1 -eq 1 ] ; then
+  %{_initrddir}/httpd reload &>/dev/null || :
+fi
+
+%postun
+%{_initrddir}/httpd reload &>/dev/null || :
+
 %post libs
 for catalog in "mathml.soc sgml.soc svg.soc xhtml.soc xml.soc"; do
   install-catalog --add \
@@ -129,6 +137,10 @@ done
 
 
 %changelog
+* Sat Apr 24 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.5-0.beta2.2
+- Make httpd reload its config after install, upgrade and erase.
+- Fix a couple of paths for beta2.
+
 * Sat Apr 17 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.5-0.beta2.1
 - Update to 0.6.5 beta 2.
 
