@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.30 1999-09-06 04:42:45 gerald Exp $
+# $Id: check,v 1.31 1999-09-06 04:58:00 gerald Exp $
 
 use LWP::UserAgent;
 use strict;
@@ -17,8 +17,8 @@ use strict;
 # Constant definitions
 #############################################################################
 
-my $cvsrevision	= '$Revision: 1.30 $';
-my $cvsdate	= '$Date: 1999-09-06 04:42:45 $';
+my $cvsrevision	= '$Revision: 1.31 $';
+my $cvsdate	= '$Date: 1999-09-06 04:58:00 $';
 
 my $logfile	= "/var/log/httpd/val-svc";
 
@@ -68,7 +68,7 @@ my $rightarrow		= "${lt}tt${gt}${lt}img src=\"/images/arrow_right.gif\" alt=\"^\
 my $contchars		= "${lt}tt${gt}${lt}img src=\"/images/ellipsis.gif\" alt=\"[...]\"${gt}${lt}/tt${gt}";
 my $gifborder		= " border=0";
 
-my @options = ( 'weblint', 'pw', 'outline', 'ss', 'sp', 'noatt' );
+my @options = qw(weblint pw outline ss sp noatt);
 
 #############################################################################
 # Array of FPIs -> plain text version strings
