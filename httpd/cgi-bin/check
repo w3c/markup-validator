@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.390 2005-02-05 04:08:31 link Exp $
+# $Id: check,v 1.391 2005-02-05 04:20:57 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -239,7 +239,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.390 $;
+  $VERSION    =  q$Revision: 1.391 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1101,7 +1101,7 @@ sub add_warning ($$$$) {
   my $Title   = shift;
   my $Message = shift;
 
-  if ($File->{Mode} eq 'html' or $Class eq 'fatal') {
+  if ($File->{Opt}->{Output} eq 'html' or $Class eq 'fatal') {
     push @{$File->{Warnings}}, {
                                 Class   => $Class,
                                 Title   => $Title,
