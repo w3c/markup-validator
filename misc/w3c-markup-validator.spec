@@ -1,5 +1,5 @@
 # RPM Spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.1.2.2 2003-03-01 09:25:15 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.1.2.3 2003-04-21 15:50:13 ville Exp $
 
 %define httpd_confdir %{_sysconfdir}/httpd/conf.d
 %define htmldir       %{_var}/www/html
@@ -11,6 +11,7 @@ Summary:        W3C Markup Validator
 Name:           w3c-markup-validator
 Version:        0.6.2
 Release:        1w3c
+Epoch:          0
 URL:            http://validator.w3.org/
 License:        http://www.w3.org/Consortium/Legal/copyright-software
 Source0:        http://validator.w3.org/dist/validator-0_6_2.tar.gz
@@ -18,7 +19,7 @@ Source1:        http://validator.w3.org/dist/sgml-lib-0_6_2.tar.gz
 Group:          Applications/Internet
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires:  perl
-Requires:       httpd, %{name}-libs = 0.6.2
+Requires:       httpd, %{name}-libs = 0:0.6.2
 Requires:       perl >= 5.6, perl-HTML-Parser >= 3.25, perl-libwww-perl
 Requires:       perl-URI, perl-Text-Iconv, perl(CGI) >= 2.81, perl(Time::HiRes)
 Requires:       perl(Set::IntSpan), perl(Config::General) >= 2.06
@@ -100,14 +101,34 @@ rm -rf $RPM_BUILD_ROOT
 
 # -----------------------------------------------------------------------------
 
+%post libs
+# Note that we're using versioned catalog, so this is always ok.
+if [ -x %{_bindir}/install-catalog -a -d %{_sysconfdir}/sgml ]; then
+  for catalog in "mathml.soc sgml.soc svg.soc xhtml.soc xml.soc"; do
+    %{_bindir}/install-catalog --add \
+      %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
+      %{sgmldir}/%{name}/$catalog > /dev/null || :
+  done
+fi
+
+%postun libs
+# Note that we're using versioned catalog, so this is always ok.
+if [ -x %{_bindir}/install-catalog -a -d %{_sysconfdir}/sgml ]; then
+  for catalog in "mathml.soc sgml.soc svg.soc xhtml.soc xml.soc"; do
+    %{_bindir}/install-catalog --remove \
+      %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
+      %{sgmldir}/%{name}/$catalog > /dev/null || :
+  done
+fi
+
+# -----------------------------------------------------------------------------
+
 %files
 %defattr(-,root,root,-)
 %config(noreplace) %{httpd_confdir}/*
 %config(noreplace) %{_sysconfdir}/w3c/*
 %{htmldir}/%{name}
 %{_bindir}/*
-
-# -----------------------------------------------------------------------------
 
 %files libs
 %defattr(-,root,root,-)
@@ -116,9 +137,11 @@ rm -rf $RPM_BUILD_ROOT
 # -----------------------------------------------------------------------------
 
 %changelog
-* Sat Feb 22 2003 Ville Skyttä <ville.skytta at iki.fi> - 0.6.2-1w3c
+* Mon Apr 21 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.2-1w3c
 - Update to 0.6.2.
 - Rename to w3c-markup-validator.
+- Install our catalogs if %%{_bindir}/install-catalog is available.
+- Add Epoch: 0.
 
 * Sun Dec  1 2002 Ville Skyttä <ville.skytta at iki.fi> - 0.6.1-1w3c
 - Update to 0.6.1.
