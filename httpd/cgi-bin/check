@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.12 2002-03-30 04:28:16 link Exp $
+# $Id: check,v 1.200.2.13 2002-03-30 07:22:09 link Exp $
 
 #
 # We need Perl 5.004.
@@ -66,7 +66,7 @@ $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.12 $;
+$VERSION    =  q$Revision: 1.200.2.13 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 #
@@ -95,7 +95,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-03-30 04:28:16 $,
+			      Date => q$Date: 2002-03-30 07:22:09 $,
 			     });
 
 #
@@ -272,8 +272,7 @@ if (TRUE) { # @@ Need to stringify here?
   &add_table($File, qq(<label title="Address of Page to Validate" for="uri">Address</label>),
 	     '<input type="text" id="uri" name="uri" size="'
 	     . (length($File->{Opt}->{URI}) + 2)
-	     . '" value="' . $File->{Opt}->{URI} . '" />'
-             . ' [<a title="Go to the entered URI" href="' . $File->{Opt}->{URI} . '">Go to...</a>]');
+	     . '" value="' . $File->{Opt}->{URI} . '" />');
 } elsif ($q->param('uploaded_file')) {
   &add_table($File, "File", $File->{Opt}->{URI});
 } else {
@@ -288,14 +287,16 @@ if (TRUE) { # @@ Need to stringify here?
 	       '&#171;<code>' . $File->{Opt}->{URI} . '</code>&#187;.');
 }
 
-&add_table($File, "Last Modified", $File->{Modified})  if $File->{Modified};
-&add_table($File, "Server", $File->{Server})  if $File->{Server};
-&add_table($File, "Content Length", $File->{Size})  if $File->{Size};
-&add_table($File, "Detected Character Encoding", "<code>$File->{Charset}</code>");
-&add_table($File, "Used Character Encoding", "<code>$File->{Use_Charset}</code>")
-    unless $File->{Charset} eq $File->{Use_Charset};
+#&add_table($File, "Modified", $File->{Modified})  if $File->{Modified};
+#&add_table($File, "Server", $File->{Server})  if $File->{Server};
+#&add_table($File, "Size", $File->{Size})  if $File->{Size};
+#&add_table($File, "Character&nbsp;Encoding", "<code>$File->{Charset}</code>");
+#&add_table($File, "Character&nbsp;Encoding", "<code>$File->{Use_Charset}</code>")
+#    unless $File->{Charset} eq $File->{Use_Charset};
 unless ($File->{Opt}->{'Is Upload'}) {
-  &add_table($File, qq(<label title="Select Character Encoding" for="charset">Select Character Encoding</label>),
+  &add_table($File,
+	     qq(<label title="Character Encoding" for="charset">Character&nbsp;Encoding</label>),
+	     $File->{Use_Charset} . ' ' .
 	     &CGI::popup_menu(-name => 'charset', -id => 'charset',
 			    -values => [
 					'(detect automatically)',
@@ -337,7 +338,7 @@ unless ($File->{Opt}->{'Is Upload'}) {
 	    );
 }
 
-if ($File->{HTTP_Charset} ne $File->{META_Charset}) {
+if ($File->{META_Charset} and $File->{HTTP_Charset} ne $File->{META_Charset}) {
   &add_warning($File, <<"EOHD");
       <strong>Character Encoding mismatch!</strong>
       The character encoding specified in the HTTP header
@@ -346,7 +347,7 @@ if ($File->{HTTP_Charset} ne $File->{META_Charset}) {
       (&#171;<code>$File->{META_Charset}</code>&#187;).
       I will use &#171;<code>$File->{Charset}</code>&#187; for this validation.
 EOHD
-} elsif ($File->{HTTP_Charset} ne $File->{XML_Charset}) {
+} elsif ($File->{XML_Charset} and $File->{HTTP_Charset} ne $File->{XML_Charset}) {
   &add_warning($File, <<"EOHD");
       <strong>Character Encoding mismatch!</strong>
       The character encoding specified in the HTTP header
@@ -557,8 +558,27 @@ if ($File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 's
 }
 $File->{Version} = $CFG->{'FPI to Text'}->{$fpi} || 'unknown';
 
+&add_table($File, "Document Type",
+	   $File->{Version} . ' ' .
+	   &CGI::popup_menu(
+			    -name => 'doctype',
+			    -id => 'doctype',
+			    -values => [
+					'(detect automatically)',
+					'XHTML 1.0 Strict',
+					'XHTML 1.0 Transitional',
+					'XHTML 1.0 Frameset',
+					'HTML 4.01 Strict',
+					'HTML 4.01 Transitional',
+					'HTML 4.01 Frameset',
+					'HTML 3.2',
+					'HTML 2.0',
+				       ],
+			   )
+	  );
+
+
 if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
-  &add_table($File, "Document Type", $File->{Version});
   if ($File->{Type} eq 'xhtml' and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
     &add_warning($File, "Unknown namespace (&#171;<code>$File->{Namespace}</code>&#187;) for text/html document!");
     if ($File->{Namespace} ne '') {
@@ -586,27 +606,6 @@ if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
     }
     &add_table($File, "Other Namespaces", $namespaces . "</ul>");
   }
-} else {
-  &add_table($File, "Current Doctype", $File->{Version}); # is this current or detected???
-}
-
-unless ($File->{Opt}->{'Is Upload'}) { # @@@FIXME@@@: Temporarily Broken.
-#  &add_table($File, qq(<label title="Select Doctype" for="doctype">Select Doctype</label>),
-#	     $q->popup_menu(-name => 'doctype', -id => 'doctype',
-#			    -values => [
-#					'(detect automatically)',
-#					'XHTML 1.0 Strict',
-#					'XHTML 1.0 Transitional',
-#					'XHTML 1.0 Frameset',
-#					'HTML 4.01 Strict',
-#					'HTML 4.01 Transitional',
-#					'HTML 4.01 Frameset',
-#					'HTML 3.2',
-#					'HTML 2.0',
-#				       ],
-#			    -default => $File->{Opt}->{DOCTYPE},
-#			   )
-#	    );
 }
 
 &print_table($File);
@@ -692,7 +691,7 @@ sub print_table {
   my $File = shift;
   my $tableEntry;
   unless ($File->{Opt}->{URI} =~ m(^upload://)) {
-    add_table($File, "Options",
+    add_table($File, '<input type="submit" value="Revalidate" />',
 	      '         <label title="Show Page Source"><input type="checkbox" value="" name="ss"' .
 	      ($File->{Opt}->{'Show Source'}      ? 'checked="checked"' : '') . " />Show Source</label>\n" .
 	      '         <label title="Show an Outline of the document"><input type="checkbox" value="" name="outline"' .
@@ -709,11 +708,9 @@ sub print_table {
   for $tableEntry (@{$File->{Table}}) {
     print "    <tr>\n";
     print ' ' x 6, "<th>", $$tableEntry{Head}, ": </th>\n";
-    print ' ' x 6, "<td colspan='3'>", $$tableEntry{Tail}, "</td>\n";
+    print ' ' x 6, "<td>", $$tableEntry{Tail}, "</td>\n";
     print "    </tr>\n";
   }
-  print qq(    <tr><th><input type="submit" value="Revalidate" /></th><td>&nbsp;</td>\n)
-    unless $File->{Opt}->{URI} =~ m(^upload://);
   print "  </table></form>\n";
 }
 
@@ -742,16 +739,16 @@ sub output_doctype_spiel {
     </p>
 
     <pre>
-      &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
-      &lt;HTML&gt;
-	&lt;HEAD&gt;
-	  &lt;TITLE&gt;Title&lt;/TITLE&gt;
-	&lt;/HEAD&gt;
+      &lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN"&gt;
+      &lt;html&gt;
+	&lt;head&gt;
+	  &lt;title&gt;Title&lt;/title&gt;
+	&lt;/head&gt;
 
-	&lt;BODY&gt;
+	&lt;body&gt;
 	  &lt;-- ... body of document ... --&gt;
-	&lt;/BODY&gt;
-      &lt;/HTML&gt;</pre>
+	&lt;/body&gt;
+      &lt;/html&gt;</pre>
 
 EOF
 }
@@ -827,73 +824,59 @@ sub authenticate {
 Status: 401 Authorization Required
 WWW-Authenticate: $authHeader
 Connection: close
-Content-Type: text/html
+Content-Type: text/html; charset=utf-8
 
-<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">
-<HTML><HEAD>
-<TITLE>401 Authorization Required</TITLE>
-</HEAD><BODY>
-<H1>Authorization Required</H1>
-<p>
-  Sorry, I am not authorized to access the specified URI.
-</p>
-
-<p>
-  The URI you specified,
-</p>
-
-<blockquote>
-  <code><a href="$resource">$resource</a></code>
-</blockquote>
-
-<p>
-  returned a 401 "authorization required" response when I tried
-  to download it.
-</p>
-
-<p>
-  You should have been prompted by your browser for a
-  username/password pair; if you had supplied this information, I
-  would have forwarded it to your server for authorization to
-  access the resource. You can use your browser's "reload" function
-  to try again, if you wish.
-</p>
-
-<p>
-  Of course, you may not want to trust me with this information,
-  which is fine. I can tell you that I don't log it or do
-  anything else nasty with it, and you can <a
-  href="$CFG->{'Home Page'}source/">download the source for
-  this service</a> to see what it does, but you have no guarantee
-  that this is actually the code I'm using; you basically have to
-  decide whether to trust me or not. :-)
-</p>
-
-<p>
-  You should also be aware that the way we proxy this authentication
-  information defeats the normal working of HTTP Authentication.
-  If you authenticate to server A, your browser may keep sending
-  the authentication information to us every time you validate
-  a page, regardless of what server it's on, and we'll happily pass
-  that on to the server thereby making it possible for a malicious
-  server operator to capture your credentials.
-</p>
-
-<p>
-  Due to the way HTTP Authentication works there is no way we can
-  avoid this. We are using some "tricks" to fool your client into
-  not sending this information in the first place, but there is no
-  guarantee this will work. If security is a conern to you, you
-  may wish to avoid validating protected resources or take extra
-  precautions to prevent your browser from sending authentication
-  information when validating other servers.
-</p>
-
-<p>
-  Also note that you shouldn't use HTTP Basic Authentication for
-  anything which really needs to be private, since the password
-  goes across the network unencrypted.
-</p>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html>
+  <head><title>401 Authorization Required</title></head>
+  <body>
+    <h1>Authorization Required</h1>
+    <p>Sorry, I am not authorized to access the specified URI.</p>
+    <p>
+      The URI you specified, <code><a href="$resource">$resource</a></code>,
+      returned a 401 "authorization required" response when I tried
+      to download it.
+    </p>
+    <p>
+      You should have been prompted by your browser for a
+      username/password pair; if you had supplied this information, I
+      would have forwarded it to your server for authorization to
+      access the resource. You can use your browser's "reload" function
+      to try again, if you wish.
+    </p>
+    <p>
+      Of course, you may not want to trust me with this information,
+      which is fine. I can tell you that I don't log it or do
+      anything else nasty with it, and you can <a
+        href="$CFG->{'Home Page'}source/">download the source for
+      this service</a> to see what it does, but you have no guarantee
+      that this is actually the code I'm using; you basically have to
+      decide whether to trust me or not. :-)
+    </p>
+    <p>
+      You should also be aware that the way we proxy this authentication
+      information defeats the normal working of HTTP Authentication.
+      If you authenticate to server A, your browser may keep sending
+      the authentication information to us every time you validate
+      a page, regardless of what server it's on, and we'll happily pass
+      that on to the server thereby making it possible for a malicious
+      server operator to capture your credentials.
+    </p>
+    <p>
+      Due to the way HTTP Authentication works there is no way we can
+      avoid this. We are using some "tricks" to fool your client into
+      not sending this information in the first place, but there is no
+      guarantee this will work. If security is a conern to you, you
+      may wish to avoid validating protected resources or take extra
+      precautions to prevent your browser from sending authentication
+      information when validating other servers.
+    </p>
+    <p>
+      Also note that you shouldn't use HTTP Basic Authentication for
+      anything which really needs to be private, since the password
+      goes across the network unencrypted.
+    </p>
 EOF
 }
 
@@ -912,7 +895,7 @@ sub print_unknown_http_error_message {
   </p>
 
   <blockquote>
-    <code>$code $message</code>
+    <p><code>$code $message</code></p>
   </blockquote>
 
   <p>
@@ -1250,20 +1233,21 @@ sub report_errors ($) {
 	or $err->{msg} =~ m(unrecognized ({{)?DOCTYPE(}})?)i
         or $err->{msg} =~ m(no document type declaration)i) {
       print <<"    .EOF.";
-    <p class="fatal"><strong>Fatal Error: $err->{msg}</strong>></p>
+    <li class="fatal"><strong>Fatal Error: $err->{msg}</strong>
     <p>
       I could not parse this document, because it uses a public identifier that
       is not in my <a href="/sgml-lib/catalog">catalog</a>.
     </p>
     .EOF.
       &output_doctype_spiel;
+      print '</li>';
       last;
     }
 
     # No or unknown FPI and a relative SI.
     if ($err->{msg} =~ m(cannot (open|find))) {
       print <<"    .EOF.";
-    <p class="fatal"><strong>Fatal Error: $err->{msg}</strong>></p>
+    <li class="fatal"><strong>Fatal Error: $err->{msg}</strong>
     <p>
       I could not parse this document, because it makes reference to a
       system-specific file instead of using a well-known public identifier to
@@ -1271,19 +1255,21 @@ sub report_errors ($) {
     </p>
     .EOF.
       &output_doctype_spiel;
+      print '</li>';
       last;
     }
 
     # No DOCTYPE.
     if ($err->{msg} =~ m(prolog can\'t be omitted)) {
       print <<"    .EOF.";
-    <p class="fatal"><strong>Fatal Error: No DOCTYPE specified!</strong></p>
+    <li class="fatal"><strong>Fatal Error: No DOCTYPE specified!</strong>
     <p>
       I could not parse this document, because it doesn\'t include a
       DOCTYPE Declaration and the detected document type does not permit this.
     </p>
     .EOF.
       &output_doctype_spiel;
+      print '</li>';
       last;
     }
 
@@ -1314,10 +1300,10 @@ sub report_errors ($) {
       print qq{ (<code style="background: red">"$err->{idx}"</code>)};
     }
 
-    print "\n<pre>  <code class=input>$line</code>\n";
-    print " " x ($col + 2); # 2 is the number of spaces before <code> above
-    print " " x 4 if $col != $err->{char}; # only for truncated lines
-    print "<span class=markup>^</span></pre>\n";
+    print qq(\n<pre>  <code class="input">$line</code>\n);
+    print ' ' x ($col + 2); # 2 is the number of spaces before <code> above
+    print ' ' x 4 if $col != $err->{char}; # only for truncated lines
+    print qq(<span class="markup">^</span></pre>\n);
   }
   print "</ul>\n";
   print "<hr>\n";
@@ -1380,12 +1366,12 @@ sub report_valid {
       $gifborder = "";
       $gifhw   = ' height="31" width="88"';
       $xhtmlendtag = " /";
-#    } elsif ($File->{Version} =~ /XHTML Basic 1.0/) {
-#      $image_uri = "$CFG->{'Home Page'}/images/vxhtml-basic10";
-#      $alttext = "Valid XHTML Basic 1.0!";
-#      $gifborder = "";
-#      $gifhw   = ' height="31" width="88"';
-#      $xhtmlendtag = " /";
+    } elsif ($File->{Version} =~ /XHTML Basic 1.0/) {
+      $image_uri = "$CFG->{'Home Page'}/images/vxhtml-basic10";
+      $alttext = "Valid XHTML Basic 1.0!";
+      $gifborder = "";
+      $gifhw   = ' height="31" width="88"';
+      $xhtmlendtag = " /";
     } elsif ($File->{Version} =~ /XHTML 1.1/) {
       $image_uri = "http://www.w3.org/Icons/valid-xhtml11";
       $alttext = "Valid XHTML 1.1!";
@@ -1406,7 +1392,7 @@ sub report_valid {
     if (defined $image_uri) {
       print <<"EOHD";
   <p>
-    <img src="$image_uri" alt="$alttext"> Congratulations, this
+    <img src="$image_uri" alt="$alttext"$gifhw> Congratulations, this
     document validates as $File->{Version}!
   </p>
 
@@ -1462,7 +1448,7 @@ EOHD
   </p>
 
   <blockquote>
-    <code><a href="$thispage">$thispage</a></code>
+    <p><code><a href="$thispage">$thispage</a></code></p>
   </blockquote>
 
   <p>
@@ -1510,7 +1496,7 @@ EOF
     print "    </ul>\n" x ($prevlevel - $level); # perl is so cool.
     if ($level - $prevlevel == 1) {print "    <ul>\n"};
     foreach my $i (($prevlevel + 1) .. ($level - 1)) {
-      print qq(  <ul>\n    <li class="warning">A level $i heading is missing!\n);
+      print qq(  <ul>\n    <li class="warning">A level $i heading is missing!</li>\n);
     }
     if ($level - $prevlevel > 1) {print "    <ul>\n"};
 
@@ -1534,7 +1520,7 @@ EOF
 
     $heading = substr($heading, 1); # chop the leading '-' or ' '.
     $heading = &ent($heading);
-    print "    <li>$heading\n";
+    print "    <li>$heading</li>\n";
   }
   print "    </ul>\n" x $level;
   print <<'EOF';
