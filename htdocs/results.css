@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.14 2002-12-01 13:40:32 link Exp $ */
+/* $Id: results.css,v 1.15 2002-12-01 13:47:15 link Exp $ */
 
 .markup {
   color: red;
@@ -20,10 +20,6 @@ fieldset {
 ul#Warnings {
   clear: left;
   padding-top: 1ex;
-}
-
-div.meat {
-  margin-right: 10em;
 }
 
 th {
@@ -145,9 +141,12 @@ img.inline-badge {
   float: left;
 }
 
-
+.source code {
+  white-space: normal;
+}
 
 div.mtb { /* "Medium Thematic Break" */
   margin-top: 5em;
   border-top: 1px solid black;
 }
+
