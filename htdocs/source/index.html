@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.22.2.17 2003-12-25 09:40:16 ot Exp $"
---><!--#set var="date" value="\$Date: 2003-12-25 09:40:16 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.22.2.18 2004-02-02 20:05:09 ville Exp $"
+--><!--#set var="date" value="\$Date: 2004-02-02 20:05:09 $"
 --><!--#set var="title" value="Source Code Availability for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -56,17 +56,18 @@
         </li>
         <li id="rpm">
           <p>
-            Experimental RPMs are available, courtesy of Ville Skytt&auml;, at
-            &lt;<a href="http://cachalot.mine.nu/9/">http://cachalot.mine.nu/9/</a>&gt;.
+            RPM packages are available, courtesy of Ville Skytt&auml;, at
+            &lt;<a href="http://cachalot.mine.nu/1/">http://cachalot.mine.nu/1/</a>&gt;.
           </p>
           <p>
             The RPMs have only been tested on
-            <a href="http://www.redhat.com/">Red Hat</a> Linux 9,
+            <a href="http://fedora.redhat.com/">Fedora</a> Core 1,
             but should be adaptable to other RPM based systems.
           </p>
           <p>
-            Note that the Validator RPMs have several dependencies so you will
-            have to get at least the following RPMs:
+            Note that the Validator RPMs have several dependencies, you'll
+            have to get at least the following RPMs (other dependencies are
+            included in the Fedora Core distribution):
           </p>
           <ul>
             <li>w3c-markup-validator</li>
@@ -74,13 +75,16 @@
             <li>perl-Net-IP</li>
             <li>perl-Set-IntSpan</li>
             <li>perl-Text-Iconv</li>
-            <li>opensp</li>
           </ul>
           <p>
             In addition, each of these may have further dependencies that must
-            be satisfied. All the necessary RPMs should either be included in
-            the Red Hat Linux distribution or available from
-             &lt;<a href="http://cachalot.mine.nu/9/">http://cachalot.mine.nu/9/</a>&gt;.
+            be satisfied. All the necessary RPMs are either included in
+            the Fedora Core distribution or are available from
+            &lt;<a href="http://cachalot.mine.nu/1/">http://cachalot.mine.nu/1/</a>&gt; or
+            &lt;<a href="http://www.fedora.us/">http://www.fedora.us/</a>&gt;.
+            Use of an automated package management tool, such as apt, up2date
+            or yum is strongly recommended.  See the links above for more
+            information about getting and configuring these tools.
           </p>
         </li>
         <li id="deb">
