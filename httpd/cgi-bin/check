@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.26 2002-05-30 01:58:09 link Exp $
+# $Id: check,v 1.200.2.27 2002-05-30 02:47:25 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -30,14 +30,15 @@ use warnings;
 
 #
 # Modules.
-use CGI::Carp;
 use CGI qw(:cgi -newstyle_urls -private_tempfiles);
-use File::Spec ();     # File::Spec pollutes our namespace by default. :-(
-use HTML::Parser 3.25; # Need 3.25 for $p->ignore_elements.
+use CGI::Carp;
+use File::Spec ();          # File::Spec pollutes our namespace by default. :-(
+use HTML::Parser 3.25;      # Need 3.25 for $p->ignore_elements.
+use HTTP::Request;
 use IO::File;
 use IPC::Open3;
-use LWP::UserAgent;
-use Text::Iconv;       # Debian: apt-get install libtext-iconv-perl
+use LWP::UserAgent 1.90;    # Need 1.90 for protocols_(allowed|forbidden)
+use Text::Iconv;            # Debian: apt-get install libtext-iconv-perl
 use Text::Wrap;
 use URI;
 use URI::Escape;
@@ -77,7 +78,7 @@ $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.26 $;
+$VERSION    =  q$Revision: 1.200.2.27 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 #
@@ -106,7 +107,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-05-30 01:58:09 $,
+			      Date => q$Date: 2002-05-30 02:47:25 $,
 			     });
 
 #
@@ -169,13 +170,7 @@ if ($q->param('uploaded_file')) {
 } elsif ($q->param('fragment')) {
   $File = &handle_frag($q, $File);
 } elsif ($q->param('uri')) {
-  my $rejected = &uri_rejected($File);
-  if ($rejected) {
-    $File->{'Error Flagged'} = TRUE;
-    $File->{'Error Message'} = $rejected;
-  } else {
-    $File = &handle_uri($q, $File);
-  }
+  $File = &handle_uri($q, $File);
 }
 
 #
@@ -396,7 +391,7 @@ if (&is_html($File->{Type})) {
 # to deal with braindead browsers. IOW, these override the check for &is_html.
 $catalog = File::Spec->catfile($CFG->{'SGML Library'}, 'xhtml.soc')
   if &is_xhtml($File->{Type});
-$catalog = File:Spec->catfile($CFG->{'SGML Library'}, 'mathml.soc')
+$catalog = File::Spec->catfile($CFG->{'SGML Library'}, 'mathml.soc')
   if &is_mathml($File->{Type});
 
 
@@ -896,10 +891,12 @@ sub read_cfg {
       next if /^\s*$/;
       next if /^\s*\#/;
       chomp;
-      my($k, $v) = split /\t+/, $_;
+      my($k, $v) = split /\t+/, $_, 2;
       $v = '' unless defined $v;
-      $v = &read_cfg($v) if $v =~ s(^file://){};
-      $cfg{$k} = $v;
+
+      if    ($v =~ s(^file://){}) {$cfg{$k} = &read_cfg($v)  }
+      elsif ($v =~ /,/)           {$cfg{$k} = [split /,/, $v]}
+      else                        {$cfg{$k} = $v             }
     }
     undef $fh;
   } else {
@@ -914,11 +911,25 @@ sub handle_uri {
   my $q    = shift; # The CGI object.
   my $File = shift; # The master datastructure.
 
-  my $uri = $q->param('uri'); # The URI to fetch.
+  my $uri = new URI $q->param('uri'); # The URI to fetch.
 
   my $ua = new LWP::UserAgent;
   $ua->agent("W3C_Validator/$VERSION " . $ua->agent);
   $ua->parse_head(0);  # Parse the http-equiv stuff ourselves. @@ Why?
+
+  # @@@FIXME@@@:
+  #   Disable checking if the URI is local (or private) for security reasons,
+  #   or at least make it configurable to do so.
+  #   eg. /^(localhost(\.localdomain)?|127\..+)$/ (+ private networks)
+  #
+  $ua->protocols_allowed($CFG->{'Allowed Protocols'} || ['http', 'https']);
+
+  unless ($ua->is_protocol_supported($uri)) {
+    $File->{'Error Flagged'} = TRUE;
+    $File->{'Error Message'} = &uri_rejected($uri);
+    return $File;
+  }
+
   my $req = new HTTP::Request(GET => $uri);
 
   # If we got a Authorization header, the client is back at it after being
@@ -934,7 +945,11 @@ sub handle_uri {
       &authenticate($File, $res->request->url, $res->www_authenticate);
     } else {
       print $File->{Results};
-      &print_unknown_http_error_message($uri, $res->code, $res->message);
+      &print_unknown_http_error_message(
+					$uri->as_string,
+					$res->code,
+					$res->message
+				       );
     }
     print $File->{'Footer'};
     exit;
@@ -1718,37 +1733,11 @@ sub prepSSI {
 
 
 #
-# Check if the URI looks like one we want to retrieve.
-#
-# Returns FALSE if URI is ok, or an error message suitable for output.
-#
-# @@@FIXME@@@:
-#   Disable checking if the URI is local (or private) for security reasons,
-#   or at least make it configurable to do so.
-#   eg. /^(localhost(\.localdomain)?|127\.)$/ (+ private networks)
-#
+# Output errors for a rejected URI.
 sub uri_rejected {
-  my $File    = shift;
-  my $uri     = URI->new($File->{Opt}->{URI});
-  my $scheme  = $uri->scheme();
+  my $scheme = shift->scheme() || 'undefined';
 
-  my($handler, $ret);
-
-  #
-  # If we don't have an SSL implementation for use with LWP, CGI::Carp bombs
-  # here and the script dies. So, we need to "local"ize $SIG{__DIE__} here.
-  eval {local $SIG{__DIE__}; $handler = LWP::Protocol::implementor($scheme)};
-
-  # No implementor for the scheme, or a (disabled) "file://" URI.
-  if ($@ or $scheme eq 'file' or $handler eq 'LWP::Protocol::file') {
-    undef $handler;
-  }
-
-  if (defined $handler) {
-    return FALSE;
-  } else {
-    $scheme = $scheme || 'undefined';
-    $ret =  <<"EOF";
+  return <<".EOF.";
     <div class="error">
       <p>
         Sorry, this type of <a
@@ -1766,9 +1755,7 @@ sub uri_rejected {
         in question.
       </p>
     </div>
-EOF
-  return $ret;
-  }
+.EOF.
 }
 
 
