@@ -4,7 +4,7 @@
    Copyright 2000-2004 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: navbar.css,v 1.9 2004-09-01 21:57:23 link Exp $
+   $Id: navbar.css,v 1.10 2004-09-01 22:00:40 link Exp $
 */
 
 #menu {
@@ -35,7 +35,7 @@
   font-size: smaller;
   font-variant: small-caps;
   border-right: solid 1px #bbb;
-  border-bottom: solid 1px #ddd;
+  border-bottom: solid 1px black;
 }
 
 #menu li a#selected:link, #menu li a#selected:visited {
