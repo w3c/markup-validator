@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.406 2005-03-01 20:29:34 ot Exp $
+# $Id: check,v 1.407 2005-03-24 02:41:12 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -220,7 +220,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.406 $;
+  $VERSION    =  q$Revision: 1.407 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -829,9 +829,12 @@ if ($File->{Opt}->{Output} eq 'xml') {
 
   if ($File->{'Is Valid'}) {
     $T->param(VALID => TRUE);
+    $T->param(valid_status => 'Valid');
     &report_valid($File, $T);
   } else {
     $T->param(VALID => FALSE);
+    $T->param(valid_status => 'Invalid');
+    $T->param(valid_errors_num => scalar @{$File->{Errors}});
     $T->param(file_errors => &report_errors($File));
   }
 
@@ -932,7 +935,6 @@ sub report_valid {
   } elsif (defined $File->{Tentative}) {
     $T->param(is_tentative => TRUE);
   }
-
   my $thispage = $File->{Env}->{'Self URI'};
   my $escaped_uri = uri_escape($File->{URI});
   $thispage .= qq(?uri=$escaped_uri);
@@ -2088,6 +2090,9 @@ sub report_xml {
 
   my $valid = ($File->{'Is Valid'} ? 'Valid' : 'Invalid');
   my $errs  = ($File->{'Is Valid'} ? '0' : scalar @{$File->{Errors}});
+  if ($File->{E}->param('fatal_http_error')) {
+    $valid = 'Could not validate';
+  } 
 
   print <<".EOF.";
 Content-Type: application/xml; charset=UTF-8
@@ -2186,6 +2191,9 @@ sub report_earl {
 
   my $valid = ($File->{'Is Valid'} ? 'Valid' : 'Invalid');
   my $errs  = ($File->{'Is Valid'} ? '0' : scalar @{$File->{Errors}});
+  if ($File->{E}->param('fatal_http_error')) {
+    $valid = 'Could not validate';
+  } 
 
   print <<".EOF.";
 Content-Type: application/rdf+xml; charset=UTF-8
@@ -2282,6 +2290,9 @@ sub report_n3 {
 
   my $valid = ($File->{'Is Valid'} ? 'Valid' : 'Invalid');
   my $errs  = ($File->{'Is Valid'} ? '0' : scalar @{$File->{Errors}});
+  if ($File->{E}->param('fatal_http_error')) {
+    $valid = 'Could not validate';
+  } 
 
   print <<".EOF.";
 Content-Type: text/plain; charset=UTF-8
