@@ -8,7 +8,7 @@
     W3C HTML Validation Service, To Do List">
   <meta name="description" content="To Do List for W3C's Validation Service.">
   <meta name="revision"
-    content="$Id: todo.html,v 1.4 1998-08-04 23:34:53 gerald Exp $">
+    content="$Id: todo.html,v 1.5 1998-08-05 22:12:43 gerald Exp $">
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
@@ -21,18 +21,115 @@
 
 <h1>W3C HTML Validation Service: To Do List</h1>
 
-<ul>
+<p>
+  This page has the to-do list for the <a href="http://validator.w3.org/">W3C
+  HTML Validation Service</a>, including bugs that need fixing and general
+  wishlist items.
+</p>
+
+<p>
+  See also: <a
+  href="http://lists.w3.org/Archives/Public/www-validator/">www-validator
+  mailing list archives</a> for recent discussion that may not be reflected
+  on this page.
+</p>
+
+<p>
+  These items are roughly in prioritized order; i.e. the items near the
+  top are those which I consider most important.
+</p>
+
+<ol>
+
   <li> make the output valid (!)
+
   <li> replace libwww-perl with perl5 LWP calls
-  <li> put the explanations in a database, display them inline with
-    the errors
+
+  <li> do i18n bug fixes
+
+  <li> put the explanations in a database (flat files are probably okay),
+    offer an option to display them inline with the errors
+
   <li> add a "fix my HTML for me" option using <a
     href="http://www.w3.org/People/Raggett/tidy/">tidy</a>.
-  <li> write some documentation (how to link to the service etc.);
-    make links to HTML references at places like <a
-    href="http://www.htmlhelp.com/">htmlhelp.com</a>.
-  <li> ...
-</ul>
+
+  <li> add support for form-based file upload (RFC 1867)
+
+  <li> add a textarea for testing short HTML fragments
+
+  <li> add a doctype-overriding option
+
+  <li> write documentation, describing each
+    feature and option of the validator and answering questions like
+    "What's the difference between an SGML parser and Weblint?",
+    "Which DOCTYPE should I use?", ...
+
+  <li> add XML validation
+
+  <li> add CSS validation
+
+  <li> make e.g.
+    <code>http://validator.w3.org/check/referer;imgonly</code>
+    return only an image showing the validation status of the referring page
+
+  <li> bug fix: fix the heading-based "outline" feature to include ALT text
+    if it appears in the headings.
+
+  <li> if the validator gets a redirection from the given URI, instead
+    of displaying a page about the redirection, just put something at the
+    top of the report saying "by the way, I was redirected to: ..."
+
+  <li> make an "elements found" section a la Webtechs, with links from each
+    element to the appropriate place in either the DTD tree listing produced
+    with dtd2html (after running dtd2html with all DTDs in the catalog),
+    or the HTML 3.2/4.0 specs, or htmlhelp.com stuff, ...
+    Similarly, put links on each element in the parse tree.
+
+  <li> add a "document meta-information" section to the report, to encourage
+    people to use META tags appropriately?
+
+  <li> add a "recommend a DTD for me" feature (check a document against all
+    available DTDs, report which one has the fewest errors)
+
+  <li> start caching validation results locally and doing an If-Modified-Since
+    HTTP request to only download and re-validate URLs if they actually
+    changed since their last validation
+
+  <li> site walker/validator:
+    need to add a "registered user" feature first, because this feature
+    could be abused (many requests on a server in a short period of time)?
+
+  <li> URL-minder service: "remind me if this page or set of pages ever
+      ceases to validate"
+  <ul>
+    <li> "registered user" feature is also necessary for this (to prevent
+      unwanted e-mail)
+    <li> "registered users" could have a list of URLs they're interested in,
+      and whenever they return to the service they can modify this list,
+      and e-mail can be sent whenever any of them cease to validate
+    <li> right now someone could probably use the existing URL-minder service
+      instead of writing a new one (tell it to "mind" the URL that points to the
+      validation result for a page?) But I'm not sure how regularly URL-minder
+      checks for changes; it seemed to be weekly or something, which isn't
+      frequent enough, IMO. Doing an If-Modified-Since GET every day doesn't
+      cost much if pages don't change. Some of these features should only
+      be enabled if the page consistently returns a Last-Modified header, maybe.
+  </ul>
+
+  <li> add an HTML pretty-printer feature, using <a
+    href="http://www.w3.org/People/Raggett/tidy/">tidy</a>?
+
+  <li> provide messages in different languages?
+
+  <li> add a graphical representation of the document's structure,
+    using GIFs-mixed-with-text, or an entire GIF?
+
+  <li> add a section with PICS info?
+
+  <li> issue PICS labels for documents that do/don't conform?
+    or for editing tools that don't conform?
+
+</ol>
 
 <hr>
 
@@ -41,7 +138,7 @@
      src="http://validator.w3.org/images/vh40.gif" height=31 width=88
      align=right border=0 alt="Valid W3C HTML 4.0!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</A><br>
-     $Date: 1998-08-04 23:34:53 $
+     $Date: 1998-08-05 22:12:43 $
 </address>
 
 </body>
