@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.220 2002-08-30 07:26:10 duerst Exp $
+# $Id: check,v 1.221 2002-08-30 07:35:02 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.220 $;
+  $VERSION    =  q$Revision: 1.221 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-30 07:26:10 $,
+			      Date => q$Date: 2002-08-30 07:35:02 $,
 			     });
 
 #
@@ -2011,7 +2011,8 @@ sub charset_conflicts {
 
   #
   # warn about charset override
-  if (&conflict($File->{Charset}->{Override}, $File->{Charset}->{Use})) {
+  if ($File->{Charset}->{Override} &&
+        &conflict($File->{Charset}->{Override}, $File->{Charset}->{Use})) {
     &add_warning($File, <<"      .EOF.");
       <strong>Character Encoding Override in effect!</strong>
       The detected character encoding,
