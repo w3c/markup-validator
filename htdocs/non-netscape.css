@@ -1,0 +1,12 @@
+/*
+  non-netscape.css - CSS that is hidden from NS 4.x
+  $Id: non-netscape.css,v 1.1 2001-08-28 00:35:56 link Exp $
+*/
+p.navbar {
+  float: right;
+  text-align: right;
+}
+
+.nsnote {
+  display: none;
+}
