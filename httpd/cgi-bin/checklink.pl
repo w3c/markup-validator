@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.28 2000-02-08 21:48:34 hugo Exp $
+# $Id: checklink.pl,v 2.29 2000-02-08 23:11:20 hugo Exp $
 #
 # This program is licensed under the W3C(r) License.
 #
@@ -29,7 +29,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.28 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.29 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -78,7 +78,7 @@ if ($#ARGV >= 0) {
         $_summary = 1;
     } else {
     }
-    if (! $query->param('redirects')) {
+    if ($query->param('hide_redirects')) {
         $_redirects = 0;
     }
     $_html = 1;
@@ -1183,7 +1183,7 @@ sub print_form() {
 <p>
   <input type=\"checkbox\" name=\"summary\"> Summary only
   &nbsp;
-  <input type=\"checkbox\" name=\"redirects\" checked> Show redirects
+  <input type=\"checkbox\" name=\"hide_redirects\"> Hide redirects
 </p>
 <p><input type=\"submit\" name=\"submit\" value=\"Check\"></p>
 </form>
