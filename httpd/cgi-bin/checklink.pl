@@ -80,7 +80,9 @@ use CGI;
 ###############
 # Global Variables
 
-my $VERSION= '$Id: checklink.pl,v 1.25 1999-03-08 22:19:52 renaudb Exp $ ';
+my $VERSION= '$Id: checklink.pl,v 1.26 1999-03-08 22:34:24 renaudb Exp $ ';
+my $CVSINFO= 'http://dev.w3.org/cgi-bin/cvsweb/validator/httpd/cgi-bin/checklink.pl';
+my $CVSSERVER= 'http://dev.w3.org/';
 my %ALLOWED_SCHEMES = ( "http" => 1 );
 my %SCHEMES = (); # for report
 my %URL = ();
@@ -137,7 +139,9 @@ sub doit {
 	print $q->submit('','Check the Links !');
 	print $q->endform;
     }
-    print $q->hr,$q->i($VERSION);
+    print $q->hr,$q->i($VERSION),$q->br;
+    print $q->a({href => $CVSINFO},'Version Information')," available from the ";
+    print $q->a({href => $CVSSERVER},'W3C public CVS server');
     print $q->end_html;
 }
 
