@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.79 2001-03-05 03:30:26 link Exp $
+# $Id: check,v 1.80 2001-03-05 03:51:07 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -74,9 +74,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.79 $;
+$VERSION    =  q$Revision: 1.80 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-03-05 03:30:26 $;
+$DATE       =  q$Date: 2001-03-05 03:51:07 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -388,10 +388,12 @@ if (   $File->{Charset} eq 'utf-8'
     or $File->{Charset} eq 'unknown') {
   for (@{$File->{Content}}) {print CHECKER $_, "\n"};
 } else {
-  $File->{Charset} =~ s/^windows-(\d+)$/CP$1/i;
-  eval {my $c = Text::Iconv->new($File->{Charset}, 'utf-8')};
+  # workaround for windows-nnnn charsets missing from glibc<2.2
+  my $temp_charset = $File->{Charset};
+  $temp_charset =~ s/^windows-(\d+)$/CP$1/i;
+  eval {my $c = Text::Iconv->new($temp_charset, 'utf-8')};
   if (not $@) {
-    my $c = Text::Iconv->new($File->{Charset}, 'utf-8');
+    my $c = Text::Iconv->new($temp_charset, 'utf-8');
     for (@{$File->{Content}}) {print CHECKER $c->convert("$_\n")};
   } else {
     &print_charset_error($@, $File->{Charset});
