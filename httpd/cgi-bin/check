@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.243 2002-10-10 05:22:45 duerst Exp $
+# $Id: check,v 1.244 2002-10-12 05:51:32 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.243 $;
+  $VERSION    =  q$Revision: 1.244 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-10 05:22:45 $,
+			      Date => q$Date: 2002-10-12 05:51:32 $,
 			     });
 
 #
@@ -1611,12 +1611,15 @@ sub report_valid {
   } elsif (&is_xml($File->{Type}) and not $File->{DOCTYPE}) {
     print qq(  <h2 class="valid">This document is well-formed XML.</h2>\n);
   } elsif (defined $File->{Tentative}) {
-    print qq(<h2 class="valid">This Page Is Valid $File->{Version}!</h2>);
+    # don't say it validates and then say it would validate :-)
+    # print qq(<h2 class="valid">This Page Is Valid $File->{Version}!</h2>);
     print &daily_tip($File, $CFG->{'Tips DB'});
     &print_warnings($File);
     print "
       <p>
-        This document would validate as $File->{Version} if you updated it to
+        The document located at
+        <code>&lt;URL:<a href='$File->{URI}'>$File->{URI}</a>&gt;</code>
+              would validate as $File->{Version} if you updated it to
         match the Options used.
       </p>\n";
   } else {
@@ -2092,6 +2095,7 @@ sub charset_conflicts {
         XML declaration (<code>$cs_xml</code>)
       for this validation.
 .EOF.
+    $File->{Tentative} |= T_WARN;
   }
 
   return $File;
