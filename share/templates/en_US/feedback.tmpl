@@ -86,20 +86,20 @@
 
   <p>Once you have checked that your suggestion has not been given yet, you can send your message. To write an efficient message:</p>
   <ul>
-    <li>Add a meaningful subject.  but also add a handful of words on what you are sending</li>
+    <li><strong>Add a meaningful subject</strong>: summarize your feeedback in a handful of words;</li>
     <li>If our system added [VE][XX] at the beginning of the mail subject, keep it. 
-    Otherwise, please precise which error message you are sending feedback about.</li>
-    <li>Always give a URL: knowing what page you were validating will help us diagnose issues much quicker.</li>
-    <li>explain your suggestion, or question, in a clear and informative manner.</li>
+    Otherwise, please precise which error message you are sending feedback about;</li>
+    <li><strong>Always give a URL</strong>: knowing what page you were validating will help us diagnose issues much quicker;</li>
+    <li>Explain your suggestion, or question, in a clear and informative manner.</li>
   </ul>
     
-  <p>Messages can be sent to the
+  <p>Once you have checked all the criteria above, 
     <TMPL_IF NAME="errmsg_id">
-      <a href="mailto:www-validator@w3.org?Subject=[VE][82]%20Error%0Message%20Feedback">www-validator</a>
+      <a href="mailto:www-validator@w3.org?Subject=[VE][<TMPL_VAR NAME="errmsg_id">]%20Error%20Message%20Feedback">send 
     <TMPL_ELSE>
-      <a href="mailto:www-validator@w3.org?Subject=Error%0Message%20Feedback">www-validator</a>
+      <a href="mailto:www-validator@w3.org?Subject=Error%0Message%20Feedback">send 
     </TMPL_IF>
-    public mailing-list.
+   your message to the www-validator public mailing-list</a> 
    </p>
    
 <h3 id="mailinglist">Discuss and participate</h3>
