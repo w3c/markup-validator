@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.6 2002-12-04 10:39:53 link Exp $ */
+/* $Id: results.css,v 1.13.2.7 2003-05-31 01:26:24 link Exp $ */
 
 .markup {
   color: red;
@@ -24,10 +24,25 @@ fieldset legend {
   font-weight: bold;
 }
 
-ul#Warnings {
+dl#Warnings {
   clear: left;
   padding-top: 1ex;
 }
+
+dl#Warnings dt.fatal {
+  background: #FCC;
+  border: 1px solid black;
+  margin:  .5ex;
+  padding: .5ex;
+}
+
+dl#Warnings dd.fatal {
+  border: 5px solid #FCC;
+  margin: 1em;
+  padding: .5em 1em;
+}
+
+
 
 div.meat {
   margin-right: 10em;
