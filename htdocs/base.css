@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.27 2002-12-01 13:40:32 link Exp $
+   $Id: base.css,v 1.28 2002-12-02 02:52:53 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -19,7 +19,7 @@ body {
   word-spacing:    normal;
   letter-spacing:  normal;
   text-transform:  none;
-  font-family:     "Luxi Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-family:     sans-serif;
   font-style:      normal;
   text-decoration: none;
 }
@@ -137,7 +137,7 @@ div.colophon em {
 
 /* Various header(ish) things. Definitions cribbed from the CORE Styles. */
 h1 {
-  font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-family: sans-serif;
   font-size-adjust: .53;
   font-size: 2em;
   font-weight: bold;
@@ -151,7 +151,7 @@ h1 {
 }
 
 h2 {
-  font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-family: sans-serif;
   font-size-adjust: .53;
   font-size: 1.75em;
   font-weight: 500;
@@ -163,7 +163,7 @@ h2 {
 }
 
 h3 {
-  font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-family: sans-serif;
   font-size-adjust: .53;
   font-size: 1.58em;
   font-weight: 500;
@@ -175,7 +175,7 @@ h3 {
 }
 
 h4 {
-  font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-family: sans-serif;
   font-size-adjust: .53;
   font-size: 1.33em;
   font-weight: 500;
@@ -187,7 +187,7 @@ h4 {
 }
 
 h5, dt {
-  font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-family: sans-serif;
   font-size-adjust: .53;
   font-size: 1.17em;
   font-weight: 500;
@@ -200,7 +200,7 @@ h5, dt {
 }
 		
 h6 {
-  font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-family: sans-serif;
   font-size-adjust: .53;
   font-size: 1em;
   font-weight: 500;
