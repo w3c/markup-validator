@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.178 2001-09-14 00:14:15 link Exp $
+# $Id: check,v 1.179 2001-09-14 00:40:35 link Exp $
 
 #
 # We need Perl 5.004.
@@ -41,10 +41,11 @@ use constant DEBUG => 0;
 
 #
 # Tentative Validation Severeties.
-use constant T_INFO  => 1; # 0001
-use constant T_WARN  => 2; # 0010
-use constant T_ERROR => 4; # 0100
-use constant T_FATAL => 8; # 1000
+use constant T_DEBUG =>  1; # 0000 0001
+use constant T_INFO  =>  2; # 0000 0010
+use constant T_WARN  =>  4; # 0000 0100
+use constant T_ERROR =>  8; # 0000 1000
+use constant T_FATAL => 16; # 0001 0000
 
 
 #
@@ -88,9 +89,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.178 $;
+$VERSION    =  q$Revision: 1.179 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-09-14 00:14:15 $;
+$DATE       =  q$Date: 2001-09-14 00:40:35 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -434,7 +435,7 @@ if ($File->{Use_Charset} eq 'unknown') {
       <a href='http://www.w3.org/International/O-charset.html'>Further
       explanations</a>.
 EOHD
-  $File->{Tentative} |= T_WARN;
+  $File->{Tentative} |= T_DEBUG; # WOuld be T_WARN, but the complaints...
 }
 
 {  # block for character conversion and checking
@@ -657,32 +658,28 @@ EOHD
 
 if (defined $File->{Tentative}) {
   my $class = '';
-#     $class = $File->{Tentative} & T_FATAL ? 'Fatal'
-#            : $File->{Tentative} & T_ERROR ? 'Error'
-#            : $File->{Tentative} & T_WARN  ? 'Warning'
-#            : $File->{Tentative} & T_INFO  ? 'Info'
-#            : 'Info';
-
      $class .= ($File->{Tentative} & T_INFO  ? ' Info'    :'');
      $class .= ($File->{Tentative} & T_WARN  ? ' Warning' :'');
      $class .= ($File->{Tentative} & T_ERROR ? ' Error'   :'');
      $class .= ($File->{Tentative} & T_FATAL ? ' Fatal'   :'');
 
-
-  print <<".EOF.";
-  <p id="Notice" class="$class">
-    Please note that you have chosen one or more options that alter the content
-    of the document before validation, or have not provided enough information
-    to accurately validate the document. Even if no errors are reported below,
-    the document will not be valid until you manually make the changes we have
-    performed automatically. Specifically, if you used some of the options
-    that override a property of the document (e.g. the DOCTYPE or Character
-    Encoding), you must make the same change to the source document or the
-    server setup before it can be valid. You will also need to insert an
-    appropriate DOCTYPE Declaration or Character Encoding (the "charset"
-    parameter for the Content-Type HTTP header) if any of those are missing.
-  </p>
+  unless ($File->{Tentative} == T_DEBUG) {
+    print <<".EOF.";
+    <p id="Notice" class="$class">
+      Please note that you have chosen one or more options that alter the
+      content of the document before validation, or have not provided enough
+      information to accurately validate the document. Even if no errors are
+      reported below, the document will not be valid until you manually make
+      the changes we have performed automatically. Specifically, if you used
+      some of the options that override a property of the document (e.g. the
+      DOCTYPE or Character Encoding), you must make the same change to the
+      source document or the server setup before it can be valid. You will
+      also need to insert an appropriate DOCTYPE Declaration or Character
+      Encoding (the "charset" parameter for the Content-Type HTTP header) if
+      any of those are missing.
+    </p>
 .EOF.
+  }
 }
 
 if (scalar @{$File->{Errors}}) {
