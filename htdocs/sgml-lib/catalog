@@ -1,6 +1,6 @@
 
 	-- SGML catalog for the W3C HTML Validation Service --
-	-- $Id: catalog,v 1.8 2000-10-18 22:40:45 gerald Exp $ --
+	-- $Id: catalog,v 1.9 2000-10-19 00:02:00 gerald Exp $ --
 
 OVERRIDE YES	-- prefer public identifiers to system identifiers --
 
@@ -131,19 +131,18 @@ PUBLIC "-//W3C//DTD HTML 3.2S Draft//EN"	html-970421.dtd
 PUBLIC "-//W3C//DTD HTML 4.0//EN"		REC-html40-19980424/strict.dtd
 PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"	REC-html40-19980424/loose.dtd
 PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"	REC-html40-19980424/frameset.dtd
-PUBLIC "-//W3C//ENTITIES Latin1//EN//HTML"	REC-html40-19980424/HTMLlat1.ent
-PUBLIC "-//W3C//ENTITIES Special//EN//HTML"	REC-html40-19980424/HTMLspecial.ent
-PUBLIC "-//W3C//ENTITIES Symbols//EN//HTML"	REC-html40-19980424/HTMLsymbol.ent
 
 	-- HTML 4.01 --
-PUBLIC "-//W3C//DTD HTML 4.01//EN"		PR-html40-19990824/strict.dtd
-PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"	PR-html40-19990824/loose.dtd
-PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"	PR-html40-19990824/frameset.dtd
-PUBLIC "-//W3C//ENTITIES Latin1//EN//HTML"	PR-html40-19990824/HTMLlat1.ent
-PUBLIC "-//W3C//ENTITIES Special//EN//HTML"	PR-html40-19990824/HTMLspecial.ent
-PUBLIC "-//W3C//ENTITIES Symbols//EN//HTML"	PR-html40-19990824/HTMLsymbol.ent
+PUBLIC "-//W3C//DTD HTML 4.01//EN"		REC-html40-19991224/strict.dtd
+PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"	REC-html40-19991224/loose.dtd
+PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"	REC-html40-19991224/frameset.dtd
+PUBLIC "-//W3C//ENTITIES Latin1//EN//HTML"	REC-html40-19991224/HTMLlat1.ent
+PUBLIC "-//W3C//ENTITIES Latin 1//EN//HTML"	REC-html40-19991224/HTMLlat1.ent
+PUBLIC "-//W3C//ENTITIES Special//EN//HTML"	REC-html40-19991224/HTMLspecial.ent
+PUBLIC "-//W3C//ENTITIES Symbols//EN//HTML"	REC-html40-19991224/HTMLsymbol.ent
 
 	-- ISO-HTML --
 PUBLIC "ISO/IEC 15445:2000//DTD HyperText Markup Language//EN"	ISO-HTML/15445.dtd
 PUBLIC "ISO/IEC 15445:2000//DTD HTML//EN"	ISO-HTML/15445.dtd
+PUBLIC "-//W3C//ENTITIES Full Latin 1//EN//HTML"	REC-html40-19991224/HTMLlat1.ent
 
