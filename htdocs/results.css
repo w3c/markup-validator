@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.21 2003-09-09 08:34:29 ot Exp $ */
+/* $Id: results.css,v 1.13.2.22 2003-11-25 01:19:35 ot Exp $ */
 
 .input {
   color: black;
@@ -227,7 +227,7 @@ h2.valid {
   padding-bottom: 	.5em;
 }
 
-.valid a {
+.valid a:link {
   color:      yellow;
   background: #053188;
 }
