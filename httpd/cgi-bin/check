@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.332 2004-07-21 17:06:27 link Exp $
+# $Id: check,v 1.333 2004-09-03 01:26:33 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,15 +104,18 @@ BEGIN {
   eval {
     my %config_opts =
       (-ConfigFile     => $ENV{W3C_VALIDATOR_CFG} || '/etc/w3c/validator.conf',
-       -MergeDuplicateOptions => 'yes',
+       -MergeDuplicateOptions => TRUE,
+       -MergeDuplicateBlocks  => TRUE,
        -SplitPolicy      => 'equalsign',
        -UseApacheInclude => TRUE,
        -IncludeRelative  => TRUE,
        -InterPolateVars  => TRUE,
        -AutoLaunder      => TRUE,
-       -DefaultConfig    => { Allowed_Protocols => 'http,https',
-                              SGML_Parser       => '/usr/bin/onsgmls',
-                              Template_Path     => '/usr/local/validator/share/templates/en_US',
+       -AutoTrue         => TRUE,
+       -DefaultConfig    => {
+                             Protocols => {Allow => 'http,https'},
+                             'SGML Parser'   => '/usr/bin/onsgmls',
+                             'Template Path' => '/usr/local/validator/share/templates/en_US',
                             },
       );
     my %cfg = Config::General->new(%config_opts)->getall();
@@ -120,25 +123,23 @@ BEGIN {
   };
   if ($@) {
     die <<".EOF.";
-Couldn't read configuration.  Set the W3C_VALIDATOR_CFG environment variable
-or copy conf/* to /etc/w3c/, and make sure that the configuration file, as
-well as all included files are readable by the web server user.
-The error reported was: '$@'
+Could not read configuration.  Set the W3C_VALIDATOR_CFG environment variable
+or copy conf/* to /etc/w3c/, and make sure that the configuration file, as well
+as all included files are readable by the web server user. The error was:
+'$@'
 .EOF.
   }
 
+  #
   # Split allowed protocols into a list.
-  # We could use the array / identical values feature of Config::General,
-  # but that has unwanted effects when the only array type option we need is
-  # Allowed_Protocols.
-  if (my $allowed = delete($CFG->{Allowed_Protocols})) {
-    $CFG->{Allowed_Protocols} = [ split(/\s*,\s*/, $allowed) ];
+  if (my $allowed = delete($CFG->{Protocols}->{Allow})) {
+    $CFG->{Protocols}->{Allow} = [ split(/\s*,\s*/, $allowed) ];
   }
 
   #
   # Make sure onsgmls exists and is executable.
-  unless (-x $CFG->{SGML_Parser}) {
-    die qq(Configured SGML Parser "$CFG->{SGML_Parser}" not executable!\n);
+  unless (-x $CFG->{'SGML Parser'}) {
+    die qq(Configured SGML Parser "$CFG->{'SGML Parser'}" not executable!\n);
   }
 
   { # Make types config indexed by FPI.
@@ -185,11 +186,15 @@ The error reported was: '$@'
 
   #
   # Set debug flag.
-  $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
+  if ($CFG->{'Allow Debug'} == TRUE) {
+    $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{'Enable Debug'};
+  } else {
+    $DEBUG = FALSE;
+  }
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.332 $;
+  $VERSION    =  q$Revision: 1.333 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -265,15 +270,15 @@ $File->{'Other Namespaces'} = []; # Other (non-root) Namespaces.
 ###############################################################################
 
 my $T = HTML::Template->new(
-  filename          => File::Spec->catfile($CFG->{Template_Path}, 'result.tmpl'),
+  filename          => File::Spec->catfile($CFG->{'Template Path'}, 'result.tmpl'),
   die_on_bad_params => FALSE,
 );
 my $E = HTML::Template->new(
-  filename          => File::Spec->catfile($CFG->{Template_Path}, 'fatal-error.tmpl'),
+  filename          => File::Spec->catfile($CFG->{'Template Path'}, 'fatal-error.tmpl'),
   die_on_bad_params => FALSE,
 );
 
-$T->param(cfg_home_page => $CFG->{Home_Page});
+$T->param(cfg_home_page => $CFG->{'Home Page'});
 
 
 #########################################
@@ -316,9 +321,14 @@ if ($HAVE_SOAP_LITE) {
 
   #
   # If ";debug" was given, let it overrule the value from the config file,
-  # regardless of whether it's "0" or "1" (on or off).
-  $DEBUG = $q->param('debug') if defined $q->param('debug');
-  $File->{Opt}->{Verbose} = TRUE if $DEBUG;
+  # regardless of whether it's "0" or "1" (on or off), but only if config
+  # allows the debugging options.
+  if ($CFG->{'Allow Debug'}) {
+    $DEBUG = $q->param('debug') if defined $q->param('debug');
+    $File->{Opt}->{Verbose} = TRUE if $DEBUG;
+  } else {
+    $DEBUG = FALSE; # The default.
+  }
 
   &abort_if_error_flagged($File, O_NONE); # Too early to &print_table.
 
@@ -924,7 +934,7 @@ sub report_valid {
     $T->param(file_version => $File->{Version});
 
     # @@@
-    # print &daily_tip($File, $CFG->{Tips_DB});
+    # print &daily_tip($File, $CFG->{Tips});
     # &print_warnings($File);
 
     if (defined $image_uri) {
@@ -1117,7 +1127,7 @@ sub handle_uri {
   $ua->agent("W3C_Validator/$VERSION " . $ua->agent);
   $ua->parse_head(0);  # Parse the http-equiv stuff ourselves. @@ Why?
 
-  $ua->protocols_allowed($CFG->{'Allowed Protocols'} || ['http', 'https']);
+  $ua->protocols_allowed($CFG->{Protocols}->{Allow} || ['http', 'https']);
 
   unless ($ua->is_protocol_supported($uri)) {
     $File->{'Error Flagged'} = TRUE;
@@ -1595,10 +1605,6 @@ sub report_errors ($) {
       }
       #DEBUG;
 
-#      if (defined $CFG->{Error_to_URI}->{$err->{idx}}) {
-#        $err->{uri} = $CFG->{Msg_FAQ_URI} . '#'
-#          . $CFG->{Error_to_URI}->{$err->{idx}};
-#      }
       $err->{src} = $line;
       $err->{col} = ' ' x $col;
 
@@ -1822,7 +1828,7 @@ sub parsetree {
     if (my ($close, $elem) = $printme =~ /^([()])(.+)/) {
       # reformat and add links on HTML elements
       $close = ($close eq ')') ? '/' : ''; # ")" -> close-tag
-      if (my $u = $CFG->{'Element Map'}->{lc($elem)}) {
+      if (my $u = $CFG->{Elements}->{lc($elem)}) {
         $elem = '<a href="' . $CFG->{'Element Ref URI'} . "$u\">$elem</a>";
       }
       $printme = "&lt;$close$elem&gt;";
@@ -2712,9 +2718,9 @@ sub self_url_q {
 #
 # Return random Tip with it's URL.
 sub get_tip {
-  my @tipAddrs = keys %{$CFG->{Tips_DB}};
+  my @tipAddrs = keys %{$CFG->{Tips}};
   my $tipAddr = $tipAddrs[rand scalar @tipAddrs];
-  my $tipSlug = $CFG->{Tips_DB}->{$tipAddr};
+  my $tipSlug = $CFG->{Tips}->{$tipAddr};
 
   return [$tipAddr, $tipSlug];
 }
