@@ -5,7 +5,7 @@
 # (c) 1999-2001 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.73 2001-01-22 16:00:06 hugo Exp $
+# $Id: checklink.pl,v 2.74 2001-03-26 21:39:03 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -38,7 +38,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.73 $ . '(c) 1999-2001 W3C';
+my $VERSION = q$Revision: 2.74 $ . '(c) 1999-2001 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -984,7 +984,11 @@ sub W3C::CheckLink::start() {
     if (!$self->{only_anchors}) {
         # Here, we are checking too many things
         # The right thing to do is to parse the DTD...
-        if ($tag ne 'base') {
+        if ($tag eq 'base') {
+            if (defined($attr->{href})) {
+                $self->{base} = $attr->{href};
+            }
+        } else {
             $self->add_link($attr->{href});
         }
         $self->add_link($attr->{src});
