@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.381 2005-02-04 18:40:59 link Exp $
+# $Id: check,v 1.382 2005-02-04 19:00:59 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -239,7 +239,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.381 $;
+  $VERSION    =  q$Revision: 1.382 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -880,7 +880,7 @@ sub parse (\$) {
       $File->{Tentative} |= (T_ERROR | T_FALL);
       my $dtd = $1 eq 'SGML' ? 'HTML 4.01 Transitional' : 'XHTML 1.0 Strict';
       &add_warning($File, 'fallback', 'DOCTYPE Fallback in effect!', <<".EOF.");
-      The DOCTYPE Declaration in your document was not recognized. This
+      The DOCTYPE Declaration was not recognized or is missing. This
       probably means that the Formal Public Identifier contains a spelling
       error, or that the Declaration is not using correct syntax. Validation
       has been performed using a default "fallback" Document Type Definition
@@ -1704,13 +1704,15 @@ sub parse_errors ($$) {
 
     # No DOCTYPE.
     if ($err->{msg} =~ m(prolog can\'t be omitted)) {
+      my $dtd = ($File->{Mode} == MODE_SGML ?
+                   'HTML 4.01 Transitional' : 'XHTML 1.0 Transitional');
       my $class = 'fatal';
-      my $title = 'No DOCTYPE Found! Falling Back to HTML 4.01 Transitional';
+      my $title = "No DOCTYPE Found! Falling Back to $dtd";
       my $message = <<".EOF.";
       <p>
         A DOCTYPE Declaration is mandatory for most current markup languages
         and without one it is impossible to reliably validate this document.
-        I am falling back to "HTML 4.01 Transitional" and will attempt to
+        I am falling back to "$dtd" and will attempt to
         validate the document anyway, but this is very likely to produce
         spurious error messages for most non-trivial documents.
       </p>
