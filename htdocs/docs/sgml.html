@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: sgml.html,v 1.11 2002-10-23 23:11:30 link Exp $"
---><!--#set var="date" value="\$Date: 2002-10-23 23:11:30 $"
+<!--#set var="revision" value="\$Id: sgml.html,v 1.11.2.1 2002-12-01 11:34:03 ville Exp $"
+--><!--#set var="date" value="\$Date: 2002-12-01 11:34:03 $"
 --><!--#set var="title" value="Introduction To SGML for The W3C MarkUp Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -72,19 +72,16 @@
         Be sure that the syntax is as described above, and that you use the
         correct public identifier; otherwise, The Validator will use the wrong
         DTD, or will be unable to find a DTD at all, and will produce a huge
-        list of absolutely meaningless errors. The Validator's
-        <a href="../sgml-lib/catalog">public identifier catalog</a> lists all the public
-        identifiers The Validator recognizes for various types of HTML; of
-        those, the following public identifiers are most likely to be widely
-        recognized:
+        list of absolutely meaningless errors.
       </p>
-      <dl>
-        <dt><code>For HTML 2.0...</code></dt><dd>...use "-//IETF//DTD HTML 2.0//EN"</dd>
-        <dt><code>For HTML 4.0...</code></dt><dd>...use "-//W3C//DTD HTML 4.0//EN"</dd>
-        <dt><code>For HTML 4.0 Transitional...</code></dt><dd>...use "-//W3C//DTD HTML 4.0 Transitional//EN"</dd>
-        <dt><code>For HTML 4.0 Frameset...</code></dt><dd>...use "-//W3C//DTD HTML 4.0 Frameset//EN"</dd>
-      </dl>
-      <p>Note that the string must appear exactly as shown, including case.</p>
+      <p>
+        The W3C QA Activity maintains a <a
+        href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">List of
+        Valid Doctypes</a> that you can choose from, and the <acronym
+        title="Web Design Group">WDG</acronym> maintains a document on
+        "<a href="http://htmlhelp.com/tools/validator/doctype.html">Choosing
+        a DOCTYPE</a>".
+      </p>
       <p class="warning">
         <strong>WARNING:</strong> Some HTML editors will insert a
         <code>DOCTYPE</code> declaration for you. Unfortunately, this
