@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.283 2002-11-03 02:22:07 link Exp $
+# $Id: check,v 1.284 2002-11-03 14:39:40 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.283 $;
+  $VERSION    =  q$Revision: 1.284 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-11-03 02:22:07 $,
+			      Date => q$Date: 2002-11-03 14:39:40 $,
 			     });
 
 #
@@ -1504,10 +1504,11 @@ EOHD
 #
 # Output "This page is Valid" report.
 sub report_valid {
-  my $File   = shift;
+  my $File        = shift;
   my $gifborder   = ' border="0"';
   my $xhtmlendtag = '';
   my($image_uri, $alttext, $gifhw);
+  my $URI         = &ent($File->{URI});
 
   unless ($File->{Version} eq 'unknown' or defined $File->{Tentative}) {
     if ($File->{Version} =~ /^HTML 2\.0$/) {
@@ -1580,7 +1581,7 @@ sub report_valid {
     print <<".EOF.";
     <p>
       The document located at
-      <code>&lt;URL:<a href="$File->{URI}">$File->{URI}</a>&gt;</code>
+      <code>&lt;URL:<a href="$URI">$URI</a>&gt;</code>
       was checked and found to be valid $File->{Version}. This means that
       the resource in question identified itself as
       &ldquo;$File->{Version}&rdquo; and that we successfully performed a
@@ -1619,22 +1620,23 @@ sub report_valid {
 	     (Tentatively Valid)!</h2>);
     print &daily_tip($File, $CFG->{'Tips DB'});
     &print_warnings($File);
-    print "
+    print <<".EOF.";
       <p>
         The document located at
-        <code>&lt;URL:<a href='$File->{URI}'>$File->{URI}</a>&gt;</code>
+        <code>&lt;URL:<a href="$URI">$URI</a>&gt;</code>
         was tentatively found to be Valid. That means it would validate
         as $File->{Version} if you updated the source document to match
         the options used (typically this message indicates that you used
         either the Document Type override or the Character Encoding
         override).
-      </p>\n";
+      </p>
+.EOF.
   } else {
     print qq(  <h2 class="valid">This document validates as the document type specified!</h2>\n);
     print <<".EOF.";
     <p>
       The document located at
-      &lt;URL:<a href="$File->{URI}">$File->{URI}</a>&gt; was checked and found
+      &lt;URL:<a href="$URI">$URI</a>&gt; was checked and found
       to be valid $File->{Version}. This means that the resource in question
       identified itself as &ldquo;$File->{Version}&rdquo; and that we
       successfully performed a formal validation using an SGML or XML Parser
@@ -1645,13 +1647,13 @@ sub report_valid {
 
   unless ($File->{'Is Upload'}) {
     my $thispage = $File->{Env}->{'Self URI'};
-    $thispage .= qq(?uri=$File->{URI});
+    $thispage .= qq(?uri=$URI);
     $thispage .= ';ss=1'      if $File->{Opt}->{'Show Source'};
     $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
     $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
     $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
 
-    &output_css_validator_blurb($File->{URI});
+    &output_css_validator_blurb($URI);
 
     print <<"EOHD";
   <p>
