@@ -6,7 +6,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: referers,v 1.6 1999-08-06 21:53:34 gerald Exp $
+# $Id: referers,v 1.7 1999-11-01 10:41:00 gerald Exp $
 
 LOG=/var/log/httpd/validator_log; export LOG
 
@@ -27,7 +27,8 @@ Content-Type: text/html
 <table>
 EOHD
 
-tail -50000 $LOG | grep -v image/gif | cut -d\" -f4 | sort | uniq -c | \
+tail -50000 $LOG | egrep -v image/png | egrep -v image/gif | \
+    cut -d\" -f4 | sort | uniq -c | \
     grep -v ' \-$' | sort -rn | head -100 | sed 's/\&/\&amp;/g; s/</\&lt;/g' | \
     awk '{printf("<tr><td>%s</td><td><a href=\"%s\">%s</a></td></tr>\n",\
         $1, $2, $2)}'
@@ -38,7 +39,7 @@ cat <<EOHD
 <hr>
 <address>
 <a href="http://www.w3.org/People/Gerald/">Gerald Oskoboiny</a><br>
-\$Date: 1999-08-06 21:53:34 $ \
+\$Date: 1999-11-01 10:41:00 $ \
 </address>
 
 EOHD
