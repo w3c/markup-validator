@@ -4,14 +4,12 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: tips.css,v 1.4 2002-10-27 15:36:19 ville Exp $
+   $Id: tips.css,v 1.4.2.1 2002-11-30 05:05:42 link Exp $
 */
 
 
 dl.tip {
-/*  float: right; */
   text-align: justify;
-/*  width: 25ex; */
   margin-top:    0em;
   background:    #eeeeee;
   border-top: 1px solid black;
@@ -37,13 +35,7 @@ dl.tip dd {
   font-weight: bolder;
   margin: .5em;
   color: blue;
-/*  border: .1em dashed black; */
 }
-
-/ * dl.tip dd a:hover {
-  color: blue;
-  background: silver;
-} */
 
 dl.tip dd a {
   padding: .1em .25em;
