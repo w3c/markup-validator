@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.39 2000-04-26 17:07:59 hugo Exp $
+# $Id: checklink.pl,v 2.40 2000-05-04 20:28:30 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -31,7 +31,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.39 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.40 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -51,7 +51,7 @@ my $_trusted = '\.w3\.org';
 my $_http_proxy;
 my $_recursive = 0;
 my $_accept_language = 1;
-my $_languages = 'en';
+my $_languages = '*';
 my $_base_location = '.';
 my $_contact_address = 'hugo@w3.org';
 
@@ -331,10 +331,11 @@ sub check_uri() {
 
     my $absolute_uri = $response->{absolute_uri}->as_string();
 
-    printf("\nProcessing\t%s\n\n", $absolute_uri);
+    printf("\nProcessing\t%s\n\n", $_html ? &show_url($absolute_uri)
+           : $absolute_uri);
 
     if ($_html) {
-        printf("</h2>\n<p>Check also: <a href=\"http://validator.w3.org/check?uri=%s\">HTML Validity</a> &amp; <a href=\"http://jigsaw.w3.org/css-validator/validator?uri=%s\">CSS Validity</a></p>\n", map{&encode($absolute_uri)}(1..2));
+        printf("</h2>\n<p>Check also: <a href=\"http://validator.w3.org/check?uri=%s\">HTML Validity</a> &amp; <a href=\"http://jigsaw.w3.org/css-validator/validator?uri=%s\">CSS Validity</a></p>\n<p>Back to the <a href=\"checklink\">link checker</a>.</p>\n", map{&encode($absolute_uri)}(1..2));
         if (! $_summary) {
             print "<pre>\n";
         }
@@ -505,6 +506,7 @@ sub check_uri() {
 
 sub get_document() {
     my ($method, $uri, $in_recursion, $redirects) = @_;
+    my $error_first;
 
     # Get the document
     my $response = &get_uri($method, $uri);
@@ -538,6 +540,9 @@ sub get_document() {
 
     # Parse the document
     if (! ($response->header('Content-type') =~ m/text\/html/)) {
+        if ($_html) {
+            &html_header($uri);
+        }
         if (! $in_recursion) {
             &hprintf("Can't check link: Content-type is '%s'.\n",
                      $response->header('Content-type'));
@@ -1186,7 +1191,7 @@ sub anchors_summary(\%, \%) {
 }
 
 sub show_link_report {
-    my ($links, $results, $broken, $redirects, $urls, $codes) = @_;
+    my ($links, $results, $broken, $redirects, $urls, $codes, $todo) = @_;
 
     if ($_html) {
         print("\n<dl class=\"report\">");
@@ -1217,10 +1222,20 @@ sub show_link_report {
         }
         my $lines_list = join(', ',
                               &sort_unique(@total_lines));
+        # Error type
+        $c = &code_shown($u, $results);
+        # What to do
+        my $whattodo;
+        if ($todo) {
+            $whattodo = $todo->{$c};
+        } else {
+            # Directory redirects
+            $whattodo = 'Add a trailing slash to the URL.';
+        }
         if ($_html) {
+            # Style stuff
             my $idref = '';
-            $c = &code_shown($u, $results);
-            if ($c != $previous_c) {
+            if ($codes && ($c != $previous_c)) {
                 $idref = ' id="code_'.$c.'"';
                 $previous_c = $c;
             }
@@ -1231,6 +1246,7 @@ sub show_link_report {
             }
             printf("
 <dt%s%s>%s</dt>
+<dd>What to do: <strong%s>%s</strong><br>
 <dd%s>HTTP Code returned: %d%s<br>
 HTTP Message: %s%s%s</dd>
 <dd%s>Lines: %s</dd>\n",
@@ -1242,11 +1258,16 @@ HTTP Message: %s%s%s</dd>
                    $redirected ? join(' redirected to<br>',
                                       @redirects_urls) : &show_url($u),
                    # Color
+                   &bgcolor($c),
+                   # What to do
+                   $whattodo,
+                   # Color
                    &bgcolor($results->{$u}{location}{orig}),
                    # Original HTTP reply
                    $results->{$u}{location}{orig},
                    # Final HTTP reply
-                   ($results->{$u}{location}{code} != $results->{$u}{location}{orig})
+                   ($results->{$u}{location}{code} !=
+                    $results->{$u}{location}{orig})
                    ? ' <span title="redirected to">-&gt;</span> '.
                    &encode($results->{$u}{location}{code})
                    : '',
@@ -1268,10 +1289,16 @@ HTTP Message: %s%s%s</dd>
                    # List of lines
                    $lines_list);
             if ($#fragments >= 0) {
-                print("<dd><dl><dt>Broken fragments and their line numbers:</dt>\n");
+                my $fragment_direction;
+                if (!($broken->{$u}{'location'})) {
+                    $fragment_direction =
+                        ' <strong class="broken">They need to be fixed!</strong>';
+                }
+                printf("<dd><dl><dt>Broken fragments and their line numbers: %s</dt>\n",
+                       $fragment_direction);
             }
         } else {
-            printf("\n%s\t%s\n  Code: %d%s %s\n",
+            printf("\n%s\t%s\n  Code: %d%s %s\nTo do: %s\n",
                    # List of redirects
                    $redirected ? join("\n-> ",
                                       &get_redirects($u, %$redirects)) : $u,
@@ -1284,7 +1311,15 @@ HTTP Message: %s%s%s</dd>
                    ? ' -> '.$results->{$u}{location}{code}
                    : '',
                    # HTTP message
-                   $results->{$u}{location}{message} ? $results->{$u}{location}{message} : '');
+                   $results->{$u}{location}{message} ?
+                   $results->{$u}{location}{message} : '',
+                   # What to do
+                   $whattodo);
+            if (($#fragments >= 0) && !($broken->{$u}{'location'})) {
+                print("The following fragments need to be fixed:\n");
+            } else {
+                print("Fragments:\n");
+            }
         }
         # Fragments
         foreach $f (@fragments) {
@@ -1332,15 +1367,15 @@ sub code_shown() {
 sub links_summary {
     # Advices to fix the problems
 
-    my %todo = ( 200 => 'There are broken fragments that must be fixed.',
-                 300 => 'It usually means that there is a typo in a link that triggers <strong>mod_speling</strong> action - this must be fixed!',
-                 301 => 'Usually nothing, unless the end point of the redirect is broken.',
-                 302 => 'Usually nothing, unless the end point of the redirect is broken.',
+    my %todo = ( 200 => 'There are broken fragments which must be fixed.',
+                 300 => 'It usually means that there is a typo in a link that triggers mod_speling action - this must be fixed!',
+                 301 => 'Usually nothing. You may want to update the link though.',
+                 302 => 'Usually nothing.',
                  400 => 'Usually the sign of a malformed URL that cannot be parsed by the server.',
                  401 => 'The link is not public. You had better specify it.',
                  403 => 'The link is forbidden! This needs fixing. Usual suspect: a missing Overview.html or index.html, or bad access control.',
-                 404 => 'The link is broken. Fix it <B>NOW</B>!',
-                 405 => 'The server does not allow HEAD requests. How liberal. Go ask the guys who run this server why.',
+                 404 => 'The link is broken. Fix it NOW!',
+                 405 => 'The server does not allow HEAD requests. Go ask the guys who run this server why.',
                  407 => 'The link is a proxy, but requires Authentication.',
                  408 => 'The request timed out',
                  415 => 'The media type is not supported.',
@@ -1436,7 +1471,7 @@ sub links_summary {
             print(':');
         }
         &show_link_report($links, $results, $broken, $redirects,
-                          \@urls, 1);
+                          \@urls, 1, \%todo);
     }
 
     # Show directory redirects
