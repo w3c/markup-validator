@@ -1,0 +1,18 @@
+# http://module-build.sourceforge.net/META-spec.html
+#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
+name:         Bundle-W3C-Validator
+version:      0.6.5
+version_from: lib/Bundle/W3C/Validator.pm
+installdirs:  site
+requires:
+    CGI:                           2.81
+    Config::General:               0
+    HTML::Parser:                  3.25
+    LWP::UserAgent:                1.9
+    Net::IP:                       0
+    Set::IntSpan:                  0
+    Text::Iconv:                   0
+    URI:                           0
+
+distribution_type: module
+generated_by: ExtUtils::MakeMaker version 6.17

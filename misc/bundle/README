@@ -1,0 +1,25 @@
+Bundle-W3C-Validator
+====================
+
+This bundle contains the prerequisite CPAN perl modules for running
+the W3C Markup Validator, <http://validator.w3.org/>.
+
+For more information, consult the embedded documentation in the
+Bundle::W3C::Validator module, typically (in the directory where you
+unpacked the source):
+
+  perldoc ./lib/Bundle/W3C/Validator.pm
+
+COPYRIGHT AND LICENCE
+
+Originally by Ville Skyttä, <ville.skytta@iki.fi>, for the W3C
+Maintained by the W3C Markup Validator Team, <www-validator@w3.org>
+
+Copyright (C) 1994-2004 World Wide Web Consortium, (Massachusetts
+Institute of Technology, European Research Consortium for Informatics
+and Mathematics, Keio University). All Rights Reserved. This work is
+distributed under the W3C(R) Software License [1] in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+[1] http://www.w3.org/Consortium/Legal/copyright-software

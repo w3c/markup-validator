@@ -1,0 +1,8 @@
+ChangeLog                       Recent changes
+MANIFEST
+META.yml                        Module meta-data (added by MakeMaker)
+Makefile.PL
+README                          Start by reading this
+SIGNATURE
+lib/Bundle/W3C/Validator.pm
+t/00load.t
