@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.266 2002-10-26 01:15:19 link Exp $
+# $Id: check,v 1.267 2002-10-26 02:11:13 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.266 $;
+  $VERSION    =  q$Revision: 1.267 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-26 01:15:19 $,
+			      Date => q$Date: 2002-10-26 02:11:13 $,
 			     });
 
 #
@@ -1958,14 +1958,20 @@ sub prepCGI {
   # Futz the URI so "/referer" works.
   $q->param('uri', 'referer') if $q->path_info eq '/referer';
 
+  # Use "url" unless a "uri" was also given.
+  if ($q->param('url') and not $q->param('uri')) {
+    $q->param('uri', $q->param('url'));
+  }
+
+  # Munge the URI to include commonly omitted prefix.
+  my $u = $q->param('uri');
+  $q->param('uri', "http://$u") if $u && $u =~ m(^www)i;
+
   # Issue a redirect for uri=referer.
   if ($q->param('uri') and $q->param('uri') eq 'referer') {
     print $q->redirect($q->url() . '?uri=' . uri_escape($q->referer));
     exit;
   }
-
-  # Use "url" unless a "uri" was also given.
-  $q->param('uri', $q->param('url')) if $q->param('url') and not $q->param('uri');
 
   # Supersede URI with an uploaded file.
   if ($q->param('uploaded_file')) {
@@ -1974,11 +1980,23 @@ sub prepCGI {
   }
 
   # Supersede URI with an uploaded fragment.
-  $q->param('uri', 'upload://Form Submission') if $q->param('fragment');
+  if ($q->param('fragment')) {
+    $q->param('uri', 'upload://Form Submission');
+    $File->{'Is Upload'} = TRUE; # Tag it for later use.
+  }
 
-  # Munge the URI to include commonly omitted prefix.
-  my $u = $q->param('uri');
-  $q->param('uri', "http://$u") if $u && $u =~ m(^www)i;
+  # Redirect to a GETable URL if method is POST without a file upload.
+  if ($q->request_method eq 'POST' and not $File->{'Is Upload'}) {
+    my $thispage = $File->{Env}->{'Self URI'};
+       $thispage .= '?uri='       . $q->param('uri');
+       $thispage .= ';ss=1'      if $q->param('ss');
+       $thispage .= ';sp=1'      if $q->param('sp');
+       $thispage .= ';noatt=1'   if $q->param('noatt');
+       $thispage .= ';outline=1' if $q->param('outline');
+
+    print $q->redirect($thispage);
+    exit;
+  }
 
   #
   # Flag an error if we didn't get a file to validate.
