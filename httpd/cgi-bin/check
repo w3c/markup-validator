@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.237 2002-10-01 07:09:54 duerst Exp $
+# $Id: check,v 1.238 2002-10-02 12:21:18 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.237 $;
+  $VERSION    =  q$Revision: 1.238 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-01 07:09:54 $,
+			      Date => q$Date: 2002-10-02 12:21:18 $,
 			     });
 
 #
@@ -1243,12 +1243,12 @@ sub normalize_newlines {
   my $pattern = '';
 
   # don't use backreference parentheses!
-  $pattern = '\0\xD(?:\0\xA)?|\0\xA' if /^utf-16be$/;
-  $pattern = '\xD\0(?:\xA\0)?|\xA\0' if /^utf-16le$/;
-  $pattern = '\0\0\0\xD(?:\0\0\0\xA)?|\0\0\0\xA' if /^UCS-4be$/;
-  $pattern = '\xD\0\0\0(?:\xA\0\0\0)?|\xA\0\0\0' if /^UCS-4le$/;
+  $pattern = '\x00\x0D(?:\x00\x0A)?|\x00\x0A' if /^utf-16be$/;
+  $pattern = '\x0D\x00(?:\x0A\x00)?|\x0A\x00' if /^utf-16le$/;
+  $pattern = '\x00\x00\x00\x0D(?:\x00\x00\x00\x0A)?|\x00\x00\x00\x0A' if /^UCS-4be$/;
+  $pattern = '\x0D\x00\x00\x00(?:\x0A\x00\x00\x00)?|\x0A\x00\x00\x00' if /^UCS-4le$/;
   # insert other special cases here, such as EBCDIC
-  $pattern = '\xD(?:\xA)?|\xA' if !$pattern;    # all other cases
+  $pattern = '\x0D(?:\x0A)?|\x0A' if !$pattern;    # all other cases
 
   return [split /$pattern/, $file];
 }
