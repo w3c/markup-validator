@@ -8,7 +8,7 @@
     W3C HTML Validation Service, To Do List">
   <meta name="description" content="To Do List for W3C's Validation Service.">
   <meta name="revision"
-    content="$Id: todo.html,v 1.18 1999-10-25 03:18:50 gerald Exp $">
+    content="$Id: todo.html,v 1.19 1999-10-25 13:25:49 gerald Exp $">
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
@@ -41,26 +41,23 @@
 
 <ol>
 
-  <li> make the output valid (!)
+  <li> add a "fix my HTML for me" option using <a
+    href="http://www.w3.org/People/Raggett/tidy/">tidy</a>.
+
+  <li> finish adding support for XML validation (see also: <a
+    href="dev/tests/#xml">test cases</a>, or <a
+    href="http://www.hcrc.ed.ac.uk/~richard/xml-check.html">an
+    existing service</a>)
+
+  <li> bug fix: column counts are off in <a
+    href="/check?uri=http://www.xml.org/xmlorg_catalog.htm;ss">this
+    report</a>
 
   <li> update <a
     href="http://validator.w3.org/sgml-lib.tar.gz">sgml-lib.tar.gz</a>;
     automate the updates
 
   <li> create a stylesheet and link to it from every page
-
-  <li> add a "fix my HTML for me" option using <a
-    href="http://www.w3.org/People/Raggett/tidy/">tidy</a>.
-
-  <li> bug fix: column count seems off in the <a
-  href="/check?uri=http://www.disney.com/">report
-  for disney.com</a>
-  <a
-  href="/check?uri=http://www.webcom.com/us_scot/">this
-  one too</a>
-  <a
-  href="/check?uri=http://www.xml.org/xmlorg_catalog.htm;ss">and
-  this one</a>
 
   <li> don't output a bazillion errors for documents with bogus
   FPIs (see <a
@@ -71,13 +68,6 @@
   href="http://www.mnot.net/cacheability/">document
   cacheability</a>? (or just link to it?)
 
-  <li> do more <a
-   href="http://lists.w3.org/Archives/Public/www-validator/1998JulSep/0003">i18n
-    bug fixes</a>
-    (see also: a <a
-    href="http://lists.w3.org/Archives/Public/www-validator/1999JulSep/0041.html">more
-    recent report</a> of same)
-
   <li> put the explanations in a database (flat files are probably okay),
     offer an option to display them inline with the errors
 
@@ -87,17 +77,7 @@
 
   <li> add a doctype-overriding option
 
-  <li> add XML validation<br>
-  test cases:
-  <ul>
-  <li><a href="/check?uri=http://www.oasis-open.org/committees/xmltest/xmlconf-19990712.xml;ss">xmlconf-19990712.xml</a><br>
-  <li><a href="/check?uri=http://www.w3.org/1999/08/WD-xpath-19990813.xml;ss">WD-xpath-19990813.xml</a><br>
-  <li><a href="/check?uri=http://www.w3.org/TR/1998/REC-xml-19980210.xml;ss">REC-xml-19980210.xml</a><br>
-  <li><a href="/check?uri=http://www.w3.org/1999/09/SVG-access/computer.svg;ss">SVG</a><br>
-  <li><a href="http://dmoz.org/rdf.html">http://dmoz.org/rdf.html</a><br>
-  </ul>
-  other services:<br>
-  <a href="http://www.hcrc.ed.ac.uk/~richard/xml-check.html">http://www.hcrc.ed.ac.uk/~richard/xml-check.html</a>
+  <li> add support for more character encodings
 
   <li> install and play with HTML::Validator, link to it from somewhere:
     <a href="http://www.hut.fi/~samzait/HTML-Validator/">http://www.hut.fi/~samzait/HTML-Validator/</a> 
@@ -197,7 +177,7 @@
      src="http://validator.w3.org/images/vh40" height=31 width=88
      align=right border=0 alt="Valid W3C HTML 4.0!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</A><br>
-     $Date: 1999-10-25 03:18:50 $
+     $Date: 1999-10-25 13:25:49 $
 </address>
 
 </body>
