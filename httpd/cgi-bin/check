@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.389 2005-02-04 23:31:04 link Exp $
+# $Id: check,v 1.390 2005-02-05 04:08:31 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -239,7 +239,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.389 $;
+  $VERSION    =  q$Revision: 1.390 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1066,23 +1066,17 @@ sub report_valid {
   my $File = shift;
   my $T    = shift;
 
-  my $gifborder   = ' border="0"';
-  my $xhtmlendtag = '';
-  my($image_uri, $alttext, $gifhw);
-
   unless ($File->{Version} eq 'unknown' or defined $File->{Tentative}) {
     $T->param(file_version => $File->{Version});
 
-    # @@@
-    # print &daily_tip($File, $CFG->{Tips});
-    # &print_warnings($File);
-
-    if (defined $image_uri) {
-      $T->param(have_badge  => TRUE);
-      $T->param(badge_uri   => $image_uri);
-      $T->param(badge_alt   => $alttext);
-      $T->param(badge_gifhw => $gifhw);
-      $T->param(badge_xhtml => $xhtmlendtag);
+    if (exists $CFG->{Types}->{$File->{DOCTYPE}}->{Badge}) {
+      my $cfg = $CFG->{Types}->{$File->{DOCTYPE}};
+      $T->param(have_badge => TRUE);
+      $T->param(badge_uri  => $cfg->{Badge}->{URI});
+      $T->param(badge_alt  => $cfg->{Badge}->{Alt});
+      $T->param(badge_h    => $cfg->{Badge}->{Height});
+      $T->param(badge_w    => $cfg->{Badge}->{Width});
+      $T->param(badge_tagc => ($cfg->{'Parse Mode'} eq 'XML' ? '/' : ''));
     }
   } elsif (defined $File->{Tentative}) {
     $T->param(is_tentative => TRUE);
