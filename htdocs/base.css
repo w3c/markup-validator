@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.7 2003-02-24 23:14:27 ville Exp $
+   $Id: base.css,v 1.26.2.8 2003-04-17 16:04:06 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -102,9 +102,15 @@ address {
 }
 
 p.copyright {
-margin-top: 0;
-padding-top: .5em;
-background-color: #eee;
+  margin-top: 5em;
+  padding-top: .5em;
+  font-size: xx-small;
+  max-width: 75ex;
+  text-align: justify;
+  text-transform: uppercase;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: monospace;
 }
 
 p.jumpbar {
