@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.61 2002-08-17 14:16:30 link Exp $
+# $Id: check,v 1.200.2.62 2002-08-17 14:18:32 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.200.2.61 $;
+  $VERSION    =  q$Revision: 1.200.2.62 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-17 14:16:30 $,
+			      Date => q$Date: 2002-08-17 14:18:32 $,
 			     });
 
 #
@@ -532,9 +532,10 @@ $ENV{SP_BCTF}          = 'UTF-8';
 my @cmd = ($CFG->{'SGML Parser'}, '-c', $catalog, '-E0', @xmlflags);
 
 if ($DEBUG) {
-  &add_table($File, 'Command', [1, 2, "<code>@cmd</code>"]);
+  &add_table($File, 'Command',          [1, 2, "@cmd"]);
   &add_table($File, 'SP_CHARSET_FIXED', [1, 2, "<code>$ENV{SP_CHARSET_FIXED}</code>"]);
-  &add_table($File, 'SP_ENCODING', [1, 2, "<code>$ENV{SP_ENCODING}</code>"]);
+  &add_table($File, 'SP_ENCODING',      [1, 2, "<code>$ENV{SP_ENCODING}</code>"]);
+  &add_table($File, 'SP_BCTF',          [1, 2, "<code>$ENV{SP_BCTF}</code>"]);
 }
 
 #
