@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.33 1999-09-10 22:56:39 gerald Exp $
+# $Id: check,v 1.34 1999-09-17 08:52:54 gerald Exp $
 
 use LWP::UserAgent;
 use strict;
@@ -17,8 +17,8 @@ use strict;
 # Constant definitions
 #############################################################################
 
-my $cvsrevision	= '$Revision: 1.33 $';
-my $cvsdate	= '$Date: 1999-09-10 22:56:39 $';
+my $cvsrevision	= '$Revision: 1.34 $';
+my $cvsdate	= '$Date: 1999-09-17 08:52:54 $';
 
 my $logfile	= "/var/log/httpd/val-svc";
 
@@ -660,7 +660,7 @@ else {
 	    $alttext = "Valid HTML 3.2!";
             $gifhw   = " height=31 width=88";
 	}
-	elsif ( $version =~ /HTML 4\.0<\/a>$/ ) {
+	elsif ( $version =~ /HTML 4\.0<\/a> Strict$/ ) {
 	    $gifname = "vh40.gif";
 	    $alttext = "Valid HTML 4.0!";
             $gifborder = "";
@@ -671,7 +671,7 @@ else {
 	    $alttext = "Valid HTML 4.0!";
             $gifhw   = " height=31 width=88";
 	}
-	elsif ( $version =~ /HTML 4\.01<\/a>$/ ) {
+	elsif ( $version =~ /HTML 4\.01<\/a> Strict$/ ) {
 	    $gifname = "vh40.gif";
 	    $alttext = "Valid HTML 4.01!";
             $gifborder = "";
