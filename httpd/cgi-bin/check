@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.43 2003-05-05 00:05:42 link Exp $
+# $Id: check,v 1.305.2.44 2003-05-20 15:30:52 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.43 $;
+  $VERSION    =  q$Revision: 1.305.2.44 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -172,7 +172,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-05-05 00:05:42 $,
+                              Date => q$Date: 2003-05-20 15:30:52 $,
                              });
 
 #
@@ -1812,6 +1812,9 @@ sub report_valid {
     $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
     $thispage .= ';verbose=1' if $File->{Opt}->{'Verbose'};
 
+    my $display = $thispage; # Nasty hack to enable line-wrapping in browsers!
+    $display =~ s/(^.+?)\?uri=(.+)/$1\? uri=$2/; # @@@FIXME: Needs better way!
+
     &output_css_validator_blurb($File->{URI});
 
     print <<"EOHD";
@@ -1819,7 +1822,7 @@ sub report_valid {
     If you would like to create a link to <em>this</em> page (i.e., this
     validation result) to make it easier to re-validate this page in the
     future or to allow others to validate your page, the URI is
-    &lt;<a href="$thispage">$thispage</a>&gt; (or you can just add the
+    &lt;<a href="$thispage">$display</a>&gt; (or you can just add the
     current page to your bookmarks or hotlist).</p>
 EOHD
   }
