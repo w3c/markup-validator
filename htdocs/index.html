@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.55.2.11 2003-04-17 15:52:37 link Exp $"
---><!--#set var="date" value="\$Date: 2003-04-17 15:52:37 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.55.2.12 2003-04-17 16:52:32 link Exp $"
+--><!--#set var="date" value="\$Date: 2003-04-17 16:52:32 $"
 --><!--#set var="title" value="The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -11,42 +11,40 @@
         and other standards.
       </p>
     </div>
+
     <div>
       <h2>Validate Files</h2>
       <p>
-        You can enter a URI in the <code>Address</code> field below, and
-        have the page validated:</p>
-     <form method="get" action="check">
-      <p>
-        <label title="Address of page to Validate" for="uri">Address:
-          <input id="uri" name="uri" size="40" /></label>
-      <label title="Submit URI for validation">
-	<input type="submit" value="Validate URI..." /></label>
+        You can enter a URI in the <code>Address</code> field below,
+        and have the page validated:
       </p>
+      <form method="get" action="check">
+        <p>
+          <label title="Address of page to Validate" for="uri">Address:
+            <input id="uri" name="uri" size="40" /></label>
+          <label title="Submit URI for validation">
+	    <input type="submit" value="Validate URI..." /></label>
+        </p>
       </form>
-
-	<p>If you want to upload a file from your computer and have it validated,
-	you can use this form:</p>
-
+      <p>
+        If you want to upload a file from your computer and have it validated,
+	you can use this form:
+      </p>
       <form method="post" enctype="multipart/form-data" action="check">
-      <p>    
-        <label title="Choose a Local File to Upload and Validate" for="uploaded_file">Local File:
-          <input type="file" id="uploaded_file" name="uploaded_file" size="30" /></label>
-        <label title="Submit file for validation"><input type="submit" value="Validate File" /></label>
-      </p>
+        <p>    
+          <label title="Choose a Local File to Upload and Validate" for="uploaded_file">Local File: <input type="file" id="uploaded_file" name="uploaded_file" size="30" /></label>
+          <label title="Submit file for validation"><input type="submit" value="Validate File" /></label>
+        </p>
       </form>
-
       <p>
-        There is also an <a title="Extended Interface to the
-        W3C Markup Validation Service" href="detailed.html">Extended
-        Interface</a> available if you want to set any advanced options, and 
-	a <a title="File Upload Interface to the
-        W3C Markup Validation Service" href="file-upload.html">Extended File
-	Upload Interface</a> if you want to validate uploaded files with
-	advanced options.
+        There is also an <a
+          title="Extended Interface to the W3C Markup Validation Service"
+          href="detailed.html">Extended Interface</a> available if you want
+        to set any advanced options, and a <a
+          title="File Upload Interface to the W3C Markup Validation Service"
+          href="file-upload.html">Extended File Upload Interface</a> if you
+        want to validate uploaded files with advanced options.
       </p>
-
-
     </div>
 
     <div id="recent">
@@ -55,12 +53,17 @@
         These are the most recent major changes to this service. See
         "<a href="whatsnew.html">What's&nbsp;New</a>" for more details.
       </p> 
-    <dl>
-      <dt><a href="whatsnew.html#2002-12-01">December 01, 2002</a></dt>
-      <dd>Maintenance release to fix minor bugs.</dd>
-      <dt><a href="whatsnew.html#2002-11-26">November 26, 2002</a></dt>
-      <dd>Internal restructuring and new DTDs added. Bug fixes.</dd>
-    </dl>
+      <dl>
+        <dt><a href="whatsnew.html#2003-05-01">May 01, 2003 (TBC)</a></dt>
+        <dd>
+          Released version 0.6.2 of the Markup Validator; a maintenance
+          release to address various minor issues.
+        </dd>
+        <dt><a href="whatsnew.html#2002-12-01">December 01, 2002</a></dt>
+        <dd>Maintenance release to fix minor bugs.</dd>
+        <dt><a href="whatsnew.html#2002-11-26">November 26, 2002</a></dt>
+        <dd>Internal restructuring and new DTDs added. Bug fixes.</dd>
+      </dl>
    </div>
 
 <!--#include virtual="footer.html" -->
