@@ -1,5 +1,5 @@
 # RPM Spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.1.2.3 2003-04-21 15:50:13 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.1.2.4 2003-04-24 16:49:24 ville Exp $
 
 %define httpd_confdir %{_sysconfdir}/httpd/conf.d
 %define htmldir       %{_var}/www/html
@@ -91,8 +91,9 @@ rm -rf htdocs/config
 cp -a htdocs/* $RPM_BUILD_ROOT%{htmldir}/%{name}
 
 # SGML library
-mkdir -p $RPM_BUILD_ROOT%{sgmldir}
+mkdir -p $RPM_BUILD_ROOT{%{sgmldir},%{_sysconfdir}/sgml}
 cp -pr sgml-lib $RPM_BUILD_ROOT%{sgmldir}/%{name}
+> %{buildroot}%{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat
 
 # -----------------------------------------------------------------------------
 
@@ -107,17 +108,17 @@ if [ -x %{_bindir}/install-catalog -a -d %{_sysconfdir}/sgml ]; then
   for catalog in "mathml.soc sgml.soc svg.soc xhtml.soc xml.soc"; do
     %{_bindir}/install-catalog --add \
       %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
-      %{sgmldir}/%{name}/$catalog > /dev/null || :
+      %{sgmldir}/%{name}/$catalog > /dev/null 2>&1 || :
   done
 fi
 
-%postun libs
+%preun libs
 # Note that we're using versioned catalog, so this is always ok.
 if [ -x %{_bindir}/install-catalog -a -d %{_sysconfdir}/sgml ]; then
   for catalog in "mathml.soc sgml.soc svg.soc xhtml.soc xml.soc"; do
     %{_bindir}/install-catalog --remove \
       %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
-      %{sgmldir}/%{name}/$catalog > /dev/null || :
+      %{sgmldir}/%{name}/$catalog > /dev/null 2>&1 || :
   done
 fi
 
@@ -131,7 +132,8 @@ fi
 %{_bindir}/*
 
 %files libs
-%defattr(-,root,root,-)
+%defattr(0644,root,root,0755)
+%config %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat
 %{sgmldir}/%{name}
 
 # -----------------------------------------------------------------------------
