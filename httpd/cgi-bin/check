@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.394 2005-02-06 01:00:57 link Exp $
+# $Id: check,v 1.395 2005-02-06 03:47:38 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -224,7 +224,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.394 $;
+  $VERSION    =  q$Revision: 1.395 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -810,7 +810,6 @@ sub parse (\$) {
   $File->{ESIS} = [];
   my $elements_found = 0;
   while (<$spout>) {
-    push @{$File->{'DEBUG'}->{ESIS}}, $_;
     $elements_found++ if /^\(/;
 
     if (/^Axmlns() \w+ (.*)/ or /^Axmlns:([^ ]+) \w+ (.*)/) {
@@ -826,7 +825,7 @@ sub parse (\$) {
       }
     }
 
-    next if / IMPLIED$/;
+    next if / IMPLIED$/ && not $DEBUG;;
     next if /^ASDAFORM CDATA /;
     next if /^ASDAPREF CDATA /;
     chomp; # Removes trailing newlines
@@ -1665,7 +1664,7 @@ sub parse_errors ($$) {
     s/^\Q$CFG->{Paths}->{SGML}->{Parser}\E// if
          $CFG->{Paths}->{SGML}->{Parser} =~ /:/;
 
-    push @{$File->{'DEBUG'}->{Errors}}, $_;
+    push @{$File->{DEBUG}->{Errors}}, $_;
     chomp;
     my($err, @errors);
     next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
@@ -2095,7 +2094,7 @@ sub show_esis ($) {
     <h2><a name="raw_esis">Raw ESIS Output</a></h2>
     <pre>
 EOF
-  for (@{shift->{'DEBUG'}->{ESIS}}) {
+  for (@{shift->{ESIS}}) {
     s/\\012//g;
     s/\\n/\n/g;
     print ent $_;
@@ -2112,7 +2111,7 @@ sub show_errors ($) {
     <h2><a name="raw_errors">Raw Error Output</a></h2>
     <pre>
 EOF
-  for (@{shift->{'DEBUG'}->{Errors}}) {print ent $_};
+  for (@{shift->{DEBUG}->{Errors}}) {print ent $_};
   print "    </pre>\n  </div>";
 }
 
