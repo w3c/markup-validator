@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.8 1998-08-27 03:21:07 gerald Exp $
+# $Id: check,v 1.9 1998-12-16 11:29:17 gerald Exp $
 
 #############################################################################
 # Constant definitions
@@ -16,8 +16,8 @@
 
 $ENV{USER_AGENT} = 'W3C_Validator/1.0';
 
-$logfile	= "/usr/local/apache/logs/val-svc";
-$reflogfile	= "/usr/local/apache/logs/val-svc-referers";
+$logfile	= "/var/log/httpd/val-svc";
+$reflogfile	= "/var/log/httpd/val-svc-referers";
 
 $faqloc		= "http://www.cs.duke.edu/~dsb/kgv-faq/";
 $faqerrloc	= "${faqloc}errors.html";
@@ -26,7 +26,7 @@ $rel_img_uri	= "/images/";
 $abs_img_uri	= "${abs_svc_uri}images/";
 
 $grabber	= "/usr/local/lib/libwww-perl/get";
-$sgmlstuff	= "/usr/local/validator/htdocs/sgml-lib";
+$sgmlstuff	= "/usr/local/src/validator/htdocs/sgml-lib";
 $sp		= "/usr/local/bin/nsgmls";
 $tidy		= "/usr/local/bin/tidy";
 
@@ -35,7 +35,7 @@ $sgmldecl	= "$sgmlstuff/REC-html40-971218/HTML4.decl";
 # $notice		= "<p><strong>Note: This service will be intermittently unavailable for the next few hours for an operating system upgrade.</strong>";
 
 umask( 022 );
-$weblint	 = "/usr/local/bin/weblint";
+$weblint	 = "/usr/bin/weblint";
 $html2_doctype	 = qq{<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">};
 $html32_doctype	 = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">};
 $nice_html40_doctype	 = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN\n            "http://www.w3.org/TR/REC-html40/strict.dtd">};
@@ -1190,7 +1190,7 @@ sub output_closing {
      src="http://validator.w3.org/images/vh40.gif" height=31 width=88
      align=right border=0 alt="Valid HTML 4.0!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</A><br>
-     \$Date: 1998-08-27 03:21:07 $ \
+     \$Date: 1998-12-16 11:29:17 $ \
 </address>
 
 </body>
