@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200 2002-03-02 00:58:29 link Exp $
+# $Id: check,v 1.201 2002-06-16 03:38:47 link Exp $
 
 #
 # We need Perl 5.004.
@@ -95,9 +95,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200 $;
+$VERSION    =  q$Revision: 1.201 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2002-03-02 00:58:29 $;
+$DATE       =  q$Date: 2002-06-16 03:38:47 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -264,6 +264,19 @@ EOF
 if    ($q->param('uploaded_file')) {$File = &handle_file($q, $File)}
 elsif ($q->param('fragment'))      {$File = &handle_frag($q, $File)}
 elsif ($q->param('uri'))           {$File = &handle_uri( $q, $File)};
+
+
+#
+# Abort if an error was flagged during initialization.
+if ($File->{'Error Flagged'}) {
+  print $File->{'Results'};
+  print $File->{'Error Message'};
+#  print $File->{'Footer'};
+  undef $File;
+  exit;
+}
+
+
 
 #
 # Abort if there was no document type mapping for this Content-Type, in which
@@ -1186,6 +1199,20 @@ sub handle_uri {
   my $ua = new LWP::UserAgent;
   $ua->agent("W3C_Validator/$VERSION " . $ua->agent);
   $ua->parse_head(0);  # Parse the http-equiv stuff ourselves. @@ Why?
+
+  # @@@FIXME@@@:
+  #   Disable checking if the URI is local (or private) for security reasons,
+  #   or at least make it configurable to do so.
+  #   eg. /^(localhost(\.localdomain)?|127\..+)$/ (+ private networks)
+  #
+  $ua->protocols_allowed($CFG->{'Allowed Protocols'} || ['http', 'https']);
+
+  unless ($ua->is_protocol_supported($uri)) {
+    $File->{'Error Flagged'} = TRUE;
+    $File->{'Error Message'} = &uri_rejected($uri);
+    return $File;
+  }
+
   my $req = new HTTP::Request(GET => $uri);
 
   # If we got a Authorization header, the client is back at it after being
@@ -1915,4 +1942,30 @@ sub show_errors ($) {
 EOF
   for (@{shift->{'DEBUG'}->{Errors}}) {print ent $_};
   print "    </pre>\n  </div>";
+}
+
+#
+# Output errors for a rejected URI.
+sub uri_rejected {
+  my $scheme = shift->scheme() || 'undefined';
+
+  return <<".EOF.";
+    <div class="error">
+      <p>
+        Sorry, this type of <a
+          href="http://www.w3.org/Addressing/#terms">URI</a>
+        (<q>$scheme</q>) is not supported by this service. Please check
+        that you entered the URI correctly.
+      </p>
+      <p>URIs should be in the form: <code>http://validator.w3.org/</code></p>
+      <p>
+        If you entered a valid URI using a scheme that we should support,
+        please let us know as outlined on our
+        <a href="/feedback.html">Feedback page</a>. Make sure to include the
+        specific URI you would like us to support, and if possible provide a
+        reference to the relevant standards document describing the URI scheme
+        in question.
+      </p>
+    </div>
+.EOF.
 }
