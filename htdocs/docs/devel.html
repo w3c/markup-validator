@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: devel.html,v 1.10.2.12 2004-05-05 22:24:27 ot Exp $"
---><!--#set var="date" value="\$Date: 2004-05-05 22:24:27 $"
+<!--#set var="revision" value="\$Id: devel.html,v 1.10.2.13 2004-05-06 06:14:37 ot Exp $"
+--><!--#set var="date" value="\$Date: 2004-05-06 06:14:37 $"
 --><!--#set var="title" value="Developer Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -11,122 +11,58 @@
 
     <div id="toc">
       <ul>
-        <li><a href="#prereq">Prerequisites</a></li>
-        <li><a href="#config">Configuration Files</a></li>
-        <li><a href="#todo">TODO</a></li>
-        <li><a href="#bugzilla">Bugs and Issue Tracking</a></li>
+	<li><a href="#participate">Participate</a></li>
+        <li><a href="devel-frame">Development Framework</a>
+	  <ul>
+		<li><a href="#bug">Bugs and Issue Tracking</a></li>
+		<li><a href="#test">Test suite</a></li>
+        	<li><a href="#todo">TODO</a></li>
+	  </ul>
+	</li>
       </ul>
     </div>
     
     <p id="skip" name="skip">
-      The W3C Markup Validation Service consists of an SGML Parser, an SGML
-      catalog, a CGI program and it's configuration files. In addition it
-      relies on a moderately large set of Perl modules for it's operation.
-    </p>
     <p>
-      This document tries to draw a road map of the prerequisites and what the
-      different parts of the system do. It is intended for system
-      administrators and people interested in helping developing the validator.
-      This is not end user documentation. See the
-      <a href="users.html">User Manual</a> for usage instructions.
+      This document is an overview of how developers can modify the Markup Validator, and how to contribute
+      to the development of the project. It is intended for system administrators and developers.
+      <strong>This is not end user documentation</strong>. See the <a href="users.html">User Manual</a> for usage instructions.
     </p>
+	
+     <h3 id="participate" name="participate">Participating in the development of the Markup Validator</h3>
+     <p>The Markup Validator is managed as an open source project by a <a href="http://www.w3.org/QA/Tools/qa-dev">team 
+     of volunteer developers and people from the W3C Team</a>.</p>
+     <p> Help on this project is always welcome, usually as <a href="../feedback.html">feedback</a>,
+     but developers may also be interested in working directly on the code, which is certainly encouraged.</p>
 
-    <div id="prereq" class="stb">
-      <h3>Prerequisites</h3>
+     <p>This document tries to give a general overview of the development framework for the Markup Validator, and
+     should help developers get a good idea of how the project is managed.</p>
+     <p>The next steps would certainly be to read about <a href="../source/">source availability</a> and then try 
+     a <a href="install.html">local installation</a> of the validator, if not done yet. We also (obviously) recommend
+     to get in touch with other developers, eother through <a href="../feedback.html">regular means</a>, or on the
+     IRC channel #validator on irc.freenode.net where many developers and contributors often are.</p>
+
+     <h3 name="devel-frame" id="devel-frame">Development Framework</h3>
+
+	<h4>Bug and Issue Trackin System</h4>
       <p>
-        Apart from a properly configured Web server, the Validator needs a
-        SGML parser -- that does all the hard work -- and several Perl
-        modules used by the "check" CGI script.
+        Bug and Issue Tracking for the Validator happens in the <a
+          href="http://www.w3.org/Bugs/Public/">W3C Public Bugzilla</a>
+        instance. Developers should feel free to set up an account
+        and report bugs, enhancement requests, patches, etc. directly there
+        (end users should continue to send reports and ideas to the 
+	<a href="http://lists.w3.org/Archives/Public/www-validator/">mailing-list</a>).
       </p>
-      <p>
-        The SGML parser we're currently using is <code>OpenSP 1.5</code>,
-        which can be found on the
-        <a href="http://openjade.sourceforge.net/">OpenJade home page</a>.
-      </p>
-      <p>
-        The canonical list of Perl modules we use can be found in the source
-        for the "check" CGI script. There is a bunch of lines that of the form
-        "use Foo::Bar" where each "Foo::Bar" represents a module. Most modules
-        can be found on <a href="http://www.cpan.org/">CPAN</a> (minimum
-        versions in parenthesis after the name). The following
-        list was complete when CVS spit out:
-        <code>$Date: 2004-05-05 22:24:27 $</code>. <tt>:-)</tt>
-      </p>
-      <dl>
-        <dt><code>CGI (2.81)</code></dt>
-        <dd>
-          The all-singing, all-dancing,
-          everything-<em>and</em>-the-kitchen-sink, Perl CGI library. This
-          takes care of all those niggly little bits of CGI for us and make
-          options parsing and file upload a breeze.
-        </dd>
-        <dt><code>CGI::Carp</code></dt>
-        <dd>CGI-aware warn()/die()</dd>
-        <dt><code>File::Spec</code></dt><dd>Portable filespecs.</dd>
-        <dt><code>HTML::Parser (3.25)</code></dt>
-        <dd>Minimal HTML Parser used for preparse and finding metadata.</dd>
-        <dt><code>LWP::UserAgent (1.90)</code></dt>
-        <dd>
-          Gisle Aas' most excellent WWW library for Perl. This is where our
-          support for downloading pages off the net comes from.
-        </dd>
-        <dt><code>Set::IntSpan</code></dt><dd>Efficient Set operations.</dd>
-        <dt><code>Text::Iconv</code></dt>
-        <dd>
-          Perl-native interface to the (g)libc iconv(3) library. Handles
-          charset conversion issues.
-        </dd>
-        <dt><code>Text::Wrap</code></dt>
-        <dd>Wrap text to a sane width. Needed for source output in results.</dd>
-        <dt><code>URI::Escape</code></dt>
-        <dd>Module to handle escaping special characters in URIs.</dd>
-      </dl>
-    </div>
-    <div id="config" class="stb">
-      <h3>Configuration Files</h3>
-      <p>
-        The validator uses a number of configuration files -- most of which
-        are really mapping tables of some form -- to avoid having to check in
-        a new version of the code every time a new version of HTML comes out.
-        All configuration files can be found in
-        <code>$CVSROOT/validator/htdocs/config/</code>.
-      </p>
-      <p>
-        To really understand what each does you should read the source, but
-        here is a short description to get you started.
-      </p>
-      <dl>
-        <dt>eref.cfg</dt>
-        <dd>
-          Contains the mappings from element names to an URI fragment
-          (relative to a configurable URI) for their definitions. Used
-          in output when the "Show Source Input" option is enabled.
-        </dd>
-        <dt>fpis.cfg</dt>
-        <dd>
-          Maps FPIs to plain text version strings.
-        </dd>
-        <dt>frag.cfg</dt>
-        <dd>
-          Maps error messages to an URI fragment identifier where an
-          explanation of that error can be found.
-        </dd>
-        <dt>type.cfg</dt>
-        <dd>
-          Maps MIME/HTTP Content-Types to an internal "document type" which
-          is used for treating HTML, XML, and XHTML in different ways.
-        </dd>
-        <dt>validator.conf</dt>
-        <dd>
-          Main configuration file. Gives various parameters (such as the
-          address of the maintainer and the URL for the "Home Page") and
-          the locations of the other configuration files and mapping tables.
-        </dd>
-       </dl>
-    </div>
-   
-    <div id="todo" class="stb">
-      <h3>TODO</h3>
+      <h4 id="test" name="test">Test suite</h4>
+
+       <p>
+         Any changes to the service will attempt to maintain
+         compatibility with a <a href="../dev/tests/">list of test cases</a>.
+       </p>
+       <p>We are in the process of turning this (crude) list into a more manageable 
+	testing framework.</p>
+
+      <h4 id="todo" name="todo">TODO</h4>
       <p>
         The TODO list for the Validator is online at
         &lt;<a href="../todo.html">http://validator.w3.org/todo.html</a>&gt;.
@@ -144,18 +80,8 @@
         think is a Good Idea&reg;. While extra features are nice, they
         shouldn't dilute the value of the validator as an objective check.
       </p>
-    </div>
-    <div id="bugzilla" class="stb">
-      <h3>Bugs and Issue Tracking</h3>
-      <p>
-        Bug and Issue Tracking for the Validator happens in the <a
-          href="http://www.w3.org/Bugs/Public/">W3C Public Bugzilla</a>
-        instance. Developers should feel free to set up an account
-        and report bugs, enhancement requests, patches, etc. directly there
-        (end users should continue to send reports and ideas to the 
-	<a href="http://lists.w3.org/Archives/Public/www-validator/">mailing-list</a>).
-      </p>
-    </div>
+
+
 </div>
 <!--#include virtual="../footer.html" -->
   </body>
