@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.373 2005-01-15 15:20:39 ville Exp $
+# $Id: check,v 1.374 2005-01-15 15:21:24 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -211,7 +211,7 @@ Directory not readable (permission denied): @_r
   }
   #FIXME;
 
- 
+
   #
   # Set debug flag.
   if ($CFG->{'Allow Debug'} == TRUE) {
@@ -222,7 +222,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.373 $;
+  $VERSION    =  q$Revision: 1.374 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1137,7 +1137,7 @@ $headers
       goes across the network unencrypted.
     </p>
 EOF
-  
+
   # this is needed to avoid that the template code emits additional
   # markup which would make the result invalid and look odd; in the
   # longer term this should be moved into a template that fits with
@@ -1557,7 +1557,7 @@ sub parse_errors ($$) {
     # remove SGML Parser path if it contains colons
     s/^\Q$CFG->{Paths}->{SGML}->{Parser}\E// if
          $CFG->{Paths}->{SGML}->{Parser} =~ /:/;
-    
+
     push @{$File->{'DEBUG'}->{Errors}}, $_;
     chomp;
     my($err, @errors);
@@ -1659,7 +1659,7 @@ sub parse_errors ($$) {
 sub report_errors ($) {
   my $File = shift;
   my $Errors = [];
-    
+
   # Hash to keep track of how many of each error is reported.
   my %Msgs; # Used to generate a UID for explanations.
 
