@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.115 2004-05-15 07:21:34 ville Exp $
+# $Id: check,v 1.305.2.116 2004-05-15 10:17:48 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.115 $;
+  $VERSION    =  q$Revision: 1.305.2.116 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-15 07:21:34 $,
+                              Date => q$Date: 2004-05-15 10:17:48 $,
                              });
 
 #
@@ -1902,7 +1902,7 @@ EOHD
 
       #DEBUG: Print misc. vars relevant to source display.
       if ($DEBUG) {
-        $line .= "<br/> <strong>org length: $orglength - adj length: $adjlength - org col: $orgcol - adj col: $adjcol</strong>";
+        $line .= "<br /> <strong>org length: $orglength - adj length: $adjlength - org col: $orgcol - adj col: $adjcol</strong>";
       }
       #DEBUG;
 
