@@ -1,9 +1,9 @@
 # RPM spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.1.2.12 2003-12-01 21:23:36 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.1.2.13 2004-04-05 20:34:17 ville Exp $
 
 Name:           w3c-markup-validator
 Version:        0.6.5
-Release:        0.beta1.2
+Release:        0.beta1.3
 Epoch:          0
 Summary:        W3C Markup Validator
 
@@ -50,10 +50,11 @@ perl -pi -e \
   httpd/conf/httpd.conf
 
 # Cleanup of unused files
-rm -rf htdocs/source htdocs/config/verbosemsg.rc
-
-# Rename checklink
-mv httpd/cgi-bin/checklink.pl httpd/cgi-bin/checklink
+rm -rf \
+  htdocs/source \
+  htdocs/config/verbosemsg.rc \
+  htdocs/config/checklink.conf \
+  httpd/cgi-bin/checklink.pl
 
 # Move config out of the way
 mv htdocs/config __config
@@ -61,7 +62,7 @@ mv htdocs/config __config
 # Fixup permissions
 find . -type d | xargs chmod 755
 find . -type f | xargs chmod 644
-chmod 755 httpd/cgi-bin/check*
+chmod 755 httpd/cgi-bin/check
 
 # Point to validator.w3.org for source code
 perl -pi -e \
@@ -70,18 +71,14 @@ perl -pi -e \
 
 
 %build
-# Create the manual page.
-pod2man --center="W3C Link Checker" httpd/cgi-bin/checklink > checklink.1
 
 
 %install
 rm -rf $RPM_BUILD_ROOT
 mkdir -pm 755 $RPM_BUILD_ROOT%{_datadir}/%{name}
 
-# Scripts
-cp -p httpd/cgi-bin/check* $RPM_BUILD_ROOT%{_datadir}/%{name}
-mkdir -pm 755 $RPM_BUILD_ROOT%{_bindir}
-ln -s %{_datadir}/%{name}/checklink $RPM_BUILD_ROOT%{_bindir}
+# Script
+cp -p httpd/cgi-bin/check $RPM_BUILD_ROOT%{_datadir}/%{name}
 
 # Config files
 mkdir -pm 755 $RPM_BUILD_ROOT%{_sysconfdir}/w3c
@@ -98,10 +95,6 @@ mkdir -pm 755 $RPM_BUILD_ROOT%{_datadir}/sgml
 cp -pR sgml-lib $RPM_BUILD_ROOT%{_datadir}/sgml/%{name}
 mkdir -pm 755 $RPM_BUILD_ROOT%{_sysconfdir}/sgml
 touch $RPM_BUILD_ROOT%{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat
-
-# Man pages
-mkdir -pm 755 $RPM_BUILD_ROOT%{_mandir}/man1
-cp -p checklink.1 $RPM_BUILD_ROOT%{_mandir}/man1
 
 
 %clean
@@ -128,8 +121,6 @@ done
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config(noreplace) %{_sysconfdir}/w3c
 %{_datadir}/%{name}
-%{_bindir}/checklink
-%{_mandir}/man1/checklink.1*
 
 %files libs
 %defattr(-,root,root,-)
@@ -138,6 +129,9 @@ done
 
 
 %changelog
+* Mon Apr  5 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.5-0.beta1.3
+- The link checker is now available separately from CPAN.
+
 * Mon Dec  1 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.5-0.beta1.2
 - Cleanups.
 
