@@ -1,168 +1,208 @@
 /*
    Base Style Sheet for the W3C Markup Validation Service.
 
-   Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
+   Copyright 2000-2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.34 2004-11-16 05:19:49 ot Exp $
+   $Id: base.css,v 1.35 2005-01-04 08:37:53 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
 @import url(navbar.css);  /* CSS for navigation menu. */
 @import url(tips.css);    /* CSS for Quality Tips. */
 @import url(docs.css);    /* CSS for the Documentation. */
-/* the print CSS is at the end of this document, imported after everything else */
 
 
-html, body {
-  line-height:     120%;
-  color:           black;
-  background:      white;
-  font-weight:     normal;
-  font-family: "Bitstream Vera Sans", sans-serif;
-  font-style:      normal;
-  text-decoration: none;
-  margin:  0;
-  padding: 0;
-  border:  0;
+/*                 
+   General styling 
+                   */
+html {
+    background-image:url(images/bg1.gif);
 }
 
-div#main {
-  padding-top: 1em;
-/*   margin-right: 7.6em; */ /* no need for this without the righthand bar */
-  margin: 0;
+body {  
+    margin: auto auto;
+    background-image: url(http://www.w3.org/Icons/logo-WMVS.png);
+    background-attachment: fixed;
+    background-position: 0 20px;
+    background-repeat: no-repeat;
+    color: #33333E;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 12px;
 }
 
-div#main p, div#main dt {
-  padding-left: 1em;
-  padding-right: 1em;
+/*                                                   
+   Main blocks - see also #menu styled in navbar.css 
+                                                     */
+
+#banner {
+    background: white;
+    background-image: url(images/header.jpg);
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: top right;
+    padding: 0;
+    margin-top: 20px;
+    margin-left: 72px;
+    margin-right: 0;
+    margin-bottom: 0;
+    height: 50px;
+    width: 780px;
+    border-bottom: 0;
+    border-top: 1px solid #053188;
+    border-left: 1px solid #053188;
+    border-right: 1px solid #053188;
 }
 
-dt {
-  margin-top: 1em;
+#banner h1 { 
+    height: 50px;
+    vertical-align: middle;
+    font-size: 20px;
+    display: inline;
 }
 
-/* Fieldsets in general */
-fieldset {
-  background: #FCFCFC;
-  border: 1px dotted #053188;
-  margin-left:   1em;
-  margin-right:  1em;
-  padding:       1em;
+#main, address { 
+    margin: 0;
+    margin-left: 72px;
+    width: 750px;
+    padding: 15px;
+    background: white;
+    border: 1px solid #053188;
 }
 
-fieldset legend {
-  color: #053188;
-  background: #FFF;
-  font-variant: small-caps;
-  padding: .1ex .5ex;
-  border-right: 1px solid gray;
-  border-bottom: 1px solid gray;
-  font-weight: bold;
+address {
+    background-color: #eee;
+    background-image: url(images/footer.jpg);
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: right;
+    height:50px;
+    padding-top: 0;
+    padding-bottom: 0;
+    clear: right;
+
 }
 
-
+#main {
+    border-bottom: 0;
+}
 
 .intro {
   font-style: italic;
   text-align: justify;
 }
 
+/* 
+   Headers
+            */
+
+h1 { 
+    color: #053188;
+    font-family: "Bitstream Vera Sans", Helvetica, Arial, sans-serif;
+    font-size-adjust: .53;
+    font-weight: bold;
+    font-style: normal;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+h2 { 
+    color: #C65831;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    margin-left: -10px;
+    text-decoration: none;
+}
+
+h3 {
+    color: #C65831;
+    font-size: 12px;
+    text-decoration: none;
+} 
+
+h4 {
+    color: #C65831;
+    font-weight: 600;
+    font-style: normal;
+    text-decoration: underline;
+    font-size: 10px;
+}
+
+/* 
+   General link styling
+                         */
+
 a:link, a:visited {
-  color: blue;
+    color: #00209E;
+    text-decoration: none;
+
 }
 
-a:hover {
-  color: blue;
-  background-color: #eee;
+a:hover, a:active {
+  color: #C65831;
+  text-decoration: underline;
+
 }
 
-a:active {
-  color: red;
-  background-color: yellow;
+
+/* 
+   Other basic styles 
+                      */
+
+/* TODO - add ol, li, td here ? */
+p {
+
 }
 
-acronym:hover, abbr:hover {cursor: help}
+img { 
+    margin:0;
+    padding: 0;
+    vertical-align: middle;
+    border: 0;
+}
+
+acronym:hover, abbr:hover {
+    cursor: help;
+}
+
 abbr[title], acronym[title], span[title], strong[title] {
-  border-bottom: thin dotted;
-  cursor: help;
+    border-bottom: thin dotted;
+    cursor: help;
 }
 
 pre, code, tt {
-  font-family: "Bitstream Vera Sans Mono", monospace;
-  line-height: 100%;
-  white-space: pre;
+    font-family: "Bitstream Vera Sans Mono", monospace;
+    line-height: 100%;
+    white-space: pre;
 }
 
-a:link img, a:visited img {border-style: none}
+a:link img, a:visited img {
+    border-style: none;
+}
+
 a img {color: black} /* The only way to hide the border in NS 4.x */
 
 ul.toc {
-  list-style: none;
+    list-style: none;
 }
 
-ol li {
-  padding: .1em;
-}
 
-div.issue {
-  padding: 0.5em;
-  border: none;
-  margin-right: 5%;
-}
 
-.hideme {display: none}
 
-#Notice {
-  border: solid;
-  margin: .2em;
-  padding: .5em;
-  text-align: justify;
-}
-
-/* dt a {color: black} */ /* These are usually targets and not links */
-h1 a {color: black} /* These are usually targets and not links */
-h2 a {color: black} /* These are usually targets and not links */
-h3 a {color: black} /* These are usually targets and not links */
-
-img {vertical-align: middle}
-
-a.formoptions {text-decoration: none; color: black; border-bottom: 1px dotted #0000DD}
-
-/* done vs. tbc for the TODO list */
-.done { text-decoration: line-through; }
-
-address img {
-  float: right;
-  width: 88px;
-}
-
-address {
-  padding-right:    1em;
-  padding-left:     1em;
-  margin-top:       3em;
-  border-top:       1px solid black;
-  background-color: #eee;
-  clear:            right;
-}
-
-address {
-  background-image: url(images/footer.jpg);
-  background-repeat: no-repeat;
-  background-attachment: scroll;
-  height: 50px;
-  background-position: center;
-}
-
+/*
+   Stuff we don't actually want too visible - or not at all
+                                                            */
+                                                            
 p.copyright {
-  margin-top:     5em;
-  padding-top:    .5em;
-  font-size:      xx-small;
-  max-width:      85ex;
+  margin-top:     20px;
+  width: 500px;
+  font-size:      9px;
   text-align:     justify;
   text-transform: uppercase;
-  margin-left:    auto;
-  margin-right:   auto;
+  margin-left:    222px;
   font-family: "Bitstream Vera Sans Mono", monospace;
   color:          #888;
   line-height:    120%;
@@ -173,169 +213,39 @@ p.copyright a {
   text-decoration: none;
 }
 
-.stb {clear: left}
 
-div.colophon {
-  margin-left: 2em;
-  font-style: italic;
+.hideme { display: none; }
+
+
+/*
+   Forms 
+         */
+
+
+/* Fieldsets */
+fieldset {
+    background: #FCFCFC;
+    border: 1px dotted #053188;
 }
 
-div.colophon em {
-  font-style: normal;
+fieldset legend {
+    color: #C65831;
+    padding: .1ex .5ex;
+    border-right: 1px solid gray;
+    border-bottom: 1px solid gray;
+    font-weight: bold;
 }
 
-/* Various header(ish) things. Definitions cribbed from the CORE Styles. */
-h1 {
-  font-family: "Bitstream Vera Sans", sans-serif;
-  font-size-adjust: .53;
-  font-size: 2em;
-  font-weight: bold;
-  font-style: normal;
-  text-decoration: none;
-  color: #053188;
-}
-#banner h1 {font-size: 1.3em;
-display: inline}
-
-#banner {
-background-image: url(images/header.jpg); /* only jpg version - png too big! */
-background-repeat: no-repeat;
-background-attachment: scroll;
-height: 50px;
-background-position: right;
-margin:0; padding:0;
-border-bottom: 1px solid black;
-}
-
-#banner #versioninfo {
-  font-size: small;
-  color: #053188;
-  
-}
-
-h1#title {
-/*  background-color: #eee; 
-  border-bottom: 1px solid black; 
-  padding: .25em;*/
-  padding: 0;
-  margin: 0;
-  color: #053188;
-}
-
-/* Used for beta releases. */
-#versioninfo em {
-  color: red;
-}
-
-h1, h2, h3, h4, h5, h6, dt {
-  font-family: "Bitstream Vera Sans", sans-serif;
-  font-size-adjust: .53;
-  font-variant: small-caps;
-}
-
-h2 {
-  font-size: 1.5em;
-  text-align: center;
-  font-weight: bold;
-  font-style: normal;
-  text-decoration: none;
-  margin-top : 2em;
-  margin-bottom : 1em;
-  line-height: 120%;  
-}
-
-h3 {
-  font-size: 1.3em;
-  font-weight: normal;
-  font-style: normal;
-  text-decoration: none;
-  background-color: #eee;
-  text-indent: 2em;
-  padding: .2em;
-  border-top: 1px dotted black;
-}
-
-h4 {
-  font-size: 1.1em;
-  font-weight: 600;
-  font-style: normal;
-  text-decoration: underline;
-}
-
-h5, dt {
-  font-size: 1em;
-  font-weight: bold;
-  font-style: normal;
-  text-decoration: none;
-  text-indent: .5em;
-  margin:0;
-}
-
-h6 {
-  font-size: 1em;
-  font-style: italic;
-  text-decoration: none;
-  color: #666;
-  text-indent: 1em;
-  margin:0;
-}
-
-/* comma tools table */
-
-td.comma-desc {
-  background: #ffeecc;
-  border : 1px solid black;
-  font-family: "Bitstream Vera Sans", sans-serif
-}
-
-td.comma-shortcut {
-  background: #e7e7ff; 
-  border : 1px solid black;
-  font-family: "Bitstream Vera Sans Mono", monospace;
-}
-
-td.comma-tool {
-  background: #e7e7ff;
-  border: 1px solid black;
-}
-
-kbd {
-  font-weight: bold;
-}
-
-.shout {
-  background: yellow;
-  border: .5ex dotted black;
-  padding: 1em;
-}
-
-.shout strong {
-  display: block;
-  color: red;
-}
 
 input {
-  vertical-align: middle;
+    vertical-align: middle;
 }
 
 input.reset {
-  text-align: center;
-  font-family: "Bitstream Vera Sans Mono", monospace;
+    text-align: center;
 }
 
 input.default {
-  text-align: center;
-  font-weight: bold;
-  font-family: "Bitstream Vera Sans Mono", monospace;
+    text-align: center;
+    font-weight: bold;
 }
-
-div#recent {
-  margin-right: 5em;
-}
-
-div#recent dt {
-  margin-top: 1em;
-}
-
-@import url(print.css) print;
-

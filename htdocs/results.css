@@ -1,11 +1,11 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.20 2004-11-15 01:24:21 ot Exp $ */
+/* $Id: results.css,v 1.21 2005-01-04 08:37:53 ot Exp $ */
 
 .input {
   color: black;
   background-color: #eee;
   font-family: "Bitstream Vera Sans Mono", monospace;
-  font-size: small;
+  font-size: 10px;
 }
 
 /* Various Bits of the Table Header */
@@ -19,6 +19,7 @@ fieldset div.moreinfo {
 fieldset div.moreinfo p {
   background: #FFF;
   border: 1px solid #CCC;
+  padding: 10px;
   text-align: justify;
   font-size: smaller;
 }
@@ -54,8 +55,6 @@ fieldset table.header {
 
 .ve p {
   line-height: 100%;
-  font-style: italic;
-  font-size: small;
   margin: 1ex 5em 1ex 1em;
   text-align: justify;
 }
@@ -222,9 +221,19 @@ td {
   border: solid black 1px;
 }
 
-h2.valid {
-  text-align: center;
+div#result {
+  clear: left;
+  padding-top: 1em;
 }
+
+h2.valid, h2.invalid {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: -15px !important;
+    margin-right: -15px !important;
+}
+
 
 .valid {
   background:		#053188;
@@ -263,20 +272,6 @@ h2.valid {
   background: yellow;
 }
 
-div#result {
-  clear: left;
-  padding-top: 1em;
-}
-
-h2.valid {
-margin-top: 0;
-margin-bottom: 0;
-}
-h2.invalid {
-  text-align: center;
-  margin-top: 0;
-  margin-bottom: 0;
-}
 
 .invalid {
   background:		#A51C1C;
