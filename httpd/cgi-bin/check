@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.85 2004-03-15 21:33:18 ot Exp $
+# $Id: check,v 1.305.2.86 2004-04-13 01:45:51 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.85 $;
+  $VERSION    =  q$Revision: 1.305.2.86 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-03-15 21:33:18 $,
+                              Date => q$Date: 2004-04-13 01:45:51 $,
                              });
 
 #
@@ -284,7 +284,7 @@ if ($HAVE_SOAP_LITE) {
   $File->{Opt}->{'Verbose'}        = $q->param('verbose') ? TRUE                   :  FALSE;
   $File->{Opt}->{'Debug'}          = $q->param('debug')   ? TRUE                   :  FALSE;
   $File->{Opt}->{'No200'}          = $q->param('No200')   ? TRUE                   :  FALSE;
-  $File->{Opt}->{'Fussy'}          = $q->param('fussy')   ? TRUE                   :  FALSE;
+  # $File->{Opt}->{'Fussy'}          = $q->param('fussy')   ? TRUE                   :  FALSE;
   $File->{Opt}->{'Charset'}        = $q->param('charset') ? lc $q->param('charset'):     '';
   $File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') ? $q->param('doctype')   :     '';
   $File->{Opt}->{'URI'}            = $q->param('uri')     ? $q->param('uri')       :     '';
@@ -620,21 +620,21 @@ sub parse (\$) {
      title="Limitations in Validator XML support">some limitations</a>.
 .EOF.
   } else { # Only add these in SGML mode.
-    if ($File->{Opt}->{'Fussy'}) {
-      push @spopt, '-wmin-tag';
-      push @spopt, '-wfully-tagged';
-      push @spopt, '-wrefc';
-      push @spopt, '-wmissing-att-name';
-      push @spopt, '-wdata-delim';
-      &add_warning($File, 'note', 'Note:', <<".EOF.");
-    The Validator is running in "Fussy" mode. In this mode it will generate
-    warnings about some things that are not strictly forbidden in the HTML
-    Recommendation, but that are known to be problematic in popular browsers.
-    In general it is recommended that you fix any such errors regardless, but
-    if in doubt you can rerun the Validator in its lax mode to find out if it
-    will pass your document then.
-.EOF.
-    }
+#    if ($File->{Opt}->{'Fussy'}) {
+#      push @spopt, '-wmin-tag';
+#      push @spopt, '-wfully-tagged';
+#      push @spopt, '-wrefc';
+#      push @spopt, '-wmissing-att-name';
+#      push @spopt, '-wdata-delim';
+#      &add_warning($File, 'note', 'Note:', <<".EOF.");
+#    The Validator is running in "Fussy" mode. In this mode it will generate
+#    warnings about some things that are not strictly forbidden in the HTML
+#    Recommendation, but that are known to be problematic in popular browsers.
+#    In general it is recommended that you fix any such errors regardless, but
+#    if in doubt you can rerun the Validator in its lax mode to find out if it
+#    will pass your document then.
+#.EOF.
+#    }
   }
 
 
@@ -1009,13 +1009,13 @@ sub print_table {
              ($File->{Opt}->{'Verbose'}         ? q(checked="checked" ) : '') .
              q(/>Verbose&nbsp;Output</label>)
            );
-  add_table($Options, '',
-            # Fussy Parse Mode?
-             q(<label title="Use Fussy Error Reporting" for="fussy"><input type="checkbox" value="1" id="fussy" name="fussy" ) .
-             # @@@ accesskey missing
-             ($File->{Opt}->{Fussy}         ? q(checked="checked" ) : '') .
-             q(/>Fussy&nbsp;Parsing</label>),
-           );
+#  add_table($Options, '',
+#            # Fussy Parse Mode?
+#             q(<label title="Use Fussy Error Reporting" for="fussy"><input type="checkbox" value="1" id="fussy" name="fussy" ) .
+#             # @@@ accesskey missing
+#             ($File->{Opt}->{Fussy}         ? q(checked="checked" ) : '') .
+#             q(/>Fussy&nbsp;Parsing</label>),
+#           );
 
   add_table(
             $Form,
