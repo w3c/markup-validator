@@ -5,7 +5,7 @@
 # (c) 1999-2001 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.81 2001-06-05 10:09:14 gerald Exp $
+# $Id: checklink.pl,v 2.82 2001-06-27 15:59:04 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -38,7 +38,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.81 $ . '(c) 1999-2001 W3C';
+my $VERSION = q$Revision: 2.82 $ . '(c) 1999-2001 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -97,7 +97,7 @@ if ($#ARGV >= 0) {
             $_progress = 0;
         }
         # Transform the parameter into a URI
-        $uri = urize($uri);
+        $uri = &urize($uri);
         &check_uri($uri, 0, $_depth);
     }
     if (($doc_count > 0) && !$_summary) {
@@ -1811,7 +1811,7 @@ of a document that you would like to check:</p>
   <br>
   <input type=\"checkbox\" name=\"hide_dir_redirects\"> Hide directory redirects
   <br>
-  <input type=\"checkbox\" name=\"recursive\"> Check linked documents recursively <small>(maximum: $_max_documents documents; sleeping $_sleep_time\s between each document)</small>
+  <input type=\"checkbox\" name=\"recursive\"> Check linked documents recursively <small>(maximum: $_max_documents documents; sleeping $_sleep_time seconds between each document)</small>
   <br>
   Depth of the recursion: <input type=\"text\" size=\"3\" name=\"depth\"><small>(-1 is the default and means unlimited)</small>
 </p>
