@@ -63,7 +63,7 @@ sub on_return {
 	if($response->code == 401 && !defined($self->{Auth}{$response->request->url})){
 	    if($response->request->url->netloc =~ /\.w3\.org$/){
 		my $newreq = HTTP::Request->new(HEAD => $response->request->url);
-		$newreq->headers->authorization_basic("XXXXX","XXXXX");
+		$newreq->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
 		$self->{Auth}{$response->request->url} = 1;
 		$self->register($newreq,\&callback_check,undef,0);
 	    }	    
@@ -76,7 +76,7 @@ use CGI;
 ###############
 # Global Variables
 
-my $VERSION= '$Id: checklink.pl,v 1.20 1999-02-19 02:22:16 renaudb Exp $ ';
+my $VERSION= '$Id: checklink.pl,v 1.21 1999-02-21 00:13:37 renaudb Exp $ ';
 my %ALLOWED_SCHEMES = ( "http" => 1 );
 my %SCHEMES = (); # for report
 my %URL = ();
@@ -124,10 +124,10 @@ if ($#ARGV == 0){
 sub doit {
     my $q=shift;
     
-    &html_header($q);
     if(defined $q->param('url')){
 	&checklinks($q);
     } else {
+	&html_header($q);
 	print $q->startform($q->url);
 	print "Enter a URI ",$q->textfield(-name=>'url',-size=>'50'),$q->br;
 	print $q->submit('','Check the Links !');
@@ -193,8 +193,8 @@ sub checklinks {
     # Request document and parse it as it arrives via callback
     # Then get the UA ready for the requests in the foreach loop
     if($CGI){
-	if($q->param('username')){
-	    $request->headers->authorization_basic($q->param('username'),$q->param('password'));
+	if($ENV{HTTP_AUTHORIZATION}){
+	    $request->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
 	}
     }
 
@@ -230,10 +230,31 @@ sub checklinks {
 	    # I need to add a command-line mode here
 	    if($r->code == 401){
 		if($CGI){
-		    print $q->h3($r->request->url);
 		    $r->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
 		    my $realm = $1;
-		    if($CGI){
+		    my $resource = $r->request->url;
+		    my $authHeader = $r->headers->www_authenticate;
+		    my $authResponse = <<EOF
+Status: 401 Authorization Required
+WWW-Authenticate: $authHeader
+Connection: close
+Content-Type: text/html
+
+<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">
+<HTML><HEAD>
+<TITLE>401 Authorization Required</TITLE>
+</HEAD><BODY>
+<H1>Authorization Required</H1>
+<P>You need $realm access to $resource to perform Link Checking.
+<P>Return to the <a href="checklink.pl">Link Checker</A>.
+
+EOF
+    ;
+		    if(0){
+			&html_header($q);
+			print $q->h3($r->request->url);
+			print "<PRE>",$authResponse;
+			print "</PRE>\n";
 			print $q->h2('Authentication Required To Fetch '.$q->a({href=>$url},$url));
 			print $q->startform('POST',$q->url);
 			print $q->textfield(-name=>'url',-size=>'50',-value=>$url),$q->br;
@@ -241,9 +262,14 @@ sub checklinks {
 			print $q->password_field(-name=>'password',-size=>'10'),"Password",$q->br;
 			print $q->submit('Proceed');
 			print $q->endform;
+		    } else {
+			print $authResponse;
 		    }
+		} elsif($VERBOSE){
+		    print "Need authentication: ".$r->headers->www_authenticate,"\n";
 		}
 	    } else {
+		&html_header($q);
 		print $q->h2('Error '.$r->code." ".$r->content_type) if($CGI);
 	    }
 	}
@@ -270,6 +296,7 @@ sub print_result{
     }
     # first a sumary, which also acts as a legend
     if($CGI){
+	&html_header($q);
 	print $q->h2('Summary and Legend');
 	print "<TABLE BORDER=\"1\"><TR ALIGN=\"center\"><TD>Return Code</TD><TD>Occurrences</TD><TD>Meaning and color</TD><TD>What to do</TD></TR>\n";
 	foreach(sort keys %{$URL{Legend}}){
