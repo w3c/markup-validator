@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.386 2005-02-04 21:03:07 link Exp $
+# $Id: check,v 1.387 2005-02-04 21:05:54 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -239,7 +239,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.386 $;
+  $VERSION    =  q$Revision: 1.387 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1376,9 +1376,9 @@ sub handle_file {
   $File->{Mode}            = $mode;
   $File->{ContentType}     = $ct;
   $File->{Charset}->{HTTP} = lc $charset;
-  $File->{Modified}        = $h->{'Last-Modified'};
-  $File->{Server}          = $h->{'User-Agent'}; # Fake a "server". :-)
-  $File->{Size}            = $h->{'Content-Length'};
+  $File->{Modified}        = $q->http('Last-Modified');
+  $File->{Server}          = $q->http('User-Agent'); # Fake a "server". :-)
+  $File->{Size}            = $q->http('Content-Length');
   $File->{URI}             = "$f"; # Need to stringify because we want ref
                                    # to return false later in add_table.  This
                                    # is also a file handle... see man CGI.
