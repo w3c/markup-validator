@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.3 2002-11-27 08:00:06 link Exp $
+# $Id: check,v 1.305.2.4 2002-11-27 08:47:21 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -36,7 +36,12 @@ use warnings;
 # when loading modules to prevent non-OO or poorly written modules from
 # polluting our namespace.
 #
-use CGI            2.81 qw(-newstyle_urls -private_tempfiles); # 2.81 for XHTML
+use CGI            2.81 qw(
+			   -newstyle_urls
+			   -private_tempfiles
+			   redirect
+			  ); # 2.81 for XHTML, and import redirect() function.
+
 use CGI::Carp           qw(carp croak);
 use File::Spec          qw();
 use HTML::Parser   3.25 qw(); # Need 3.25 for $p->ignore_elements.
@@ -95,7 +100,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.3 $;
+  $VERSION    =  q$Revision: 1.305.2.4 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +162,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-27 08:00:06 $,
+                              Date => q$Date: 2002-11-27 08:47:21 $,
                              });
 
 #
@@ -1131,7 +1136,11 @@ sub handle_uri {
     exit;
   }
 
-  my($type, $ct, $charset) = &parse_content_type($File, $res->header('Content-Type'));
+  my($type, $ct, $charset) = &parse_content_type(
+						 $File,
+						 $res->header('Content-Type'),
+						 scalar($res->request->url),
+						);
 
   my $lastmod = undef;
   if ( $res->last_modified ) {
@@ -1205,6 +1214,7 @@ sub handle_frag {
 sub parse_content_type {
   my $File         = shift;
   my $Content_Type = shift;
+  my $url          = shift || '';
   my $charset      = '';
   my $type         = '';
 
@@ -1222,13 +1232,20 @@ sub parse_content_type {
   }
 
   if ($type =~ m(/)) {
-    $File->{'Error Flagged'} = TRUE;
-    $File->{'Error Message'} = sprintf(<<"    EOF", &ent($type));
+    if ($type =~ m(text/css) and defined $url) {
+      print redirect
+	'http://jigsaw.w3.org/css-validator/validator?uri='
+	  . uri_escape $url;
+      exit;
+    } else {
+      $File->{'Error Flagged'} = TRUE;
+      $File->{'Error Message'} = sprintf(<<"      EOF", &ent($type));
     <p class="error">
       Sorry, I am unable to validate this document because its content type is
       <code>%s</code>, which is not currently supported by this service.
     </p>
-    EOF
+      EOF
+    }
   }
 
   return $type, $ct, $charset;
@@ -1981,7 +1998,7 @@ sub prepCGI {
       $q->param('uri', 'referer');
     } else {
       my $thispage = &self_url($q);
-      print $q->redirect($thispage);
+      print redirect $thispage;
       exit;
     }
   }
@@ -1996,7 +2013,7 @@ sub prepCGI {
 
   # Issue a redirect for uri=referer.
   if ($q->param('uri') and $q->param('uri') eq 'referer') {
-    print $q->redirect($q->url() . '?uri=' . uri_escape($q->referer));
+    print redirect $q->url() . '?uri=' . uri_escape($q->referer);
     exit;
   }
 
@@ -2015,7 +2032,7 @@ sub prepCGI {
   # Redirect to a GETable URL if method is POST without a file upload.
   if ($q->request_method eq 'POST' and not $File->{'Is Upload'}) {
     my $thispage = &self_url($q);
-    print $q->redirect($thispage);
+    print redirect $thispage;
     exit;
   }
 
