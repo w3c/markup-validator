@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.33 2004-04-26 00:54:52 ot Exp $
+   $Id: base.css,v 1.26.2.34 2004-04-26 01:02:58 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -117,6 +117,8 @@ div.issue {
 }
 
 /* dt a {color: black} */ /* These are usually targets and not links */
+h1 a {color: black} /* These are usually targets and not links */
+h2 a {color: black} /* These are usually targets and not links */
 h3 a {color: black} /* These are usually targets and not links */
 
 img {vertical-align: middle}
@@ -189,6 +191,7 @@ h1 {
   font-weight: bold;
   font-style: normal;
   text-decoration: none;
+  color: #053188;
 }
 #banner h1 {font-size: 1.3em;
 border-bottom: 1px solid black;}
@@ -206,14 +209,13 @@ h1#title {
   padding: .25em;*/
   padding:0;
   margin: 0;
+  color: #053188;
 }
 
 /* Used for beta releases. */
 h1#title em {
   color: red;
 }
-h1, h2 { color: rgb(  0,  79, 147) !important }
-
 h2 {
   font-family: "Bitstream Vera Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
   font-size-adjust: .53;
