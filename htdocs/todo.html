@@ -8,7 +8,7 @@
     W3C HTML Validation Service, To Do List">
   <meta name="description" content="To Do List for W3C's Validation Service.">
   <meta name="revision"
-    content="$Id: todo.html,v 1.20 2000-02-01 23:48:45 gerald Exp $">
+    content="$Id: todo.html,v 1.21 2000-04-28 09:20:01 gerald Exp $">
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
@@ -41,9 +41,13 @@
 
 <ol>
 
-  <li> fix the confusion caused by defaulting to xhtml
+  <li> fix transparency problems in icons
 
-  <li> finish integrating support for form-based file upload (RFC 1867)
+  <li> link directly to png and gif versions of icons from the
+    results page; add docs on content negotiation
+
+  <li> put error explanations online, re-link them from validator
+    output
 
   <li> add a "fix my HTML for me" option using <a
     href="http://www.w3.org/People/Raggett/tidy/">tidy</a>.
@@ -53,6 +57,10 @@
     href="http://www.hcrc.ed.ac.uk/~richard/xml-check.html">an
     existing service</a>)
 
+  <li> bug fix: escape '&amp;' to '&amp;amp;' in URI: item in
+    validator results (<a
+    href="/check?uri=http://validator.w3.org/check?uri=http%3A%2F%2Fvalidator.w3.org%2Fcheck%3Furi%3Dhttp%253A%252F%252Fvalidator.w3.org%252F%26ss%3D">sample</a>)
+
   <li> bug fix: column counts are off in <a
     href="/check?uri=http://www.xml.org/xmlorg_catalog.htm;ss">this
     report</a>
@@ -60,6 +68,16 @@
   <li> update <a
     href="http://validator.w3.org/sgml-lib.tar.gz">sgml-lib.tar.gz</a>;
     automate the updates
+
+  <li> always display source code if there are errors?
+    (or maybe just show a few lines of context for each error?)
+    Or add a "show source iff errors" option?
+
+  <li> allow twiddling of options from the results page
+
+  <li> make a "most frequently validated invalid pages" list
+    (need to start logging stuff first, including IPs to compare
+    uniqueness)
 
   <li> create a stylesheet and link to it from every page
 
@@ -97,7 +115,7 @@
   href="http://lists.w3.org/Archives/Public/www-validator/1999AprJun/0003.html">patches</a>
   to make it work on win9x systems
 
-  <li> add CSS validation
+  <li> incorporate CSS validation directly into this service
 
   <li> make e.g.
     <code>http://validator.w3.org/check/referer;imgonly</code>
@@ -179,7 +197,7 @@
      src="http://validator.w3.org/images/vh40" height=31 width=88
      align=right border=0 alt="Valid W3C HTML 4.0!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</A><br>
-     $Date: 2000-02-01 23:48:45 $
+     $Date: 2000-04-28 09:20:01 $
 </address>
 
 </body>
