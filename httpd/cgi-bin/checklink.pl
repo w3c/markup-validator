@@ -5,7 +5,7 @@
 # (c) 1999-2002 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.92 2002-08-22 00:56:48 link Exp $
+# $Id: checklink.pl,v 2.93 2002-08-22 01:03:43 link Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -38,7 +38,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.92 $ . '(c) 1999-2002 W3C';
+my $VERSION = q$Revision: 2.93 $ . '(c) 1999-2002 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -84,12 +84,12 @@ my $timestamp = &get_timestamp;
 if ($#ARGV >= 0 && !(@ARGV == 1 && $ARGV[0] eq 'DEBUG')) {
     $_cl = 1;
 # Parse command line
-    my @uris = &parse_arguments();
+    &parse_arguments();
     if ($_user && (! $_password)) {
         &ask_password();
     }
     my $uri;
-    foreach $uri (@uris) {
+    foreach $uri (@ARGV) {
 	if (!$_summary) {
             printf("%s %s\n", $PROGRAM ,$VERSION) if (! $_html);
         } else {
@@ -185,95 +185,44 @@ if ($#ARGV >= 0 && !(@ARGV == 1 && $ARGV[0] eq 'DEBUG')) {
 ################################
 
 sub parse_arguments() {
-    my @uris;
-    my $uris = 0;
-    while (@ARGV) {
-        $_ = shift(@ARGV);
-        if ($uris) {
-            push(@uris, $_);
-        } elsif (m/^--$/) {
-            $uris = 1;
-        } elsif (m/^-[^-DupytdlL]/) {
-            if (m/q/) {
-                $_quiet = 1;
-                $_summary = 1;
-            }
-            if (m/s/) {
-                $_summary = 1;
-            }
-            if (m/b/) {
-                $_redirects = 0;
-            }
-            if (m/e/) {
-                $_dir_redirects = 0;
-            }
-            if (m/v/) {
-                $_verbose = 1;
-            }
-            if (m/i/) {
-                $_progress = 1;
-            }
-            if (m/h/) {
-                $_html = 1;
-            }
-            if (m/n/) {
-                $_accept_language = 0;
-            }
-            if (m/r/) {
-                if ($_depth == 0) {
-                    $_depth = -1;
-                }
-            }
-        } elsif (m/^--help$/) {
-            &usage();
-        } elsif (m/^--quiet$/) {
-            $_quiet = 1;
-        } elsif (m/^--summary$/) {
-            $_summary = 1;
-        } elsif (m/^--broken$/) {
-            $_redirects = 0;
-        } elsif (m/^--dir-redirects$/) {
-            $_dir_redirects = 0;
-        } elsif (m/^--verbose$/) {
-            $_verbose = 1;
-        } elsif (m/^--indicator$/) {
-            $_progress = 1;
-        } elsif (m/^--html$/) {
-            $_html = 1;
-        } elsif (m/^--noacclanguage$/) {
-            $_accept_language = 0;
-        } elsif (m/^--recursive$/) {
-            if ($_depth == 0) {
-                $_depth = -1;
-            }
-        } elsif (m/^-l|--location$/) {
-            $_base_location = shift(@ARGV);
-        } elsif (m/^-u|--user$/) {
-            $_user = shift(@ARGV);
-        } elsif (m/^-p|--password$/) {
-            $_password = shift(@ARGV);
-        } elsif (m/^-t|--timeout$/) {
-            $_timeout = shift(@ARGV);
-        } elsif (m/^-L|--languages$/) {
-            $_languages = shift(@ARGV);
-        } elsif (m/^-D|--depth$/) {
-            my $value = shift(@ARGV);
-            $_depth = $value unless($value == 0);
-        } elsif (m/^-d|--domain$/) {
-            $_trusted = shift(@ARGV);
-        } elsif (m/^-y|--proxy$/) {
-            $_http_proxy = shift(@ARGV);
-        } elsif (m/^--masquerade$/) {
-            $_masquerade = 1;
-            $_local_dir = shift(@ARGV);
-            $_remote_masqueraded_uri = shift(@ARGV);
-        } elsif (m/^--hide-same-realm$/) {
-            $_hide_same_realm = 1;
-        } else {
-            push(@uris, $_);
-        }
+
+    use Getopt::Long 2.17 qw(GetOptions);
+    Getopt::Long::Configure('no_ignore_case');
+    my @masq = ();
+
+    GetOptions('help'            => \&usage,
+               'q|quiet'         => sub { $_quiet = 1; $_summary = 1; },
+               's|summary'       => \$_summary,
+               'b|broken'        => sub { $_redirects = 0; },
+               'e|dir-redirects' => sub { $_dir_redirects = 0; },
+               'v|verbose'       => \$_verbose,
+               'i|indicator'     => \$_progress,
+               'h|html'          => \$_html,
+               'n|noacclanguage' => sub { $_accept_language = 0; },
+               'r|recursive'     => sub { $_depth = -1 if $_depth == 0; },
+               'l|location=s'    => \$_base_location,
+               'u|user=s'        => \$_user,
+               'p|password=s'    => \$_password,
+               't|timeout=i'     => \$_timeout,
+               'L|languages=s'   => \$_languages,
+               'D|depth=i'       => sub { $_depth = $_[1] unless $_[1] == 0; },
+               'd|domain=s'      => \$_trusted,
+               'y|proxy=s'       => \$_http_proxy,
+               'masquerade'      => \@masq,
+               'hide-same-realm' => \$_hide_same_realm,
+               'V|version'       => \&version,
+              );
+
+    if (@masq) {
+        $_masquerade = 1;
+        $_local_dir = shift(@masq);
+        $_remote_masqueraded_uri = shift(@masq);
     }
-    return(@uris);
+}
+
+sub version() {
+    print STDERR "$PROGRAM $VERSION\n";
+    exit(0);
 }
 
 sub usage() {
@@ -300,7 +249,7 @@ Options:
 	-i/--indicator		Show progress while parsing.
 	-u/--user username	Specify a username for authentication.
 	-p/--password password	Specify a password.
-	--hide-same-real	Hide 401's that are in the same realm as the
+	--hide-same-realm	Hide 401's that are in the same realm as the
 				document checked.
 	-t/--timeout value	Timeout for the HTTP requests.
 	-d/--domain domain	Regular expression describing the domain to
@@ -312,6 +261,7 @@ Options:
 	-y/--proxy proxy	Specify an HTTP proxy server.
 	-h/--html		HTML output.
 	--help			Show this message.
+	-V/--version		Output version information.
 
 Documentation at: http://www.w3.org/2000/07/checklink
 Please send bug reports and comments to the www-validator mailing list:
