@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.51 2002-07-05 21:34:05 link Exp $
+# $Id: check,v 1.200.2.52 2002-07-05 22:17:59 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.200.2.51 $;
+  $VERSION    =  q$Revision: 1.200.2.52 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-07-05 21:34:05 $,
+			      Date => q$Date: 2002-07-05 22:17:59 $,
 			     });
 
 #
@@ -1444,6 +1444,9 @@ sub report_valid {
     } elsif ($File->{Version} =~ /Hotjava/) {
       $image_uri = "$CFG->{'Home Page'}images/vhhj";
       $alttext = "Valid Hotjava-HTML!";
+    } elsif ($File->{Version} =~ /ISO\/IEC 15445:2000/) {
+      $image_uri = "$CFG->{'Home Page'}images/v15445";
+      $alttext = "Valid ISO-HTML!";
     }
 
     if (defined $image_uri) {
