@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.235 2002-09-30 17:32:23 link Exp $
+# $Id: check,v 1.236 2002-10-01 06:11:14 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.235 $;
+  $VERSION    =  q$Revision: 1.236 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-09-30 17:32:23 $,
+			      Date => q$Date: 2002-10-01 06:11:14 $,
 			     });
 
 #
@@ -1400,8 +1400,8 @@ sub parse_errors ($$) {
       <p>
         I could not parse this document, because it does not include a
         DOCTYPE Declaration. A DOCTYPE Declaration is mandatory for most
-        current markup languages and without such a Declaration it is
-        impossible Validate this document.
+        current markup languages and without such a declaration it is
+        impossible to validate this document.
       </p>
 .EOF.
       $File->{'Error Message'} .= &doctype_spiel;
