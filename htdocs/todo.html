@@ -8,7 +8,7 @@
     W3C HTML Validation Service, To Do List">
   <meta name="description" content="To Do List for W3C's Validation Service.">
   <meta name="revision"
-    content="$Id: todo.html,v 1.9 1999-04-09 00:38:39 gerald Exp $">
+    content="$Id: todo.html,v 1.10 1999-09-30 12:07:18 gerald Exp $">
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
@@ -41,11 +41,33 @@
 
 <ol>
 
+  <li> make a link to the CSS validator from the results page
+
+  <li> add image/svg, application/smil to XML types to check for
+
   <li> make the output valid (!)
+
+  <li> bug fix: <a href="http://validator.w3.org:8000/check?uri=www.w3.org/Press/1998/XSL-WD.html.ja">iso-2022-jp
+  document</a>
+
+  <li> bug fix: column count seems off in the <a
+  href="http://validator.w3.org/check?uri=http://www.disney.com/">report
+  for disney.com</a>
+  <a
+  href="http://validator.w3.org/check?uri=http://www.webcom.com/us_scot/">this
+  one too</a>
+
+  <li> don't output a bazillion errors for documents with bogus
+  FPIs (see <a
+  href="http://validator.w3.org/check?uri=http://validator.w3.org/dev/tests/bogus-fpi.html">a
+  sample</a>)
 
   <li> do more <a
    href="http://lists.w3.org/Archives/Public/www-validator/1998JulSep/0003">i18n
     bug fixes</a>
+    (see also: a <a
+    href="http://lists.w3.org/Archives/Public/www-validator/1999JulSep/0041.html">more
+    recent report</a> of same)
 
   <li> put the explanations in a database (flat files are probably okay),
     offer an option to display them inline with the errors
@@ -59,14 +81,19 @@
 
   <li> add a doctype-overriding option
 
+  <li> add XML validation
+
   <li> write documentation, describing each
     feature and option of the validator and answering questions like
     "What's the difference between an SGML parser and Weblint?",
     "Which DOCTYPE should I use?", ...
 
-  <li> upgrade weblint to the most recent version
+  <li> upgrade <a href="http://www.weblint.org/">weblint</a> to
+  the most recent version
 
-  <li> add XML validation
+  <li> incorporate <a
+  href="http://lists.w3.org/Archives/Public/www-validator/1999AprJun/0003.html">patches</a>
+  to make it work on win9x systems
 
   <li> add CSS validation
 
@@ -77,13 +104,19 @@
   <li> bug fix: fix the heading-based "outline" feature to include ALT text
     if it appears in the headings.
 
-  <li> if the validator gets a redirection from the given URI, instead
-    of displaying a page about the redirection, just put something at the
-    top of the report saying "by the way, I was redirected to: ..."
-
   <li> add link validation using Renaud's <a
   href="http://dev.w3.org/cgi-bin/cvsweb/validator/httpd/cgi-bin/checklink.pl">checklink
   code</a>
+  (or other code with similar functionality)
+
+  <li> give errors/warnings related to markup that is technically
+  valid SGML, but error prone, such as things found in <a
+  href="http://www.w3.org/TR/REC-html40/appendix/notes.html#h-B.3">"B.3
+  SGML implementation notes"</a> in the <a
+  href="http://www.w3.org/TR/REC-html40/">HTML 4.0 spec</a>.
+  (these things really belong in <a
+  href="http://www.weblint.org/">weblint</a>; does it handle
+  any/all of them?)
 
   <li> make an "elements found" section a la Webtechs, with links from each
     element to the appropriate place in either the DTD tree listing produced
@@ -144,7 +177,7 @@
      src="http://validator.w3.org/images/vh40.gif" height=31 width=88
      align=right border=0 alt="Valid W3C HTML 4.0!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</A><br>
-     $Date: 1999-04-09 00:38:39 $
+     $Date: 1999-09-30 12:07:18 $
 </address>
 
 </body>
