@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.102 2004-05-06 16:13:55 ot Exp $
+# $Id: check,v 1.305.2.103 2004-05-06 16:21:25 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.102 $;
+  $VERSION    =  q$Revision: 1.305.2.103 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-06 16:13:55 $,
+                              Date => q$Date: 2004-05-06 16:21:25 $,
                              });
 
 #
@@ -1003,7 +1003,7 @@ sub print_table {
              ($File->{Opt}->{'No200'}         ? q(checked="checked" ) : '') .
              q(/>Validate&nbsp;error&nbsp;pages</label>),
             # Verbose output?
-             q(<label title="Show Verbose Output" for="verbose"><input type="checkbox" value="0" id="verbose" name="verbose" ) .
+             q(<label title="Show Verbose Output" for="verbose"><input type="checkbox" id="verbose" name="verbose" ) .
              # @@@ accesskey missing
              ($File->{Opt}->{'Verbose'}         ? q(checked="checked" ) : '') .
              q(/>Verbose&nbsp;Output</label>)
