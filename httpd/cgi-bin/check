@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.24 2002-12-08 17:51:11 ville Exp $
+# $Id: check,v 1.305.2.25 2003-01-09 18:53:00 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.24 $;
+  $VERSION    =  q$Revision: 1.305.2.25 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -166,7 +166,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-12-08 17:51:11 $,
+                              Date => q$Date: 2003-01-09 18:53:00 $,
                              });
 
 #
@@ -348,7 +348,7 @@ if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
 
 unless ($File->{Charset}->{Use}) {
   $File->{'Error Flagged'} = TRUE;
-  $File->{'Error Message'} = <<".EOF." . iana_charset_blurb();
+  $File->{'Error Message'} = <<".EOF." . &iana_charset_blurb();
     <p>
       I was not able to extract a character encoding labeling from any of
       the valid sources for such information. Without encoding information it
@@ -2312,7 +2312,7 @@ sub transcode {
         look into supporting it in the future.
       </p>
 .EOF.
-    $File->{'Error Message'} .= iana_charset_blurb();
+    $File->{'Error Message'} .= &iana_charset_blurb();
     return $File;
   }
 
