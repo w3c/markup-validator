@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.403 2005-02-24 17:59:49 ville Exp $
+# $Id: check,v 1.404 2005-02-25 00:25:04 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -220,7 +220,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.403 $;
+  $VERSION    =  q$Revision: 1.404 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1448,6 +1448,15 @@ sub report_errors ($) {
         }
         my $_msg = $RSRC->{msg}->{nomsg}->{verbose};
         $_msg =~ s/<!--MID-->/$num/g;
+        if ($File->{'Is Upload'})
+	{
+		$_msg =~ s/<!--URI-->//g
+	}
+	else 
+	{
+		my $escaped_uri = uri_escape($File->{URI});
+        	$_msg =~ s/<!--URI-->/$escaped_uri/g;
+	}
         $explanation .= "    $_msg\n"; # The send feedback plea.
       }
 
