@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.89 2004-04-22 23:12:01 ot Exp $
+# $Id: check,v 1.305.2.90 2004-04-23 01:50:34 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.89 $;
+  $VERSION    =  q$Revision: 1.305.2.90 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-04-22 23:12:01 $,
+                              Date => q$Date: 2004-04-23 01:50:34 $,
                              });
 
 #
@@ -1905,39 +1905,7 @@ EOHD
   # Add in Jim Ley's JavaScript to show the explanations for every error
   # message without having to actually download msg.size() * num err.
   if ($File->{Opt}->{Verbose}) {
-    print <<'.EOF.';
-   <script type="text/javascript">
-<!--
-d=document
-w=window
-msgs=new Array()
-if (w && d && d.getElementsByTagName){
- w.onload=doubleUp
-}
-function doubleUp() {
- glist=d.getElementsByTagName("DIV")
- upto(10)
-}
-function upto(n) {
- if (n<glist.length) {
-  for (i=n;i<glist.length && i<n+10;i++) {
-   j=glist[i]
-   cls=j.className
-   if (cls) cls=cls.split(' ')
-   if (cls.length>1) {
-    if (cls[0]=='ve') msgs[cls[1]]=j.innerHTML
-    if (cls[0]=='hidden' && msgs[cls[1]]) {
-     j.className="ve "+cls[1]
-     j.innerHTML=msgs[cls[1]]
-    }
-   }
-  }
-  if (w && w.setTimeout) setTimeout('upto('+i+')',500)
- }
-}
- -->
-   </script>
-.EOF.
+    print '<script type="text/javascript" src="loadexplanation.js" />';
   }
   print "    </div><!-- End of #result -->\n\n";
 }
