@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.326 2004-05-09 15:56:53 link Exp $
+# $Id: check,v 1.327 2004-05-10 01:41:52 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -107,6 +107,7 @@ BEGIN {
        -UseApacheInclude => TRUE,
        -IncludeRelative  => TRUE,
        -InterPolateVars  => TRUE,
+       -AutoLaunder      => TRUE,
        -DefaultConfig    => { Allowed_Protocols => 'http,https',
                               SGML_Parser       => '/usr/bin/onsgmls',
                               Template_Path     => '/usr/local/validator/share/templates/en_US',
@@ -186,49 +187,12 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.326 $;
+  $VERSION    =  q$Revision: 1.327 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
   # Use passive FTP by default.
   $ENV{FTP_PASSIVE} = 1 unless exists($ENV{FTP_PASSIVE});
-
-
-  #
-  # Read TAB-delimited configuration files. Returns a hash reference.
-  sub read_cfg {
-    my $file = shift;
-    my %cfg;
-
-    my $fh = new IO::File $file;
-    unless (defined $fh) {
-      die <<".EOF.";
-open($file) returned: $!
-(Did you forget to set \$ENV{W3C_VALIDATOR_CFG}
- or to copy validator.conf to /etc/w3c/validator.conf?)
-.EOF.
-    }
-
-    while (<$fh>) {
-      next if /^\s*$/;
-      next if /^\s*\#/;
-      chomp;
-      my($k, $v) = split /\t+/, $_, 2;
-      $v = '' unless defined $v;
-
-      if ($v =~ s(^file://){}) {
-        $cfg{$k} = &read_cfg($v);
-      } elsif ($v =~ /,/) {
-        $cfg{$k} = [split /,/, $v];
-      } else {
-        # Launder data for Perl 5.8+ taint mode, trusting the config...
-        $v =~ /^(.*)$/;
-        $cfg{$k} = $1;
-      }
-    }
-    undef $fh;
-    return \%cfg;
-  }
 } # end of BEGIN block.
 
 #
