@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.380 2005-02-04 16:50:13 link Exp $
+# $Id: check,v 1.381 2005-02-04 18:40:59 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -82,11 +82,19 @@ use constant T_FALL  => 32; # 0010 0000, Fallback in effect.
 
 #
 # Output flags for error processing
-use constant O_SOURCE  =>  1; # 0000 0001
-use constant O_CHARSET =>  2; # 0000 0010
-use constant O_DOCTYPE =>  4; # 0000 0100
-use constant O_NONE    =>  8; # 0000 1000
+use constant O_SOURCE  => 1; # 0000 0001
+use constant O_CHARSET => 2; # 0000 0010
+use constant O_DOCTYPE => 4; # 0000 0100
+use constant O_NONE    => 8; # 0000 1000
 
+#
+# Parse mode tokens.
+use constant MODE_SGML => 1; # 0000 0001
+use constant MODE_XML  => 2; # 0000 0010
+use constant MODE_TBD  => 4; # 0000 0100, needs further info to decide.
+#@@FIXME: XML WF checking isn't implemented.
+use constant MODE_WF   => 8; # 0000 1000, only XML well-formed checking.
+#@@FIXME;
 
 #
 # Define global variables.
@@ -95,8 +103,8 @@ our $HAVE_SOAP_LITE;
 
 
 #
-# Things inside BEGIN don't happen on every request in persistent
-# environments, such as mod_perl.  So let's do globals, eg. read config here.
+# Things inside BEGIN don't happen on every request in persistent environments
+# (such as mod_perl); so let's do the globals, eg. read config, here.
 BEGIN {
   # Launder data for -T; -AutoLaunder doesn't catch this one.
   if (exists $ENV{W3C_VALIDATOR_HOME}) {
@@ -183,6 +191,15 @@ Directory not readable (permission denied): @_r
   }
 
   #
+  # Change strings to internal constants in MIME type mapping.
+  for (keys %{$CFG->{MIME}}) {
+    if    ($CFG->{MIME}->{$_} eq 'SGML') {$CFG->{MIME}->{$_} = MODE_SGML}
+    elsif ($CFG->{MIME}->{$_} eq 'XML')  {$CFG->{MIME}->{$_} = MODE_XML}
+    elsif ($CFG->{MIME}->{$_} eq 'TBD')  {$CFG->{MIME}->{$_} = MODE_TBD}
+    else                                 {$CFG->{MIME}->{$_} = MODE_TBD};
+  }
+
+  #
   # Use IPC::Run on mod_perl if it's available, IPC::Open3 otherwise.
   $HAVE_IPC_RUN = 0;
   if ($ENV{MOD_PERL}) {
@@ -222,7 +239,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.380 $;
+  $VERSION    =  q$Revision: 1.381 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -235,9 +252,12 @@ Directory not readable (permission denied): @_r
 delete $ENV{PATH};
 
 
+#@@DEBUG: Dump $CFG datastructure. Used only as a developer aid.
 #use Data::Dumper qw(Dumper);
 #print Dumper($CFG);
 #exit;
+#@@DEBUG;
+
 ###############################################################################
 #### Process CGI variables and initialize. ####################################
 ###############################################################################
@@ -280,7 +300,7 @@ $File->{Charset}->{Override} = ''; # From CGI/user override.
 
 #
 # Misc simple types.
-$File->{Type} = '';
+$File->{Mode} = MODE_SGML; # Default parse mode is SGML.
 
 #
 # Array (ref) used to store character offsets for the XML report.
@@ -450,7 +470,7 @@ $File->{Content} = &normalize_newlines($File->{Bytes},
 #
 # Try to extract META charset
 # (works only if ascii-based and reasonably clean before <meta>)
-$File = &preparse_meta($File);
+$File = &preparse_meta($File); # First call. Repeated later to fetch the FPI.
 unless ($File->{Charset}->{Use}) {
   $File->{Charset}->{Use} = $File->{Charset}->{META};
 }
@@ -619,13 +639,58 @@ if ($File->{Opt}->{DOCTYPE}
 # Try to extract a DOCTYPE or xmlns.
 $File = &preparse_doctype($File);
 
-
 #
-# Set document type to XHTML if the DOCTYPE was for XHTML.
-# Set document type to MathML if the DOCTYPE was for MathML.
-# This happens when the file is served as text/html
-$File->{Type} = 'xhtml+xml'  if $File->{DOCTYPE} =~ /xhtml/i;
-$File->{Type} = 'mathml+xml' if $File->{DOCTYPE} =~ /mathml/i;
+# Set parse mode.
+if ($File->{DOCTYPE}) {
+  my $fpi = $File->{DOCTYPE};
+  if (exists $CFG->{Types}->{$fpi}) {
+    my $cfg  = $CFG->{Types}->{$fpi};
+    my $mode = $cfg->{'Parse Mode'};
+    if    ($mode eq 'SGML') {$mode = MODE_SGML}
+    elsif ($mode eq 'XML')  {$mode = MODE_XML}
+    else                    {$mode = MODE_TBD}
+&add_warning($File, 'debug', "Mode from DTD was $mode");
+    if ($File->{Mode} == MODE_TBD) {
+      if    ($mode == MODE_SGML) {$File->{Mode} = MODE_SGML}
+      elsif ($mode == MODE_XML)  {$File->{Mode} = MODE_XML}
+      else {
+        $File->{Mode} = MODE_SGML;
+        &add_warning($File, 'Unable to Determine Parse Mode!',
+                     'Falling back to SGML mode.');
+      }
+    } else {
+      unless ($mode == $File->{Mode}) {
+        my $dtd = $mode;
+        my $ct  = $File->{Mode};
+        for ($dtd, $ct) {
+          if    ($_ == MODE_SGML) {$_ = 'SGML'}
+          elsif ($_ == MODE_XML)  {$_ =  'XML'}
+          else                    {$_ = 'SGML'};
+        }
+        unless ($File->{Mode} == MODE_TBD) {
+          &add_warning($File, 'warning', 'Contradictory Parse Modes Detected!', <<".EOF.");
+        The MIME Media Type (<code>$File->{ContentType}</code>)
+        indicated parse mode should be $ct, but the <code>DOCTYPE</code>
+        Declaration indicates $dtd mode.
+        Using $ct mode based on <code>Content-Type</code> header.
+.EOF.
+        }
+      }
+    }
+  } else {
+    if ($File->{Mode} == MODE_TBD) {
+      &add_warning($File, 'warning', 'Unknown Document Type and Parse Mode!', <<".EOF.");
+    The MIME Media Type (<code>$File->{ContentType}</code>) for
+    this document is used to serve both SGML and XML based documents, and
+    no <code>DOCTYPE</code> Declaration was found to disambiguate it.
+    Parsing will continue in SGML mode and with a fallback <code>DOCTYPE</code>
+    similar to HTML 4.01 Transitional.
+.EOF.
+    }
+  }
+}
+&add_warning($File, 'debug', "Final mode is $File->{Mode}");
+
 
 
 #
@@ -707,7 +772,7 @@ sub parse (\$) {
             ],
            );
 
-  #FIXME: This needs a UI and testing!
+  #@@FIXME: This needs a UI and testing!
   #
   # Set onsgmls' -E switch to the number of errors requested.
   if ($File->{Opt}->{'Max Errors'} =~ m(^all$)i) {
@@ -723,7 +788,7 @@ sub parse (\$) {
   } else {
     push @cmd, '-E' . ($CFG->{'Max Errors'} || 0); # "-E0" means "all".
   }
-  #FIXME;
+  #@@FIXME;
 
   #
   # Temporary filehandles.
@@ -846,21 +911,35 @@ if (my $prettyver = $CFG->{Types}->{$File->{Version}}->{Display}) {
   $File->{Version} = $prettyver;
 }
 
+
 #
-# Warn about unknown Namespaces.
-if (&is_xml($File) and $File->{Namespace}) {
+# Warn about unknown, incorrect, or missing Namespaces.
+if ($File->{Namespace}) {
+  my $ns  = $CFG->{Types}->{$File->{Version}}->{Namespace} || FALSE;
   my $rns = &ent($File->{Namespace});
-  if (&is_xhtml($File) and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
-    &add_warning($File, 'warning', 'Warning:',
-      "Unknown namespace (&#171;<code>$rns</code>&#187;) for text/html document!",
+
+  if (&is_xml($File)) {
+    if ($ns eq $File->{Namespace}) {
+      &add_warning($File, 'warning', 'Unknown Namespace Found',
+        "Unknown namespace (&#171;<code>$rns</code>&#187;) for $File->{Version} document!",
+      );
+    }
+  } else {
+    &add_warning($File, 'warning', 'Namespace Found in non-XML Document',
+      "Namespace &#171;<code>$rns</code>&#187; found, but document type is not XML!",
     );
-  } elsif (&is_svg($File) and $File->{Namespace} ne 'http://www.w3.org/2000/svg') {
-    &add_warning($File, 'warning', 'Warning:',
-      "Unknown namespace (&#171;<code>$rns</code>&#187;) for SVG document!",
+  }
+} else {
+  if (&is_xml($File) and $CFG->{Types}->{$File->{Version}}->{Namespace}) {
+    &add_warning($File, 'warning', 'No Namespace Found',
+      "No Namespace was found, but document type requires one to be present!",
     );
   }
 }
 
+
+#
+#@@FIXME: This logic belongs in the templates.
 if (defined $File->{Tentative}) {
   my $class = '';
      $class .= ($File->{Tentative} & T_INFO  ? ' info'    :'');
@@ -886,6 +965,7 @@ if (defined $File->{Tentative}) {
 .EOF.
   }
 }
+#@@FIXME;
 
 if ($File->{Opt}->{Output} eq 'xml') {
   &report_xml($File);
@@ -1244,7 +1324,7 @@ sub handle_uri {
     return $File;
   }
 
-  my($type, $ct, $charset)
+  my($mode, $ct, $charset)
     = &parse_content_type(
                           $File,
                           $res->header('Content-Type'),
@@ -1260,7 +1340,7 @@ sub handle_uri {
     $res->decoded_content(charset => 'none') : $res->content;
 
   $File->{Bytes}           = $content;
-  $File->{Type}            = $type;
+  $File->{Mode}            = $mode;
   $File->{ContentType}     = $ct;
   $File->{ContentEnc}      = $res->content_encoding;
   $File->{TransferEnc}     = $res->header('Client-Transfer-Encoding');
@@ -1270,7 +1350,7 @@ sub handle_uri {
   $File->{Size}            = scalar $res->content_length;
   $File->{URI}             = scalar $res->request->uri->canonical;
   $File->{'Is Upload'}     = FALSE;
-
+&add_warning($File, 'debug', "Mode from CT was: $mode");
   return $File;
 
 }
@@ -1288,10 +1368,10 @@ sub handle_file {
   local $/ = undef; # set line delimiter so that <> reads rest of file
   $file = <$f>;
 
-  my($type, $ct, $charset) = &parse_content_type($File, $h->{'Content-Type'});
+  my($mode, $ct, $charset) = &parse_content_type($File, $h->{'Content-Type'});
 
   $File->{Bytes}           = $file;
-  $File->{Type}            = $type;
+  $File->{Mode}            = $mode;
   $File->{ContentType}     = $ct;
   $File->{Charset}->{HTTP} = lc $charset;
   $File->{Modified}        = $h->{'Last-Modified'};
@@ -1312,7 +1392,7 @@ sub handle_frag {
   my $File = shift; # The master datastructure.
 
   $File->{Bytes}       = $q->param('fragment');
-  $File->{Type}        = 'html';
+  $File->{Mode}        = MODE_TBD;
   $File->{Modified}    = '';
   $File->{Server}      = '';
   $File->{Size}        = '';
@@ -1330,11 +1410,11 @@ sub parse_content_type {
   my $Content_Type = shift;
   my $url          = shift;
   my $charset      = '';
-  my $type         = '';
+  my $mode         = '';
 
   my($ct, @param) = split /\s*;\s*/, lc $Content_Type;
 
-  $type = $CFG->{File_Type}->{$ct} || $ct;
+  $mode = $CFG->{MIME}->{$ct} || MODE_TBD;
 
   foreach my $param (@param) {
     my($p, $v) = split /\s*=\s*/, $param;
@@ -1345,7 +1425,8 @@ sub parse_content_type {
     }
   }
 
-  if ($type =~ m(/)) {
+  if ($mode =~ m(/)) {
+    my $type = $mode; # $mode is the MIME media type.
     if ($type =~ m(text/css) and defined $url) {
       print redirect
         'http://jigsaw.w3.org/css-validator/validator?uri='
@@ -1382,7 +1463,7 @@ sub parse_content_type {
     }
   }
 
-  return $type, $ct, $charset;
+  return $mode, $ct, $charset;
 }
 
 
@@ -2217,14 +2298,8 @@ sub uri_rejected {
 
 
 #
-# Utility subs to tell if type "is" something.
-sub is_xml    {shift->{Type} =~ m(^[^+]+\+xml$)};
-sub is_svg    {shift->{Type} =~ m(svg\+xml$)};
-sub is_smil   {shift->{Type} =~ m(smil\+xml$)};
-sub is_html   {shift->{Type} =~ m(html\+sgml$)};
-sub is_xhtml  {shift->{Type} =~ m(xhtml\+xml$)};
-sub is_mathml {shift->{Type} =~ m(mathml\+xml$)};
-
+# Utility sub to tell if mode "is" XML.
+sub is_xml {shift->{Mode} == MODE_XML};
 
 #
 # Do an initial parse of the Document Entity to extract charset from HTML <meta>.
@@ -2914,8 +2989,13 @@ sub check {
   unless ($File->{Charset}->{Use}) {
     $File->{Charset}->{Use} = $File->{Charset}->{META};
   }
-  $File->{Type} = 'xhtml+xml'  if $File->{DOCTYPE} =~ /xhtml/i;
-  $File->{Type} = 'mathml+xml' if $File->{DOCTYPE} =~ /mathml/i;
+
+  #
+  # @@FIXME: This needs updating for new MIME->Mode config.
+#  $File->{Mode} = MODE_XML if $File->{DOCTYPE} =~ /xhtml/i;
+#  $File->{Mode} = MODE_XML if $File->{DOCTYPE} =~ /mathml/i;
+  # @@FIXME;
+
   $File = &main::parse($File);
   if ($File->{'Is Valid'}) {
     return $File->{ESIS};
