@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.34 2004-04-26 01:02:58 ot Exp $
+   $Id: base.css,v 1.26.2.35 2004-04-28 07:38:18 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -29,7 +29,7 @@ html, body {
 div#main {
   padding-top: 1em;
 /*   margin-right: 7.6em; */ /* no need for this without the righthand bar */
-margin: 1em;
+  margin: 0;
 }
 
 div#main p, div#main dt {
@@ -43,8 +43,9 @@ dt {
 
 /* Fieldsets in general */
 fieldset {
-  max-width:     80%;
-  margin-left:   1em;
+/*  max-width:     80%; */
+  margin-left:   2em;
+  margin-right:   2em;
 }
 
 /* The front-page fieldsets */
