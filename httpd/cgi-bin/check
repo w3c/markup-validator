@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.311 2002-12-02 11:37:51 link Exp $
+# $Id: check,v 1.312 2002-12-05 03:11:08 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -133,7 +133,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.311 $;
+  $VERSION    =  q$Revision: 1.312 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 } # end of BEGIN block.
@@ -246,10 +246,12 @@ my $T = HTML::Template->new(
 			    filename => '/usr/local/validator/share/templates/en_US/result.tmpl',
 			    die_on_bad_params => FALSE,
 			   );
+my $E = HTML::Template->new(
+			    filename => '/usr/local/validator/share/templates/en_US/fatal-error.tmpl',
+			    die_on_bad_params => FALSE,
+			   );
 
 $T->param(cfg_home_page => $CFG->{Home_Page});
-$T->param(is_upload     => $File->{'Is Upload'});
-
 
 
 ###############################################################################
@@ -258,7 +260,6 @@ $T->param(is_upload     => $File->{'Is Upload'});
 
 #
 # Add warning if we were redirected.
-$T->param(file_uri => &ent($File->{URI}));
 unless (URI::eq("$File->{Opt}->{URI}", $File->{URI}) and not $File->{'Is Upload'}) {
   &add_warning(
 	       $File, 'Note:',
@@ -638,7 +639,7 @@ if ($File->{Opt}->{Output} eq 'xml') {
 } elsif ($File->{Opt}->{Output} eq 'n3') {
   &report_n3($File);
 } else {
-  &report_html($File);
+  &prep_template($File, $T);
 
   if ($File->{'Is Valid'}) {
     $T->param(VALID => TRUE);
@@ -648,8 +649,6 @@ if ($File->{Opt}->{Output} eq 'xml') {
     $File->{Opt}->{'Show Source'} = TRUE;
     $T->param(file_errors => &report_errors($File));
   }
-
-  #@@@ &print_table($File);
 
   $T->param(file_warnings  => $File->{Warnings});
   $T->param(file_outline   => &outline($File));
@@ -673,12 +672,21 @@ exit;
 
 #
 # Generate HTML report.
-sub report_html {
+sub prep_template ($$) {
   my $File = shift;
+  my $T    = shift;
 
   #
   # XML mode...
   $T->param(is_xml => &is_xml($File));
+
+  #
+  # Upload?
+  $T->param(is_upload => $File->{'Is Upload'});
+
+  #
+  # The URI...
+  $T->param(file_uri => &ent($File->{URI}));
 
   #
   # Metadata...
@@ -705,7 +713,8 @@ sub report_html {
   #
   # Namespaces...
   $T->param(file_namespace  => &ent($File->{Namespace}));
-  $T->param(file_namespaces => $File->{Namespaces});
+  $T->param(file_namespaces => $File->{Namespaces})
+    if $File->{Namespaces};
 }
 
 #
@@ -804,168 +813,6 @@ sub report_valid {
   $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
   $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
   $T->param(file_thispage => $thispage);
-}
-
-#
-# Add a row to the metadata-table datastructure.
-#
-# Takes 3 or more arguments. The first is the reference to the datastructure to
-# use for storing the table. The second is the header for this row. The third
-# and subsequent arguments are table data cells. Each argument corresponds to
-# exactly one table data cell. If the argument is a string it is inserted
-# directly. If it is a reference it is assumed to be a reference to an array
-# of 3 elements. The 3 are: rowspan, colspan, and data.
-#
-# Make sure that the arguments are properly encoded, this uses them as is.
-#
-sub add_table {
-  my $File = shift;
-  my $TH   = shift;
-  my @td;
-
-  foreach my $td (@_) {
-    if (ref $td) {
-      push @td, $td;
-    } else {
-      push @td, [1, 1, $td];
-    }
-  }
-
-  if (defined $File->{Table}->{Max}) {
-    $File->{Table}->{Max} = scalar @td
-      if $File->{Table}->{Max} < scalar @td;
-  } else {
-    $File->{Table}->{Max} = scalar @td;
-  }
-
-  push @{$File->{Table}->{Data}}, { Head => $TH, Tail => \@td};
-}
-
-
-
-#
-# Print the table containing the metadata about the Document Entity.
-sub print_table {
-  my $File = shift;
-
-  # @@@FIXME@@@: This is a *hack*! ;D
-  unless ($File->{'Is Valid'} or scalar @{$File->{Errors} || []} == 0) {
-    &add_table($File, 'Errors', scalar @{$File->{Errors}});
-  }
-
-  print qq(  <form id="form" method="get" action="check">\n)
-    unless $File->{'Is Upload'};
-
-  print join '', @{&serialize_table($File, 'header')};
-
-  # Don't output revalidation options for uploads, can't revalidate them.
-  return if ($File->{'Is Upload'});
-
-  my $Options = {};
-  my $Form    = {};
-  $Form->{Table}->{Fieldset}  = TRUE;
-  $Form->{Table}->{Accesskey} = '4';
-  $Form->{Table}->{Legend}    = 'Revalidate With Options: (accesskey: 4)';
-
-
-  add_table($Options, '',
-            # Show source?
-            q(<label title="Show Page Source (accesskey: 5)"><input type="checkbox" value="1" name="ss" ) .
-            q(accesskey="5" ) .
-            ($File->{Opt}->{'Show Source'}    ? q(checked="checked" ) : '') .
-            q(/>Show&nbsp;Source</label>),
-            # Outline?
-            q(<label title="Show an Outline of the document (accesskey: 6)"><input type="checkbox" value="1" name="outline" ) .
-            q(accesskey="6" ) .
-            ($File->{Opt}->{'Outline'}        ? q(checked="checked" ) : '') .
-            q(/>Outline</label>)
-           );
-  add_table($Options, '',
-            # Parse tree?
-            q(<label title="Show Parse Tree (accesskey: 7)"><input type="checkbox" value="1" name="sp" ) .
-            q(accesskey="7" ) .
-            ($File->{Opt}->{'Show Parsetree'} ? q(checked="checked" ) : '') .
-            q(/>Parse&nbsp;Tree</label>),
-            # No attributes?
-            q(<label title="Exclude Attributes from Parse Tree (accesskey: 8)"><input type="checkbox" value="1" name="noatt" ) .
-            q(accesskey="8" ) .
-            ($File->{Opt}->{'No Attributes'}  ? q(checked="checked" ) : '') .
-            q(/>...no&nbsp;attributes</label>)
-           );
-  add_table($Options, '',
-            # Validate error pages?
-             q(<label title="Validate also pages for which the HTTP status code indicates an error"><input type="checkbox" value="1" name="No200" ) .
-             # @@@ accesskey missing
-             ($File->{Opt}->{'No200'}         ? q(checked="checked" ) : '') .
-             q(/>Validate&nbsp;error&nbsp;pages</label>),
-            # Verbose output?
-             q(<label title="Show Verbose Output"><input type="checkbox" value="1" name="verbose" ) .
-             # @@@ accesskey missing
-             ($File->{Opt}->{'Verbose'}         ? q(checked="checked" ) : '') .
-             q(/>Verbose&nbsp;Output</label>)
-           );
-
-  add_table(
-            $Form,
-            q(<input type="submit" value="Revalidate" accesskey="9" title="Revalidate file (accesskey: 9)" />),
-            [1, $File->{Table}->{Max}, join('', @{&serialize_table($Options, 'options')})]
-           );
-
-  print <<".EOF.";
-      <fieldset>
-        <legend accesskey="4">Revalidate With Options</legend>
-.EOF.
-  print join '', @{&serialize_table($Form, 'header')};
-  print qq(      </fieldset>\n);
-
-  print qq(  </form>\n);
-}
-
-#
-# Serialize a table datastructure ($th, @td) into HTML.
-# Takes two arguments; the datastructure, and a CSS class name for the table.
-# Returns a reference to an array of lines (to enable re-indentation).
-sub serialize_table {
-  my $table = shift;
-  my $class = shift;
-  my @table = ();
-
-  push @table, qq(<table class="$class">\n);
-
-  foreach my $tr (@{$table->{Table}->{Data}}) {
-    if (ref $tr->{Head}) {
-      my $opts = '';
-      push @table, "  <tr>\n";
-      if ($tr->{Head}->[0] > 1) {
-        $opts .= qq( rowspan="$tr->{Head}->[0]");
-      }
-      if ($tr->{Head}->[1] > 1) {
-        $opts .= qq( colspan="$tr->{Head}->[1]");
-      }
-      push @table, "    <th$opts>" . $tr->{Head}->[2] . ": </th>\n";
-    } elsif ($tr->{Head}) {
-      push @table, "  <tr>\n";
-      push @table, "    <th>" . $tr->{Head} . ": </th>\n";
-    } else {
-      push @table, "  <tr>\n";
-      # Table has no header column.
-    }
-
-    for (my $i = 0; $i < scalar @{$tr->{Tail}}; $i++) {
-      my $opts = '';
-      if ($tr->{Tail}->[$i]->[0] > 1) {
-        $opts .= qq( rowspan="$tr->{Tail}->[$i]->[0]");
-      }
-      if ($tr->{Tail}->[$i]->[1] > 1) {
-        $opts .= qq( colspan="$tr->{Tail}->[$i]->[1]");
-      }
-      push @table, qq(    <td$opts>) . $tr->{Tail}->[$i]->[2] . "</td>\n";
-    }
-    push @table, "  </tr>\n";
-  }
-  push @table, qq(</table>\n);
-
-  return \@table;
 }
 
 
@@ -2441,123 +2288,22 @@ sub find_xml_encoding {
 #
 # Abort with a message if an error was flagged at point.
 sub abort_if_error_flagged {
-  my $File = shift;
+  my $File  = shift;
   my $Flags = shift;
-  if ($File->{'Error Flagged'}) {
-    print $File->{'Results'};
 
-    #
-    # "Manually" add DOCTYPE row to table if requested.
-    if ($Flags & O_DOCTYPE) {
-      # @@@ "accesskey" and "for" shouldn't be output for uploads.
-      my @data = ($File->{Version});
-      # Don't add popup for uploads.
-      push(@data, &popup_doctype) unless ($File->{'Is Upload'});
-      &add_table($File,
-                 qq(<label accesskey="3" for="doctype" title="Document Type (accesskey: 3)">Doctype</label>),
-                 @data);
-    }
+  return unless $File->{'Error Flagged'};
 
-    #
-    # "Manually" add charset row to table if requested.
-    if ($Flags & O_CHARSET) {
-      # @@@ "accesskey" and "for" shouldn't be output for uploads.
-      my @data = (&ent($File->{Charset}->{Use}));
-      # Don't add popup for uploads.
-      push(@data, &popup_charset) unless ($File->{'Is Upload'});
-      &add_table($File,
-                 qq(<label accesskey="2" title="Character Encoding (accesskey: 2)" for="charset">Encoding</label>),
-                 @data);
-    }
+  &prep_template($File, $E);
 
-
-    &print_table($File);
-    print $File->{'Error Message'};
-    if ($File->{Opt}->{'Show Source'} and $Flags & O_SOURCE) {
-      &show_source($File);
-    }
-    print $File->{'Footer'};
-    undef $File;
-    exit;
-  }
+  $E->param(error_message => $File->{'Error Message'});
+  print $E->output;
+  exit;
 }
 
 #
 # conflicting encodings
-sub conflict {
-  my $encodingA = shift;
-  my $encodingB = shift;
-  return $encodingA && $encodingB && ($encodingA ne $encodingB);
-}
+sub conflict ($$) {return $_[0] && $_[1] && ($_[0] ne $_[1])};
 
-#
-# Return a text string suitable for inclusion in the result table.
-sub popup_doctype {
-  return &CGI::popup_menu(
-                          -name => 'doctype',
-                            -id => 'doctype',
-                        -values => [
-                                    '(detect automatically)',
-                                    'XHTML 1.1',
-                                    'XHTML Basic 1.0',
-                                    'XHTML 1.0 Strict',
-                                    'XHTML 1.0 Transitional',
-                                    'XHTML 1.0 Frameset',
-                                    'HTML 4.01 Strict',
-                                    'HTML 4.01 Transitional',
-                                    'HTML 4.01 Frameset',
-                                    'HTML 3.2',
-                                    'HTML 2.0',
-                                   ],
-                          );
-}
-
-#
-# Return a text string suitable for inclusion in the result table.
-sub popup_charset {
-  return &CGI::popup_menu(
-                          -name      => 'charset',
-                          -id        => 'charset',
-                          -values => [
-                                      '(detect automatically)',
-                                      'utf-8 (Unicode, worldwide)',
-                                      'utf-16 (Unicode, worldwide)',
-                                      'iso-8859-1 (Western Europe)',
-                                      'iso-8859-2 (Central Europe)',
-                                      'iso-8859-3 (Southern Europe)',
-                                      'iso-8859-4 (Baltic Rim)',
-                                      'iso-8859-5 (Cyrillic)',
-                                      'iso-8859-6-i (Arabic)',
-                                      'iso-8859-7 (Greek)',
-                                      'iso-8859-8-i (Hebrew)',
-                                      'iso-8859-9 (Turkish)',
-                                      'iso-8859-10 (Latin 6)',
-                                      'iso-8859-13 (Latin 7)',
-                                      'iso-8859-14 (Celtic)',
-                                      'iso-8859-15 (Latin 9)',
-                                      'us-ascii (basic English)',
-                                      'euc-jp (Japanese, Unix)',
-                                      'shift_jis (Japanese, Win/Mac)',
-                                      'iso-2022-jp (Japanese, email)',
-                                      'euc-kr (Korean)',
-                                      'gb2312 (Chinese, simplified)',
-                                      'gb18030 (Chinese, simplified)',
-                                      'big5 (Chinese, traditional)',
-                                      'tis-620 (Thai)',
-                                      'koi8-r (Russian)',
-                                      'koi8-u (Ukrainian)',
-                                      'macintosh (MacRoman)',
-                                      'windows-1250 (Central Europe)',
-                                      'windows-1251 (Cyrillic)',
-                                      'windows-1252 (Western Europe)',
-                                      'windows-1253 (Greek)',
-                                      'windows-1254 (Turkish)',
-                                      'windows-1255 (Hebrew)',
-                                      'windows-1256 (Arabic)',
-                                      'windows-1257 (Baltic Rim)',
-                                     ],
-                         );
-}
 
 #
 # Construct a self-referential URL.

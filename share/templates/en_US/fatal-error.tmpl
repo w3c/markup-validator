@@ -1,0 +1,13 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+
+    <div id="main">
+      <div id="head">
+      <TMPL_UNLESS NAME="no_jumpbar">
+        <TMPL_INCLUDE name="jumpbar.tmpl">
+      </TMPL_UNLESS>
+        <TMPL_INCLUDE NAME="table.tmpl">
+      </div><!-- end of "head" -->
+<TMPL_VAR NAME="error_message">
+    </div><!-- end of "main" -->
+
+<TMPL_INCLUDE NAME="footer.tmpl">

@@ -1,3 +1,4 @@
+<TMPL_IF NAME="file_uri">
 <form id="form" method="get" action="check">
   <table class="header">
     <tr>
@@ -8,11 +9,13 @@
       <td colspan="2"><input accesskey="1" type="text" id="uri" name="uri" value="<TMPL_VAR NAME="file_uri">" /></td>
 </TMPL_IF>
     </tr>
+<TMPL_IF NAME="opt_verbose">
     <tr><th>Modified:</th><td colspan="2"><TMPL_VAR NAME="file_modified"></td></tr>
     <tr><th>Server:</th><td colspan="2"><TMPL_VAR NAME="file_server"></td></tr>
     <tr><th>Size:</th><td colspan="2"><TMPL_VAR NAME="file_size"></td></tr>
     <tr><th>Content-Type:</th><td colspan="2"><TMPL_VAR NAME="file_contenttype"></td></tr>
-<TMPL_IF NAME="is_debug">
+</TMPL_IF>
+<TMPL_IF NAME="opt_debug">
   <TMPL_LOOP NAME="debug">
     <tr><th><TMPL_VAR NAME="name"></th><td colspan="2"><TMPL_VAR NAME="value"></td></tr>
   </TMPL_LOOP>
@@ -21,14 +24,22 @@
     <tr><th>Encoding:</th><td colspan="2"><TMPL_VAR NAME="file_charset"></td></tr>
     <tr><th>Doctype:</th><td colspan="2"><TMPL_VAR NAME="file_version"></td></tr>
 <TMPL_ELSE>
+  <TMPL_IF NAME="file_charset">
     <tr>
       <th><label accesskey="2" title="Character Encoding (accesskey: 2)" for="charset">Encoding</label>:</th>
       <td><TMPL_VAR NAME="file_charset"></td><td><TMPL_INCLUDE NAME="popup_charset.tmpl"></td>
     </tr>
+  <TMPL_ELSE>
+    <tr><th>Encoding:</th><td colspan="2"><TMPL_INCLUDE NAME="popup_charset.tmpl"></td></tr>
+  </TMPL_IF>
+  <TMPL_IF NAME="file_version">
     <tr>
       <th><label accesskey="3" for="doctype" title="Document Type (accesskey: 3)">Doctype</label>:</th>
       <td><TMPL_VAR NAME="file_version"></td><td><TMPL_INCLUDE NAME="popup_doctype.tmpl"></td>
     </tr>
+  <TMPL_ELSE>
+    <tr><th>Doctype:</th><td colspan="2"><TMPL_INCLUDE NAME="popup_doctype.tmpl"></td></tr>
+  </TMPL_IF>
 </TMPL_IF>
 <TMPL_IF NAME="file_namespace">
     <tr>
@@ -47,6 +58,7 @@
     </tr>
 </TMPL_IF>
   </table>
+<TMPL_UNLESS NAME="is_upload">
   <fieldset>
     <legend accesskey="4">Revalidate With Options</legend>
     <table class="header">
@@ -71,4 +83,6 @@
       </tr>
     </table>
   </fieldset>
+</TMPL_UNLESS>
 </form>
+</TMPL_IF>
