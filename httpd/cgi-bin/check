@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.104 2004-05-06 16:22:37 ot Exp $
+# $Id: check,v 1.305.2.105 2004-05-06 16:23:58 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.104 $;
+  $VERSION    =  q$Revision: 1.305.2.105 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-06 16:22:37 $,
+                              Date => q$Date: 2004-05-06 16:23:58 $,
                              });
 
 #
@@ -1040,7 +1040,7 @@ sub print_table {
   # end redundant code
   print <<".EOF.";
       <p><a href='http://qa-dev.w3.org/wmvs/0.6/docs/users.html#Options'>Help</a> on the options is available. 
-	<a href="$thispage;verbose=1">Verbose output</a> will give you explanations in addition to the error messages.);
+	<a href="$thispage;verbose=1">Verbose output</a> will give you explanations in addition to the error messages.
 .EOF.
   print qq(      </fieldset>\n);
 
