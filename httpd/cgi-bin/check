@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.204 2002-08-21 19:33:13 link Exp $
+# $Id: check,v 1.205 2002-08-23 08:06:03 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.204 $;
+  $VERSION    =  q$Revision: 1.205 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-21 19:33:13 $,
+			      Date => q$Date: 2002-08-23 08:06:03 $,
 			     });
 
 #
@@ -463,6 +463,7 @@ if ($File->{'Is Upload'}) {
 					  'iso-2022-jp (Japanese, email)',
 					  'euc-kr (Korean)',
 					  'gb2312 (Chinese, simplified)',
+					  'gb18030 (Chinese, simplified)',
 					  'big5 (Chinese, traditional)',
 					  'tis-620 (Thai)',
 					  'koi8-r (Russian)',
