@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: help.html,v 1.11 2002-11-07 04:58:34 ot Exp $"
---><!--#set var="date" value="\$Date: 2002-11-07 04:58:34 $"
+<!--#set var="revision" value="\$Id: help.html,v 1.12 2002-11-25 01:37:22 ot Exp $"
+--><!--#set var="date" value="\$Date: 2002-11-25 01:37:22 $"
 --><!--#set var="title" value="Help for The W3C MarkUp Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -50,6 +50,17 @@
   <ul>
 	<li>
 		<a href="#faq-ampersand">The validator complains about "&amp;" in my URLs!</a>
+	</li>
+	<li>
+		<a href="#faq-javascript">The validator complains about something in my Javascript!</a>
+	</li>
+	<li>
+		<a href="#faq-linkandmeta">Why doesn't the validator like my &lt;link ... /&gt; 
+		or &lt;meta ... /&gt;?</a>
+	</li>
+	<li>
+		<a href="#faq-typo">I found some nasty typo like &lt;p&lt;a ...&gt; 
+		and the validator accepted it!</a>
 	</li>
    </ul>
    </li>
@@ -191,6 +202,38 @@ href="http://www.htmlhelp.com/tools/validator/problems.html#amp">ampersand secti
 of WDG's excellent 
 "<a href="http://www.htmlhelp.com/tools/validator/problems.html">common validation problem</a>"
 </p>
+
+<h3 id="faq-javascript">The validator complains about something in my Javascript!</h3>
+<p>Most probably, you should read the 
+<a href="http://www.htmlhelp.com/tools/validator/problems.html#script">script section</a>
+of WDG's excellent                                                                    
+"<a href="http://www.htmlhelp.com/tools/validator/problems.html">common validation problem</a>"     
+</p>
+
+<h3 id="faq-linkandmeta">Why doesn't the validator like my 
+&lt;link ... /&gt; or &lt;meta ... /&gt;?</h3>
+<p>HTML is based on <a href="sgml.html">SGML</a> and uses an SGML 
+feature (called SHORTTAG) (note that this is <strong>not</strong> 
+the case with XHTML).</p>
+
+<p>With this feature enabled, the "/" in &lt;link ... /&gt; or &lt;meta ... /&gt;
+already closes the link (or meta) tag, and the "&gt;" becomes some regular text,
+ which is not allowed in the &lt;head&gt; element. Since &lt;/head&gt;&lt;body&gt; 
+is optional in HTML (again, <strong>not</strong> in XHTML), it is silently inserted, 
+thus head-only elements like meta and style as well as 
+"&lt;/head&gt;" and "&lt;body&gt;", which may apear only once, become false.
+</p>
+
+<p>(explanation courtesy of Christoph P&auml;per)</p>
+
+<h3 id="faq-typo">I found some nasty typo like &lt;p&lt;a ...&gt; 
+and the validator accepted it!</h3>
+
+<p>This again (as in the <a href="#faq-linkandmeta">previous case</a>) comes from the
+SHORTTAG feature in HTML (<strong>not</strong> in XHTML). The typo is actually a 
+"shorthand markup" and is a valid construct in HTML, even though its use 
+<a href="http://www.w3.org/TR/html4/appendix/notes.html#h-B.3.7">is not 
+recommended</a>.</p>
 
 </div>
 
