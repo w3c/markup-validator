@@ -16,8 +16,6 @@ SYSTEM "http://www.w3.org/Math/DTD/mathml2/mathml2.dtd"
 
 PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN"
        "REC-MathML2-20031021/xhtml-math11-f.dtd"
-PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
-       "REC-MathML2-20031021/xhtml-math11-f.dtd"
 SYSTEM "http://www.w3.org/Math/DTD/mathml2/xhtml-math11-f.dtd"
        "REC-MathML2-20031021/xhtml-math11-f.dtd"
 
@@ -54,6 +52,12 @@ PUBLIC "-//W3C//DTD XHTML Basic 1.0//EN"
        "REC-xhtml-basic-20001219/xhtml-basic10.dtd"
 PUBLIC "-//W3C//ENTITIES XHTML Basic 1.0 Document Model 1.0//EN"
        "REC-xhtml-basic-20001219/xhtml-basic10-model-1.mod"
+
+
+-- XHTML + MathML + SVG --
+
+PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
+       "xhtml-math-svg-flat-20020809.dtd"
 
 
 -- SMIL --
