@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.137 2001-07-02 09:19:16 duerst Exp $
+# $Id: check,v 1.138 2001-07-08 10:03:55 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.137 $;
+$VERSION    =  q$Revision: 1.138 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-02 09:19:16 $;
+$DATE       =  q$Date: 2001-07-08 10:03:55 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -586,7 +586,6 @@ if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
                                   ],
                        -default => $q->param('doctype'),
         ));
-# &revalidate($q, $File);
 &print_table;
 &print_warnings;
 
@@ -1583,42 +1582,3 @@ sub preparse {
   return $File;
 }
 
-#
-# Output HTML for the revalidate controls in validation results.
-sub revalidate {
-  my $q    = shift;
-  my $File = shift;
-
-  print <<".EOF.";
-  <tr id="controls"><th>Options: </th>
-    <td>
-      <input type="hidden" name="uri" value="$File->{URI}">
-.EOF.
-  print " " x 8, '<input type="checkbox" value="" name="ss"',
-    ($q->param('ss')      ? 'checked="checked"' : ''), ' />Show Source';
-  print " " x 8, '<input type="checkbox" value="" name="outline"',
-    ($q->param('outline') ? 'checked="checked"' : ''), ' />Outline';
-  print " " x 8, '<input type="checkbox" value="" name="sp"',
-    ($q->param('sp')      ? 'checked="checked"' : ''), ' />Parse Tree';
-  print " " x 8, '<input type="checkbox" value="" name="noatt"',
-    ($q->param('noatt')   ? 'checked="checked"' : ''), ' />...no attributes</td>';
-  print "        <tr><th>Doctype: </th><td>";
-  print $q->popup_menu(-name => 'doctype',
-		       -values => [
-				   '(specified inline)',
-				   'XHTML 1.0 Strict',
-				   'XHTML 1.0 Transitional',
-				   'XHTML 1.0 Frameset',
-				   'HTML 4.01 Strict',
-				   'HTML 4.01 Transitional',
-				   'HTML 4.01 Frameset',
-				   'HTML 3.2',
-				   'HTML 2.0',
-				  ],
-		       -default => $q->param('doctype'),
-		      );
-  print <<".EOF.";
-        <input type="submit" value="Revalidate" />
-    </td></tr>
-.EOF.
-}
