@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.59 2000-01-26 15:16:53 gerald Exp $
+# $Id: check,v 1.60 2000-01-26 16:17:03 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -73,9 +73,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.59 $;
+$VERSION    =  q$Revision: 1.60 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2000-01-26 15:16:53 $;
+$DATE       =  q$Date: 2000-01-26 16:17:03 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -92,6 +92,7 @@ my $xhtmlt_doctype  = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitiona
 my $lt        = "\020";
 my $gt        = "\021";
 my $gifborder = ' border=0';
+my $xhtmlendtag;
 
 #
 # The option names
@@ -641,8 +642,10 @@ else {
 	}
 	elsif ( $version =~ /XHTML 1\.0<\/a> / ) {
 	    $gifname = "vxhtml10";
-	    $alttext = "Valid XHTML 4.01!";
-            $gifhw   = " height=31 width=88";
+	    $alttext = "Valid XHTML 1.0!";
+            $gifborder = "";
+            $gifhw   = ' height="31" width="88"';
+	    $xhtmlendtag = " /";
 	}
 	elsif ( $version =~ /HTML 3\.0/ ) {
 	    $gifname = "vh30";
@@ -675,7 +678,7 @@ else {
   &lt;p&gt;
     &lt;a href="${abs_svc_uri}check/referer"&gt;&lt;img$gifborder
         src="$abs_img_uri$nicegifname"
-        alt="$alttext"$gifhw&gt;&lt;/a&gt;
+        alt="$alttext"$gifhw$xhtmlendtag&gt;&lt;/a&gt;
   &lt;/p&gt;</pre>
   <p>
     If you like, you can <a href="$rel_img_uri$gifname">download a copy of this
