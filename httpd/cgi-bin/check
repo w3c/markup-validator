@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.71 2000-10-21 07:51:47 gerald Exp $
+# $Id: check,v 1.72 2000-10-21 09:11:01 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -71,9 +71,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.71 $;
+$VERSION    =  q$Revision: 1.72 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2000-10-21 07:51:47 $;
+$DATE       =  q$Date: 2000-10-21 09:11:01 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -229,7 +229,7 @@ my $File = ($q->param('uploaded_file') ? &handle_file($q) : &handle_uri($q));
 #
 # Abort if there was no document type mapping for this Content-Type, in which
 # case the document type will be equal to the content type (contains a "/").
-if ($File->{'Type'} =~ m(/)) {
+if ($File->{'Type'} =~ m(/) and not $q->param('uploaded_file')) {
   print $header;
   print <<"EOF";
     <p class="error">
@@ -256,7 +256,8 @@ EOF
 
 #
 # Try to extract or guess the DOCTYPE for HTML and XHTML files.
-if ($File->{Type} ne 'xml') {
+if ($File->{Type} eq 'html' or $File->{Type} eq 'xhtml'
+    or $q->param('uploaded_file') ) {
   ($guessed_doctype, $doctype) = &check_for_doctype($File->{Content});
 }
 
@@ -1340,13 +1341,11 @@ sub handle_file {
 # Parse a Content-Type and parameters. Return document type and charset.
 sub parse_content_type {
   my $Content_Type = shift;
-  my $charset;
+  my ($charset, $type);
   
   my($ct, @param) = split /\s*;\s*/, lc $Content_Type;
 
-  if (exists $file_type->{$ct}) {
-    $type = $file_type->{$ct};
-  }
+  $type = $file_type->{$ct} || $ct;
   
   foreach my $param (@param) {
     my($p, $v) = split /\s*=\s*/, $param;
