@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.56 2000-07-12 19:14:31 hugo Exp $
+# $Id: checklink.pl,v 2.57 2000-07-13 16:10:35 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -31,7 +31,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.56 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.57 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -527,7 +527,8 @@ sub get_document() {
     if (! ($response->header('Content-Type') =~ m/text\/html/)) {
         $failed_reason = "Content-Type is '".
             $response->header('Content-Type')."'";
-    } elsif ($response->header('Content-Encoding')) {
+    } elsif ($response->header('Content-Encoding')
+             && ($response->header('Content-Encoding') ne 'identity')) {
         $failed_reason = "Content-Encoding is '".
             $response->header('Content-encoding')."'";
     }
