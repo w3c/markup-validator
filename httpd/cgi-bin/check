@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.309 2002-12-02 01:53:14 link Exp $
+# $Id: check,v 1.310 2002-12-02 02:11:23 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -133,7 +133,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.309 $;
+  $VERSION    =  q$Revision: 1.310 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 } # end of BEGIN block.
@@ -243,7 +243,7 @@ untie *STDIN;
 ###############################################################################
 
 my $T = HTML::Template->new(
-			    filename => '/usr/local/validator/share/templates/result.tmpl',
+			    filename => '/usr/local/validator/share/templates/en_US/result.tmpl',
 			    die_on_bad_params => FALSE,
 			   );
 
@@ -490,7 +490,7 @@ $ENV{SGML_SEARCH_PATH} = $CFG->{SGML_Library};
 
 ##
 ## HTML. Turn back to SGML semantics.
-#if (&is_html($File->{Type})) {
+#if (&is_html($File)) {
 #  $ENV{SP_CHARSET_FIXED} = 'YES';
 #  $ENV{SP_ENCODING}      = 'UTF-8';
 #  $catalog  = File::Spec->catfile($CFG->{SGML_Library}, 'catalog');
@@ -501,9 +501,9 @@ $ENV{SGML_SEARCH_PATH} = $CFG->{SGML_Library};
 ## MathML and XHTML. Must be here because they're usually served as text/html
 ## to deal with braindead browsers. In other words, these override the check for &is_html.
 #$catalog = File::Spec->catfile($CFG->{SGML_Library}, 'xhtml.soc')
-#  if &is_xhtml($File->{Type});
+#  if &is_xhtml($File);
 #$catalog = File::Spec->catfile($CFG->{SGML_Library}, 'mathml.soc')
-#  if &is_mathml($File->{Type});
+#  if &is_mathml($File);
 
 
 my @cmd = ($CFG->{SGML_Parser}, '-c', $catalog, '-E0', @xmlflags);
@@ -605,10 +605,10 @@ if (&is_xml($File) and not $File->{DOCTYPE}) {
 }
 
 
-#$File->{Version} = $File->{DOCTYPE} if &is_xhtml($File->{Type});
-#$File->{Version} = $File->{DOCTYPE} if &is_mathml($File->{Type});
-#$File->{Version} = $File->{DOCTYPE} if &is_svg($File->{Type});
-#$File->{Version} = $File->{DOCTYPE} if &is_smil($File->{Type});
+#$File->{Version} = $File->{DOCTYPE} if &is_xhtml($File);
+#$File->{Version} = $File->{DOCTYPE} if &is_mathml($File);
+#$File->{Version} = $File->{DOCTYPE} if &is_svg($File);
+#$File->{Version} = $File->{DOCTYPE} if &is_smil($File);
 
 #
 # Get the pretty text version of the FPI if a mapping exists.
@@ -626,11 +626,11 @@ if ($File->{'Is Upload'}) {
 }
 
 
-if (&is_xml($File->{Type}) and $File->{Namespace}) {
+if (&is_xml($File) and $File->{Namespace}) {
   my $rns = &ent($File->{Namespace});
-  if (&is_xhtml($File->{Type}) and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
+  if (&is_xhtml($File) and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
     &add_warning($File, "Unknown namespace (&#171;<code>$rns</code>&#187;) for text/html document!");
-  } elsif (&is_svg($File->{Type}) and $File->{Namespace} ne 'http://www.w3.org/2000/svg') {
+  } elsif (&is_svg($File) and $File->{Namespace} ne 'http://www.w3.org/2000/svg') {
     &add_warning($File, "Unknown namespace (&#171;<code>$rns</code>&#187;) for SVG document!");
   }
 
@@ -1920,11 +1920,11 @@ sub uri_rejected {
 #
 # Utility subs to tell if type "is" something.
 sub is_xml    {shift->{Type} =~ m(^[^+]+\+xml$)};
-sub is_svg    {shift =~ m(svg\+xml$)};
-sub is_smil   {shift =~ m(smil\+xml$)};
-sub is_html   {shift =~ m(html\+sgml$)};
-sub is_xhtml  {shift =~ m(xhtml\+xml$)};
-sub is_mathml {shift =~ m(mathml\+xml$)};
+sub is_svg    {shift->{Type} =~ m(svg\+xml$)};
+sub is_smil   {shift->{Type} =~ m(smil\+xml$)};
+sub is_html   {shift->{Type} =~ m(html\+sgml$)};
+sub is_xhtml  {shift->{Type} =~ m(xhtml\+xml$)};
+sub is_mathml {shift->{Type} =~ m(mathml\+xml$)};
 
 
 #
