@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.193 2001-10-20 10:56:04 link Exp $
+# $Id: check,v 1.194 2001-11-06 15:51:02 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -95,9 +95,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.193 $;
+$VERSION    =  q$Revision: 1.194 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-10-20 10:56:04 $;
+$DATE       =  q$Date: 2001-11-06 15:51:02 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -201,6 +201,7 @@ Content-Type: text/html; charset=utf-8
 $html40t_doctype
 <html>
   <head>
+    <meta http-eqiv='Content-Type' content='text/html;charset=utf-8'>
     <title>W3C HTML Validation Service Results</title>
     <link rev="made" href="mailto:$MAINTAINER">
     <style type="text/css" media="screen">\@import "/results.css";</style>
