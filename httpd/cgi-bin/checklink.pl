@@ -5,7 +5,7 @@
 # (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.16 2003-07-27 15:38:16 ville Exp $
+# $Id: checklink.pl,v 3.6.2.17 2003-07-27 16:19:02 ville Exp $
 #
 # This program is licensed under the W3C(r) Software License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -65,7 +65,7 @@ sub redirect_ok
 package W3C::CheckLink;
 
 use vars qw($PROGRAM $AGENT $VERSION $CVS_VERSION $REVISION
-            $Have_ReadKey $DocType $Accept $ContentTypes %Cfg);
+            $DocType $Accept $ContentTypes %Cfg);
 
 use Config::General 2.06 qw(); # Need 2.06 for -SplitPolicy
 use HTML::Entities       qw();
@@ -88,12 +88,9 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.16 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.17 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
-
-  eval "use Term::ReadKey 2.00 qw(ReadMode)";
-  $Have_ReadKey = !$@;
 
   # Pull in mod_perl modules if applicable.
   if ($ENV{MOD_PERL}) {
@@ -215,8 +212,9 @@ if ($Opts{Command_Line}) {
 
 } else {
 
-  use CGI ();
-  use CGI::Carp qw(fatalsToBrowser);
+  require CGI;
+  require CGI::Carp;
+  CGI::Carp->import(qw(fatalsToBrowser));
   $query = new CGI;
   # Set a few parameters in CGI mode
   $Opts{Verbose}   = 0;
@@ -436,10 +434,21 @@ The full manual page can be displayed with:
 
 sub ask_password ()
 {
+  eval {
+    local $SIG{__DIE__};
+    require Term::ReadKey;
+    Term::ReadKey->require_version(2.00);
+    Term::ReadKey->import(qw(ReadMode));
+  };
+  if ($@) {
+    warn('Warning: Term::ReadKey 2.00 or newer not available, ' .
+         "password input disabled.\n");
+    return;
+  }
   printf(STDERR 'Enter the password for user %s: ', $Opts{User});
-  $Have_ReadKey ? ReadMode('noecho',  *STDIN) : system('stty -echo');
+  ReadMode('noecho',  *STDIN);
   chomp($Opts{Password} = <STDIN>);
-  $Have_ReadKey ? ReadMode('restore', *STDIN) : system('stty echo');
+  ReadMode('restore', *STDIN);
   print(STDERR "ok.\n");
 }
 
