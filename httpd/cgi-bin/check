@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.17 1999-04-08 22:18:49 renaudb Exp $
+# $Id: check,v 1.18 1999-04-09 00:06:52 gerald Exp $
 
 use LWP::UserAgent;
 
@@ -16,11 +16,10 @@ use LWP::UserAgent;
 # Constant definitions
 #############################################################################
 
-$cvsrevision	= '$Revision: 1.17 $';
-$cvsdate	= '$Date: 1999-04-08 22:18:49 $';
+$cvsrevision	= '$Revision: 1.18 $';
+$cvsdate	= '$Date: 1999-04-09 00:06:52 $';
 
 $logfile	= "/var/log/httpd/val-svc";
-$reflogfile	= "/var/log/httpd/val-svc-referers";
 
 $uri_def_uri	= "http://www.w3.org/Addressing/#terms";
 $faqloc		= "http://www.cs.duke.edu/~dsb/kgv-faq/";
@@ -29,10 +28,8 @@ $abs_svc_uri	= "http://validator.w3.org/";
 $rel_img_uri	= "/images/";
 $abs_img_uri	= "${abs_svc_uri}images/";
 
-$grabber	= "/usr/local/lib/libwww-perl/get";
 $sgmlstuff	= "/usr/local/src/validator/htdocs/sgml-lib";
 $sp		= "/usr/local/bin/nsgmls";
-$tidy		= "/usr/local/bin/tidy";
 $nkf		= "/usr/local/bin/nkf";
 
 $sgmldecl	= "$sgmlstuff/REC-html40-971218/HTML4.decl";
@@ -166,13 +163,7 @@ $SIG{'PIPE'} = 'IGNORE';
 $parameters = $ENV{PATH_INFO} || $ENV{QUERY_STRING};
 
 if ( ! $parameters ) {
-    if ( $ENV{REQUEST_URI} =~ /check/ ) {
-        &redirect_to_home_page;
-    }
-    else {
-	&output_intro_spiel;
-	&clean_up_and_exit;
-    }
+    &redirect_to_home_page;
 }
 
 foreach $pair (split(/[&;,]/, $parameters)) {
@@ -262,8 +253,6 @@ EOF
     &clean_up_and_exit;
 }
 
-# @@ is this completely safe!?
-
 $ua = new LWP::UserAgent;
 $request = new HTTP::Request(GET => $uri);
 
@@ -276,51 +265,6 @@ if($ENV{HTTP_AUTHORIZATION}){
 }
 
 $response = $ua->request($request);
-
-#open( URI, "$grabber \"$uri_escaped\" |" ) || die "couldn't retrieve uri: $!";
-#@file = <URI>;
-#close( URI ) || die "couldn't close uri retrieval pipe: $!";
-
-# skip the request headers
-#while ( $_ = shift( @file ) ) {
-#    chop;
-#    last if /^$/;
-#}
-
-# check the response headers
-#while ( $_ = shift( @file ) ) {
-#    chop;
-#    s/\r$//;
-#    if (/^HTTP\/[0-9\.]+ [0-9][0-9][0-9] ?.*/ ) {
-#	( ( $httpversion, $response, $message ) =
-#	    ( /^(HTTP\/[0-9\.]+) ([0-9][0-9][0-9]) ?(.*)/ ) );
-#    }
-#    if (/^Last-Modified: /i ) {
-#	( $lastmod ) = ( /^Last-Modified: (.*)/i );
-#    }
-#    if (/^Content-Length: /i ) {
-#	( $length ) = ( /^Content-Length: (.*)/i );
-#    }
-#    if (/^Server: /i ) {
-#	( $server ) = ( /^Server: (.*)/i );
-#    }
-#    if (/^Location: /i ) {
-#	( $redirect_uri ) = ( /^Location: (.*)/i );
-#	$redirect_uri =~ s/\s*$//g;	# it has a trailing space sometimes (?)
-#    }
-#    if (/^Content-Type: /i) {
-#        ( $content_type ) = ( /^Content-Type: (.*)/i );
-#        ( $http_charset ) = ( $content_type =~ /;\s*charset=(.*)/i );
-#        $content_type =~ s/;.*$//;
-#        $content_type =~ s/\s*$//g;
-#	$http_charset =~ s/;.*//;
-#        $http_charset =~ s/\s*//g;
-#    }
-
-#    last if /^$/;
-#}
-
-
 
 if ( $response->code != 200 ) {
     $optionstring = &build_options;
@@ -385,10 +329,40 @@ Content-Type: text/html
 </p>
 
 <p>
-  This service can only validate pages which are available somewhere
-  on the publicly-accessible Internet. In the future this service may
-  be enhanced to accept a username/password combination to be proxied
-  to your server for authentication purposes.
+  The URI you specified,
+</p>
+
+<blockquote>
+  <code><a href="$resource">$resource</a></code>
+</blockquote>
+
+<p>
+  returned a 401 "authorization required" response when I tried
+  to download it.
+</p>
+
+<p>
+  You should have been prompted by your browser for a
+  username/password pair; if you had supplied this information, I
+  would have forwarded it to your server for authorization to
+  access the resource. You can use your browser's "reload" function
+  to try again, if you wish.
+</p>
+
+<p>
+  Of course, you may not want to trust me with this information,
+  which is fine. I can tell you that I don't log it or do
+  anything else nasty with it, and you can <a
+  href="http://validator.w3.org/source/">download the source for
+  this service</a> to see what it does, but you have no guarantee
+  that this is actually the code I'm using; you basically have to
+  decide whether to trust me or not. :-)
+</p>
+
+<p>
+  Note that you shouldn't use HTTP Basic Authentication for
+  anything which really needs to be private, since the password
+  goes across the network unencrypted.
 </p>
 EOF
 
@@ -430,7 +404,7 @@ EOF
 if ( $doctype =~ /xhtml/i ) {
     $xhtml = 1;
 }
-#&clean_up_and_exit;
+
 foreach $line (@file) {
     # @@ needs to handle meta elements that span more than one line
     if ( $line =~ /<meta/i ) {
@@ -441,7 +415,7 @@ foreach $line (@file) {
     }
 }
 
-$content_type = $response->headers->content_type;
+$content_type = $response->headers->header("Content-Type");
 ( $http_charset ) = ( $content_type =~ /;\s*charset=(.*)/i );
 $content_type =~ s/;.*$//;
 $content_type =~ s/\s*$//g;
@@ -480,15 +454,12 @@ if ( $lastmod = $response->headers->header("Last-Modified") ) {
     print qq{  <li>Last modified: $lastmod\n};
 }
 
-# @@ add a "verbose" option or something on the advanced form, then
-# display a bunch of stuff like this if it's selected
-
 if ( defined $response->headers->server ) {
-    print "<li>Server: ".$response->headers->server."\n";
+    print "  <li>Server: " . $response->headers->server . "\n";
 }
 
 if ( defined $response->content_length ) {
-    print "<li>Content length: ".$response->content_length."\n";
+    print "  <li>Content length: " . $response->content_length . "\n";
 }
 
 if ( $xhtml ) {
@@ -525,7 +496,6 @@ for (@file) {
     s/+$//;
     print CHECKER $_, "\n";
 }
-# print CHECKER @file;
 close( CHECKER ) || "couldn't close checker";
 
 open( ERRORS, "< $temp" )	|| die "couldn't open checker results: $!";
@@ -948,13 +918,13 @@ EOF
     print "<pre>\n";
     if ( $guessed_doctype ) {
 	$gd = "$doctype\n";
-	$gd =~ s/&/&amp;/go; $gd =~ s/</&lt;/go; # $gd =~ s/>/&gt;/go;
+	$gd =~ s/&/&amp;/go; $gd =~ s/</&lt;/go;
 	printf "%4d: %s", 0, $gd;
     }
     $line = 1;
     for (@file) {
-	s/&/&amp;/go; s/</&lt;/go; # s/>/&gt;/go;
-	printf "%4d: %s", $line, $_;
+	s/&/&amp;/go; s/</&lt;/go;
+	printf "%4d: %s\n", $line, $_;
 	$line++;
     }
     print "</pre>\n";
@@ -1080,146 +1050,6 @@ EOF
 
 }
 
-sub output_intro_spiel {
-
-    print <<"EOF";
-Content-Type: text/html
-
-$html40t_doctype
-<html>
-
-<head>
-  <title>W3C HTML Validation Service</title>
-  <link rev="made" href="mailto:gerald\@w3.org">
-  <meta name="keywords" content="HTML, Hypertext Markup Language, Validation,
-    W3C HTML Validation Service">
-  <meta name="description" content="W3C's easy-to-use
-    HTML validation service, based on an SGML parser.">
-</head>
-
-<body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
-
-  <p>
-    <a href="http://www.w3.org/"><img
-       src="http://www.w3.org/Icons/WWW/w3c_home" height=48 border=0
-       alt="W3C"></a>
-  </p>
-
-  <h1>W3C HTML Validation Service</h1>
-
-  <p>
-    Welcome to the W3C HTML Validation Service!
-    See <a href="whatsnew.html"><strong>what's new</strong></a>. (updated
-    August 26, 1998)
-  </p>
-$notice
-  <p>
-    This is an easy-to-use HTML validation service based on an SGML
-    parser. It checks HTML documents for compliance with W3C HTML
-    Recommendations and other HTML standards.
-  </p>
-
-  <p>
-    To use the <a
-    href="http://www.w3.org/TR/REC-html40/">W3C HTML 4.0 Recommendation</a>,
-    start your document with one of the following doctype declarations:
-  </p>
-
-  <pre>
-    &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
-            "http://www.w3.org/TR/REC-html40/strict.dtd"&gt;
-    &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
-            "http://www.w3.org/TR/REC-html40/loose.dtd"&gt;
-    &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"
-            "http://www.w3.org/TR/REC-html40/frameset.dtd"&gt;
-  </pre>
-
-  <hr>
-  <h2><a name="byURI">Validate Documents by URI</a></h2>
-
-  <p>
-    Enter the location of a document you would like validated:
-  </p>
-
-  <form method=GET action="/check">
-    Location: <input name="uri" size=50><br>
-    <input name="weblint" type=checkbox value="">Include <a
-    href="http://www.cre.canon.co.uk/~neilb/weblint/">Weblint</a>
-    results
-    <input name="pw" type=checkbox value="">run Weblint
-    in "pedantic" mode<br>
-    <input name="ss" type=checkbox value="">Show source input
-    <input name="outline" type=checkbox value="">Show an outline of this
-    document<br>
-    <input name="sp" type=checkbox value="">Show parse tree
-    <input name="noatt" type=checkbox value="">don't show
-    attributes in the parse tree<br>
-    <input type="submit" value="Submit this URI for validation">
-    <input type="reset" value="Reset this form">
-  </form>
-
-  <hr>
-  <h2><a name="seeAlso">See Also</a></h2>
-
-  <ul>
-    <li><a href="whatsnew.html">Recent changes to this service</a></li>
-    <li><a href="news:comp.infosystems.www.authoring.html">The HTML
-      authoring newsgroup</a> (for help with HTML)
-    <li><a href="feedback.html">How to provide feedback on this service</a></li>
-    <li><a href="sgml-lib/catalog">DTDs (document types) supported by this
-      service</a> (the SGML catalog)</li>
-    <li><a href="todo.html">The to-do list for the service</a></li>
-    <li><a href="/source/">Information on the source code availability</a></li>
-    <li><a href="http://lists.w3.org/Archives/Public/www-validator/">The
-      www-validator mailing list archives</a></li>
-    <li><a href="http://www.w3.org/TR/REC-html40/">The W3C HTML 4.0
-      Recommendation</a>
-    <li><a href="http://www.w3.org/TR/REC-html32">The W3C HTML 3.2
-      Recommendation</a>
-
-  </ul>
-
-  <h2><a name="credits">Credits</a></h2>
-
-  <p>
-    This service uses:
-  </p>
-
-  <ul>
-
-    <li>
-      <a href="about.html">Hardware/network connectivity</a> provided by <a
-      href="http://www.compaq.com/">Compaq Computer Corporation</a>.
-    </li>
-
-    <li>
-      <a href="http://www.jclark.com/">James Clark</a>'s excellent <a
-      href="http://www.jclark.com/sp/">SGML parser</a>,
-    </li>
-
-    <li>
-      <a href="http://www.ics.uci.edu/~fielding/">Roy T. Fielding</a>'s <a
-      href="http://www.ics.uci.edu/pub/websoft/libwww-perl/">libwww-perl</a>
-      to retrieve documents,
-    </li>
-
-    <li>
-      <a href="http://www.cre.canon.co.uk/~neilb/">Neil Bowers</a>' HTML
-      style checker, <a
-      href="http://www.cre.canon.co.uk/~neilb/weblint/">Weblint</a>.
-    </li>
-
-    <li>
-      SGML <a href="http://www.cs.duke.edu/~dsb/kgv-faq/errors.html">error
-      explanations</a> maintained by <a
-      href="http://www.cs.duke.edu/~dsb/index.html">Scott Bigham</a>.
-
-  </ul>
-
-EOF
-
-}
-
 sub output_closing {
 
     print <<"EOF";
@@ -1267,12 +1097,6 @@ sub make_log_entry {
 	print LOG "frag not defined for msgindex: $msgindex\n";
     }
     close( LOG ) || die "couldn't close log: $!";
-
-    if ( length( $ENV{HTTP_REFERER} ) ) {
-	open(RLOG,">>$reflogfile") || die "couldn't append to rlog: $!";
-	print RLOG "$ENV{HTTP_REFERER} -> $ENV{REQUEST_URI}\n";
-	close( RLOG ) || die "couldn't close rlog: $!";
-    }
 
 }
 
@@ -1351,8 +1175,8 @@ sub check_for_doctype {
     # second value:
     #     the inferred doctype, if any
 
-    my $arrayref = shift;		# a reference to @file, for efficiency
-    my @file = @$arrayref;		# dereference $fileref
+    my $fileref = shift;		# a reference to @file, for efficiency
+    my @file = @$fileref;		# dereference $fileref
 
     foreach $count (0..$#file) {
 	$line = $file[$count];
