@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.55.2.6 2002-12-05 02:55:40 ot Exp $"
---><!--#set var="date" value="\$Date: 2002-12-05 02:55:40 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.55.2.7 2002-12-05 03:15:55 ot Exp $"
+--><!--#set var="date" value="\$Date: 2002-12-05 03:15:55 $"
 --><!--#set var="title" value="The W3C MarkUp Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -15,25 +15,38 @@
       <h2>Validate Files</h2>
       <p>
         You can enter a URI in the <code>Address</code> field below, and
-        have the page validated. 
+        have the page validated:</p>
+     <form method="get" action="check">
+      <p>
+        <label title="Address of page to Validate" for="uri">Address:
+          <input id="uri" name="uri" size="40" /></label>
+      <label title="Submit URI for validation">
+	<input type="submit" value="Validate URI..." /></label>
+      </p>
+      </form>
+
+	<p>If you want to upload a file from your computer and have it validated,
+	you can use this form:</p>
+
+      <form method="post" enctype="multipart/form-data" action="check">
+      <p>    
+        <label title="Choose a Local File to Upload and Validate" for="uploaded_file">Local File:
+          <input type="file" id="uploaded_file" name="uploaded_file" size="30" /></label>
+        <label title="Submit file for validation"><input class="default" type="submit" value="Validate File" /></label>
+      </p>
+      </form>
+
+      <p>
         There is also an <a title="Extended Interface to the
         W3C MarkUp Validation Service" href="detailed.html">Extended
         Interface</a> available if you want to set any advanced options, and 
 	a <a title="File Upload Interface to the
-        W3C MarkUp Validation Service" href="file-upload.html">File
-	Upload Interface</a> if you want to upload a file from your computer
-	and have it validated.
+        W3C MarkUp Validation Service" href="file-upload.html">Extended File
+	Upload Interface</a> if you want to validate uploaded files with
+	advanced options.
       </p>
-      <form method="get" action="check">
-      <p>
-        <label title="Address of page to Validate" for="uri">Address:
-          <input id="uri" name="uri" size="40" /></label>
-      </p>
-      <p>
-        <label title="Reset fields to default values"><input class="reset" type="reset" value="Reset Form" /></label>
-        <label title="Submit file for validation"><input class="default" type="submit" value="Validate Page" /></label>
-      </p>
-      </form>
+
+
     </div>
 
     <div id="recent">
