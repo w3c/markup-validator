@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.52 2000-06-12 15:37:34 hugo Exp $
+# $Id: checklink.pl,v 2.53 2000-06-23 16:56:42 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -31,7 +31,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.52 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.53 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -56,7 +56,7 @@ my $_contact_address = 'hugo@w3.org';
 
 # Restrictions for the online version
 my $_sleep_time = 3;
-my $_max_documents = 50;
+my $_max_documents = 150;
 
 # Global variables
 # What is our query?
