@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.363 2004-11-20 09:09:38 bjoern Exp $
+# $Id: check,v 1.364 2004-12-15 08:08:57 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -222,7 +222,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.363 $;
+  $VERSION    =  q$Revision: 1.364 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2409,7 +2409,8 @@ sub check_utf8 {
   }
 
   # Add a warning if doc is UTF-8 and contains a BOM.
-  if ($File->{Content}->[0] =~ m(^\xEF\xBB\xBF)) {
+  if ($File->{Charset}->{Use} eq 'utf-8' &&
+        $File->{Content}->[0] =~ m(^\xEF\xBB\xBF)) {
     &add_warning($File, 'note', 'Note:', <<".EOF.");
       The Unicode Byte-Order Mark (BOM) in UTF-8 encoded files is known to cause
       problems for some text editors and older browsers. You may want to consider
