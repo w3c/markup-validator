@@ -1,0 +1,34 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+
+    <div id="main">
+      <div id="head">
+        <TMPL_INCLUDE name="jumpbar.tmpl">
+        <TMPL_IF NAME="file_opt_verbose">
+          <TMPL_INCLUDE NAME="table.tmpl">
+        </TMPL_IF>
+        <TMPL_IF NAME="file_opt_warnings">
+          <ul id="Warnings">
+          </ul>
+        </TMPL_IF>
+      </div><!-- end of "head" -->
+
+      <TMPL_IF NAME="VALID">
+        <TMPL_INCLUDE NAME="valid.tmpl">
+      <TMPL_ELSE>
+        <TMPL_INCLUDE NAME="invalid.tmpl">
+      </TMPL_IF>
+
+      <TMPL_IF NAME="OPT_SHOW_SOURCE">
+        <TMPL_INCLUDE NAME="opt_show_source.tmpl">
+      </TMPL_IF>
+
+      <TMPL_IF NAME="OPT_SHOW_OUTLINE">
+        <TMPL_INCLUDE NAME="opt_show_outline.tmpl">
+      </TMPL_IF>
+
+      <TMPL_IF NAME="OPT_SHOW_parsetree">
+        <TMPL_INCLUDE NAME="opt_show_parsetree.tmpl">
+      </TMPL_IF>
+    </div><!-- end of "main" -->
+
+<TMPL_INCLUDE NAME="footer.tmpl">

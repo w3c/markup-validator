@@ -1,0 +1,63 @@
+<div id="result">
+<TMPL_IF NAME="is_tentative">
+  <h2 class="valid">This Page Is <em>Tentatively</em> Valid <TMPL_VAR NAME="file_version"> (Tentatively Valid)!</h2>
+<TMPL_ELSE>
+  <h2 class="valid">This Page Is Valid <TMPL_VAR NAME="file_version">!</h2>
+</TMPL_IF>
+  <dl class="tip">
+    <dt><a href="http://www.w3.org/2001/06tips/">Tip Of The Day</a>:</dt>
+    <dd><a href="<TMPL_VAR NAME="tip_uri">"><TMPL_VAR NAME="tip_slug"></a></dd>
+  </dl>
+  <p>
+    The document located at
+    &lt;<a href="<TMPL_VAR NAME="file_uri">"><TMPL_VAR NAME="file_uri"></a>&gt;
+    was checked and found to be valid <TMPL_VAR NAME="file_version">.
+    This means that the resource in question identified itself as
+    "<TMPL_VAR NAME="file_version">" and that we successfully performed a
+    formal validation using an SGML or XML Parser (depending on the
+    markup language used).
+  </p>
+<TMPL_IF NAME="have_badge">
+  <p>
+    <img
+      class="inline-badge"
+      src="<TMPL_VAR NAME="badge_uri">"
+      alt="<TMPL_VAR NAME="badge_alt">"
+      <TMPL_VAR NAME="badge_gifhw"> />
+    To show your readers that you have taken the care to create an
+    interoperable Web page, you may display this icon on any page
+    that validates. Here is the HTML you could use to add this icon
+    to your Web page:
+  </p>
+  <pre>
+  &lt;p&gt;
+    &lt;a href="<TMPL_VAR NAME="cfg_home_page">/check/referer"&gt;&lt;img
+        src="<TMPL_VAR NAME="badge_uri">"
+        alt="<TMPL_VAR NAME="badge_alt">"<TMPL_VAR NAME="badge_gifhw"><TMPL_VAR NAME="badge_xhtml">&gt;&lt;/a&gt;
+  &lt;/p&gt;
+  </pre>
+  <p>
+    If you like, you can download a copy of this image (in
+    <a href="<TMPL_VAR NAME="badge_uri">.png">PNG</a> or
+    <a href="<TMPL_VAR NAME="badge_uri">.gif">GIF</a>
+    format) to keep in your local web directory, and change the HTML fragment
+    above to reference your local image rather than the one on this server.
+  </p>
+</TMPL_IF>
+  <p>
+    If you use <a href="http://www.w3.org/Style/CSS/">CSS</a> in your document,
+    you should also <a title="Validate CSS at the W3C CSS Validator"
+    href="http://jigsaw.w3.org/css-validator/validator?uri=<TMPL_VAR NAME="file_uri">">check
+    it for validity</a> using the W3C <a
+    href="http://jigsaw.w3.org/css-validator/">CSS Validation Service</a>.
+  </p>
+<TMPL_UNLESS NAME="is_upload">
+  <p>
+    If you would like to create a link to <em>this</em> page (i.e., this
+    validation result) to make it easier to re-validate this page in the
+    future or to allow others to validate your page, the URI is
+    &lt;<a href="<TMPL_VAR NAME="file_thispage">"><TMPL_VAR NAME="file_thispage"></a>&gt;
+    (or you can just add the current page to your bookmarks or hotlist).
+  </p>
+</TMPL_UNLESS>
+</div><!-- end of "result" -->

@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.308 2002-12-01 13:40:33 link Exp $
+# $Id: check,v 1.309 2002-12-02 01:53:14 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -46,6 +46,7 @@ use CGI::Carp            qw(carp croak);
 use Config::General 2.06 qw(); # Need 2.06 for -SplitPolicy
 use File::Spec           qw();
 use HTML::Parser    3.25 qw(); # Need 3.25 for $p->ignore_elements.
+use HTML::Template  2.6  qw();
 use HTTP::Request        qw();
 use IO::File             qw();
 use IPC::Open3           qw(open3);
@@ -132,7 +133,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.308 $;
+  $VERSION    =  q$Revision: 1.309 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 } # end of BEGIN block.
@@ -140,7 +141,6 @@ The error reported was: '$@'
 #
 # Get rid of (possibly insecure) $PATH.
 delete $ENV{PATH};
-
 
 ###############################################################################
 #### Process CGI variables and initialize. ####################################
@@ -153,29 +153,6 @@ my $q = new CGI;
 #
 # The data structure that will hold all session data.
 my $File;
-
-#
-# Pseudo-SSI include header and footer for output.
-$File->{'Header'} = &prepSSI({
-                              File     => $CFG->{Header},
-                              Title    => 'Validation Results',
-                              Revision => $VERSION,
-                             });
-$File->{'Footer'} = &prepSSI({
-                              File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-12-01 13:40:33 $,
-                             });
-
-#
-# SSI Footer for static pages does not include closing tags for body & html.
-$File->{'Footer'} .= qq(  </body>\n</html>\n);
-
-#
-# Prepare standard HTML preamble for output.
-$File->{'Results'}  = "Content-Language: en\n";
-$File->{'Results'} .= "Content-Type: text/html; charset=utf-8\n\n";
-$File->{'Results'} .= $File->{'Header'};
-
 
 ##############################################
 # Populate $File->{Env} -- Session Metadata. #
@@ -259,6 +236,20 @@ untie *STDIN;
 #
 # Abort if an error was flagged during initialization.
 &abort_if_error_flagged($File, 0);
+
+
+###############################################################################
+#### Generate Template for Result. ############################################
+###############################################################################
+
+my $T = HTML::Template->new(
+			    filename => '/usr/local/validator/share/templates/result.tmpl',
+			    die_on_bad_params => FALSE,
+			   );
+
+$T->param(cfg_home_page => $CFG->{Home_Page});
+$T->param(is_upload     => $File->{'Is Upload'});
+
 
 
 ###############################################################################
@@ -475,7 +466,7 @@ my @xmlflags = qw(
 
 #
 # Switch to XML semantics if file is XML.
-if (&is_xml($File->{Type})) {
+if (&is_xml($File)) {
   $catalog  = File::Spec->catfile($CFG->{SGML_Library}, 'xml.soc');
   push(@xmlflags, '-wxml');
   &add_warning($File, <<".EOF.");
@@ -607,7 +598,7 @@ for (@{$File->{ESIS}}) {
 #
 # Force "XML" if type is an XML type and an FPI was not found.
 # Otherwise set the type to be the FPI.
-if (&is_xml($File->{Type}) and not $File->{DOCTYPE}) {
+if (&is_xml($File) and not $File->{DOCTYPE}) {
   $File->{Version} = 'XML';
 } else {
   $File->{Version} = $File->{DOCTYPE} unless $File->{Version};
@@ -692,51 +683,34 @@ if ($File->{Opt}->{Output} eq 'xml') {
 } elsif ($File->{Opt}->{Output} eq 'n3') {
   &report_n3($File);
 } else {
-  print $File->{Results};
-  print qq(    <div class="meat">\n);
+  $T->param(is_xml => &is_xml($File));
 
-  print &jump_links($File);
+  $T->param(opt_show_source    => $File->{Opt}->{'Show Source'});
+  $T->param(opt_show_outline   => $File->{Opt}->{'Outline'});
+  $T->param(opt_show_parsetree => $File->{Opt}->{'Show Parsetree'});
+  $T->param(opt_show_noatt     => $File->{Opt}->{'No Attributes'});
 
-  if ($File->{Opt}->{Verbose} or not $File->{'Is Valid'}) {
-    print qq(<div class="splash">\n);
-    &print_table($File);
-    &print_warnings($File);
-    print qq(</div>\n);
+  my $tip = &get_tip;
+  $T->param(tip_uri  => $tip->[0]);
+  $T->param(tip_slug => $tip->[1]);
+
+  if ($File->{'Is Valid'} and not $DEBUG) {
+    $T->param(VALID => TRUE);
+    &report_valid($File, $T);
   } else {
-    if ($File->{'Is Valid'} and not $File->{'Is Upload'}) {
-      my $thispage = $File->{Env}->{'Self URI'};
-      my $escaped_uri = uri_escape($File->{URI});
-      $thispage .= qq(?uri=$escaped_uri);
-      $thispage .= ';ss=1'      if $File->{Opt}->{'Show Source'};
-      $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
-      $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
-      $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
-
-      &add_warning($File, <<".EOF.");
-<em>Note</em>: You can also view <a href="$thispage;verbose=1">verbose
-results</a> by setting the corresponding option on the <a
-  href="detailed.html">Extended Interface</a>.
-.EOF.
-    }
-  }
-
-  if ($File->{'Is Valid'}) {
-    &report_valid($File);
-  } else {
+    $T->param(VALID => FALSE);
     $File->{Opt}->{'Show Source'} = TRUE;
-    &report_errors($File);
+    # &print_table($File);
+    # &print_warnings($File);
+    $T->param(file_errors => &report_errors($File));
+    $T->param(file_outline => &outline($File));
+    $T->param(file_source  => &source($File));
+    $T->param(file_parsetree => &parsetree($File));
+    #    &show_esis($File)   if $File->{Opt}->{'Show ESIS'};
+    #    &show_errors($File) if $File->{Opt}->{'Show Errors'};
   }
 
-  if (not $File->{'Is Valid'} or $File->{Opt}->{Verbose}) {
-    &outline($File)     if $File->{Opt}->{'Outline'};
-    &show_source($File) if $File->{Opt}->{'Show Source'};
-    &parse_tree($File)  if $File->{Opt}->{'Show Parsetree'};
-    &show_esis($File)   if $File->{Opt}->{'Show ESIS'};
-    &show_errors($File) if $File->{Opt}->{'Show Errors'};
-  }
-
-  print qq(</div> <!-- End of "meat". -->\n); # End of "Meat".
-  print $File->{'Footer'};
+  print $T->output;
 }
 
 #
@@ -748,6 +722,103 @@ exit;
 #############################################################################
 # Subroutine definitions
 #############################################################################
+#
+# Output "This page is Valid" report.
+sub report_valid {
+  my $File = shift;
+  my $T    = shift;
+
+  $T->param(file_uri => &ent($File->{URI}));
+
+  my $gifborder   = ' border="0"';
+  my $xhtmlendtag = '';
+  my($image_uri, $alttext, $gifhw);
+
+  unless ($File->{Version} eq 'unknown' or defined $File->{Tentative}) {
+    if ($File->{Version} =~ /^HTML 2\.0$/) {
+      $image_uri = "$CFG->{Home_Page}images/vh20";
+      $alttext = "Valid HTML 2.0!";
+      $gifborder = "";
+    } elsif ($File->{Version} =~ /HTML 3\.2</) {
+      $image_uri = "http://www.w3.org/Icons/valid-html32";
+      $alttext = "Valid HTML 3.2!";
+      $gifhw   = ' height="31" width="88"';
+    } elsif ($File->{Version} =~ /HTML 4\.0<\/a> Strict$/) {
+      $image_uri = "http://www.w3.org/Icons/valid-html40";
+      $alttext = "Valid HTML 4.0!";
+      $gifborder = "";
+      $gifhw   = ' height="31" width="88"';
+    } elsif ($File->{Version} =~ /HTML 4\.0<\/a> /) {
+      $image_uri = "http://www.w3.org/Icons/valid-html40";
+      $alttext = "Valid HTML 4.0!";
+      $gifhw   = ' height="31" width="88"';
+    } elsif ($File->{Version} =~ /HTML 4\.01<\/a> Strict$/) {
+      $image_uri = "http://www.w3.org/Icons/valid-html401";
+      $alttext = "Valid HTML 4.01!";
+      $gifborder = "";
+      $gifhw   = ' height="31" width="88"';
+    } elsif ($File->{Version} =~ /HTML 4\.01<\/a> /) {
+      $image_uri = "http://www.w3.org/Icons/valid-html401";
+      $alttext = "Valid HTML 4.01!";
+      $gifhw   = ' height="31" width="88"';
+    } elsif ($File->{Version} =~ /XHTML 1\.0<\/a> /) {
+      $image_uri = "http://www.w3.org/Icons/valid-xhtml10";
+      $alttext = "Valid XHTML 1.0!";
+      $gifborder = "";
+      $gifhw   = ' height="31" width="88"';
+      $xhtmlendtag = " /";
+    } elsif ($File->{Version} =~ /XHTML Basic 1.0/) {
+      $image_uri = "$CFG->{Home_Page}/images/vxhtml-basic10";
+      $alttext = "Valid XHTML Basic 1.0!";
+      $gifborder = "";
+      $gifhw   = ' height="31" width="88"';
+      $xhtmlendtag = " /";
+    } elsif ($File->{Version} =~ /XHTML 1.1/) {
+      $image_uri = "http://www.w3.org/Icons/valid-xhtml11";
+      $alttext = "Valid XHTML 1.1!";
+      $gifborder = "";
+      $gifhw   = ' height="31" width="88"';
+      $xhtmlendtag = " /";
+    } elsif ($File->{Version} =~ /HTML 3\.0/) {
+      $image_uri = "$CFG->{Home_Page}images/vh30";
+      $alttext = "Valid HTML 3.0!";
+    } elsif ($File->{Version} =~ /Netscape/) {
+      $image_uri = "$CFG->{Home_Page}images/vhns";
+      $alttext = "Valid Netscape-HTML!";
+    } elsif ($File->{Version} =~ /Hotjava/) {
+      $image_uri = "$CFG->{Home_Page}images/vhhj";
+      $alttext = "Valid Hotjava-HTML!";
+    } elsif ($File->{Version} =~ /ISO\/IEC 15445:2000/) {
+      $image_uri = "$CFG->{Home_Page}images/v15445";
+      $alttext = "Valid ISO-HTML!";
+    }
+
+    $T->param(file_version => $File->{Version});
+
+    # @@@
+    # print &daily_tip($File, $CFG->{Tips_DB});
+    # &print_warnings($File);
+
+    if (defined $image_uri) {
+      $T->param(have_badge  => TRUE);
+      $T->param(badge_uri   => $image_uri);
+      $T->param(badge_alt   => $alttext);
+      $T->param(badge_gifhw => $gifhw);
+      $T->param(badge_xhtml => $xhtmlendtag);
+    }
+  } elsif (defined $File->{Tentative}) {
+    $T->param(is_tentative => TRUE);
+  }
+
+  my $thispage = $File->{Env}->{'Self URI'};
+  my $escaped_uri = uri_escape($File->{URI});
+  $thispage .= qq(?uri=$escaped_uri);
+  $thispage .= ';ss=1'      if $File->{Opt}->{'Show Source'};
+  $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
+  $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
+  $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
+  $T->param(file_thispage => $thispage);
+}
 
 #
 # Add a row to the metadata-table datastructure.
@@ -975,26 +1046,6 @@ EOF
 
 
 #
-# Generate HTML for the "Jump to:" links in results.
-sub jump_links {
-  my $links = '';
-  $links .= <<".EOF.";
-      <p id="skip" class="jumpbar">
-        Jump To: [<a title="Result of Validation" href="#result">Results</a>]
-.EOF.
-
-  $links .= ' [<a title="Listing of Source Input" href="#source">Source&nbsp;Listing</a>]'
-    if $File->{Opt}->{'Show Source'};
-  $links .= ' [<a title="Document Parse Tree" href="#parse">Parse&nbsp;Tree</a>]'
-    if $File->{Opt}->{'Show Parsetree'};
-  $links .= ' [<a title="Document Outline" href="#outline">Outline</a>]'
-    if $File->{Opt}->{'Outline'};
-  $links .= "      </p>\n";
-  return $links;
-}
-
-
-#
 # Proxy authentication requests.
 sub authenticate {
   my $File       = shift;
@@ -1088,39 +1139,6 @@ sub http_error {
 
 EOF
 }
-
-
-#
-# Print blurb advocating using the CSS Validator.
-sub output_css_validator_blurb {
-  my $uri = ent(uri_escape(shift));
-
-  print <<"EOHD";
-  <p>
-    If you use <a href="http://www.w3.org/Style/CSS/">CSS</a> in your document,
-    you should also <a
-    href="http://jigsaw.w3.org/css-validator/validator?uri=$uri">check it for
-    validity</a> using the W3C <a
-    href="http://jigsaw.w3.org/css-validator/">CSS Validation Service</a>.
-  </p>
-EOHD
-}
-
-
-sub daily_tip {
-  my @tipAddrs = keys %{$CFG->{Tips_DB}};
-  srand(time());
-  my $tipAddr = $tipAddrs[rand scalar @tipAddrs];
-  my $tipSlug = $CFG->{Tips_DB}->{$tipAddr};
-
-  return <<"EOHD";
-  <dl class="tip">
-    <dt><a href="http://www.w3.org/2001/06tips/">Tip Of The Day</a>:</dt>
-    <dd><a href="$tipAddr">$tipSlug</a></dd>
-  </dl>
-EOHD
-}
-
 
 #
 # Fetch an URI and return the content and selected meta-info.
@@ -1417,7 +1435,6 @@ sub parse_errors ($$) {
   my $fh   = shift;
 
   $File->{Errors} = []; # Initialize to an (empty) anonymous array ref.
-warn('@@@-> ' . $CFG->{SGML_Parser});
   for (<$fh>) {
     push @{$File->{'DEBUG'}->{Errors}}, $_;
     my($err, @errors);
@@ -1522,31 +1539,9 @@ warn('@@@-> ' . $CFG->{SGML_Parser});
 sub report_errors ($) {
   my $File = shift;
 
-  print <<"EOHD";
-    <h2 id="result" class="invalid">This page is <strong>not</strong> Valid $File->{Version}!</h2>
-EOHD
-
-  if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 'svg' or $File->{Type} eq 'smil') {
-    my $xmlvalid = ($File->{DOCTYPE} ? ' and validity' : '');
-    print <<"EOHD";
-    <p>
-      Below are the results of checking this document for <a
-      href="http://www.w3.org/TR/REC-xml#sec-conformance">XML
-      well-formedness</a>$xmlvalid.
-    </p>
-EOHD
-  } else {
-    print <<"EOHD";
-  <p>
-    Below are the results of attempting to parse this document with
-    an SGML parser.
-  </p>
-EOHD
-  }
+  my $Errors = [];
 
   if (scalar @{$File->{Errors}}) {
-    print qq(  <ol>\n);
-
     foreach my $err (@{$File->{Errors}}) {
       my($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $err->{char});
 
@@ -1565,193 +1560,18 @@ EOHD
       $line = &ent($line); # Entity encode.
       $line =~ s/\t/ /g;   # Collapse TABs.
 
-      print qq(  <li><em>Line <a href="#line-$err->{line}">$err->{line}</a>, column $err->{char}</em>: );
-      print qq{<span class="msg">$err->{msg}</span>};
       if (defined $CFG->{Error_to_URI}->{$err->{idx}}) {
-	print qq{ (<a href="$CFG->{Msg_FAQ_URI}#$CFG->{Error_to_URI}->{$err->{idx}}">explain...</a>).};
-      } elsif ($DEBUG) {
-	print qq{ (<code style="background: red">"$err->{idx}"</code>)};
+	$err->{uri} = $CFG->{Msg_FAQ_URI} . '#'
+	  . $CFG->{Error_to_URI}->{$err->{idx}};
       }
 
-      print qq(\n<pre>  <code class="input">$line</code>\n);
-      print ' ' x ($col + 2); # 2 is the number of spaces before <code> above
-      print qq(<span class="markup">^</span></pre></li>\n);
+      $err->{src} = $line;
+      $err->{col} = ' ' x $col;
+
+      push @{$Errors}, $err;
     }
-    print qq(  </ol>\n);
   }
-}
-
-
-#
-# Output "This page is Valid" report.
-sub report_valid {
-  my $File        = shift;
-  my $gifborder   = ' border="0"';
-  my $xhtmlendtag = '';
-  my($image_uri, $alttext, $gifhw);
-  my $URI         = &ent($File->{URI});
-
-  unless ($File->{Version} eq 'unknown' or defined $File->{Tentative}) {
-    if ($File->{Version} =~ /^HTML 2\.0$/) {
-      $image_uri = "$CFG->{Home_Page}images/vh20";
-      $alttext = "Valid HTML 2.0!";
-      $gifborder = "";
-    } elsif ($File->{Version} =~ /HTML 3\.2</) {
-      $image_uri = "http://www.w3.org/Icons/valid-html32";
-      $alttext = "Valid HTML 3.2!";
-      $gifhw   = ' height="31" width="88"';
-    } elsif ($File->{Version} =~ /HTML 4\.0<\/a> Strict$/) {
-      $image_uri = "http://www.w3.org/Icons/valid-html40";
-      $alttext = "Valid HTML 4.0!";
-      $gifborder = "";
-      $gifhw   = ' height="31" width="88"';
-    } elsif ($File->{Version} =~ /HTML 4\.0<\/a> /) {
-      $image_uri = "http://www.w3.org/Icons/valid-html40";
-      $alttext = "Valid HTML 4.0!";
-      $gifhw   = ' height="31" width="88"';
-    } elsif ($File->{Version} =~ /HTML 4\.01<\/a> Strict$/) {
-      $image_uri = "http://www.w3.org/Icons/valid-html401";
-      $alttext = "Valid HTML 4.01!";
-      $gifborder = "";
-      $gifhw   = ' height="31" width="88"';
-    } elsif ($File->{Version} =~ /HTML 4\.01<\/a> /) {
-      $image_uri = "http://www.w3.org/Icons/valid-html401";
-      $alttext = "Valid HTML 4.01!";
-      $gifhw   = ' height="31" width="88"';
-    } elsif ($File->{Version} =~ /XHTML 1\.0<\/a> /) {
-      $image_uri = "http://www.w3.org/Icons/valid-xhtml10";
-      $alttext = "Valid XHTML 1.0!";
-      $gifborder = "";
-      $gifhw   = ' height="31" width="88"';
-      $xhtmlendtag = " /";
-    } elsif ($File->{Version} =~ /XHTML Basic 1.0/) {
-      $image_uri = "$CFG->{Home_Page}/images/vxhtml-basic10";
-      $alttext = "Valid XHTML Basic 1.0!";
-      $gifborder = "";
-      $gifhw   = ' height="31" width="88"';
-      $xhtmlendtag = " /";
-    } elsif ($File->{Version} =~ /XHTML 1.1/) {
-      $image_uri = "http://www.w3.org/Icons/valid-xhtml11";
-      $alttext = "Valid XHTML 1.1!";
-      $gifborder = "";
-      $gifhw   = ' height="31" width="88"';
-      $xhtmlendtag = " /";
-    } elsif ($File->{Version} =~ /HTML 3\.0/) {
-      $image_uri = "$CFG->{Home_Page}images/vh30";
-      $alttext = "Valid HTML 3.0!";
-    } elsif ($File->{Version} =~ /Netscape/) {
-      $image_uri = "$CFG->{Home_Page}images/vhns";
-      $alttext = "Valid Netscape-HTML!";
-    } elsif ($File->{Version} =~ /Hotjava/) {
-      $image_uri = "$CFG->{Home_Page}images/vhhj";
-      $alttext = "Valid Hotjava-HTML!";
-    } elsif ($File->{Version} =~ /ISO\/IEC 15445:2000/) {
-      $image_uri = "$CFG->{Home_Page}images/v15445";
-      $alttext = "Valid ISO-HTML!";
-    }
-
-    if ($File->{Version}) {
-      print qq(<h2 id="result" class="valid">This Page Is Valid $File->{Version}!</h2>\n);
-    } else {
-      print qq(<h2 id="result" class="valid">This Page Is Valid!</h2>\n);
-    }
-
-    print &daily_tip($File, $CFG->{'Tips DB'});
-    &print_warnings($File) unless $File->{Opt}->{Verbose};
-
-    my $source;
-    if ($File->{'Is Upload'}) {
-      $source = qq(The uploaded file);
-    } else {
-      $source = qq(The document located at &lt;<a href="$URI">$URI</a>&gt;);
-    }
-
-    print <<".EOF.";
-    <p>
-      $source
-      was checked and found to be valid $File->{Version}. This means that
-      the resource in question identified itself as
-      &ldquo;$File->{Version}&rdquo; and that we successfully performed a
-      formal validation using an SGML or XML Parser (depending on the
-      markup language used).
-    </p>
-.EOF.
-      if (defined $image_uri) {
-        print <<".EOF.";
-    <p>
-      <img class="inline-badge" src="$image_uri" alt="$alttext"$gifhw />
-      To show your readers that you have taken the care to create an
-      interoperable Web page, you may display this icon on any page
-      that validates. Here is the HTML you could use to add this icon
-      to your Web page:
-    </p>
-    <pre>
-    &lt;p&gt;
-      &lt;a href="$CFG->{Home_Page}check/referer"&gt;&lt;img$gifborder
-          src="$image_uri"
-          alt="$alttext"$gifhw$xhtmlendtag&gt;&lt;/a&gt;
-    &lt;/p&gt;
-    </pre>
-    <p>
-      If you like, you can download a copy of this image (in <a
-      href="${image_uri}.png">PNG</a> or <a href="${image_uri}.gif">GIF</a>
-      format) to keep in your local web directory, and change the HTML fragment
-      above to reference your local image rather than the one on this server.
-    </p>
-.EOF.
-    }
-  } elsif (&is_xml($File->{Type}) and not $File->{DOCTYPE}) {
-    print qq(  <h2 class="valid">This document is well-formed XML.</h2>\n);
-  } elsif (defined $File->{Tentative}) {
-    print qq(<h2 class="valid">This Page <em>Tentatively</em> Validates As $File->{Version} (Tentatively Valid)!</h2>);
-    print &daily_tip($File, $CFG->{Tips_DB});
-    &print_warnings($File);
-    print <<".EOF.";
-      <p>
-        The document located at
-        &lt;<a href="$URI">$URI</a>&gt;
-        was tentatively found to be Valid. That means it would validate
-        as $File->{Version} if you updated the source document to match
-        the options used (typically this message indicates that you used
-        either the Document Type override or the Character Encoding
-        override).
-      </p>
-.EOF.
-  } else {
-    print qq(  <h2 class="valid">This document validates as the document type specified!</h2>\n);
-    print <<".EOF.";
-    <p>
-      The document located at
-      &lt;<a href="$URI">$URI</a>&gt; was checked and found
-      to be valid $File->{Version}. This means that the resource in question
-      identified itself as &ldquo;$File->{Version}&rdquo; and that we
-      successfully performed a formal validation using an SGML or XML Parser
-      (depending on the markup language used).
-    </p>
-.EOF.
-  }
-
-  unless ($File->{'Is Upload'}) {
-    my $thispage = $File->{Env}->{'Self URI'};
-    my $escaped_uri = uri_escape($File->{URI});
-    $thispage .= qq(?uri=$escaped_uri);
-    $thispage .= ';ss=1'      if $File->{Opt}->{'Show Source'};
-    $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
-    $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
-    $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
-    $thispage .= ';verbose=1' if $File->{Opt}->{'Verbose'};
-
-    &output_css_validator_blurb($File->{URI});
-
-    print <<"EOHD";
-  <p>
-    If you would like to create a link to <em>this</em> page (i.e., this
-    validation result) to make it easier to re-validate this page in the
-    future or to allow others to validate your page, the URI is
-    &lt;<a href="$thispage">$thispage</a>&gt; (or you can just add the
-    current page to your bookmarks or hotlist).</p>
-EOHD
-  }
+  return $Errors;
 }
 
 
@@ -1760,14 +1580,7 @@ EOHD
 sub outline {
   my $File = shift;
 
-  print <<'EOF';
-  <div id="outline" class="mtb">
-    <h2>Outline</h2>
-    <p>
-      Below is an outline for this document, automatically generated from the
-      heading tags (<code>&lt;h1&gt;</code> through <code>&lt;h6&gt;</code>.)
-    </p>
-EOF
+  my $outline = '';
 
   my $prevlevel = 0;
   my $indent    = 0;
@@ -1779,12 +1592,12 @@ EOF
     $prevlevel = $level;
     $level     = $1;
 
-    print "    </ul>\n" x ($prevlevel - $level); # perl is so cool.
-    if ($level - $prevlevel == 1) {print "    <ul>\n"};
+    $outline .= "    </ul>\n" x ($prevlevel - $level); # perl is so cool.
+    if ($level - $prevlevel == 1) {$outline .= "    <ul>\n"};
     foreach my $i (($prevlevel + 1) .. ($level - 1)) {
-      print qq(  <ul>\n    <li class="warning">A level $i heading is missing!</li>\n);
+      $outline .= qq(  <ul>\n    <li class="warning">A level $i heading is missing!</li>\n);
     }
-    if ($level - $prevlevel > 1) {print "    <ul>\n"};
+    if ($level - $prevlevel > 1) {$outline .= "    <ul>\n"};
 
     $line       = '';
     my $heading = '';
@@ -1806,78 +1619,43 @@ EOF
 
     $heading = substr($heading, 1); # chop the leading '-' or ' '.
     $heading = &ent($heading);
-    print "    <li>$heading</li>\n";
+    $outline .= "    <li>$heading</li>\n";
   }
-  print "    </ul>\n" x $level;
-  print <<'EOF';
-    <p>
-      If this does not look like a real outline, it is likely that the
-      heading tags are not being used properly. (Headings should reflect
-      the logical structure of the document; they should not be used simply
-      to add emphasis, or to change the font size.)
-    </p>
-    </div>
-EOF
+  $outline .= "    </ul>\n" x $level;
+
+  return $outline;
 }
 
 
 #
 # Create a HTML representation of the document.
-sub show_source {
+sub source {
   my $File = shift;
   my $line = 1;
-
-  my $comment = '';
-
-  if ($File->{'Error Flagged'}) {
-    $comment = "<p>I have marked lines that I haven't been able to decode.</p>\n";
-  }
-
-  print <<"EOF";
-  <div id="source" class="mtb">
-    <h2>Source Listing</h2>
-
-    <p>Below is the source input I used for this validation:</p>
-    $comment
-    <pre>
-EOF
+  my @source = ();
 
   for (@{$File->{Content}}) {
-    printf "<a name=\"line-%s\">%4d</a>: %s\n", $line, $line, ent $_;
+    push @source, {
+		   file_source_i => $line,
+		   file_source_line => ent $_,
+		  };
     $line++;
   }
-  print "    </pre>\n  </div>";
+  return \@source;
 }
 
 
 #
 # Create a HTML Parse Tree of the document for validation report.
-sub parse_tree {
+sub parsetree {
   my $File = shift;
+  my $tree = '';
 
-  print <<'EOF';
-  <div id="parse" class="mtb">
-    <h2>Parse Tree</h2>
-EOF
-  if ($File->{Opt}->{'No Attributes'}) {
-    print <<'EOF';
-    <p class="note">
-      I am excluding the attributes, as you requested.
-    </p>
-EOF
-  } else {
-    print <<'EOF';
-    <p class="note">
-      You can also view this parse tree without attributes by selecting the
-      appropriate option on <a href="./#form">the form</a>.
-    </p>
-EOF
-  }
+  $T->param(file_parsetree_noatt => TRUE) if $File->{Opt}->{'No Attributes'};
 
   my $indent   = 0;
   my $prevdata = '';
 
-  print "<pre>\n";
   foreach my $line (@{$File->{ESIS}}) {
     if ($File->{Opt}->{'No Attributes'}) { # don't show attributes
       next if $line =~ /^A/;
@@ -1898,7 +1676,7 @@ EOF
     } elsif ($prevdata) {
       $prevdata = &ent($prevdata);
       $prevdata =~ s/\s+/ /go;
-      print wrap(' ' x $indent, ' ' x $indent, $prevdata), "\n";
+      $tree .= wrap(' ' x $indent, ' ' x $indent, $prevdata) . "\n";
       undef $prevdata;
     }
 
@@ -1917,13 +1695,12 @@ EOF
                    "\">$2<\/a>&gt;"
                  }egx;
     $printme =~ s,^A,  A,; # indent attributes a bit
-    print ' ' x $indent, $printme, "\n";
+    $tree .= ' ' x $indent . $printme . "\n";
     if ($line =~ /^\(/) {
       $indent += 2;
     }
   }
-  print "</pre>\n";
-  print "</div>\n";
+  return $tree;
 }
 
 
@@ -2142,7 +1919,7 @@ sub uri_rejected {
 
 #
 # Utility subs to tell if type "is" something.
-sub is_xml    {shift =~ m(^[^+]+\+xml$)};
+sub is_xml    {shift->{Type} =~ m(^[^+]+\+xml$)};
 sub is_svg    {shift =~ m(svg\+xml$)};
 sub is_smil   {shift =~ m(smil\+xml$)};
 sub is_html   {shift =~ m(html\+sgml$)};
@@ -2831,4 +2608,15 @@ sub self_url {
     $thispage .= ';charset=' . uri_escape($q->param('charset'));
   }
   return $thispage;
+}
+
+
+#
+# Return random Tip with it's URL.
+sub get_tip {
+  my @tipAddrs = keys %{$CFG->{Tips_DB}};
+  my $tipAddr = $tipAddrs[rand scalar @tipAddrs];
+  my $tipSlug = $CFG->{Tips_DB}->{$tipAddr};
+
+  return [$tipAddr, $tipSlug];
 }

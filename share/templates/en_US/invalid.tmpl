@@ -1,0 +1,27 @@
+  <div id="result">
+    <h2 id="results" class="invalid">This page is <strong>not</strong> Valid <TMPL_VAR NAME="file_version">!</h2>
+<TMPL_IF NAME="is_xml">
+    <p>
+      Below are the results of checking this document for <a
+      href="http://www.w3.org/TR/REC-xml#sec-conformance">XML
+      well-formedness</a> and validity.
+    </p>
+<TMPL_ELSE>
+    <p>
+      Below are the results of attempting to parse this document with
+      an SGML parser.
+    </p>
+</TMPL_IF>
+    <ol>
+<TMPL_LOOP NAME="file_errors">
+      <li>
+        <em>Line <a href="#line-<TMPL_VAR NAME="line">"><TMPL_VAR NAME="line"></a>,
+            column <TMPL_VAR NAME="char"></em>:
+        <span class="msg"><TMPL_VAR NAME="msg"></span>
+<TMPL_IF NAME="uri">(<a href="<TMPL_VAR NAME="uri">">explain...</a>)</TMPL_IF>.
+<pre><code class="input"><TMPL_VAR NAME="src"></code>
+<TMPL_VAR NAME="col"><span class="markup">^</span></pre>
+      </li>
+</TMPL_LOOP>
+    </ol>
+  </div>

@@ -1,0 +1,10 @@
+  <div id="source">
+    <h2>Source Listing</h2>
+
+    <p>Below is the source input I used for this validation:</p>
+    <ol class="source">
+<TMPL_LOOP NAME="file_source">
+      <li id="<TMPL_VAR NAME="file_source_index">"><TMPL_VAR NAME="file_source_line"></li>
+</TMPL_LOOP> 
+    </ol>
+  </div>
