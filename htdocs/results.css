@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.29 2004-05-15 16:02:28 link Exp $ */
+/* $Id: results.css,v 1.13.2.30 2004-05-16 07:08:59 link Exp $ */
 
 .input {
   color: black;
@@ -93,19 +93,20 @@ ol#errors li {
 /*
 */
 #source div {
-/* where the source is actually displayed */
-  background: #eee;
-  border: 1px solid black;
-  margin-right: 1em;
-  margin-left: 1em;
-  padding-left: 1em;
-  padding-right: 1em;
-}
-
-#source code {
-  white-space: normal;
   font-family: "Bitstream Vera Sans Mono", monospace;
   font-size: smaller;
+  background: #eee;
+  border: 1px solid black;
+  margin: 1em;
+}
+#source div pre {
+  margin: 1em;
+}
+
+#source div pre a {
+  color: inherit;
+  background-color: transparent;
+  text-decoration: none;
 }
 
 

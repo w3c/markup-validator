@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.122 2004-05-16 03:13:28 link Exp $
+# $Id: check,v 1.305.2.123 2004-05-16 07:09:00 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.122 $;
+  $VERSION    =  q$Revision: 1.305.2.123 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-16 03:13:28 $,
+                              Date => q$Date: 2004-05-16 07:09:00 $,
                              });
 
 #
@@ -2205,8 +2205,9 @@ EOF
 #
 # Create a HTML representation of the document.
 sub show_source {
-  my $File = shift;
-  my $line = 1;
+  my $File  = shift;
+  my $line  = 1;
+  my $lines = scalar @{$File->{Content}};
 
   my $comment = '';
   if ($File->{'Error Flagged'}) {
@@ -2224,14 +2225,16 @@ sub show_source {
     <p>Below is the source input I used for this validation:</p>
     $comment
     <div>
+      <pre>
 EOF
 
   for (@{$File->{Content}}) {
-    my $hline = ('&nbsp;' x (4 - length "$line")) . $line;
-    printf qq(<code id="line-%s">%s: %s</code><br/>\n), $line, $hline, ent $_;
+    my $hline = (' ' x (length("$lines") - length("$line"))) . $line;
+    printf qq(<a id="line-%s"><strong>%s</strong>: %s</a>\n),
+      $line, $hline, ent $_;
     $line++;
   }
-  print "    </div>\n  </div>";
+  print "      </pre>\n    </div>\n  </div>";
 }
 
 
