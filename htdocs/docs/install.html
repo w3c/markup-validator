@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.1.2.8 2004-05-06 05:42:10 ot Exp $"
---><!--#set var="date" value="\$Date: 2004-05-06 05:42:10 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.1.2.9 2004-05-06 18:13:38 ville Exp $"
+--><!--#set var="date" value="\$Date: 2004-05-06 18:13:38 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -37,7 +37,7 @@
     which should work on most systems. To our knowledge, the following platform-specific 
     guides are also available and can be of interest :</p>
     <ul>
-        <li><a href="http://www.mediaville.net/articles/validator/">Mac OSX and OSX Server</a>
+        <li><a href="http://www.mediaville.net/articles/validator/">Mac OS X and OS X Server</a>
         by Stephen Yoch,</li>
         <li><a href="http://lists.w3.org/Archives/Public/www-validator/2003Dec/0023.html">Linux (Slackware)</a>
         by Nick Talbot</li>
@@ -85,11 +85,11 @@
         can be found on <a href="http://www.cpan.org/">CPAN</a> (minimum
         versions in parenthesis after the name). The following
         list was complete when CVS spit out:
-        <code>$Date: 2004-05-06 05:42:10 $</code>. <tt>:-)</tt>
+        <code>$Date: 2004-05-06 18:13:38 $</code>. <tt>:-)</tt>
       </p>
 
-     <p>One easy - and strongly recommended - way to take care of all these perl modules dependencies is to 
-     install the <a href="http://search.cpan.org/search?query=Bundle-W3C-Validator&mode=dist">bundle available through CPAN</a>
+     <p>One easy - and strongly recommended - way to take care of all these Perl module dependencies is to 
+     install the <a href="http://search.cpan.org/dist/Bundle-W3C-Validator/">bundle available through CPAN</a>
      as Bundle-W3C-Validator.</p>
 
      <h5>List of required Perl modules</h5>
@@ -104,7 +104,8 @@
         </dd>
         <dt><code>CGI::Carp</code></dt>
         <dd>CGI-aware warn()/die()</dd>
-        <dt><code>File::Spec</code></dt><dd>Portable filespecs.</dd>
+        <dt><code>File::Spec</code></dt>
+        <dd>Portable file and path name operations.</dd>
         <dt><code>HTML::Parser (3.25)</code></dt>
         <dd>Minimal HTML Parser used for preparse and finding metadata.</dd>
         <dt><code>LWP::UserAgent (1.90)</code></dt>
@@ -116,7 +117,7 @@
         <dt><code>Text::Iconv</code></dt>
         <dd>
           Perl-native interface to the (g)libc iconv(3) library. Handles
-          charset conversion issues.
+          character set conversion issues.
         </dd>
         <dt><code>Text::Wrap</code></dt>
         <dd>Wrap text to a sane width. Needed for source output in results.</dd>
