@@ -2,10 +2,10 @@
 #
 # W3C Link Checker
 # by Hugo Haas
-# (c) 1999 World Wide Web Consortium
+# (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: LinkChecker.pl,v 1.13 1999-12-15 18:03:17 hugo Exp $
+# $Id: LinkChecker.pl,v 1.14 2000-01-17 22:16:02 hugo Exp $
 #
 # This program is licensed under the W3C License.
 
@@ -21,7 +21,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C LinkChecker';
-my $VERSION = q$Revision: 1.13 $ . '(c) 1999 W3C';
+my $VERSION = q$Revision: 1.14 $ . '(c) 1999 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -805,7 +805,26 @@ sub anchors_summary(\%, \%) {
 }
 
 sub links_summary(\%,\%,\%) {
+    # Advices to fix the problems
+
+    my %todo = ( 200 => 'nothing !',
+                 300 => 'it usually means that there is a typo in a link that triggers <strong>mod_speling</strong> action - this should be fixed',
+                 301 => 'usually nothing, unless the end point of the redirect is broken (in which case, the <B>Code</B> column is RED)',
+                 302 => 'usually nothing, unless the end point of the redirect is broken (in which case, the <B>Code</B> column is RED)',
+                 400 => 'Usually the sign of a malformed URL that cannot be parsed by the server',
+                 401 => 'The link is not public. You had better specify it.',
+                 403 => 'The link is forbidden ! This needs fixing. Usual suspect: a missing Overview.html or index.html, or bad access control',
+                 404 => 'The link is broken. Fix it <B>NOW</B>',
+                 405 => 'The server does not allow HEAD requests. How liberal. Go ask the guys who run this server why.',
+                 407 => 'The link is a proxy, but requires Authentication.',
+                 408 => 'The request timed out',
+                 415 => 'The media type is not supported.',
+                 500 => 'The server failed. It is a server side problem.',
+                 501 => 'HEAD or GET is not implemented on this server... What kind of server is that?',
+                 503 => 'The server cannot service the request, for some unknown reason');
+
     my ($links, $results, $broken, $redirects) = @_;
+
     if (! $_quiet) {
         if ($_html) {
             print("\n<hr>\n\n<p>");
@@ -832,6 +851,24 @@ sub links_summary(\%,\%,\%) {
         }
         print("\n");
     }
+
+    if ($_html) {
+        # Print a summary
+        my %code_summary;
+        foreach $u (keys %$links) {
+            $code_summary{$results->{$u}{$u}{orig}}++;
+        }
+        print "<table border=\"1\">\n<tr><td><b>Code</b></td><td><b>Occurences</b></td><td><b>What to do</b></td></tr>\n";
+        foreach $code (sort(keys(%code_summary))) {
+            printf("<tr%s>", &bgcolor($code));
+            printf("<td>%s</td>", $code);
+            printf("<td>%s</td>", $code_summary{$code});
+            printf("<td>%s</td>", $todo{$code});
+            print "</tr>\n";
+        }
+        print "</table>\n";
+    }
+
     # List of the broken links
     @urls = keys %{$broken};
     if ($#urls < 0) {
@@ -840,6 +877,7 @@ sub links_summary(\%,\%,\%) {
         }
         return;
     }
+
     if ($_html) {
         print('<p>');
     }
