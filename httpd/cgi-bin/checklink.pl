@@ -2,6 +2,11 @@
 #
 # Link Checker
 # Renaud Bruyeron, September 1998
+#
+# requires libwww-perl
+# and LWP::Parallel::UserAgent
+# and HTML::Parser
+# and URI::URL
 
 use strict;
 $|++;
@@ -79,7 +84,7 @@ use CGI;
 ###############
 # Global Variables
 
-my $VERSION= '$Id: checklink.pl,v 1.22 1999-02-21 00:25:51 renaudb Exp $ ';
+my $VERSION= '$Id: checklink.pl,v 1.23 1999-03-01 20:09:08 renaudb Exp $ ';
 my %ALLOWED_SCHEMES = ( "http" => 1 );
 my %SCHEMES = (); # for report
 my %URL = ();
