@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.299 2002-11-19 11:58:55 link Exp $
+# $Id: check,v 1.300 2002-11-19 14:45:05 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.299 $;
+  $VERSION    =  q$Revision: 1.300 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-19 11:58:55 $,
+                              Date => q$Date: 2002-11-19 14:45:05 $,
                              });
 
 #
@@ -2305,6 +2305,12 @@ X-W3C-Validator-Errors: $errs
     <doctype>), &ent($File->{DOCTYPE}), qq(</doctype>
   </meta>
 );
+
+  &add_warning($File, <<".EOF.");
+      This interface is highly experimental and the output *will* change
+      -- probably even several times -- before finished. Do *not* rely on it!
+      See http://validator.w3.org:8001/docs/users.html#api-warning
+.EOF.
 
   if (defined $File->{Warnings} and scalar @{$File->{Warnings}}) {
     print qq(  <warnings>\n);

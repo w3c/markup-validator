@@ -10,11 +10,13 @@
 <html lang="en">
   <head>
     <title>Report</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="stylesheet" type="text/css" href="xml-results.css"/>
   </head>
   <body>
 <!-- insert HTML body top parts here -->
     <xsl:apply-templates select="meta"/>
+<!-- insert (whatever) between tables -->
+    <xsl:apply-templates select="warnings"/>
 <!-- insert (whatever) between tables -->
     <xsl:apply-templates select="messages"/>
 <!-- insert HTML footer here -->
@@ -23,7 +25,7 @@
   </xsl:template>
 
   <xsl:template match="meta">
-  <table id="about" summary="Metadata concerning the page">
+  <table id="meta" summary="Metadata concerning the page">
     <tbody>
       <tr><th scope="row">URI</th>            <td><a><xsl:attribute name="href"><xsl:value-of select="uri"/></xsl:attribute></a></td></tr>
       <tr><th scope="row">Last Modified</th>  <td><xsl:value-of select="modified"/></td></tr>
@@ -35,8 +37,14 @@
   </table>
   </xsl:template>
 
+  <xsl:template match="warnings">
+  <ul style="display: list">
+    <xsl:apply-templates select="warning"/>
+  </ul>
+  </xsl:template>
+
   <xsl:template match="messages">
-  <table>
+  <table id="errors" summary="Error messages">
     <thead>
       <tr>
         <th scope="col">Line</th>
@@ -49,6 +57,10 @@
     <xsl:apply-templates select="msg"/>
     </tbody>
   </table>
+  </xsl:template>
+
+  <xsl:template match="warning">
+    <li><xsl:value-of select="text()"/></li>
   </xsl:template>
 
   <xsl:template match="msg">

@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.25 2002-11-07 05:02:58 ot Exp $
+   $Id: base.css,v 1.26 2002-11-19 14:45:05 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -12,7 +12,7 @@
 @import url(tips.css);    /* CSS for Quality Tips. */
 
 body {
-  line-height:     1.2;
+  line-height:     120%;
   color:           black;
   background:      white;
   font-weight:     normal;
@@ -38,7 +38,7 @@ abbrev[title], acronym[title], span[title] {
 
 pre, code, tt {
   font-family: monospace;
-  font-size:   1em;
+  line-height: 100%;
   white-space: pre;
 }
 
@@ -221,4 +221,19 @@ td.comma-tool { background: #e7e7ff;  border : 1px solid black;}
 /* documentation - table of contents */
 #toc {	
   border-bottom : 2px dotted black;
+}
+
+kbd {
+  font-weight: bold;
+}
+
+.shout {
+  background: yellow;
+  border: .5ex dotted black;
+  padding: 1em;
+}
+
+.shout strong {
+  display: block;
+  color: red;
 }

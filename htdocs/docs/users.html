@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: users.html,v 1.12 2002-11-07 05:02:58 ot Exp $"
---><!--#set var="date" value="\$Date: 2002-11-07 05:02:58 $"
+<!--#set var="revision" value="\$Id: users.html,v 1.13 2002-11-19 14:45:05 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-11-19 14:45:05 $"
 --><!--#set var="title" value="User Documentation for The W3C MarkUp Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -115,14 +115,14 @@
         The various options are listed above in the section
         "<a href="#Options">The Options</a>" in parenthesis after the long
         name. To add options to your links directly, append the options
-        separated by a semi-colon. For example &lt;URL:<a href="http://validator.w3.org/check?uri=http://www.example.com/;ss;outline;sp">http://validator.w3.org/check?uri=http://www.example.com/;ss;outline;sp</a>&gt;
+        separated by a semi-colon. For example
+        &lt;URL:<a href="http://validator.w3.org/check?uri=http://www.example.com/;ss=1;outline=1;sp=1">http://validator.w3.org/check?uri=http://www.example.com/;ss=1;outline=1;sp=1</a>&gt;
         will validate the example.com home page with "Show Source", "Outline" and
         "Show Parse Tree" on, but "Exclude Attributes" off.
       </p>
       <p>
-        You may also see these separated by ampersands and equal-signs, but
-        this usage is deprecated and support may be removed at some time in the
-        future.
+        You may also see these separated by ampersands, but this usage is
+        deprecated and support may be removed at some time in the future.
       </p>
     </div>
 
@@ -149,6 +149,131 @@
         possible and include the <em>exact</em> error message and, preferably, an URL
         we can validate to see for ourselves.
       </p>
+      <div id="Output" class="stb">
+        <h3>Output Options</h3>
+        <p>
+          In addition to the HTML output intended for human consumption in a
+          browser, the Validator has some experimental features to generate
+          machine parseable output in a few different forms. To enable these
+          output options, append "<code>;output=&lt;option&gt;</code>" to the
+          URI of the Validation results (an interface for these options will be
+          provided when they exit the beta stage).
+        </p>
+        <p class="shout" id="api-warning">
+	  <strong>These options are experimental!</strong>
+	  The API and output format is subject to change without notice and
+	  may well be removed or disabled at any time. They are provided now
+	  to garner public feedback to determine how best to support this
+	  functionality in the future. One particularly likely option being
+	  considered is removing these features alltogether in favor of a
+	  full-blown SOAP interface. <em>You have been warned!</em>
+	</p>
+        <dl>
+          <dt id="output-earl">EARL/RDF (<code>earl</code>)</dt>
+          <dd>Produces output in the EARL RDF syntax.</dd>
+	  <dt id="output-n3">Notation3 (<code>n3</code>)</dt>
+	  <dd>Produces output in the Notation3 RDF syntax</dd>
+	  <dt id="output-xml">XML (<code>xml</code>)</dt>
+	  <dd>
+            <p>Produces output in a homegrown XML format (yes, we know...).</p>
+            <p>The DTD for this format is as follows:</p>
+	    <pre>
+	      <code>
+&lt;!DOCTYPE result [
+  &lt;!ELEMENT result (meta, warnings?, messages?)&gt;
+  &lt;!ATTLIST result
+    version CDATA #FIXED '0.9'
+  &gt;
+
+  &lt;!ELEMENT meta (uri, modified, server, size, encoding, doctype)&gt;
+  &lt;!ELEMENT uri      (#PCDATA)&gt;
+  &lt;!ELEMENT modified (#PCDATA)&gt;
+  &lt;!ELEMENT server   (#PCDATA)&gt;
+  &lt;!ELEMENT size     (#PCDATA)&gt;
+  &lt;!ELEMENT encoding (#PCDATA)&gt;
+  &lt;!ELEMENT doctype  (#PCDATA)&gt;
+
+  &lt;!ELEMENT warnings (warning)+&gt;
+  &lt;!ELEMENT warning  (#PCDATA)&gt;
+
+  &lt;!ELEMENT messages (msg)*&gt;
+  &lt;!ELEMENT msg      (#PCDATA)&gt;
+  &lt;!ATTLIST msg
+    line   CDATA #IMPLIED
+    col    CDATA #IMPLIED
+    offset CDATA #IMPLIED
+  &gt;
+]&gt;
+              </code>
+            </pre>
+            <p>
+	      Each element except the containers (<code>result</code>,
+              <code>meta</code>, <code>warnings</code>, <code>messages</code>)
+              and the free-form text fields (<code>warning</code>,
+              <code>msg</code>) will take a single value of a specific type.
+            </p>
+            <p>
+              The base document element is <code>result</code>. The only
+              elements allowed to be directly contained at the first level are
+              <code>meta</code>, <code>warnings</code>, and
+              <code>messages</code>. <code>warnings</code>, and
+              <code>messages</code> may be omitted if empty, and no first-level
+              elements may appear more then once.
+            </p>
+            <div id="dtd-meta">
+	      <h4>The <code>meta</code> element</h4>
+	      <p>
+                The <code>meta</code> element contains various metadata about
+	        about the Validated document. It contains further elements
+	        describing each value.
+	      </p>
+	      <dl>
+	        <dt><code>uri</code></dt>
+	        <dd>The URI of the document validated.</dd>
+	        <dt><code>modified</code></dt>
+	        <dd>The Last-Modified header field of the document as free-form text.</dd>
+	        <dt><code>server</code></dt>
+	        <dd>The Server header field of the document as free-form text.</dd>
+	        <dt><code>size</code></dt>
+	        <dd>The size in bytes of the document.</dd>
+	        <dt><code>encoding</code></dt>
+	        <dd>The Character Encoding used for Validation.</dd>
+	        <dt><code>doctype</code></dt>
+	        <dd>A text string describing the DOCTYPE used for Validation.</dd>
+	      </dl>
+	      <p>
+	        Currently, the type of these fields is free-form text, but it
+                is intended that a future revision will switch to less opaque
+                data types so these values can be reliably machine-parsed.
+              </p>
+            </div>
+	    <div id="dtd-warnings">
+	      <h4>The <code>warnings</code> element</h4>
+	      <p>
+	        The <code>warnings</code> element can contain only one sub-element;
+	        the <code>warning</code> element. Multiple <code>warning</code>
+	        elements may appear and each one contains free-form text
+                corresponding to a warning of the type found in the "Warnings"
+	        section of the HTML output (e.g. "DOCTYPE override in effect!").
+	      </p>
+	    </div>
+	    <div id="dtd-messages">
+	      <h4>The <code>messages</code> element.</h4>
+	      <p>
+	        The <code>messages</code> element can contain only one sub-element;
+	        the <code>msg</code> element. Multiple <code>msg</code> elements
+	        may appear and each contains free-form text representing one
+	        detected error. The <code>msg</code> element has three attributes;
+	        <code>line</code>, <code>col</code>, <code>offset</code>.
+	        These contain a number representing the line and column on which
+	        the error was detected, and the offset in characters from the
+	        beginning of the document (as opposed to <code>col</code> which
+	        can be said to be the offset from the beginning of the line).
+	      </p>
+	    </div>
+	  </dd>
+	</dl>
+      </div>
     </div>
 
     <div id="CommaTools">
