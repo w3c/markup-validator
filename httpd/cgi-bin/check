@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.297 2002-11-19 11:27:47 link Exp $
+# $Id: check,v 1.298 2002-11-19 11:51:41 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.297 $;
+  $VERSION    =  q$Revision: 1.298 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-19 11:27:47 $,
+                              Date => q$Date: 2002-11-19 11:51:41 $,
                              });
 
 #
@@ -1925,6 +1925,22 @@ EOF
 sub prepCGI {
   my $File = shift;
   my    $q = shift;
+
+  # Avoid CGI.pm's "exists but undef" behaviour.
+  if (scalar $q->param) {
+    foreach my $param ($q->param) {
+      next if $param eq 'uploaded_file'; # 'uploaded_file' contains data.
+      next if $q->param($param) eq '0';  # Keep false-but-set params.
+      #
+      # Parameters that are given to us without specifying a value get
+      # set to "1" (the "TRUE" constant). This is so we can test for the
+      # boolean value of a parameter instead of first checking whether
+      # the param was given and then testing it's value. Needed because
+      # CGI.pm sets ";param" and ";param=" to a boolean false value
+      # (undef() or a null string, respectively).
+      $q->param($param, TRUE) unless $q->param($param);
+    }
+  }
 
   # Futz the URI so "/referer" works.
   if ($q->path_info) {
