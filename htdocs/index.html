@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.55.2.4 2002-12-02 12:59:10 link Exp $"
---><!--#set var="date" value="\$Date: 2002-12-02 12:59:10 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.55.2.5 2002-12-05 02:54:09 ot Exp $"
+--><!--#set var="date" value="\$Date: 2002-12-05 02:54:09 $"
 --><!--#set var="title" value="The W3C MarkUp Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -14,23 +14,24 @@
     <div>
       <h2>Validate Files</h2>
       <p>
-        You can enter a URI in the <code>Address</code> field below, or choose
-        a file to upload. There is also an <a title="Extended Interface to the
+        You can enter a URI in the <code>Address</code> field below, and
+        have the page validated. 
+        There is also an <a title="Extended Interface to the
         W3C MarkUp Validation Service" href="detailed.html">Extended
-        Interface</a> available if you want to set any advanced options.
+        Interface</a> available if you want to set any advanced options, and 
+	a <a title="File Upload Interface to the
+        W3C MarkUp Validation Service" href="file-upload.html">File
+	Upload Interface</a> if you want to upload a file from your computer
+	and have it validated.
       </p>
       <form method="post" enctype="multipart/form-data" action="check">
       <p>
         <label title="Address of page to Validate" for="uri">Address:
           <input id="uri" name="uri" size="40" /></label>
       </p>
-      <p>    
-        <label title="Choose a Local File to Upload and Validate" for="uploaded_file">Local File:
-          <input type="file" id="uploaded_file" name="uploaded_file" size="40" /></label>
-      </p>
       <p>
         <label title="Reset fields to default values"><input class="reset" type="reset" value="Reset Form" /></label>
-        <label title="Submit file for validation"><input class="default" type="submit" value="Validate File" /></label>
+        <label title="Submit file for validation"><input class="default" type="submit" value="Validate Page" /></label>
       </p>
       </form>
     </div>
@@ -42,8 +43,6 @@
         "<a href="whatsnew.html">What's&nbsp;New</a>" for more details.
       </p> 
     <dl>
-      <dt><a href="whatsnew.html#2002-12-03">December 03, 2002</a></dt>
-      <dd>Experimental RPMs added, and addressing a few minor issues.</dd>
       <dt><a href="whatsnew.html#2002-12-01">December 01, 2002</a></dt>
       <dd>Maintenance release to fix minor bugs.</dd>
       <dt><a href="whatsnew.html#2002-11-26">November 26, 2002</a></dt>
