@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.255 2002-10-23 21:57:09 link Exp $
+# $Id: check,v 1.256 2002-10-23 22:15:20 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.255 $;
+  $VERSION    =  q$Revision: 1.256 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -156,7 +156,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-23 21:57:09 $,
+			      Date => q$Date: 2002-10-23 22:15:20 $,
 			     });
 
 #
@@ -1695,7 +1695,7 @@ sub outline {
     <h2>Outline</h2>
     <p>
       Below is an outline for this document, automatically generated from the
-      heading tags (<code>&lt;H1&gt;</code> through <code>&lt;H6&gt;</code>.)
+      heading tags (<code>&lt;h1&gt;</code> through <code>&lt;h6&gt;</code>.)
     </p>
 EOF
 
