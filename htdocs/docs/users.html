@@ -1,10 +1,16 @@
-<!--#set var="revision" value="\$Id: users.html,v 1.14.2.5 2003-05-06 12:02:17 ot Exp $"
---><!--#set var="date" value="\$Date: 2003-05-06 12:02:17 $"
+<!--#set var="revision" value="\$Id: users.html,v 1.14.2.6 2003-08-20 20:56:01 ot Exp $"
+--><!--#set var="date" value="\$Date: 2003-08-20 20:56:01 $"
 --><!--#set var="title" value="User Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
+
+<div class="doc">
+
+<h2>User's guide for the W3C Markup Validator</h2>
+
+<h3 id="TableOfContents">Table of contents</h3>
+
     <div id="toc">
-      <h2 id="TableOfContents">Table of contents</h2>
 	<ul>
 	<li><a href="#Quickstart">Quick Start</a></li>
 	<li><a href="#Introduction">Introduction</a></li>
@@ -17,7 +23,7 @@
     </div>
 
     <div id="Quickstart">
-      <h2 id="skip">Quick Start</h2>
+      <h3 id="skip">Quick Start</h3>
       <p>
         Just type (or Cut&amp;Paste) the URL for the page you want to validate
         into the text field on the form and press the "Validate this page"
@@ -32,7 +38,7 @@
     </div>
 
     <div id="Introduction" class="stb">
-      <h2>Introduction</h2>
+      <h3>Introduction</h3>
       <p>
         The W3C Markup Validation Service is a web gateway to a well known SGML
         parser called SP. SP will take your HTML and compare it to a set of
@@ -56,7 +62,7 @@
     </div>
 
     <div id="Options" class="stb">
-      <h2>The Options</h2>
+      <h3>The Options</h3>
       <p>
         In addition to the text field where you enter an URL -- or the file
         selection field if you are uploading files -- there are a few
@@ -136,7 +142,7 @@
     </div>
 
     <div id="Calling" class="stb">
-      <h2>Calling/Linking to the Validator</h2>
+      <h3>Calling/Linking to the Validator</h3>
       <p>
         You can link directly to the Validator home page, or you can call the
         Validator CGI program. The home page is &lt;<a
@@ -174,7 +180,7 @@
     </div>
 
     <div id="Interpret" class="stb">
-      <h2>Interpreting the results</h2>
+      <h3>Interpreting the results</h3>
       <p>
         In spite of our efforts,  interpreting the Markup Validator's error messages 
 	isn't quite what you'd call easy. The error messages are generated in the 
@@ -197,7 +203,7 @@
         we can validate to see for ourselves.
       </p>
       <div id="Output" class="stb">
-        <h3>Output Options</h3>
+        <h4>Output Options</h4>
         <p>
           In addition to the HTML output intended for human consumption in a
           browser, the Validator has some experimental features to generate
@@ -268,7 +274,7 @@
               elements may appear more then once.
             </p>
             <div id="dtd-meta">
-	      <h4>The <code>meta</code> element</h4>
+	      <h5>The <code>meta</code> element</h5>
 	      <p>
                 The <code>meta</code> element contains various metadata about
 	        about the Validated document. It contains further elements
@@ -295,7 +301,7 @@
               </p>
             </div>
 	    <div id="dtd-warnings">
-	      <h4>The <code>warnings</code> element</h4>
+	      <h5>The <code>warnings</code> element</h5>
 	      <p>
 	        The <code>warnings</code> element can contain only one sub-element;
 	        the <code>warning</code> element. Multiple <code>warning</code>
@@ -305,7 +311,7 @@
 	      </p>
 	    </div>
 	    <div id="dtd-messages">
-	      <h4>The <code>messages</code> element.</h4>
+	      <h5>The <code>messages</code> element.</h5>
 	      <p>
 	        The <code>messages</code> element can contain only one sub-element;
 	        the <code>msg</code> element. Multiple <code>msg</code> elements
@@ -324,7 +330,7 @@
     </div>
 
     <div id="CommaTools">
-      <h2>Comma Tools / Site Tools</h2>
+      <h3>Comma Tools / Site Tools</h3>
       <p>
 	This site uses "comma tools", as does <a href="http://www.w3.org/,tools">W3C</a>
 	and other sites. This means you can append a string (starting with a comma, hence 
@@ -422,7 +428,7 @@
 </div>
 
     <div id="Installing" class="stb">
-      <h2>Installing a local Validator</h2>
+      <h3>Installing a local Validator</h3>
       <p>
         You can download the Validator to run on your own system, but it's not
         recommended for average users as the process is rather complex and
@@ -433,6 +439,7 @@
         in our <a href="devel.html">Developer Manual</a>.
       </p>
     </div>
+</div>
 
 <!--#include virtual="../footer.html" -->
   </body>

@@ -1,9 +1,11 @@
-<!--#set var="revision" value="\$Id: devel.html,v 1.10.2.5 2003-05-24 11:38:05 link Exp $"
---><!--#set var="date" value="\$Date: 2003-05-24 11:38:05 $"
+<!--#set var="revision" value="\$Id: devel.html,v 1.10.2.6 2003-08-20 20:56:00 ot Exp $"
+--><!--#set var="date" value="\$Date: 2003-08-20 20:56:00 $"
 --><!--#set var="title" value="Developer Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
 
+<div class="doc">
+<h2>Installation and development information <br />for the W3C Markup Validator</h2>
     <p id="skip">
       The W3C Markup Validation Service consists of an SGML Parser, an SGML
       catalog, a CGI program and it's configuration files. In addition it
@@ -18,7 +20,7 @@
     </p>
 
     <div id="prereq" class="stb">
-      <h2>Prerequisites</h2>
+      <h3>Prerequisites</h3>
       <p>
         Apart from a properly configured web server, the Validator needs a
         SGML parser -- that does all the hard work -- and several Perl
@@ -36,7 +38,7 @@
         can be found on <a href="http://www.cpan.org/">CPAN</a> (minimum
         versions in parenthesis after the name). The following
         list was complete when CVS spit out:
-        <code>$Date: 2003-05-24 11:38:05 $</code>. <tt>:-)</tt>
+        <code>$Date: 2003-08-20 20:56:00 $</code>. <tt>:-)</tt>
       </p>
       <dl>
         <dt><code>CGI (2.81)</code></dt>
@@ -69,7 +71,7 @@
       </dl>
     </div>
     <div id="config" class="stb">
-      <h2>Configuration Files</h2>
+      <h3>Configuration Files</h3>
       <p>
         The validator uses a number of configuration files -- most of which
         are really mapping tables of some form -- to avoid having to check in
@@ -111,7 +113,7 @@
        </dl>
     </div>
     <div id="todo" class="stb">
-      <h2>TODO</h2>
+      <h3>TODO</h3>
       <p>
         The TODO list for the Validator is online at
         &lt;<a href="../todo.html">http://validator.w3.org/todo.html</a>&gt;.
@@ -131,7 +133,7 @@
       </p>
     </div>
     <div id="bugzilla" class="stb">
-      <h2>Bugs and Issue Tracking</h2>
+      <h3>Bugs and Issue Tracking</h3>
       <p>
         Bug and Issue Tracking for the Validator happens in the <a
           href="http://www.w3.org/Bugs/Public/">W3C Public Bugzilla</a>
@@ -140,7 +142,7 @@
         (end users should continue to send stuff to the mailinglist).
       </p>
     </div>
-
+</div>
 <!--#include virtual="../footer.html" -->
   </body>
 </html>
