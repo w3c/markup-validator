@@ -1,11 +1,11 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl -wT
 #
 # W3C Link Checker
 # by Hugo Haas <hugo@w3.org>
 # (c) 1999-2002 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.4 2002-11-21 23:27:47 ville Exp $
+# $Id: checklink.pl,v 3.5 2002-11-23 15:06:06 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -83,7 +83,7 @@ BEGIN
 {
   # Version info
   $PROGRAM       = 'W3C checklink';
-  ($CVS_VERSION) = q$Revision: 3.4 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.5 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2002 W3C', $VERSION);
 
@@ -145,6 +145,7 @@ if ($_cl) {
   if ($_user && (! $_password)) {
     &ask_password();
   }
+  my $first = 1;
   foreach my $uri (@ARGV) {
     if (!$_summary) {
       printf("%s %s\n", $PROGRAM, $REVISION) if (! $_html);
@@ -154,9 +155,12 @@ if ($_cl) {
     }
     # Transform the parameter into a URI
     $uri = &urize($uri);
-    &check_uri($uri, 0, $_depth);
+    &check_uri($uri, ($_html && $first), $_depth);
+    $first &&= 0;
   }
-  if (($doc_count > 0) && !$_summary) {
+  if ($_html) {
+    &html_footer();
+  } elsif (($doc_count > 0) && !$_summary) {
     printf("\n%s\n", &global_stats());
   }
 } else {
@@ -167,18 +171,25 @@ if ($_cl) {
   # Set a few parameters in CGI mode
   $_verbose = 0;
   $_progress = 0;
+
   if ($query->param('summary')) {
     $_summary = 1;
   } else {
   }
+
   if ($query->param('hide_redirects')) {
-    $_redirects = 0;
+    $_dir_redirects = 0;
+    if (my $type = $query->param('hide_type')) {
+      $_redirects = 0 if ($type ne 'dir');
+    } else {
+      $_redirects = 0;
+    }
   }
+  # Backwards compatibility
+  $_dir_redirects = 0 if ($query->param('hide_dir_redirects'));
+
   if ($query->param('no_accept_language')) {
     $_accept_language = 0;
-  }
-  if ($query->param('hide_dir_redirects')) {
-    $_dir_redirects = 0;
   }
   if ($query->param('recursive')) {
     if ($_depth == 0) {
@@ -230,7 +241,7 @@ sub parse_arguments ()
   GetOptions('help'            => \&usage,
              'q|quiet'         => sub { $_quiet = 1; $_summary = 1; },
              's|summary'       => \$_summary,
-             'b|broken'        => sub { $_redirects = 0; },
+             'b|broken'        => sub { $_redirects = $_dir_redirects = 0; },
              'e|dir-redirects' => sub { $_dir_redirects = 0; },
              'v|verbose'       => \$_verbose,
              'i|indicator'     => \$_progress,
@@ -358,9 +369,7 @@ sub check_uri ($$$)
   $doc_count++;
 
   if ($_html) {
-    if ($html_header) {
-      &html_header($uri);
-    }
+    &html_header($uri) if $html_header;
     print('<h2>');
   }
 
@@ -1239,26 +1248,26 @@ sub sort_unique (@)
 sub anchors_summary (\%\%)
 {
   my ($anchors, $errors) = @_;
+
   # Number of anchors found.
+  my $n = scalar(keys(%$anchors));
   if (! $_quiet) {
     if ($_html) {
       print("<h3>Anchors</h3>\n<p>");
     } else {
       print("Anchors\n\n");
     }
-    my $n = scalar(keys(%$anchors));
     &hprintf("Found %d anchor%s.", $n, ($n == 1) ? '' : 's');
     print('</p>') if $_html;
     print("\n");
   }
   # List of the duplicates, if any.
   my @errors = keys %{$errors};
-  if ($#errors < 0) {
-    if (! $_quiet && $_html) {
-      print "<p>Valid anchors!</p>\n";
-    }
+  if (! scalar(@errors)) {
+    print("<p>Valid anchors!</p>\n") if (! $_quiet && $_html && $n);
     return;
   }
+  undef $n;
 
   print('<p>') if $_html;
   print('List of duplicate and empty anchors');
@@ -1600,7 +1609,7 @@ sub links_summary (\%\%\%\%)
   }
 
   # Show directory redirects
-  if ($_redirects && $_dir_redirects && ($#dir_redirect_urls > -1)) {
+  if ($_dir_redirects && ($#dir_redirect_urls > -1)) {
     print('<h3>') if $_html;
     print("\nList of directory redirects");
     print("</h3>\n<p>The links below are not broken, but the document does not use the exact URL.</p>") if $_html;
@@ -1629,69 +1638,68 @@ sub global_stats ()
 # HTML interface #
 ##################
 
-sub html_header ($;$)
+sub html_header ($;$$)
 {
-  my $uri = &encode($_[0]);
-  my $title = ' Link Checker' . ($uri eq '' ? '' : ': '.$uri);
+  my ($uri, $nocache, $focus) = @_;
+
+  $uri = &encode($uri);
+  my $title = ' Link Checker' . ($uri eq '' ? '' : ': ' . $uri);
 
   # mod_perl 1.99_05 doesn't seem to like if the "\n\n" isn't in the same
   # print() statement as the last header...
 
-  my $headers =
-    defined($_[1]) ? "Cache-Control: no-cache\nPragma: no-cache\n" : '';
+  my $headers = '';
   if (! $_cl) {
+    $headers .= "Cache-Control: no-cache\nPragma: no-cache\n" if $nocache;
     $headers .= "Content-Type: text/html; charset=iso-8859-1\n";
+    $headers .= "Content-Script-Type: text/javascript\n";
     $headers .= "Content-Language: en\n\n";
   }
+
+  my $onload = $focus ? sprintf(' onload="%s.focus()"', $focus) : '';
 
   print $headers, $DocType, "
 <html lang=\"en\">
 <head>
 <title>W3C", $title, "</title>
 <style type=\"text/css\">
-
-body {
+body, address {
   font-family: sans-serif;
   color: black;
   background: white;
 }
-
 pre, code, tt {
   font-family: monospace;
 }
-
 img {
   color: white;
   border: none;
 }
-
+fieldset {
+  padding-left: 1em;
+  background-color: #eeeeee;
+}
 .report {
   width: 100%;
 }
-
 dt.report {
   font-weight: bold;
 }
-
 .unauthorized {
   background-color: aqua;
 }
-
 .redirect {
   background-color: yellow;
 }
-
 .broken {
   background-color: red;
 }
-
 .multiple {
   background-color: fuchsia;
 }
-
 </style>
 </head>
-<body>
+<body", $onload, ">
 <p><a href=\"http://www.w3.org/\" title=\"W3C\"><img alt=\"W3C\" src=\"http://www.w3.org/Icons/w3c_home\" height=\"48\" width=\"72\"></a></p>
 <h1>W3C<sup>&reg;</sup>", $title, "</h1>
 \n";
@@ -1770,25 +1778,27 @@ sub file_uri ($)
 sub print_form ($)
 {
   my ($q) = @_;
-  &html_header('', 1);
+  &html_header('', 1, 'document.forms[0].uri');
   print "<form action=\"", $q->self_url(), "\" method=\"get\">
 <p><label for=\"uri\">Enter the address (<a href=\"http://www.w3.org/Addressing/#terms\">URL</a>)
 of a document that you would like to check:</label></p>
 <p><input type=\"text\" size=\"50\" id=\"uri\" name=\"uri\"></p>
-<p>Options:</p>
-<p>
-  <label><input type=\"checkbox\" name=\"summary\"> Summary only</label>
-  <br>
-  <label><input type=\"checkbox\" name=\"hide_redirects\"> Hide redirects</label>
-  <br>
-  <label><input type=\"checkbox\" name=\"no_accept_language\"> Don't send <tt>Accept-Language</tt> headers</label>
-  <br>
-  <label><input type=\"checkbox\" name=\"hide_dir_redirects\"> Hide directory redirects</label>
-  <br>
-  <label><input type=\"checkbox\" name=\"recursive\"> Check linked documents recursively <small>(maximum: $_max_documents documents; sleeping $_sleep_time seconds between each document)</small></label>
-  <br>
-  <label>Depth of the recursion: <input type=\"text\" size=\"3\" name=\"depth\"><small>(-1 is the default and means unlimited)</small></label>
-</p>
+<fieldset>
+  <legend>Options</legend>
+  <p>
+    <label><input type=\"checkbox\" name=\"summary\" value=\"on\"> Summary only</label>
+    <br>
+    <label><input type=\"checkbox\" name=\"hide_redirects\" value=\"on\"> Hide redirects:</label>
+    <label><input type=\"radio\" name=\"hide_type\" value=\"all\" checked=\"checked\"> all</label>
+    <label><input type=\"radio\" name=\"hide_type\" value=\"dir\"> for directories only</label>
+    <br>
+    <label><input type=\"checkbox\" name=\"no_accept_language\" value=\"on\"> Don't send <tt>Accept-Language</tt> headers</label>
+    <br>
+    <label title=\"Check linked documents recursively (maximum: $_max_documents documents; sleeping $_sleep_time seconds between each document)\"><input type=\"checkbox\" name=\"recursive\" value=\"on\"> Check linked documents recursively</label>,
+    <label title=\"Depth of the recursion (-1 is the default and means unlimited)\">recursion depth: <input type=\"text\" size=\"3\" maxlength=\"3\" name=\"depth\" value=\"\"></label>
+    <br>
+  </p>
+</fieldset>
 <p><input type=\"submit\" name=\"submit\" value=\"Check\"></p>
 </form>
 ";
