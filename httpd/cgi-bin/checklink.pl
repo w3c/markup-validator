@@ -5,7 +5,7 @@
 # (c) 1999 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.7 1999-12-02 01:42:59 hugo Exp $
+# $Id: checklink.pl,v 2.8 1999-12-04 23:00:25 hugo Exp $
 #
 # This program is licensed under the W3C License.
 
@@ -23,7 +23,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = '$Revision: 2.7 $ (c) 1999 W3C';
+my $VERSION = '$Revision: 2.8 $ (c) 1999 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -207,9 +207,11 @@ sub urize() {
 sub check_uri() {
     my $uri = $_[0];
     my $start;
-    if ((! $_summary) && (! $_html)) {
+    if (! $_summary) {
         $start = &get_timestamp();
-        printf("\nProcessing\t%s\n", $uri);
+        if (! $_html) {
+            printf("\nProcessing\t%s\n", $uri);
+        }
     }
     # Get the document
     my $response = &get_uri('GET', $uri);
@@ -357,8 +359,10 @@ sub W3C::UserAgent::redirect_ok {
 }
 
 sub get_uri() {
-    my ($method, $uri, $code) = @_;
-    my $start = &get_timestamp();
+    my ($method, $uri, $start, $code, $realm, $tested) = @_;
+    if (! defined($start)) {
+        $start = &get_timestamp();
+    }
     my $ua = new W3C::UserAgent;
     $ua->timeout($_timeout);
     $ua->agent('W3Cchecklink/'.$REVISION.' '.$ua->agent());
@@ -370,22 +374,23 @@ sub get_uri() {
         printf("%s %s ", $method, $uri);
     }
     my $request = new HTTP::Request($method, $uri);
-    if (($request->url->netloc =~ /\.w3\.org$/) && defined($ENV{HTTP_AUTHORIZATION})) {
+    if (defined($code) && $code == 401
+        && ($request->url->netloc =~ /\.w3\.org$/) && defined($ENV{HTTP_AUTHORIZATION})) {
         $request->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
     }
     $response = $ua->request($request);
-    if (!defined($code)) {
+    if (! defined($code)) {
         $code = $ua->{FirstResponse};
     }
     if (($response->code() == 401)
         && defined($ENV{HTTP_AUTHORIZATION})
-        && ($uri ne $response->request->url)) {
+        && !defined ($tested)) {
         # Deal with authentication and avoid loops
-        if (defined($code)) {
-            &get_uri($method, $response->request->url, $code);
-        } else {
-            &get_uri($method, $response->request->url, 401);
+        if (! defined ($realm)) {
+            $response->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
+            $realm = $1;
         }
+        return &get_uri($method, $response->request->url, $start, $code, $realm, 1);
     }
     $response->{Redirects} = $ua->{Redirects};
     my $stop = &get_timestamp();
@@ -393,6 +398,9 @@ sub get_uri() {
         printf(" fetched in %ss\n", &time_diff($start,$stop));
     }
     $response->{OriginalCode} = $code;
+    if (defined($realm)) {
+        $response->{Realm} = $realm;
+    }
     return $response;
 }
 
@@ -563,8 +571,15 @@ sub check_validity($, $, \%, \%, \%, \%, $) {
         &record_redirects($redirects, $response->{Redirects});
         # Parse the document if necessary and possible
         $results->{$uri}{$uri}{code} = $response->code();
-        $results->{$uri}{$uri}{success} = $response->is_success();
         $results->{$uri}{$uri}{orig} = $response->{OriginalCode};
+        if ($response->{OriginalCode} != $response->code()) {
+            $results->{$uri}{$uri}{success} = 0;
+        } else {
+            $results->{$uri}{$uri}{success} = $response->is_success();
+        }
+        if (defined($response->{Realm})) {
+            $results->{$uri}{$uri}{realm} = $response->{Realm};
+        }
         if (! $results->{$uri}{$uri}{success}) {
             $results->{$uri}{$uri}{message} = $response->message();
             if ($_verbose) {
@@ -713,8 +728,8 @@ sub anchors_summary(\%, \%) {
     # List of the duplicates, if any.
     @errors = keys %{$errors};
     if ($#errors < 0) {
-        if (! $_quiet) {
-            print "<p>Valid anchors!</p>";
+        if (! $_quiet && $_html) {
+            print "<p>Valid anchors!</p>\n";
         }
         return;
     }
@@ -771,8 +786,8 @@ sub links_summary(\%,\%,\%) {
     # List of the broken links
     @urls = keys %{$broken};
     if ($#urls < 0) {
-        if (! $_quiet) {
-            print "<p>Valid links!</p>";
+        if (! $_quiet && $_html) {
+            print "<p>Valid links!</p>\n";
         }
         return;
     }
@@ -803,13 +818,16 @@ sub links_summary(\%,\%,\%) {
                                sort {$a <=> $b} keys %{$links->{$u}{$u}});
         }
         if ($_html) {
-            printf("<tr><th rowspan=\"%d\">%s</th><th rowspan=\"%d\"%s>%d%s</th><td>%s</td><td%s>%s</td></tr>\n",
+            printf("<tr><th rowspan=\"%d\">%s</th><th rowspan=\"%d\"%s>%d%s%s</th><td>%s</td><td%s>%s</td></tr>\n",
                    $n_fragments,
                    $redirected ? join('<br>-&gt; ',
                                       &get_redirects($u, %$redirects)) : $u,
                    $n_fragments,
                    &bgcolor($results->{$u}{$u}{orig}),
                    $results->{$u}{$u}{orig},
+                   defined($results->{$u}{$u}{realm})
+                   ? '<br>Realm: '.$results->{$u}{$u}{realm}
+                   : '',
                    $results->{$u}{$u}{message}
                    ? '<br>'.$results->{$u}{$u}{message}
                    : '',
@@ -817,7 +835,7 @@ sub links_summary(\%,\%,\%) {
                    &bgcolor($results->{$u}{$u}{code}),
                    $lines_list);
         } else {
-            printf("\n%s\t%s\n  Code: %d%s\n",
+            printf("\n%s\t%s\n  Code: %d %s\n",
                    $redirected ? join("\n-> ",
                                       &get_redirects($u, %$redirects)) : $u,
                    $lines_list ? 'Lines: '.$lines_list : '' ,
