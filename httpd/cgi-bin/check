@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.101 2001-05-26 06:05:56 link Exp $
+# $Id: check,v 1.102 2001-05-27 05:06:02 link Exp $
 
 #
 # We need Perl 5.004.
@@ -75,9 +75,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.101 $;
+$VERSION    =  q$Revision: 1.102 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-05-26 06:05:56 $;
+$DATE       =  q$Date: 2001-05-27 05:06:02 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -129,6 +129,12 @@ if (scalar $q->param) {
 #
 # Futz the URI so "/referer" works.
 if ($q->path_info eq '/referer') {
+  $q->param('uri', $q->referer);
+}
+
+#
+# USe HTTP Referer if uri=referer.
+if ($q->param('uri') =~ m(referer)i) {
   $q->param('uri', $q->referer);
 }
 
