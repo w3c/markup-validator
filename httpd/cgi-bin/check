@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.274 2002-10-27 18:36:16 ville Exp $
+# $Id: check,v 1.275 2002-10-30 01:41:34 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.274 $;
+  $VERSION    =  q$Revision: 1.275 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-27 18:36:16 $,
+			      Date => q$Date: 2002-10-30 01:41:34 $,
 			     });
 
 #
@@ -2246,10 +2246,35 @@ X-W3C-Validator-Errors: $errs
 
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/css" href="xml-results.css"?>
+<!DOCTYPE result [
+  <!ELEMENT result (meta, warnings?, messages?)>
+  <!ATTLIST result
+    version CDATA #FIXED '0.9'
+  >
+
+  <!ELEMENT meta (uri, modified, server, size, encoding, doctype)>
+  <!ELEMENT uri      (#PCDATA)>
+  <!ELEMENT modified (#PCDATA)>
+  <!ELEMENT server   (#PCDATA)>
+  <!ELEMENT size     (#PCDATA)>
+  <!ELEMENT encoding (#PCDATA)>
+  <!ELEMENT doctype  (#PCDATA)>
+
+  <!ELEMENT warnings (warning)+>
+  <!ELEMENT warning  (#PCDATA)>
+
+  <!ELEMENT messages (msg)*>
+  <!ELEMENT msg      (#PCDATA)>
+  <!ATTLIST msg
+    line   CDATA #IMPLIED
+    col    CDATA #IMPLIED
+    offset CDATA #IMPLIED
+  >
+]>
 .EOF.
 
   print qq(
-<results>
+<result>
   <meta>
     <uri>), &ent($File->{URI}), qq(</uri>
     <modified>), &ent($File->{Modified}), qq(</modified>
@@ -2258,39 +2283,39 @@ X-W3C-Validator-Errors: $errs
     <encoding>), &ent($File->{Charset}->{Use}), qq(</encoding>
     <doctype>), &ent($File->{DOCTYPE}), qq(</doctype>
   </meta>
-  <warnings>);
+);
 
-  printf qq(\n    <warning>%s</warning>), &ent($_) for @{$File->{Warnings}};
-  print "\n  </warnings>\n  <messages>\n";
-
-  foreach my $err (@{$File->{Errors}}) {
-    # Strip curlies from lq-nsgmls output.
-    $err->{msg} =~ s/[{}]//g;
-    chomp $err->{msg};
-
-    # Find index into the %frag hash for the "explanation..." links.
-    $err->{idx} =  $err->{msg};
-    $err->{idx} =~ s/"[^\"]*"/FOO/g;
-    $err->{idx} =~ s/[^A-Za-z ]//g;
-    $err->{idx} =~ s/\s+/ /g; # Collapse spaces
-    $err->{idx} =~ s/(^\s|\s$)//g; # Remove leading and trailing spaces.
-    $err->{idx} =~ s/(FOO )+/FOO /g; # Collapse FOOs.
-    $err->{idx} =~ s/FOO FOO/FOO/g; # Collapse FOOs.
-
-    my @offsets = (
-		   $File->{Offsets}->[$err->{line}    ]->[0],
-		   $File->{Offsets}->[$err->{line} - 1]->[1],
-		   $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char}
-		  );
-    printf <<".EOF.", &ent($err->{msg});
-    <error><line>$err->{line}</line><column>$err->{char}</column><offset>@offsets</offset><msg>%s</msg></error>
-.EOF.
+  if (defined $File->{Warnings} and scalar @{$File->{Warnings}}) {
+    print qq(  <warnings>\n);
+    printf qq(    <warning>%s</warning>\n), &ent($_) for @{$File->{Warnings}};
+    print qq(  </warnings>\n);
   }
 
-  print <<".EOF.";
-  </messages>
-</results>
+  if (defined $File->{Errors} and scalar @{$File->{Errors}}) {
+    print qq(  <messages>\n);
+
+    foreach my $err (@{$File->{Errors}}) {
+      # Strip curlies from lq-nsgmls output.
+      $err->{msg} =~ s/[{}]//g;
+      chomp $err->{msg};
+
+      # Find index into the %frag hash for the "explanation..." links.
+      $err->{idx} =  $err->{msg};
+      $err->{idx} =~ s/"[^\"]*"/FOO/g;
+      $err->{idx} =~ s/[^A-Za-z ]//g;
+      $err->{idx} =~ s/\s+/ /g; # Collapse spaces
+      $err->{idx} =~ s/(^\s|\s$)//g; # Remove leading and trailing spaces.
+      $err->{idx} =~ s/(FOO )+/FOO /g; # Collapse FOOs.
+      $err->{idx} =~ s/FOO FOO/FOO/g; # Collapse FOOs.
+
+      my $offset = $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char};
+      printf <<".EOF.", &ent($err->{msg});
+    <msg line="$err->{line}" col="$err->{char}" offset="$offset">%s</msg>
 .EOF.
+    }
+    print qq(  </messages>\n);
+  }
+  print qq(</result>\n);
 }
 
 
