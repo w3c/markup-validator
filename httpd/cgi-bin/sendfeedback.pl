@@ -1,7 +1,7 @@
 #!/usr/bin/perl -T
 ##
 ## feedback generator for W3C Markup Validation Service
-# # $Id: sendfeedback.pl,v 1.3 2005-02-03 06:53:04 ot Exp $
+# # $Id: sendfeedback.pl,v 1.4 2005-02-25 00:18:51 ot Exp $
 
 ## Pragmas.
 use strict;
@@ -146,7 +146,7 @@ sub prepare_error_message {
 }
 
 sub print_prefilled_form {
-    $T->param(page_title => "Feedback for the Markup Validator");
+    $T->param(page_title => "Feedback");
     $T->param(uri => $validated_uri);
     $T->param(errmsg_id => $errmsg_id);
 #    $T->param(errlist => $errlist);
