@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.71 2002-08-17 14:43:18 link Exp $
+# $Id: check,v 1.200.2.72 2002-08-17 14:45:03 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.200.2.71 $;
+  $VERSION    =  q$Revision: 1.200.2.72 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-17 14:43:18 $,
+			      Date => q$Date: 2002-08-17 14:45:03 $,
 			     });
 
 #
@@ -2478,15 +2478,16 @@ sub parse_xml_decl {
     my $pi = shift;
     return unless $pi =~ m(<\?xml);
     $pi =~ m(<\?xml[^>]*\sencoding\s*=\s*([\"\'])([A-Za-z][-A-Za-z0-9._]*)\1)s;
-    warn qq('$1' - '$2'\n) if $DEBUG;
+    warn qq(\$1 == '$1' and \$2 == '$2'\n) if $DEBUG;
     $e = lc $2 if $2;
+    warn "\$e inside == $e\n";
     $p->eof()  if $e;
   };
 
   $p->xml_mode(TRUE);
   $p->handler(process => $pi, 'text');
   $p->parse($f->{Content});
-
+  warn "$e\n" if $DEBUG;
   return $e;
 }
 
