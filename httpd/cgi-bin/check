@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.201 2002-06-16 03:38:47 link Exp $
+# $Id: check,v 1.202 2002-06-22 16:35:58 link Exp $
 
 #
 # We need Perl 5.004.
@@ -95,9 +95,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.201 $;
+$VERSION    =  q$Revision: 1.202 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2002-06-16 03:38:47 $;
+$DATE       =  q$Date: 2002-06-22 16:35:58 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1194,7 +1194,7 @@ sub handle_uri {
   my $q    = shift; # The CGI object.
   my $File = shift; # The master datastructure.
 
-  my $uri = $q->param('uri'); # The URI to fetch.
+  my $uri = new URI $q->param('uri'); # The URI to fetch.
 
   my $ua = new LWP::UserAgent;
   $ua->agent("W3C_Validator/$VERSION " . $ua->agent);
@@ -1205,7 +1205,7 @@ sub handle_uri {
   #   or at least make it configurable to do so.
   #   eg. /^(localhost(\.localdomain)?|127\..+)$/ (+ private networks)
   #
-  $ua->protocols_allowed($CFG->{'Allowed Protocols'} || ['http', 'https']);
+  $ua->protocols_allowed(['http', 'https']);
 
   unless ($ua->is_protocol_supported($uri)) {
     $File->{'Error Flagged'} = TRUE;
