@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.8.2.1 2002-03-30 22:45:45 link Exp $ */
+/* $Id: results.css,v 1.8.2.2 2002-03-31 06:30:45 link Exp $ */
 
 .markup {
   color: red;
@@ -11,15 +11,53 @@
   background-color: #eeeeee; /* light grey */
 }
 
-.tip {
+dl.tip {
+  float: left;
+  margin: 0em 3em 0em 3em;
+  max-width: 20em;
+  background: #eeeeee;
+  border-top: 3px solid #eeeeee;
+  border-left: 3px solid #eeeeee;
+  border-bottom: 3px solid silver;
+  border-right: 3px solid silver;
+}
+
+dl.tip dt a {
+  text-decoration: none;
+  color: inherit;
+} 
+
+dl.tip dt {
   text-align: center;
-  background-color: yellow;
-  clear: both;
+  padding: 0em;
+  margin: 0em;
+  color: black;
+  background: #eeeeee;
+}
+
+dl.tip dd {
+  text-align: left;
+  text-decoration: none;
+  font-weight: bolder;
+  margin: .5em;
+  color: blue;
+  border: 3px dashed black;
+}
+
+dl.tip dd a:hover {
+  color: blue;
+  background: silver;
+  border: 3px solid black;
+}
+
+dl.tip dd a {
+  padding: .1em .25em;
+  text-decoration: none;
+  margin:  .25em;
 }
 
 table.header {
   background-color: #eeeeee;
-  
 }
 
 th {
@@ -88,5 +126,5 @@ td {
 }
 
 .invalid a {
-  color: yellow;
+  color: blue;
 }

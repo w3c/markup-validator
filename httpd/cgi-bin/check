@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.15 2002-03-31 00:37:49 link Exp $
+# $Id: check,v 1.200.2.16 2002-03-31 06:30:46 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -70,7 +70,7 @@ $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.15 $;
+$VERSION    =  q$Revision: 1.200.2.16 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 #
@@ -99,7 +99,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-03-31 00:37:49 $,
+			      Date => q$Date: 2002-03-31 06:30:46 $,
 			     });
 
 #
@@ -269,7 +269,7 @@ if ($File->{Use_Charset} ne 'unknown') {
 }
 
 #
-# Print header and jump links.
+# Print header.
 print $File->{Results};
 
 
@@ -295,12 +295,9 @@ if (TRUE) { # @@ Need to stringify here?
 	       '&#171;<code>' . $File->{Opt}->{URI} . '</code>&#187;.');
 }
 
-#&add_table($File, "Modified", $File->{Modified})  if $File->{Modified};
-#&add_table($File, "Server", $File->{Server})  if $File->{Server};
-#&add_table($File, "Size", $File->{Size})  if $File->{Size};
-#&add_table($File, "Character&nbsp;Encoding", "<code>$File->{Charset}</code>");
-#&add_table($File, "Character&nbsp;Encoding", "<code>$File->{Use_Charset}</code>")
-#    unless $File->{Charset} eq $File->{Use_Charset};
+&add_table($File, "Modified", $File->{Modified})  if $File->{Modified};
+&add_table($File, "Server", $File->{Server})  if $File->{Server};
+&add_table($File, "Size", $File->{Size})  if $File->{Size};
 unless ($File->{Opt}->{'Is Upload'}) {
   &add_table($File,
 	     qq(<label title="Character Encoding" for="charset">Character&nbsp;Encoding</label>),
@@ -624,10 +621,10 @@ if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
 
 &print_table($File);
 &print_jump_links($File);
-&print_warnings($File);
 &print_tip_of_the_day($File, $CFG->{'Tips DB'});
+&print_warnings($File);
 
-print "<h2>Validation Results</h2>\n";
+print qq(<h2 class="stb">Validation Results</h2>\n);
 
 if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 'svg' or $File->{Type} eq 'smil') {
   my $xmlvalid = ($File->{DOCTYPE} ? ' and validity' : '');
@@ -803,29 +800,17 @@ sub print_jump_links {
   $count++ if $File->{Opt}->{'Outline'};
 
   if ($count) {
-    $text .= "  <p>\n    Jump to: ";
-    if ($File->{Opt}->{'Weblint'}) {
-      $text .= "<a\n      href=\"#weblint\">Weblint Results</a>";
-      $count--;
-      $text .= " or " if ( $count == 1 );
-      $text .= ", "   if ( $count >  1 );
-    }
-    if ($File->{Opt}->{'Outline'}) {
-      $text .= "<a\n      href=\"#outline\">Outline</a>";
-      $count--;
-      $text .= " or " if ( $count == 1 );
-      $text .= ", "   if ( $count >  1 );
-    }
+    $text .= qq(  <p class="jumpbar">\n   );
     if ($File->{Opt}->{'Show Source'}) {
-      $text .= "<a\n      href=\"#source\">Source Listing</a>";
-      $count--;
-      $text .= " or " if ( $count == 1 );
-      $text .= ", "   if ( $count >  1 );
+      $text .= qq(<a href="#source">Source Listing</a>\n    );
     }
     if ($File->{Opt}->{'Show Parsetree'}) {
-      $text .= "<a\n      href=\"#parse\">Parse Tree</a>";
+      $text .= qq(<a href="#parse">Parse Tree</a>\n  );
     }
-    $text .= ".\n  </p>\n\n";
+    if ($File->{Opt}->{'Outline'}) {
+      $text .= qq(<a href="#outline">Outline</a>\n    );
+    }
+    $text .= qq(</p>\n\n);
   }
   print $text;
 }
@@ -975,10 +960,10 @@ sub print_tip_of_the_day{
   my $tipSlug = $CFG->{'Tips DB'}->{$tipAddr};
 
   print <<"EOHD";
-  <div class="tip">
-    <strong><a href="http://www.w3.org/2001/06tips/">Tip Of The Day</a>:</strong>
-    <a href="$tipAddr">$tipSlug</a>
-  </div>
+  <dl class="tip">
+    <dt><a href="http://www.w3.org/2001/06tips/">Tip Of The Day</a>:</dt>
+    <dd><a href="$tipAddr">$tipSlug</a></dd>
+  </dl>
 EOHD
 }
 
@@ -1780,7 +1765,7 @@ sub prepSSI {
   $ssi =~ s/<!--\#echo var="date" -->/$opt->{Date}/g
     if defined $opt->{Date};
 
-  $ssi =~ s/<!--\#echo var="revision" -->/$opt->{Revision}/g
+  $ssi =~ s/<!--\#echo\s+var="revision"\s+-->/$opt->{Revision}/g
     if defined $opt->{Revision};
 
   return $ssi;

@@ -4,7 +4,7 @@
   Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
   See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-  $Id: base.css,v 1.20.2.3 2002-03-30 22:45:44 link Exp $
+  $Id: base.css,v 1.20.2.4 2002-03-31 06:30:45 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -93,19 +93,36 @@ p.navbar {
   text-decoration: none;
   margin: .1em;
   padding: 1ex;
-  min-width: 13ex;
-  max-width: 15em;
   width:     13ex;
   background-color: #eee;
   border:1px dashed #999;
-  clear: both;
+  clear:both;
+}
+
+p.jumpbar a {
+  display: block;;
+}
+
+p.jumpbar a:hover {
+  background: #ccc;
+}
+
+p.jumpbar {
+  float: left;
+  text-align: left;
+  text-decoration: none;
+  margin: 0em .5em .5em 0em;
+  padding: 1ex;
+  width:     13ex;
+  background-color: #eee;
+  border:1px dashed #999;
 }
 
 .nsnote {
   display: none;
 }
 
-div.stb {clear: both}
+.stb {clear: both}
 
 p {
   max-width: 75ex;
