@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.340 2004-09-10 09:25:55 bjoern Exp $
+# $Id: check,v 1.341 2004-09-12 07:48:05 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -225,7 +225,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.340 $;
+  $VERSION    =  q$Revision: 1.341 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1768,7 +1768,7 @@ sub outline {
       } elsif ($level > $prevlevel) {
         if ($level - $prevlevel > 1) {
           foreach my $i (($prevlevel + 1) .. ($level - 1)) {
-            $outline .= "\n", "  " x ($i + 2) . "<ul>\n" . "  " x ($i + 2);
+            $outline .= "\n". "  " x ($i + 2) . "<ul>\n" . "  " x ($i + 2);
             $outline .= qq(<li class="warning">A level $i heading is missing!);
           }
           $outline .= "\n" . "  " x $TAB . "<ul>\n";
@@ -1799,7 +1799,7 @@ sub outline {
     $heading =~ s/\s+/ /g;
     $heading =~ s/^[- ]//;
     $heading = &ent($heading);
-    $outline .= "    <li>$heading\n";
+    $outline .= "    <li>$heading";
   }
   $outline .= "    </li></ul>\n" x $level;
   return $outline;
