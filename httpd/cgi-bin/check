@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.334 2004-09-04 21:06:17 link Exp $
+# $Id: check,v 1.335 2004-09-04 22:27:43 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -225,7 +225,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.334 $;
+  $VERSION    =  q$Revision: 1.335 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1799,19 +1799,12 @@ sub source {
   my $line = 1;
   my @source = ();
 
-  my $comment = '';
-  if ($File->{'Error Flagged'}) {
-    $comment = "<p>I have marked lines that I haven't been able to decode.</p>\n";
-  }
-
   # Remove any BOM since we're not at BOT anymore...
   $File->{Content}->[0] =
     substr $File->{Content}->[0], ($File->{BOM} ? 3 : 0); # remove BOM
 
-  my $maxhlen = length scalar @{$File->{Content}};
   for (@{$File->{Content}}) {
-    my $hline = (' ' x ($maxhlen - length("$line"))) . $line;
-    push @source, {file_source_i => $line, file_source_line => ent $hline};
+    push @source, {file_source_i => $line, file_source_line => ent $_};
     $line++;
   }
   return \@source;
