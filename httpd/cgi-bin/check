@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.153 2001-07-19 23:01:01 link Exp $
+# $Id: check,v 1.154 2001-07-20 06:23:03 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.153 $;
+$VERSION    =  q$Revision: 1.154 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-19 23:01:01 $;
+$DATE       =  q$Date: 2001-07-20 06:23:03 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1173,7 +1173,8 @@ sub report_errors ($) {
 
     # An unknown FPI and no SI.
     if (   $err->{msg} =~ m(cannot generate system identifier for entity)
-	or $err->{msg} =~ m(unrecognized ({{)?DOCTYPE(}})?)i) {
+	or $err->{msg} =~ m(unrecognized ({{)?DOCTYPE(}})?)i
+        or $err->{msg} =~ m(no document type declaration)i) {
       print <<"    .EOF.";
     <p><strong>Fatal Error</strong>: $err->{msg}</p>
     <p>
