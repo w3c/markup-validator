@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.38 2004-05-06 04:03:23 ot Exp $
+   $Id: base.css,v 1.26.2.39 2004-05-15 16:02:28 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -18,7 +18,7 @@ html, body {
   color:           black;
   background:      white;
   font-weight:     normal;
-  font-family:     "Bitstream Vera Sans", sans-serif;
+  font-family: "Bitstream Vera Sans", sans-serif;
   font-style:      normal;
   text-decoration: none;
   margin:  0;
@@ -86,7 +86,7 @@ abbr[title], acronym[title], span[title], strong[title] {
 }
 
 pre, code, tt {
-  font-family: monospace;
+  font-family: "Bitstream Vera Sans Mono", monospace;
   line-height: 100%;
   white-space: pre;
 }
@@ -160,7 +160,7 @@ p.copyright {
   text-transform: uppercase;
   margin-left:    auto;
   margin-right:   auto;
-  font-family:    monospace;
+  font-family: "Bitstream Vera Sans Mono", monospace;
   color:          #888;
   line-height:    120%;
 }
@@ -183,7 +183,7 @@ div.colophon em {
 
 /* Various header(ish) things. Definitions cribbed from the CORE Styles. */
 h1 {
-  font-family: "Bitstream Vera Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-family: "Bitstream Vera Sans", sans-serif;
   font-size-adjust: .53;
   font-size: 2em;
   font-weight: bold;
@@ -224,9 +224,13 @@ h1#title {
   color: red;
 }
 
-h2 {
-  font-family: "Bitstream Vera Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+h1, h2, h3, h4, h5, h6, dt {
+  font-family: "Bitstream Vera Sans", sans-serif;
   font-size-adjust: .53;
+  font-variant: small-caps;
+}
+
+h2 {
   font-size: 1.5em;
   text-align: center;
   font-weight: bold;
@@ -238,21 +242,17 @@ h2 {
 }
 
 h3 {
-  font-family: "Bitstream Vera Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
-  font-size-adjust: .53;
   font-size: 1.3em;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: none;
   background-color: #eee;
   text-indent: 2em;
   padding: .2em;
   border-top: 1px dotted black;
-  font-weight: normal;
-  font-style: normal;
-  text-decoration: none;
 }
 
 h4 {
-  font-family: "Bitstream Vera Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
-  font-size-adjust: .53;
   font-size: 1.1em;
   font-weight: 600;
   font-style: normal;
@@ -260,8 +260,6 @@ h4 {
 }
 
 h5, dt {
-  font-family: "Bitstream Vera Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
-  font-size-adjust: .53;
   font-size: 1em;
   font-weight: bold;
   font-style: normal;
@@ -271,14 +269,12 @@ h5, dt {
 }
 
 h6 {
-  font-family: "Bitstream Vera Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
-  font-size-adjust: .53;
-  color: #666;
-  text-indent: 1em;
   font-size: 1em;
   font-style: italic;
-  margin:0;
   text-decoration: none;
+  color: #666;
+  text-indent: 1em;
+  margin:0;
 }
 
 /* comma tools table */
@@ -286,13 +282,13 @@ h6 {
 td.comma-desc {
   background: #ffeecc;
   border : 1px solid black;
-  font-family: sans-serif
+  font-family: "Bitstream Vera Sans", sans-serif
 }
 
 td.comma-shortcut {
   background: #e7e7ff; 
   border : 1px solid black;
-  font-family: monospace;
+  font-family: "Bitstream Vera Sans Mono", monospace;
 }
 
 td.comma-tool {
@@ -321,12 +317,12 @@ input {
 
 input.reset {
   text-align: center;
-  font-family: monospace;
+  font-family: "Bitstream Vera Sans Mono", monospace;
 }
 
 input.default {
   text-align: center;
   font-weight: bold;
-  font-family: monospace;
+  font-family: "Bitstream Vera Sans Mono", monospace;
 }
 

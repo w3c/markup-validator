@@ -1,10 +1,10 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.28 2004-04-30 04:05:40 ot Exp $ */
+/* $Id: results.css,v 1.13.2.29 2004-05-15 16:02:28 link Exp $ */
 
 .input {
   color: black;
   background-color: #eee;
-  font-family: "Bitstream Vera Mono", monospace;
+  font-family: "Bitstream Vera Sans Mono", monospace;
   font-size: small;
 }
 
@@ -104,7 +104,7 @@ ol#errors li {
 
 #source code {
   white-space: normal;
-  font-family: "Bitstream Vera Mono", monospace;
+  font-family: "Bitstream Vera Sans Mono", monospace;
   font-size: smaller;
 }
 
@@ -249,7 +249,7 @@ h2.valid {
 .valid {
   background:		#053188;
   color:		white;
-  font-family:		"Luxi Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-family: "Bitstream Vera Sans", sans-serif;
   font-size-adjust:	.53;
   font-size:		1.5em;
   font-weight:		500;
@@ -301,7 +301,7 @@ h2.invalid {
 .invalid {
   background:		#880531;
   color:		white;
-  font-family:		"Luxi Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-family: "Bitstream Vera Sans", sans-serif;
   font-size-adjust:	.53;
   font-size:		1.5em;
   font-weight:		500;
