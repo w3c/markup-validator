@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.22.2.1 2002-11-29 22:40:41 ville Exp $"
---><!--#set var="date" value="\$Date: 2002-11-29 22:40:41 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.22.2.2 2002-12-02 12:43:19 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-12-02 12:43:19 $"
 --><!--#set var="title" value="Source Code Availability for The W3C MarkUp Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -42,9 +42,37 @@
         </li>
         <li>
           <p>
-            If you want a copy of all the files that make up the
-            service, you can <a href="../validator.tar.gz">grab a tar
-              ball</a> (~2.8MB).
+            If you want a copy of all the files that make up the service, you
+            can download a tarball of <a href="../validator.tar.gz">the code</a>
+	    (~161kB) and the <a href="../sgml-lib.tar.gz">the <acronym
+              title="Document Type Definitions">DTDs</acronym></a> (~2.6MB).
+          </p>
+        </li>
+        <li id="rpm">
+          <p>
+            Experimental RPMs are available, courtesy of Ville Skytt&auml;, at
+            &lt;<a href="http://cachalot.ods.org/">http://cachalot.ods.org/</a>&gt;.
+          </p>
+          <p>
+            The RPMs have only been tested on <a href="http://www.redhat.com/">Red
+            Hat</a> 8.0, but should be adaptable to other RPM based systems.
+          </p>
+          <p>
+            Note that the Validator RPMs have several dependencies so you will
+            have to get at least the following RPMs:
+          </p>
+          <ul>
+            <li>w3c-validator</li>
+            <li>w3c-validator-libs</li>
+            <li>perl-Set-IntSpan</li>
+            <li>perl-Text-Iconv</li>
+            <li>opensp</li>
+          </ul>
+          <p>
+            In addition, each of these may have further dependencies that must
+            be satisfied. All the necessary RPMs should be either in Red Hat 8.0
+            or available from
+             &lt;<a href="http://cachalot.ods.org/">http://cachalot.ods.org/</a>&gt;.
           </p>
         </li>
         <li id="CVS">
@@ -67,12 +95,20 @@
     bash$ <kbd>cvs login</kbd>
     (Logging in to anonymous@dev.w3.org)
     CVS password: <kbd>anonymous</kbd>
-    bash$ <kbd>cvs get validator</kbd>
+    bash$ <kbd>cvs get -r validator-0_6_2-release validator</kbd>
     cvs server: Updating validator
     cvs server: Updating validator/htdocs
     U validator/htdocs/about.html
     ...
           </pre>
+          <p>
+            This will get you the current release version. For intermediate
+            updates, use the <code>validator-0_6_0-branch</code> branch tag
+            instead. Major new development is done in <code>HEAD</code> and
+            the trunk is more or less guaranteed to be in a state of greater
+            or lesser breakage at any given point in time. <em>Approach with
+            caution!</em>
+          </p>
         </li>
       </ul>
     </div>
