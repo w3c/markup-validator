@@ -1,5 +1,5 @@
 # RPM Spec file for the W3C MarkUp Validator
-# $Id: w3c-validator.spec,v 1.2 2002-12-01 13:40:33 link Exp $
+# $Id: w3c-validator.spec,v 1.3 2002-12-01 16:52:03 ville Exp $
 
 %define httpd_confdir %{_sysconfdir}/httpd/conf.d
 %define htmldir       %{_var}/www/html
@@ -56,7 +56,7 @@ perl -pi -e 's|/var/www/html/|%{htmldir}/|' httpd/conf/httpd.conf
 # Cleanup of unused files
 rm -f httpd/cgi-bin/[Lprt]*
 rename .pl '' httpd/cgi-bin/checklink.pl
-rm -f htdocs/p3p.html htdocs/source
+rm -rf htdocs/p3p.html htdocs/source
 
 # Fixup permissions
 find . -type d -exec chmod 0755 {} ';'
