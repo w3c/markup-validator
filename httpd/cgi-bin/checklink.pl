@@ -5,23 +5,23 @@
 # (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.17 2003-07-27 16:19:02 ville Exp $
+# $Id: checklink.pl,v 3.6.2.18 2003-09-12 17:49:45 ville Exp $
 #
 # This program is licensed under the W3C(r) Software License:
-#	http://www.w3.org/Consortium/Legal/copyright-software
+#       http://www.w3.org/Consortium/Legal/copyright-software
 #
 # The documentation is at:
-#	http://www.w3.org/2000/07/checklink
+#       http://www.w3.org/2000/07/checklink
 #
 # See the CVSweb interface at:
-#	http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/checklink.pl
+#       http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/checklink.pl
 #
 # An online version is available at:
-#	http://validator.w3.org/checklink
+#       http://validator.w3.org/checklink
 #
 # Comments and suggestions should be sent to the www-validator mailing list:
-#	www-validator@w3.org (with 'checklink' in the subject)
-#	http://lists.w3.org/Archives/Public/www-validator/ (archives)
+#       www-validator@w3.org (with 'checklink' in the subject)
+#       http://lists.w3.org/Archives/Public/www-validator/ (archives)
 
 use strict;
 
@@ -67,7 +67,6 @@ package W3C::CheckLink;
 use vars qw($PROGRAM $AGENT $VERSION $CVS_VERSION $REVISION
             $DocType $Accept $ContentTypes %Cfg);
 
-use Config::General 2.06 qw(); # Need 2.06 for -SplitPolicy
 use HTML::Entities       qw();
 use HTML::Parser    3.00 qw();
 use HTTP::Request        qw();
@@ -88,7 +87,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.17 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.18 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
 
@@ -105,22 +104,31 @@ BEGIN
   my $re = join('|', map { s/\+/\\+/g; $_ } @content_types);
   $ContentTypes = qr{\b(?:$re)\b}io;
 
+  #
+  # Read configuration.  If the W3C_CHECKLINK_CFG environment variable has
+  # been set or the default contains a non-empty file, read it.  Otherwise,
+  # skip silently.
+  #
   my $defaultconfig = '/etc/w3c/checklink.conf';
+  if ($ENV{W3C_CHECKLINK_CFG} || -s $defaultconfig) {
 
-  eval {
-    my %config_opts =
-      ( -ConfigFile  => $ENV{W3C_CHECKLINK_CFG} || $defaultconfig,
-        -SplitPolicy => 'equalsign',
-      );
-    %Cfg = Config::General->new(%config_opts)->getall();
-  };
-  if ($@) {
-    die <<".EOF.";
-Couldn't read configuration.  Set the W3C_CHECKLINK_CFG environment variable
-or copy a configuration file into $defaultconfig and make sure it is
-readable by the user executing this script.  The reported error was:
+    require Config::General;
+    Config::General->require_version(2.06); # Need 2.06 for -SplitPolicy
+
+    my $conffile = $ENV{W3C_CHECKLINK_CFG} || $defaultconfig;
+    eval {
+      my %config_opts =
+        ( -ConfigFile  => $conffile,
+          -SplitPolicy => 'equalsign',
+        );
+      %Cfg = Config::General->new(%config_opts)->getall();
+    };
+    if ($@) {
+      die <<".EOF.";
+Failed to read configuration from '$conffile':
 $@
 .EOF.
+    }
   }
 
   # Trusted environment variables that need laundering in taint mode.
@@ -421,13 +429,15 @@ See \"perldoc Net::FTP\" for information about various environment variables
 affecting FTP connections and \"perldoc Net::NNTP\" for setting a default
 NNTP server for news: URIs.
 
-Documentation at: http://www.w3.org/2000/07/checklink
+The W3C_CHECKLINK_CFG environment variable can be used to set the
+configuration file to use.  See details in the full manual page, it can
+be displayed with:
+  perldoc $0
+
+More documentation at: http://www.w3.org/2000/07/checklink
 Please send bug reports and comments to the www-validator mailing list:
   www-validator\@w3.org (with 'checklink' in the subject)
   Archives are at: http://lists.w3.org/Archives/Public/www-validator/
-
-The full manual page can be displayed with:
-  perldoc $0
 ";
   exit $exitval;
 }
@@ -2188,3 +2198,10 @@ This program is licensed under the W3CE<174> Software License,
 L<http://www.w3.org/Consortium/Legal/copyright-software>.
 
 =cut
+
+# Local Variables:
+# mode: perl
+# indent-tabs-mode: nil
+# tab-width: 2
+# perl-indent-level: 2
+# End:
