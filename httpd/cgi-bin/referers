@@ -1,0 +1,47 @@
+#!/bin/sh
+#
+# referers: CGI script to show the top referers of the most recent 'n'
+# hits to this server.
+#
+# This source code is available under the license at:
+#     http://www.w3.org/Consortium/Legal/copyright-software
+#
+# $Id: referers,v 1.1 1998-08-13 20:46:21 gerald Exp $
+
+LOG=/usr/local/apache/logs/complete_log; export LOG
+
+cat <<EOHD
+Content-Type: text/html
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<title>top referrals to validator.w3.org</title>
+
+<body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
+
+<p>
+  This page lists the top 100 referrals to <a href="/">the W3C Validation
+  Service</a> (taken from the most recent 50,000 log entries.)
+</p>
+
+<table>
+EOHD
+
+tail -50000 $LOG | grep -v image/gif | cut -d\" -f4 | sort | uniq -c | sort -rn | head -100 | sed 's/\&/\&amp;/g; s/</\&lt;/g' | awk '{printf("<tr><td>%s</td><td><a href=\"%s\">%s</a></td></tr>\n", $1, $2, $2)}'
+
+echo "</table>"
+echo 
+
+cat <<EOHD
+</pre>
+
+<hr>
+<address>
+<a href="http://www.w3.org/People/Gerald/">Gerald Oskoboiny</a><br>
+\$Date: 1998-08-13 20:46:21 $ \
+</address>
+
+EOHD
+
+exit
+
