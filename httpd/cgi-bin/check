@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.51 1999-12-01 02:17:10 gerald Exp $
+# $Id: check,v 1.52 1999-12-06 00:26:23 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -73,9 +73,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.51 $;
+$VERSION    =  q$Revision: 1.52 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 1999-12-01 02:17:10 $;
+$DATE       =  q$Date: 1999-12-06 00:26:23 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -182,7 +182,7 @@ $q->param('uri', 'http://' . $q->param('uri')) if $q->param('uri') =~ m(^www)i;
 my $header = <<"EOF";
 Content-Type: text/html
 
-$html40s_doctype
+$html40t_doctype
 <html>
   <head>
     <title>W3C HTML Validation Service Results</title>
@@ -190,7 +190,7 @@ $html40s_doctype
     <link rel="stylesheet" href="/results.css" media="screen">
   </head>
 
-  <body>
+  <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
     <h1><a href="http://www.w3.org/"><img
        src="http://www.w3.org/Icons/WWW/w3c_home"
        width=72 height=48 border=0 alt="W3C"></a>
@@ -919,7 +919,7 @@ sub output_closing {
      src="http://validator.w3.org/images/vh40" height=31 width=88
      align=right border=0 alt="Valid HTML 4.0!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</a><br>
-  $DATE
+  Last modified: $DATE
 </address>
 
 </body>
