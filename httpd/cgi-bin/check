@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.85 2001-03-07 19:53:55 link Exp $
+# $Id: check,v 1.86 2001-03-07 23:03:33 link Exp $
 
 #
 # We need Perl 5.004.
@@ -38,7 +38,7 @@ use constant DEBUG => 0;
 
 #
 # Define global variables
-use vars qw($VERSION $DATE $MAINTAINER);             # Strings we need.
+use vars qw($VERSION $DATE $MAINTAINER $NOTICE);     # Strings we need.
 use vars qw($frag $pub_ids $element_uri $file_type); # Cfg hashes.
 
 #
@@ -73,11 +73,11 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.85 $;
+$VERSION    =  q$Revision: 1.86 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-03-07 19:53:55 $;
+$DATE       =  q$Date: 2001-03-07 23:03:33 $;
 $MAINTAINER =  'gerald@w3.org';
-my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
+$NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
 #
 # DOCTYPEs
@@ -91,19 +91,11 @@ my $xhtmlt_doctype  = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitiona
 # HTML fragments
 my $lt        = "\020";
 my $gt        = "\021";
-my $gifborder = ' border="0"';
-my $xhtmlendtag;
-
-#
-# The option names
-my @options = qw(weblint pw outline ss sp noatt);
 
 #
 # Stopgap to shut -w up. It won't actually fix anything, but it'll keep us
 # running without warnings until we can fix the problems.
-my ($validity, $effective_charset, $catalog,
-    @fake_errors, $doctype, $line, $col, $type, $msg, $diff,
-    $pos, $indent, $image_uri, $alttext, $gifhw, $pedanticflags,
+my ($image_uri, $alttext, $gifhw, $pedanticflags,
     $pedantic_blurb, $level, $prevlevel, $prevdata);
 
 #
@@ -195,9 +187,9 @@ $html40t_doctype
        src="http://www.w3.org/Icons/WWW/w3c_home"
        width=72 height=48 border="0" alt="W3C"></a>
       <a href="/">HTML Validation Service</a> Results</h1>
+    $NOTICE
 EOF
 
-$header .= $notice;
 
 #
 # Punt if we don't recognize this URI scheme.
@@ -255,6 +247,7 @@ EOF
 #     inferred by the check_for_doctype function
 #
 
+my $doctype;
 my $guessed_doctype = 2;
 
 #
@@ -356,7 +349,8 @@ print(' ' x 4, q(<li>Content length: ), $File->{Size},     qq(</li>\n))
 
 
 my $xmlflags = '';
-my $decl = '';
+my $decl     = '';
+my $catalog  = '';
 
 if ($File->{Type} eq 'xhtml') {
   $ENV{SGML_CATALOG_FILES} = $sgmlstuff . '/REC-xhtml1-20000126/xhtml.soc';
@@ -463,7 +457,7 @@ if (($File->{Type} eq 'xhtml') || ($File->{Type} eq 'mathml')) {
 $version = $pub_ids->{$fpi} || 'unknown';
 
 if ($guessed_doctype == 1) {
-    push( @fake_errors, "$sp:<OSFD>0:2:1:E: Missing DOCTYPE declaration at start of document (<a href=\"http://www.htmlhelp.org/tools/validator/doctype.html\">explanation...</a>)\n" );
+  unshift @errors, "$sp:<OSFD>0:2:1:E: Missing DOCTYPE declaration at start of document (<a href=\"http://www.htmlhelp.org/tools/validator/doctype.html\">explanation...</a>)\n";
 }
 
 print ' ' x 4, q(<li>Character encoding: ), $File->{Charset};
@@ -490,33 +484,30 @@ EOHD
 }
 print ' ' x 4, qq(</li>\n);
 
-if (($File->{Type} eq 'xml') || ($File->{Type} eq 'xhtml')) {
+if ($File->{Type} eq 'xml' || 'xhtml') {
+  print ' ' x 4, qq(<li>Document type: ), $version;
+  if ($File->{Type} eq 'xhtml'
+      and $root_namespace ne 'http://www.w3.org/1999/xhtml') {
+    print "<br>warning: unknown namespace for text/html document!";
+    if ($root_namespace ne '') {
+      print qq{, <a href="$root_namespace">$root_namespace</a>};
+    }
+    print "\n";
+  } else {
+    if ($root_namespace ne '') {
+      print qq( with namespace <a href="$root_namespace">$root_namespace</a>);
+    }
+  }
 
-    print ' ' x 4, qq(<li>Document type: ), $version;
-    if ( ( $type eq "html" ) &&
-         ( $root_namespace ne "http://www.w3.org/1999/xhtml" ) ) {
-	print "<br>warning: unknown namespace for text/html document!";
-	if ( $root_namespace ne '' ) {
-	    print qq{, <a href="$root_namespace">$root_namespace</a>};
-	}
-	print "\n";
+  if (scalar keys %other_namespaces >= 1) {
+    print "<br>Other namespaces in this document: ";
+    for (keys %other_namespaces) {
+      print qq(<a href="$_">$_</a>, ), "\n";
     }
-    else {
-	if ( $root_namespace ne '' ) {
-	    print qq( with namespace <a href="$root_namespace">$root_namespace</a>);
-	}
-    }
-
-    if (scalar(keys %other_namespaces) >= 0) {
-        print "<br>Other namespaces in this document: ";
-        for (keys %other_namespaces) {
-	    print qq(<a href="$_">$_</a>, ), "\n";
-	}
-    }
-    print qq(</li>\n);
-}
-else {
-    print ' ' x 4, qq(<li>Document type: ), $version, qq(</li>\n);
+  }
+  print qq(</li>\n);
+} else {
+  print ' ' x 4, qq(<li>Document type: ), $version, qq(</li>\n);
 }
 print ' ' x 2, qq(</ul>\n\n);
 
@@ -548,8 +539,9 @@ EOHD
 }
 
 if ( $? || ($guessed_doctype == 1) ) {
+  my($line, $col, $type, $msg);
     print "<ul>\n";
-    for ((@fake_errors,@errors)) {
+    for (@errors) {
 	next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
 	next if / numbers exceeding 65535 not supported$/;
 	# @@ could maybe replace the following statement with an SGMLDECL
@@ -590,41 +582,8 @@ if ( $? || ($guessed_doctype == 1) ) {
 	$newline =~ s/${lt}/P/go; $newline =~ s/${gt}/Q/g;
 
 	my $orig_col = $col;
-	if ( length( $newline ) > 70 ) {
-	    if ( $col < 25 ) {
-		# truncate source line at 70 chars (truncate right side only)
-		$newline = substr( $newline, 0, 70 ) . " ...";
-	    }
-	    elsif ( $col > 70 ) {
-		# keep rightmost 70 chars; adjust $col accordingly
-		# (truncate left side only)
-		$diff = $col - 50;
-		$newline = "... " . substr( $newline, $diff, 70 );
-		if ( length( $newline ) == (70 + 4) ) {
-		    $newline .= " ...";
-		}
-		if ( $col > $diff ) {
-		    $col -= $diff;
-		}
-		else {
-		    $col -= 70;
-		}
-	    }
-	    else {
-		# truncate source line on both sides; leave more source text
-		# on left, and about 30 chars on right side. Also, adjust $col.
-		if ( $col < 35 ) {
-		    $newline = "... " . substr( $newline, 0, 60 );
-		}
-		else {
-		    $newline = "... " . substr( $newline, $col - 35, 60 );
-		    $col = 35;
-		}
-		if ( length( $newline ) == ( 60 + 4 ) ) {
-		    $newline .= " ...";
-		}
-	    }
-	}
+        ($newline, $col) = &truncate_line($newline, $col);
+
 
 	# temporarily strip curlies from lq-nsgmls output.
 	# @@ should link HTML elements using $elem_db instead.
@@ -633,7 +592,7 @@ if ( $? || ($guessed_doctype == 1) ) {
 	# figure out the index into the %frag associative array for the
 	# "explanation..." links to the KGV FAQ.
 	my $msgindex = $msg;
-	$msgindex =~ s/"[^"]+"/FOO/g;
+	$msgindex =~ s/"[^\"]+"/FOO/g;
 	$msgindex =~ s/[^A-Za-z ]//g;
 
 	$newline =~ s/&/&amp;/go; $newline =~ s/</&lt;/go;
@@ -674,9 +633,10 @@ if ( $? || ($guessed_doctype == 1) ) {
 	print "\n  <p>\n    Sorry, this document does not validate as $version.\n  </p>\n\n";
 	&output_css_validator_blurb( $q->param('uri') );
     }
-    $validity="invalid";
-}
-else {
+} else {
+    my $gifborder   = ' border="0"';
+    my $xhtmlendtag = '';
+
     if (($File->{Type} eq 'xml') || ($File->{Type} eq 'xhtml')) {
 	print "\n  <pre>\n    No errors found! ";
 	print "<a href=\"#sp-lim\">*</a></pre>\n\n";
@@ -795,7 +755,6 @@ EOHD
   </p>
 EOHD
     }
-    $validity="valid";
     if (($File->{Type} eq 'xml') || ($File->{Type} eq 'xhtml')) {
       print qq{    <h2><a name="sp-lim">Caveat</a></h2>
       <p>
@@ -901,6 +860,7 @@ EOF
     until (substr($line, 0, 3) =~ /^\)H$level/i) {
       $line = $esis[$_++];
       $line =~ s/\\011/ /g;
+      $line =~ s/\\012/ /g;
       if ($line =~ /^-/) {
 	my $headcont = $line;
 	substr($headcont, 0, 1) = " ";
@@ -929,29 +889,29 @@ EOF
 EOF
 }
 
-if ( $q->param('ss') ) {
-    print <<'EOF';
-  <hr>
-  <h2><a name="source">Source Listing</a></h2>
+if ($q->param('ss')) {
+  my $line = 1;
 
-  <p>
-    Below is the source input I used for this validation:
-  </p>
+  print <<'EOF';
+  <div id="source" class="mtb">
+    <hr>
+    <h2><a name="source">Source Listing</a></h2>
+
+    <p>Below is the source input I used for this validation:</p>
+    <pre>
 EOF
 
-    print "<pre>\n";
-    if ( $guessed_doctype == 1 ) {
-        my $gd = $doctype . "\n";
-	$gd =~ s/&/&amp;/go; $gd =~ s/</&lt;/go;
-	printf "%4d: %s", 0, $gd;
-    }
-    $line = 1;
-    for (@{$File->{Content}}) {
-	s/&/&amp;/go; s/</&lt;/go;
-	printf "<a name=\"line-%s\">%4d</a>: %s\n", $line, $line, $_;
-	$line++;
-    }
-    print "</pre>\n";
+  if ($guessed_doctype == 1) {
+    my $gd = $doctype . "\n";
+    $gd =~ s/&/&amp;/go; $gd =~ s/</&lt;/go;
+    printf "%4d: %s", 0, $gd;
+  }
+  for (@{$File->{Content}}) {
+    s/&/&amp;/go; s/</&lt;/go;
+    printf "<a name=\"line-%s\">%4d</a>: %s\n", $line, $line, $_;
+    $line++;
+  }
+  print "    </pre>\n  </div>";
 }
 
 if ($q->param('sp')) {
@@ -988,6 +948,7 @@ EOF
 
     $line =~ s/\\n/ /g;
     $line =~ s/\\011/ /g;
+    $line =~ s/\\012/ /g;
     $line =~ s/\s+/ /g;
     next if $line =~ /^-\s*$/;
 
@@ -1407,11 +1368,11 @@ sub handle_file {
 sub parse_content_type {
   my $Content_Type = shift;
   my ($charset, $type);
-  
+
   my($ct, @param) = split /\s*;\s*/, lc $Content_Type;
 
   $type = $file_type->{$ct} || $ct;
-  
+
   foreach my $param (@param) {
     my($p, $v) = split /\s*=\s*/, $param;
     next unless $p =~ m(charset)i;
@@ -1443,3 +1404,36 @@ sub ent {
   return $_;
 }
 
+#
+# Truncate source lines for report.
+sub truncate_line {
+  my $line = shift;
+  my $col  = shift;
+
+  if (length $line > 70) {
+    if ($col < 25) {      # Truncate at 70 chars and right side only.
+      $line = substr($line, 0, 70) . " ...";
+    } elsif ($col > 70) { # Keep rightmost 70 chars; left side only.
+      my $diff = $col - 50;
+      $line = "... " . substr($line, $diff, 70);
+      if (length $line == 70 + 4) {
+	$line .= " ...";
+      }
+      if ($col > $diff) {
+	$col -= $diff;
+      } else {
+	$col -= 70;
+      }
+    } else { # Truncate both sides; leave more on left, and 30 chars on right.
+      if ($col < 35) {
+	$line = "... " . substr($line, 0, 60);
+      } else {
+	$line = "... " . substr($line, $col - 35, 60);
+	$col = 35;
+      }
+      if (length $line == 60 + 4) {$line .= " ..."};
+    }
+  }
+
+  return $line, $col;
+}
