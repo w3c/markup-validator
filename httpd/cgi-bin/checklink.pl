@@ -2,7 +2,7 @@
 
 $|++;
 
-$VERSION= '$Id: checklink.pl,v 1.4 1998-08-31 20:54:03 renaudb Exp $ ';
+$VERSION= '$Id: checklink.pl,v 1.5 1998-09-02 00:05:31 renaudb Exp $ ';
 
 BEGIN {
     unshift@INC,('/usr/etc/apache/PerlLib');
@@ -14,14 +14,12 @@ sub new_line {
     my $self=shift;
     $self->{Line}++;
 }
-# called by HTML::Parser->parse
-# we overload it to add line number in Parser object
 sub start {
     my $self=shift;
     my ($tag,$attr)=@_;
     my $link;
     $link=$attr->{href} if $tag eq "a";
-    $link=$attr{src} if $tag eq "img";
+    $link=$attr->{src} if $tag eq "img";
     if (defined $link){
 	$self->{Links}{$link}{$self->{Line}+1}++;
     }
@@ -32,7 +30,6 @@ use CGI qw(:standard);
 #use CGI::Carp qw(fatalsToBrowser);
 use W3CDebugCGI;
 use LWP::Parallel::UserAgent;
-use HTML::LinkExtor;
 
 %ALLOWED_SCHEMES = ( "http" => 1 );
 %SCHEMES = (); # for report
@@ -72,7 +69,7 @@ sub main {
 sub callback_parse {
     my ($content,$response,$protocol)=@_;
     if(length $content){
-	print "Parsing content from '", $response->request->url,"': ", length($content), " bytes, code ",$response->code,"\n" if($VERBOSE);
+	print "Fetching content from '", $response->request->url,"': ", length($content), " bytes, code ",$response->code,"\n" if($VERBOSE);
 	# adding content
 	$response->add_content($content);
 	# waiting for rest of it
@@ -102,10 +99,10 @@ sub callback_check {
 }
 
 sub checklinks {
-    $url=shift;
-    $q = shift if($CGI);
-    $ua = new LWP::Parallel::UserAgent;
-    $p = ParseLink->new();
+    my $url=shift;
+    my $q = shift if($CGI);
+    my $ua = new LWP::Parallel::UserAgent;
+    $p = ParseLink->new(); # we want the parser to be global, so we can call it from the callback function
 
     $ua->max_hosts(10);
     $ua->max_req(20);
@@ -113,6 +110,7 @@ sub checklinks {
     # prepare the request
     # Request document and parse it as it arrives via callback
     # Then get the UA ready for the requests in the foreach loop
+    $ua->credentials(URI::URL->new($url)->netloc,"W3C-Team","XXXXX","XXXXX");
     $ua->register(HTTP::Request->new(GET => $url), \&callback_parse);
     $res = $ua->wait(10);
     $ua->initialize;
