@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.49 2000-05-11 15:44:29 hugo Exp $
+# $Id: checklink.pl,v 2.50 2000-05-16 12:48:12 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -31,7 +31,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.49 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.50 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -59,8 +59,6 @@ my $_sleep_time = 3;
 my $_max_documents = 50;
 
 # Global variables
-# Used for the output
-my $first = 2;
 # What is our query?
 my $query;
 # What URI's did we process? (used for $_recursive == 1)
@@ -298,22 +296,13 @@ sub urize() {
 sub check_uri() {
     my ($uri, $html_header) = @_;
 
-    # Are we in a recursion cycle?
-    my $in_recursion = !$first;
-
-    if ($_html) {
-        $first = 1;
-    } else {
-        $first = 0;
-    }
-
     my $start;
     if (! $_quiet) {
         $start = &get_timestamp();
     }
 
     # Get the document
-    my $response = &get_document('GET', $uri, $in_recursion, \%redirects);
+    my $response = &get_document('GET', $uri, $doc_count, \%redirects);
 
     if (defined($response->{Stop})) {
         return(-1);
@@ -507,12 +496,10 @@ sub check_uri() {
 
 sub get_document() {
     my ($method, $uri, $in_recursion, $redirects) = @_;
-    my $error_first;
 
     # Get the document
     my $response = &get_uri($method, $uri);
     &record_results($uri, $method, $response);
-    $first = 0;
     if (! $response->is_success()) {
         if (! $in_recursion) {
             if ($response->code() == 401) {
@@ -590,7 +577,7 @@ sub W3C::UserAgent::simple_request() {
 sub W3C::UserAgent::redirect_ok {
     my ($self, $request) = @_;
     
-    if (! ($_summary || $first)) {
+    if (! ($_summary || (!$doc_count && $_html))) {
         &hprintf("\n%s %s ", $request->method(), $request->uri());
     }
 
@@ -622,7 +609,7 @@ sub get_uri() {
     }
     my $count = 0;
     my $response;
-    if (! ($_summary || $first)) {
+    if (! ($_summary || (!$doc_count && $_html))) {
         &hprintf("%s %s ", $method, $uri);
     }
     my $request = new HTTP::Request($method, $uri);
@@ -659,7 +646,7 @@ sub get_uri() {
             $response->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
             $realm = $1;
         }
-        if (! ($_summary || $first)) {
+        if (! ($_summary || (!$doc_count && $_html))) {
             print "\n";
         }
         return &get_uri($method, $response->request->url,
@@ -669,7 +656,7 @@ sub get_uri() {
     # Record the redirects
     $response->{Redirects} = $ua->{Redirects};
     my $stop = &get_timestamp();
-    if (! ($_summary || $first)) {
+    if (! ($_summary || (!$doc_count && $_html))) {
         &hprintf(" fetched in %ss\n", &time_diff($start,$stop));
     }
     $response->{OriginalCode} = $code;
@@ -1234,7 +1221,7 @@ sub show_link_report {
         if ($_html) {
             # Style stuff
             my $idref = '';
-            if ($codes && ($c != $previous_c)) {
+            if ($codes && (!defined($previous_c) || ($c != $previous_c))) {
                 $idref = ' id="code_'.$c.'"';
                 $previous_c = $c;
             }
