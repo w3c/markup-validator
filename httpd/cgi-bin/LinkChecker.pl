@@ -5,7 +5,7 @@
 # (c) 1999 World Wide Web Consortium
 # based on Renaud Bruyeron's checklin.pl
 #
-# $Id: LinkChecker.pl,v 1.3 1999-12-01 19:47:34 hugo Exp $
+# $Id: LinkChecker.pl,v 1.4 1999-12-01 19:53:17 hugo Exp $
 #
 # This program is licensed under the W3C License.
 
@@ -21,8 +21,8 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C LinkChecker';
-my $VERSION = '$Revision: 1.3 $ (c) 1999 W3C';
-my $REVISION; ($REVISION = $VERSION) =~ s/^\$Revision: 1.3 $1/;
+my $VERSION = '$Revision: 1.4 $ (c) 1999 W3C';
+my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
 my $_cl;
