@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.5 2002-11-27 13:00:52 link Exp $
+# $Id: check,v 1.305.2.6 2002-11-30 16:45:33 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -100,7 +100,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.5 $;
+  $VERSION    =  q$Revision: 1.305.2.6 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -162,7 +162,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-27 13:00:52 $,
+                              Date => q$Date: 2002-11-30 16:45:33 $,
                              });
 
 #
@@ -281,9 +281,7 @@ if ($File->{'Is Upload'}) {
     &add_table($File, qq(<label title="Address of Page to Validate (accesskey: 1)" for="uri">URI</label>),
                '<input accesskey="1" type="text" id="uri" name="uri" size="' . $size
              . '" value="' . $furi . '" />');
-    &add_warning($File, '<em>Note:</em> The URI you gave me, &#171;<code>' .
-    &ent($File->{Opt}->{URI}) . '</code>&#187;, ' . 'returned a redirect to ' .
-         '&#171;<code>' . $furi . '</code>&#187;.');
+    &add_warning($File, sprintf('<em>Note:</em> The URI you gave me, &lt;%s&gt;, returned a redirect to &lt;%s&gt;.', &ent($File->{Opt}->{URI}), $furi));
   }
 }
 
@@ -1010,7 +1008,7 @@ Content-Type: text/html; charset=utf-8
     <h1>Authorization Required</h1>
     <p>Sorry, I am not authorized to access the specified URI.</p>
     <p>
-      The URI you specified, <code><a href="$resource">$resource</a></code>,
+      The URI you specified, &lt;<a href="$resource">$resource</a>&gt;,
       returned a 401 "authorization required" response when I tried
       to download it.
     </p>
@@ -1067,7 +1065,7 @@ sub http_error {
   print <<"EOF";
   <p>
     I got the following unexpected response when trying to
-    retrieve <code><a href="$uri">$uri</a></code>:
+    retrieve &lt;<a href="$uri">$uri</a>&gt;:
   </p>
 
   <blockquote>
@@ -1654,7 +1652,7 @@ sub report_valid {
     print <<".EOF.";
     <p>
       The document located at
-      <code>&lt;URL:<a href="$URI">$URI</a>&gt;</code>
+      &lt;<a href="$URI">$URI</a>&gt;
       was checked and found to be valid $File->{Version}. This means that
       the resource in question identified itself as
       &ldquo;$File->{Version}&rdquo; and that we successfully performed a
@@ -1695,7 +1693,7 @@ sub report_valid {
     print <<".EOF.";
       <p>
         The document located at
-        <code>&lt;URL:<a href="$URI">$URI</a>&gt;</code>
+        &lt;<a href="$URI">$URI</a>&gt;
         was tentatively found to be Valid. That means it would validate
         as $File->{Version} if you updated the source document to match
         the options used (typically this message indicates that you used
@@ -1708,7 +1706,7 @@ sub report_valid {
     print <<".EOF.";
     <p>
       The document located at
-      &lt;URL:<a href="$URI">$URI</a>&gt; was checked and found
+      &lt;<a href="$URI">$URI</a>&gt; was checked and found
       to be valid $File->{Version}. This means that the resource in question
       identified itself as &ldquo;$File->{Version}&rdquo; and that we
       successfully performed a formal validation using an SGML or XML Parser
@@ -1734,8 +1732,8 @@ sub report_valid {
     If you would like to create a link to <em>this</em> page (i.e., this
     validation result) to make it easier to re-validate this page in the
     future or to allow others to validate your page, the URI is
-    <a href="$thispage">$thispage</a> (or you can just add the current page to
-    your bookmarks or hotlist.)</p>
+    &lt;<a href="$thispage">$thispage</a>&gt; (or you can just add the
+    current page to your bookmarks or hotlist).</p>
 EOHD
   }
 }
@@ -2603,7 +2601,7 @@ X-W3C-Validator-Errors: $errs
 
 #
 # Autodetection as in Appendix F of the XML 1.0 Recommendation.
-# <URL:http://www.w3.org/TR/2000/REC-xml-20001006#sec-guessing>
+# <http://www.w3.org/TR/2000/REC-xml-20001006#sec-guessing>
 #
 # return values are: (base_encoding, BOMSize, Size, Pattern)
 sub find_base_encoding {
