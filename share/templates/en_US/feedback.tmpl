@@ -90,17 +90,13 @@
     <li><strong>Add a meaningful subject</strong>: summarize your feedback in a handful of words;</li>
     <li>If our system added [VE][XX] at the beginning of the mail subject, keep it. 
     Otherwise, please precise which error message you are sending feedback about;</li>
-    <li><strong>Always give a URL</strong>: knowing what page you were validating will help us diagnose issues much quicker;</li>
+    <li><strong>Always give a URL</strong>: knowing what page you were validating will help us diagnose issues much quicker. 
+     <TMPL_IF NAME="uri">In your case, that URL should be: <em><TMPL_VAR NAME="uri" ESCAPE="HTML"></em></TMPL_IF></li>
     <li>Explain your suggestion, or question, in a clear and informative manner.</li>
   </ul>
     
   <p>Once you have checked all the criteria above, 
-    <TMPL_IF NAME="errmsg_id">
-      <a href="mailto:www-validator@w3.org?Subject=[VE][<TMPL_VAR NAME="errmsg_id">]%20Error%20Message%20Feedback">send 
-    <TMPL_ELSE>
-      <a href="mailto:www-validator@w3.org?Subject=Error%0Message%20Feedback">send 
-    </TMPL_IF>
-   your message to the www-validator public mailing-list</a>.
+    <a href="mailto:www-validator@w3.org?Subject=<TMPL_IF NAME="errmsg_id">[VE][<TMPL_VAR NAME="errmsg_id">]</TMPL_IF>%20Error%20Message%20Feedback<TMPL_IF NAME="uri">&amp;body=<TMPL_VAR NAME="uri" ESCAPE="HTML"></TMPL_IF>">send your message to the www-validator public mailing-list</a>.
    </p>
    
 <h3 id="mailinglist">Discuss and participate</h3>
@@ -139,8 +135,8 @@
 
     <ul>
       <li><a href="http://www.w3.org/Bugs/">W3C issue tracking system homepage</a></li>
-      <li><a href="http://www.w3.org/Bugs/Public/buglist.cgi?product=Validator&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED">All active Markup Validator issues</a></li>
-      <li><a href="http://www.w3.org/Bugs/Public/buglist.cgi?product=Validator">All Markup Validator issues</a></li>
+      <li><a href="http://www.w3.org/Bugs/Public/buglist.cgi?product=Validator&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED;order=bugs.bug_id">All active Markup Validator issues</a></li>
+      <li><a href="http://www.w3.org/Bugs/Public/buglist.cgi?product=Validator;order=bugs.bug_id">All Markup Validator issues</a></li>
       <li><a href="http://www.w3.org/Bugs/Public/query.cgi?product=Validator">Search Markup Validator issues</a></li>
       <li><a href="http://www.w3.org/Bugs/Public/enter_bug.cgi?product=Validator">New Markup Validator issue</a></li>
     </ul>
