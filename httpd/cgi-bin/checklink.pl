@@ -5,7 +5,7 @@
 # (c) 1999-2002 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.89 2002-02-01 21:29:09 hugo Exp $
+# $Id: checklink.pl,v 2.90 2002-06-21 20:29:15 eric Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -38,7 +38,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.89 $ . '(c) 1999-2002 W3C';
+my $VERSION = q$Revision: 2.90 $ . '(c) 1999-2002 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -81,7 +81,7 @@ my $doc_count = 0;
 # Time stamp
 my $timestamp = &get_timestamp;
 
-if ($#ARGV >= 0) {
+if ($#ARGV >= 0 && !(@ARGV == 1 && $ARGV[0] eq 'DEBUG')) {
     $_cl = 1;
 # Parse command line
     my @uris = &parse_arguments();
@@ -104,6 +104,28 @@ if ($#ARGV >= 0) {
         printf("\n%s\n", &global_stats());
     }
 } else {
+    if (0) { # Uncomment if you want to replay HTTP requests in the debugger.
+        if ($ARGV[0] eq 'DEBUG') {
+            open (OUT, "/tmp/checklink.pl.log");
+            foreach my $e (<OUT>) {
+                chomp $e;
+                my ($key, $value) = split(': ', $e, 2);
+                $ENV{$key} = $value;
+                print "$key: $value\n";
+            }
+            close OUT;
+        } else {
+            open (OUT, ">/tmp/checklink.pl.log");
+            use POSIX qw(strftime);
+            foreach my $e (keys %ENV) {
+                print OUT "$e: $ENV{$e}\n";
+            }
+            my $now_string = strftime "%a %b %e %H:%M:%S %Y", localtime;
+            print OUT "Run-Date: $now_string\n";
+            close OUT;
+        }
+    }
+
     use CGI;
     use CGI::Carp qw(fatalsToBrowser);
     $query = new CGI;
@@ -746,7 +768,7 @@ sub get_uri() {
     }
     # Are we providing authentication info?
     if (defined($auth)
-        && ($request->url->netloc =~ /$_trusted$/)) {
+        && ($request->url->host =~ /$_trusted$/)) {
         if (defined($ENV{HTTP_AUTHORIZATION})) {
             $request->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
         } elsif (defined($_user) && defined($_password)) {
