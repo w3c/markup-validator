@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.354 2004-11-12 18:04:40 ville Exp $
+# $Id: check,v 1.355 2004-11-13 10:31:18 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -227,7 +227,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.354 $;
+  $VERSION    =  q$Revision: 1.355 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1472,11 +1472,16 @@ sub truncate_line {
 # Suppress any existing DOCTYPE by commenting it out.
 sub override_doctype {
   no strict 'vars';
-  my $File    = shift;
-  my $pubid = $CFG->{Types}->{$File->{Opt}->{DOCTYPE}}->{PubID};
-  my $sysid = $CFG->{Types}->{$File->{Opt}->{DOCTYPE}}->{SysID};
-  my $name  = $CFG->{Types}->{$File->{Opt}->{DOCTYPE}}->{Name};
-  local $dtd  = qq(<!DOCTYPE $name PUBLIC "$pubid"\n  "$sysid">);
+  my $File  = shift;
+  my ($dt)  =
+    grep { $_->{Display} eq $File->{Opt}->{DOCTYPE} } values %{$CFG->{Types}};
+  # @@@ TODO: abort/whine about unrecognized doctype if $dt is undef.
+  my $pubid = $dt->{PubID};
+  my $sysid = $dt->{SysID};
+  my $name  = $dt->{Name};
+  local $dtd = qq(<!DOCTYPE $name PUBLIC "$pubid");
+  $dtd .= qq(\n  "$sysid") if $sysid; # We don't have one for all types.
+  $dtd .= '>';
   local $org_dtd = '';
   local $HTML = '';
   local $seen = FALSE;
