@@ -1,162 +1,152 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>W3C HTML Validation Service</title>
+    <link rev="made" href="mailto:gerald@w3.org" />
+    <link rel="stylesheet" type="text/css" href="base.css" />
+    <meta name="keywords" content="HTML, Hypertext Markup Language, Validation,
+      W3C HTML Validation Service" />
+    <meta name="description" content="W3C's easy-to-use
+      HTML validation service, based on an SGML parser." />
+  </head>
 
-<head>
-  <title>W3C HTML Validation Service</title>
-  <link rev="made" href="mailto:gerald@w3.org" />
-  <meta name="keywords" content="HTML, Hypertext Markup Language, Validation,
-    W3C HTML Validation Service" />
-  <meta name="description" content="W3C's easy-to-use
-    HTML validation service, based on an SGML parser." />
-</head>
+  <body>
+    <p class="navbar">
+      <a href="about.html">About...</a><br />
+      <a href="feedback.html">Feedback</a><br />
+      <a href="whatsnew.html">What's new</a><br />
+      <a href="source/">Source code</a><br />
+      <a href="http://lists.w3.org/Archives/Public/www-validator/">List archives</a><br />
+      <a href="http://jigsaw.w3.org/css-validator/">CSS validator</a><br />
+      <a href="checklink">Link checker</a><br />
+      <a href="http://www.w3.org/MarkUp/">HTML home</a><br />
+      <a href="file-upload.html">Upload files</a><br />
+      <a href="http://www.w3.org/People/Raggett/tidy/">HTML Tidy</a><br />
+      <a href="http://www.w3.org/TR/xhtml1/">XHTML 1.0</a><br />
+      <a href="http://www.w3.org/TR/html401/">HTML 4.01</a><br />
+    </p>
+    <h1><a href="http://www.w3.org/"><img height="48" alt="W3C" id="logo"
+       src="http://www.w3.org/Icons/WWW/w3c_home" /></a>
+       HTML Validation Service</h1>
+    <p class="intro">
+      Welcome to the W3C HTML Validation Service. It checks HTML documents for
+      conformance to W3C HTML and XHTML Recommendations and other HTML standards.
+    </p>
 
-<body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
+    <div>
+      <h2>Recent Updates</h2>
+      <p class="intro">
+        These are the most recent major changes to this service. See
+        &lsquo;<a href="whatsnew.html">What's New</a>&rsquo; for more details.
+      </p> 
+      <ul>
+        <li><a href="whatsnew.html#2001-07-26">Added support for XHTML 1.1,
+          XHTML Basic 1.0, and MathML 2.0</a> <small>(July 26, 2001)</small></li>
+        <li><a href="whatsnew.html#2001-06-22">Improved and expanded Character
+          Encoding support</a><small>(June 22, 2001)</small></li>
+      </ul>
+    </div>
 
-  <p>
-    <a href="http://www.w3.org/"><img align="left"
-       src="http://www.w3.org/Icons/WWW/w3c_home" height="48" border="0"
-       alt="W3C" /></a>
-  </p>
+    <div class="stb">
+      <h2><a name="byURI">Validate by URI</a></h2>
+      <form method="get" action="/check">
+        <table>
+          <tr><th>Address:</th><td colspan="2"><input name="uri" size="50" /></td></tr>
+          <tr>
+            <th>Character Encoding:</th>
+            <td colspan="2">
+              <select name="charset">
+                <option value="unknown">(detect automatically)</option>
+                <option value="utf-8 (Unicode, worldwide)">utf-8 (Unicode, worldwide)</option>
+                <option value="iso-8859-1 (Western Europe)">iso-8859-1 (Western Europe)</option>
+                <option value="iso-8859-2 (Central Europe)">iso-8859-2 (Central Europe)</option>
+                <option value="iso-8859-3 (Maltese)">iso-8859-3 (Maltese)</option>
+                <option value="iso-8859-4 (Baltic Rim)">iso-8859-4 (Baltic Rim)</option>
+                <option value="iso-8859-5 (Cyrillic)">iso-8859-5 (Cyrillic)</option>
+                <option value="iso-8859-6-i (Arabic)">iso-8859-6-i (Arabic)</option>
+                <option value="iso-8859-7 (Greek)">iso-8859-7 (Greek)</option>
+                <option value="iso-8859-8-i (Hebrew)">iso-8859-8-i (Hebrew)</option>
+                <option value="iso-8859-9 (Turkish)">iso-8859-9 (Turkish)</option>
+                <option value="iso-8859-10 (Latin 6)">iso-8859-10 (Latin 6)</option>
+                <option value="iso-8859-13 (Latin 7)">iso-8859-13 (Latin 7)</option>
+                <option value="iso-8859-14 (Celtic)">iso-8859-14 (Celtic)</option>
+                <option value="iso-8859-15 (Latin 9)">iso-8859-15 (Latin 9)</option>
+                <option value="us-ascii (basic English)">us-ascii (basic English)</option>
+                <option value="euc-jp (Japanese, Unix)">euc-jp (Japanese, Unix)</option>
+                <option value="shift_jis (Japanese, Win/Mac)">shift_jis (Japanese, Win/Mac)</option>
+                <option value="iso-2022-jp (Japanese, email)">iso-2022-jp (Japanese, email)</option>
+                <option value="euc-kr (Korean)">euc-kr (Korean)</option>
+                <option value="gb2312 (Chinese, simplified)">gb2312 (Chinese, simplified)</option>
+                <option value="big5 (Chinese, traditional)">big5 (Chinese, traditional)</option>
+                <option value="tis-620 (Thai)">tis-620 (Thai)</option>
+                <option value="koi8-r (Russian)">koi8-r (Russian)</option>
+                <option value="koi8-u (Ukrainian)">koi8-u (Ukrainian)</option>
+                <option value="macistosh (MacRoman)">macistosh (MacRoman)</option>
+                <option value="windows-1250 (Central Europe)">windows-1250 (Central Europe)</option>
+                <option value="windows-1251 (Cyrillic)">windows-1251 (Cyrillic)</option>
+                <option value="windows-1252 (Western Europe)">windows-1252 (Western Europe)</option>
+                <option value="windows-1253 (Greek)">windows-1253 (Greek)</option>
+                <option value="windows-1254 (Turkish)">windows-1254 (Turkish)</option>
+                <option value="windows-1255 (Hebrew)">windows-1255 (Hebrew)</option>
+                <option value="windows-1256 (Arabic)">windows-1256 (Arabic)</option>
+                <option value="windows-1257 (Baltic Rim)">windows-1257 (Baltic Rim)</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th>Document Type:</th>
+            <td colspan="2">
+              <select name="doctype">
+                <option value="Inline">(specified inline)</option>
+                <option>XHTML 1.0 Strict</option>
+                <option>XHTML 1.0 Transitional</option>
+                <option>XHTML 1.0 Frameset</option>
+                <option>HTML 4.01 Strict</option>
+                <option>HTML 4.01 Transitional</option>
+                <option>HTML 4.01 Frameset</option>
+                <option>HTML 3.2</option>
+                <option>HTML 2.0</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th rowspan="2">Options:</th>
+            <td><input name="ss" type="checkbox" value="" /> Show Source</td>
+            <td><input name="sp" type="checkbox" value="" /> Show Parse Tree</td>
+          </tr>
+          <tr>
+            <td><input name="outline" type="checkbox" value="" /> Show Outline</td>
+            <td><input name="noatt" type="checkbox" value="" /> ...exclude attributes</td>
+          </tr>
+          <tr><td />
+            <td><input type="reset" value="Reset this form" /></td>
+            <td><input type="submit" value="Validate this page" /></td>
+          </tr>
+        </table>
+      </form>
+    </div>
 
-  <p align="right" class="navbar">
-    <a href="about.html">About this service</a> |
-    <a href="whatsnew.html">What's new</a> |
-    <a href="source/">Source code</a> |
-    <a href="feedback.html">Feedback</a><br clear="right"/>
-    <a href="file-upload.html">Upload files</a> |
-    <a href="http://lists.w3.org/Archives/Public/www-validator/">www-validator archives</a> |
-    <a href="http://jigsaw.w3.org/css-validator/">CSS validator</a> |
-    <a href="checklink">Link checker</a><br clear="right"/>
-    <a href="http://www.w3.org/People/Raggett/tidy/">HTML Tidy</a> |
-    <a href="http://www.w3.org/MarkUp/">HTML home</a> |
-    <a href="http://www.w3.org/TR/html401/">HTML 4.01</a> |
-    <a href="http://www.w3.org/TR/xhtml1/">XHTML 1.0</a>
-    <br clear="all" />
-  </p>
+    <div>
+      <p>
+        Alternatively, you can <a href="file-upload.html">upload
+        files</a> from your computer to have them checked.
+      </p>
 
-  <h1>HTML Validation Service</h1>
-
-  <p>
-    Welcome to the W3C HTML Validation Service.
-    It checks HTML documents for conformance to W3C HTML and
-    XHTML Recommendations and other HTML standards.
-    Recent updates include:
-  </p>
-
-  <ul>
-    <li><a href="whatsnew.html#2001-07-26">Added support for XHTML 1.1,
-        XHTML Basic 1.0, and MathML 2.0</a> <small>(July 26, 2001)</small></li>
-    <li><a href="whatsnew.html#2001-06-22">Improved and expanded Character
-        Encoding support</a><small>(June 22, 2001)</small></li>
-    <li><a href="whatsnew.html#2000-10-18">Added support for ISO-HTML</a>
-    <small>(October 18, 2000)</small></li>
-    <li><a href="whatsnew.html">more...</a></li>
-  </ul>
-
-  <p>
-    <a name="byURI">Enter</a> the address (<a
-    href="http://www.w3.org/Addressing/#terms">URI</a>) of a
-    document you would like to validate:
-  </p>
-
-  <form method="get" action="/check">
-    Address: <input name="uri" size="50" /><br />
-    Document type:
-	<select name="doctype">
-	  <option value="Inline">(specified inline)</option>
-	  <option>XHTML 1.0 Strict</option>
-	  <option>XHTML 1.0 Transitional</option>
-	  <option>XHTML 1.0 Frameset</option>
-	  <option>HTML 4.01 Strict</option>
-	  <option>HTML 4.01 Transitional</option>
-	  <option>HTML 4.01 Frameset</option>
-	  <option>HTML 3.2</option>
-	  <option>HTML 2.0</option>
-	</select><br />
-        Character Encoding:
-        <select name="charset">
-          <option value="unknown">(detect automatically)</option>
-          <option value="utf-8 (Unicode, worldwide)">utf-8 (Unicode, worldwide)
-          <option value="iso-8859-1 (Western Europe)">iso-8859-1 (Western Europe)
-          <option value="iso-8859-2 (Central Europe)">iso-8859-2 (Central Europe)
-          <option value="iso-8859-3 (Maltese)">iso-8859-3 (Maltese)
-          <option value="iso-8859-4 (Baltic Rim)">iso-8859-4 (Baltic Rim)
-          <option value="iso-8859-5 (Cyrillic)">iso-8859-5 (Cyrillic)
-          <option value="iso-8859-6-i (Arabic)">iso-8859-6-i (Arabic)
-          <option value="iso-8859-7 (Greek)">iso-8859-7 (Greek)
-          <option value="iso-8859-8-i (Hebrew)">iso-8859-8-i (Hebrew)
-          <option value="iso-8859-9 (Turkish)">iso-8859-9 (Turkish)
-          <option value="iso-8859-10 (Latin 6)">iso-8859-10 (Latin 6)
-          <option value="iso-8859-13 (Latin 7)">iso-8859-13 (Latin 7)
-          <option value="iso-8859-14 (Celtic)">iso-8859-14 (Celtic)
-          <option value="iso-8859-15 (Latin 9)">iso-8859-15 (Latin 9)
-          <option value="us-ascii (basic English)">us-ascii (basic English)
-          <option value="euc-jp (Japanese, Unix)">euc-jp (Japanese, Unix)
-          <option value="shift_jis (Japanese, Win/Mac)">shift_jis (Japanese, Win/Mac)
-          <option value="iso-2022-jp (Japanese, email)">iso-2022-jp (Japanese, email)
-          <option value="euc-kr (Korean)">euc-kr (Korean)
-          <option value="gb2312 (Chinese, simplified)">gb2312 (Chinese, simplified)
-          <option value="big5 (Chinese, traditional)">big5 (Chinese, traditional)
-          <option value="tis-620 (Thai)">tis-620 (Thai)
-          <option value="koi8-r (Russian)">koi8-r (Russian)
-          <option value="koi8-u (Ukrainian)">koi8-u (Ukrainian)
-          <option value="macistosh (MacRoman)">macistosh (MacRoman)
-          <option value="windows-1250 (Central Europe)">windows-1250 (Central Europe)
-          <option value="windows-1251 (Cyrillic)">windows-1251 (Cyrillic)
-          <option value="windows-1252 (Western Europe)">windows-1252 (Western Europe)
-          <option value="windows-1253 (Greek)">windows-1253 (Greek)
-          <option value="windows-1254 (Turkish)">windows-1254 (Turkish)
-          <option value="windows-1255 (Hebrew)">windows-1255 (Hebrew)
-          <option value="windows-1256 (Arabic)">windows-1256 (Arabic)
-          <option value="windows-1257 (Baltic Rim)">windows-1257 (Baltic Rim)
-        </select>
-    <table cellpadding="0" cellspacing="0">
-    <tr>
-      <td>
-        <input name="ss" type="checkbox" value="" /> Show source input
-      </td>
-      <td>
-        <input name="outline" type="checkbox" value="" /> Show an outline of this
-        document<br />
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <input name="sp" type="checkbox" value="" /> Show parse tree
-      </td>
-      <td>
-        <input name="noatt" type="checkbox" value="" /> exclude
-        attributes from the parse tree<br />
-      </td>
-    </tr>
-    </table>
-      <input type="submit" value="Validate this page" />
-      <input type="reset" value="Reset this form" />
-  </form>
-
-  <p>
-    Alternatively, you can <a href="file-upload.html">upload
-    files</a> from your computer to have them checked.
-  </p>
-
-  <p>
-    You can also check your <a
-    href="http://www.w3.org/Style/CSS/">Cascading Style Sheets</a> using
-    W3C's <a
-    href="http://jigsaw.w3.org/css-validator/">CSS Validation Service</a>.
-  </p>
-
-<hr />
-
-<address>
-  <a href="http://validator.w3.org/check/referer"><img
-     src="http://validator.w3.org/images/vxhtml10" height="31" width="88"
-     align="right" border="0" alt="Valid XHTML 1.0!" /></a>
-  <a href="/feedback.html">Gerald Oskoboiny</a><br />
-     $Date: 2001-07-26 15:56:45 $
-</address>
-
-</body>
-
+      <p>
+        You can also check your
+        <a href="http://www.w3.org/Style/CSS/">Cascading Style Sheets</a>
+        using W3C's
+        <a href="http://jigsaw.w3.org/css-validator/">CSS Validation Service</a>.
+      </p>
+    </div>
+    <address>
+      <a href="http://validator.w3.org/check/referer"><img
+        src="http://validator.w3.org/images/vxhtml10" height="31" width="88"
+        alt="Valid XHTML 1.0!" /></a>
+      <a href="/feedback.html">Gerald Oskoboiny</a><br />
+      $Date: 2001-07-27 11:29:43 $
+    </address>
+  </body>
 </html>
+
