@@ -1,9 +1,0 @@
-<!ENTITY % driver SYSTEM "xhtml-math-svg.dtd">
-<!ENTITY % plane1D "&#38;#38;#xE">
-<!ENTITY % SVG.module    "IGNORE" >
-<!ENTITY % MATHML.pref.prefixed "INCLUDE" >
-<!ENTITY % MATHML.sysid.base "" >
-%driver;
-<!ATTLIST %a.qname; target CDATA #IMPLIED>
-
-
