@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.199 2002-03-02 00:28:34 link Exp $
+# $Id: check,v 1.200 2002-03-02 00:58:29 link Exp $
 
 #
 # We need Perl 5.004.
@@ -63,10 +63,10 @@ $DEBUG += 1 unless $ENV{SERVER_PORT} == 80;
 
 #
 # Paths and file locations
-my $base_path = $0;  # get full name of program
-   $base_path =~ s#^(/([^/]*/)*)[^/]*/[^/]*/[^/]*$#$1#; # move two levels up
-        # backtracking is somewhat inefficient, but nothing to worry
-# DWC tweak: my $base_path="/var/www/";
+
+#
+# CONFIG: Change this to the directory that contains "htdocs/".
+my $base_path = '/usr/local/validator/';
 
 my $html_path = $base_path . 'htdocs/';
 my $elem_db   = $html_path . 'config/eref.cfg';
@@ -95,9 +95,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.199 $;
+$VERSION    =  q$Revision: 1.200 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2002-03-02 00:28:34 $;
+$DATE       =  q$Date: 2002-03-02 00:58:29 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
