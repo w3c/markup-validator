@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.44 2000-05-05 15:13:19 hugo Exp $
+# $Id: checklink.pl,v 2.45 2000-05-07 15:16:06 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -31,7 +31,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.44 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.45 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -1245,7 +1245,7 @@ sub show_link_report {
             my $http_message;
             if ($results->{$u}{location}{message}) {
                 $http_message = &encode($results->{$u}{location}{message});
-                if ($_html && (($c == 404) || ($c == 500))) {
+                if (($c == 404) || ($c == 500)) {
                     $http_message = '<span class="broken">'.
                         $http_message.'</span>';
                 }
@@ -1415,6 +1415,7 @@ sub links_summary {
     # Broken links and redirects
     if ($#urls < 0) {
         if (! $_quiet && $_html) {
+            print "<h3>Links</h3>\n";
             print "<p>Valid links!</p>\n";
         }
     } else {
