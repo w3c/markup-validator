@@ -1,11 +1,40 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.23 2004-01-20 09:45:00 ot Exp $ */
+/* $Id: results.css,v 1.13.2.24 2004-02-16 21:16:05 link Exp $ */
 
 .input {
   color: black;
   background-color: #eee;
   font-family: "Bitstream Vera Mono", monospace;
   font-size: small;
+}
+
+/* The "Jump To" links in result pages. */
+.jumpbar {
+  float:            left;
+  width:            12ex;
+  text-align:       left;
+  text-decoration:  none;
+  padding:          1ex;
+  background-color: #eee;
+  border-top:       1px solid #eee;
+  border-right:     1px solid black;
+  border-bottom:    1px solid black;
+  margin-top:       -1.3em;
+  font-weight:      bolder;
+  font-size:        smaller;
+}
+
+div.jumpbar ul {
+  padding: 0;
+  margin:  0;
+}
+
+div.jumpbar li {
+  list-style-type: none;
+}
+
+p.jumpbar a:hover {
+  background: #ccc;
 }
 
 /* Error Messages Display */
