@@ -1,6 +1,6 @@
 
 	-- SGML catalog for the W3C HTML Validation Service --
-	-- $Id: catalog,v 1.15 2001-05-27 15:45:02 link Exp $ --
+	-- $Id: catalog,v 1.16 2001-06-16 18:58:35 link Exp $ --
 
 OVERRIDE YES	-- prefer public identifiers to system identifiers --
 
@@ -146,4 +146,6 @@ PUBLIC "ISO/IEC 15445:2000//DTD HyperText Markup Language//EN"	ISO-HTML/15445.dt
 PUBLIC "ISO/IEC 15445:2000//DTD HTML//EN"	ISO-HTML/15445.dtd
 PUBLIC "-//W3C//ENTITIES Full Latin 1//EN//HTML"	REC-html401-19991224/HTMLlat1.ent
 PUBLIC "-//W3C//ENTITIES Symbolic//EN//HTML"	REC-html401-19991224/HTMLsymbol.ent
+
+PUBLIC "-//bebop.net//DTD HTML Apple Help 1.0//EN"	AppleHelp1.0.dtd
 
