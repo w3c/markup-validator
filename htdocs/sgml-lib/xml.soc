@@ -8,14 +8,14 @@ SYSTEM "spec.dtd" "http://www.w3.org/XML/1998/06/xmlspec-v20.dtd"
 -- MathML 2.0 DTD driver --
 
 PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN"
-       "REC-MathML2-20010221/xhtml-math11-f.dtd"
+       "UPD-MathML2-20021015/xhtml-math11-f.dtd"
 PUBLIC "-//W3C//DTD MathML 2.0//EN"
-       "REC-MathML2-20010221/mathml2.dtd"
+       "UPD-MathML2-20021015/mathml2.dtd"
 
 SYSTEM "http://www.w3.org/TR/MathML2/dtd/xhtml-math11-f.dtd"
-       "REC-MathML2-20010221/xhtml-math11-f.dtd"
+       "UPD-MathML2-20021015/xhtml-math11-f.dtd"
 SYSTEM "http://www.w3.org/TR/MathML2/dtd/mathml2.dtd"
-       "REC-MathML2-20010221/mathml2.dtd"
+       "UPD-MathML2-20021015/mathml2.dtd"
 
 -- XHTML + MathML + SVG --
 PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"

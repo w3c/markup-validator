@@ -1,0 +1,40 @@
+
+<!--
+     File isogrk4.ent produced by the XSL script characters.xsl
+     from input data in unicode.xml.
+
+     Please report any errors to David Carlisle
+     via the public W3C list www-math@w3.org.
+
+     The numeric character values assigned to each entity
+     (should) match the Unicode assignments in Unicode 3.2.
+
+     Entity names in this file are derived from files carrying the
+     following notice:
+
+     (C) International Organization for Standardization 1986
+     Permission to copy in any form is granted for use with
+     conforming SGML systems and applications as defined in
+     ISO 8879, provided this notice is included in all copies.
+
+-->
+
+<!ENTITY % plane1D  "&#38;#38;#x1D">
+
+<!ENTITY b.alpha          "%plane1D;6C2;" ><!--small alpha, Greek -->
+<!ENTITY b.beta           "%plane1D;6C3;" ><!--small beta, Greek -->
+<!ENTITY b.delta          "%plane1D;6C5;" ><!--small delta, Greek -->
+<!ENTITY b.epsi           "%plane1D;6C6;" ><!--small epsilon, Greek -->
+<!ENTITY b.eta            "%plane1D;6C8;" ><!--small eta, Greek -->
+<!ENTITY b.Gamma          "%plane1D;6AA;" ><!--capital gamma, Greek -->
+<!ENTITY b.gamma          "%plane1D;6C4;" ><!--small gamma, Greek -->
+<!ENTITY b.iota           "%plane1D;6CA;" ><!--small iota, Greek -->
+<!ENTITY b.kappa          "%plane1D;6CB;" ><!--small kappa, Greek -->
+<!ENTITY b.lambda         "%plane1D;6CC;" ><!--small lambda, Greek -->
+<!ENTITY b.mu             "%plane1D;6CD;" ><!--small mu, Greek -->
+<!ENTITY b.nu             "%plane1D;6CE;" ><!--small nu, Greek -->
+<!ENTITY b.pi             "%plane1D;6D1;" ><!--small pi, Greek -->
+<!ENTITY b.rho            "%plane1D;6D2;" ><!--small rho, Greek -->
+<!ENTITY b.thetas         "%plane1D;6C9;" ><!--straight theta, Greek -->
+<!ENTITY b.xi             "%plane1D;6CF;" ><!--small xi, Greek -->
+<!ENTITY b.zeta           "%plane1D;6C7;" ><!--small zeta, Greek -->
