@@ -8,14 +8,14 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.12 1999-02-25 05:13:34 gerald Exp $
+# $Id: check,v 1.13 1999-02-26 04:11:08 gerald Exp $
 
 #############################################################################
 # Constant definitions
 #############################################################################
 
-$cvsrevision	= '$Revision: 1.12 $';
-$cvsdate	= '$Date: 1999-02-25 05:13:34 $';
+$cvsrevision	= '$Revision: 1.13 $';
+$cvsdate	= '$Date: 1999-02-26 04:11:08 $';
 
 $logfile	= "/var/log/httpd/val-svc";
 $reflogfile	= "/var/log/httpd/val-svc-referers";
@@ -482,7 +482,7 @@ for (@esis) {
 $version = $pub_ids{$fpi} || "unknown";
 
 if ( $guessed_doctype ) {
-    push( @fake_errors, "nsgmls:<OSFD>0:2:1:E: Missing DOCTYPE declaration at start of document (${lt}a href=\"/docs/doctypes.html\"${gt}explanation...${lt}/a${gt})\n" );
+    push( @fake_errors, "nsgmls:<OSFD>0:2:1:E: Missing DOCTYPE declaration at start of document (${lt}a href=\"http://www.htmlhelp.org/tools/validator/doctype.html\"${gt}explanation...${lt}/a${gt})\n" );
 }
 
 if ( $guessed_doctype ) {
