@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.139 2004-05-28 22:13:04 ville Exp $
+# $Id: check,v 1.305.2.140 2004-05-29 07:36:23 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.139 $;
+  $VERSION    =  q$Revision: 1.305.2.140 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-28 22:13:04 $,
+                              Date => q$Date: 2004-05-29 07:36:23 $,
                              });
 
 #
@@ -2697,14 +2697,15 @@ sub transcode {
     my $in = $_;
     $line++;
     $_ = $c->convert($_); # $_ is local!!
-    if ($in ne "" and $_ eq "") {
+    if ($in ne "" and (!defined($_) || $_ eq "")) {
       push @{$File->{Lines}}, $line;
       # try to decoded as much as possible of the line
       my $short = 0;               # longest okay
       my $long = (length $in) - 1; # longest unknown
       while ($long > $short) { # binary search
         my $try = int (($long+$short+1) / 2);
-        if ($c->convert(substr($in,0,$try)) eq "") {
+        my $converted = $c->convert(substr($in, 0, $try));
+        if (!defined($converted) || $converted eq "") {
           $long  = $try-1;
         } else {
           $short = $try;
