@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.392 2005-02-05 21:02:14 link Exp $
+# $Id: check,v 1.393 2005-02-06 00:56:47 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -161,8 +161,8 @@ Directory not readable (permission denied): @_r
 
   #
   # Check paths in config...
-  # @@@ This does not do a very good job error-message-wise if a path is
-  # @@@ missing...
+  # @@FIXME: This does not do a very good job error-message-wise if a path is
+  # @@FIXME: missing...;
   {
     my @dirs = ();
     push @dirs, $CFG->{Paths}->{Base};
@@ -239,7 +239,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.392 $;
+  $VERSION    =  q$Revision: 1.393 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -317,7 +317,7 @@ $File->{Namespaces} = []; # Other (non-root) Namespaces.
 #### Generate Template for Result. ############################################
 ###############################################################################
 
-my $lang = 'en_US'; # @@@ TODO: conneg
+my $lang = 'en_US'; # @@TODO: conneg;
 
 my $T = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
@@ -757,7 +757,6 @@ sub parse (\$) {
   my @cmd = ($CFG->{Paths}->{SGML}->{Parser}, '-n', '-c', $catalog, @spopt);
 
 
-
   #
   # Set debug info for HTML report.
   $T->param(opt_debug => $DEBUG);
@@ -782,7 +781,7 @@ sub parse (\$) {
     if ($numErr >= 200) {
       $numErr = 200;
     } elsif ($numErr <= 0) {
-      $numErr = 0; #FIXME: Should add feature to supress error output in this case.;
+      $numErr = 0; #@@FIXME: Should add feature to supress error output in this case.;
     }
     push @cmd, '-E' . $numErr;
   } else {
@@ -844,7 +843,7 @@ sub parse (\$) {
         if ($elements_found == 0 and $1 eq "") {
           $File->{Namespace} = $2;
         } else {
-          # @@@ should not happen
+          # @@FIXME: should not happen;
           push(@{$File->{Namespaces}}, $2);
         }
       } else {
@@ -1274,7 +1273,7 @@ sub handle_uri {
   my $ua = new LWP::UserAgent;
   $ua->env_proxy();
   $ua->agent("W3C_Validator/$VERSION");
-  $ua->parse_head(0);  # Parse the http-equiv stuff ourselves. @@ Why?
+  $ua->parse_head(0);  # Don't parse the http-equiv stuff.
 
   $ua->protocols_allowed($CFG->{Protocols}->{Allow} || ['http', 'https']);
 
@@ -1615,7 +1614,7 @@ sub override_doctype {
   my $File  = shift;
   my ($dt)  =
     grep { $_->{Display} eq $File->{Opt}->{DOCTYPE} } values %{$CFG->{Types}};
-  # @@@ TODO: abort/whine about unrecognized doctype if $dt is undef.
+  # @@TODO: abort/whine about unrecognized doctype if $dt is undef.;
   my $pubid = $dt->{PubID};
   my $sysid = $dt->{SysID};
   my $name  = $dt->{Name};
@@ -1699,7 +1698,7 @@ sub parse_errors ($$) {
     next if /URL Redirected to/;
 
     my(@_err) = split /:/;
-    next unless $_err[1] eq '<OSFD>0'; #@@@ This is a polite fiction!
+    next unless $_err[1] eq '<OSFD>0'; #@@FIXME: This is a polite fiction!;
     if ($_err[1] =~ m(^<URL>)) {
       @errors = ($_err[0], join(':', $_err[1], $_err[2]), @_err[3..$#_err]);
     } else {
@@ -2768,7 +2767,7 @@ X-W3C-Validator-Errors: $errs
 #
 # Return a Notation3 EARL report for the page.
 #
-# @@ TODO: escape output
+# @@TODO: escape output;
 sub report_n3 {
   my $File = shift;
 
@@ -3043,12 +3042,6 @@ sub check {
   unless ($File->{Charset}->{Use}) {
     $File->{Charset}->{Use} = $File->{Charset}->{META};
   }
-
-  #
-  # @@FIXME: This needs updating for new MIME->Mode config.
-#  $File->{Mode} = MODE_XML if $File->{DOCTYPE} =~ /xhtml/i;
-#  $File->{Mode} = MODE_XML if $File->{DOCTYPE} =~ /mathml/i;
-  # @@FIXME;
 
   $File = &main::parse($File);
   if ($File->{'Is Valid'}) {
