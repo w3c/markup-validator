@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.5 2002-03-18 00:32:47 link Exp $
+# $Id: check,v 1.200.2.6 2002-03-18 01:01:30 link Exp $
 
 #
 # We need Perl 5.004.
@@ -26,9 +26,8 @@ use CGI qw(:cgi -newstyle_urls -private_tempfiles);
 use Text::Wrap;
 use IPC::Open3;
 use IO::File;
-use Text::Iconv; # on debian: apt-get install libtext-iconv-perl 
+use Text::Iconv; # on debian: apt-get install libtext-iconv-perl
 use HTML::Parser 3.25; # Need 3.25 for $p->ignore_elements.
-                       # DWC tweaks this in his local set-up.
 
 
 #############################################################################
@@ -84,14 +83,10 @@ my $sgmlstuff = $html_path . 'sgml-lib';
 my $sp = '/usr/local/bin/onsgmls';
 
 #
-# URIs and fragments
-my $uri_def_uri	= 'http://www.w3.org/Addressing/#terms';
-
-#
 # Strings
-$VERSION    =  q$Revision: 1.200.2.5 $;
+$VERSION    =  q$Revision: 1.200.2.6 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2002-03-18 00:32:47 $;
+$DATE       =  q$Date: 2002-03-18 01:01:30 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -354,7 +349,7 @@ if (TRUE) { # @@ Need to stringify here?
 } elsif ($q->param('uploaded_file')) {
   &add_table($File, "File", $File->{Opt}->{URI});
 } else {
-  &add_table($File, qq(<label title="Address of Page to Validate" for="uri"><a href="$uri_def_uri">URI</a></label>),
+  &add_table($File, qq(<label title="Address of Page to Validate" for="uri"><a href="http://www.w3.org/Addressing/#terms">URI</a></label>),
 	     '<input type="text" id="uri" name="uri" size="'
 	     . (length($File->{Opt}->{URI}) + 2)
 	     . '" value="' . $File->{Opt}->{URI} . '" />'
