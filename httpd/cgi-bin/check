@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.38 2003-04-23 02:47:24 link Exp $
+# $Id: check,v 1.305.2.39 2003-04-23 04:47:04 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.38 $;
+  $VERSION    =  q$Revision: 1.305.2.39 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -166,7 +166,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-04-23 02:47:24 $,
+                              Date => q$Date: 2003-04-23 04:47:04 $,
                              });
 
 #
@@ -235,9 +235,9 @@ $File->{Opt}->{'Output'}         = $q->param('output')  ? $q->param('output')   
 # "Fallback" info for Character Encoding (fbc), Content-Type (fbt),
 # and DOCTYPE (fbd). If TRUE, the Override values are treated as
 # Fallbacks instead of Overrides.
-$File->{Opt}->{FB}->{Encoding} = $q->param('fbc') ? TRUE : FALSE;
-$File->{Opt}->{FB}->{Type}     = $q->param('fbt') ? TRUE : FALSE;
-$File->{Opt}->{FB}->{DTD}      = $q->param('fbd') ? TRUE : FALSE;
+$File->{Opt}->{FB}->{Charset} = $q->param('fbc') ? TRUE : FALSE;
+$File->{Opt}->{FB}->{Type}    = $q->param('fbt') ? TRUE : FALSE;
+$File->{Opt}->{FB}->{DOCTYPE} = $q->param('fbd') ? TRUE : FALSE;
 
 #
 # If ";debug" was given, let it overrule the value from the config file,
@@ -298,7 +298,7 @@ if ($File->{'Is Upload'}) {
 }
 
 
-$File = &find_xml_encoding ($File);
+$File = &find_xml_encoding($File);
 
 #
 # Decide on a charset to use (first part)
@@ -348,24 +348,34 @@ unless ($File->{Charset}->{Use}) {
 
 if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
   my ($override, undef) = split(/\s/, $File->{Opt}->{Charset}, 2);
-  $File->{Charset}->{Use} = $File->{Charset}->{Override} = lc($override);
-  # message about 'charset override' in effect comes later
+  $File->{Charset}->{Override} = lc($override);
+  unless ($File->{Charset}->{Use} and $File->{Opt}->{FB}->{Charset}) {
+    if ($File->{Opt}->{FB}->{Charset} and not $File->{Charset}->{Use}) {
+      &add_warning($File, <<".EOF."); # Warn about fallback...
+  <strong>No Character Encoding Found!</strong>
+  Falling back to "$File->{Charset}->{Override}" (<a href="docs/errors.html#fbc">explain...</a>).
+.EOF.
+      $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
+    } else {
+      # Warn about Override...
+      unless ($File->{Charset}->{Override} eq $File->{Charset}->{Use}) {
+	my $cs_use = &ent($File->{Charset}->{Use});
+	my $cs_opt = &ent($File->{Charset}->{Override});
+	&add_warning($File, <<".EOF.");
+      <strong>Character Encoding Override in effect!</strong>
+      The detected character encoding "<code>$cs_use</code>"
+      has been suppressed and "<code>$cs_opt</code>" used instead.
+.EOF.
+	$File->{Tentative} |= T_ERROR;
+      }
+    }
+    $File->{Charset}->{Use} = $File->{Charset}->{Override};
+  }
 }
 
 unless ($File->{Charset}->{Use}) { # No charset given...
-  if ($File->{Opt}->{FB}->{Encoding}
-      and     $File->{Opt}->{Charset}
-      and not $File->{Opt}->{Charset} =~ m|(detect automatically)|) {
-
-      &add_warning($File, <<".EOF.");
-  <strong>No Character Encoding Found!</strong>
-  Falling back to "$File->{Opt}->{Charset}" (<a href="docs/errors.html#fbc">explain...</a>).
-.EOF.
-      $File->{Tentative}     |= T_ERROR; # Tag it as Invalid.
-      $File->{Charset}->{Use} = $File->{Opt}->{Charset};
-  } else {
-    $File->{'Error Flagged'} = TRUE;
-    $File->{'Error Message'} = <<".EOF." . &iana_charset_blurb();
+  $File->{'Error Flagged'} = TRUE;
+  $File->{'Error Message'} = <<".EOF." . &iana_charset_blurb();
     <p>
       I was not able to extract a character encoding labeling from any of
       the valid sources for such information. Without encoding information it
@@ -387,7 +397,6 @@ unless ($File->{Charset}->{Use}) { # No charset given...
       character encoding in use.
     </p>
 .EOF.
-  }
 }
 
 sub iana_charset_blurb () {
@@ -444,14 +453,6 @@ $File = &byte_error($File);
 if ($File->{Opt}->{DOCTYPE}
     and not $File->{Opt}->{DOCTYPE} =~ /(Inline|detect)/i) {
   $File = &override_doctype($File);
-  my $dtd = ent($File->{Opt}->{DOCTYPE});
-  &add_warning($File, <<".EOF.");
-  <strong>DOCTYPE Override in effect!</strong> Any DOCTYPE Declaration in the
-  document has been suppressed and the DOCTYPE for
-  &#171;<code>$dtd</code>&#187; inserted instead. The document will not be
-  Valid until you alter the source file to reflect this new DOCTYPE.
-.EOF.
-  $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
 }
 
 #
@@ -1423,14 +1424,20 @@ sub truncate_line {
 # Suppress any existing DOCTYPE by commenting it out.
 sub override_doctype {
   no strict 'vars';
-  my $File    = shift;
-  local $dtd  = $CFG->{'Doctypes'}->{$File->{Opt}->{DOCTYPE}};
-  local $HTML = '';
-  local $seen = FALSE;
+  my $File       = shift;
+
+  local $dtd     = $CFG->{'Doctypes'}->{$File->{Opt}->{DOCTYPE}};
+  local $org_dtd = '';
+  local $HTML    = '';
+  local $seen    = FALSE;
 
   my $declaration = sub {
     $seen = TRUE;
-    $HTML .= "$dtd\n" . '<!-- ' . $_[0] . ' -->';
+    # No Override if Fallback was requested.
+    unless ($File->{Opt}->{FB}->{DOCTYPE}) {
+      $HTML .= "$dtd\n" . '<!-- ' . $_[0] . ' -->';
+      $org_dtd = &ent($_[0]);
+    }
   };
 
   HTML::Parser->new(default_h     => [sub {$HTML .= shift}, 'text'],
@@ -1438,7 +1445,40 @@ sub override_doctype {
                    )->parse(join "\n", @{$File->{Content}})->eof();
 
   $File->{Content} = [split /\n/, $HTML];
-  unshift @{$File->{Content}}, $dtd unless $seen;
+
+  if ($seen) {
+    unless ($File->{Opt}->{FB}->{DOCTYPE}) {
+      my $dtd = ent($File->{Opt}->{DOCTYPE});
+      &add_warning($File, <<".EOF.");
+<strong>DOCTYPE Override in effect!</strong>
+The detected DOCTYPE Declaration "$org_dtd" has been suppressed and
+the DOCTYPE for "<code>$dtd</code>" inserted instead, but even if no
+errors are shown below the document will not be Valid until you update
+it to reflect this new DOCTYPE.
+.EOF.
+      $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
+    }
+  } else {
+    unshift @{$File->{Content}}, $dtd;
+
+    if ($File->{Opt}->{FB}->{DOCTYPE}) {
+      &add_warning($File, <<".EOF.");
+<strong>No DOCTYPE Found!</strong>
+Falling back to HTML 4.01 Transitional. (<a href="docs/errors.html#fbd">explain...</a>)
+.EOF.
+      $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
+    } else {
+      my $dtd = ent($File->{Opt}->{DOCTYPE});
+      &add_warning($File, <<".EOF.");
+<strong>DOCTYPE Override in effect!</strong>
+The DOCTYPE Declaration for "$dtd" has been inserted at the start of
+the document, but even if no errors are shown below the document will
+not be Valid until you add the new DOCTYPE Declaration.
+.EOF.
+      $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
+    }
+  }
+
   return $File;
 }
 
@@ -1481,15 +1521,8 @@ sub parse_errors ($$) {
 
     # An unknown FPI and no SI.
     if ($err->{msg} =~ m(unrecognized DOCTYPE)i or $err->{msg} =~ m(no document type declaration)i) {
-      if ($File->{Opt}->{FB}->{DTD}) {
-	&add_warning($File, <<".EOF.");
-<strong>No DOCTYPE Found!</strong>
-Falling back to HTML 4.01 Transitional. (<a href="docs/errors.html#fbd">explain...</a>)
-.EOF.
-	$File->{Tentative} |= T_ERROR;
-      } else {
-	$File->{'Error Flagged'} = TRUE;
-	$File->{'Error Message'} = <<".EOF.";
+      $File->{'Error Flagged'} = TRUE;
+      $File->{'Error Message'} = <<".EOF.";
      <div class="fatal">
        <h2>Fatal Error: $err->{msg}</h2>
        <p>
@@ -1497,9 +1530,8 @@ Falling back to HTML 4.01 Transitional. (<a href="docs/errors.html#fbd">explain.
          that is not in my catalog.
        </p>
 .EOF.
-	$File->{'Error Message'} .= &doctype_spiel();
-	$File->{'Error Message'} .= "    </div>\n";
-      }
+      $File->{'Error Message'} .= &doctype_spiel();
+      $File->{'Error Message'} .= "    </div>\n";
     }
 
     # No or unknown FPI and a relative SI.
@@ -1520,15 +1552,8 @@ Falling back to HTML 4.01 Transitional. (<a href="docs/errors.html#fbd">explain.
 
     # No DOCTYPE.
     if ($err->{msg} =~ m(prolog can\'t be omitted)) {
-      if ($File->{Opt}->{FB}->{DTD}) {
-	&add_warning($File, <<".EOF.");
-<strong>No DOCTYPE Found!</strong>
-Falling back to HTML 4.01 Transitional. (<a href="docs/errors.html#fbd">explain...</a>)
-.EOF.
-	$File->{Tentative} |= T_ERROR;
-      } else {
-	$File->{'Error Flagged'} = TRUE;
-	$File->{'Error Message'} = <<".EOF.";
+      $File->{'Error Flagged'} = TRUE;
+      $File->{'Error Message'} = <<".EOF.";
     <div class="fatal">
       <h2>Fatal Error: No DOCTYPE specified!</h2>
       <p>
@@ -1549,10 +1574,8 @@ Falling back to HTML 4.01 Transitional. (<a href="docs/errors.html#fbd">explain.
            a DOCTYPE</a>".
       </p>
 .EOF.
-	$File->{'Error Message'} .= "    </div>\n";
-      }
+      $File->{'Error Message'} .= "    </div>\n";
     }
-
 
     &abort_if_error_flagged($File, O_DOCTYPE);
     push @{$File->{Errors}}, $err;
@@ -2235,19 +2258,6 @@ sub is_mathml {shift =~ m(mathml\+xml$)};
 # Check charset conflicts and add any warnings necessary.
 sub charset_conflicts {
   my $File = shift;
-  #
-  # Handle the case where there was no charset to be found.
-  unless ($File->{Charset}->{Use}) {
-    &add_warning($File, <<".EOF.");
-      <strong>No Character Encoding detected!</strong>
-      To ensure correct validation, processing, and display,
-      it is important that the character encoding is properly
-      labeled.
-      <a href="http://www.w3.org/International/O-charset.html">More
-      information...</a>
-.EOF.
-    $File->{Tentative} |= T_WARN;
-  }
 
   my $cs_use  = $File->{Charset}->{Use}  ? &ent($File->{Charset}->{Use})  : '';
   my $cs_opt  = $File->{Opt}->{Charset}  ? &ent($File->{Opt}->{Charset})  : '';
