@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.1.2.13 2004-05-18 03:41:19 link Exp $"
---><!--#set var="date" value="\$Date: 2004-05-18 03:41:19 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.1.2.14 2004-06-08 15:23:04 ot Exp $"
+--><!--#set var="date" value="\$Date: 2004-06-08 15:23:04 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -23,6 +23,7 @@
 	     </ul>
 	    </li>
             <li><a href="#install-troubleshoot">Installation troubleshooting</a></li>
+	    <li><a href="#post-install">Post-install options</a></li>
             <li><a href="#credits">Credits and Acknowledgments</a></li>
       </ul>
     </div>
@@ -84,7 +85,7 @@
         "use Foo::Bar" where each "Foo::Bar" represents a module. The modules
         can be found on <a href="http://www.cpan.org/"><acronym title="Comprehensive Perl Archive Network">CPAN</acronym></a>.
         The following list was complete when CVS spit out:
-        <code>$Date: 2004-05-18 03:41:19 $</code>. <tt>:-)</tt>
+        <code>$Date: 2004-06-08 15:23:04 $</code>. <tt>:-)</tt>
       </p>
 
      <p>
@@ -295,6 +296,14 @@
    <p>Don't hesitate to contact the public mailing-list www-validator@w3.org with all the details 
   you can provide on what you did, tried, and what went wrong...</p>
 
+    <h3 id="post-install">Post-install options</h3>
+   <p>if the installation succeeded, you should be able to now use the Markup Validator on your own
+   system and network. You may want to give the validator a look and feel specific to your Web site.
+   The easiest way to achieve this is to edit <code>header.html</code> and <code>footer.html</code>
+   (in the <code>htdocs</code> directory), the header and footer markup snippets used to build all 
+   pages for the validator.</p><p>  You may also edit the Style Sheets (in the same directory), 
+   especially <code>base.css</code> You may however want to avoid editing the other CSS files too 
+   heavily, there is a risk you could make the output of the validator unusable.</p>
 </div>
     
     <div id="credits" class="stb">
