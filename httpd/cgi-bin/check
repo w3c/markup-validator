@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.115 2001-06-13 19:12:39 link Exp $
+# $Id: check,v 1.116 2001-06-18 02:25:55 link Exp $
 
 #
 # We need Perl 5.004.
@@ -74,9 +74,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.115 $;
+$VERSION    =  q$Revision: 1.116 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-13 19:12:39 $;
+$DATE       =  q$Date: 2001-06-18 02:25:55 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -756,6 +756,7 @@ sub print_charset_error {
   my $charset = shift;
 
   print <<".EOF.";
+  </ul>
   <p>
     A fatal error occurred when attempting to transliterate the document
     charset. Either we do not support this character encoding yet, or you have
