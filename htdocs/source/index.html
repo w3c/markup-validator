@@ -8,7 +8,7 @@
     W3C HTML Validation Service, Source Code">
   <meta name="description" content="Source Code for W3C's Validation Service.">
   <meta name="revision"
-    content="$Id: index.html,v 1.12 2000-04-28 07:17:59 gerald Exp $">
+    content="$Id: index.html,v 1.13 2001-08-23 19:32:45 gerald Exp $">
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
@@ -33,8 +33,7 @@
   others to set up mirrors of the service (either publicly or within
   an intranet behind a firewall), but also to allow us to collaborate
   on making the service better -- there are <a
-  href="/todo.html">many ways the service could be improved</a> but I
-  only have a small amount of time to work on it myself.
+  href="../todo.html">many ways the service could be improved</a>!
 </p>
 
 <h2><a name="getting">Retrieving the Code</a></h2>
@@ -61,7 +60,7 @@
 
   <li><p>If you want a copy of all the files that make up the
   service, you can <a href="../validator.tar.gz">grab a tar
-  ball</a> (~1.5M, updated every day at 06:00 ET.)
+  ball</a> (~2.0M, updated hourly.)
   </p>
 
   <li><p><a name="CVS">If you intend to actively mirror the code</a>
@@ -108,29 +107,29 @@
 
 <ul>
 
-  <li>A Unix-like operating system. It may work with Windows NT or
-  other systems, but I haven't tried it yet. It has worked on Linux,
-  Solaris, FreeBSD, HP-UX, and Digital UNIX. If anyone tries it on other
-  systems and gets it to work, please <a href="/feedback.html">let
-  me know</a> (and <a href="/feedback.html">send me patches</a>, if
+  <li>A Unix-like operating system. It may also work with Windows
+  NT, MacOS X or other systems. It has worked on Linux,
+  Solaris, FreeBSD, HP-UX, and Digital UNIX. If you try it on other
+  systems and get it to work, please <a href="../feedback.html">let
+  us know</a> (and <a href="../feedback.html">send us patches</a>, if
   they are needed to get it to work eleswhere.)
 
   <li><a href="http://www.jclark.com/sp/">SP version 1.2.1 or higher</a>.
   SP is the SGML parser used by the service. More recent versions than
-  1.2.1 will also work; I am currently using version 1.3.
+  1.2.1 will also work; we are currently using version 1.3.4.
 
-  <li><a href="/sgml-lib.tar.gz">A collection of DTDs and other SGML
+  <li><a href="../sgml-lib.tar.gz">A collection of DTDs and other SGML
   files</a> to validate against. You don't strictly <em>need</em> these
   on your system since SP will retrieve them off the Web if you use URIs
-  in your doctypes, but you probably want them locally for efficiency.
+  in your doctypes, but you probably want them to be local for efficiency.
   (You don't need to download this tar ball if you mirror everything
   using <a href="#CVS">CVS</a>.)
 
   <li>The <a href="http://www.linpro.no/lwp/">LWP Perl module</a>
   
-  <li>A web server: I am currently running <a
-  href="http://www.apache.org/">Apache</a> version 1.3.6, but likely any
-  version will work, and other httpd's may work as well.
+  <li>A web server: we are currently running <a
+  href="httpd://www.apache.org/">Apache</a> version 1.3.12, but likely any
+  version will work, and other web servers may work as well.
 
   <li><a href="http://www.perl.com/">Perl</a>: the <a
   href="http://dev.w3.org/cgi-bin/cvsweb/validator/httpd/cgi-bin/check">main
@@ -143,8 +142,8 @@
 </ul>
 
 <p>
-  If anyone tries to use the code, and succeeds (or fails), please <a
-  href="/feedback.html">let me know</a>!
+  If you try to use the code and succeed (or fail), please <a
+  href="../feedback.html">let us know</a>!
 </p>
 
 <h2><a name="dev">Development</a></h2>
@@ -152,17 +151,29 @@
 <p>
   For information on current development activity, see the <a
   href="http://lists.w3.org/Archives/Public/www-validator/">www-validator
-  mailing list archives</a>. Any changes to the code or
-  documentation related to the service cause a notification
-  message to be sent to the <a
-  href="http://lists.w3.org/Archives/Public/www-validator-cvs/">www-validator-cvs
-  mailing list</a>.
+  mailing list archives</a>.
+</p>
+
+<p>
+  Some of the developers use <a name="irc">IRC</a> (Internet
+  Relay Chat) to discuss development issues in real time; this
+  takes place on a server run by the <a
+  href="http://openprojects.nu/">Open Projects</a> IRC Network:
+  server irc.openprojects.net, port 6667, <a
+  href="irc://irc.openprojects.net/validator">channel #validator</a>.
+  If you are interested in contributing code, documentation or
+  ideas, feel free to drop by.
 </p>
 
 <p>
   Any changes to the service will attempt to maintain
   compatibility with a <a href="../dev/tests/">list of test
   cases</a>.
+  Any changes to the code or
+  documentation related to the service cause a notification
+  message to be sent to the <a
+  href="http://lists.w3.org/Archives/Public/www-validator-cvs/">www-validator-cvs
+  mailing list</a>.
 </p>
 
 <hr>
@@ -171,8 +182,8 @@
   <a href="http://validator.w3.org/check/referer"><img
      src="http://validator.w3.org/images/vh40.gif" height=31 width=88
      align=right border=0 alt="Valid W3C HTML 4.0!"></a>
-  <a href="/feedback.html">Gerald Oskoboiny</A><br>
-     $Date: 2000-04-28 07:17:59 $
+  <a href="../feedback.html">Webmasters</a><br>
+     $Date: 2001-08-23 19:32:45 $
 </address>
 
 </body>
