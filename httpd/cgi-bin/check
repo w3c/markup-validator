@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.113 2004-05-15 06:58:10 ville Exp $
+# $Id: check,v 1.305.2.114 2004-05-15 07:04:49 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.113 $;
+  $VERSION    =  q$Revision: 1.305.2.114 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-15 06:58:10 $,
+                              Date => q$Date: 2004-05-15 07:04:49 $,
                              });
 
 #
@@ -2288,14 +2288,18 @@ EOF
 
     my $printme;
     chomp($printme = $line);
-    $printme =~ s{^([()])(.*)} # reformat and add links on HTML elements
-                 { my $close = '';
-                      $close = "/" if $1 eq ")"; # ")" -> close-tag
-                   "&lt;" . $close . "<a href=\"" .
-                   $CFG->{'Element Ref URI'} . $CFG->{'Element Map'}->{lc($2)} .
-                   "\">$2<\/a>&gt;"
-                 }egx;
-    $printme =~ s,^A,  A,; # indent attributes a bit
+
+    if (my ($close, $elem) = $printme =~ /^([()])(.+)/) {
+      # reformat and add links on HTML elements
+      $close = ($close eq ')') ? '/' : ''; # ")" -> close-tag
+      if (my $u = $CFG->{'Element Map'}->{lc($elem)}) {
+        $elem = '<a href="' . $CFG->{'Element Ref URI'} . "$u\">$elem</a>";
+      }
+      $printme = "&lt;$close$elem&gt;";
+    } else {
+      $printme =~ s,^A,  A,; # indent attributes a bit
+    }
+
     print ' ' x $indent, $printme, "\n";
     if ($line =~ /^\(/) {
       $indent += 2;
