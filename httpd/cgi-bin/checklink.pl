@@ -5,7 +5,7 @@
 # (c) 1999-2001 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.74 2001-03-26 21:39:03 hugo Exp $
+# $Id: checklink.pl,v 2.75 2001-03-26 22:33:41 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -38,7 +38,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.74 $ . '(c) 1999-2001 W3C';
+my $VERSION = q$Revision: 2.75 $ . '(c) 1999-2001 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -55,7 +55,6 @@ my $_user;
 my $_password;
 my $_trusted = '\.w3\.org';
 my $_http_proxy;
-my $_recursive = 0;
 my $_accept_language = 1;
 my $_languages = '*';
 my $_base_location = '.';
@@ -63,6 +62,7 @@ my $_contact_address = 'www-validator@w3.org';
 my $_masquerade = 0;
 my $_local_dir = my $_remote_masqueraded_uri = '';
 my $_hide_same_realm = 0;
+my $_depth = 0; # -1 means unlimited recursion
 
 # Restrictions for the online version
 my $_sleep_time = 3;
@@ -71,7 +71,7 @@ my $_max_documents = 150;
 # Global variables
 # What is our query?
 my $query;
-# What URI's did we process? (used for $_recursive == 1)
+# What URI's did we process? (used for recursive mode)
 my %processed;
 # Result of the HTTP query
 my %results;
@@ -99,7 +99,7 @@ if ($#ARGV >= 0) {
         }
         # Transform the parameter into a URI
         $uri = urize($uri);
-        &check_uri($uri);
+        &check_uri($uri, 0, $_depth);
     }
     if (($doc_count > 0) && !$_summary) {
         printf("\n%s\n", &global_stats());
@@ -126,7 +126,12 @@ if ($#ARGV >= 0) {
         $_dir_redirects = 0;
     }
     if ($query->param('recursive')) {
-        $_recursive = 1;
+        if ($_depth == 0) {
+            $_depth = -1;
+        }
+    }
+    if ($query->param('depth') && ($query->param('depth') != 0)) {
+        $_depth = $query->param('depth');
     }
     $_html = 1;
     my $uri;
@@ -148,7 +153,7 @@ if ($#ARGV >= 0) {
             $uri = 'http://'.$uri;
         }
     }
-    &check_uri($uri, 1);
+    &check_uri($uri, 1, $_depth);
     &html_footer();
 }
 
@@ -167,7 +172,7 @@ sub parse_arguments() {
             push(@uris, $_);
         } elsif (m/^--$/) {
             $uris = 1;
-        } elsif (m/^-[^-upytdlL]/) {
+        } elsif (m/^-[^-DupytdlL]/) {
             if (m/q/) {
                 $_quiet = 1;
                 $_summary = 1;
@@ -194,7 +199,9 @@ sub parse_arguments() {
                 $_accept_language = 0;
             }
             if (m/r/) {
-                $_recursive = 1;
+                if ($_depth == 0) {
+                    $_depth = -1;
+                }
             }
         } elsif (m/^--help$/) {
             &usage();
@@ -215,7 +222,9 @@ sub parse_arguments() {
         } elsif (m/^--noacclanguage$/) {
             $_accept_language = 0;
         } elsif (m/^--recursive$/) {
-            $_recursive = 1;
+            if ($_depth == 0) {
+                $_depth = -1;
+            }
         } elsif (m/^-l|--location$/) {
             $_base_location = shift(@ARGV);
         } elsif (m/^-u|--user$/) {
@@ -226,6 +235,9 @@ sub parse_arguments() {
             $_timeout = shift(@ARGV);
         } elsif (m/^-L|--languages$/) {
             $_languages = shift(@ARGV);
+        } elsif (m/^-D|--depth$/) {
+            my $value = shift(@ARGV);
+            $_depth = $value unless($value == 0);
         } elsif (m/^-d|--domain$/) {
             $_trusted = shift(@ARGV);
         } elsif (m/^-y|--proxy$/) {
@@ -253,6 +265,8 @@ Options:
 	-e/--directory		Hide directory redirects - e.g.
 				http://www.w3.org/TR -> http://www.w3.org/TR/
 	-r/--recursive		Check the documents linked from the first one.
+	-D/--depth n		Check the documents linked from the first one
+				to depth n.
 	-l/--location uri	Scope of the documents checked.
 				By default, for
 				http://www.w3.org/TR/html4/Overview.html
@@ -325,7 +339,7 @@ sub urize() {
 ########################################
 
 sub check_uri() {
-    my ($uri, $html_header) = @_;
+    my ($uri, $html_header, $depth) = @_;
     # If $html_header equals 1, we need to generate a HTML header (first
     # instance called in HTML mode).
 
@@ -359,7 +373,7 @@ sub check_uri() {
     printf("\nProcessing\t%s\n\n", $_html ? &show_url(&encode($absolute_uri))
            : $absolute_uri);
 
-    if ($_html) {
+    if ($_html && ! $_quiet) {
         printf("</h2>\n<p>Go to <a href='#%s'>the results</a>.</p>\n",
                $result_anchor);
         printf("<p>Check also: <a href=\"http://validator.w3.org/check?uri=%s\">HTML Validity</a> &amp; <a href=\"http://jigsaw.w3.org/css-validator/validator?uri=%s\">CSS Validity</a></p>\n<p>Back to the <a href=\"checklink\">link checker</a>.</p>\n", map{&encode($absolute_uri)}(1..2));
@@ -372,7 +386,8 @@ sub check_uri() {
     $processed{$absolute_uri} = 1;
     # Parse the document
     my $p = &parse_document($uri, $absolute_uri,
-                            $response->content(), 1);
+                            $response->content(), 1, 
+			    $depth != 0);
     my $base = URI->new($p->{base});
 
     # Check anchors
@@ -503,7 +518,7 @@ sub check_uri() {
     &links_summary(\%links, \%results, \%broken, \%redirects);
 
     # Do we want to process other documents?
-    if ($_recursive) {
+    if ($depth != 0) {
         if ($_base_location eq '.') {
             # Get the name of the original directory
             # e.g. http://www.w3.org/TR/html4/Overview.html
@@ -546,7 +561,11 @@ sub check_uri() {
                 sleep($_sleep_time);
             }
             print "\n";
-            &check_uri($u, 0);
+            if ($depth < 0) {
+                &check_uri($u, 0, -1);
+            } else {
+                &check_uri($u, 0, $depth-1);
+            }
         }
     }
 }
@@ -810,7 +829,7 @@ sub record_results() {
 ####################
 
 sub parse_document() {
-    my ($uri, $location, $document, $links) = @_;
+    my ($uri, $location, $document, $links, $rec_needs_links) = @_;
 
     my $p;
 
@@ -835,7 +854,7 @@ sub parse_document() {
     # We only look for anchors if we are not interested in the links
     # obviously, or if we are running a recursive checking because we
     # might need this information later
-    $p->{only_anchors} = !($links || $_recursive);
+    $p->{only_anchors} = !($links || $rec_needs_links);
 
     # Transform <?xml:stylesheet ...?> into <xml:stylesheet ...> for parsing
     # Processing instructions are not parsed by process, but in this case
@@ -1764,6 +1783,8 @@ of a document that you would like to check:</p>
   <input type=\"checkbox\" name=\"hide_dir_redirects\"> Hide directory redirects
   <br>
   <input type=\"checkbox\" name=\"recursive\"> Check linked documents recursively <small>(maximum: $_max_documents documents; sleeping $_sleep_time\s between each document)</small>
+  <br>
+  Depth of the recursion: <input type=\"text\" size=\"3\" name=\"depth\"><small>(-1 is the default and means unlimited)</small>
 </p>
 <p><input type=\"submit\" name=\"submit\" value=\"Check\"></p>
 </form>
