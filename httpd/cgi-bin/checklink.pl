@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.61 2000-08-04 22:43:51 hugo Exp $
+# $Id: checklink.pl,v 2.62 2000-08-04 23:20:43 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -34,7 +34,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.61 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.62 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -524,7 +524,7 @@ sub get_document() {
     # What URI are we processing by the way?
     my $base_uri = URI->new($response->base());
     my $request_uri = URI->new($response->request->url);
-    $response->{absolute_uri} = $base_uri->abs($request_uri);
+    $response->{absolute_uri} = $request_uri->abs($base_uri);
 
     # Parse the document
     my $failed_reason;
