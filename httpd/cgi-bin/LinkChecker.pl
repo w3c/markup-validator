@@ -5,7 +5,7 @@
 # (c) 1999 World Wide Web Consortium
 # based on Renaud Bruyeron's checklin.pl
 #
-# $Id: LinkChecker.pl,v 1.1 1999-11-24 22:04:35 hugo Exp $
+# $Id: LinkChecker.pl,v 1.2 1999-11-26 13:14:50 hugo Exp $
 #
 # This program is licensed under the W3C License.
 
@@ -21,7 +21,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C LinkChecker';
-my $VERSION = '$Revision: 1.1 $ (c) 1999 W3C';
+my $VERSION = '$Revision: 1.2 $ (c) 1999 W3C';
 
 # State of the program
 my $_cl;
@@ -31,6 +31,7 @@ my $_verbose = 0;
 my $_progress = 0;
 my $_html = 0;
 my $_timeout = 60;
+my $_chunksize = 1024;
 my $_redirects = 1;
 my $_user;
 my $_password;
@@ -87,7 +88,7 @@ sub parse_arguments() {
             push(@uris, $_);
         } elsif (m/^--$/) {
             $uris = 1;
-        } elsif (m/^-[^-up]/) {
+        } elsif (m/^-[^-uptc]/) {
             if (m/q/) {
                 $_quiet = 1;
             }
@@ -126,6 +127,8 @@ sub parse_arguments() {
             $_password = shift(@ARGV);
         } elsif (m/^-t|--timeout$/) {
             $_timeout = shift(@ARGV);
+        } elsif (m/^-c|--chunksize$/) {
+            $_chunksize = shift(@ARGV);
         } else {
             push(@uris, $_);
         }
@@ -145,6 +148,7 @@ Options:
 	-u/--user username	Specify a username for authentication.
 	-p/--password password	Specify a password.
 	-t/--timeout value	Timeout for the HTTP requests.
+	-c/--chunk-size size	Size of the blocks parsed (default: $_chunksize).
 	-h/--html		HTML output.
 	--help			Show this message.
 ";
@@ -257,7 +261,7 @@ sub check_uri() {
         if (! $_summary) {
             printf("Checking link %s\n", $u);
         }
-        &check_validity($uri, $u, \%links, \%results, \%redirects, $p->{Anchors});
+        &check_validity($uri, $u, \%links, \%results, \%redirects, $p->{Anchors}, $response->code());
         if ($_verbose) {
             printf("\tReturn code: %s\n", $results{$u}{$u}{code});
         }
@@ -348,6 +352,8 @@ sub parse_document() {
 
     my $start;
     my $p = W3C::LinkChecker->new();
+    # Loose interpretation of the HTML comments since browsers will do the same
+    $p->strict_comment(FALSE);
     if (! $_summary) {
         $start = &get_timestamp();
         print("Parsing...\n");
@@ -358,7 +364,11 @@ sub parse_document() {
         $p->{Total} = ($document =~ tr/\n//);
     }
     $p->{extract_links} = $links;
-    $p->parse($document);
+    @chunks = unpack("A$_chunksize"x(length($document)/$_chunksize).'A*',
+                     $document);
+    for (@chunks) {
+        $p->parse($_);
+    }
     if (! $_summary) {
         my $stop = &get_timestamp();
         if ($_progress) {
@@ -389,7 +399,7 @@ sub W3C::LinkChecker::new_line() {
 #######################################
 
 sub W3C::LinkChecker::start() {
-    my ($self, $tag, $attr, $text) = @_;
+    my ($self, $tag, $attr, $attrseq, $text) = @_;
     my $anchor;
     # Links
     if ($self->{extract_links}) {
@@ -420,9 +430,9 @@ sub W3C::LinkChecker::start() {
     }
 }
 
-#####################################################
-# text and end functions for line counting purposes #
-#####################################################
+####################################################
+# Overloading functions for line counting purposes #
+####################################################
 
 sub W3C::LinkChecker::text() {
     my ($self, $text) = @_;
@@ -442,13 +452,27 @@ sub W3C::LinkChecker::end() {
     $self->text($self, $text);
 }
 
+sub W3C::LinkChecker::declaration() {
+    my $self = shift;
+    return unless $self->{extract_links};
+    my $text = shift;
+    $self->text($text);
+}
+
+sub W3C::LinkChecker::comment() {
+    my $self = shift;
+    return unless $self->{extract_links};
+    my $text = shift;
+    $self->text($text);
+}
+
 ################################
 # Check the validity of a link #
 ################################
 
-sub check_validity($, $, \%, \%, \%, \%) {
+sub check_validity($, $, \%, \%, \%, \%, $) {
     use HTTP::Status;
-    my ($testing, $uri, $links, $results, $redirects, $anchors) = @_;
+    my ($testing, $uri, $links, $results, $redirects, $anchors, $testing_code) = @_;
     # Checking file: URI's is not allowed with a CGI
     if ($testing ne $uri) {
         if ((! $_cl) && (!($testing =~ m/^file:/)) && ($uri =~ m/^file:/)) {
@@ -467,7 +491,9 @@ sub check_validity($, $, \%, \%, \%, \%) {
     my $method;
     my @fragments = keys %{$links->{$uri}};
     if ($testing eq $uri) {
-        $method = 'Already have';
+        if (! $_summary) {
+            printf("Checking link %s\nNo need to be fetched.\n", $uri);
+        }
     } elsif ($#fragments == 0) {
         $method = 'HEAD';
     } else {
@@ -476,7 +502,7 @@ sub check_validity($, $, \%, \%, \%, \%) {
     my $response;
     if ($testing eq $uri) {
         # Mimic an HTTP::Response object
-        $results->{$uri}{$uri}{code} = 600;
+        $results->{$uri}{$uri}{code} = $testing_code;
         $results->{$uri}{$uri}{success} = 1;
     } else {
         $response = &get_uri($method, $uri);
