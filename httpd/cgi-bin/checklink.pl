@@ -5,7 +5,7 @@
 # (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.9 2003-06-15 14:42:56 ville Exp $
+# $Id: checklink.pl,v 3.6.2.10 2003-06-15 14:56:00 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -85,7 +85,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.9 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.10 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
 
@@ -121,6 +121,11 @@ or copy a configuration file into $defaultconfig and make sure it is
 readable by the user executing this script.  The reported error was:
 $@
 .EOF.
+  }
+
+  # Trusted environment variables.
+  foreach (qw(NNTPSERVER NEWSHOST)) {
+    ($ENV{$_}) = ($ENV{$_} =~ /^(.*)$/) if $ENV{$_};
   }
 }
 
