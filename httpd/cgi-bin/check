@@ -8,14 +8,14 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.13 1999-02-26 04:11:08 gerald Exp $
+# $Id: check,v 1.14 1999-03-04 10:40:23 gerald Exp $
 
 #############################################################################
 # Constant definitions
 #############################################################################
 
-$cvsrevision	= '$Revision: 1.13 $';
-$cvsdate	= '$Date: 1999-02-26 04:11:08 $';
+$cvsrevision	= '$Revision: 1.14 $';
+$cvsdate	= '$Date: 1999-03-04 10:40:23 $';
 
 $logfile	= "/var/log/httpd/val-svc";
 $reflogfile	= "/var/log/httpd/val-svc-referers";
@@ -34,6 +34,7 @@ $tidy		= "/usr/local/bin/tidy";
 $nkf		= "/usr/local/bin/nkf";
 
 $sgmldecl	= "$sgmlstuff/REC-html40-971218/HTML4.decl";
+$xhtmldecl	= "$sgmlstuff/WD-html-in-xml-19990224/xhtml1.dcl";
 
 $revision	= $cvsrevision;
 $revision	=~ s/^\$Revision: //;
@@ -53,6 +54,7 @@ $nice_html40f_doctype = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset/
 $html40_doctype	 = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN "http://www.w3.org/TR/REC-html40/strict.dtd">};
 $html40t_doctype = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">};
 $html40f_doctype = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN" "http://www.w3.org/TR/REC-html40/frameset.dtd">};
+$xhtmlt_doctype = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"};
 $temp		 = "/tmp/validate.$$";
 $lt		 = "\020";
 $gt		 = "\021";
@@ -107,7 +109,10 @@ $gifborder       = " BORDER=0";
     'http://www.w3.org/MarkUp/Cougar/Cougar.dtd', '<a href="http://www.w3.org/MarkUp/Cougar/">HTML Level "Cougar"</a>',
     '-//W3C//DTD HTML 4.0//EN', '<a href="http://www.w3.org/TR/REC-html40/">HTML 4.0</a>',
     '-//W3C//DTD HTML 4.0 Transitional//EN', '<a href="http://www.w3.org/TR/REC-html40/">HTML 4.0</a> Transitional',
-    '-//W3C//DTD HTML 4.0 Frameset//EN', '<a href="http://www.w3.org/TR/REC-html40/">HTML 4.0</a> Frameset'
+    '-//W3C//DTD HTML 4.0 Frameset//EN', '<a href="http://www.w3.org/TR/REC-html40/">HTML 4.0</a> Frameset',
+    '-//W3C//DTD XHTML 1.0 Strict//EN', '<a href="http://www.w3.org/TR/WD-html-in-xml/">XHTML 1.0</a> Strict',
+    '-//W3C//DTD XHTML 1.0 Transitional//EN', '<a href="http://www.w3.org/TR/WD-html-in-xml/">XHTML 1.0</a> Transitional',
+    '-//W3C//DTD XHTML 1.0 Frameset//EN', '<a href="http://www.w3.org/TR/WD-html-in-xml/">XHTML 1.0</a> Frameset'
 
 );
 
@@ -385,7 +390,11 @@ print <<"EOF";
 $jump_links
 EOF
 
-$guessed_doctype = &check_for_doctype( \@file );
+( $guessed_doctype, $doctype ) = &check_for_doctype( \@file );
+
+if ( $doctype =~ /xhtml/i ) {
+    $xhtml = 1;
+}
 
 foreach $line (@file) {
     # @@ needs to handle meta elements that span more than one line
@@ -440,11 +449,27 @@ if ( defined $lastmod ) {
 #     print qq{<li>Content length: $length\n};
 # }
 
-open( CHECKER,
-   "| $codeconv $sp -E0 -m $sgmlstuff/catalog - >$temp.esis 2>$temp" )
+if ( $xhtml ) {
+    $ENV{SP_CATALOG_FILES} = "$sgmlstuff/WD-html-in-xml-19990224/xhtml.soc";
+    $ENV{SGML_SEARCH_PATH} = "$sgmlstuff/WD-html-in-xml-19990224";
+    $ENV{SP_CHARSET_FIXED}="YES";
+    $ENV{SP_ENCODING}="XML";
+    $xmlflags = "-wxml ";
+    $decl = $xhtmldecl;
+}
+else {
+    $decl = $sgmldecl;
+    $catalog = "-c $sgmlstuff/catalog";
+}
+
+$command  = "$codeconv $sp -E0 $xmlflags $catalog $decl";
+
+print "  <li>nsgmls command line: $command\n";
+
+open( CHECKER, "| $command - >$temp.esis 2>$temp" )
 	|| die "couldn't open checker: $!";
 
-print CHECKER "$guessed_doctype\n" if $guessed_doctype;
+print CHECKER "$doctype\n" if $guessed_doctype;
 # this is a kludge for DOS users with their entire file on a single line
 # like http://bogo.w3.org/test/samuels.html
 if ( $#file == 0 ) {
@@ -474,19 +499,25 @@ while (<ESIS>) {
 }
 close( ESIS )			|| die "couldn't close parser output: $!";
 
-for (@esis) {
-		# grab the doctype, etc.
-    next unless /^AVERSION CDATA (.*)/;
-    $fpi = $1;
+$version = "unknown";
+if ( $xhtml ) {
+    $fpi = $doctype;
 }
-$version = $pub_ids{$fpi} || "unknown";
+else {
+    for (@esis) {
+	next unless /^AVERSION CDATA (.*)/;
+	$fpi = $1;
+	last;
+    }
+}
+$version = $pub_ids{$fpi};
 
 if ( $guessed_doctype ) {
     push( @fake_errors, "nsgmls:<OSFD>0:2:1:E: Missing DOCTYPE declaration at start of document (${lt}a href=\"http://www.htmlhelp.org/tools/validator/doctype.html\"${gt}explanation...${lt}/a${gt})\n" );
 }
 
 if ( $guessed_doctype ) {
-    $escaped_doctype = $guessed_doctype;
+    $escaped_doctype = $doctype;
     $escaped_doctype =~ s/" "/"\n            "/;
     $escaped_doctype =~ s/&/\&amp;/g;
     $escaped_doctype =~ s/</\&lt;/g;
@@ -523,6 +554,7 @@ if ( $? || $guessed_doctype ) {
     for ((@fake_errors,@errors)) {
 	next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
 	next if / numbers exceeding 65535 not supported$/;
+	next if $xhtml && /:W: SGML declaration was not implied$/;
 	s/.*<OSFD>//g;
 	if ( ! (($line, $col, $type, $msg)=(/^[^:]*:([0-9]+):([0-9]+):([A-Z]?):? (.*)/))) {
 	    print "Uh oh! I got the following unknown error:\n\n   $_\n\n";
@@ -873,7 +905,7 @@ EOF
 
     print "<pre>\n";
     if ( $guessed_doctype ) {
-	$gd = "$guessed_doctype\n";
+	$gd = "$doctype\n";
 	$gd =~ s/&/&amp;/go; $gd =~ s/</&lt;/go; # $gd =~ s/>/&gt;/go;
 	printf "%4d: %s", 0, $gd;
     }
@@ -1268,16 +1300,35 @@ sub check_for_doctype {
     # check if the document has a doctype; if it doesn't, try to
     # guess an appropriate one given the elements used
     #
-    # if the document has a doctype, it returns 0; if not, it
-    # returns a text string with the inferred doctype
+    # returns 2 values:
+    #
+    # first value: 0 or 1:
+    #     if 0, there was a doctype already present;
+    #     if 1, there wasn't a doctype
+    #
+    # second value:
+    #     the inferred doctype, if any
 
     my $fileref = shift;		# a reference to @file, for efficiency
     my @file = @$fileref;		# dereference $fileref
 
-    foreach $line (@file) {
+    foreach $count (0..$#file) {
+	$line = $file[$count];
+
 	# does an HTML element precede the doctype on the same line?
 	last if $line =~ /<[a-z].*<!doctype/i;
-	return 0 if $line =~ /<!doctype/i;	# found a doctype
+
+	if ( $line =~ /<!doctype/i ) {	# found a doctype
+	    $dttext = join( "", @file[$count..$count+3] );
+	    if ( $dttext =~ /xhtml/i ) {
+		$dttext =~ s/\n//g;
+		$dttext =~ s/.*doctype\s+html\s+public\s*"//i;
+		$dttext =~ s/".*//;	# strip everything except the FPI
+		return 0, $dttext;
+	    }
+	    return 0, "";	# doc does have a doctype
+	}
+
 	last if ( $line =~ /<[a-z]/i );		# found an element
 	    # @@ this needs to be fixed to handle commented-out markup
 	    # which appears before the doctype
@@ -1289,25 +1340,29 @@ sub check_for_doctype {
     # these heuristics could be improved a lot.
 
     foreach $line (@file[0..20]) {
-	return $html40f_doctype if $line =~ /<frame/i;
+	return 1, $xhtmlt_doctype if $line =~ /xmlns\s*=/i;
     }
 
     foreach $line (@file[0..20]) {
-	return $html40t_doctype if $line =~ /<(table|body )/i;
+	return 1, $html40f_doctype if $line =~ /<frame/i;
+    }
+
+    foreach $line (@file[0..20]) {
+	return 1, $html40t_doctype if $line =~ /<(table|body )/i;
     }
 
     # go through the whole file
     foreach $line (@file) {
-	return $html40t_doctype if $line =~ /<(table|body )/i;
+	return 1, $html40t_doctype if $line =~ /<(table|body )/i;
     }
 
     foreach $line (@file) {
-	return $html32_doctype if $line =~ /<center>/i;
-	return $html32_doctype if $line =~ /<[h0-9p]*\s*align\s*=\s*center>/i;
+	return 1, $html32_doctype if $line =~ /<center>/i;
+	return 1, $html32_doctype if $line =~ /<[h0-9p]*\s*align\s*=\s*center>/i;
     }
 
     # no luck earlier; guess HTML 4.0 transitional
-    return $html40t_doctype;
+    return 1, $html40t_doctype;
 
 }
 
