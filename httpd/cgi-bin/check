@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.160 2001-07-24 09:54:56 link Exp $
+# $Id: check,v 1.161 2001-07-24 10:18:31 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.160 $;
+$VERSION    =  q$Revision: 1.161 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-24 09:54:56 $;
+$DATE       =  q$Date: 2001-07-24 10:18:31 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -257,10 +257,27 @@ EOF
 #
 
 #
+# Detect and remove a UTF-8 BOM.
+$File->{Content}[0] =~ s/^\xEF\xBB\xBF//
+  and &add_warning(<<".EOF.");
+     UTF-8 'BOM' detected and removed. (See the
+     <a href="$faqerrloc#utf8-bom">explanation</a> for details.)
+.EOF.
+
+
+#
 # Override DOCTYPE if user asked for it.
 if (defined $q->param('doctype') and not $q->param('doctype') =~ /Inline/i) {
   $File->{Content} = &supress_doctype($File->{Content});
   unshift @{$File->{Content}}, $doctypes->{$q->param('doctype')};
+  my $dtd = ent($q->param('doctype'));
+  &add_warning(<<".EOF.");
+  <strong>DOCTYPE Override in effect!</strong> Any DOCTYPE Declaration in the
+  document has been supressed and the DOCTYPE for &#171;<code>$dtd</code>&#187;
+  inserted instead. The document will not be Valid until you alter the source
+  file to reflect this new DOCTYPE.
+.EOF.
+  $File->{Tentative} = TRUE; # Tag it as Invalid.
 }
 
 #
@@ -352,33 +369,38 @@ if ($File->{HTTP_Charset} ne $File->{META_Charset}
     and $File->{HTTP_Charset} ne ''
     and $File->{META_Charset} ne ''
     and $File->{Charset} ne 'unknown') {
-  &add_warning( <<"EOHD");
-      The character encoding specified in the HTTP
-      header ("<code>$File->{HTTP_Charset}</code>") is different from the one
-      specified in the META element ("<code>$File->{META_Charset}</code>").
-      I will use "<code>$File->{Charset}</code>" for this validation.
+  &add_warning(<<"EOHD");
+      <strong>Character Encoding mismatch!</strong>
+      The character encoding specified in the HTTP header
+      (&#171;<code>$File->{HTTP_Charset}</code>&#187;) is different from the
+      one specified in the META element
+      (&#171;<code>$File->{META_Charset}</code>&#187;).
+      I will use &#171;<code>$File->{Charset}</code>&#187; for this validation.
 EOHD
 } elsif ($File->{HTTP_Charset} ne $File->{XML_Charset}
     and $File->{HTTP_Charset} ne ''
     and $File->{XML_Charset} ne ''
     and $File->{Charset} ne 'unknown') {
-  &add_warning( <<"EOHD");
-      The character encoding specified in the HTTP
-      header ("<code>$File->{HTTP_Charset}</code>") is different from the one
-      specified in the XML declaration ("<code>$File->{XML_Charset}</code>").
-      I will use "<code>$File->{Charset}</code>" for this validation.
+  &add_warning(<<"EOHD");
+      <strong>Character Encoding mismatch!</strong>
+      The character encoding specified in the HTTP header
+      (&#171;<code>$File->{HTTP_Charset}</code>&#187;) is different from the
+      one specified in the XML declaration
+      (&#171;<code>$File->{XML_Charset}</code>&#187;).
+      I will use &#171;<code>$File->{Charset}</code>&#187; for this validation.
 EOHD
 }
 if ($File->{Use_Charset} ne $File->{Charset}) {
-  &add_warning( <<"EOHD");
-      Detected character encoding ($File->{Charset}) and
-      selected character encoding ($File->{Use_Charset})
-      differ. Tentative validation only.
+  &add_warning(<<"EOHD");
+      <strong>Character Encoding Override in effect!</strong>
+      The detected character encoding
+      (&#171;<code>$File->{Charset}</code>&#187;) has been supressed and the
+      character encoding (&#171;<code>$File->{Use_Charset}</code>&#187;)
+      used instead. The document will not be Valid until you alter the source
+      file to reflect this new Character Encoding.
 EOHD
+  $File->{Tentative} = TRUE;
 }
-
-$File->{Content}[0] =~ s/^\xEF\xBB\xBF//
-  and &add_warning("UTF-8 'BOM' detected and removed.");
 
 {  # block for character conversion and checking
   my @lines;
@@ -522,7 +544,7 @@ $version = $pub_ids->{$fpi} || 'unknown';
 if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
   &add_table("Document Type", $version);
   if ($File->{Type} eq 'xhtml' and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
-    &add_warning ("Unknown namespace for text/html document!");
+    &add_warning ("Unknown namespace (&#171;<code>$File->{Namespace}</code>&#187;) for text/html document!");
     if ($File->{Namespace} ne '') {
       &add_table("Root Namespace",
 	"<a href='$File->{Namespace}'>$File->{Namespace}</a>");
@@ -579,8 +601,21 @@ EOHD
     Below are the results of attempting to parse this document with
     an SGML parser.
   </p>
-
 EOHD
+}
+
+if (defined $File->{Tentative}) {
+  print <<".EOF.";
+  <p class="Warning">
+    Please note that you have chosen one or more options that alter the content
+    of the document before Validation. Even if no errors are reported below,
+    the document will not be Valid until you manually make the changes we have
+    performed automatically. Specifically, since you used some of the options
+    that Override a property of the document (e.g. the DOCTYPE or Character
+    Encoding), you must make the same change to the source document before it
+    can be valid.
+  </p>
+.EOF.
 }
 
 if (scalar @{$File->{Errors}}) {
@@ -633,17 +668,12 @@ sub print_table {
   print "  </table></form>\n";
 }
 
-sub add_warning {
-  push @{$File->{Warnings}}, shift;
-}
+sub add_warning {push @{$File->{Warnings}}, shift};
 
 sub print_warnings {
-  my $warning;
   return unless defined @{$File->{Warnings}};
   print "  <div><h2>Warnings</h2>\n  <ul>\n";
-  for $warning (@{$File->{Warnings}}) {
-    print "    <li class='warning'>$warning</li>\n";
-  }
+  print qq(    <li>Warning: $_</li>\n) for @{$File->{Warnings}};
   print "  </ul></div>\n";
 }
 
@@ -1222,7 +1252,8 @@ sub report_valid {
   } else {
     print "\n  <pre>\n    No errors found!</pre>\n\n";
   }
-  unless ($version eq 'unknown') {
+
+  unless ($version eq 'unknown' or defined $File->{Tentative}) {
     if ($version =~ /^HTML 2\.0$/) {
       $image_uri = "${abs_svc_uri}images/vh20";
       $alttext = "Valid HTML 2.0!";
@@ -1277,6 +1308,7 @@ sub report_valid {
       $image_uri = "${abs_svc_uri}images/vhhj";
       $alttext = "Valid Hotjava-HTML!";
     }
+
     if (defined $image_uri) {
       print <<"EOHD";
   <p>
@@ -1307,7 +1339,9 @@ EOHD
     }
   }
   if ($File->{Type} eq 'xml' and not $File->{DOCTYPE}) {
-    print "  <p>\n    Congratulations, this document is well-formed XML.\n  </p>\n";
+    print "  <p>Congratulations, this document is well-formed XML.</p>\n";
+  } elsif (defined $File->{Tentative}) {
+    print "  <p>\n    This document would validate as the document type specified if you updated it to match the Options used.\n  </p>\n";
   } elsif ($version eq 'unknown' or not defined $image_uri) {
     print "  <p>\n    Congratulations, this document validates as the document type specified! (I don't have an icon for this one yet, sorry.)\n  </p>\n";
   }
@@ -1566,7 +1600,7 @@ sub preparse {
       if (lc $tag eq 'meta') {
 	if (lc $attr{'http-equiv'} eq 'content-type') {
 	  $attr{content} =~ m(charset\s*=[\s\"\']*([^\s;\"\'>]*))si;
- 	  $File->{META_Charset} = lc $1;
+	  $File->{META_Charset} = lc $1;
 	}
       }
       return unless $tag eq $File->{Root};

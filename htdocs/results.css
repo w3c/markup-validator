@@ -1,7 +1,7 @@
 
 /* style sheet for the validator's results page */
 
-/* $Id: results.css,v 1.4 2001-06-25 19:22:09 link Exp $ */
+/* $Id: results.css,v 1.5 2001-07-24 10:18:30 link Exp $ */
 
 .markup {
   color: red;
@@ -29,4 +29,15 @@ td {
 
 h1.title img {
   vertical-align: middle;
+}
+
+
+.Warning {
+  width: 75ex;
+  background: yellow;
+  border: solid;
+  border-color: black;
+  margin: .2em;
+  padding: .5em;
+  text-align: justify;
 }
