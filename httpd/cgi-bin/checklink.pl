@@ -1,5 +1,7 @@
 #!/usr/local/bin/perl
 
+$VERSION= '$Id: checklink.pl,v 1.2 1998-08-31 15:55:22 renaudb Exp $';
+
 BEGIN {
     unshift@INC,('/usr/etc/apache/PerlLib');
 }
