@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.189 2001-09-25 04:53:21 link Exp $
+# $Id: check,v 1.190 2001-09-25 13:10:13 link Exp $
 
 #
 # We need Perl 5.004.
@@ -91,9 +91,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.189 $;
+$VERSION    =  q$Revision: 1.190 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-09-25 04:53:21 $;
+$DATE       =  q$Date: 2001-09-25 13:10:13 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1300,7 +1300,12 @@ sub parse_errors ($$) {
     $err->{line} = $errors[2];
     $err->{char} = $errors[3];
     $err->{type} = $errors[4];
-    if ($err->{type} eq 'W' or $err->{type} eq 'E' or $err->{type} eq 'X') {
+    if (
+	   $err->{type} eq 'W'
+	or $err->{type} eq 'E'
+	or $err->{type} eq 'X'
+	or $err->{type} eq 'Q'
+       ) {
       $err->{msg}  = $errors[5];
     } else {
       $err->{type} = 'I';
