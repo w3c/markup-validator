@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.58 2000-01-26 15:13:24 gerald Exp $
+# $Id: check,v 1.59 2000-01-26 15:16:53 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -73,9 +73,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.58 $;
+$VERSION    =  q$Revision: 1.59 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2000-01-26 15:13:24 $;
+$DATE       =  q$Date: 2000-01-26 15:16:53 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -576,8 +576,9 @@ if ( $? ) {
         print qq{<span class=error>Error: $msg</span>};
 
 	if ( defined $frag->{$msgindex} ) {
-	    print qq{ (<a
-	        href="$faqerrloc#$frag->{$msgindex}">explanation...</a>)};
+	    # temporarily commented out due to broken links
+	    # print qq{ (<a
+	    #     href="$faqerrloc#$frag->{$msgindex}">explanation...</a>)};
 	}
 	else { # remember msgindexes without frags, to get the KGV FAQ updated.
 	    $undef_frag{$msgindex} = 1;
