@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.24 1999-08-03 03:42:29 gerald Exp $
+# $Id: check,v 1.25 1999-08-03 04:59:16 gerald Exp $
 
 use LWP::UserAgent;
 
@@ -16,8 +16,8 @@ use LWP::UserAgent;
 # Constant definitions
 #############################################################################
 
-$cvsrevision	= '$Revision: 1.24 $';
-$cvsdate	= '$Date: 1999-08-03 03:42:29 $';
+$cvsrevision	= '$Revision: 1.25 $';
+$cvsdate	= '$Date: 1999-08-03 04:59:16 $';
 
 $logfile	= "/var/log/httpd/val-svc";
 
@@ -59,7 +59,7 @@ $gt		 = "\021";
 $leftarrow	 = "${lt}tt${gt}${lt}img src=\"/images/arrow_left.gif\" alt=\"^\"${gt}${lt}/tt${gt}";
 $rightarrow	 = "${lt}tt${gt}${lt}img src=\"/images/arrow_right.gif\" alt=\"^\"${gt}${lt}/tt${gt}";
 $contchars	 = "${lt}tt${gt}${lt}img src=\"/images/ellipsis.gif\" alt=\"[...]\"${gt}${lt}/tt${gt}";
-$gifborder       = " BORDER=0";
+$gifborder       = " border=0";
 
 @options = ( 'weblint', 'pw', 'outline', 'ss', 'sp', 'noatt' );
 # this doesn't work for some reason
@@ -253,6 +253,7 @@ EOF
 
 $ua = new LWP::UserAgent;
 $ua->agent( "W3C_Validator/$revision " . $ua->agent );
+$ua->parse_head(0);  # we want to parse the http-equiv stuff ourselves, for now
 $request = new HTTP::Request(GET => $uri);
 
 # if we got a Authorization header from the client, it means
@@ -705,18 +706,18 @@ else {
 	elsif ( $version =~ /HTML 3\.2</ ) {
 	    $gifname = "vh32.gif";
 	    $alttext = "Valid HTML 3.2!";
-            $gifhw   = " HEIGHT=31 WIDTH=88";
+            $gifhw   = " height=31 width=88";
 	}
 	elsif ( $version =~ /HTML 4\.0<\/a>$/ ) {
 	    $gifname = "vh40.gif";
 	    $alttext = "Valid HTML 4.0!";
             $gifborder = "";
-            $gifhw   = " HEIGHT=31 WIDTH=88";
+            $gifhw   = " height=31 width=88";
 	}
 	elsif ( $version =~ /HTML 4\.0<\/a> / ) {
 	    $gifname = "vh40.gif";
 	    $alttext = "Valid HTML 4.0!";
-            $gifhw   = " HEIGHT=31 WIDTH=88";
+            $gifhw   = " height=31 width=88";
 	}
 	elsif ( $version =~ /HTML 3\.0/ ) {
 	    $gifname = "vh30.gif";
@@ -746,9 +747,11 @@ else {
     to your Web page:
   </p>
   <pre>
-  &lt;P&gt;&lt;A HREF="$abs_svc_uri"&gt;&lt;IMG$gifborder
-     SRC="$abs_img_uri$nicegifname"
-     ALT="$alttext"$gifhw&gt;&lt;/A&gt;</pre>
+  &lt;p&gt;
+    &lt;a href="$abs_svc_uri"&gt;&lt;img$gifborder
+        src="$abs_img_uri$nicegifname"
+        alt="$alttext"$gifhw&gt;&lt;/a&gt;
+  &lt;/p&gt;</pre>
   <p>
     If you like, you can <a href="$rel_img_uri$gifname">download a copy of this
     image</a> to keep in your local web directory, and change the HTML fragment
