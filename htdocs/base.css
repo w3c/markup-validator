@@ -4,7 +4,7 @@
   Copyright © 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
   See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-  $Id: base.css,v 1.6 2001-07-25 08:05:54 link Exp $
+  $Id: base.css,v 1.7 2001-07-26 12:31:56 link Exp $
 */
 
 body {
@@ -66,6 +66,23 @@ address {
 	border-top-style: solid;
 	border-top-color: black;
 }
+
+p.navbar {
+	float: right;
+	text-align: right;
+}
+
+table th {
+	text-align: right;
+        vertical-align: top;
+}
+
+div.stb {
+	clear: both;
+}
+
+
+
 
 /* Various header(ish) things. Definitions cribbed from the CORE Styles. */
 H1	{	
