@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.119 2004-05-16 02:36:32 link Exp $
+# $Id: check,v 1.305.2.120 2004-05-16 02:55:53 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.119 $;
+  $VERSION    =  q$Revision: 1.305.2.120 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-16 02:36:32 $,
+                              Date => q$Date: 2004-05-16 02:55:53 $,
                              });
 
 #
@@ -890,9 +890,6 @@ results</a> by setting the corresponding option on the <a
   if ($File->{'Is Valid'}) {
     &report_valid($File);
   } else {
-# no need for this override now that snippets of source code are given with the errors
-# we can let the user choose if the actually want the whole source displayed
-#    $File->{Opt}->{'Show Source'} = TRUE;
     &report_errors($File);
   }
 
