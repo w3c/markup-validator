@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.249 2002-10-12 10:00:27 link Exp $
+# $Id: check,v 1.250 2002-10-12 10:12:24 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.249 $;
+  $VERSION    =  q$Revision: 1.250 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-12 10:00:27 $,
+			      Date => q$Date: 2002-10-12 10:12:24 $,
 			     });
 
 #
@@ -256,8 +256,7 @@ $File = &find_xml_encoding ($File);
 #
 # Decide on a charset to use (first part)
 #
-if ($File->{Charset}->{HTTP}) {
-  # HTTP, if given, is authoritative.
+if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
   $File->{Charset}->{Use} = $File->{Charset}->{HTTP};
 } elsif ($File->{Type} =~ m(^text/\w+\+xml$)) {
   # Act as if $http_charset was 'us-ascii'. (MIME rules)
@@ -267,10 +266,10 @@ if ($File->{Charset}->{HTTP}) {
       The HTTP Content-Type field did not contain a "charset" attribute,
       but the Content-Type was one of the XML text/* sub-types. The relevant
       specification (RFC 3023) specifies a strong default of "us-ascii" for
-      such documents so
-      we will use this value regardless of any encoding you may have indicated
-      elsewhere. If you would like to use a different encoding, you should
-      arrange to have your server send this new encoding information.
+      such documents so we will use this value regardless of any encoding you
+      may have indicated elsewhere. If you would like to use a different
+      encoding, you should arrange to have your server send this new encoding
+      information.
 .EOF.
 } elsif ($File->{Charset}->{XML}) {
   $File->{Charset}->{Use} = $File->{Charset}->{XML};
