@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.54 2002-10-23 23:11:29 link Exp $"
---><!--#set var="date" value="\$Date: 2002-10-23 23:11:29 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.55 2002-10-27 10:22:18 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-10-27 10:22:18 $"
 --><!--#set var="title" value="The W3C MarkUp Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -19,14 +19,12 @@
         W3C MarkUp Validation Service" href="detailed.html">Extended
         Interface</a> available if you want to set any advanced options.
       </p>
-      <form method="get" action="check">
+      <form method="post" enctype="multipart/form-data" action="check">
       <p>
         <label title="Address of page to Validate" for="uri">Address:
           <input id="uri" name="uri" size="40" /></label>
-        <input type="submit" value="Validate URI..." />
+        <input type="submit" value="Validate URL..." />
       </p>
-      </form>
-      <form method="post" enctype="multipart/form-data" action="check">
       <p>    
         <label title="Choose a Local File to Upload and Validate" for="uploaded_file">Local File:
           <input type="file" id="uploaded_file" name="uploaded_file" size="30" /></label>
