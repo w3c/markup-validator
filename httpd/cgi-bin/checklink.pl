@@ -5,7 +5,7 @@
 # (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.7 2003-05-24 20:32:50 link Exp $
+# $Id: checklink.pl,v 3.8 2003-09-11 10:46:24 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -85,7 +85,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.7 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.8 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
 
@@ -315,7 +315,7 @@ sub parse_arguments ()
   Getopt::Long::Configure('bundling', 'no_ignore_case');
   my @masq = ();
 
-  GetOptions('help'            => \&usage,
+  GetOptions('help'            => \&usage(0),
              'q|quiet'         => sub { $Opts{Quiet} = 1;
                                         $Opts{Summary_Only} = 1;
                                       },
