@@ -4,7 +4,7 @@
    Copyright 2000-2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.43 2005-02-16 23:29:15 ot Exp $
+   $Id: base.css,v 1.44 2005-02-16 23:44:36 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -90,12 +90,18 @@ address {
     background-repeat: no-repeat;
     background-attachment: scroll;
     background-position: right;
-    border-top: 1px solid #E8E8FA;
-    height:50px;
-    padding-top: 0;
+    height:40px;
+    padding-top: 7px;
     padding-bottom: 0;
+    padding-left: 15px;
     clear: right;
 
+}
+
+address img {
+   display: inline;
+   float: left;
+   width: 88px;
 }
 
 #main {
