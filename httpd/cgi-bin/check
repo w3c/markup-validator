@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.34 2002-06-06 02:18:40 link Exp $
+# $Id: check,v 1.200.2.35 2002-06-06 02:26:17 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -78,7 +78,7 @@ $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.34 $;
+$VERSION    =  q$Revision: 1.200.2.35 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 #
@@ -107,7 +107,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-06-06 02:18:40 $,
+			      Date => q$Date: 2002-06-06 02:26:17 $,
 			     });
 
 #
@@ -2136,7 +2136,7 @@ X-W3C-Validator-Errors: $errs
 		    );
       print <<".EOF.";
     [
-      earl:testMode earl:Auto
+      earl:testMode earl:Auto;
       rdf:predicate earl:fails;
       rdf:subject [
                     val:column "$err->{char}";
@@ -2147,7 +2147,7 @@ X-W3C-Validator-Errors: $errs
       rdf:object [
                    earl:id <http://www.w3.org/HTML/>;
                    earl:note "$err->{msg}"
-                 ];
+                 ]
     ],
 .EOF.
 
@@ -2160,13 +2160,13 @@ X-W3C-Validator-Errors: $errs
   } else {
     print <<".EOF.";
     [
-      earl:testMode earl:Auto
+      earl:testMode earl:Auto;
       rdf:predicate earl:passes;
       rdf:subject   [earl:testSubject <$File->{URI}>];
       rdf:object    [
                       earl:id <http://www.w3.org/HTML/>;
                       earl:note "Valid"
-                    ];
+                    ]
     ]
 .EOF.
   }
