@@ -4,7 +4,7 @@
    Copyright 2000-2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.37 2005-01-07 05:59:38 ot Exp $
+   $Id: base.css,v 1.38 2005-01-19 08:33:12 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -66,8 +66,8 @@ body {
     margin: 0;
     margin-left: 42px;
     padding: 15px;
-    padding-left: 5%;
-    padding-right: 5%;
+    padding-left: 0;
+    padding-right: 0;
     background: white;
     border: 1px solid #053188;
 }
@@ -113,14 +113,18 @@ h2 {
     padding-bottom: 5px;
     margin-top: 20px;
     margin-bottom: 20px;
-    font-size: 1.1em;
-    margin-left: -5%;
+    font-size: 1.3em;
+    text-align: center;
     text-decoration: none;
 }
 
 h3 {
     color: #C65831;
-    font-size: 1em;
+    font-size: 1.2em;
+    padding: 5px 15px;
+    background-color: #E3EDFE;
+    border-top: 1px dotted #C65831;
+    border-bottom: 1px dotted #C65831;
     text-decoration: none;
 } 
 
@@ -129,7 +133,7 @@ h4 {
     font-weight: 600;
     font-style: normal;
     text-decoration: underline;
-    font-size: 0.9em;
+    font-size: 1.1em;
 }
 
 /* 
@@ -155,7 +159,8 @@ a:hover, a:active {
 
 /* TODO - add ol, li, td here ? */
 p {
-
+    margin-left: 15px;
+    margin-right: 25px;
 }
 
 img { 
