@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.37 2000-04-05 21:28:01 hugo Exp $
+# $Id: checklink.pl,v 2.38 2000-04-10 22:10:28 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -31,7 +31,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.37 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.38 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -353,8 +353,11 @@ sub check_uri() {
     my %errors;
     my $anchor;
     foreach $anchor (keys %{$p->{Anchors}}) {
-        my @lines = keys %{$p->{Anchors}{$anchor}};
-        my $times = $#lines + 1;
+        my $times;
+        my $l;
+        foreach $l (keys %{$p->{Anchors}{$anchor}}) {
+            $times += $p->{Anchors}{$anchor}{$l};
+        }
         if ($times > 1) {
             $errors{$anchor} = 1;
         }
@@ -730,8 +733,6 @@ sub parse_document() {
 
     my $start;
     $p = W3C::CheckLink->new();
-    # Loose interpretation of the HTML comments since browsers will do the same
-    $p->strict_comment(0);
     $p->{base} = $location;
     if (! $_summary) {
         $start = &get_timestamp();
@@ -776,12 +777,18 @@ sub parse_document() {
 sub W3C::CheckLink::new() {
     my $p = HTML::Parser::new(@_);
 
+    # Using API version 2
+    $p->{api_version} = 2;
     # Line count
     $p->{Line} = 1;
     # Check <a [..] name="...">?
     $p->{check_name} = 1;
     # Check <[..] id="..">?
     $p->{check_id} = 1;
+    # Loose interpretation of the HTML comments since browsers will do the same
+    $p->strict_comment(0);
+    # Enable XML extensions
+    $p->xml_mode(1);
 
     return $p;
 }
@@ -886,7 +893,8 @@ sub W3C::CheckLink::get_anchor() {
 # Overloading functions for line counting purposes #
 ####################################################
 
-# W3C::CheckLink::text() is called by end(), declaration() and comment()
+# W3C::CheckLink::text() is called by end(), declaration(), process()
+# and comment()
 sub W3C::CheckLink::text() {
     my ($self, $text) = @_;
     if (!$_progress) {
@@ -934,6 +942,11 @@ sub W3C::CheckLink::comment() {
     return unless !$self->{only_anchors};
     my $text = shift;
     $self->text($text);
+}
+
+sub W3C::CheckLink::process() {
+    my $self = shift;
+    $self->comment($_[1]);
 }
 
 ################################
@@ -988,6 +1001,9 @@ sub check_validity() {
     my $p;
     if ($being_processed) {
         # Can we really parse the document?
+        if (!defined($results{$uri}{location}{type})) {
+            return;
+        }
         if (! ($results{$uri}{location}{type} =~ m/text\/html/i)) {
             if ($_verbose) {
                 &hprintf("Can't check content: Content-type is '%s'.\n",
@@ -1129,7 +1145,7 @@ sub anchors_summary(\%, \%) {
             print('<p>');
         }
         my @anchors = keys %{$anchors};
-        &hprintf("Found %d anchors.", $#anchors+1);
+        &hprintf("Found %d anchor(s).", $#anchors+1);
         if ($_html) {
             print('</p>');
         }
