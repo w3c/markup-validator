@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.41 2000-05-04 22:29:01 hugo Exp $
+# $Id: checklink.pl,v 2.42 2000-05-04 22:58:23 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -31,7 +31,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.41 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.42 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -327,11 +327,15 @@ sub check_uri() {
 
     my $absolute_uri = $response->{absolute_uri}->as_string();
 
-    printf("\nProcessing\t%s\n\n", $_html ? &show_url($absolute_uri)
+    my $result_anchor = 'results'.$doc_count;
+
+    printf("\nProcessing\t%s\n\n", $_html ? &show_url(&encode($absolute_uri))
            : $absolute_uri);
 
     if ($_html) {
-        printf("</h2>\n<p>Check also: <a href=\"http://validator.w3.org/check?uri=%s\">HTML Validity</a> &amp; <a href=\"http://jigsaw.w3.org/css-validator/validator?uri=%s\">CSS Validity</a></p>\n<p>Back to the <a href=\"checklink\">link checker</a>.</p>\n", map{&encode($absolute_uri)}(1..2));
+        printf("</h2>\n<p>Go to <a href='#%s'>the results</a>.</p>\n",
+               $result_anchor);
+        printf("<p>Check also: <a href=\"http://validator.w3.org/check?uri=%s\">HTML Validity</a> &amp; <a href=\"http://jigsaw.w3.org/css-validator/validator?uri=%s\">CSS Validity</a></p>\n<p>Back to the <a href=\"checklink\">link checker</a>.</p>\n", map{&encode($absolute_uri)}(1..2));
         if (! $_summary) {
             print "<pre>\n";
         }
@@ -437,7 +441,8 @@ sub check_uri() {
     # Display results
     if ($_html) {
         if (! $_summary) {
-            print "</pre>\n";
+            print("</pre>\n");
+            printf("<h2><a name='%s'>Results</a></h2>\n", $result_anchor);
         }
     }
     if (! $_quiet) {
@@ -1133,7 +1138,9 @@ sub anchors_summary(\%, \%) {
     # Number of anchors found.
     if (! $_quiet) {
         if ($_html) {
-            print('<p>');
+            print("<h3>Anchors</h3>\n<p>");
+        } else {
+            print("Anchors\n\n");
         }
         my @anchors = keys %{$anchors};
         &hprintf("Found %d anchor(s).", $#anchors+1);
@@ -1230,13 +1237,11 @@ sub show_link_report {
                 $_ = &show_url($_);
             }
             printf("
-<dt%s%s>%s</dt>
+<dt%s>%s</dt>
 <dd>What to do: <strong%s>%s</strong><br>
-<dd%s>HTTP Code returned: %d%s<br>
+<dd>HTTP Code returned: %d%s<br>
 HTTP Message: %s%s%s</dd>
-<dd%s>Lines: %s</dd>\n",
-                   # Color
-                   &bgcolor($results->{$u}{location}{record}),
+<dd>Lines: %s</dd>\n",
                    # Anchor for return codes
                    $idref,
                    # List of redirects
@@ -1246,8 +1251,6 @@ HTTP Message: %s%s%s</dd>
                    &bgcolor($c),
                    # What to do
                    $whattodo,
-                   # Color
-                   &bgcolor($results->{$u}{location}{orig}),
                    # Original HTTP reply
                    $results->{$u}{location}{orig},
                    # Final HTTP reply
@@ -1269,8 +1272,6 @@ HTTP Message: %s%s%s</dd>
                    $results->{$u}{location}{message}
                    ? &encode($results->{$u}{location}{message})
                    : '',
-                   # Color again
-                   &bgcolor($results->{$u}{location}{code}),
                    # List of lines
                    $lines_list);
             if ($#fragments >= 0) {
