@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.20 2000-01-20 23:00:35 hugo Exp $
+# $Id: checklink.pl,v 2.21 2000-01-26 21:45:00 hugo Exp $
 #
 # This program is licensed under the W3C License.
 
@@ -21,7 +21,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.20 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.21 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -38,6 +38,7 @@ my $_user;
 my $_password;
 my $_trusted = '\.w3\.org';
 my $_http_proxy;
+my $first;
 my $query;
 
 if ($#ARGV >= 0) {
@@ -217,6 +218,7 @@ sub urize() {
 
 sub check_uri() {
     my $uri = $_[0];
+    $first = 1;
     my $start;
     if (! $_summary) {
         $start = &get_timestamp();
@@ -226,6 +228,7 @@ sub check_uri() {
     }
     # Get the document
     my $response = &get_uri('GET', $uri);
+    $first = 0;
     if (! $response->is_success()) {
         if ($response->code() == 401) {
             &authentication($response);
@@ -365,7 +368,7 @@ sub W3C::UserAgent::simple_request() {
 sub W3C::UserAgent::redirect_ok {
     my ($self, $request) = @_;
     
-    if (! $_summary) {
+    if (! ($_summary || $first)) {
         printf("\n%s %s ", $request->method(), $request->uri());
     }
 
@@ -397,7 +400,7 @@ sub get_uri() {
     }
     my $count = 0;
     my $response;
-    if (! $_summary) {
+    if (! ($_summary || $first)) {
         printf("%s %s ", $method, $uri);
     }
     my $request = new HTTP::Request($method, $uri);
@@ -431,7 +434,7 @@ sub get_uri() {
             $response->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
             $realm = $1;
         }
-        if (! $_summary) {
+        if (! ($_summary || $first)) {
             print "\n";
         }
         return &get_uri($method, $response->request->url,
@@ -441,7 +444,7 @@ sub get_uri() {
     # Record the redirects
     $response->{Redirects} = $ua->{Redirects};
     my $stop = &get_timestamp();
-    if (! $_summary) {
+    if (! ($_summary || $first)) {
         printf(" fetched in %ss\n", &time_diff($start,$stop));
     }
     $response->{OriginalCode} = $code;
