@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.64 2003-07-24 12:24:29 link Exp $
+# $Id: check,v 1.305.2.65 2003-07-24 16:14:56 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -130,7 +130,7 @@ BEGIN
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.64 $;
+  $VERSION    =  q$Revision: 1.305.2.65 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -202,7 +202,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-07-24 12:24:29 $,
+                              Date => q$Date: 2003-07-24 16:14:56 $,
                              });
 
 #
@@ -823,6 +823,7 @@ if ($File->{Opt}->{Output} eq 'xml') {
       $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
       $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
       $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
+      $thispage .= ';No200=1'   if $File->{Opt}->{'No200'};
 
       &add_warning($File, 'note', 'Note:', <<".EOF.");
 You can also view <a href="$thispage;verbose=1">verbose
@@ -1915,16 +1916,7 @@ sub report_valid {
   }
 
   unless ($File->{'Is Upload'}) {
-    my $thispage = $File->{Env}->{'Self URI'};
-    my $escaped_uri = uri_escape($File->{URI});
-    $thispage .= qq(?uri=$escaped_uri);
-    $thispage .= ';ss=1'      if $File->{Opt}->{'Show Source'};
-    $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
-    $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
-    $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
-    $thispage .= ';verbose=1' if $File->{Opt}->{'Verbose'};
-
-    my $display = $thispage; # Nasty hack to enable line-wrapping in browsers!
+    my $display = my $thispage = &self_url_file($File);
     $display =~ s/(^.+?)\?uri=(.+)/$1\? uri=$2/; # @@@FIXME: Needs better way!
 
     &output_css_validator_blurb($File->{URI});
@@ -1932,7 +1924,7 @@ sub report_valid {
     print <<"EOHD";
   <p>
     If you would like to create a link to <em>this</em> page (i.e., this
-    validation result) to make it easier to re-validate this page in the
+    validation result) to make it easier to validate this page in the
     future or to allow others to validate your page, the URI is
     &lt;<a href="$thispage">$display</a>&gt; (or you can just add the
     current page to your bookmarks or hotlist).</p>
@@ -2252,15 +2244,15 @@ sub prepCGI {
   if ($q->path_info) {
     if ($q->path_info eq '/referer' or $q->path_info eq '/referrer') {
       if ($q->referer) {
-	print redirect $q->url() . '?uri=' . uri_escape($q->referer);
+	$q->param('uri', $q->referer);
+	print redirect &self_url_q($q, $File);
 	exit;
       } else {
 	print redirect $q->url() . '?uri=' . 'referer';
 	exit;
       }
     } else {
-      my $thispage = &self_url_q($q, $File);
-      print redirect $thispage;
+      print redirect &self_url_q($q, $File);
       exit;
     }
   }
@@ -2277,7 +2269,8 @@ sub prepCGI {
   # Issue a redirect for uri=referer.
   if ($q->param('uri') and $q->param('uri') eq 'referer') {
     if ($q->referer) {
-      print redirect $q->url() . '?uri=' . uri_escape($q->referer);
+      $q->param('uri', $q->referer);
+      print redirect &self_url_q($q, $File);
       exit;
     } else {
       # Redirected from /check/referer to /check?uri=referer because
@@ -3113,6 +3106,7 @@ sub self_url_file {
   $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
   $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
   $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
+  $thispage .= ';verbose=1' if $File->{Opt}->{'Verbose'};
   $thispage .= ';No200=1'   if $File->{Opt}->{'No200'};
 
   return $thispage;

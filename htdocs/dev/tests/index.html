@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.42.2.3 2003-05-20 15:07:39 link Exp $"
---><!--#set var="date" value="\$Date: 2003-05-20 15:07:39 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.42.2.4 2003-07-24 16:14:56 link Exp $"
+--><!--#set var="date" value="\$Date: 2003-07-24 16:14:56 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -74,8 +74,13 @@
     <div id="errors">
       <h2>Error conditions &amp; strange cases</h2>
       <ul>
-	<li><a href="../../check/referer">/check/referer</a></li>
-	<li><a href="../../check?uri=http://www.w3.org/MarkUp">redirect</a></li>
+	<li><a href="../../check/referer">/check/referer</a> (deprecated)</li>
+	<li><a href="../../check/referer;verbose=1">/check/referer;verbose=1</a> (unsupported)</li>
+	<li><a href="../../check/referer;verbose=1;No200=1">/check/referer;verbose=1;No200=1</a> (unsupported)</li>
+	<li><a href="../../check?uri=referer">/check?uri=referer</a></li>
+	<li><a href="../../check?uri=referer;verbose=1">/check?uri=referer;verbose=1</a></li>
+	<li><a href="../../check?uri=referer;verbose=1;No200=1">/check?uri=referer;verbose=1;No200=1</a></li>
+	<li><a href="../../check?uri=http://www.w3.org/MarkUp">Directory Redirect</a></li>
 	<li><a href="../../check">script invoked with no parameters</a></li>
 	<li><a href="../../check?uri=">uri parameter is empty</a></li>
 	<li><a href="../../check?uri=www.w3.org/">uri is missing http://</a></li>
@@ -94,7 +99,7 @@
 	<li><a href="../../check?uri=http://validator.w3.org/dev/tests/shorttags.html">SHORTTAGS and -wunclosed..</a></li>
         <li><a href="../../check?uri=http://www.w3.org/1999/09/SVG-access/computer.svg">image/svg</a></li>
         <li><a href="../../check?uri=http://validator.w3.org/dev/tests/REC-SVG-1_0-minimal.svg">SVG 1.0 Rec. minimal document</a></li>
-            <li><a href="../../check?uri=http://www.oasis-open.org/committees/xmltest/xmlconf-19990712.xml;ss">xmlconf-19990712.xml</a></li>
+	<li><a href="../../check?uri=http://www.oasis-open.org/committees/xmltest/xmlconf-19990712.xml;ss">xmlconf-19990712.xml</a></li>
       </ul>
     </div>
 
