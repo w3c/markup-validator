@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.159 2001-07-24 09:03:01 link Exp $
+# $Id: check,v 1.160 2001-07-24 09:54:56 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.159 $;
+$VERSION    =  q$Revision: 1.160 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-24 09:03:01 $;
+$DATE       =  q$Date: 2001-07-24 09:54:56 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1560,11 +1560,13 @@ sub preparse {
   my $start = sub {
     my $tag  = shift;
     my $attr = shift;
+    my %attr = map {lc($_) => $attr->{$_}} keys %{$attr};
+
     if ($File->{Root}) {
       if (lc $tag eq 'meta') {
-	if (lc $attr->{'http-equiv'} eq 'content-type') {
-	  $attr->{content} =~ m(charset\s*=\s*[\"\']*([^\s;\"\'>]*))s;
-	  $File->{META_Charset} = lc $1;
+	if (lc $attr{'http-equiv'} eq 'content-type') {
+	  $attr{content} =~ m(charset\s*=[\s\"\']*([^\s;\"\'>]*))si;
+ 	  $File->{META_Charset} = lc $1;
 	}
       }
       return unless $tag eq $File->{Root};
