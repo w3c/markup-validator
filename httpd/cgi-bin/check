@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.47 2002-06-16 20:42:09 link Exp $
+# $Id: check,v 1.200.2.48 2002-06-29 14:31:33 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -36,7 +36,7 @@ use warnings;
 # when loading modules to prevent non-OO or poorly written modules from
 # polluting our namespace.
 #
-use CGI                 qw(:cgi -newstyle_urls -private_tempfiles);
+use CGI            2.81 qw(:cgi -newstyle_urls -private_tempfiles);
 use CGI::Carp           qw(carp croak);
 use File::Spec          qw();
 use HTML::Parser   3.25 qw(); # Need 3.25 for $p->ignore_elements.
@@ -90,7 +90,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.200.2.47 $;
+  $VERSION    =  q$Revision: 1.200.2.48 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -150,7 +150,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-06-16 20:42:09 $,
+			      Date => q$Date: 2002-06-29 14:31:33 $,
 			     });
 
 #
@@ -341,12 +341,11 @@ if ($File->{'Is Upload'}) {
   &add_table($File, 'Encoding', $File->{Charset}->{Use});
 } else {
   &add_table($File,
-	     qq(<label title="Character Encoding (accesskey: 2)" for="charset">Encoding</label>),
+	     qq(<label accesskey="2" title="Character Encoding (accesskey: 2)" for="charset">Encoding</label>),
 	     $File->{Charset}->{Use},
 	     &CGI::popup_menu(
 			      -name      => 'charset',
 			      -id        => 'charset',
-			      -accesskey => '2',
 			      -values => [
 					  '(detect automatically)',
 					  'utf-8 (Unicode, worldwide)',
@@ -552,12 +551,11 @@ $File->{Version} = $CFG->{'FPI to Text'}->{$File->{Version}} || $File->{Version}
 if ($File->{'Is Upload'}) {
   &add_table($File, 'Doctype', $File->{Version});
 } else {
-  &add_table($File, qq(<label for="doctype" title="Document Type of Validate Page  (accesskey: 3)">Doctype</label>),
+  &add_table($File, qq(<label accesskey="3" for="doctype" title="Document Type of Validate Page  (accesskey: 3)">Doctype</label>),
 	     $File->{Version},
 	     &CGI::popup_menu(
 			      -name => 'doctype',
 			      -id => 'doctype',
-			      -accesskey => '3',
 			      -values => [
 					  '(detect automatically)',
 					  'XHTML 1.0 Strict',
@@ -735,17 +733,17 @@ sub print_table {
 
   add_table($Options, '', qq(<label title="Show Page Source (accesskey: 5)"><input type="checkbox" value="" name="ss" ) .
 	    qq(accesskey="5" ) .
-	     ($File->{Opt}->{'Show Source'}      ? 'checked="checked"' : '') . ' />Show Source</label>',
+	     ($File->{Opt}->{'Show Source'}      ? 'checked="checked"' : '') . ' />Show&nbsp;Source</label>',
 	    '<label title="Show an Outline of the document (accesskey: 6)"><input type="checkbox" value="" name="outline" ' .
 	    qq(accesskey="6" ) .
 	    ($File->{Opt}->{'Outline'} ? 'checked="checked"' : '') . ' />Outline</label>');
   add_table($Options, '',
 	    '<label title="Show Parse Tree (accesskey: 7)"><input type="checkbox" value="" name="sp" ' .
 	    qq(accesskey="7" ) .
-	    ($File->{Opt}->{'Show Parsetree'}      ? 'checked="checked"' : '') . ' />Parse Tree</label>',
+	    ($File->{Opt}->{'Show Parsetree'}      ? 'checked="checked"' : '') . ' />Parse&nbsp;Tree</label>',
 	    '<label title="Exclude Attributes from Parse Tree (accesskey: 8)"><input type="checkbox" value="" name="noatt" ' .
 	    qq(accesskey="8" ) .
-	    ($File->{Opt}->{'No Attributes'}   ? 'checked="checked"' : '') . ' />...no attributes</label>'
+	    ($File->{Opt}->{'No Attributes'}   ? 'checked="checked"' : '') . ' />...no&nbsp;attributes</label>'
 	   );
 
   add_table(
@@ -755,8 +753,8 @@ sub print_table {
 	   );
 
   print <<".EOF.";
-      <fieldset accesskey="4">
-        <legend>Revalidate With Options</legend>
+      <fieldset>
+        <legend accesskey="4">Revalidate With Options</legend>
 .EOF.
   print join '', @{&serialize_table($Form, 'header')};
   print qq(      </fieldset>\n);
