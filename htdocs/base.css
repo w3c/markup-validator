@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.22 2002-10-27 15:36:19 ville Exp $
+   $Id: base.css,v 1.23 2002-11-06 02:52:23 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -207,4 +207,11 @@ h6 {
   text-transform: none;
 }
 
+/* comma tools table */
+
+td.comma.desc { background: #ffeecc;  font-family: sans-serif }
+td.comma.shortcut { background: #e7e7ff; 
+ font-family: monospace }
+td.comma.tool { background: #e7e7ff }
+tr.comma {border : 1px solid black;}
 
