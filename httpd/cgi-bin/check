@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.127 2001-06-23 02:25:55 link Exp $
+# $Id: check,v 1.128 2001-06-23 02:45:11 link Exp $
 
 #
 # We need Perl 5.004.
@@ -78,9 +78,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.127 $;
+$VERSION    =  q$Revision: 1.128 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-23 02:25:55 $;
+$DATE       =  q$Date: 2001-06-23 02:45:11 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -442,7 +442,7 @@ my $xmlflags = '';
 my $catalog  = $sgmlstuff . '/catalog';
 
 if ($File->{Type} eq 'xhtml') {
-  $catalog               = $sgmlstuff . '/REC-xhtml1-20000126/xhtml.soc';
+  $catalog               = $sgmlstuff . '/xhtml.soc';
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'UTF-8';
   $xmlflags              = '-wxml';
