@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.411 2005-03-25 04:44:33 ot Exp $
+# $Id: check,v 1.412 2005-03-31 07:43:42 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -220,7 +220,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.411 $;
+  $VERSION    =  q$Revision: 1.412 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -838,6 +838,9 @@ if ($File->{Opt}->{Output} eq 'xml') {
 } else {
   &prep_template($File, $T);
 
+  
+  
+  
   if (! $File->{Doctype} and ($File->{Version} eq 'unknown' or $File->{Version} eq 'SGML')) {
       $T->param(file_version => '(no Doctype found)');
   }
@@ -930,6 +933,13 @@ sub prep_template ($$) {
   $T->param(file_namespace  => $File->{Namespace});
   my @nss                   =  map({uri => $_}, @{$File->{Namespaces}});
   $T->param(file_namespaces => \@nss) if @nss;
+  
+  if ($File->{Opt}->{DOCTYPE}) {
+      my $over_doctype_param = "override $File->{Opt}->{DOCTYPE}";
+       $T->param($over_doctype_param => TRUE);
+      
+  }
+  
 }
 
 #
