@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.343 2004-09-22 00:40:40 duerst Exp $
+# $Id: check,v 1.344 2004-09-22 00:46:12 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -225,7 +225,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.343 $;
+  $VERSION    =  q$Revision: 1.344 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1887,13 +1887,11 @@ sub parsetree {
 
 #
 # Do an initial parse of the Document Entity to extract FPI.
-# (still also extracts charset)
 sub preparse_doctype {
   my $File = shift;
 
   #
-  # Reset DOCTYPE, Root, and Charset (for second invocation).
-  $File->{Charset}->{META} = '';
+  # Reset DOCTYPE, Root (for second invocation, probably not needed anymore).
   $File->{DOCTYPE}         = '';
   $File->{Root}            = '';
 
@@ -1908,13 +1906,6 @@ sub preparse_doctype {
     my %attr = map {lc($_) => $attr->{$_}} keys %{$attr};
 
     if ($File->{Root}) {
-      if (lc $tag eq 'meta') {
-        if (lc $attr{'http-equiv'} eq 'content-type') {
-          if ($attr{content} =~ m(charset\s*=[\s\"\']*([^\s;\"\'>]*))si) {
-            $File->{Charset}->{META} = lc $1;
-          }
-        }
-      }
       return unless $tag eq $File->{Root};
     } else {
       $File->{Root} = $tag;
