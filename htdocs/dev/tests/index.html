@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.42 2002-10-23 23:11:30 link Exp $"
---><!--#set var="date" value="\$Date: 2002-10-23 23:11:30 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.42.2.1 2002-12-04 04:18:10 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-12-04 04:18:10 $"
 --><!--#set var="title" value="The W3C MarkUp Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -109,8 +109,9 @@
     <div id="regress">
       <h2>Bugs and Regression Tests</h2>
       <ul>
-	<li><a href="../../check?uri=http://validator.w3.org/dev/tests/long-lines.html">Long Lines (cause a core)</a></li>
-	<li><a href="../../check?uri=http://validator.w3.org/dev/tests/trailing-nul.html">A trailing ASCII NUL character (trips up HTML::Parser)</a></li>
+	<li><a href="../../check?uri=http://validator.w3.org/dev/tests/long-lines.html">Long Lines</a> (cause a core)</li>
+	<li><a href="../../check?uri=http://validator.w3.org/dev/tests/trailing-nul.html">A trailing ASCII NUL character</a> (trips up HTML::Parser (not really))</li>
+	<li><a href="../../check?uri=http://validator.w3.org/dev/tests/colons.html">Undeclared namespace prefixes</a> (colons ":" in element names (trips up parsing of onsgmls output))</li>
       </ul>
     </div>
 
