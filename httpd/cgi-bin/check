@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.296 2002-11-15 02:40:34 link Exp $
+# $Id: check,v 1.297 2002-11-19 11:27:47 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.296 $;
+  $VERSION    =  q$Revision: 1.297 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-15 02:40:34 $,
+                              Date => q$Date: 2002-11-19 11:27:47 $,
                              });
 
 #
@@ -1263,34 +1263,45 @@ sub ent {
 
 #
 # Truncate source lines for report.
+#
+# This *really* wants Perl 5.8.0 and it's improved UNICODE support.
+# Byte semantics are in effect on all length(), substr(), etc. calls,
+# so offsets will be wrong if there are multi-byte sequences prior to
+# the column where the error is detected.
+#
 sub truncate_line {
-  my $line = shift;
-  my $col  = shift;
+  my $line  = shift;
+  my $col   = shift;
 
-  if (length $line > 70) {
-    if ($col < 25) {      # Truncate at 70 chars and right side only.
-      $line = substr($line, 0, 70) . " ...";
-    } elsif ($col > 70) { # Keep rightmost 70 chars; left side only.
-      my $diff = $col - 50;
-      $line = "... " . substr($line, $diff, 70);
-      if (length $line == 70 + 4) {
-        $line .= " ...";
+  my $start = $col;
+  my $end   = $col;
+
+  for (1..40) {
+    $start-- if ($start - 1 >= 0);            # in/de-crement until...
+    $end++   if ($end   + 1 <= length $line); # ...we hit end of line.
+  }
+
+  unless ($end - $start == 80) {
+    if ($start == 0) { # Hit start of line, maybe grab more at end.
+      my $diff = 40 - $col;
+      for (1..$diff) {
+        $end++ if ($end + 1 <= length $line);
       }
-      if ($col > $diff) {
-        $col -= $diff;
-      } else {
-        $col -= 70;
+    } elsif ($end == 80) { # Hit end of line, maybe grab more at beginning.
+      my $diff = 80 - $col;
+      for (1..$diff) {
+        $start-- if ($start - 1 >= 0);
       }
-    } else { # Truncate both sides; leave more on left, and 30 chars on right.
-      if ($col < 35) {
-        $line = "... " . substr($line, 0, 60);
-      } else {
-        $line = "... " . substr($line, $col - 35, 60);
-        $col = 35;
-      }
-      if (length $line == 60 + 4) {$line .= " ..."};
     }
   }
+
+  $col = $col - $start; # New offset is diff from $col to $start.
+  $line = substr $line, $start, $end - $start; # Truncate.
+
+  #
+  # Add elipsis at start and end as necessary.
+  unless ($start == 0)            {substr $line,  0, 3, '...'};
+  unless ($end   == length $line) {substr $line, -3, 3, '...'};
 
   return $line, $col;
 }
@@ -1473,7 +1484,7 @@ EOHD
     $line = &ent($line); # Entity encode.
     $line =~ s/\t/ /g;   # Collapse TABs.
 
-    print qq(  <li><em>Line <a href="#line-$err->{line}">$err->{line}</a>, column $col</em>: );
+    print qq(  <li><em>Line <a href="#line-$err->{line}">$err->{line}</a>, column $err->{char}</em>: );
     print qq{<span class="msg">$err->{msg}</span>};
     if (defined $CFG->{'Error to URI'}->{$err->{idx}}) {
       print qq{ (<a href="$CFG->{'Msg FAQ URI'}#$CFG->{'Error to URI'}->{$err->{idx}}">explain...</a>).};
@@ -1483,7 +1494,6 @@ EOHD
 
     print qq(\n<pre>  <code class="input">$line</code>\n);
     print ' ' x ($col + 2); # 2 is the number of spaces before <code> above
-    print ' ' x 4 if $col != $err->{char}; # only for truncated lines
     print qq(<span class="markup">^</span></pre></li>\n);
   }
   print qq(  </ol>\n);
