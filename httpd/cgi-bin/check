@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.210 2002-08-26 08:59:04 duerst Exp $
+# $Id: check,v 1.211 2002-08-26 11:41:25 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.210 $;
+  $VERSION    =  q$Revision: 1.211 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-26 08:59:04 $,
+			      Date => q$Date: 2002-08-26 11:41:25 $,
 			     });
 
 #
@@ -305,15 +305,6 @@ untie *STDIN;
 \t\n\r]+encoding[ \t\n\r]?=[ \t\n\r]?([\'\"])([A-Za-z][-._A-Za-z0-9]*)\2);
 
   $File->{Charset}->{XML} = $3;
-
-  # if (!$File->{Charset}->{XML}) {   # handle XML default cases
-  #                                   # problem: defaults shouldn't generate the same errors
-  #   if ($File->{BOM} == 2 && $File->{Charset}->{Auto} =~ m"^UTF-16") {
-  #     $File->{Charset}->{XML} = $File->{Charset}->{Auto};
-  #   }
-  #   elsif (($File->{BOM}==3 || $File->{BOM}==0) && $File->{Charset}->{Auto} eq "UTF-8") {
-  #     $File->{Charset}->{XML} = "UTF-8";
-  # }
 }
 
 #
@@ -1303,12 +1294,13 @@ sub normalize_newlines {
   my $_ = shift;  #charset
   my $pattern = '';
 
-  $pattern = '\x00\015(\x00\012)?|\x00\012' if /^UTF-16BE$/i;
-  $pattern = '\015\x00(\012\x00)?|\012\x00' if /^UTF-16LE$/i;
-  $pattern = '\x00\x00\x00\015(\x00\x00\x00\012)?|\x00\x00\x00\012' if /^UCS-4BE$/i;
-  $pattern = '\015\x00\x00\x00(\012\x00\x00\x00)?|\012\x00\x00\x00' if /^UCS-4LE$/i;
+  # patterns are not allowed to have parentheses
+  $pattern = '\x00\015\x00\012|\x00\015|\x00\012' if /^UTF-16BE$/i;
+  $pattern = '\015\x00\012\x00|\015\x00|\012\x00' if /^UTF-16LE$/i;
+  $pattern = '\x00\x00\x00\015\x00\x00\x00\012|\x00\x00\x00\015|\x00\x00\x00\012' if /^UCS-4BE$/i;
+  $pattern = '\015\x00\x00\x00\012\x00\x00\x00|\015\x00\x00\x00|\012\x00\x00\x00' if /^UCS-4LE$/i;
   # insert other special cases here
-  $pattern = '\015\012?|\012' if !$pattern;    # all other cases
+  $pattern = '\015\012|\015|\012' if !$pattern;    # all other cases
 
   return [split /$pattern/, $file];
 }
