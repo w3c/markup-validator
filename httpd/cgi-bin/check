@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.25 2003-01-09 18:53:00 ville Exp $
+# $Id: check,v 1.305.2.26 2003-02-05 20:18:54 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.25 $;
+  $VERSION    =  q$Revision: 1.305.2.26 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -166,7 +166,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-01-09 18:53:00 $,
+                              Date => q$Date: 2003-02-05 20:18:54 $,
                              });
 
 #
@@ -1601,66 +1601,69 @@ sub report_valid {
   my $File        = shift;
   my $gifborder   = ' border="0"';
   my $xhtmlendtag = '';
-  my($image_uri, $alttext, $gifhw);
+  my $image_uri;
+  my $alttext     = '';
+  my $gifhw       = '';
   my $URI         = &ent($File->{URI});
 
   unless ($File->{Version} eq 'unknown' or defined $File->{Tentative}) {
     if ($File->{Version} =~ /^HTML 2\.0$/) {
       $image_uri = "$CFG->{'Home Page'}images/vh20";
-      $alttext = "Valid HTML 2.0!";
+      $alttext   = "Valid HTML 2.0!";
       $gifborder = "";
     } elsif ($File->{Version} =~ /HTML 3\.2</) {
       $image_uri = "http://www.w3.org/Icons/valid-html32";
-      $alttext = "Valid HTML 3.2!";
-      $gifhw   = ' height="31" width="88"';
+      $alttext   = "Valid HTML 3.2!";
+      $gifhw     = ' height="31" width="88"';
     } elsif ($File->{Version} =~ /HTML 4\.0<\/a> Strict$/) {
       $image_uri = "http://www.w3.org/Icons/valid-html40";
-      $alttext = "Valid HTML 4.0!";
+      $alttext   = "Valid HTML 4.0!";
       $gifborder = "";
-      $gifhw   = ' height="31" width="88"';
+      $gifhw     = ' height="31" width="88"';
     } elsif ($File->{Version} =~ /HTML 4\.0<\/a> /) {
       $image_uri = "http://www.w3.org/Icons/valid-html40";
-      $alttext = "Valid HTML 4.0!";
-      $gifhw   = ' height="31" width="88"';
+      $alttext   = "Valid HTML 4.0!";
+      $gifhw     = ' height="31" width="88"';
     } elsif ($File->{Version} =~ /HTML 4\.01<\/a> Strict$/) {
       $image_uri = "http://www.w3.org/Icons/valid-html401";
-      $alttext = "Valid HTML 4.01!";
+      $alttext   = "Valid HTML 4.01!";
       $gifborder = "";
-      $gifhw   = ' height="31" width="88"';
+      $gifhw     = ' height="31" width="88"';
     } elsif ($File->{Version} =~ /HTML 4\.01<\/a> /) {
       $image_uri = "http://www.w3.org/Icons/valid-html401";
-      $alttext = "Valid HTML 4.01!";
-      $gifhw   = ' height="31" width="88"';
+      $alttext   = "Valid HTML 4.01!";
+      $gifhw     = ' height="31" width="88"';
     } elsif ($File->{Version} =~ /XHTML 1\.0<\/a> /) {
       $image_uri = "http://www.w3.org/Icons/valid-xhtml10";
-      $alttext = "Valid XHTML 1.0!";
+      $alttext   = "Valid XHTML 1.0!";
       $gifborder = "";
-      $gifhw   = ' height="31" width="88"';
+      $gifhw     = ' height="31" width="88"';
       $xhtmlendtag = " /";
     } elsif ($File->{Version} =~ /XHTML Basic 1.0/) {
       $image_uri = "$CFG->{'Home Page'}/images/vxhtml-basic10";
-      $alttext = "Valid XHTML Basic 1.0!";
+      $alttext   = "Valid XHTML Basic 1.0!";
       $gifborder = "";
-      $gifhw   = ' height="31" width="88"';
+      $gifhw     = ' height="31" width="88"';
       $xhtmlendtag = " /";
     } elsif ($File->{Version} =~ /XHTML 1.1/) {
       $image_uri = "http://www.w3.org/Icons/valid-xhtml11";
-      $alttext = "Valid XHTML 1.1!";
+      $alttext   = "Valid XHTML 1.1!";
       $gifborder = "";
-      $gifhw   = ' height="31" width="88"';
+      $gifhw     = ' height="31" width="88"';
       $xhtmlendtag = " /";
     } elsif ($File->{Version} =~ /HTML 3\.0/) {
       $image_uri = "$CFG->{'Home Page'}images/vh30";
-      $alttext = "Valid HTML 3.0!";
+      $alttext   = "Valid HTML 3.0!";
     } elsif ($File->{Version} =~ /Netscape/) {
       $image_uri = "$CFG->{'Home Page'}images/vhns";
-      $alttext = "Valid Netscape-HTML!";
+      $alttext   = "Valid Netscape-HTML!";
     } elsif ($File->{Version} =~ /Hotjava/) {
       $image_uri = "$CFG->{'Home Page'}images/vhhj";
-      $alttext = "Valid Hotjava-HTML!";
+      $alttext   = "Valid Hotjava-HTML!";
     } elsif ($File->{Version} =~ /ISO\/IEC 15445:2000/) {
       $image_uri = "$CFG->{'Home Page'}images/v15445";
-      $alttext = "Valid ISO-HTML!";
+      $alttext   = "Valid ISO-HTML!";
+      $gifborder = "";
     }
 
     if ($File->{Version}) {
