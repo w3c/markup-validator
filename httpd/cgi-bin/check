@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.287 2002-11-03 16:54:31 link Exp $
+# $Id: check,v 1.288 2002-11-03 22:09:51 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.287 $;
+  $VERSION    =  q$Revision: 1.288 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-11-03 16:54:31 $,
+			      Date => q$Date: 2002-11-03 22:09:51 $,
 			     });
 
 #
@@ -2367,7 +2367,7 @@ X-W3C-Validator-Errors: $errs
    <Assertion rdf:ID="result">
     <subject rdf:resource="%s" />
     <result rdf:resource="http://www.w3.org/2001/03/earl/1.00#fails" />
-    <testCase rdf:resource="http://www.w3.org/HTML/" />
+    <testCase rdf:resource="http://www.w3.org/MarkUp/" />
     <note>Invalid!</note>
    </Assertion>
   </asserts>
@@ -2404,7 +2404,8 @@ X-W3C-Validator-Errors: $errs
           <val:offset>@offsets</val:offset>
         </subject>
         <result rdf:resource="http://www.w3.org/2003/03/earl/1.00#fails" />
-        <testCase>%s</testCase>
+        <testCase rdf:resource="http://www.w3.org/Markup/" />
+        <note>%s</note>
       </Assertion>
     </asserts>
 .EOF.
@@ -2415,7 +2416,7 @@ X-W3C-Validator-Errors: $errs
    <Assertion>
     <subject rdf:resource="%s" />
     <result rdf:resource="http://www.w3.org/2001/03/earl/1.00#passes" />
-    <testCase rdf:resource="http://www.w3.org/HTML/" />
+    <testCase rdf:resource="http://www.w3.org/MarkUp/" />
     <note>Valid!</note>
    </Assertion>
   </asserts>
