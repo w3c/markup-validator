@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.22 2002-05-23 18:11:59 link Exp $
+# $Id: check,v 1.200.2.23 2002-05-29 02:40:24 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -70,7 +70,7 @@ $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.22 $;
+$VERSION    =  q$Revision: 1.200.2.23 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 #
@@ -99,7 +99,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-05-23 18:11:59 $,
+			      Date => q$Date: 2002-05-29 02:40:24 $,
 			     });
 
 #
@@ -286,7 +286,10 @@ if ($File->{'Is Upload'}) {
 &add_table($File, "Modified", $File->{Modified})  if $File->{Modified};
 &add_table($File, "Server", $File->{Server})  if $File->{Server};
 &add_table($File, "Size", $File->{Size})  if $File->{Size};
-unless ($File->{Opt}->{'Is Upload'}) {
+
+if ($File->{'Is Upload'}) {
+  &add_table($File, 'Encoding', $File->{Charset}->{Use});
+} else {
   &add_table($File,
 	     qq(<label title="Character Encoding" for="charset">Encoding</label>),
 	     $File->{Charset}->{Use} . ' ' .
@@ -488,25 +491,28 @@ if (&is_xml($File->{Type}) and not $File->{DOCTYPE}) {
 $File->{Version} = $CFG->{'FPI to Text'}->{$File->{Version}} || $File->{Version};
 
 
-
-&add_table($File, qq(<label for="doctype">Doctype</label>),
-	   $File->{Version} . ' ' .
-	   &CGI::popup_menu(
-			    -name => 'doctype',
-			    -id => 'doctype',
-			    -values => [
-					'(detect automatically)',
-					'XHTML 1.0 Strict',
-					'XHTML 1.0 Transitional',
-					'XHTML 1.0 Frameset',
-					'HTML 4.01 Strict',
-					'HTML 4.01 Transitional',
-					'HTML 4.01 Frameset',
-					'HTML 3.2',
-					'HTML 2.0',
-				       ],
-			   )
-	  );
+if ($File->{'Is Upload'}) {
+  &add_table($File, 'Doctype', $File->{Version});
+} else {
+  &add_table($File, qq(<label for="doctype">Doctype</label>),
+	     $File->{Version} . ' ' .
+	     &CGI::popup_menu(
+			      -name => 'doctype',
+			      -id => 'doctype',
+			      -values => [
+					  '(detect automatically)',
+					  'XHTML 1.0 Strict',
+					  'XHTML 1.0 Transitional',
+					  'XHTML 1.0 Frameset',
+					  'HTML 4.01 Strict',
+					  'HTML 4.01 Transitional',
+					  'HTML 4.01 Frameset',
+					  'HTML 3.2',
+					  'HTML 2.0',
+					 ],
+			     )
+	    );
+}
 
 
 if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
@@ -628,8 +634,9 @@ sub print_table {
 	      ($File->{Opt}->{'No Attributes'}   ? 'checked="checked"' : '') . " />...no attributes</label>\n"
 	     );
   }
-  print '  <form method="get" action="/check">' unless $File->{'Is Upload'};
-  print qq(<table class="header">\n);
+  print qq(  <form id="form" method="get" action="/check">\n)
+    unless $File->{'Is Upload'};
+  print qq(    <table class="header">\n);
   unless ($File->{'Is Valid'}) {
     &add_table($File, 'Errors', scalar(@{$File->{Errors}}) . ' (approximate)');
   }
@@ -647,7 +654,9 @@ sub print_table {
       print "    </tr>\n";
     }
   }
-  print "  </table></form>\n";
+  print qq(    </table>\n);
+  print qq(  </form>\n)
+    unless $File->{'Is Upload'};
 }
 
 #
@@ -1495,7 +1504,7 @@ EOF
     print <<'EOF';
     <p class="note">
       You can also view this parse tree without attributes by selecting the
-      appropriate option on <a href="./#byURI">the form</a>.
+      appropriate option on <a href="./#form">the form</a>.
     </p>
 EOF
   }
