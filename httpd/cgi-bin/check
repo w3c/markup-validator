@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.206 2002-08-23 08:21:34 duerst Exp $
+# $Id: check,v 1.207 2002-08-23 08:26:50 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.206 $;
+  $VERSION    =  q$Revision: 1.207 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-23 08:21:34 $,
+			      Date => q$Date: 2002-08-23 08:26:50 $,
 			     });
 
 #
@@ -2174,7 +2174,8 @@ sub validate_encoding {
     $File->{'Error Flagged'} = TRUE;
     my $s = $#lines ? 's' : '';
     my $lines = new Set::IntSpan \@lines;
-       $lines = join ', ', split ',', $lines->run_list;
+       $lines = $lines->run_list;
+       $lines =~ s/, /,/g;
     $File->{'Error Message'} = <<"    .EOF.";
       <p class="error">
         Sorry, I am unable to validate this document because on line$s
