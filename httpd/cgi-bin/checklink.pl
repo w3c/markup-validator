@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.47 2000-05-09 19:44:58 hugo Exp $
+# $Id: checklink.pl,v 2.48 2000-05-10 18:32:51 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -31,7 +31,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.47 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.48 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -134,6 +134,10 @@ if ($#ARGV >= 0) {
         $uri = 'http://'.$uri;
     }
     &check_uri($uri, 1);
+}
+
+if ($_html) {
+    &html_footer();
 }
 
 ###############################################################################
@@ -292,7 +296,7 @@ sub urize() {
 #######################
 
 sub check_uri() {
-    my ($uri, $html_stuff) = @_;
+    my ($uri, $html_header) = @_;
 
     # Are we in a recursion cycle?
     my $in_recursion = !$first;
@@ -319,7 +323,7 @@ sub check_uri() {
     $doc_count++;
 
     if ($_html) {
-        if ($html_stuff) {
+        if ($html_header) {
             &html_header($uri);
         }
         print('<h2>');
@@ -495,10 +499,6 @@ sub check_uri() {
             &check_uri($u, 0);
         }
     }
-
-    if ($_html && $html_stuff) {
-        &html_footer();
-    }
 }
 
 #############################
@@ -541,10 +541,10 @@ sub get_document() {
 
     # Parse the document
     if (! ($response->header('Content-type') =~ m/text\/html/)) {
-        if ($_html) {
-            &html_header($uri);
-        }
         if (! $in_recursion) {
+            if ($_html) {
+                &html_header($uri);
+            }
             &hprintf("Can't check link: Content-type is '%s'.\n",
                      $response->header('Content-type'));
         }
@@ -756,7 +756,9 @@ sub parse_document() {
     # Processing instructions are not parsed by process, but in this case
     # it should be. It's expensive, it's horrible, but it's the easiest way
     # for right now.
-    $document =~ s/\<\?(xml:stylesheet.*?)\?\>/\<$1\>/;
+    if (!$p->{only_anchors}) {
+        $document =~ s/\<\?(xml:stylesheet.*?)\?\>/\<$1\>/;
+    }
 
     $p->parse($document);
 
