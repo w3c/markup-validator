@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.33 2003-03-01 18:56:00 link Exp $
+# $Id: check,v 1.305.2.34 2003-04-23 01:19:43 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.33 $;
+  $VERSION    =  q$Revision: 1.305.2.34 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -166,7 +166,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-03-01 18:56:00 $,
+                              Date => q$Date: 2003-04-23 01:19:43 $,
                              });
 
 #
@@ -1450,10 +1450,10 @@ sub parse_errors ($$) {
     $err->{char} = $errors[3];
     $err->{type} = $errors[4];
     if ($err->{type} eq 'E' or $err->{type} eq 'X' or $err->{type} eq 'Q') {
-      $err->{msg}  = join ':', @errors[5 .. scalar @errors];
+      $err->{msg}  = join ':', @errors[5 .. $#errors];
     } elsif ($err->{type} eq 'W') {
       &add_warning($File, "Line $err->{line}, column $err->{char}: $errors[5]");
-      $err->{msg}  = join ':', @errors[5 .. scalar @errors];
+      $err->{msg}  = join ':', @errors[5 .. $#errors];
     } else {
       $err->{type} = 'I';
       $err->{msg}  = $errors[4];
