@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.20 1999-04-26 11:50:20 gerald Exp $
+# $Id: check,v 1.21 1999-04-30 02:19:09 gerald Exp $
 
 use LWP::UserAgent;
 
@@ -16,8 +16,8 @@ use LWP::UserAgent;
 # Constant definitions
 #############################################################################
 
-$cvsrevision	= '$Revision: 1.20 $';
-$cvsdate	= '$Date: 1999-04-26 11:50:20 $';
+$cvsrevision	= '$Revision: 1.21 $';
+$cvsdate	= '$Date: 1999-04-30 02:19:09 $';
 
 $logfile	= "/var/log/httpd/val-svc";
 
@@ -99,7 +99,7 @@ $gifborder       = " BORDER=0";
 
     '-//IETF//DTD HTML V2.2//EN', 'HTML 2.2',
     '-//W3C//DTD HTML 1996-01//EN', 'HTML 1996-01',
-    '-//W3C//DTD HTML 3.2 Final//EN', '<a href="http://www.w3.org/TR/REC-HTML32">HTML 3.2</a>',
+    '-//W3C//DTD HTML 3.2 Final//EN', '<a href="http://www.w3.org/TR/REC-html32">HTML 3.2</a>',
     '-//W3C//DTD HTML Experimental 970421//EN', '<a href="http://www.w3.org/TR/NOTE-html-970421.html">HTML 3.2 + Style</a>',
     '+//Silmaril//DTD HTML Pro v0r11 19970101//EN', '<a href="http://www.ucc.ie/doc/www/html/dtds/htmlpro.html">HTML Pro</a>',
     '-//Spyglass//DTD HTML 2.0 Extended//EN', 'Spyglass HTML 2.0 Extended',
