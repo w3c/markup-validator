@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.8.2.6 2002-05-12 20:52:29 link Exp $ */
+/* $Id: results.css,v 1.8.2.7 2002-05-12 22:53:17 link Exp $ */
 
 .markup {
   color: red;
@@ -32,52 +32,7 @@ div.splash {
   background:  #eeeeee;
 }
 
-dl.tip {
-  float: right;
-  clear: left;
-  text-align: justify;
-  width: 25ex;
-  margin-top:    0em;
-  background:    #eeeeee;
-  border-top:    3px solid #eeeeee;
-  border-left:   3px solid #eeeeee;
-  border-bottom: 3px solid silver;
-  border-right:  3px solid silver;
-}
 
-dl.tip dt a {
-  text-decoration: none;
-  color: inherit;
-} 
-
-dl.tip dt {
-  text-align: center;
-  padding: 0em;
-  margin: 0em;
-  color: black;
-  background: #eeeeee;
-}
-
-dl.tip dd {
-  text-align: left;
-  text-decoration: none;
-  font-weight: bolder;
-  margin: .5em;
-  color: blue;
-  border: .1em dashed black;
-}
-
-/ * dl.tip dd a:hover {
-  color: blue;
-  background: silver;
-} */
-
-dl.tip dd a {
-  padding: .1em .25em;
-  text-decoration: none;
-  margin:  .5em;
-  display: block;
-}
 
 th {
   padding-right: .5em;
