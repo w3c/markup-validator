@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.152 2001-07-19 03:16:14 link Exp $
+# $Id: check,v 1.153 2001-07-19 23:01:01 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.152 $;
+$VERSION    =  q$Revision: 1.153 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-19 03:16:14 $;
+$DATE       =  q$Date: 2001-07-19 23:01:01 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -643,7 +643,6 @@ sub add_table {
 sub print_table {
   my $tableEntry;
   add_table("Options",
-      "<input type='hidden' name='uri' value='$File->{URI}'>\n" .
       '         <input type="checkbox" value="" name="ss"' .
       ($q->param('ss')      ? 'checked="checked"' : '') . " />Show Source\n" .
       '         <input type="checkbox" value="" name="outline"' .
