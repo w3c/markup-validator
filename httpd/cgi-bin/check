@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.356 2004-11-13 15:40:46 ville Exp $
+# $Id: check,v 1.357 2004-11-13 15:52:36 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -227,7 +227,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.356 $;
+  $VERSION    =  q$Revision: 1.357 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1221,7 +1221,7 @@ sub handle_uri {
   unless ($res->code == 200 || $File->{Opt}->{'No200'}) {
     if ($res->code == 401) {
       my %auth = $res->www_authenticate(); # HTTP::Headers::Auth
-      &authenticate($File, $res->request->url, \%auth);
+      &authenticate($File, $res->request->uri, \%auth);
     } else {
       $File->{'Error Flagged'} = TRUE;
       $File->{'Error Message'} = &http_error($uri->as_string, $res->code, $res->message);
@@ -1233,7 +1233,7 @@ sub handle_uri {
     = &parse_content_type(
                           $File,
                           $res->header('Content-Type'),
-                          scalar($res->request->url),
+                          scalar($res->request->uri),
                          );
 
   my $lastmod = undef;
@@ -1248,7 +1248,7 @@ sub handle_uri {
   $File->{Modified}        = $lastmod;
   $File->{Server}          = &ent(scalar $res->server);
   $File->{Size}            = scalar $res->content_length;
-  $File->{URI}             = scalar $res->request->url;
+  $File->{URI}             = scalar $res->request->uri;
   $File->{'Is Upload'}     = FALSE;
 
   return $File;
