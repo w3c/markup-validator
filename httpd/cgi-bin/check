@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.341 2004-09-12 07:48:05 bjoern Exp $
+# $Id: check,v 1.342 2004-09-17 14:36:23 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -225,7 +225,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.341 $;
+  $VERSION    =  q$Revision: 1.342 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1335,7 +1335,7 @@ sub parse_content_type {
         <code>Content-Type</code> values (such as <code>text/html</code>).
       </p>
       <p>
-        That you recieved this message can mean that your server is
+        That you received this message can mean that your server is
         not configured correctly, that your file does not have the correct
         filename extension, or that you are attempting to validate a file
         type that we do not support yet. In the latter case you should let
