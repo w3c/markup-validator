@@ -142,33 +142,6 @@
     </p>
   </dd>
 </TMPL_IF>
-<TMPL_IF NAME="W16">
-  <dt id="W16">No DOCTYPE Found! Falling Back to <TMPL_VAR NAME="W16_dtd" ESCAPE="HTML">.</dt>
-  <dd>
-    <p>
-      A DOCTYPE Declaration is mandatory for most current markup languages
-      and without one it is impossible to reliably validate this document.
-      I am falling back to "<TMPL_VAR NAME="W16_dtd" ESCAPE="HTML">" and will attempt to
-      validate the document anyway, but this is very likely to produce
-      spurious error messages for most non-trivial documents.
-    </p>
-  <TMPL_IF NAME="opt_verbose">
-    <TMPL_INCLUDE NAME="doctype_spiel.tmpl">
-    <p>
-      The W3C QA Activity maintains a <a
-        href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">List of
-          Valid Doctypes</a> that you can choose from, and the <acronym
-        title="Web Design Group">WDG</acronym> maintains a document on
-      "<a href="http://htmlhelp.com/tools/validator/doctype.html">Choosing
-         a DOCTYPE</a>".
-    </p>
-  <TMPL_ELSE>
-    <p>
-      So what should I do?
-      <a href="docs/help.html#faq-doctype">Tell me more...</a>
-    </p>
-  </TMPL_IF>
-</TMPL_IF>
 <TMPL_IF NAME="W09">
   <dt id="W09"><code>DOCTYPE</code> Fallback in effect!</dt>
   <dd>
@@ -240,6 +213,35 @@
       are shown below the document will not be Valid until you add the new
       DOCTYPE Declaration.
     </p>
+  </dd>
+</TMPL_IF>
+<TMPL_IF NAME="W16">
+  <dt id="W16">No DOCTYPE Found! Falling Back to
+    <TMPL_VAR NAME="W16_dtd" ESCAPE="HTML">.</dt>
+  <dd>
+    <p>
+      A DOCTYPE Declaration is mandatory for most current markup languages
+      and without one it is impossible to reliably validate this document.
+      I am falling back to "<TMPL_VAR NAME="W16_dtd" ESCAPE="HTML">" and will
+      attempt to validate the document anyway, but this is very likely to
+      produce spurious error messages for most non-trivial documents.
+    </p>
+  <TMPL_IF NAME="opt_verbose">
+    <TMPL_INCLUDE NAME="doctype_spiel.tmpl">
+    <p>
+      The W3C QA Activity maintains a <a
+        href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">List of
+          Valid Doctypes</a> that you can choose from, and the <acronym
+        title="Web Design Group">WDG</acronym> maintains a document on
+      "<a href="http://htmlhelp.com/tools/validator/doctype.html">Choosing
+         a DOCTYPE</a>".
+    </p>
+  <TMPL_ELSE>
+    <p>
+      So what should I do?
+      <a href="docs/help.html#faq-doctype">Tell me more...</a>
+    </p>
+  </TMPL_IF>
   </dd>
 </TMPL_IF>
 <TMPL_IF NAME="W17">
