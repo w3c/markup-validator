@@ -1,15 +1,5 @@
   <div id="result">
     <h2 id="results" class="invalid">This page is <strong>not</strong> Valid <TMPL_VAR NAME="file_version" ESCAPE="HTML">!</h2>
-<TMPL_IF NAME="file_warnings">
-    <dl id="warnings">
-<TMPL_LOOP NAME="file_warnings">
-      <dt><TMPL_VAR NAME="Title" ESCAPE="HTML"></dt>
-        <dd>
-          <TMPL_VAR NAME="Message">
-        </dd>
-</TMPL_LOOP>
-      </dl>
-</TMPL_IF>
 <TMPL_IF NAME="is_xml">
     <p>
       Below are the results of checking this document for <a

@@ -8,16 +8,6 @@
     <dt><a href="http://www.w3.org/2001/06tips/">Tip Of The Day</a>:</dt>
     <dd><a href="<TMPL_VAR NAME="tip_uri" ESCAPE="HTML">"><TMPL_VAR NAME="tip_slug"></a></dd>
   </dl>
-<TMPL_IF NAME="file_warnings">
-  <dl id="warnings">
-<TMPL_LOOP NAME="file_warnings">
-    <dt><TMPL_VAR NAME="Title" ESCAPE="HTML"></dt>
-    <dd>
-      <TMPL_VAR NAME="Message">
-    </dd>
-</TMPL_LOOP>
-  </dl>
-</TMPL_IF>
   <p>
 <TMPL_IF NAME="is_upload">
     The uploaded document "<TMPL_VAR NAME="file_uri" ESCAPE="HTML">"
