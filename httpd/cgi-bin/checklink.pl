@@ -5,7 +5,7 @@
 # (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.22 2003-11-22 15:20:15 ville Exp $
+# $Id: checklink.pl,v 3.6.2.23 2003-11-22 15:40:20 ville Exp $
 #
 # This program is licensed under the W3C(r) Software License:
 #       http://www.w3.org/Consortium/Legal/copyright-software
@@ -87,7 +87,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.22 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.23 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
 
@@ -207,7 +207,7 @@ if ($Opts{Command_Line}) {
     }
     # Transform the parameter into a URI
     $uri = &urize($uri);
-    &check_uri($uri, ($Opts{HTML} && $first), $Opts{Depth});
+    &check_uri($uri, $first, $Opts{Depth});
     $first &&= 0;
   }
   undef $first;
@@ -487,9 +487,8 @@ sub urize ($)
 
 sub check_uri ($$$;$)
 {
-  my ($uri, $html_header, $depth, $cookie) = @_;
-  # If $html_header equals 1, we need to generate a HTML header (first
-  # instance called in HTML mode).
+
+  my ($uri, $first, $depth, $cookie) = @_;
 
   my $start = &get_timestamp() unless $Opts{Quiet};
 
@@ -499,11 +498,24 @@ sub check_uri ($$$;$)
   # Can we check the resource? If not, we exit here...
   return -1 if defined($response->{Stop});
 
+  if ($first) {
+    # Use the first URI as the recursion base unless specified otherwise.
+    $Opts{Base_Location} = ($Opts{Base_Location} eq '.')
+      ? $response->{absolute_uri}->canonical() :
+        URI->new($Opts{Base_Location})->canonical();
+  } else {
+    # Before fetching the document, we don't know if we'll be within the
+    # recursion scope or not (think redirects).
+    return -1 unless &in_recursion_scope($response->{absolute_uri});
+
+    print $Opts{HTML} ? '<hr>' : '-' x 40, "\n";
+  }
+
   # We are checking a new document
   $doc_count++;
 
   if ($Opts{HTML}) {
-    &html_header($uri, 0, $cookie) if $html_header;
+    &html_header($uri, 0, $cookie) if $first;
     print('<h2>');
   }
 
@@ -646,22 +658,12 @@ sub check_uri ($$$;$)
 
   # Do we want to process other documents?
   if ($depth != 0) {
-    if (! ref($Opts{Base_Location})) { # Not a URI object yet?
-      $Opts{Base_Location} = ($Opts{Base_Location} eq '.')
-        ? URI->new($results{$uri}{parsing}{base})->canonical() :
-          URI->new($Opts{Base_Location})->canonical();
-    }
 
     foreach my $u (keys %links) {
 
       next unless $results{$u}{location}{success};  # Broken link?
 
-      # Check if this link is in our recursion scope (see URI docs).
-      my $current = URI->new($u)->canonical();
-      my $rel = $current->rel($Opts{Base_Location}); # base -> current !
-      next if ($current eq $rel);                 # Relative path not possible?
-      next if ($rel =~ m|^(\.\.)?/|);    # Relative path starts with ../ or / ?
-      undef $current; undef $rel;
+      next unless &in_recursion_scope($u);
 
       # Do we understand its content type?
       next unless ($results{$u}{location}{type} =~ $ContentTypes);
@@ -671,9 +673,7 @@ sub check_uri ($$$;$)
 
       # Do the job
       print "\n";
-      if (! $Opts{HTML}) {
-        print '-' x 40;
-      } else {
+      if ($Opts{HTML}) {
         # For the online version, wait for a while to avoid abuses
         if (!$Opts{Command_Line}) {
           if ($doc_count == $Opts{Max_Documents}) {
@@ -686,10 +686,8 @@ sub check_uri ($$$;$)
             next;
           }
         }
-        print('<hr>');
         sleep($Opts{Sleep_Time});
       }
-      print "\n";
       if ($depth < 0) {
         &check_uri($u, 0, -1);
       } else {
@@ -762,6 +760,23 @@ sub get_document ($$$;\%)
 
   # Ok, return the information
   return($response);
+}
+
+#########################################################
+# Check whether a URI is within the scope of recursion. #
+#########################################################
+
+sub in_recursion_scope ($)
+{
+  my ($uri) = @_;
+  return undef unless $uri;
+
+  my $current = URI->new($uri)->canonical();
+  my $rel = $current->rel($Opts{Base_Location}); # base -> current!
+
+  return undef if ($current eq $rel);     # Relative path not possible?
+  return undef if ($rel =~ m|^(\.\.)?/|); # Relative path starts with ../ or /?
+  return 1;
 }
 
 ##################################################
