@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.258 2002-10-25 02:34:25 link Exp $
+# $Id: check,v 1.259 2002-10-25 02:42:45 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.258 $;
+  $VERSION    =  q$Revision: 1.259 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -156,7 +156,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-25 02:34:25 $,
+			      Date => q$Date: 2002-10-25 02:42:45 $,
 			     });
 
 #
@@ -913,24 +913,29 @@ sub print_warnings {
 sub doctype_spiel {
   return <<".EOF.";
     <p>
-      You should make the first line of your HTML document a DOCTYPE
-      declaration, for example, for a typical <a
+      You should place a DOCTYPE declaration as the very first thing in your
+      HTML document. For example, for a typical <a
       href="http://www.w3.org/TR/xhtml1/">XHTML 1.0</a> document:
     </p>
-
     <pre>
       &lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
       &lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"&gt;
-	&lt;head&gt;
-	  &lt;title&gt;Title&lt;/title&gt;
-	&lt;/head&gt;
+	      &lt;head&gt;
+	        &lt;title&gt;Title&lt;/title&gt;
+	      &lt;/head&gt;
 
-	&lt;body&gt;
-	  &lt;!-- ... body of document ... --&gt;
-	&lt;/body&gt;
+	      &lt;body&gt;
+	        &lt;!-- ... body of document ... --&gt;
+	      &lt;/body&gt;
       &lt;/html&gt;
     </pre>
+    <p>
+      For XML documents, you may also wish to include an "XML Declaration"
+      even before the DOCTYPE Declaration, but this is not well supported
+      in older browsers. More information about this can be found in the
+      <a href="http://www.w3.org/TR/xhtml1/">XHTML 1.0</a> Recommendation.
+    </p>
 .EOF.
 }
 
