@@ -14,6 +14,8 @@ sub new_line {
     my $self=shift;
     $self->{Line}++;
 }
+# called by HTML::Parser::parse
+# overriden to count lines
 sub start {
     my $self=shift;
     my ($tag,$attr)=@_;
@@ -24,10 +26,15 @@ sub start {
 	$self->{Links}{$link}{$self->{Line}+1}++;
     }
 }
+
 package UserAgent;
 use LWP::Parallel::UserAgent;
 use vars qw(@ISA);
 @ISA = qw(LWP::Parallel::UserAgent);
+# function overload to handle 301s and build
+# redirect chain
+# next is to handle 401s to make sure a 404
+# is not hidden behind it.
 sub on_return {
     my $self = shift;
     my ($request,$response,$content) = @_;
@@ -47,7 +54,7 @@ use CGI qw(:standard);
 ###############
 # Global Variables
 
-my $VERSION= '$Id: checklink.pl,v 1.11 1998-09-06 01:00:15 renaudb Exp $ ';
+my $VERSION= '$Id: checklink.pl,v 1.12 1998-09-09 13:43:34 renaudb Exp $ ';
 my %ALLOWED_SCHEMES = ( "http" => 1 );
 my %SCHEMES = (); # for report
 my %URL = ();
