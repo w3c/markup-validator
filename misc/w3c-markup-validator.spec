@@ -1,9 +1,9 @@
 # RPM spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.4 2004-10-10 16:35:28 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.5 2004-10-14 09:51:20 ville Exp $
 
 Name:           w3c-markup-validator
 Version:        0.7.0
-Release:        0.cvs
+Release:        0.1.cvs
 Epoch:          0
 Summary:        W3C Markup Validator
 
@@ -108,14 +108,14 @@ fi
 %{_initrddir}/httpd reload &>/dev/null || :
 
 %post libs
-for catalog in "mathml.soc sgml.soc svg.soc xhtml.soc xml.soc"; do
+for catalog in sgml.soc xml.soc ; do
   install-catalog --add \
     %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
     %{_datadir}/sgml/%{name}/$catalog >/dev/null 2>&1 || :
 done
 
 %preun libs
-for catalog in "mathml.soc sgml.soc svg.soc xhtml.soc xml.soc"; do
+for catalog in sgml.soc xml.soc ; do
   install-catalog --remove \
     %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
     %{_datadir}/sgml/%{name}/$catalog >/dev/null 2>&1 || :
@@ -139,7 +139,10 @@ done
 
 
 %changelog
-* Sun Oct 10 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.7.0-0
+* Thu Oct 14 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.7.0-0.1.cvs
+- Bring -libs post(un)install scriptlets up to date with sgml-lib/*.soc.
+
+* Sun Oct 10 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.7.0-0.cvs
 - Update to 0.7.0 (CVS HEAD as of today).
 
 * Wed Jul 21 2004 Terje Bless <link@pobox.com> - 0:0.6.7-1
