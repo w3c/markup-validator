@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.227 2002-08-31 07:14:45 duerst Exp $
+# $Id: check,v 1.228 2002-09-01 03:32:28 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.227 $;
+  $VERSION    =  q$Revision: 1.228 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-31 07:14:45 $,
+			      Date => q$Date: 2002-09-01 03:32:28 $,
 			     });
 
 #
@@ -290,7 +290,7 @@ unless ($File->{Charset}->{Use}) {
 }
 
 if (&conflict($File->{Opt}->{'Charset'}, '(detect automatically)')) {
-  ($File->{Charset}->{Override}) = split($File->{Opt}->{'Charset'}, ' ', 1);
+  ($File->{Charset}->{Override}) = split(' ', $File->{Opt}->{'Charset'}, 1);
   $File->{Charset}->{Use} = $File->{Charset}->{Override} = lc $File->{Charset}->{Override};
   # message about 'charset override' in effect comes later
 }
@@ -2474,7 +2474,7 @@ sub find_xml_encoding {
   else { # generic code for UTF-16/UCS-4
     $someBytes =~ /^(($Pattern)*)/s;
     $someText = $1;       # get initial piece without chars >255
-    $someText = s/$Pattern/$1/sg;    # select the relevant bytes
+    $someText =~ s/$Pattern/$1/sg;    # select the relevant bytes
   }
 
   # try to find encoding pseudo-attribute
