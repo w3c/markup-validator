@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.207 2002-08-23 08:26:50 duerst Exp $
+# $Id: check,v 1.208 2002-08-23 08:44:09 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.207 $;
+  $VERSION    =  q$Revision: 1.208 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-23 08:26:50 $,
+			      Date => q$Date: 2002-08-23 08:44:09 $,
 			     });
 
 #
@@ -1725,11 +1725,18 @@ sub show_source {
   my $File = shift;
   my $line = 1;
 
-  print <<'EOF';
+  my $comment;
+
+  if ($File->{'Error Flagged'}) {
+    $comment = "<p>I have marked lines that I haven't been able to decode.</p>\n";
+  }
+
+  print <<"EOF";
   <div id="source" class="mtb">
     <h2>Source Listing</h2>
 
     <p>Below is the source input I used for this validation:</p>
+    $comment
     <pre>
 EOF
 
@@ -2144,7 +2151,10 @@ sub validate_encoding {
       my $in = $_;
       $line++;
       $_ = $c->convert($_); # $_ is local!!
-      push @lines, $line if ($in ne "" and $_ eq "");
+      if ($in ne "" and $_ eq "") {
+        push @lines, $line;
+        $_ = "#### encoding problem on this line, not shown ####";
+      }
     }
   }
 
@@ -2516,6 +2526,7 @@ sub abort_if_error_flagged {
   if ($File->{'Error Flagged'}) {
     print $File->{'Results'};
     print $File->{'Error Message'};
+    &show_source($File) if $File->{Opt}->{'Show Source'};
     print $File->{'Footer'};
     undef $File;
     exit;
