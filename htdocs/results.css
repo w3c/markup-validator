@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.10 2002-09-29 22:46:34 link Exp $ */
+/* $Id: results.css,v 1.11 2002-10-25 06:28:22 link Exp $ */
 
 .markup {
   color: red;
@@ -95,9 +95,7 @@ td {
   color: red;
 }
 
-
 .invalid {
-/*  clear: both; */
   background:		#880531;
   color:		white;
   font-family:		Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
@@ -113,6 +111,20 @@ td {
 }
 
 .invalid a {
-  color: yellow;
+  color: blue;
 }
+
+.invalid a:visited {
+  color: silver;
+}
+
+.invalid a:hover {
+  color: blue;
+}
+
+.invalid a:active {
+  color: red;
+}
+
+
 
