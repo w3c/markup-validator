@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.6 1998-07-25 01:18:32 gerald Exp $
+# $Id: check,v 1.7 1998-08-05 23:27:12 gerald Exp $
 
 #############################################################################
 # Constant definitions
@@ -1069,7 +1069,7 @@ $html40t_doctype
   <p>
     Welcome to the W3C HTML Validation Service!
     See <a href="whatsnew.html"><strong>what's new</strong></a>. (updated
-    July 24, 1998)
+    August 5, 1998)
   </p>
 $notice
   <p>
@@ -1097,11 +1097,11 @@ $notice
   <h2><a name="byURI">Validate Documents by URI</a></h2>
 
   <p>
-    Enter the URI of a document you would like validated:
+    Enter the location of a document you would like validated:
   </p>
 
   <form method=GET action="/check">
-    URI: <input name="uri" size=50><br>
+    Location: <input name="uri" size=50><br>
     <input name="weblint" type=checkbox value="">Include <a
     href="http://www.cre.canon.co.uk/~neilb/weblint/">Weblint</a>
     results
@@ -1118,35 +1118,23 @@ $notice
   </form>
 
   <hr>
-  <h2><a name="otherInfo">Other sources of information</a></h2>
+  <h2><a name="seeAlso">See Also</a></h2>
 
   <ul>
     <li><a href="whatsnew.html">Recent changes to this service</a></li>
     <li><a href="news:comp.infosystems.www.authoring.html">The HTML
       authoring newsgroup</a> (for help with HTML)
+    <li><a href="feedback.html">How to provide feedback on this service</a></li>
     <li><a href="sgml-lib/catalog">DTDs (document types) supported by this
       service</a> (the SGML catalog)</li>
-    <li>The <a href="http://www.w3.org/TR/REC-html40/">W3C HTML 4.0
+    <li><a href="todo.html">The to-do list for the service</a></li>
+    <li><a href="/source/">Information on the source code availability</a></li>
+    <li><a href="http://lists.w3.org/Archives/Public/www-validator/">The
+      www-validator mailing list archives</a></li>
+    <li><a href="http://www.w3.org/TR/REC-html40/">The W3C HTML 4.0
       Recommendation</a>
-    <li>The <a href="http://www.w3.org/TR/REC-html32">W3C HTML 3.2
+    <li><a href="http://www.w3.org/TR/REC-html32">The W3C HTML 3.2
       Recommendation</a>
-
-  </ul>
-
-  <h2><a name="comingSoon">Coming soon</a></h2>
-
-  <ul>
-
-    <li>A comprehensive user manual.
-
-    <li>A feature to allow the DOCTYPE to be temporarily overriden
-      by a user-selectable DTD.
-
-    <li>Support for <a
-      href="http://www.ics.uci.edu/pub/ietf/html/rfc1867.txt">Form-based
-      File upload</a>.</li>
-
-    <li>A text area in which to enter HTML code to be tested.</li>
 
   </ul>
 
@@ -1201,9 +1189,8 @@ sub output_closing {
   <a href="http://validator.w3.org/check/referer"><img
      src="http://validator.w3.org/images/vh40.gif" height=31 width=88
      align=right border=0 alt="Valid HTML 4.0!"></a>
-  <a href="http://www.w3.org/People/Gerald/">Gerald Oskoboiny</A><br><A
-     href="http://www.w3.org/Help/Webmaster">Webmaster</A><br>
-     \$Date: 1998-07-25 01:18:32 $ \
+  <a href="/feedback.html">Gerald Oskoboiny</A><br>
+     \$Date: 1998-08-05 23:27:12 $ \
 </address>
 
 </body>
