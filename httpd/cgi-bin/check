@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.66 2003-07-28 03:44:17 link Exp $
+# $Id: check,v 1.305.2.67 2003-07-28 03:57:00 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -130,7 +130,7 @@ BEGIN
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.66 $;
+  $VERSION    =  q$Revision: 1.305.2.67 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -202,7 +202,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-07-28 03:44:17 $,
+                              Date => q$Date: 2003-07-28 03:57:00 $,
                              });
 
 #
@@ -318,7 +318,7 @@ if ($File->{'Is Upload'}) {
   &add_table($File, 'File', &ent($File->{URI}));
 } else {
   my $size = (length($File->{Opt}->{URI}) || 38) + 2;
-  $size = 70 if $size > 70;
+  $size = 50 if $size > 50;
 
   if (URI::eq("$File->{Opt}->{URI}", $File->{URI})) {
     &add_table($File, qq(<label title="Address of Page to Validate (accesskey: 1)" for="uri">Address</label>),
