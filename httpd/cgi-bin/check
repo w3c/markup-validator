@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.93 2004-05-01 10:19:17 ville Exp $
+# $Id: check,v 1.305.2.94 2004-05-05 22:27:42 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.93 $;
+  $VERSION    =  q$Revision: 1.305.2.94 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-01 10:19:17 $,
+                              Date => q$Date: 2004-05-05 22:27:42 $,
                              });
 
 #
@@ -1151,7 +1151,7 @@ sub jump_links {
   my $me = &uri_escape(&self_url_file($File));
 
   $links .= <<".EOF.";
-      <div id="skip" class="jumpbar">
+      <div id="skip" name="skip" class="jumpbar">
         Jump To:
         <ul>
           <li><a title="Result of Validation" href="#result">Results</a></li>
@@ -1771,7 +1771,7 @@ sub report_errors ($) {
 
 
   print <<"EOHD";
-    <div id="result">
+    <div id="result" name="result">
       <h2 class="invalid">This page is <strong>not</strong> Valid $File->{Version}!</h2>
 EOHD
 
