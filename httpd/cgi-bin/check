@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.157 2001-07-22 18:47:40 link Exp $
+# $Id: check,v 1.158 2001-07-22 19:33:16 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.157 $;
+$VERSION    =  q$Revision: 1.158 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-22 18:47:40 $;
+$DATE       =  q$Date: 2001-07-22 19:33:16 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -283,39 +283,11 @@ if ($q->param('charset')) {
 }
 
 #
-# If we find a XML declaration with charset information,
-# we take it into account.
-# @@ needs to handle declarations that span more than one line
-if (${$File->{Content}}[0] =~
-         /^<\?xml[^>]*\sencoding\s*=\s*([\"\'])([A-Za-z][A-Za-z0-9._\-]*)\1/) {
-  $File->{XML_Charset} = lc $2;
-}
-
-#
-# If we find a META element with charset information, we take it into account.
-foreach my $line (@{$File->{Content}}) {
-  # @@ needs to handle meta elements that span more than one line
-  if ($line =~ /<meta/i) {
-    if ($line =~ /charset\s*=[\s\"\']*([^\s;\"\'>]*)/i) {
-      $File->{META_Charset} = lc $1;
-      last;
-    } elsif ($line =~ /<body/i || $line =~ /<body/i) {
-      last;
-    }
-  }
-}
-
-#
 # Figure out which charset was detected.
-if ($File->{HTTP_Charset}) {
-  $File->{Charset} = $File->{HTTP_Charset};
-} elsif ($File->{XML_Charset}) {
-  $File->{Charset} = $File->{XML_Charset};
-} elsif ($File->{META_Charset}) {
-  $File->{Charset} = $File->{META_Charset};
-} else {
-  $File->{Charset} = 'unknown';
-}
+if    ($File->{HTTP_Charset}) {$File->{Charset} = $File->{HTTP_Charset}}
+elsif ($File->{XML_Charset})  {$File->{Charset} = $File->{XML_Charset}}
+elsif ($File->{META_Charset}) {$File->{Charset} = $File->{META_Charset}}
+else  {                        $File->{Charset} = 'unknown'}
 
 # Figure out which charset to use for validation.
 $File->{Use_Charset} = $File->{Form_Charset} ?
@@ -1576,13 +1548,25 @@ EOF
 sub preparse {
   my $File = shift;
 
-  my $dtd   = sub {return if $File->{Root}; ($File->{Root}, $File->{DOCTYPE}) = shift =~  m(<!DOCTYPE\s+(\w+)\s+PUBLIC\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si};
-#  my $dtd   = sub {print "DTD:   ", shift(), "\n"};
-#  my $pi    = sub {print "PI:    ", shift(), "\n"};
+  my $dtd = sub {
+    return if $File->{Root};
+    ($File->{Root}, $File->{DOCTYPE}) = shift =~  m(<!DOCTYPE\s+(\w+)\s+PUBLIC\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
+  };
+  my $pi = sub {
+    my $pi = shift;
+    $pi =~ m(<\?xml[^>]*\sencoding\s*=\s*([\"\'])([A-Za-z][A-Za-z0-9._\-]*)\1)s;
+    $File->{XML_Charset} = lc $2;
+  };
   my $start = sub {
     my $tag  = shift;
     my $attr = shift;
     if ($File->{Root}) {
+      if (lc $tag eq 'meta') {
+	if (lc $attr->{'http-equiv'} eq 'content-type') {
+	  $attr->{content} =~ m(charset\s*=\s*[\"\']*([^\s;\"\'>]*))s;
+	  $File->{META_Charset} = lc $1;
+	}
+      }
       return unless $tag eq $File->{Root};
     } else {
       $File->{Root} = $tag;
@@ -1595,7 +1579,7 @@ sub preparse {
   $p->ignore_elements('BODY');
   $p->ignore_elements('body');
   $p->handler(declaration => $dtd, 'text');
-#  $p->handler(process => $pi, 'text');
+  $p->handler(process => $pi, 'text');
   $p->handler(start => $start, 'tag,attr');
   $p->parse(join "\n", @{$File->{Content}});
 
