@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.45 2000-05-07 15:16:06 hugo Exp $
+# $Id: checklink.pl,v 2.46 2000-05-09 19:36:38 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -31,7 +31,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.45 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 2.46 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -1290,7 +1290,7 @@ HTTP Message: %s%s%s</dd>
                    $lines_list);
             if ($#fragments >= 0) {
                 my $fragment_direction;
-                if (!($broken->{$u}{'location'})) {
+                if (!$broken->{$u}{'location'} || ($results->{$u}{location}{code} == 200)) {
                     $fragment_direction =
                         ' <strong class="broken">They need to be fixed!</strong>';
                 }
