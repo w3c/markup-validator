@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.84 2001-03-06 07:01:48 link Exp $
+# $Id: check,v 1.85 2001-03-07 19:53:55 link Exp $
 
 #
 # We need Perl 5.004.
@@ -73,9 +73,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.84 $;
+$VERSION    =  q$Revision: 1.85 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-03-06 07:01:48 $;
+$DATE       =  q$Date: 2001-03-07 19:53:55 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -278,11 +278,24 @@ if ($doctype =~ /mathml/i && $guessed_doctype != 2) {
 }
 
 #
+# If we find a XML declaration with charset information,
+# we take it into account.
+foreach my $line (@{$File->{Content}}) {
+  # @@ needs to handle declarations that span more than one line
+  if ($line =~ /<\?xml\s/) {
+    if ($line =~ /encoding\s*=[\s\"\']*([^\s;\"\'>]*)/) {
+      $File->{XML_Charset} = lc $1;
+      last;
+    } else {last};
+  }
+}
+
+#
 # If we find a META element with charset information, we take it into account.
 foreach my $line (@{$File->{Content}}) {
   # @@ needs to handle meta elements that span more than one line
   if ($line =~ /<meta/i) {
-    if ($line =~ /charset\s*=[\s\"]*([^\s;\">]*)/i) {
+    if ($line =~ /charset\s*=[\s\"\']*([^\s;\"\'>]*)/i) {
       $File->{META_Charset} = lc $1;
       last;
     } elsif ($line =~ /<body/i || $line =~ /<body/i) {
@@ -295,6 +308,8 @@ foreach my $line (@{$File->{Content}}) {
 # Figure out which charset to use for the validation.
 if ($File->{HTTP_Charset}) {
   $File->{Charset} = $File->{HTTP_Charset};
+} elsif ($File->{XML_Charset}) {
+  $File->{Charset} = $File->{XML_Charset};
 } elsif ($File->{META_Charset}) {
   $File->{Charset} = $File->{META_Charset};
 } else {
@@ -460,6 +475,16 @@ if ($File->{HTTP_Charset} ne $File->{META_Charset}
       <em><span class="warning">The character encoding specified in the HTTP
       header ("<code>$File->{HTTP_Charset}</code>") is different from the one
       specified in the META element ("<code>$File->{META_Charset}</code>").
+      I will use "<code>$File->{Charset}</code>" for this validation.</span></em>
+EOHD
+} elsif ($File->{HTTP_Charset} ne $File->{XML_Charset}
+    and $File->{HTTP_Charset} ne ''
+    and $File->{XML_Charset} ne ''
+    and $File->{Charset} ne 'unknown') {
+  print <<"EOHD";
+      <em><span class="warning">The character encoding specified in the HTTP
+      header ("<code>$File->{HTTP_Charset}</code>") is different from the one
+      specified in the XML declaration ("<code>$File->{XML_Charset}</code>").
       I will use "<code>$File->{Charset}</code>" for this validation.</span></em>
 EOHD
 }
