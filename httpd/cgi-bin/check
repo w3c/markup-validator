@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.30 2003-03-01 18:10:05 link Exp $
+# $Id: check,v 1.305.2.31 2003-03-01 18:16:40 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.30 $;
+  $VERSION    =  q$Revision: 1.305.2.31 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -166,7 +166,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-03-01 18:10:05 $,
+                              Date => q$Date: 2003-03-01 18:16:40 $,
                              });
 
 #
@@ -370,17 +370,19 @@ unless ($File->{Charset}->{Use}) {
 .EOF.
 }
 
-sub iana_charset_blurb ()
-{
-  return <<EOF;
+sub iana_charset_blurb () {
+  return <<".EOF.";
     <p>
-      <a href="http://www.iana.org/"><acronym
-      title="Internet Assigned Numbers Authority">IANA</acronym></a>
+      <a href="http://www.iana.org/"><abbr
+      title="Internet Assigned Numbers Authority">IANA</abbr></a>
       maintains the list of <a
       href="http://www.iana.org/assignments/character-sets">official
-      names for character sets</a>.
+      names for character sets</a> and the <abbr
+        title="Web Design Group">WDG</abbr> has some <a
+        href="http://www.htmlhelp.com/tools/validator/charset.html">information
+        to help you correctly specify the character encoding</a>.
     </p>
-EOF
+.EOF.
 }
 
 #
