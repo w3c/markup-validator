@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.97 2001-04-19 02:20:38 link Exp $
+# $Id: check,v 1.98 2001-04-19 02:49:53 link Exp $
 
 #
 # We need Perl 5.004.
@@ -75,9 +75,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.97 $;
+$VERSION    =  q$Revision: 1.98 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-04-19 02:20:38 $;
+$DATE       =  q$Date: 2001-04-19 02:49:53 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -146,6 +146,10 @@ if ($q->param('uploaded_file')) {
 }
 
 #
+# Supercede URI with an uploaded fragment.
+if ($q->param('fragment')) {$q->param('uri', 'upload://Form Submission')};
+
+#
 # Send them to the homepage unless we can extract a URI from either of the
 # acceptable sources: uri, url or /referer.
 &redirect_to_home_page unless length($q->param('uri')) > 5;
@@ -209,7 +213,10 @@ EOF
 
 #
 # Get the file and metadata.
-my $File = ($q->param('uploaded_file') ? &handle_file($q) : &handle_uri($q));
+my $File;
+if    ($q->param('uploaded_file')) {$File = &handle_file($q)}
+elsif ($q->param('fragment'))      {$File = &handle_frag($q)}
+elsif ($q->param('uri'))           {$File = &handle_uri($q)};
 
 #
 # Abort if there was no document type mapping for this Content-Type, in which
@@ -1383,6 +1390,18 @@ sub handle_file {
 	  Server       => $h->{'Server'},
 	  Size         => $h->{'Content-Length'},
 	  URI          => $q->param('uploaded_file')};
+}
+
+#
+# Handle uploaded file and return the content and selected meta-info.
+sub handle_frag {
+  return {Content      => &normalize_newlines(shift->param('fragment')),
+	  Type         => 'html',
+	  HTTP_Charset => '',
+	  Modified     => '',
+	  Server       => '',
+	  Size         => '',
+	  URI          => 'upload://Form Submission'};
 }
 
 #
