@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: todo.html,v 1.49.2.12 2002-06-24 00:40:03 link Exp $"
---><!--#set var="date" value="\$Date: 2002-06-24 00:40:03 $"
+<!--#set var="revision" value="\$Id: todo.html,v 1.49.2.13 2002-07-05 20:45:02 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-07-05 20:45:02 $"
 --><!--#set var="title" value="TODO List for The W3C HTML Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -31,9 +31,10 @@
     <div id="validator-0_6_0">
       <h2>Validator v0.6.0</h2>
       <ul>
-        <li>
+        <li class="done">
           Fix up all absolute URIs to be relative (to aid local installations).
-          Thanks to Alex Holst.
+          Thanks to Alex Holst for the reminder. Thanks to Ville Skytta for the
+	  patch.
         </li>
         <li class="done">
           Fix up Validators temp file handling to use secure temporary files.
@@ -44,7 +45,7 @@
           Thanks (again) to Alex Holst for the prod... <code>:-)</code>
         </li>
         <li class="done">Make it run under mod_perl.</li>
-        <li>
+        <li class="done">
           Apply Ville Skytt&auml;'s
           <a href="http://cachalot.ods.org/patches/w3c-validator/">patches</a>.
         </li>
@@ -59,6 +60,8 @@
         <li class="done">Add first cut at
         	<acronym title="eXtensible Markup Language">XML</acronym> output!</li>
         <li class="done">Add count of errors found in page.</li>
+        <li>Add icon for ISO-HTML.</li>
+        <li>Bring back the Root Namespace in results.</li>
       </ul>
     </div>
     <div id="validator-0_7_0">
