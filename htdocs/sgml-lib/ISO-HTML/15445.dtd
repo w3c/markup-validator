@@ -66,14 +66,14 @@
 <!ENTITY % block "BLOCKQUOTE | DIV | DL | FIELDSET | FORM |
                   HR | OL | P | PRE | TABLE | UL" >
 
-<!-- Form fields - input elements that may appear only within forms -->
+<!-- Form fields - input elements that should appear only within forms -->
 <!ENTITY % form.fields "BUTTON | INPUT | LABEL | SELECT | TEXTAREA" >
 
 <!-- Character level elements and text strings -->
-<!ENTITY % text "#PCDATA | %physical.styles; | %logical.styles; | %special;" >
+<!ENTITY % text "#PCDATA | %physical.styles; | %logical.styles; | %special;
+                         | %form.fields;" >
 
-<!-- Elements that may appear in a form, section or table -->
-<!ENTITY % form.content    "(%block; | %text; | %form.fields; | ADDRESS)+" >
+<!-- Elements that may appear in a section or table -->
 <!ENTITY % section.content "(%block; | %text; | ADDRESS)+" >
 <!ENTITY % table.content   "(%block; | %text;)*" >
 
@@ -81,13 +81,16 @@
 
 <!ENTITY % core
    "CLASS      CDATA      #IMPLIED -- Comma separated list of class values --
+    --The name space of the ID attribute is shared with the name space of
+      the NAME attribute.  Both ID and NAME attributes may be provided for
+      the <A> and <MAP> elements. When both ID and NAME values are provided
+      for an element, the values shall be identical.  It is an error for an
+      ID or NAME value to be associated with more than one element in a
+      document.
 
-    --The name space of the ID attribute is shared with the name space of 
-      the NAME attributes of <A> elements.  ID and NAME values shall be
-      distinct.  It is an error for an ID or NAME value to be duplicated 
-      within a document.  It is recommended that authors of documents 
-      intended for further processing specify the ID attribute in preference 
-      to the NAME attribute. --
+      It is recommended that authors of documents specify both the ID
+      attribute and the NAME attribute for the <A> and <MAP> elements.
+    --
     ID         ID         #IMPLIED -- Document-wide unique id --
     TITLE      CDATA      #IMPLIED -- Advisory title or amplification --" >
 
@@ -134,6 +137,7 @@
 <!-- The following marked section is informative only -->
 <![ %Preparation; [
 <!ELEMENT Pre-HTML    - -  (HEAD, BODY) >
+<!ATTLIST Pre-HTML %i18n;  -- Internationalization DIR and LANG -->
 <!ELEMENT BODY        - O  ((%block;)*,(H1,DIV1)* ) +(DEL|INS) >
 <!ELEMENT H1          - -  (%text;)+ >
 <!ELEMENT DIV1        O O  ((%block;)*, (H2,DIV2)* ) >
@@ -164,12 +168,14 @@
 <!ELEMENT PRE         - -  (%text;)+ -(IMG|MAP|OBJECT|SUB|SUP) >
 <!ELEMENT BLOCKQUOTE  - -  (%block;)+ >
 <!ELEMENT Q           - -  (%text;)+ >
-<!ELEMENT FORM        - -  %form.content; -(FORM) >
+<!ELEMENT FORM        - -  (%block;)+ -(FORM) >
+
 <!-- #PCDATA required to absorb leading white space -->
-<!ELEMENT FIELDSET    - -  (#PCDATA,LEGEND,%form.content;) -(FIELDSET) >
+<!ELEMENT FIELDSET    - -  (#PCDATA,LEGEND,(%block; | %text; | ADDRESS)+)
+                            -(FIELDSET) >
 <!ELEMENT INPUT       - O  EMPTY >
 <!ELEMENT BUTTON      - -  (%text;)+ -(A|FIELDSET|FORM|%form.fields;) >
-<!ELEMENT LABEL       - -  (%text;|%form.fields;)+ -(LABEL) >
+<!ELEMENT LABEL       - -  (%text;)+ -(LABEL) >
 <!ELEMENT LEGEND      - -  (#PCDATA) >
 <!ELEMENT SELECT      - -  (OPTGROUP|OPTION)+ >
 <!ELEMENT OPTGROUP    - -  (OPTION)+ >
@@ -191,7 +197,11 @@
 <!ELEMENT OBJECT      - -  (PARAM | %section.content;)* >
 <!ELEMENT PARAM       - O  EMPTY >
 <!ELEMENT BR          - O  EMPTY >
-<!ELEMENT MAP         - -  (AREA)+ >
+<!-- Authors should use the block-level content of the <MAP> element when
+     creating accessible documents.  Each region should be specified using
+     an <A> element to define its associated link and shape.  User agents
+     should render the block-level content of a <MAP> element. -->
+<!ELEMENT MAP         - -  ((%block;)|AREA)+ >
 <!ELEMENT AREA        - O  EMPTY >
 <!ELEMENT SPAN        - -  (%text;)+ >
 <!ELEMENT (DEL|INS)   - -  (%text;)+ >
@@ -210,18 +220,23 @@
     The NAME attribute value specification shall be processed as if the
     declared value were NAME.
 
-    It is recommended that authors of HTML documents give
-    preference to the ID attribute over the NAME attribute.
+    It is recommended that authors of HTML documents specify both ID and
+    NAME attributes.  When both attributes are specified, they shall have
+    identical values.
+
+    COORDS shall not be specified if SHAPE has the value `default'.
   --
     %core;                         -- Element CLASS, ID and TITLE --
     %i18n;                         -- Internationalization DIR and LANG --
     ACCESSKEY  CDATA      #IMPLIED -- Accessibility key character --
     CHARSET    CDATA      #IMPLIED -- Character encoding as per RFC2045 --
+    COORDS     CDATA      #IMPLIED -- Comma separated list of values --
     HREF       %URI;      #IMPLIED -- Source anchor is URI of target --
     HREFLANG   NAME       #IMPLIED -- Language code of resource --
     NAME       CDATA      #IMPLIED -- Target anchor --
     REL        CDATA      #IMPLIED -- Forward link types --
     REV        CDATA      #IMPLIED -- Reverse link types --
+    SHAPE      %shape;        rect -- Control interpretation of coords --
     TABINDEX   NUMBER     #IMPLIED -- Position in tabbing order --
     TYPE       CDATA      #IMPLIED -- Advisory content type -->
 
@@ -255,7 +270,7 @@
     LANG       NAME       #IMPLIED -- RFC1766 language value -->
 
 <!ATTLIST BLOCKQUOTE
-  --The contents of the BLOCKQUOTE element shall not be surrounded with
+  --The contents of the <BLOCKQUOTE> element shall not be surrounded with
     quotation marks.  These may be added by the user agent through the use
     of a style sheet.
   --
@@ -271,11 +286,11 @@
     %core;                         -- Element CLASS, ID and TITLE -->
 
 <!ATTLIST BUTTON
-  --The BUTTON element shall not contain the A, BUTTON, FIELDSET, FORM,
-    INPUT, LABEL, SELECT or TEXTAREA elements.
+  --The <BUTTON> element shall not contain the <A>, <BUTTON>, <FIELDSET>,
+    <FORM>, <INPUT>, <LABEL>, <SELECT> or <TEXTAREA> elements.
 
-    If the BUTTON element contains an IMG element, the IMG shall not have
-    an ISMAP or USEMAP attribute.
+    If the <BUTTON> element contains an <IMG> element, the <IMG> shall not
+    have an ISMAP or USEMAP attribute.
     
     The TYPE attribute shall be provided, and when the TYPE is
     specified as `submit', the NAME and VALUE attributes shall be provided.
@@ -283,13 +298,16 @@
     The NAME attribute is required if the TYPE attribute has the value 
     `submit'.
 
-    If the TYPE attribute has value `reset', and the BUTTON is contained 
-    in a FIELDSET, the reset action is limited to the contents of the 
-    FIELDSET.
+    If the TYPE attribute has value `reset', and the <BUTTON> is contained 
+    in a <FIELDSET>, the reset action is limited to the contents of the 
+    <FIELDSET>.
 
     The VALUE attribute is required if the TYPE attribute has the value
     `submit' and specifies the value to be returned if the button
     is selected.
+
+    The <BUTTON> element should be used only in the content of a <FORM>
+    element.
   --
     %core;                         -- Element CLASS, ID and TITLE --
     %i18n;                         -- Internationalization DIR and LANG --
@@ -310,7 +328,7 @@
     SPAN       NUMBER            1 -- Number of cols spanned -->
 
 <!ATTLIST COLGROUP
-  --The SPAN attribute should only be used if the COLGROUP element
+  --The SPAN attribute should only be used if the <COLGROUP> element
     has no content.
   --
     %core;                         -- Element CLASS, ID and TITLE --
@@ -364,37 +382,38 @@
     %i18n;                         -- Internationalization DIR and LANG -->
 
 <!ATTLIST (H1 | H2 | H3 | H4 | H5 | H6)
-  --The H1 element shall not be followed by an H3, H4, H5 or H6 element
-    without an intervening H2 element.  
+  --The <H1> element shall not be followed by an <H3>, <H4>, <H5> or
+    <H6> element without an intervening <H2> element.  
 
-    The H2 element shall not be followed by an H4, H5 or H6 element 
-    without an intervening H3 element.
+    The <H2> element shall not be followed by an <H4>, <H5> or <H6>
+    element without an intervening <H3> element.
 
-    The H3 element shall not be followed by an H5 or H6 element without 
-    an intervening H4 element.
+    The <H3> element shall not be followed by an <H5> or <H6> element
+    without an intervening <H4> element.
 
-    The H4 element shall not be followed by an H6 element without an 
-    intervening H5 element.
+    The <H4> element shall not be followed by an <H6> element without an 
+    intervening <H5> element.
 
-    An H2 element shall be preceded by an H1 element.
+    An <H2> element shall be preceded by an <H1> element.
 
-    An H3 element shall be preceded by an H2 element.
+    An <H3> element shall be preceded by an <H2> element.
 
-    An H4 element shall be preceded by an H3 element.
+    An <H4> element shall be preceded by an <H3> element.
 
-    An H5 element shall be preceded by an H4 element.
+    An <H5> element shall be preceded by an <H4> element.
 
-    An H6 element shall be preceded by an H5 element.
+    An <H6> element shall be preceded by an <H5> element.
   --
     %core;                         -- Element CLASS, ID and TITLE --
     %i18n;                         -- Internationalization DIR and LANG -->
 
 <!ATTLIST IMG
-  --If the IMG element is contained in a BUTTON element, the IMG shall not 
-    have an ISMAP or USEMAP attribute.
+  --If the <IMG> element is contained in a <BUTTON> element, the <IMG>
+    shall not have an ISMAP or USEMAP attribute.
 
-    If the ISMAP attribute is present in an IMG element, that IMG element 
-    shall be contained in an A element with an HREF attribute present.
+    If the ISMAP attribute is present in an <IMG> element, that <IMG>
+    element shall be contained in an <A> element with an HREF attribute
+    present.
 
     At most one of the attributes ISMAP and USEMAP may be provided.
   --
@@ -408,7 +427,7 @@
 
 <!ATTLIST INPUT
   --If the attribute TYPE has the value `checkbox', values shall be 
-    provided for the the NAME and VALUE attributes.
+    provided for the NAME and VALUE attributes.
   
     If the attribute TYPE has the value `file', a value shall be 
     provided for the NAME attribute; HTML interpreting agents should 
@@ -424,7 +443,7 @@
     If the attribute TYPE has the value `radio', values shall be 
     provided for the the NAME and VALUE attributes. At all times, 
     one and only one of the radio buttons shall be checked.  
-    Initially, if none of the INPUT elements in a set of radio 
+    Initially, if none of the <INPUT> elements in a set of radio 
     buttons specifies CHECKED, then the user agent shall mark the 
     first radio button of the set as checked.
 
@@ -437,6 +456,9 @@
   
     The MAXLENGTH and TABINDEX values shall be considered as integers 
     with any leading zeroes ignored.
+
+    The <INPUT> element should be used only in the content of a <FORM>
+    element.
   --
     %core;                         -- Element CLASS, ID and TITLE --
     %i18n;                         -- Internationalization DIR and LANG --
@@ -459,8 +481,11 @@
     DATETIME   CDATA      #IMPLIED -- When changed, subset of ISO/IEC 8601 -->
 
 <!ATTLIST LABEL
-  --The LABEL element shall refer to a form field in the content of the 
-    FORM element which contains the LABEL.
+  --The <LABEL> element shall refer to a form field in the content of the 
+    <FORM> element which contains the <LABEL>.
+
+    The <LABEL> element should be used only in the content of a <FORM>
+    element.
   --
     %core;                         -- Element CLASS, ID and TITLE --
     %i18n;                         -- Internationalization DIR and LANG --
@@ -491,6 +516,10 @@
   --The value of the NAME attribute is case sensitive, and the attribute 
     value specification shall be processed as if the declared value were 
     NAME.
+
+    It is recommended that authors of HTML documents specify both ID and
+    NAME attributes.  When both attributes are specified, they shall have
+    identical values.
   --
     %core;                         -- Element CLASS, ID and TITLE --
     %i18n;                         -- Internationalization DIR and LANG --
@@ -552,7 +581,7 @@
     %i18n;                         -- Internationalization DIR and LANG -->
 
 <!ATTLIST Q
-  --The textual contents of the Q element shall not be surrounded with
+  --The textual contents of the <Q> element shall not be surrounded with
     quotation marks.  These may be added by the user agent through the
     use of a style sheet.
   --
@@ -561,6 +590,9 @@
     CITE       %URI;      #IMPLIED -- URI for source document or message -->
 
 <!ATTLIST SELECT
+  --The <SELECT> element should be used only in the content of a <FORM>
+    element.
+  --
     %core;                         -- Element CLASS, ID and TITLE --
     %i18n;                         -- Internationalization DIR and LANG --
     DISABLED   (disabled) #IMPLIED -- Control unavailable in this context --
@@ -574,7 +606,7 @@
     %i18n;                         -- Internationalization DIR and LANG -->
 
 <!ATTLIST STYLE
-  --The STYLE element contains style sheet information which shall be
+  --The <STYLE> element contains style sheet information which shall be
     passed to the user agent's style manager.  Any style sheet language
     may be used.  It is a user agent error to render the style sheet 
     information as if it were part of a document's text.
@@ -605,6 +637,9 @@
                           #IMPLIED -- Scope covered by header cells -->
 
 <!ATTLIST TEXTAREA
+  --The <TEXTAREA> element should be used only in the content of a <FORM>
+    element.
+  --
     %core;                         -- Element CLASS, ID and TITLE --
     %i18n;                         -- Internationalization DIR and LANG --
     ACCESSKEY  CDATA      #IMPLIED -- Accessibility key character --
