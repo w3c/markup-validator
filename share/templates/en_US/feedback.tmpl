@@ -96,7 +96,7 @@
   </ul>
     
   <p>Once you have checked all the criteria above, 
-    <a href="mailto:www-validator@w3.org?Subject=<TMPL_IF NAME="errmsg_id">[VE][<TMPL_VAR NAME="errmsg_id">]</TMPL_IF>%20Error%20Message%20Feedback<TMPL_IF NAME="uri">&amp;body=<TMPL_VAR NAME="uri" ESCAPE="HTML"></TMPL_IF>">send your message to the www-validator public mailing-list</a>.
+    <a href="mailto:www-validator@w3.org?Subject=<TMPL_IF NAME="errmsg_id">[VE][<TMPL_VAR NAME="errmsg_id">]</TMPL_IF>%20Error%20Message%20Feedback&amp;body=Validating%20<TMPL_IF NAME="uri"><TMPL_VAR NAME="uri" ESCAPE="HTML">%0D%0A</TMPL_IF><TMPL_IF NAME="errmsg_id">Error%20[<TMPL_VAR NAME="errmsg_id" ESCAPE="HTML">]:%20%22<TMPL_VAR NAME="explanation" ESCAPE="HTML">%22</TMPL_IF>%0D%0A%0D%0A[%20Add%20your%20message/question%20here.%0D%0A%20%20Follow%20the%20instructions%20at%0D%0Ahttp%3A%2F%2Fvalidator.w3.org%2Ffeedback.html%23errormsg%20]">send your message to the www-validator public mailing-list</a>.
    </p>
    
 <h3 id="mailinglist">Discuss and participate</h3>
