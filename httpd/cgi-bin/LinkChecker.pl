@@ -5,7 +5,7 @@
 # (c) 1999-2000 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: LinkChecker.pl,v 1.16 2000-01-20 21:40:05 hugo Exp $
+# $Id: LinkChecker.pl,v 1.17 2000-01-20 21:59:30 hugo Exp $
 #
 # This program is licensed under the W3C License.
 
@@ -21,7 +21,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C LinkChecker';
-my $VERSION = q$Revision: 1.16 $ . '(c) 1999-2000 W3C';
+my $VERSION = q$Revision: 1.17 $ . '(c) 1999-2000 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -192,7 +192,7 @@ sub ask_password() {
 
 sub urize() {
     use URI;
-    $_ = $_[0];
+    $_ = URI::Escape::uri_unescape($_[0]);
     my $base;
     my $res = $_;
     if (m/:/) {
