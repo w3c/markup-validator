@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.52 1999-12-06 00:26:23 gerald Exp $
+# $Id: check,v 1.53 1999-12-06 00:27:50 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -73,9 +73,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.52 $;
+$VERSION    =  q$Revision: 1.53 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 1999-12-06 00:26:23 $;
+$DATE       =  q$Date: 1999-12-06 00:27:50 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1199,7 +1199,7 @@ sub handle_uri {
   return {Content       => &normalize_newlines($res->content),
 	  Type          => $type,
 	  HTTP_Charset  => $charset,
-	  Modified      => gmtime($res->last_modified),
+	  Modified      => scalar(gmtime($res->last_modified)),
 	  Server        => $res->server,
 	  Size          => $res->content_length,
 	  URI           => $res->request->url};
@@ -1241,7 +1241,7 @@ sub parse_content_type {
     my($p, $v) = split /\s*=\s*/, $param;
     next unless $p =~ m(charset)i;
     if ($v =~ m/([\'\"]?)(\S+)\1/i) {
-      $charset = lc $1;
+      $charset = lc $2;
       last;
     }
   }
