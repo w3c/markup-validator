@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.16 2003-07-27 14:41:29 link Exp $ */
+/* $Id: results.css,v 1.13.2.17 2003-07-28 12:57:10 ot Exp $ */
 
 .input {
   color: black;
@@ -103,6 +103,7 @@ div#Warnings div.fatal h3 {
   border-bottom: 1px solid black;
   padding: .5ex;
   margin: 0;
+  margin-bottom: 1em;
   float: left;
   font-size: small;
   font-weight: bolder;
@@ -123,6 +124,7 @@ div#Warnings div.fatal div {
 div#Warnings div.fatal p:first-child {
   font-weight: bold;
   font-size: normal;
+  clear: left;
 }
 
 
