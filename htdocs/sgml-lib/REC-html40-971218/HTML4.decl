@@ -1,4 +1,4 @@
-<!SGML  "ISO 8879:1986"
+<!SGML  "ISO 8879:1986 (WWW)"
     --
          SGML Declaration for HyperText Markup Language version 4.0
  
@@ -49,6 +49,7 @@ SYNTAX
                   NAMECASE GENERAL YES
                            ENTITY  NO
          DELIM    GENERAL  SGMLREF
+                  HCRO "&#38;#x" -- 38 is the number for ampersand -- 
                   SHORTREF SGMLREF
          NAMES    SGMLREF
          QUANTITY SGMLREF
