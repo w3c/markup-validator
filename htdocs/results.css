@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.19 2004-07-21 15:06:55 link Exp $ */
+/* $Id: results.css,v 1.20 2004-11-15 01:24:21 ot Exp $ */
 
 .input {
   color: black;
@@ -279,7 +279,7 @@ h2.invalid {
 }
 
 .invalid {
-  background:		#880531;
+  background:		#A51C1C;
   color:		white;
   font-family: "Bitstream Vera Sans", sans-serif;
   font-size-adjust:	.53;
@@ -295,12 +295,12 @@ h2.invalid {
   padding-bottom: 	.5em;
 }
 
-.invalid a {
-  color: #0099ff;
+.invalid a:link {
+  color: white;
 }
 
 .invalid a:visited {
-  color: silver;
+  color: white; 
 }
 
 .invalid a:hover {
@@ -309,6 +309,7 @@ h2.invalid {
 }
 
 .invalid a:active {
+  background: white;
   color: red;
 }
 
