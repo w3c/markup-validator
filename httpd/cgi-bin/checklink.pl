@@ -5,7 +5,7 @@
 # (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.12 2003-07-23 20:08:18 ville Exp $
+# $Id: checklink.pl,v 3.6.2.13 2003-07-26 15:48:24 ville Exp $
 #
 # This program is licensed under the W3C(r) Software License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -85,7 +85,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.12 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.13 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
 
@@ -2100,9 +2100,10 @@ LWP(3), L<Net::FTP(3)>, L<Net::NNTP(3)>.
 =head1 AUTHOR
 
 This program was originally written by Hugo Haas <hugo@w3.org>, based on
-Renaud Bruyeron's F<checklink.pl>; there have been numerous contributors
-since.  Use the <www-validator@w3.org> mailing list for feedback, see
-L<http://validator.w3.org/docs/checklink.html#csb> for more information.
+Renaud Bruyeron's F<checklink.pl>.  It has been enhanced by Ville SkyttE<228>
+and many other volunteers since.  Use the <www-validator@w3.org> mailing list
+for feedback, see L<http://validator.w3.org/docs/checklink.html#csb> for more
+information.
 
 This manual page was written by FrE<233>dE<233>ric SchE<252>tz
 <schutz@mathgen.ch>, for the Debian GNU/Linux system (but may be used by
