@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.410 2005-03-25 03:42:09 ot Exp $
+# $Id: check,v 1.411 2005-03-25 04:44:33 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -220,7 +220,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.410 $;
+  $VERSION    =  q$Revision: 1.411 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1424,7 +1424,7 @@ sub parse_errors ($$) {
     if ($err->{msg} =~ m(prolog can\'t be omitted)) {
       my $dtd = ($File->{Mode} == MODE_SGML ?
                    'HTML 4.01 Transitional' : 'XHTML 1.0 Transitional');
-      &add_warning('W16', {W16_dtd => $dtd});
+      &add_warning('W09', {W09_dtd => $dtd});
       next; # Don't report this as a normal error.
     }
 
