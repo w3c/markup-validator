@@ -5,7 +5,7 @@
 # (c) 1999-2002 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.97 2002-10-26 19:04:35 ville Exp $
+# $Id: checklink.pl,v 2.98 2002-10-26 19:19:56 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -33,21 +33,22 @@ package W3C::CheckLink;
 use HTML::Parser 3;
 @W3C::CheckLink::ISA = qw(HTML::Parser);
 
-use vars qw($Have_ReadKey);
+use vars qw($PROGRAM $VERSION $REVISION
+            $Have_ReadKey);
 
 BEGIN
 {
+  # Version info
+  $PROGRAM  = 'W3C checklink';
+  $REVISION = q$Revision: 2.98 $ . '(c) 1999-2002 W3C';
+  $VERSION  = sprintf('%d.%02d', $REVISION =~ /(\d+)\.(\d+)/);
+
   eval "use Term::ReadKey 2.00 qw(ReadMode)";
   $Have_ReadKey = !$@;
 }
 
 # Autoflush
 $| = 1;
-
-# Version info
-my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.97 $ . '(c) 1999-2002 W3C';
-my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
 my $_cl;
@@ -99,7 +100,7 @@ if ($#ARGV >= 0 && !(@ARGV == 1 && $ARGV[0] eq 'DEBUG')) {
   my $uri;
   foreach $uri (@ARGV) {
     if (!$_summary) {
-      printf("%s %s\n", $PROGRAM, $VERSION) if (! $_html);
+      printf("%s %s\n", $PROGRAM, $REVISION) if (! $_html);
     } else {
       $_verbose = 0;
       $_progress = 0;
@@ -231,13 +232,13 @@ sub parse_arguments ()
 
 sub version ()
 {
-  print STDERR "$PROGRAM $VERSION\n";
+  print STDERR "$PROGRAM $REVISION\n";
   exit(0);
 }
 
 sub usage ()
 {
-  print STDERR "$PROGRAM $VERSION
+  print STDERR "$PROGRAM $REVISION
 
 Usage: checklink <options> <uris>
 Options:
@@ -704,7 +705,7 @@ sub get_uri ($$;$\%$$$$)
   # Prepare the query
   my $ua = new W3C::UserAgent;
   $ua->timeout($_timeout);
-  $ua->agent('W3C-checklink/'.$REVISION.' '.$ua->agent());
+  $ua->agent(sprintf('W3C-checklink/%s %s', $VERSION, $ua->agent()));
   $ua->env_proxy();
   if ($_http_proxy) {
     $ua->proxy('http', 'http://'.$_http_proxy);
@@ -1775,7 +1776,7 @@ sub html_footer ()
   print "
 <hr>
 <address>
-$PROGRAM $VERSION<br>
+$PROGRAM $REVISION<br>
 Written by <a href=\"http://www.w3.org/People/Hugo/\">Hugo Haas</a>.
 Please send bug reports, suggestions and comments to the
 <a href=\"mailto:www-validator\@w3.org?subject=checklink%3A%20\">www-validator
@@ -1785,7 +1786,7 @@ mailing list</a>
 Check out the
 <a href=\"http://www.w3.org/2000/07/checklink\">documentation</a>.
 Download the
-<a href=\"http://dev.w3.org/cvsweb/~checkout~/validator/httpd/cgi-bin/checklink.pl?rev=".$REVISION."&amp;content-type=text/plain\">source
+<a href=\"http://dev.w3.org/cvsweb/~checkout~/validator/httpd/cgi-bin/checklink.pl?rev=$VERSION&amp;content-type=text/plain\">source
 code</a> from
 <a href=\"http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/checklink.pl\">CVS</a>.
 </address>
