@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.32 2003-03-01 18:21:59 link Exp $
+# $Id: check,v 1.305.2.33 2003-03-01 18:56:00 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.32 $;
+  $VERSION    =  q$Revision: 1.305.2.33 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -166,7 +166,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-03-01 18:21:59 $,
+                              Date => q$Date: 2003-03-01 18:56:00 $,
                              });
 
 #
@@ -1847,7 +1847,8 @@ sub show_source {
   }
 
   # Remove any BOM since we're not at BOT anymore...
-  $File->{Content}->[0] = substr $File->{Content}->[0], $File->{BOM}; # remove BOM
+  $File->{Content}->[0] =
+    substr $File->{Content}->[0], ($File->{BOM} ? 3 : 0); # remove BOM
 
   print <<"EOF";
   <div id="source" class="mtb">
