@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.401 2005-02-22 18:01:05 ville Exp $
+# $Id: check,v 1.402 2005-02-24 17:43:26 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -220,7 +220,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.401 $;
+  $VERSION    =  q$Revision: 1.402 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -744,7 +744,7 @@ sub parse (\$) {
     if ($1 =~ '-//W3C//DTD (SGML|XML) Fallback//EN') {
       $File->{Tentative} |= (T_ERROR | T_FALL);
       my $dtd = $1 eq 'SGML' ? 'HTML 4.01 Transitional' : 'XHTML 1.0 Strict';
-      &add_warning('W09', {});
+      &add_warning('W09', { W09_dtd => $dtd });
     }
     $File->{Version} = $1;
     last;
