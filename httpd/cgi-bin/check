@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.229 2002-09-01 05:36:20 duerst Exp $
+# $Id: check,v 1.230 2002-09-12 05:43:56 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.229 $;
+  $VERSION    =  q$Revision: 1.230 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-09-01 05:36:20 $,
+			      Date => q$Date: 2002-09-12 05:43:56 $,
 			     });
 
 #
@@ -1171,7 +1171,9 @@ sub handle_file {
   $File->{Modified}        = $h->{'Last-Modified'};
   $File->{Server}          = $h->{'Server'};
   $File->{Size}            = $h->{'Content-Length'};
-  $File->{URI}             = $q->param('uploaded_file');
+  $File->{URI}             = "$f"; # Need to stringify because we want ref
+                                   # to return false later in add_table.  This
+                                   # is also a file handle... see man CGI.
   $File->{'Is Upload'}     = TRUE;
 
   return $File;
@@ -1705,7 +1707,7 @@ sub show_source {
   my $File = shift;
   my $line = 1;
 
-  my $comment;
+  my $comment = '';
 
   if ($File->{'Error Flagged'}) {
     $comment = "<p>I have marked lines that I haven't been able to decode.</p>\n";
