@@ -9,7 +9,11 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.14 2002-03-30 22:45:45 link Exp $
+# $Id: check,v 1.200.2.15 2002-03-31 00:37:49 link Exp $
+
+#
+# Disable buffering on STDOUT!
+$| = 1;
 
 #
 # We need Perl 5.004.
@@ -66,7 +70,7 @@ $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.14 $;
+$VERSION    =  q$Revision: 1.200.2.15 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 #
@@ -95,7 +99,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-03-30 22:45:45 $,
+			      Date => q$Date: 2002-03-31 00:37:49 $,
 			     });
 
 #
@@ -156,6 +160,10 @@ if ($q->param('uploaded_file')) {
 # Get rid of the CGI object.
 undef $q;
 
+#
+# We don't need STDIN any more, so get rid of it to avoid getting clobbered
+# by Apache::Registry's idiotic interference under mod_perl.
+untie *STDIN;
 
 ###############################################################################
 #### Output validation results. ###############################################
@@ -505,10 +513,10 @@ seek $spin, 0, 0;
 #
 # Run it through SP, redirecting output to temporary files.
 my $pid = do {
-  local(*SPIN, *SPOUT, *SPERR);
-  (*SPIN, *SPOUT, *SPERR) = ($spin, $spout, $sperr);
+  local(*SPIN, *SPOUT, *SPERR)  = ($spin, $spout, $sperr);
   open3("<&SPIN", ">&SPOUT", ">&SPERR", @cmd);
 };
+
 
 #
 # Close input file, reap the kid, and rewind temporary filehandles.
@@ -990,6 +998,7 @@ sub read_cfg {
       next if /^\s*\#/;
       chomp;
       my($k, $v) = split /\t+/, $_;
+      $v = '' unless defined $v;
       $v = &read_cfg($v) if $v =~ s(^file://){};
       $cfg{$k} = $v;
     }
@@ -1680,6 +1689,8 @@ sub preparse {
   $p->handler(process => $pi, 'text');
   $p->handler(start => $start, 'tag,attr');
   $p->parse(join "\n", @{$File->{Content}});
+
+  $File->{DOCTYPE} = '' unless defined $File->{DOCTYPE};
 
   return $File;
 }
