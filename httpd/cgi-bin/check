@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.121 2004-05-16 02:57:10 link Exp $
+# $Id: check,v 1.305.2.122 2004-05-16 03:13:28 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.121 $;
+  $VERSION    =  q$Revision: 1.305.2.122 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-16 02:57:10 $,
+                              Date => q$Date: 2004-05-16 03:13:28 $,
                              });
 
 #
@@ -866,7 +866,7 @@ if ($File->{Opt}->{Output} eq 'xml') {
   if ($File->{Opt}->{Verbose} or not $File->{'Is Valid'}) {
     print qq(<div class="splash">\n);
     &print_table($File);
-    &print_warnings($File);
+    &print_warnings($File) unless $File->{'Is Valid'};
     print qq(</div>\n);
   } else {
     if ($File->{'Is Valid'} and not $File->{'Is Upload'}) {
