@@ -5,7 +5,7 @@
 # (c) 1999-2001 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.68 2001-01-18 21:58:04 hugo Exp $
+# $Id: checklink.pl,v 2.69 2001-01-19 13:52:46 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -34,7 +34,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.68 $ . '(c) 1999-2001 W3C';
+my $VERSION = q$Revision: 2.69 $ . '(c) 1999-2001 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -1626,7 +1626,7 @@ sub html_header() {
 <!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">
 <html>
 <head>
-<title>W3C Link Checker: $uri</title>
+<title>W3C Link Checker".($uri eq '' ? '' : ': '.$uri)."</title>
 <style type=\"text/css\">
 
 body {
@@ -1734,7 +1734,7 @@ sub file_uri() {
 
 sub print_form() {
     my ($q) = @_;
-    &html_header($VERSION, 1);
+    &html_header('', 1);
     print "<form action=\"".$q->self_url()."\" method=\"get\">
 <p>Enter the URI that you want to check:</p>
 <p><input type=\"text\" size=\"50\" name=\"uri\"></p>
