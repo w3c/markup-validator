@@ -8,14 +8,14 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.46 1999-10-27 20:25:33 gerald Exp $
+# $Id: check,v 1.47 1999-11-15 04:25:52 gerald Exp $
 
 #
 # Load modules
 use strict;
 use LWP::UserAgent;
 use URI::Escape;
-use CGI::Carp;
+use CGI::Carp qw(fatalsToBrowser);
 use CGI qw(:cgi -newstyle_urls -private_tempfiles);
 use Text::Wrap;
 
@@ -29,8 +29,8 @@ use constant UNDEF => undef;
 # Constant definitions
 #############################################################################
 
-my $cvsrevision	= '$Revision: 1.46 $';
-my $cvsdate	= '$Date: 1999-10-27 20:25:33 $';
+my $cvsrevision	= '$Revision: 1.47 $';
+my $cvsdate	= '$Date: 1999-11-15 04:25:52 $';
 
 my $logfile	= "/var/log/httpd/val-svc";
 
@@ -265,6 +265,7 @@ my $ua = new LWP::UserAgent;
 $ua->agent( "W3C_Validator/$revision " . $ua->agent );
 $ua->parse_head(0);  # we want to parse the http-equiv stuff ourselves, for now
 my $request = new HTTP::Request(GET => $q->param('uri'));
+$request->headers->header('Accept' => 'text/html;q=1.0 text/*, */*;q=0.2');
 
 # if we got a Authorization header from the client, it means
 # that the client is back at it after being prompted for
