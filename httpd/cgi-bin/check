@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.48 2003-05-23 17:14:55 link Exp $
+# $Id: check,v 1.305.2.49 2003-05-24 09:30:31 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.48 $;
+  $VERSION    =  q$Revision: 1.305.2.49 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -172,7 +172,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-05-23 17:14:55 $,
+                              Date => q$Date: 2003-05-24 09:30:31 $,
                              });
 
 #
@@ -2287,6 +2287,16 @@ sub uri_rejected {
         specific URI you would like us to support, and if possible provide a
         reference to the relevant standards document describing the URI scheme
         in question.
+      </p>
+      <p class="tip">
+        Remember that you can always save the page to disk and Validate it
+        using the File Upload interface.
+      </p>
+      <p>
+        Support for <abbr title="Secure Sockets Layer">SSL</abbr> and
+        <abbr title="Transport Layer Security">TLS</abbr> is a known
+        limitation and is beeing tracked as
+        <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=77">Issue #77</a>.
       </p>
     </div>
 .EOF.
