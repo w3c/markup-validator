@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.90 2001-03-08 01:21:09 link Exp $
+# $Id: check,v 1.91 2001-03-08 01:57:52 link Exp $
 
 #
 # We need Perl 5.004.
@@ -38,8 +38,8 @@ use constant DEBUG => 0;
 
 #
 # Define global variables
-use vars qw($VERSION $DATE $MAINTAINER $NOTICE);     # Strings we need.
-use vars qw($frag $pub_ids $element_uri $file_type); # Cfg hashes.
+use vars qw($VERSION $DATE $MAINTAINER $NOTICE);               # Strings.
+use vars qw($frag $pub_ids $element_uri $file_type $doctypes); # Cfg hashes.
 
 #
 # Paths and file locations
@@ -52,6 +52,7 @@ my $elem_db   = $html_path . 'config/eref.cfg';
 my $fpis_db   = $html_path . 'config/fpis.cfg';
 my $frag_db   = $html_path . 'config/frag.cfg';
 my $type_db   = $html_path . 'config/type.cfg';
+my $dtds_db   = $html_path . 'config/doctypes.cfg';
 my $sgmlstuff = $html_path . 'sgml-lib';
 my $sgmldecl  = $sgmlstuff . '/REC-html401-19991224/HTML4.decl';
 my $xhtmldecl = $sgmlstuff . '/REC-xhtml1-20000126/xhtml1.dcl';
@@ -73,9 +74,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.90 $;
+$VERSION    =  q$Revision: 1.91 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-03-08 01:21:09 $;
+$DATE       =  q$Date: 2001-03-08 01:57:52 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -93,6 +94,7 @@ $frag        = &read_cfg($frag_db); # FPIs    -> plain text version string
 $pub_ids     = &read_cfg($fpis_db); # Errors  -> fragment identifier
 $element_uri = &read_cfg($elem_db); # Element -> URI fragment
 $file_type   = &read_cfg($type_db); # Content -> File -type
+$doctypes    = &read_cfg($dtds_db); # Name    -> doctype
 
 #
 # Set up signal handlers.
@@ -236,11 +238,17 @@ EOF
 #     inferred by the check_for_doctype function
 #
 
-my $doctype;
-my $guessed_doctype = 2;
+#
+# Override DOCTYPE if user asked for it.
+if (defined $q->param('doctype') and not $q->param('doctype') =~ /Inline/i) {
+  $File->{Content} = &supress_doctype($File->{Content});
+  unshift @{$File->{Content}}, $doctypes->{$q->param('doctype')};
+}
 
 #
 # Try to extract or guess the DOCTYPE for HTML and XHTML files.
+my $doctype;
+my $guessed_doctype = 2;
 if ($File->{Type} eq 'html' or $File->{Type} eq 'xhtml'
     or $q->param('uploaded_file') ) {
   ($guessed_doctype, $doctype) = &check_for_doctype($File->{Content});
@@ -1451,4 +1459,17 @@ sub truncate_line {
   }
 
   return $line, $col;
+}
+
+#
+# Supress any existing DOCTYPE by commenting it out.
+sub supress_doctype {
+  no strict 'vars';
+  my $file = shift;
+  local $HTML = '';
+
+  HTML::Parser->new(default_h     => [sub {$HTML .= shift}, 'text'],
+		    declaration_h => [sub {$HTML .= '<!-- ' . $_[0] . ' -->'}, 'text']
+		   )->parse(join "\n", @{$file});
+  return [split /\n/, $HTML];
 }
