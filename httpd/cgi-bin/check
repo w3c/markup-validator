@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.324.2.1 2003-06-05 14:42:41 duerst Exp $
+# $Id: check,v 1.324.2.2 2003-06-05 15:22:33 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -146,7 +146,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.324.2.1 $;
+  $VERSION    =  q$Revision: 1.324.2.2 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 } # end of BEGIN block.
 
@@ -1984,32 +1984,26 @@ sub transcode {
 
   my $c = Text::Iconv->new($result_charset, 'utf-8');
   my $line = 0;
-  my $wronglines = 0;
   for (@{$File->{Content}}) {
     my $in = $_;
     $line++;
     $_ = $c->convert($_); # $_ is local!!
     if ($in ne "" and $_ eq "") {
       push @{$File->{Lines}}, $line;
-      # the line cannot be decoded as a whole,
-      # so try to get decoded as much as possible
-      # but only for a few lines; after that, give up
-      my $short = 0;                 # longest okay
-      if (++$wornglines > 5) {
-        my $long = (length $in) - 1; # longest unknown
-        while ($long > $short) {
-          my $try = int (($long+$short+1) / 2);
-          if ($c->convert(substr($in,0,$try)) eq "") {
-            $long  = $try-1;
-          } else {
-            $short = $try;
-          }
+      # try to decoded as much as possible of the line
+      my $short = 0;               # longest okay
+      my $long = (length $in) - 1; # longest unknown
+      while ($long > $short) { # binary search
+        my $try = int (($long+$short+1) / 2);
+        if ($c->convert(substr($in,0,$try)) eq "") {
+          $long  = $try-1;
+        } else {
+          $short = $try;
         }
-        $_ = $c->convert(substr($in,0,$short));
       }
       my $remain = (length $in) - $short;
-      # can we make the text on the next line styled ???
-      $_ .= "#### $remain byte(s) unconvertable ####";
+      $_ = $c->convert(substr($in,0,$short))
+           . "#### $remain byte(s) unconvertable ####";
     }
   }
   return $File;
