@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.31 2003-03-01 18:16:40 link Exp $
+# $Id: check,v 1.305.2.32 2003-03-01 18:21:59 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.31 $;
+  $VERSION    =  q$Revision: 1.305.2.32 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -166,7 +166,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-03-01 18:16:40 $,
+                              Date => q$Date: 2003-03-01 18:21:59 $,
                              });
 
 #
@@ -2365,7 +2365,7 @@ sub check_utf8 {
 
   # Add a warning if doc is UTF-8 and contains a BOM.
   if ($File->{Content}->[0] =~ m(^\xEF\xBB\xBF)) {
-    &add_warning($File, <<".EOF.">);
+    &add_warning($File, <<".EOF.");
       The Unicode Byte-Order Mark (BOM) in UTF-8 encoded files is known to cause
       problems for some text editors and older browsers. You may want to consider
       avoiding its use until it is better supported.
