@@ -1,8 +1,9 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.2 2002-11-30 05:05:42 link Exp $ */
+/* $Id: results.css,v 1.13.2.3 2002-11-30 20:14:19 link Exp $ */
 
 .markup {
   color: red;
+  background: white;
   font-weight: bolder;
 }
 
@@ -12,6 +13,7 @@
 }
 
 fieldset {
+  color: black;
   background-color: #eeeeee;
 }
 
@@ -37,21 +39,25 @@ td {
 }
 
 .info {
+  color: black;
   background: white;
   border-color: gray;
 }
 
 .warning {
+  color: black;
   background: silver;
   border-color: gray;
 }
 
 .error {
+  color: black;
   background: yellow;
   border-color: black;
 }
 
 .fatal h2 {
+  color: black;
   background: red;
   border: solid black 1px;
 }
@@ -63,7 +69,7 @@ h2.valid {
 .valid {
   background:		#053188;
   color:		white;
-  font-family:		Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
+  font-family:		"Luxi Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
   font-size-adjust:	.53;
   font-size:		1.5em;
   font-weight:		500;
@@ -78,25 +84,29 @@ h2.valid {
 }
 
 .valid a {
-  color: yellow;
+  color:      yellow;
+  background: #053188;
 }
 
 .valid a:visited {
   color: silver;
+  background: #053188;
 }
 
 .valid a:hover {
   color: #053188;
+  background: #eee;
 }
 
 .valid a:active {
   color: red;
+  background: yellow;
 }
 
 .invalid {
   background:		#880531;
   color:		white;
-  font-family:		Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
+  font-family:		"Luxi Sans", Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
   font-size-adjust:	.53;
   font-size:		1.5em;
   font-weight:		500;
