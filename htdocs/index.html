@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.45 2001-09-24 10:05:41 link Exp $" -->
-<!--#set var="date" value="\$Date: 2001-09-24 10:05:41 $" -->
+<!--#set var="revision" value="\$Id: index.html,v 1.46 2001-10-06 13:38:34 link Exp $" -->
+<!--#set var="date" value="\$Date: 2001-10-06 13:38:34 $" -->
 <!--#set var="title" value="The W3C HTML Validation Service" -->
 <!--#include virtual="/header.html" -->
 
@@ -13,10 +13,18 @@
     <div class="nsnote">
       <h2>Why does this page render badly?</h2>
       <p>
-        Most likely this is due to a bug in your browser's support for the
-        <a href="http://www.w3.org/">W3C</a>
-        <a href="http://www.w3.org/Style/CSS/">Cascading Style Sheets</a>
-        <a href="http://www.w3.org/TR/REC-CSS1">Recommendation</a>. 
+        Most likely this is due to a bug in your browser's support for
+        <a href="http://www.w3.org/Style/CSS/">Cascading Style Sheets</a>.
+        This page has been designed to convey it's information content to
+        all clients, but it may lack of formatting and layout in older
+        browsers. If you find this page dull it's likely an artefact of
+        your browser's lack of support for CSS and I would encourage you
+        to get one that does (it's been available for 5 years now!). If
+        on the other hand this site fails to be understandable or accesible
+        regardless of the browser you use, we would very much like to know
+        about it. Send us feedback, as outlined on our
+        <a href="/feedback.html">Feedback Page</a>, and we'll do out level
+        best to remedy the situation ASAP.
       </p>
     </div>
     <div>
@@ -25,13 +33,18 @@
         These are the most recent major changes to this service. See
         "<a href="whatsnew.html">What's&nbsp;New</a>" for more details.
       </p> 
-      <ul>
-        <li><a href="whatsnew.html#2001-09-13">Added support for XHTML 1.1,
-          XHTML Basic 1.0, and MathML 2.0</a> <small>(Sept 13, 2001)</small></li>
-        <li><a href="whatsnew.html#2001-06-22">Improved and expanded Character
-          Encoding support</a> <small>(June 22, 2001)</small></li>
-      </ul>
-    </div>
+    <dl>
+      <dt><a href="whatsnew.html#2001-10-06">October 06, 2001</a></dt>
+      <dd>Finished web site redesign and added Tip-of-the-Day.</dd>
+      <dt><a href="whatsnew.html#2001-09-24">September 26, 2001</a></dt>
+      <dd>Added experimental support for SVG 1.0 and spec-prod 2.0.</dd>
+      <dt><a href="whatsnew.html#2001-09-13">September 13, 2001</a></dt>
+      <dd>Added support for XHTML 1.1, XHTML Basic 1.0, and MathML 2.0.</dd>
+      <dt><a href="whatsnew.html#2001-06-22">June 22, 2001</a></dt>
+      <dd>Improved and expanded Character Encoding support.</dd>
+    </dl>
+   </div>
+
     <div>
       <h2>Validate Files</h2>
       <p>
@@ -40,16 +53,19 @@
         W3C HTML Validation Service" href="/detailed.html">Extended
         Interface</a> available if you want to set any advanced options.
       </p>
-      <form method="post" enctype="multipart/form-data" action="/check">
+      <form method="get" action="/check">
       <p>
         <label title="Address of page to Validate">Address (URI): <input id="uri" name="uri" size="50" /></label>
-        <label title="Choose a Local File to Upload and Validate">Local File: <input type="file" name="uploaded_file" size="50" /></label>
+	<input type="submit" value="Validate URI..." />
       </p>
-      <p><input type="submit" value="Validate" /></p>
+      </form>
+      <form method="post" enctype="multipart/form-data" action="/check">
+      <p>    
+        <label title="Choose a Local File to Upload and Validate">Local File: <input type="file" name="uploaded_file" size="50" /></label>
+        <input type="submit" value="Validate File..." />
+      </p>
       </form>
     </div>
-
-
 <!--#include virtual="/footer.html" -->
   </body>
 </html>
