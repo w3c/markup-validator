@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.128 2001-06-23 02:45:11 link Exp $
+# $Id: check,v 1.129 2001-06-23 04:06:44 link Exp $
 
 #
 # We need Perl 5.004.
@@ -78,9 +78,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.128 $;
+$VERSION    =  q$Revision: 1.129 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-23 02:45:11 $;
+$DATE       =  q$Date: 2001-06-23 04:06:44 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -477,32 +477,29 @@ close ERRORS          or warn "close($temp) returned: $!\n";
 
 $File->{ESIS} = [];
 my $elements_found = 0;
-my $root_namespace;
-my %other_namespaces;
 open ESIS, "$temp.esis" or die  "open($temp.esis) returned: $!\n";
 while (<ESIS>) {
-    $elements_found++ if ( /^\(/ );
-						# look for xml namespaces
-    if ( ( ($File->{Type} eq 'xml') || ($File->{Type} eq 'xhtml')) &&
-         ( (/^Axmlns() \w+ (.*)/) || (/^Axmlns:([^ ]+) \w+ (.*)/) ) ) {
-        if ( ( ! defined $root_namespace ) &&
-	     ( $elements_found == 0 ) && ( $1 eq "" ) ) {
-	    $root_namespace = $2;
-	} else {
-	  $other_namespaces{$2}++;
-	}
+  $elements_found++ if /^\(/;
+
+  if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
+    if (/^Axmlns() \w+ (.*)/ or /^Axmlns:([^ ]+) \w+ (.*)/) {
+      if (not $File->{Namespace} and $elements_found == 0 and $1 eq "") {
+	$File->{Namespace} = $2;
+      }
+      $File->{Namespaces}->{$2}++;
     }
-    next if / IMPLIED$/;
-    next if /^ASDAFORM CDATA /;
-    next if /^ASDAPREF CDATA /;
-    chomp; # Removes trailing newlines
-    push @{$File->{ESIS}}, $_;
+  }
+  next if / IMPLIED$/;
+  next if /^ASDAFORM CDATA /;
+  next if /^ASDAPREF CDATA /;
+  chomp; # Removes trailing newlines
+  push @{$File->{ESIS}}, $_;
 }
 close ESIS              or warn "close($temp.esis) returned: $!";
 
 my $fpi;
 my $version = 'unknown';
-if (($File->{Type} eq 'xhtml') || ($File->{Type} eq 'mathml')) {
+if ($File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml') {
   $fpi = $File->{DOCTYPE};
 } elsif ($File->{Type} eq 'xml') {
   $fpi = 'XML';
@@ -517,24 +514,25 @@ if (($File->{Type} eq 'xhtml') || ($File->{Type} eq 'mathml')) {
 }
 $version = $pub_ids->{$fpi} || 'unknown';
 
-if ($File->{Type} eq 'xml' || 'xhtml') {
+if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
   print ' ' x 4, qq(<li>Document type: ), $version;
   if ($File->{Type} eq 'xhtml'
-      and $root_namespace ne 'http://www.w3.org/1999/xhtml') {
+      and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
     print "<br>warning: unknown namespace for text/html document!";
-    if ($root_namespace ne '') {
-      print qq{, <a href="$root_namespace">$root_namespace</a>};
+    if ($File->{Namespace} ne '') {
+      print qq{, <a href="$File->{Namespace}">$File->{Namespace}</a>};
     }
     print "\n";
   } else {
-    if ($root_namespace ne '') {
-      print qq( with namespace <a href="$root_namespace">$root_namespace</a>);
+    if ($File->{Namespace} ne '') {
+      print qq( with namespace <a href="$File->{Namespace}">$File->{Namespace}</a>);
     }
   }
 
-  if (scalar keys %other_namespaces >= 1) {
+  if (scalar keys %{$File->{Namespaces}} > 1) {
     print "<br>Other namespaces in this document: ";
-    for (keys %other_namespaces) {
+    for (keys %{$File->{Namespaces}}) {
+      next if $_ eq $File->{Namespace}; # Don't repeat Root Namespace.
       print qq(<a href="$_">$_</a>, ), "\n";
     }
   }
