@@ -5,7 +5,7 @@
 # (c) 1999-2003 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.14 2003-07-26 19:16:26 ville Exp $
+# $Id: checklink.pl,v 3.6.2.15 2003-07-26 19:20:51 ville Exp $
 #
 # This program is licensed under the W3C(r) Software License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -85,7 +85,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.14 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.15 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2003 W3C', $CVS_VERSION);
 
@@ -178,6 +178,9 @@ my $doc_count = 0;
 my $timestamp = &get_timestamp();
 
 if ($Opts{Command_Line}) {
+
+  require Text::Wrap;
+  Text::Wrap->import('wrap');
 
   # Parse command line
   &parse_arguments();
@@ -1507,7 +1510,7 @@ HTTP Message: %s%s%s</dd>
       }
     } else {
       my $redirmsg = $redirect_loop ? ' redirect loop detected' : '';
-      printf("\n%s\t%s\n  Code: %d%s %s\nTo do: %s\n",
+      printf("\n%s\t%s\n  Code: %d%s %s\n To do: %s\n",
              # List of redirects
              $redirected ? join("\n-> ", @redirects_urls) . $redirmsg : $u,
              # List of lines
@@ -1522,7 +1525,7 @@ HTTP Message: %s%s%s</dd>
              $results->{$u}{location}{message} ?
              $results->{$u}{location}{message} : '',
              # What to do
-             $whattodo);
+             wrap('', '        ', $whattodo));
       if ($#fragments >= 0) {
         if ($results->{$u}{location}{code} == 200) {
           print("The following fragments need to be fixed:\n");
@@ -1665,7 +1668,7 @@ sub links_summary (\%\%\%\%)
     undef(@sorted); undef(@idx);
 
     if ($Opts{HTML}) {
-      print('</h3><p><i>Fragments listed are broken. See the table below to know what action to take.</i></p>');
+      print('</h3><p><em>Fragments listed are broken. See the table below to know what action to take.</em></p>');
 
       # Print a summary
       print "<table border=\"1\">\n<tr><td><b>Code</b></td><td><b>Occurrences</b></td><td><b>What to do</b></td></tr>\n";
