@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.234 2002-09-29 22:46:34 link Exp $
+# $Id: check,v 1.235 2002-09-30 17:32:23 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.234 $;
+  $VERSION    =  q$Revision: 1.235 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-09-29 22:46:34 $,
+			      Date => q$Date: 2002-09-30 17:32:23 $,
 			     });
 
 #
@@ -2511,7 +2511,9 @@ sub abort_if_error_flagged {
   if ($File->{'Error Flagged'}) {
     print $File->{'Results'};
     print $File->{'Error Message'};
-    &show_source($File) if $File->{Opt}->{'Show Source'} && ($Flags & O_SOURCE);
+    if ($File->{Opt}->{'Show Source'} and $Flags & O_SOURCE) {
+      &show_source($File);
+    }
     print $File->{'Footer'};
     undef $File;
     exit;
@@ -2523,7 +2525,7 @@ sub abort_if_error_flagged {
 sub conflict {
   my $encodingA = shift;
   my $encodingB = shift;
-  return $encodingA && $encodingB && $encodingA ne $encodingB;
+  return $encodingA && $encodingB and $encodingA ne $encodingB;
 }
 
 
