@@ -1,18 +1,19 @@
-<!--#set var="revision" value="\$Id: errors.html,v 1.17 2002-02-11 22:09:10 link Exp $"
---><!--#set var="date" value="\$Date: 2002-02-11 22:09:10 $"
+<!--#set var="revision" value="\$Id: errors.html,v 1.18 2002-08-20 01:51:24 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-08-20 01:51:24 $"
 --><!--#set var="title" value="Error Explanations for The W3C HTML Validation Service"
---><!--#include virtual="/header.html" -->
+--><!--#set var="relroot" value="../"
+--><!--#include virtual="../header.html" -->
 
-    <p>
+    <p id="skip">
       These error explanations were originally written by Scott Bigham,
       they are used here with his permission.
     </p>
 
     <dl>
-      <dt><a id="undef-id" name="dup-id">"ID "FOO" already defined"</a></dt>
+      <dt><a id="undef-id" name="dup-id">&ldquo;<code>ID &lsquo;<var>FOO</var>&rsquo; already defined</code>&rdquo;</a></dt>
       <dd>
         <p>
-          You have defined the id/name "FOO" more then once. You will also get
+          You have defined the id/name &lsquo;<var>FOO</var>&rsquo; more then once. You will also get
           a message telling you where it was first defined. Be aware that this
           message may be the result of an ambiguity in the specification.
           While user-agents must treat values of the id attribute
@@ -23,7 +24,7 @@
           for further information.
         </p>
       </dd>
-      <dt><a id="unterm-comment-1" name="unterm-comment-1">"entity end not allowed in comment"</a></dt>
+      <dt><a id="unterm-comment-1" name="unterm-comment-1">&ldquo;<code>entity end not allowed in comment</code>&rdquo;</a></dt>
       <dd>
         <p>
           Unterminated comment. The position indicator points to the very end of
@@ -32,7 +33,7 @@
           `<code>&lt;!--</code>' in the document.
         </p>
       </dd>
-      <dt><a id="unterm-comment-2" name="unterm-comment-2">"name start character invalid: only s and comment allowed in comment declaration"</a></dt>
+      <dt><a id="unterm-comment-2" name="unterm-comment-2">&ldquo;<code>name start character invalid: only s and comment allowed in comment declaration</code>&rdquo;</a></dt>
       <dd>
         <p>
           Unterminated comments again. This time, you have a case like:
@@ -48,7 +49,7 @@
           allowed.
         </p>
       </dd>
-      <dt><a id="bad-comment" name="bad-comment">"unknown declaration type `FOO'"</a></dt>
+      <dt><a id="bad-comment" name="bad-comment">&ldquo;<code>unknown declaration type &lsquo;<var>FOO</var>&rsquo;</code>&rdquo;</a></dt>
       <dd>
         <p>
           Most likely an invalid comment of the form <code>&lt;!invalid
@@ -57,7 +58,7 @@
           declaration.
         </p>
       </dd>
-      <dt><a id="attr-quoted" name="attr-quoted">"an attribute value must be a literal unless it contains only name characters"</a></dt>
+      <dt><a id="attr-quoted" name="attr-quoted">&ldquo;<code>an attribute value must be a literal unless it contains only name characters</code>&rdquo;</a></dt>
       <dd>
         <p>
           You have an attribute whose value needs to be in quotes. If an
@@ -67,7 +68,7 @@
           standpoint, but some browsers don't recognize them).
         </p>
       </dd>
-      <dt><a id="attr-char" name="attr-char">"character `X' not allowed in attribute specification list"</a></dt>
+      <dt><a id="attr-char" name="attr-char">&ldquo;<code>character `X' not allowed in attribute specification list</code>&rdquo;</a></dt>
       <dd>
         <p>
           The validator has found a character inside an HTML tag that isn't
@@ -93,7 +94,7 @@
           quote.
         </p>
       </dd>
-      <dt><a id="name-length" name="name-length">"length of attribute value must not exceed LITLEN less NORMSEP (1022)"</a></dt>
+      <dt><a id="name-length" name="name-length">&ldquo;<code>length of attribute value must not exceed LITLEN less NORMSEP (1022)</code>&rdquo;</a></dt>
       <dd>
         <p>
           This usually occurs in conjunction with the
@@ -115,10 +116,10 @@
           this case, the <code>"joe.gif"</code> line.
         </p>
       </dd>
-      <dt><a id="undef-tag" name="undef-tag">"element `FOO' undefined"</a></dt>
+      <dt><a id="undef-tag" name="undef-tag">&ldquo;<code>element &lsquo;<var>FOO</var>&rsquo; undefined</code>&rdquo;</a></dt>
       <dd>
         <p>
-          You've used an unknown tag (represented here by FOO). Make sure the
+          You've used an unknown tag (represented here by &lsquo;<var>FOO</var>&rsquo;). Make sure the
           DTD indicated by your DOCTYPE actually includes this element.
         </p>
         <p>
@@ -127,7 +128,7 @@
           and friends) you must use the "Transitional" DTD.
         </p>
       </dd>
-      <dt><a id="not-allowed" name="not-allowed">"document type does not allow element "FOO" here"</a></dt>
+      <dt><a id="not-allowed" name="not-allowed">&ldquo;<code>document type does not allow element &lsquo;<var>FOO</var>&rsquo; here</code>&rdquo;</a></dt>
       <dd>
         <p>
           Straightforward, but not terribly informative. There are a
@@ -137,7 +138,7 @@
         <ul>
           <li>
             Using an unknown tag. In this case, the next error will be
-            <a href="#undef-tag">"element `FOO' undefined"</a>.
+            <a href="#undef-tag">&ldquo;element &lsquo;<var>FOO</var>&rsquo; undefined"</a>.
           </li>
           <li>
             Using a tag in the wrong place. For instance,
@@ -150,12 +151,12 @@
           </li>
         </ul>
       </dd>
-      <dt><a id="not-contained" name="not-contained">document type does not allow element "FOO" here; assuming missing "BAR" start-tag</a></dt>
+      <dt><a id="not-contained" name="not-contained">&ldquo;document type does not allow element &lsquo;<var>FOO</var>&rsquo; here; assuming missing &lsquo;<var>BAR</var>&rsquo; start-tag</a>&rsquo;</dt>
       <dd>
         <p>
           Similar to the <a href="#not-allowed">previous error</a>, but more
-          specific: in this case, you have a FOO element that is not contained
-          in a BAR element when FOO is not allowed outside of BAR. Some of the
+          specific: in this case, you have a &lsquo;<var>FOO</var>&rsquo; element that is not contained
+          in a &lsquo;<var>BAR</var>&rsquo; element when &lsquo;<var>FOO</var>&rsquo; is not allowed outside of &lsquo;<var>BAR</var>&rsquo;. Some of the
           most common causes of this error are:
         </p>
         <ul>
@@ -195,12 +196,12 @@
           </li>
         </ul>
         <p>
-          The validator has inserted a BAR start tag where it thinks there needs
+          The validator has inserted a &lsquo;<var>BAR</var>&rsquo; start tag where it thinks there needs
           to be one; it will probably complain later on that <a href="#no-end-tag">the
           corresponding end tag is also missing</a>.
         </p>
       </dd>
-      <dt><a id="attr-undef" name="attr-undef">"there is no attribute `FOO' for this element (in this HTML version)"</a></dt>
+      <dt><a id="attr-undef" name="attr-undef">&ldquo;<code>there is no attribute &lsquo;<var>FOO</var>&rsquo; for this element (in this HTML version)</code>&rdquo;</a></dt>
       <dd>
         <p>
           You have used an attribute with an element that is defined not to have
@@ -209,7 +210,7 @@
           appropriately.
         </p>
       </dd>
-      <dt><a id="undef-attr-val" name="undef-attr-val">"`FOO' is not a member of the group specified in the declared value of this attribute"</a></dt>
+      <dt><a id="undef-attr-val" name="undef-attr-val">&ldquo;<code>&lsquo;<var>FOO</var>&rsquo; is not a member of the group specified in the declared value of this attribute</code>&rdquo;</a></dt>
       <dd>
         <p>
           Similar to the <a href="#attr-undef">previous error</a>; this time,
@@ -237,7 +238,7 @@
           JOE.GIF as an attribute of <code>&lt;IMG&gt;</code>.
         </p>
       </dd>
-      <dt><a id="bad-attr-char" name="bad-attr-char">"syntax of attribute value does not conform to declared value"</a></dt>
+      <dt><a id="bad-attr-char" name="bad-attr-char">&ldquo;<code>syntax of attribute value does not conform to declared value</code>&rdquo;</a></dt>
       <dd>
         <p>
           Yet another attribute error; this time, the attribute in question was
@@ -252,7 +253,7 @@
           which means that <code>&lt;TD WIDTH="50%"&gt;</code> is not allowed.
         </p>
       </dd>
-      <dt><a id="attr-bad-name" name="attr-bad-name">"value of attribute "FOO" invalid: "#" cannot start a name"</a></dt>
+      <dt><a id="attr-bad-name" name="attr-bad-name">&ldquo;<code>value of attribute &lsquo;<var>FOO</var>&rsquo; invalid: "#" cannot start a name</code>&rdquo;</a></dt>
       <dd>
       	<p>
 	        A special case of <a href="#bad-attr-char">the previous error</a>; the
@@ -260,7 +261,7 @@
 	        which must begin with a letter.
 				</p>
       </dd>
-      <dt><a id="bad-abbrev-attr" name="bad-abbrev-attr">"`FOO' is not a member of a group specified for any attribute"</a></dt>
+      <dt><a id="bad-abbrev-attr" name="bad-abbrev-attr">&ldquo;<code>&lsquo;<var>FOO</var>&rsquo; is not a member of a group specified for any attribute</code>&rdquo;</a></dt>
       <dd>
         <p>
           Another attribute error, this time referring to an "abbreviated"
@@ -283,7 +284,7 @@
           error, referring to the "attribute value" <code>JOE.GIF</code>.
         </p>
       </dd>
-      <dt><a id="attr-missing" name="attr-missing">"required attribute `FOO' not specified"</a></dt>
+      <dt><a id="attr-missing" name="attr-missing">&ldquo;<code>required attribute &lsquo;<var>FOO</var>&rsquo; not specified</code>&rdquo;</a></dt>
       <dd>
         <p>
           You left off a required attribute of the indicated element. The most
@@ -294,18 +295,18 @@
           meaningful value here.
         </p>
       </dd>
-      <dt><a id="no-end-tag" name="no-end-tag">"end tag for `FOO' omitted, but its declaration does not permit this"</a></dt>
+      <dt><a id="no-end-tag" name="no-end-tag">&ldquo;<code>end tag for &lsquo;<var>FOO</var>&rsquo; omitted, but its declaration does not permit this</code>&rdquo;</a></dt>
       <dd>
         <p>
-          You forgot to close something. FOO is the element you forgot to close
+          You forgot to close something. &lsquo;<var>FOO</var>&rsquo; is the element you forgot to close
           (and the next message, `start tag was here' points to the particular
-          instance of FOO in question); the positional indicator points to where
+          instance of &lsquo;<var>FOO</var>&rsquo; in question); the positional indicator points to where
           the validator expected you to close the element. There are a few
           common ways that this can happen:
         </p>
         <ul>
           <li>
-            You've put something inside the FOO element that isn't allowed
+            You've put something inside the &lsquo;<var>FOO</var>&rsquo; element that isn't allowed
             there. For instance, <code>&lt;UL&gt;&lt;LI&gt;&lt;H4&gt;fake font
             change&lt;/H4&gt;&lt;/UL&gt;</code> will cause this error, since
             headers aren't allowed inside <code>&lt;UL&gt;</code>'s; the
@@ -315,8 +316,8 @@
           <li>
             Interlocked elements. For instance,
             <code>&lt;B&gt;&lt;I&gt;nope&lt;/B&gt;&lt;/I&gt;</code> will cause
-            this error. HTML requires that you close elements ``inside-out'' ---
-            that is, the last element you opened is the first element you should
+            this error. HTML requires that you close elements &ldquo;inside-out&rdquo;
+            &mdash; that is, the last element you opened is the first element you should
             close. In this example, you'd have to close the
             <code>&lt;I&gt;</code> before the <code>&lt;B&gt;</code>.
           </li>
@@ -330,7 +331,7 @@
           </li>
           <li>
             Having unadorned text where the validator was expecting a
-            sub-element of FOO. For instance, <code>&lt;DL&gt;fake
+            sub-element of &lsquo;<var>FOO</var>&rsquo;. For instance, <code>&lt;DL&gt;fake
             indent&lt;/DL&gt;</code> will produce this error, since inside a
             <code>&lt;DL&gt;</code>, the validator only expects to see
             <code>&lt;DT&gt;</code>'s and <code>&lt;DD&gt;</code>'s.
@@ -355,10 +356,10 @@
         	quote all attribute values.
         </p>
       </dd>
-      <dt><a id="floating-close" name="floating-close">"end tag for element "FOO" which is not open"</a></dt>
+      <dt><a id="floating-close" name="floating-close">&ldquo;<code>end tag for element &lsquo;<var>FOO</var>&rsquo; which is not open</code>&rdquo;</a></dt>
       <dd>
         <p>
-          The validator found an end tag, represented here by FOO, without a
+          The validator found an end tag, represented here by &lsquo;<var>FOO</var>&rsquo;, without a
           corresponding start tag. This frequently occurs in conjunction with
           the <a href="#no-end-tag">previous error</a>. For instance, given
           <code>&lt;B&gt;&lt;I&gt;nope&lt;/B&gt;&lt;/I&gt;</code>, the validator
@@ -382,24 +383,24 @@
           or <code>&lt;IMG&gt;</code>.
         </p>
       </dd>
-      <dt><a id="omitted-content" name="omitted-content">"end tag for `FOO' which is not finished"</a></dt>
+      <dt><a id="omitted-content" name="omitted-content">&ldquo;<code>end tag for &lsquo;<var>FOO</var>&rsquo; which is not finished</code>&rdquo;</a></dt>
       <dd>
         <p>
-          You have a FOO element, but you have omitted some required sub-element
+          You have a &lsquo;<var>FOO</var>&rsquo; element, but you have omitted some required sub-element
           of it. For instance, a <code>TABLE</code> with no <code>TR</code>'s
           would cause this error.
         </p>
       </dd>
-      <dt><a id="no-start-tag" name="no-start-tag">"start tag for `FOO' omitted, but its declaration does not permit this"</a></dt>
+      <dt><a id="no-start-tag" name="no-start-tag">&ldquo;<code>start tag for &lsquo;<var>FOO</var>&rsquo; omitted, but its declaration does not permit this</code>&rdquo;</a></dt>
       <dd>
         <p>
-          The validator expected you to start a FOO element at the indicated
+          The validator expected you to start a &lsquo;<var>FOO</var>&rsquo; element at the indicated
           point. This probably means you've put unadorned text somewhere it
           isn't allowed; for instance, <code>&lt;UL&gt;fake
           indent&lt;/UL&gt;</code> will cause this error.
         </p>
       </dd>
-      <dt><a id="bad-entity" name="bad-entity">"unknown entity `FOO'"</a></dt>
+      <dt><a id="bad-entity" name="bad-entity">&ldquo;<code>unknown entity &lsquo;<var>FOO</var>&rsquo;</code>&rdquo;</a></dt>
       <dd>
         <p>
           The validator has found an entity (something like
@@ -445,7 +446,7 @@
           </li>
         </ul>
       </dd>
-      <dt><a id="bad-char" name="bad-char">"non SGML character number ###"</a></dt>
+      <dt><a id="bad-char" name="bad-char">&ldquo;<code>non SGML character number ###</code>&rdquo;</a></dt>
       <dd>
         <p>
           You've used an illegal character in your text. HTML uses the standard
@@ -474,7 +475,7 @@
           command to save the document without formatting information.
         </p>
       </dd>
-      <dt><a id="unicode-char" name="unicode-char">"`####' is not a valid character number"</a></dt>
+      <dt><a id="unicode-char" name="unicode-char">&ldquo;<code>`####' is not a valid character number</code>&rdquo;</a></dt>
       <dd>
         <p>
           You'll get several occurrences of this error if you use the Cougar
@@ -493,7 +494,7 @@
           pretty much ignore them.
         </p>
       </dd>
-      <dt><a id="bad-pub-id" name="bad-pub-id">"cannot generate system identifier for entity `HTML'"</a></dt>
+      <dt><a id="bad-pub-id" name="bad-pub-id">&ldquo;<code>cannot generate system identifier for entity `HTML'</code>&rdquo;</a></dt>
       <dd>
         <p>
           Your <code>DOCTYPE</code> declaration contains a public identifier
@@ -508,22 +509,22 @@
           work from, and thus could not validate your document.
         </p>
       </dd>
-      <dt><a id="missing-subel" name="missing-subel">"missing a required sub-element of `FOO'"</a></dt>
+      <dt><a id="missing-subel" name="missing-subel">&ldquo;<code>missing a required sub-element of &lsquo;<var>FOO</var>&rsquo;</code>&rdquo;</a></dt>
       <dd>
         <p>
-          The element "FOO" is defined to <em>require</em> one or more
+          The element &lsquo;<var>FOO</var>&rsquo; is defined to <em>require</em> one or more
           sub-elements. One example is TR which requires one or more TD or TH
           elements.
         </p>
       </dd>
-      <dt><a id="start-tag" name="start-tag">"start tag was here"</a></dt>
+      <dt><a id="start-tag" name="start-tag">&ldquo;<code>start tag was here</code>&rdquo;</a></dt>
       <dd>
         <p>
           Not an error, but rather a pointer to the start tag of the element
           the previous error referred to.
         </p>
       </dd>
-      <dt><a id="utf8-bom" name="utf8-bom">"UTF-8 'BOM' detected and removed"</a></dt>
+      <dt><a id="utf8-bom" name="utf8-bom">&ldquo;<code>UTF-8 'BOM' detected and removed</code>&rdquo;</a></dt>
       <dd>
         <p>
           The document contained an UTF-8 encoded Unicode Byte Order Mark (BOM)
@@ -537,7 +538,7 @@
           is required and handled by all conforming XML Processors.
         </p>
       </dd>
-      <dt><a id="text-not-allowed" name="text-not-allowed">" text is not allowed here; try wrapping the text in a more descriptive container"</a></dt>
+      <dt><a id="text-not-allowed" name="text-not-allowed">&ldquo;<code> text is not allowed here; try wrapping the text in a more descriptive container</code>&rdquo;</a></dt>
       <dd>
         <p>
           The document contained bare text where an element was expected.
@@ -551,7 +552,7 @@
           appears to be plain text, outside any element, to an SGML parser.
          </p>
       </dd>
-      <dt><a id="unkn-att-val" name="unkn-att-val">" value of attribute "FOO" cannot be "BAR"; must be one of "FOO", "BAR", "BAZ""</a></dt>
+      <dt><a id="unkn-att-val" name="unkn-att-val">&ldquo;<code> value of attribute &lsquo;<var>FOO</var>&rsquo; cannot be &lsquo;<var>BAR</var>&rsquo;; must be one of &lsquo;<var>FOO</var>&rsquo;, &lsquo;<var>BAR</var>&rsquo;, &lsquo;<var>BAZ</var>&rsquo;</code>&rdquo;</a></dt>
       <dd>
         <p>
           An attribute was specified to contain one of a set of predefined
@@ -560,7 +561,7 @@
           legal values for this attribute.
         </p>
       </dd>
-      <dt><a id="no-attr-end" name="no-attr-end">"character FOO not allowed in attribute specification list possibly caused by a missing quotation mark ending a previous attribute value"</a></dt>
+      <dt><a id="no-attr-end" name="no-attr-end">&ldquo;<code>character &lsquo;<var>FOO</var>&rsquo; not allowed in attribute specification list possibly caused by a missing quotation mark ending a previous attribute value</code>&rdquo;</a></dt>
       <dd>
         <p>
           A character that is illegal in the attribute list for a particular
@@ -568,7 +569,7 @@
           a missing quote character on a previous attribute value.
         </p>
       </dd>
-      <dt><a id="dup-attr" name="dup-attr">"duplicate specification of attribute "FOO""</a></dt>
+      <dt><a id="dup-attr" name="dup-attr">&ldquo;<code>duplicate specification of attribute &lsquo;<var>FOO</var>&rsquo;</code>&rdquo;</a></dt>
       <dd>
         <p>
           You have specified an attribute more than once. For instance, you've
@@ -576,7 +577,7 @@
 	  "img" tag.
         </p>
       </dd>
-      <dt><a id="invalid-attr-val" name="invalid-attr-val">"invalid attribute value"</a></dt>
+      <dt><a id="invalid-attr-val" name="invalid-attr-val">&ldquo;<code>invalid attribute value</code>&rdquo;</a></dt>
       <dd>
         <p>
           The value of this attribute is not a legal value for attributes. For
@@ -584,7 +585,7 @@
           from errors related to illegal values for a specific attribute.
         </p>
       </dd>
-      <dt><a id="attr-spec-nmtoken" name="attr-spec-nmtoken">"an attribute specification must start with a name or name token"</a></dt>
+      <dt><a id="attr-spec-nmtoken" name="attr-spec-nmtoken">&ldquo;<code>an attribute specification must start with a name or name token</code>&rdquo;</a></dt>
       <dd>
         <p>
           An attribute name (and some attribute values) must start with one of
@@ -595,7 +596,7 @@
           (usually a typo in a common attribute name).
         </p>
       </dd>
-      <dt><a id="inval-comment" name="inval-comment">"invalid comment declaration; check your comment syntax"</a></dt>
+      <dt><a id="inval-comment" name="inval-comment">&ldquo;<code>invalid comment declaration; check your comment syntax</code>&rdquo;</a></dt>
       <dd>
         <p>
           There is a syntax error in an SGML Comment Declaration. This may be
@@ -604,12 +605,12 @@
           "comment declaration started here".
         </p>
       </dd>
-      <dt><a id="assuming-missing-starttag" name="assuming-missing-starttag">"element "FOO" not allowed here; assuming missing "BAR" start-tag"</a></dt>
+      <dt><a id="assuming-missing-starttag" name="assuming-missing-starttag">&ldquo;<code>element &lsquo;<var>FOO</var>&rsquo; not allowed here; assuming missing &lsquo;<var>BAR</var>&rsquo; start-tag</code>&rdquo;</a></dt>
       <dd>
         <p>
-          The referenced element "FOO" isn't allowed in the context it occurs
-          in, but it would be if it was wrapped in a "BAR" element. The
-          Validator has assumed that you have forgotten to add a "BAR"
+          The referenced element &lsquo;<var>FOO</var>&rsquo; isn't allowed in the context it occurs
+          in, but it would be if it was wrapped in a &lsquo;<var>BAR</var>&rsquo; element. The
+          Validator has assumed that you have forgotten to add a &lsquo;<var>BAR</var>&rsquo;
           starttag and continued validation as if it was there. You should
           check if this is the case and insert the proper tag.
         </p>
@@ -620,9 +621,9 @@
         <p>
         </p>
       </dd>
-    </dl>
 -->
+    </dl>
 
-<!--#include virtual="/footer.html" -->
+<!--#include virtual="../footer.html" -->
   </body>
 </html>

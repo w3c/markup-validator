@@ -1,7 +1,8 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.49 2002-02-11 22:09:09 link Exp $"
---><!--#set var="date" value="\$Date: 2002-02-11 22:09:09 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.50 2002-08-20 01:51:23 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-08-20 01:51:23 $"
 --><!--#set var="title" value="The W3C HTML Validation Service"
---><!--#include virtual="/header.html" -->
+--><!--#set var="relroot" value="./"
+--><!--#include virtual="header.html" -->
 
     <div id="skip" class="intro">
       <p>
@@ -23,7 +24,7 @@
         on the other hand this site fails to be understandable or accesible
         regardless of the browser you use, we would very much like to know
         about it. Send us feedback, as outlined on our
-        <a href="/feedback.html">Feedback Page</a>, and we'll do out level
+        <a href="feedback.html">Feedback Page</a>, and we'll do out level
         best to remedy the situation ASAP.
       </p>
     </div>
@@ -32,18 +33,20 @@
       <p>
         You can enter a URI in the <code>Address</code> field below, or choose
         a file to upload. There is also an <a title="Extended Interface to the
-        W3C HTML Validation Service" href="/detailed.html">Extended
+        W3C HTML Validation Service" href="detailed.html">Extended
         Interface</a> available if you want to set any advanced options.
       </p>
-      <form method="get" action="/check">
+      <form method="get" action="check">
       <p>
-        <label title="Address of page to Validate">Address: <input id="uri" name="uri" size="40" /></label>
-	<input type="submit" value="Validate URI..." />
+        <label title="Address of page to Validate" for="uri">Address:
+          <input id="uri" name="uri" size="40" /></label>
+        <input type="submit" value="Validate URI..." />
       </p>
       </form>
-      <form method="post" enctype="multipart/form-data" action="/check">
+      <form method="post" enctype="multipart/form-data" action="check">
       <p>    
-        <label title="Choose a Local File to Upload and Validate">Local File: <input type="file" name="uploaded_file" size="30" /></label>
+        <label title="Choose a Local File to Upload and Validate" for="uploaded_file">Local File:
+          <input type="file" id="uploaded_file" name="uploaded_file" size="30" /></label>
         <input type="submit" value="Validate File..." />
       </p>
       </form>
@@ -65,7 +68,7 @@
     </dl>
    </div>
 
-<!--#include virtual="/footer.html" -->
+<!--#include virtual="footer.html" -->
   </body>
 </html>
 

@@ -1,19 +1,25 @@
-<!--#set var="revision" value="\$Id: detailed.html,v 1.2 2002-02-11 22:09:09 link Exp $"
---><!--#set var="date" value="\$Date: 2002-02-11 22:09:09 $"
+<!--#set var="revision" value="\$Id: detailed.html,v 1.3 2002-08-20 01:51:22 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-08-20 01:51:22 $"
 --><!--#set var="title" value="The W3C HTML Validation Service"
---><!--#include virtual="/header.html" -->
+--><!--#set var="relroot" value="./"
+--><!--#include virtual="header.html" -->
 
-  <p name="skip" id="skip">
-    This form allows you to enter a URI or upload files from your computer and
-    have them validated.
+  <p id="skip">
+    This form allows you to enter a <acronym
+    title="Universal Resource Identifier">URI</acronym> or upload files from
+    your computer and have them validated.
   </p>
     <div>
-      <form method="post" enctype="multipart/form-data" action="/check">
+      <form method="post" enctype="multipart/form-data" action="check">
         <table>
-          <tr><th><label title="Address of page to Validate" for="uri">Address (URI):</label></th><td colspan="2"><input id="uri" name="uri" size="50" /> or...</td></tr>
-          <tr><th><label for="uploaded_file">Local File:</label></th><td colspan="2"><input type="file" name="uploaded_file" size="50" /></td></tr>
+          <tr><th><label title="Address of page to Validate"
+             for="uri">Address:</label></th><td colspan="2"><input id="uri"
+             name="uri" size="50" /> or...</td></tr>
+          <tr><th><label for="uploaded_file">Local File:</label></th><td
+          	colspan="2"><input type="file" id="uploaded_file"
+          	name="uploaded_file" size="50" /></td></tr>
           <tr>
-            <th><label for="charset">Character Encoding:</label></th>
+            <th><label for="charset">Encoding:</label></th>
             <td colspan="2">
               <select id="charset" name="charset">
                 <option value="(detect automatically)">(detect automatically)</option>
@@ -54,7 +60,7 @@
             </td>
           </tr>
           <tr>
-            <th><label for="doctype">Document Type:</label></th>
+            <th><label for="doctype">Type:</label></th>
             <td colspan="2">
               <select id="doctype" name="doctype">
                 <option value="Inline">(detect automatically)</option>
@@ -85,6 +91,6 @@
         </table>
       </form>
     </div>
-<!--#include virtual="/footer.html" -->
+<!--#include virtual="footer.html" -->
   </body>
 </html>

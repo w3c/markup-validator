@@ -1,0 +1,122 @@
+<!--#set var="revision" value="\$Id: favlets.html,v 1.2 2002-08-20 01:51:22 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-08-20 01:51:22 $"
+--><!--#set var="title" value="Favlets For The W3C HTML Validation Service"
+--><!--#set var="relroot" value="./"
+--><!--#include virtual="header.html" -->
+
+    <script type="text/javascript">
+<!--
+      var xmlhttp
+    /*@cc_on @*/
+    /*@if (@_jscript_version >= 5)
+        try {
+          xmlhttp=new ActiveXObject("Msxml2.XMLHTTP")
+        } catch (e) {
+          try {
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP")
+          } catch (E) {
+            xmlhttp=false
+          }
+        }
+      @else
+        xmlhttp=false
+      @end @*/
+      if (!xmlhttp) {
+        try {
+          xmlhttp = new XMLHttpRequest()
+        } catch (e) {
+          xmlhttp=false
+        }
+      }
+      if (xmlhttp && location.hash && location.hash.substr) {
+        var hsh=location.hash.substr(1)
+        if (hsh.indexOf('http://')==0) {
+          url="http://validator.w3.org:8001/check?uri="+hsh+";output=xml";
+          xmlhttp.open("HEAD",url,true);
+          xmlhttp.onreadystatechange=function() {
+          if (xmlhttp.readyState==4) {
+            alert(hsh+' is '+xmlhttp.getResponseHeader('X-W3C-Validator-Status')+'\nErrors: '+xmlhttp.getResponseHeader('X-W3C-Validator-Errors'));
+          }
+        }
+        xmlhttp.setRequestHeader('User-Agent','Validator+Favlet');
+        xmlhttp.send("")
+      }
+    }
+// -->
+    </script>
+
+    <div id="skip">
+      <h2><a href="http://Favlets.com/">Favlets</a>
+          For The Validator</h2>
+      <div class="intro">
+        <p>
+          Favlets are small snippets of JavaScript embedded in a Bookmark
+          <acronym title="Universal Resource Identifier">URL</acronym>
+          that allows Bookmarks in browsers do various advanced things.
+          Popular Favlets include variants that prompts the user for a
+          phrase and searches the web for that phrase, or that finds older
+          versions of the currently viewed page in the
+          <a class="offsite" title="The Internet Archive WayBack Machine"
+            href="http://www.archive.org/">WayBack Machine</a>.
+        </p>
+        <p>
+          Favlets depend on support for <code>javascript:</code>
+          <acronym title="Universal Resource Identifiers">URLs</acronym>
+          in your browser's Bookmarks feature, and each Favlet may depend on
+          support for a specific part of the JavaScript specification to work
+          properly. <acronym title="Microsoft Internet Explorer">MSIE</acronym>
+          versions more recent then 5.0, and Mozilla 1.0 and later &mdash; this
+          includes browsers using the embedded version of Mozilla, such as
+          Netscape 7.0 &mdash; are known to support most Favlets.
+          <acronym title="Microsoft Internet Explorer for Mac OS">MSIE:mac</acronym>
+          supports basic Favlets, but it's general support for JavaScript
+          may render certain advanced Favlets inoperable. Netscape 4.x is
+          a lost cause in this regard, and with it's poor support for standards
+          in general it is probably better to avoid it alltogether.
+        </p>
+      </div>
+      <div>
+        <dl>
+          <dt>"<a href="javascript:void(location='http://validator.w3.org/check?uri='+location)"
+                 title="Validate This Page">Validate <em>This</em> Page</a>"</dt>
+          <dd>
+            This is the basic "Validate This Page" Favlet.
+            It simply submits the URL for the currently viewed page to the
+            Validator for processing. Results appear in the same window.
+          </dd>
+          <dt>"Validate <em>This</em> Page In New Window"</dt>
+          <dd>
+            Like the last Favlet, this also submits the URL of the current
+            page to the Validator for processing, but this version will show
+            the results in a new window.
+          </dd>
+          <dt>"<a href="javascript:void(q=prompt('Validate Page:',''));if(q)void(location='http://validator.w3.org/check?uri='+escape(q))"
+                 title="Validate Page...">Validate Page...</a>"</dt>
+          <dd>
+            Puts up a dialog with a text entry field where you can type in the
+            URL of a page you would like to Validate. The results appear in the
+            current window.
+          </dd>
+          <dt>"Validate Page In New Window..."</dt>
+          <dd>Same as above but shows results in a new window.</dd>
+          <dt>"<a href="javascript:_is=document.createElement('iframe');_is.setAttribute('src','http://validator.w3.org:8001/favlets.html#'+location.href);_is.setAttribute('height','0');_is.setAttribute('width','0');_is.setAttribute('style','border:0;');document.body.appendChild(_is);void 0"
+                 title="Is This Page Valid?">Is <em>This</em> Page Valid?</a>"</dt>
+          <dd>
+            From the Head Of The "JavaScript Juju" Department,
+            <a href="http://jibbering.com/">Jim Ley</a>, comes this gem.
+            When invoked, this Favlet will submit the
+            <acronym title="Universal Resource Identifier">URL</acronym>
+            for the current page to the Validator for processing and pop up
+            a dialog that shows whether the page is Valid and how many errors
+            where found in the page. As with all Jim does, this Black Magic is
+            so deep I'm <em>afraid</em> to ask him how it works.
+            <q>Here There Be Dragons!</q>
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+<!--#include virtual="footer.html" -->
+  </body>
+</html>
+

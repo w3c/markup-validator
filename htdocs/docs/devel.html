@@ -1,9 +1,10 @@
-<!--#set var="revision" value="\$Id: devel.html,v 1.5 2002-02-11 22:09:10 link Exp $"
---><!--#set var="date" value="\$Date: 2002-02-11 22:09:10 $"
+<!--#set var="revision" value="\$Id: devel.html,v 1.6 2002-08-20 01:51:24 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-08-20 01:51:24 $"
 --><!--#set var="title" value="Developer Documentation for The W3C HTML Validation Service"
---><!--#include virtual="/header.html" -->
+--><!--#set var="relroot" value="../"
+--><!--#include virtual="../header.html" -->
 
-    <p>
+    <p id="skip">
       The W3C HTML Validation Service consists of an SGML Parser, an SGML
       catalog, a CGI program and it's configuration files. In addition it
       relies on a moderately large set of Perl modules for it's operation.
@@ -39,7 +40,7 @@
         for the "check" CGI script. There is a bunch of lines that of the form
         "use Foo::Bar" where each "Foo::Bar" represents a module. Most modules
         can be found on <a href="http://www.cpan.org/">CPAN</a>. The following
-        list was complete when CVS spit out: <code>$Date: 2002-02-11 22:09:10 $</code>. <tt>:-)</tt>
+        list was complete when CVS spit out: <code>$Date: 2002-08-20 01:51:24 $</code>. <tt>:-)</tt>
       </p>
       <dl>
         <dt><code>LWP::UserAgent</code></dt>
@@ -103,10 +104,11 @@
           Maps MIME/HTTP Content-Types to an internal "document type" which
           is used for treating HTML, XML, and XHTML in different ways.
         </dd>
-        <dt>"check.cfg"</dt>
+        <dt>check.cfg</dt>
         <dd>
-          We don't have one yet, but we intend to. Maybe you'll write the
-          support for us? <tt>:-)</tt>
+          Main configuration file. Gives various parameters (such as the
+          address of the maintainer and the URL for the "Home Page") and
+          the locations of the other configuration files and mapping tables.
         </dd>
        </dl>
     </div>
@@ -114,7 +116,7 @@
       <h2>TODO</h2>
       <p>
         The TODO list for the Validator is online at
-        &lt;URL:<a href="/todo.html">http://validator.w3.org/todo.html</a>&gt;.
+        &lt;URL:<a href="../todo.html">http://validator.w3.org/todo.html</a>&gt;.
  	      This is probably the best place to start.
  	    </p>
       <p>
@@ -131,6 +133,6 @@
       </p>
     </div>
 
-<!--#include virtual="/footer.html" -->
+<!--#include virtual="../footer.html" -->
   </body>
 </html>

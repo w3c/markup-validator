@@ -1,0 +1,47 @@
+/*
+   XML Results Style Sheet for the W3C HTML Validation Service.
+
+   Copyright 2002 Terje Bless <link@pobox.com>. All Rights Reserved.
+   See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
+
+   $Id: xml-results.css,v 1.2 2002-08-20 01:51:23 link Exp $
+*/
+
+results, meta, uri, modified, server, size, encoding, doctype, warnings, messages {display: block}
+strong, a, line, column, offset, msg {display: inline}
+
+meta {
+  margin-left: 5em;
+  margin-bottom: 2em;
+  border-bottom: 1px solid black;
+  font-weight: bolder;
+}
+
+uri      {text-before: 'URL: '}
+modified {text-before: 'Modified: '}
+server   {text-before: 'Server: '}
+size     {text-before: 'Size: '}
+encoding {text-before: 'Encoding: '}
+doctype  {text-before: 'Doctype: '}
+
+warnings {
+  border-top: 1px solid red;
+  border-bottom: 1px solid red;
+  background: grey;
+  margin: 3em;
+}
+
+warning {
+  background: red;
+  display: list-item;
+}
+
+messages {margin: 2em}
+error {display: list-item}
+
+line {padding-right: 1ex}
+column {padding-right: 1ex}
+msg {
+  padding: 1ex;
+  color: red;
+}

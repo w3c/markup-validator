@@ -1,0 +1,39 @@
+/*
+   Navigation Style Sheet for the W3C HTML Validation Service.
+
+   Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
+   See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
+
+   $Id: navbar.css,v 1.2 2002-08-20 01:51:23 link Exp $
+*/
+
+div.navbar p a {
+  display: block;
+  text-decoration: none;
+}
+
+div.navbar p a:hover {
+  background: #ccc;
+}
+
+div.navbar {
+  float:            right;
+  text-align:       right;
+  text-decoration:  none;
+  margin:           .1ex .1ex 2.5ex 1ex;
+  padding:          1ex;
+  background-color: #eee;
+  border-left:      1px solid black;
+  clear:            both;
+  width:            8em;
+}
+
+div.navbar p {
+  border-top: 1px solid black;
+  margin:     .1ex;
+  padding:    .1ex .1em 1.5ex .1em;
+}
+
+div.navbar p.main {
+  border-top-style: none;
+}

@@ -1,27 +1,46 @@
 /*
-  Base Style Sheet for the W3C HTML Validation Service.
+   Base Style Sheet for the W3C HTML Validation Service.
 
-  Copyright © 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
-  See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
+   Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
+   See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-  $Id: base.css,v 1.20 2002-02-13 16:53:17 link Exp $
+   $Id: base.css,v 1.21 2002-08-20 01:51:22 link Exp $
 */
 
+@import url(results.css); /* CSS for validation results. */
+@import url(navbar.css);  /* CSS for navigation menu. */
+@import url(tips.css);    /* CSS for Quality Tips. */
+
 body {
-  color:          black;
-  background:     white;
-  font-size:      1em;
-  font-weight:    normal;
-  word-spacing:   normal;
-  letter-spacing: normal;
-  text-transform: none;
-  font-family:    Verdana, Myriad Web, Syntax, sans-serif;
+  line-height:     1.2;
+  color:           black;
+  background:      white;
+  font-weight:     normal;
+  word-spacing:    normal;
+  letter-spacing:  normal;
+  text-transform:  none;
+  font-family:     Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-style:      normal;
+  text-decoration: none;
+  word-spacing:    normal;
+  letter-spacing:  normal;
+  text-transform:  none;
 }
 
 a:hover   {background-color:#eee}
 a:visited {color: purple}
 
-/* pre {font-family: monospace} */
+acronym:hover, abbrev:hover {cursor: help}
+abbrev[title], acronym[title], span[title] {
+  border-bottom: thin dotted;
+  cursor: help;
+}
+
+pre, code, tt {
+  font-family: monospace;
+  font-size:   1em;
+  white-space: pre;
+}
 
 a:link img, a:visited img {border-style: none}
 a img {color: white} /* The only way to hide the border in NS 4.x */
@@ -43,67 +62,64 @@ div.issue {
 
 .hideme {display: none}
 
+#Notice {
+  border: solid;
+  margin: .2em;
+  padding: .5em;
+  text-align: justify;
+}
+
 /* dt a {color: black} */ /* These are usually targets and not links */
 h1 a {color: black} /* These are usually targets and not links */
 h2 a {color: black} /* These are usually targets and not links */
 h3 a {color: black} /* These are usually targets and not links */
 
-h1 img {vertical-align: middle}
+img {vertical-align: middle}
 h1#title {
   background-color: #eee;
-  border-top: 1px solid black;
   border-bottom: 1px solid black;
-  border-left: 1px solid black;
   padding: .25em;
 }
 
-address img {float: right}
-address {
-  padding-top: .5em;
-  padding-right: 1em;
-  padding-left: 1em;
-  padding-bottom: .5em;
-  margin-top:  3em;
-  border-top: 1px solid black;
-  background-color: #eee;
-  clear: both;
-}
+/* done vs. tbc for the TODO list */
+.done { text-decoration: line-through; }
 
-p.navbar {
+address img {
   float: right;
-  text-align: right;
+  width: 88px;
 }
 
-p.navbar a:hover {
-  background: #ccc;
-}
-
-p.navbar {
-  text-decoration: none;
-  margin: .1em;
-  padding: 1ex;
-  min-width: 13ex;
-  max-width: 15em;
-  width:     13ex;
+address {
+  padding-top:     .5em;
+  padding-right:    1em;
+  padding-left:     1em;
+  padding-bottom:  .5em;
+  margin-top:       3em;;
+  border-top:       1px solid black;
   background-color: #eee;
-  border:1px dashed #999;
-  clear: both;
+  clear:            right;
+}
+
+p.jumpbar {
+  text-align: left;
+  text-decoration: none;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1ex;
+  background-color: #eee;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+}
+
+p.jumpbar a:hover {
+  background: #ccc;
 }
 
 .nsnote {
   display: none;
 }
 
-table th {
-  text-align: left;
-  vertical-align: top;
-}
-
-div.stb {clear: both}
-
-p {
-  max-width: 75ex;
-}
+.stb {clear: left}
 
 
 div.colophon {
@@ -116,78 +132,79 @@ div.colophon em {
 }
 
 /* Various header(ish) things. Definitions cribbed from the CORE Styles. */
-h1	{	
-	font-family:	Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
-	font-size-adjust:	.53;
-	font-size:	2em;
-	font-weight:	bold;
-	font-style:	normal;
-	text-decoration:	none;
-	word-spacing:	normal;
-	letter-spacing:	normal;
-	text-transform:	none;
-	color: #005A9C;
-	}
+h1 {
+  font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-size-adjust: .53;
+  font-size: 2em;
+  font-weight: bold;
+  font-style: normal;
+  text-decoration: none;
+  word-spacing: normal;
+  letter-spacing: normal;
+  text-transform: none;
+  /* color: #005A9C; */
+  color: #053188
+}
+
+h2 {
+  font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-size-adjust: .53;
+  font-size: 1.75em;
+  font-weight: 500;
+  font-style: normal;
+  text-decoration: none;
+  word-spacing: normal;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+h3 {
+  font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-size-adjust: .53;
+  font-size: 1.58em;
+  font-weight: 500;
+  font-style: italic;
+  text-decoration: none;
+  word-spacing: normal;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+h4 {
+  font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-size-adjust: .53;
+  font-size: 1.33em;
+  font-weight: 500;
+  font-style: normal;
+  text-decoration: none;
+  word-spacing: normal;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+h5, dt {
+  font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-size-adjust: .53;
+  font-size: 1.17em;
+  font-weight: 500;
+  font-style: normal;
+  text-decoration: none;
+  word-spacing: normal;
+  letter-spacing: normal;
+  text-transform: none;
+  margin-top: 1em;
+}
 		
-h2	{	
-	font-family:	Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
-	font-size-adjust:	.53;
-	font-size:	1.75em;
-	font-weight:	500;
-	font-style:	normal;
-	text-decoration:	none;
-	word-spacing:	normal;
-	letter-spacing:	normal;
-	text-transform:	none;
-	}	
-		
-h3	{	
-	font-family:	Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
-	font-size-adjust:	.53;
-	font-size:	1.58em;
-	font-weight:	500;
-	font-style:	italic;
-	text-decoration:	none;
-	word-spacing:	normal;
-	letter-spacing:	normal;
-	text-transform:	none;
-	}	
-		
-h4	{	
-	font-family:	Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
-	font-size-adjust:	.53;
-	font-size:	1.33em;
-	font-weight:	500;
-	font-style:	normal;
-	text-decoration:	none;
-	word-spacing:	normal;
-	letter-spacing:	normal;
-	text-transform:	none;
-	}	
-		
-h5, dt	{	
-	font-family:	Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
-	font-size-adjust:	.53;
-	font-size:	1.17em;
-	font-weight:	500;
-	font-style:	normal;
-	text-decoration:	none;
-	word-spacing:	normal;
-	letter-spacing:	normal;
-	text-transform:	none;
-	margin-top: 1em;
-	}	
-		
-h6	{	
-	font-family:	Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
-	font-size-adjust:	.53;
-	font-size:	1em;
-	font-weight:	500;
-	font-style:	normal;
-	text-decoration:	none;
-	word-spacing:	normal;
-	letter-spacing:	normal;
-	text-transform:	none;
-	}	
+h6 {
+  font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+  font-size-adjust: .53;
+  font-size: 1em;
+  font-weight: 500;
+  font-style: normal;
+  text-decoration: none;
+  word-spacing: normal;
+  letter-spacing: normal;
+  text-transform: none;
+}
 
 
