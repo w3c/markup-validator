@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.338 2004-09-08 16:10:56 bjoern Exp $
+# $Id: check,v 1.339 2004-09-08 17:21:05 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -225,7 +225,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.338 $;
+  $VERSION    =  q$Revision: 1.339 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -748,6 +748,10 @@ sub parse (\$) {
   #
   # Rewind temporary filehandles.
   seek $_, 0, 0 for $spout, $sperr;
+
+  #
+  # Proper text mode for Win32 systems
+  binmode($spout, ':crlf') if $^O eq "MSWin32";
 
   $File = &parse_errors($File, $sperr); # Parse error output.
   undef $sperr; # Get rid of no longer needed filehandle.
@@ -1517,6 +1521,11 @@ sub parse_errors ($$) {
 
   $File->{Errors} = []; # Initialize to an (empty) anonymous array ref.
   for (<$fh>) {
+
+    # remove SGML Parser path if it contains colons
+    s/^\Q$CFG->{Paths}->{SGML}->{Parser}\E// if
+         $CFG->{Paths}->{SGML}->{Parser} =~ /:/;
+    
     push @{$File->{'DEBUG'}->{Errors}}, $_;
     chomp;
     my($err, @errors);
