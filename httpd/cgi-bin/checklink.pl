@@ -5,7 +5,7 @@
 # (c) 1999-2002 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.1 2002-12-07 19:55:26 ville Exp $
+# $Id: checklink.pl,v 3.6.2.2 2002-12-08 14:47:02 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -65,7 +65,7 @@ sub redirect_ok
 package W3C::CheckLink;
 
 use vars qw($PROGRAM $AGENT $VERSION $CVS_VERSION $REVISION
-            $Have_ReadKey $DocType);
+            $Have_ReadKey $DocType $Accept $ContentTypes);
 
 use HTML::Entities      qw();
 use HTML::Parser   3.00 qw();
@@ -84,14 +84,19 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.1 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.2 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
-  $REVISION      = sprintf('version %s (c) 1999-2002 W3C', $VERSION);
+  $REVISION      = sprintf('version %s (c) 1999-2002 W3C', $CVS_VERSION);
 
   eval "use Term::ReadKey 2.00 qw(ReadMode)";
   $Have_ReadKey = !$@;
 
   $DocType = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
+
+  my @content_types = qw(application/xhtml+xml text/html);
+  $Accept = join(', ', @content_types) . ', */*;q=0.5';
+  my $re = join('|', map { s/\+/\\+/g; $_ } @content_types);
+  $ContentTypes = qr{\b(?:$re)\b}io;
 }
 
 # Autoflush
@@ -115,7 +120,6 @@ my $_trusted = '\.w3\.org';
 my $_http_proxy;
 my $_accept_language = 1;
 my $_languages = $ENV{HTTP_ACCEPT_LANGUAGE} || '*';
-my $_accept = 'application/xhtml+xml, text/html, */*;q=0.5';
 my $_base_location = '.';
 my $_masquerade = 0;
 my $_local_dir = my $_remote_masqueraded_uri = '';
@@ -395,7 +399,7 @@ sub urize ($)
 # Check for broken links in a resource #
 ########################################
 
-sub check_uri ($$$)
+sub check_uri ($$$;$)
 {
   my ($uri, $html_header, $depth, $cookie) = @_;
   # If $html_header equals 1, we need to generate a HTML header (first
@@ -572,27 +576,31 @@ Validity</a></p>
 
   # Do we want to process other documents?
   if ($depth != 0) {
-    if ($_base_location eq '.') {
-      # Get the name of the original directory
-      # e.g. http://www.w3.org/TR/html4/Overview.html
-      #      should return http://www.w3.org/TR/html4/
-      $results{$uri}{parsing}{base} =~ m|^(.*/)[^/]*|;
-      $_base_location = $1;
+    if (! ref($_base_location)) { # Not a URI object yet?
+      if ($_base_location eq '.') {
+        $_base_location = URI->new($results{$uri}{parsing}{base})->canonical();
+      } else {
+        $_base_location = URI->new($_base_location)->canonical();
+      }
     }
+
     foreach my $u (keys %links) {
-      next if (! (# Check if it's in our scope for recursion
-                  ($u =~ m|^$_base_location|) &&
-                  # and the link is not broken
-                  $results{$u}{location}{success} &&
-                  # And it is a text/html or application/xhtml+xml
-                  # resource
-                  (($results{$u}{location}{type} =~ m|text/html|) ||
-                   ($results{$u}{location}{type}
-                    =~ m|application/xhtml\+xml|))
-                 )
-              );
-      # Check if we have already processed the URI
-      next if (&already_processed($u) != 0);
+
+      next unless $results{$u}{location}{success};  # Broken link?
+
+      # Check if this link is in our recursion scope (see URI docs).
+      my $current = URI->new($u)->canonical();
+      my $rel = $current->rel($_base_location);   # base -> current !
+      next if ($current eq $rel);                 # Relative path not possible?
+      next if ($rel =~ m|^(\.\.)?/|);    # Relative path starts with ../ or / ?
+      undef $current; undef $rel;
+
+      # Do we understand its content type?
+      next unless ($results{$u}{location}{type} =~ $ContentTypes);
+
+      # Have we already processed this URI?
+      next if &already_processed($u);
+
       # Do the job
       print "\n";
       if (! $_html) {
@@ -668,15 +676,12 @@ sub get_document ($$$;\%)
 
   # Can we parse the document?
   my $failed_reason;
-  if (! (($response->header('Content-Type') =~ m|text/html|) ||
-         ($response->header('Content-Type') =~ m|application/xhtml\+xml|))
-     ) {
-    $failed_reason = "Content-Type is '".
-      $response->header('Content-Type')."'";
-  } elsif ($response->header('Content-Encoding')
-           && ($response->header('Content-Encoding') ne 'identity')) {
-    $failed_reason = "Content-Encoding is '".
-      $response->header('Content-encoding')."'";
+  if ((my $ct = $response->header('Content-Type')) !~ $ContentTypes) {
+    $failed_reason = "Content-Type is '$ct'";
+  } elsif ($response->header('Content-Encoding') &&
+           ((my $ce = $response->header('Content-Encoding')) ne 'identity')) {
+    # @@@ We could maybe handle gzip...
+    $failed_reason = "Content-Encoding is '$ce'";
   }
   if ($failed_reason) {
     # No, there is a problem...
@@ -697,7 +702,7 @@ sub get_document ($$$;\%)
 
 sub already_processed ($)
 {
-  my ($uri, %redirects) = @_;
+  my ($uri) = @_;
   # Don't be verbose for that part...
   my $summary_value = $_summary;
   $_summary = 1;
@@ -706,11 +711,11 @@ sub already_processed ($)
   # ... but just for that part
   $_summary = $summary_value;
   # Can we process the resource?
-  return(-1) if (defined($response->{Stop}));
+  return -1 if defined($response->{Stop});
   # Have we already processed it?
-  return(1) if (defined($processed{$response->{absolute_uri}->as_string()}));
+  return  1 if defined($processed{$response->{absolute_uri}->as_string()});
   # It's not processed yet and it is processable: return 0
-  return(0);
+  return  0;
 }
 
 ############################
@@ -742,7 +747,7 @@ sub get_uri ($$;$\%$$$$)
   my %lwpargs = ($LWP::VERSION >= 5.6) ? (keep_alive => 1) : ();
   my $ua = W3C::UserAgent->new(%lwpargs);
   $ua->timeout($_timeout);
-  $ua->agent(sprintf('%s/%s %s', $AGENT, $VERSION, $ua->agent()));
+  $ua->agent(sprintf('%s/%s %s', $AGENT, $CVS_VERSION, $ua->agent()));
   $ua->env_proxy();
   $ua->proxy('http', 'http://' . $_http_proxy) if ($_http_proxy);
 
@@ -763,7 +768,7 @@ sub get_uri ($$;$\%$$$$)
   if ($_accept_language && $_languages) {
     $request->header('Accept-Language' => $_languages);
   }
-  $request->header('Accept', $_accept);
+  $request->header('Accept', $Accept);
   # Are we providing authentication info?
   if (defined($auth)
       && ($request->url->host =~ /$_trusted$/)) {
@@ -1156,15 +1161,11 @@ sub check_validity ($$\%\%)
   my $p;
   if ($being_processed) {
     # Can we really parse the document?
-    if (!defined($results{$uri}{location}{type})) {
-      return;
-    }
-    if (! (($results{$uri}{location}{type} =~ m|text/html|i) ||
-           ($results{$uri}{location}{type} =~ m|application/xhtml\+xml|i))
-       ) {
+    return unless defined($results{$uri}{location}{type});
+    if ($results{$uri}{location}{type} !~ $ContentTypes) {
       if ($_verbose) {
-        &hprintf("Can't check content: Content-type is '%s'.\n",
-                 $response->header('Content-type'));
+        &hprintf("Can't check content: Content-Type is '%s'.\n",
+                 $results{$uri}{location}{type});
       }
       return;
     }
