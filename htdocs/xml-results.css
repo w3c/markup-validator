@@ -1,10 +1,10 @@
 /*
-   XML Results Style Sheet for the W3C MarkUp Validation Service.
+   XML Results Style Sheet for the W3C Markup Validation Service.
 
    Copyright 2002 Terje Bless <link@pobox.com>. All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: xml-results.css,v 1.4 2002-10-30 16:48:05 link Exp $
+   $Id: xml-results.css,v 1.5 2003-02-24 23:33:18 ville Exp $
 */
 
 result, meta, uri, modified, server, size, encoding, doctype, warnings, messages {display: block}
