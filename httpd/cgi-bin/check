@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.68 2003-07-28 06:42:16 ot Exp $
+# $Id: check,v 1.305.2.69 2003-07-28 07:43:31 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -130,7 +130,7 @@ BEGIN
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.68 $;
+  $VERSION    =  q$Revision: 1.305.2.69 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -202,7 +202,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-07-28 06:42:16 $,
+                              Date => q$Date: 2003-07-28 07:43:31 $,
                              });
 
 #
@@ -1669,7 +1669,7 @@ sub parse_errors ($$) {
         A DOCTYPE Declaration is mandatory for most current markup languages
         and without one it is impossible to reliably validate this document.
         I am falling back to "HTML 4.01 Transitional" and will attempt to
-        validate the document anyway, but this is very likley to produce
+        validate the document anyway, but this is very likely to produce
         spurious error messages for most non-trivial documents.
       </p>
 .EOF.
