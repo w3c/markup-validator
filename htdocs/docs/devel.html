@@ -1,11 +1,29 @@
-<!--#set var="revision" value="\$Id: devel.html,v 1.10.2.6 2003-08-20 20:56:00 ot Exp $"
---><!--#set var="date" value="\$Date: 2003-08-20 20:56:00 $"
+<!--#set var="revision" value="\$Id: devel.html,v 1.10.2.7 2003-12-17 05:33:49 ot Exp $"
+--><!--#set var="date" value="\$Date: 2003-12-17 05:33:49 $"
 --><!--#set var="title" value="Developer Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
 
 <div class="doc">
 <h2>Installation and development information <br />for the W3C Markup Validator</h2>
+
+<h3 id="TableOfContents">Table of Contents</h3>
+
+    <div id="toc">
+      <ul>
+        <li><a href="#prereq">Prerequisites</a></li>
+        <li><a href="#config">Configuration Files</a></li>
+        <li><a href="#install">Installation Guide</a>
+          <ul>
+            <li><a href="#install-package">Packaged systems</a></li>
+            <li><a href="install-fromsource">Install from source</a></li>
+          </ul>
+        </li>
+        <li><a href="#todo">TODO</a></li>
+        <li><a hre="#bugzilla">Bugs and Issue Tracking</a></li>
+      </ul>
+    </div>
+    
     <p id="skip">
       The W3C Markup Validation Service consists of an SGML Parser, an SGML
       catalog, a CGI program and it's configuration files. In addition it
@@ -38,7 +56,7 @@
         can be found on <a href="http://www.cpan.org/">CPAN</a> (minimum
         versions in parenthesis after the name). The following
         list was complete when CVS spit out:
-        <code>$Date: 2003-08-20 20:56:00 $</code>. <tt>:-)</tt>
+        <code>$Date: 2003-12-17 05:33:49 $</code>. <tt>:-)</tt>
       </p>
       <dl>
         <dt><code>CGI (2.81)</code></dt>
@@ -112,6 +130,118 @@
         </dd>
        </dl>
     </div>
+    <div id="install" class="stb">
+    <h3>Installation Guide</h3>
+    <p>In addition to being an online service at W3C, the Markup Validator is 
+    also fully available and it can be installed on your own Web server. This can
+    be useful if you want to provide an internal validation service (for an intranet 
+    or critical, confidential material) or if you want to test and help develop this 
+    service.</p> 
+    
+    <p>The Validator Team wishes to thank Nick Talbott and Stephen Yoch for their help
+    in creating the following installation instructions. Please note that these are 
+    generic instructions, other platform-specific guides are also available:</p>
+    <ul>
+        <li><a href="http://www.mediaville.net/articles/validator/">Mac OSX and OSX Server</a>
+        by Stephen Yoch,</li>
+        <li><a href="http://lists.w3.org/Archives/Public/www-validator/2003Dec/0023.html">Linux (Slackware)</a>
+        by Nick Talbot</li>
+    </ul>
+    
+    <h4 id="install-package">Packaged systems</h4>
+    
+    <p>The easiest way to install released versions of the Markup Validator is to use the packages created
+    for some platforms by contributors:</p>
+    
+    <ul>
+      <li>Debian GNU/Linux packages are made available by Frederic Schultz. Simply download (or apt-get) the package
+      @@???@@</li>
+      <li>Linux Redhat packages are made available and distributed by Ville Skytta. @@ where?@@</li>
+    </ul>
+    <h4 id="install-fromsource">Install from source</h4>
+    <p>These instructions are strongly inspired from Nick Talbott's guide for Linux Slackware. Thanks Nick!</p>
+    <h5>Download</h5>
+        <p>Download the <a href="http://validator.w3.org/validator.tar.gz">Validator's Tar Ball</a>
+        and the <a href="http://validator.w3.org/sgml-lib.tar.gz">DTD library</a> from our site.</p>
+        <p>Alternatively, if you want to work on the latest development version, you can download 
+        both from our CVs repository, but you should be aware that this version may not work at all.</p>
+        <p>(<a href="../source/">Read more</a> about retrieving the source)</p>
+
+
+    <h5>Install the various necessary components:</h5>
+        <ol>
+            <li><p>The installation guide assumes that you have a working Web server. We suggest
+            the popular Apache server, which is used for the W3C Markup Validation service. 
+            The validator may work with other Web servers than the popular Apache, but
+            we can not guarantee that it will. You will also need a working installation 
+            of the Perl language (standard on most Web servers).</p></li>
+                
+            <li><p>Proceed with the  <a href="#prereq">Prerequisites</a> : Install openSP and 
+            the listed Perl libraries. This can be made by using your Operating System's packaging 
+            mechanism, the CPAN installation mechanism, or simply download the modules and follow 
+            their embedded installation instructions.</p></li>
+                
+            <li><p>Create a directory for the validator's installation. On Unix-based systems, 
+            the default will be <code>/usr/local/validator</code>.This directory
+            will be referred as [validatorpath]  throughout this guide.</p></li>
+                
+            <li><p>Unpack the archives of the validator and DTD library into <code>[validatorpath]</code></p>
+            <p>The <code>[validatorpath]</code> directory should now have subdirectories named 
+            <code>htdocs</code>, <code>httpd</code>, <code>config</code> and <code>sgml-lib</code> 
+            (if you used CVS, the latter is actually in the <code>htdocs</code> subdirectory, 
+            but that is not really important).</p></li>
+        </ol>
+    <h5>Configure</h5>
+        <ol>
+            <li><p>Edit the configuration of your Web server to refer to the specific configuration file
+            for the Validation service.</p>
+            <p>With apache, this can be done by adding this line:</p>
+            <pre>Include [validatorpath]/httpd/conf/validator-httpd.conf</pre>
+            </li>
+
+            <li><p>Copy <code>[validatorpath]/httpd/conf/httpd.conf</code> to 
+            <code>[validatorpath]/httpd/conf/validator-httpd.conf</code> and start 
+            editing this file.</p></li>
+            
+            <li><p>You may want to set up a "virtual server" for the service. This can be done
+            by adding something similar to the following:</p>
+<pre>&lt;VirtualHost 127.0.0.1&gt;                                                               
+	DocumentRoot [validatorpath]/htdocs/                        
+	ServerName validator.example.org
+&lt;/VirtualHost&gt;</pre>
+            <p><strong>AND/OR</strong> you may want to have the service at a specific location
+            on your Web server, which can be configured as follows:</p>
+            <pre>Alias /validator/ [validatorpath]/htdocs/</pre>
+            </li>
+                
+            <li><p>Finish editing this HTTP server configuration file, adapting 
+            all the directory references to reflect the paths used in your installation.</p></li>
+                
+            <li><p>Now restart the web server to activate the updated configuration. For Apache
+            this is done by typing into a shell, as System Administrator: 
+            <code>apachectl graceful</code> (or, for older versions of Apache 
+            <code>apachectl configtest</code> then <code>apachectl restart</code>)</li>
+            
+            <li><p>Create the directory <code>/etc/w3c</code> and create a file called 
+            <code>validator.conf</code> using the file 
+            <code>[validatorpath]/htdocs/config/check.cfg</code> as template.  
+            This file is well commented.  Make changes to reflect where files are in your installation.</p>
+            </li>
+    </ol>
+    <h5>Check the installation</h5>
+    <ol>
+        <li><p>Point your browser at the new site.<p></li> 
+        <li><p>Check the error log of the webserver to get clues on what may be wrong 
+        if you get any server errors.</p>
+    </li>
+
+   </ol>
+
+    <p><strong>Help us</strong> improve this installation guide by sending us your feedback
+    if you install the validator on your local system!</p>
+
+    </div>
+    
     <div id="todo" class="stb">
       <h3>TODO</h3>
       <p>
