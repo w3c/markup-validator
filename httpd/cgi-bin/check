@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.8 2002-03-18 03:37:21 link Exp $
+# $Id: check,v 1.200.2.9 2002-03-29 21:50:09 link Exp $
 
 #
 # We need Perl 5.004.
@@ -64,7 +64,7 @@ $DEBUG += 1 if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.8 $;
+$VERSION    =  q$Revision: 1.200.2.9 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 #
@@ -322,47 +322,47 @@ if (TRUE) { # @@ Need to stringify here?
 &add_table($File, "Detected Character Encoding", "<code>$File->{Charset}</code>");
 &add_table($File, "Used Character Encoding", "<code>$File->{Use_Charset}</code>")
     unless $File->{Charset} eq $File->{Use_Charset};
-unless ($File->{Opt}->{'Is Upload'}) { # @@@FIXME@@@: Temporarily Broken.
-#  &add_table($File, qq(<label title="Select Character Encoding" for="charset">Select Character Encoding</label>),
-#	     $q->popup_menu(-name => 'charset', -id => 'charset',
-#			    -values => [
-#					'(detect automatically)',
-#					'utf-8 (Unicode, worldwide)',
-#					'iso-8859-1 (Western Europe)',
-#					'iso-8859-2 (Central Europe)',
-#					'iso-8859-3 (Maltese)',
-#					'iso-8859-4 (Baltic Rim)',
-#					'iso-8859-5 (Cyrillic)',
-#					'iso-8859-6-i (Arabic)',
-#					'iso-8859-7 (Greek)',
-#					'iso-8859-8-i (Hebrew)',
-#					'iso-8859-9 (Turkish)',
-#					'iso-8859-10 (Latin 6)',
-#					'iso-8859-13 (Latin 7)',
-#					'iso-8859-14 (Celtic)',
-#					'iso-8859-15 (Latin 9)',
-#					'us-ascii (basic English)',
-#					'euc-jp (Japanese, Unix)',
-#					'shift_jis (Japanese, Win/Mac)',
-#					'iso-2022-jp (Japanese, email)',
-#					'euc-kr (Korean)',
-#					'gb2312 (Chinese, simplified)',
-#					'big5 (Chinese, traditional)',
-#					'tis-620 (Thai)',
-#					'koi8-r (Russian)',
-#					'koi8-u (Ukrainian)',
-#					'macintosh (MacRoman)',
-#					'windows-1250 (Central Europe)',
-#					'windows-1251 (Cyrillic)',
-#					'windows-1252 (Western Europe)',
-#					'windows-1253 (Greek)',
-#					'windows-1254 (Turkish)',
-#					'windows-1255 (Hebrew)',
-#					'windows-1256 (Arabic)',
-#					'windows-1257 (Baltic Rim)',
-#				       ],
-#			   )
-#	    );
+unless ($File->{Opt}->{'Is Upload'}) {
+  &add_table($File, qq(<label title="Select Character Encoding" for="charset">Select Character Encoding</label>),
+	     &CGI::popup_menu(-name => 'charset', -id => 'charset',
+			    -values => [
+					'(detect automatically)',
+					'utf-8 (Unicode, worldwide)',
+					'iso-8859-1 (Western Europe)',
+					'iso-8859-2 (Central Europe)',
+					'iso-8859-3 (Maltese)',
+					'iso-8859-4 (Baltic Rim)',
+					'iso-8859-5 (Cyrillic)',
+					'iso-8859-6-i (Arabic)',
+					'iso-8859-7 (Greek)',
+					'iso-8859-8-i (Hebrew)',
+					'iso-8859-9 (Turkish)',
+					'iso-8859-10 (Latin 6)',
+					'iso-8859-13 (Latin 7)',
+					'iso-8859-14 (Celtic)',
+					'iso-8859-15 (Latin 9)',
+					'us-ascii (basic English)',
+					'euc-jp (Japanese, Unix)',
+					'shift_jis (Japanese, Win/Mac)',
+					'iso-2022-jp (Japanese, email)',
+					'euc-kr (Korean)',
+					'gb2312 (Chinese, simplified)',
+					'big5 (Chinese, traditional)',
+					'tis-620 (Thai)',
+					'koi8-r (Russian)',
+					'koi8-u (Ukrainian)',
+					'macintosh (MacRoman)',
+					'windows-1250 (Central Europe)',
+					'windows-1251 (Cyrillic)',
+					'windows-1252 (Western Europe)',
+					'windows-1253 (Greek)',
+					'windows-1254 (Turkish)',
+					'windows-1255 (Hebrew)',
+					'windows-1256 (Arabic)',
+					'windows-1257 (Baltic Rim)',
+				       ],
+			   )
+	    );
 }
 
 if ($File->{HTTP_Charset} ne $File->{META_Charset}) {
@@ -789,7 +789,7 @@ sub output_closing {
      src="http://www.w3.org/Icons/valid-html401" height="31" width="88"
      align=right border="0" alt="Valid HTML 4.01!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</a><br>
-  Last modified: \$Date: 2002-03-18 03:37:21 $
+  Last modified: \$Date: 2002-03-29 21:50:09 $
 </address>
 
 </body>
