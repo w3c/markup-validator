@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.148 2004-07-21 10:24:06 link Exp $
+# $Id: check,v 1.305.2.149 2004-08-07 13:41:34 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -145,7 +145,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.148 $;
+  $VERSION    =  q$Revision: 1.305.2.149 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -171,7 +171,7 @@ open($file) returned: $!
     while (<$fh>) {
       next if /^\s*$/;
       next if /^\s*\#/;
-      chomp;
+      s/\s+$//; # chomp() does not take care of CRLF's on *nix
       my($k, $v) = split /\t+/, $_, 2;
       $v = '' unless defined $v;
 
@@ -220,7 +220,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-07-21 10:24:06 $,
+                              Date => q$Date: 2004-08-07 13:41:34 $,
                              });
 
 #
