@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.7 2002-11-30 17:09:59 ville Exp $
+# $Id: check,v 1.305.2.8 2002-11-30 17:20:11 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -93,6 +93,9 @@ BEGIN {
   #
   # Read Config Files.
   $CFG = &read_cfg($ENV{W3C_VALIDATOR_CFG} || '/etc/w3c/validator.conf');
+  if (! -x $CFG->{'SGML Parser'}) {
+    die("Configured SGML Parser '$CFG->{'SGML Parser'}' not executable!");
+  }
 
   #
   # Set debug flag.
@@ -100,7 +103,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.7 $;
+  $VERSION    =  q$Revision: 1.305.2.8 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -162,7 +165,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-30 17:09:59 $,
+                              Date => q$Date: 2002-11-30 17:20:11 $,
                              });
 
 #
