@@ -5,7 +5,7 @@
 # (c) 1999-2002 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.5 2003-02-02 19:03:34 ville Exp $
+# $Id: checklink.pl,v 3.6.2.6 2003-02-05 21:47:28 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -85,7 +85,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.5 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.6 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2002 W3C', $CVS_VERSION);
 
@@ -462,10 +462,9 @@ sub check_uri ($$$;$)
     if (! $Opts{Summary_Only}) {
       printf("<p>Go to <a href=\"#%s\">the results</a>.</p>\n",
              $result_anchor);
-      printf("<p>Check also:
-<a href=\"check?uri=%s\">HTML Validity</a> &amp;
-<a href=\"http://jigsaw.w3.org/css-validator/validator?uri=%s\">CSS
-Validity</a></p>
+      printf("<p>For reliable link checking results, check
+<a href=\"check?uri=%s\">HTML Validity</a> first.  See also
+<a href=\"http://jigsaw.w3.org/css-validator/validator?uri=%s\">CSS Validity</a>.</p>
 <p>Back to the <a href=\"checklink\">link checker</a>.</p>\n",
              map{&encode(URI::Escape::uri_escape($absolute_uri,
                                                  "^A-Za-z0-9."))}(1..2));
@@ -888,7 +887,7 @@ sub parse_document ($$$$;$)
     $p->{base} = $results{$uri}{parsing}{base};
     $p->{Anchors} = $results{$uri}{parsing}{Anchors};
     $p->{Links} = $results{$uri}{parsing}{Links};
-    return($p);
+    return $p;
   }
 
   my $start;
@@ -926,7 +925,7 @@ sub parse_document ($$$$;$)
   $results{$uri}{parsing}{Anchors} = $p->{Anchors};
   $results{$uri}{parsing}{Links} = $p->{Links};
 
-  return($p);
+  return $p;
 }
 
 ###################################
@@ -1039,7 +1038,10 @@ sub start
     # Here, we are checking too many things
     # The right thing to do is to parse the DTD...
     if ($tag eq 'base') {
-      $self->{base} = $attr->{href} if defined($attr->{href});
+      # Treat <base> (without href) or <base href=""> as if it didn't exist.
+      if (defined($attr->{href}) && $attr->{href} ne '') {
+        $self->{base} = $attr->{href};
+      }
     } else {
       $self->add_link($attr->{href});
     }
