@@ -76,16 +76,17 @@ use CGI;
 ###############
 # Global Variables
 
-my $VERSION= '$Id: checklink.pl,v 1.19 1998-11-13 01:10:39 renaudb Exp $ ';
+my $VERSION= '$Id: checklink.pl,v 1.20 1999-02-19 02:22:16 renaudb Exp $ ';
 my %ALLOWED_SCHEMES = ( "http" => 1 );
 my %SCHEMES = (); # for report
 my %URL = ();
-my %COLORS = ( 200 => '', 301 => ' BGCOLOR="yellow"', 302 => ' BGCOLOR="yellow"', 404 => ' BGCOLOR="red"' , 401 => ' BGCOLOR="aqua"' );
+my %COLORS = ( 200 => '', 301 => ' BGCOLOR="yellow"', 302 => ' BGCOLOR="yellow"', 404 => ' BGCOLOR="red"' , 403 => ' BGCOLOR="red"' , 401 => ' BGCOLOR="aqua"' );
 my %HTTP_CODES = ( 200 => 'ok' , 
 		  201 => '201',
 		  301 => 'redirect' , 
 		  302 => 'redirect' , 
 		  401 => 'unauthorized' , 
+		  403 => 'forbidden',
 		  404 => 'not found' ,
 		  405 => '405', 
 		  408 => '408',
@@ -97,6 +98,7 @@ my %TODO = ( 200 => 'nothing !',
 	     301 => 'usually nothing, unless the end point of the redirect is broken (in which case, the <B>Code</B> column is RED',
 	     302 => 'usually nothing, unless the end point of the redirect is broken (in which case, the <B>Code</B> column is RED',
 	     401 => 'The link is not public. The <B>Extra</B> column gives the Realm',
+	     403 => 'The link is forbidden ! This needs fixing. Usual suspect: a missing Overview.html or index.html',
 	     404 => 'The link is broken. Fix it <B>NOW</B>',
 	     405 => 'The server does not allow HEAD requests. How liberal. Go ask the guys who run this server why.',
 	     408 => 'The request timed out',
