@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.339 2004-09-08 17:21:05 bjoern Exp $
+# $Id: check,v 1.340 2004-09-10 09:25:55 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -225,7 +225,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.339 $;
+  $VERSION    =  q$Revision: 1.340 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1125,6 +1125,12 @@ $headers
       goes across the network unencrypted.
     </p>
 EOF
+  
+  # this is needed to avoid that the template code emits additional
+  # markup which would make the result invalid and look odd; in the
+  # longer term this should be moved into a template that fits with
+  # the general validator.w3.org style.
+  exit;
 }
 
 
