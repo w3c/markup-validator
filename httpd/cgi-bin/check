@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.23 1999-08-03 03:35:50 gerald Exp $
+# $Id: check,v 1.24 1999-08-03 03:42:29 gerald Exp $
 
 use LWP::UserAgent;
 
@@ -16,8 +16,8 @@ use LWP::UserAgent;
 # Constant definitions
 #############################################################################
 
-$cvsrevision	= '$Revision: 1.23 $';
-$cvsdate	= '$Date: 1999-08-03 03:35:50 $';
+$cvsrevision	= '$Revision: 1.24 $';
+$cvsdate	= '$Date: 1999-08-03 03:42:29 $';
 
 $logfile	= "/var/log/httpd/val-svc";
 
@@ -1201,6 +1201,8 @@ sub check_for_doctype {
 	    # (this doesn't handle multi-line comments, unfortunately)
 
 	last if ( $line =~ /<[a-z]/i );		# found an element
+    
+    }
 
     # do several loops of increasing lengths to avoid iterating over
     # the whole file if possible.
