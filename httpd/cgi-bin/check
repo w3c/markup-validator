@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.216 2002-08-27 14:52:46 duerst Exp $
+# $Id: check,v 1.217 2002-08-30 06:31:38 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -97,7 +97,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.216 $;
+  $VERSION    =  q$Revision: 1.217 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -153,7 +153,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-27 14:52:46 $,
+			      Date => q$Date: 2002-08-30 06:31:38 $,
 			     });
 
 #
@@ -296,7 +296,7 @@ unless ($File->{Charset}->{Use}) {
     $File->{'Error Flagged'} = TRUE;
     $File->{'Error Message'} = <<".EOF.";
     <p>
-      I was not able to extract a character encoding labelling from any of
+      I was not able to extract a character encoding labeling from any of
       the valid sources for such information. Without encoding information it
       is impossible to validate the document. The sources I tried are:
     </p>
