@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.357 2004-11-13 15:52:36 ville Exp $
+# $Id: check,v 1.358 2004-11-13 15:55:23 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -227,7 +227,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.357 $;
+  $VERSION    =  q$Revision: 1.358 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1178,7 +1178,7 @@ sub handle_uri {
   my $q    = shift; # The CGI object.
   my $File = shift; # The master datastructure.
 
-  my $uri = new URI (ref $q ? $q->param('uri') : $q);
+  my $uri = new URI (ref $q ? $q->param('uri') : $q)->canonical();
 
   my $ua = new LWP::UserAgent;
   $ua->env_proxy();
@@ -1248,7 +1248,7 @@ sub handle_uri {
   $File->{Modified}        = $lastmod;
   $File->{Server}          = &ent(scalar $res->server);
   $File->{Size}            = scalar $res->content_length;
-  $File->{URI}             = scalar $res->request->uri;
+  $File->{URI}             = scalar $res->request->uri->canonical;
   $File->{'Is Upload'}     = FALSE;
 
   return $File;
