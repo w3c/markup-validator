@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.55.2.16 2003-07-28 13:22:22 link Exp $"
---><!--#set var="date" value="\$Date: 2003-07-28 13:22:22 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.55.2.17 2003-07-29 19:12:07 link Exp $"
+--><!--#set var="date" value="\$Date: 2003-07-29 19:12:07 $"
 --><!--#set var="title" value="The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -23,6 +23,12 @@
           <label title="Submit URI for validation"><input type="submit" value="Check" /></label>
         </p>
       </form>
+      <p>
+        Enter the <abbr title="Uniform Resource Locator">URL</abbr> of the page
+        you want to check. Advanced options are available from the <a
+          title="Extended Interface to the W3C Markup Validation Service"
+          href="detailed.html">Extended Interface</a>.
+      </p>
       </fieldset>
       <fieldset><legend>Validate by File Upload</legend>
       <form method="post" enctype="multipart/form-data" action="check">
@@ -33,16 +39,13 @@
           <label title="Submit file for validation"><input type="submit" value="Check" /></label>
         </p>
       </form>
-      </fieldset>
       <p>
-        There is also an <a
-          title="Extended Interface to the W3C Markup Validation Service"
-          href="detailed.html">Extended Interface</a> available if you want
-        to set any advanced options, and a <a
+        Select the file you want to upload and check. Advanced options are
+        available from the <a
           title="File Upload Interface to the W3C Markup Validation Service"
-          href="file-upload.html">Extended File Upload Interface</a> if you
-        want to validate uploaded files with advanced options.
+          href="file-upload.html">Extended File Upload Interface</a>.
       </p>
+      </fieldset>
     </div>
 
     <div id="recent">
