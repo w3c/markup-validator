@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.55.2.15 2003-07-20 17:08:38 link Exp $"
---><!--#set var="date" value="\$Date: 2003-07-20 17:08:38 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.55.2.16 2003-07-28 13:22:22 link Exp $"
+--><!--#set var="date" value="\$Date: 2003-07-28 13:22:22 $"
 --><!--#set var="title" value="The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -17,6 +17,7 @@
       <fieldset><legend>Validate by URI</legend>
       <form method="get" action="check">
         <p>
+          <input type="hidden" name="verbose" value="1" />
           <label title="Address of page to Validate" for="uri">Address:
             <input id="uri" name="uri" size="40" /></label>
           <label title="Submit URI for validation"><input type="submit" value="Check" /></label>
@@ -25,7 +26,8 @@
       </fieldset>
       <fieldset><legend>Validate by File Upload</legend>
       <form method="post" enctype="multipart/form-data" action="check">
-        <p>    
+        <p>
+          <input type="hidden" name="verbose" value="1" />
           <label title="Choose a Local File to Upload and Validate" for="uploaded_file">Local File:
             <input type="file" id="uploaded_file" name="uploaded_file" size="30" /></label>
           <label title="Submit file for validation"><input type="submit" value="Check" /></label>
