@@ -1,0 +1,17 @@
+
+/* style sheet for the validator's results page */
+
+/* $Id: results.css,v 1.1 1999-10-25 11:09:21 gerald Exp $ */
+
+.markup {
+color: red;
+font-size: larger;
+font-weight: bolder;
+}
+
+.input {
+color: black;
+font-size: smaller;
+background-color: #eeeeee; /* light grey */
+}
+
