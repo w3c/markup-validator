@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/local/bin/perl -w
 #
 # W3C HTML Validation Service
 # A CGI script to retrieve and validate an HTML file
@@ -8,71 +8,73 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.29 1999-09-05 23:22:28 gerald Exp $
+# $Id: check,v 1.30 1999-09-06 04:42:45 gerald Exp $
 
 use LWP::UserAgent;
+use strict;
 
 #############################################################################
 # Constant definitions
 #############################################################################
 
-$cvsrevision	= '$Revision: 1.29 $';
-$cvsdate	= '$Date: 1999-09-05 23:22:28 $';
+my $cvsrevision	= '$Revision: 1.30 $';
+my $cvsdate	= '$Date: 1999-09-06 04:42:45 $';
 
-$logfile	= "/var/log/httpd/val-svc";
+my $logfile	= "/var/log/httpd/val-svc";
 
-$uri_def_uri	= "http://www.w3.org/Addressing/#terms";
-$faqloc		= "http://www.cs.duke.edu/~dsb/kgv-faq/";
-$faqerrloc	= "${faqloc}errors.html";
-$abs_svc_uri	= "http://validator.w3.org/";
-$rel_img_uri	= "/images/";
-$abs_img_uri	= "${abs_svc_uri}images/";
+my $uri_def_uri	= "http://www.w3.org/Addressing/#terms";
+my $faqloc	= "http://www.cs.duke.edu/~dsb/kgv-faq/";
+my $faqerrloc	= "${faqloc}errors.html";
+my $abs_svc_uri	= "http://validator.w3.org/";
+my $rel_img_uri	= "/images/";
+my $abs_img_uri	= "${abs_svc_uri}images/";
+my $maintainer	= 'gerald@w3.org';
 
-$sgmlstuff	= "/usr/local/src/validator/htdocs/sgml-lib";
-$sp		= "/usr/local/bin/nsgmls";
-$nkf		= "/usr/local/bin/nkf";
+my $sgmlstuff	= "/usr/local/src/validator/htdocs/sgml-lib";
+my $sp		= "/usr/local/bin/nsgmls";
+my $nkf		= "/usr/local/bin/nkf";
 
-$sgmldecl	= "$sgmlstuff/REC-html40-19980424/HTML4.decl";
-$xhtmldecl	= "$sgmlstuff/PR-xhtml1-19990824/xhtml1.dcl";
-$xmldecl	= "/usr/local/src/validator/htdocs/sgml-lib/sp-1.3/pubtext/xml.dcl";
+my $sgmldecl	= "$sgmlstuff/REC-html40-19980424/HTML4.decl";
+my $xhtmldecl	= "$sgmlstuff/PR-xhtml1-19990824/xhtml1.dcl";
+my $xmldecl	= "$sgmlstuff/sp-1.3/pubtext/xml.dcl";
 
-$revision	= $cvsrevision;
-$revision	=~ s/^\$Revision: //;
-$revision	=~ s/ \$$//;
+my $revision	= $cvsrevision;
+   $revision	=~ s/^\$Revision: //;
+   $revision	=~ s/ \$$//;
 
-# $notice		= "<p><strong>Note: This service will be intermittently unavailable for the next few hours for an operating system upgrade.</strong>";
+my ( $uri,
+    $validity, $version, $document_type, $xmlflags, %FORM, %undef_frag,
+    $meta_charset, $http_charset, $effective_charset, $charsets_differ,
+    $codeconv, $lastmod, $decl, $catalog, $command, @fake_errors,
+    $guessed_doctype, $doctype, $line, $col, $type, $msg, $extraspaces, $diff,
+    $pos, $indent, $gifname, $alttext, $gifhw, $nicegifname, $pedanticflags,
+    $pedantic_blurb, $level, $prevlevel, $i, $prevdata );
+
+my $notice		= '';
+			# "<p><strong>Note: This service will be ...</strong>";
 
 umask( 022 );
-$weblint	 = "/usr/bin/weblint";
-$html2_doctype	 = qq{<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">};
-$html32_doctype	 = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">};
-$nice_html40_doctype	 = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN\n            "http://www.w3.org/TR/REC-html40/strict.dtd">};
-$nice_html40t_doctype = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"\n            "http://www.w3.org/TR/REC-html40/loose.dtd">};
-$nice_html40f_doctype = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"\n            "http://www.w3.org/TR/REC-html40/frameset.dtd">};
-$html40_doctype	 = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN "http://www.w3.org/TR/REC-html40/strict.dtd">};
-$html40t_doctype = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">};
-$html40f_doctype = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN" "http://www.w3.org/TR/REC-html40/frameset.dtd">};
-$xhtmlt_doctype = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"};
-$temp		 = "/tmp/validate.$$";
-$lt		 = "\020";
-$gt		 = "\021";
-# $leftarrow	 = qq{${lt}tt${gt}${lt}img src="/images/arrow_left.gif" alt="^"${gt}${lt}/tt${gt}};
-$leftarrow	 = "${lt}tt${gt}${lt}img src=\"/images/arrow_left.gif\" alt=\"^\"${gt}${lt}/tt${gt}";
-$rightarrow	 = "${lt}tt${gt}${lt}img src=\"/images/arrow_right.gif\" alt=\"^\"${gt}${lt}/tt${gt}";
-$contchars	 = "${lt}tt${gt}${lt}img src=\"/images/ellipsis.gif\" alt=\"[...]\"${gt}${lt}/tt${gt}";
-$gifborder       = " border=0";
+my $weblint		= "/usr/bin/weblint";
+my $html32_doctype	=
+			qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">};
+my $html40t_doctype	= qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">};
+my $html40f_doctype	= qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN" "http://www.w3.org/TR/REC-html40/frameset.dtd">};
+my $xhtmlt_doctype	= qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"};
+my $temp		= "/tmp/validate.$$";
+my $lt			= "\020";
+my $gt			= "\021";
+my $leftarrow		= "${lt}tt${gt}${lt}img src=\"/images/arrow_left.gif\" alt=\"^\"${gt}${lt}/tt${gt}";
+my $rightarrow		= "${lt}tt${gt}${lt}img src=\"/images/arrow_right.gif\" alt=\"^\"${gt}${lt}/tt${gt}";
+my $contchars		= "${lt}tt${gt}${lt}img src=\"/images/ellipsis.gif\" alt=\"[...]\"${gt}${lt}/tt${gt}";
+my $gifborder		= " border=0";
 
-@options = ( 'weblint', 'pw', 'outline', 'ss', 'sp', 'noatt' );
-# this doesn't work for some reason
-# qw{
-#     weblint pw outline ss sp noatt
-# };
+my @options = ( 'weblint', 'pw', 'outline', 'ss', 'sp', 'noatt' );
 
 #############################################################################
 # Array of FPIs -> plain text version strings
 #############################################################################
 
-%pub_ids = (
+my %pub_ids = (
     '-//IETF//DTD HTML Level 0//EN//2.0', 'HTML 0.0',
     '-//IETF//DTD HTML Strict Level 0//EN//2.0', 'Strict HTML 0.0',
 
@@ -122,7 +124,7 @@ $gifborder       = " border=0";
 # Array of errors -> fragment identifiers for error explanation links
 #############################################################################
 
-%frag = (
+my %frag = (
     'entity end not allowed in comment', 'unterm-comment-1',
     'name start character invalid only s and comment allowed in comment declaration', 'unterm-comment-2',
     'name character invalid only s and comment allowed in comment declaration', 'unterm-comment-2',
@@ -163,12 +165,13 @@ $SIG{'PIPE'} = 'IGNORE';
 #############################################################################
 
 # accept either check/foo or check?foo
-$parameters = $ENV{PATH_INFO} || $ENV{QUERY_STRING};
+my $parameters = $ENV{PATH_INFO} || $ENV{QUERY_STRING};
 
 if ( ! $parameters ) {
     &redirect_to_home_page;
 }
 
+my $pair;
 foreach $pair (split(/[&;,]/, $parameters)) {
 
     # this referer handling probably needs fixing to handle strange cases
@@ -180,7 +183,7 @@ foreach $pair (split(/[&;,]/, $parameters)) {
 	next;
     }
 
-    ($name, $value) = split(/=/, $pair);
+    my ($name, $value) = split(/=/, $pair);
     $value =~ tr/+/ /;
     $value =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack("C", hex($1))/eg;
 
@@ -207,7 +210,7 @@ if ( $uri =~ /^www/i ) {
 # Output validation results
 #############################################################################
 
-$header = <<"EOF";
+my $header = <<"EOF";
 Content-Type: text/html
 
 $html40t_doctype
@@ -215,7 +218,7 @@ $html40t_doctype
 
   <head>
     <title>W3C HTML Validation Service Results</title>
-    <link rev="made" href="mailto:gerald\@w3.org">
+    <link rev="made" href="mailto:$maintainer">
   </head>
 
   <body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
@@ -228,7 +231,7 @@ $html40t_doctype
 
   <h1><a href="/">W3C HTML Validation Service</a> Results</h1>
 
-$notice$debugmessage
+$notice
 EOF
 
 if ( $uri !~ m#^http://# ) {
@@ -256,10 +259,10 @@ EOF
     &clean_up_and_exit;
 }
 
-$ua = new LWP::UserAgent;
+my $ua = new LWP::UserAgent;
 $ua->agent( "W3C_Validator/$revision " . $ua->agent );
 $ua->parse_head(0);  # we want to parse the http-equiv stuff ourselves, for now
-$request = new HTTP::Request(GET => $uri);
+my $request = new HTTP::Request(GET => $uri);
 
 # if we got a Authorization header from the client, it means
 # that the client is back at it after being prompted for
@@ -268,10 +271,10 @@ if($ENV{HTTP_AUTHORIZATION}){
     $request->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
 }
 
-$response = $ua->request($request);
+my $response = $ua->request($request);
 
 if ( $response->code != 200 ) {
-    $optionstring = &build_options;
+    my $optionstring = &build_options;
     if ( $response->code == 401 ) {
 	$response->headers->www_authenticate =~ /Basic realm=\"([^\"]+)\"/;
 	my $realm = $1;
@@ -287,14 +290,14 @@ if ( $response->code != 200 ) {
     &clean_up_and_exit;
 }
 
-$content_type = $response->headers->content_type;
+my $content_type = $response->headers->content_type;
 
 if ( ( $content_type =~ /text\/xml/i ) ||
      ( $content_type =~ /application\/xml/i ) ) {
-    $xml = 1;
+    $document_type = "xml";
 }
 elsif ($content_type =~ /text\/html/i) {
-    $html = 1;
+    $document_type = "html";
 }
 else {
     print $header;
@@ -310,8 +313,8 @@ EOF
     &clean_up_and_exit;
 }
 
-$jump_links = &build_jump_links;
-$count = 1; # @@ should loop over many uris instead
+my $jump_links = &build_jump_links;
+my $count = 1; # @@ should loop over many uris instead
 
 print $header;
 print <<"EOF";
@@ -319,14 +322,14 @@ print <<"EOF";
 
 $jump_links
 EOF
-    
-@file = split '\n',$response->content;
-if ( $html || $xhtml ) {
+
+my @file = split '\n',$response->content;
+if ( ( $document_type eq "html" ) || ( $document_type eq "xhtml" ) ) {
     ( $guessed_doctype, $doctype ) = &check_for_doctype( \@file );
 }
 
 if ( $doctype =~ /xhtml/i ) {
-    $xhtml = 1;
+    $document_type = "xhtml";
 }
 
 foreach $line (@file) {
@@ -385,7 +388,7 @@ if ( defined $response->content_length ) {
     print "  <li>Content length: " . $response->content_length . "\n";
 }
 
-if ( $xhtml ) {
+if ( $document_type eq "xhtml" ) {
     $ENV{SP_CATALOG_FILES} = "$sgmlstuff/PR-xhtml1-19990824/xhtml.soc";
     $ENV{SGML_SEARCH_PATH} = "$sgmlstuff/PR-xhtml1-19990824/";
     $ENV{SP_CHARSET_FIXED}="YES";
@@ -393,7 +396,7 @@ if ( $xhtml ) {
     $xmlflags = "-wxml ";
     $decl = $xhtmldecl;
 }
-elsif ( $xml ) {
+elsif ( $document_type eq "xml" ) {
     $ENV{SP_CATALOG_FILES} = "$sgmlstuff/sp-1.3/pubtext/xml.soc";
     $ENV{SGML_SEARCH_PATH} = "$sgmlstuff/sp-1.3/pubtext/";
     $ENV{SP_CHARSET_FIXED}="YES";
@@ -427,12 +430,13 @@ for (@file) {
     s/+$//;
     print CHECKER $_, "\n";
 }
-close( CHECKER ) || "couldn't close checker";
+close( CHECKER ) or warn "couldn't close checker";
 
 open( ERRORS, "< $temp" )	|| die "couldn't open checker results: $!";
-@errors = <ERRORS>;
+my @errors = <ERRORS>;
 close( ERRORS )			|| die "couldn't close checker results: $!";
 
+my @esis;
 open( ESIS, "$temp.esis" )	|| die "couldn't read parser output: $!";
 while (<ESIS>) {
     next if / IMPLIED$/;
@@ -442,11 +446,12 @@ while (<ESIS>) {
 }
 close( ESIS )			|| die "couldn't close parser output: $!";
 
+my $fpi;
 $version = "unknown";
-if ( $xhtml ) {
+if ( $document_type eq "xhtml" ) {
     $fpi = $doctype;
 }
-elsif ( $xml ) {
+elsif ( $document_type eq "xml" ) {
     $fpi = "XML";
 }
 else {
@@ -467,13 +472,6 @@ if ( $guessed_doctype ) {
     push( @fake_errors, "nsgmls:<OSFD>0:2:1:E: Missing DOCTYPE declaration at start of document (${lt}a href=\"http://www.htmlhelp.org/tools/validator/doctype.html\"${gt}explanation...${lt}/a${gt})\n" );
 }
 
-if ( $guessed_doctype ) {
-    $escaped_doctype = $doctype;
-    $escaped_doctype =~ s/" "/"\n            "/;
-    $escaped_doctype =~ s/&/\&amp;/g;
-    $escaped_doctype =~ s/</\&lt;/g;
-}
-
 print qq{  <li>Character encoding: $effective_charset\n};
 
 if ( $charsets_differ ) {
@@ -492,7 +490,7 @@ print "  <li>Document type: <b>$version</b>.\n";
 
 print "</ul>\n\n";
 
-if ( $xml ) {
+if ( $document_type eq "xml" ) {
 print <<"EOHD";
   <p>
     <strong>Note: experimental XML support was added to this service
@@ -519,7 +517,7 @@ if ( $? || $guessed_doctype ) {
     for ((@fake_errors,@errors)) {
 	next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
 	next if / numbers exceeding 65535 not supported$/;
-	next if $xhtml && /:W: SGML declaration was not implied$/;
+	next if ( $document_type eq "xhtml" ) && /:W: SGML declaration was not implied$/;
 	s/.*<OSFD>//g;
 	if ( ! (($line, $col, $type, $msg)=(/^[^:]*:([0-9]+):([0-9]+):([A-Z]?):? (.*)/))) {
 	    print "Uh oh! I got the following unknown error:\n\n   $_\n\n";
@@ -548,7 +546,7 @@ if ( $? || $guessed_doctype ) {
 	}
 	$extraspaces = "";	# in case we put "(truncated)" gif on LHS
 	$line-- if $guessed_doctype;
-	$newline = $file[$line-1];
+	my $newline = $file[$line-1];
 	$newline .= "\n";
 
 	# make sure there's no ^P or ^Q's in the file, since we need to use
@@ -595,11 +593,11 @@ if ( $? || $guessed_doctype ) {
 
 	# figure out the index into the %frag associative array for the
 	# "explanation..." links to the KGV FAQ.
-	$msgindex = $msg;
+	my $msgindex = $msg;
 	$msgindex =~ s/"[^"]+"/FOO/g;
 	$msgindex =~ s/[^A-Za-z ]//;
 
-	$out = "${lt}hr${gt}\n\nError at line $line:\n   $newline";
+	my $out = "${lt}hr${gt}\n\nError at line $line:\n   $newline";
 	if ( length( $msg ) < $col ) {    # does it fit in front?
 	    $out .= "$extraspaces " . ' ' x ($col-length($msg)) .
 		"$msg $rightarrow";
@@ -729,14 +727,14 @@ EOHD
 	print "  <p>\n    Congratulations, this document validates as the document type specified! (I don't have an icon for this one yet, sorry.)\n  </p>\n";
     }
 
-    $escaped_uri = $uri;
+    my $escaped_uri = $uri;
     $escaped_uri =~  s/=/%3D/g;
     $escaped_uri =~ s/\&/%26/g;
     $escaped_uri =~  s/;/%3B/g;
     $escaped_uri =~  s/,/%2C/g;
 	# ugh
 
-    $thispage = "${abs_svc_uri}check?uri=$escaped_uri";
+    my $thispage = "${abs_svc_uri}check?uri=$escaped_uri";
     $thispage .= &build_options;
     print <<"EOHD";
 
@@ -759,7 +757,7 @@ EOHD
     $validity="valid";
 }
 
-$validation_return_code = $?;
+my $validation_return_code = $?;
 
 if ( $FORM{"weblint"} eq "true" ) {
 
@@ -788,7 +786,7 @@ EOF
     for (@file) {
 	print WEBLINT $_, "\n";
     }
-    close( WEBLINT ) || "couldn't close weblint: $!";
+    close( WEBLINT ) or warn "couldn't close weblint: $!";
 
     print "\n\n";
     if ( $? ) {
@@ -847,11 +845,12 @@ EOF
 	    print "    <ul>\n";
 	}
 
-	$line = "foo"; $heading = "";
+	$line = "foo";
+	my $heading = "";
 	while ( substr( $line, 0, 3 ) ne ")H$level" ) {
 	    $line = $esis[$_++];
 	    if ( $line =~ /^-/ ) {
-		$headcont = $line;
+		my $headcont = $line;
 		substr( $headcont, 0, 1 ) = " ";
 		$headcont =~ s/\\n/ /g;
 		$heading .= $headcont;
@@ -886,7 +885,7 @@ EOF
 
     print "<pre>\n";
     if ( $guessed_doctype ) {
-	$gd = "$doctype\n";
+	my $gd = "$doctype\n";
 	$gd =~ s/&/&amp;/go; $gd =~ s/</&lt;/go;
 	printf "%4d: %s", 0, $gd;
     }
@@ -968,6 +967,7 @@ else {
 	   $indent -= 3;
 	}
 
+	my $printme;
 	chop( $printme = $_ );
 	$printme =~ s/^\((.*)/&lt;$1&gt;\n/;
 	$printme =~ s/^\)(.*)/&lt;\/$1&gt;/;
@@ -1042,11 +1042,12 @@ EOF
 
 sub build_options {
 
-    $optionstring = "";
+    my $optionstring = "";
+    my $option;
     foreach $option (@options) {
         $optionstring .= ";$option" if $FORM{$option} eq "true";
     }
-    $optionstring;
+    return $optionstring;
 
 }
 
@@ -1059,6 +1060,8 @@ sub erase_stuff {
 }
 
 sub make_log_entry {
+
+    my $msgindex;
 
     open(LOG,">>$logfile") || die "couldn't append to log: $!";
     print LOG "$ENV{REMOTE_HOST}\t$validity $version\t$uri\n";
@@ -1154,7 +1157,7 @@ sub check_for_doctype {
 	last if $line =~ /<[a-z].*<!doctype/i;
 
 	if ( $line =~ /<!doctype/i ) {	# found a doctype
-	    $dttext = join( "", @file[$count..$count+5] );
+	    my $dttext = join( "", @file[$count..$count+5] );
 	    $dttext =~ s/\n//g;
 	    $dttext =~ s/.*doctype\s+html\s+public\s*"//i;
 	    $dttext =~ s/".*//;	# strip everything except the FPI
@@ -1166,7 +1169,7 @@ sub check_for_doctype {
 	    # (this doesn't handle multi-line comments, unfortunately)
 
 	last if ( $line =~ /<[a-z]/i );		# found an element
-    
+
     }
 
     # do several loops of increasing lengths to avoid iterating over
