@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.9 2002-11-30 19:30:42 ville Exp $
+# $Id: check,v 1.305.2.10 2002-11-30 20:33:23 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -103,7 +103,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.9 $;
+  $VERSION    =  q$Revision: 1.305.2.10 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -165,7 +165,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-30 19:30:42 $,
+                              Date => q$Date: 2002-11-30 20:33:23 $,
                              });
 
 #
@@ -451,9 +451,10 @@ $File = &charset_conflicts($File);
 #
 # Add metadata iff asked for.
 if ($File->{Opt}->{Verbose}) {
-  &add_table($File, "Modified", [1, 2, &ent($File->{Modified})]) if $File->{Modified};
-  &add_table($File, "Server",   [1, 2, &ent($File->{Server})  ]) if $File->{Server};
-  &add_table($File, "Size",     [1, 2, &ent($File->{Size})    ]) if $File->{Size};
+  &add_table($File, "Modified",     [1, 2, &ent($File->{Modified})   ]) if $File->{Modified};
+  &add_table($File, "Server",       [1, 2, &ent($File->{Server})     ]) if $File->{Server};
+  &add_table($File, "Size",         [1, 2, &ent($File->{Size})       ]) if $File->{Size};
+  &add_table($File, "Content-Type", [1, 2, &ent($File->{ContentType})]) if $File->{ContentType};
 }
 
 if ($File->{'Is Upload'}) {
@@ -659,10 +660,7 @@ if (&is_xml($File->{Type}) and $File->{Namespace}) {
     &add_table($File, 'Other Namespaces', $namespaces . '</ul>')
       if $File->{Opt}->{Verbose};
   }
-} else {
-  &add_warning($File, $File->{Namespace} . $File->{Type})
 }
-
 
 if (defined $File->{Tentative}) {
   my $class = '';
@@ -703,7 +701,7 @@ if ($File->{Opt}->{Output} eq 'xml') {
 
   print &jump_links($File);
 
-  if ($File->{Opt}->{Verbose}) {
+  if ($File->{Opt}->{Verbose} or not $File->{'Is Valid'}) {
     print qq(<div class="splash">\n);
     &print_table($File);
     &print_warnings($File);
@@ -1664,10 +1662,16 @@ sub report_valid {
     print &daily_tip($File, $CFG->{'Tips DB'});
     &print_warnings($File) unless $File->{Opt}->{Verbose};
 
+    my $source;
+    if ($File->{'Is Upload'}) {
+      $source = qq(The uploaded file);
+    } else {
+      $source = qq(The document located at &lt;<a href="$URI">$URI</a>&gt;);
+    }
+
     print <<".EOF.";
     <p>
-      The document located at
-      &lt;<a href="$URI">$URI</a>&gt;
+      $source
       was checked and found to be valid $File->{Version}. This means that
       the resource in question identified itself as
       &ldquo;$File->{Version}&rdquo; and that we successfully performed a
