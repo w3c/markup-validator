@@ -1,4 +1,3 @@
-OVERRIDE	YES
         -- Oasis entity catalog for Extensible HTML 1.0 --
 
 PUBLIC  "-//W3C//DTD XHTML 1.0 Strict//EN"        "xhtml1-strict.dtd"
@@ -11,4 +10,3 @@ PUBLIC	"-//W3C//ENTITIES Latin 1 for XHTML//EN"  "xhtml-lat1.ent"
 PUBLIC	"-//W3C//ENTITIES Symbols for XHTML//EN" "xhtml-symbol.ent"
 PUBLIC	"-//W3C//ENTITIES Special for XHTML//EN" "xhtml-special.ent"
 
-SGMLDECL "xhtml1.dcl"

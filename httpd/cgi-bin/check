@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.104 2001-05-27 11:05:39 link Exp $
+# $Id: check,v 1.105 2001-05-27 11:36:30 link Exp $
 
 #
 # We need Perl 5.004.
@@ -75,9 +75,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.104 $;
+$VERSION    =  q$Revision: 1.105 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-05-27 11:05:39 $;
+$DATE       =  q$Date: 2001-05-27 11:36:30 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -361,11 +361,10 @@ print(' ' x 4, q(<li>Content length: ), $File->{Size},     qq(</li>\n))
 
 my $xmlflags = '';
 my $decl     = '';
-my $catalog  = '';
+my $catalog  = $sgmlstuff . '/catalog';
 my $path     = $sgmlstuff;
 
 if ($File->{Type} eq 'xhtml') {
-  $catalog               = $sgmlstuff . '/REC-xhtml1-20000126/xhtml.soc';
   $path                  = $sgmlstuff . '/REC-xhtml1-20000126/';
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'UTF-8';
@@ -375,10 +374,10 @@ if ($File->{Type} eq 'xhtml') {
   }
   $decl                  = $xhtmldecl;
 } elsif ($File->{Type} eq 'mathml') {
-  $catalog               = $sgmlstuff . '/CR-MathML2-20001113/catalog';
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'XML';
   $xmlflags              = '-wxml ';
+  $decl                  = $xmldecl;
 } elsif ($File->{Type} eq 'xml' or $guessed_doctype == 2) {
   # no doctype, with xmlns attr on 1st element
   $File->{Type} = 'xml'; # @@ probably a better way to do this
@@ -389,8 +388,7 @@ if ($File->{Type} eq 'xhtml') {
   $xmlflags              = '-wxml -wno-valid ';
   $decl                  = $xmldecl;
 } else { # must be HTML (for now)
-  $decl    = $sgmldecl;
-  $catalog = $sgmlstuff . '/catalog';
+  $decl = $sgmldecl;
 }
 
 my $command  = "$sp -f$temp -E0 $xmlflags -c $catalog -D $path $decl";
