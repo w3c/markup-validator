@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.43 2004-05-20 11:40:28 link Exp $
+   $Id: base.css,v 1.26.2.44 2004-05-28 02:30:11 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -197,7 +197,7 @@ h1 {
 display: inline}
 
 #banner {
-background-image: url(images/header);
+background-image: url(images/header.jpg);
 background-repeat: no-repeat;
 background-attachment: scroll;
 height: 50px;
