@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.102 2001-05-27 05:06:02 link Exp $
+# $Id: check,v 1.103 2001-05-27 05:35:22 link Exp $
 
 #
 # We need Perl 5.004.
@@ -75,9 +75,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.102 $;
+$VERSION    =  q$Revision: 1.103 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-05-27 05:06:02 $;
+$DATE       =  q$Date: 2001-05-27 05:35:22 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -338,7 +338,7 @@ print "  <ul>\n";
 
 #
 # Print different things if we got redirected or had a file upload.
-if ($File->{URI} eq $q->param('uri')) {
+if (URI::eq("$File->{URI}", $q->param('uri'))) { # @@ Why do we need to stringify here?
   print ' ' x 4, qq(<li><a href="$uri_def_uri">URI</a>: );
   print '<a href="', ent($File->{URI}), '">', ent($File->{URI}), qq(</a>\n);
 } elsif ($q->param('uploaded_file')) {
