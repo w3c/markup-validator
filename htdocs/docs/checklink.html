@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: checklink.html,v 1.4 2002-10-27 08:26:40 ville Exp $"
---><!--#set var="date" value="\$Date: 2002-10-27 08:26:40 $"
+<!--#set var="revision" value="\$Id: checklink.html,v 1.5 2002-11-19 21:43:31 ville Exp $"
+--><!--#set var="date" value="\$Date: 2002-11-19 21:43:31 $"
 --><!--#set var="title" value="W3C Link Checker documentation"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -58,65 +58,11 @@
     </p>
 
     <p>
-      There is a command-line version and a CGI version. They both
-      support HTTP basic authentication. This is achieved in the CGI version
+      There is a command line version and a CGI version. They both
+      support <a href="http://www.ietf.org/rfc/rfc2617.txt">HTTP basic
+      authentication</a>. This is achieved in the CGI version
       by passing through the authorization information from the user browser
       to the site tested.
-    </p>
-
-    <p>
-      The current version has proven to be stable. It could however be
-      improved:
-    </p>
-
-    <ul id="todo">
-      <li>
-	Currently, the URIs are extracted from a defined set of
-	elements and attributes, whereas the right thing to do would be to
-	parse the DTD and get the list of elements and attributes to extract
-	from from the DTD.
-      </li>
-      <li>
-	The program doesn't follow the
-	<a href="http://www.robotstxt.org/">Robot Exclusion Standard</a>.
-      </li>
-      <li>
-	HTTPS could be supported without much code change.
-      </li>
-      <li>
-	It would be cool to show the source where the error is like the
-	HTML validator does instead of just giving the line.
-      </li>
-      <li>
-	The link checker should do a GET request when the server replies
-	501 to a HEAD request.
-      </li>
-      <li>
-	A <code>Referer</code> header should be sent out.
-      </li>
-      <li>
-        Add XML and <a href="http://www.w3.org/XML/Linking">XLink</a> support.
-      </li>
-      <li>
-        Produce a report in <a href="http://www.w3.org/RDF/">RDF</a>.
-      </li>
-      <li>
-	Post annotations to the
-	<a href="http://www.w3.org/2001/Annotea/">Annotea</a>: when
-	the document was checked, tag links that are broken, etc.
-      </li>
-      <li>
-	Display an error when both the name and id attributes are used and
-	their values are different.
-      </li>
-      <li>
-	Probably other things that I haven't thought about.
-      </li>
-    </ul>
-
-    <p>
-      If you are interested in making the link checker understand XML,
-      please <a href="mailto:hugo@w3.org">contact me</a>.
     </p>
 
     <h2><a name="online" id="online">Use it online</a></h2>
@@ -169,7 +115,7 @@
     <p>
       Calling <code>checklink.pl</code> without any arguments runs the
       CGI version, and running <code>checklink.pl --help</code> shows how to
-      use the command-line version.
+      use the command line version.
     </p>
 
     <p>
@@ -179,6 +125,11 @@
     </p>
 
     <h2><a name="csb" id="csb">Comments, suggestions and bugs</a></h2>
+
+    <p>
+      The current version has proven to be stable. It could however be
+      improved, see the <a href="http://www.w3.org/Bugs/Public/buglist.cgi?product=LinkChecker&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED">list of open enhancement ideas and bugs</a> for details.
+    </p>
 
     <p>
       Please send comments, suggestions and bugs about the link checker
