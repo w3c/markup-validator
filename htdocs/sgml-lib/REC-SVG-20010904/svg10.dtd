@@ -417,6 +417,7 @@
                    %ceExt;%svgExt;)* >
 <!ATTLIST svg
   xmlns CDATA #FIXED "http://www.w3.org/2000/svg"
+  xmlns:xlink CDATA #FIXED "http://www.w3.org/1999/xlink"
   %stdAttrs;
   %testAttrs;
   %langSpaceAttrs;
@@ -1269,7 +1270,9 @@
   externalResourcesRequired %Boolean; #IMPLIED
   class %ClassList; #IMPLIED
   style %StyleSheet; #IMPLIED
-  %PresentationAttributes-All; >
+  %PresentationAttributes-All;
+  %filter_primitive_attributes;
+  preserveAspectRatio %PreserveAspectRatioSpec; 'xMidYMid meet' >
 
 <!ELEMENT feMerge (feMergeNode)* >
 <!ATTLIST feMerge
