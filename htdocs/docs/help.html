@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: help.html,v 1.12.2.5 2003-07-28 08:37:39 ot Exp $"
---><!--#set var="date" value="\$Date: 2003-07-28 08:37:39 $"
+<!--#set var="revision" value="\$Id: help.html,v 1.12.2.6 2003-08-04 06:35:04 ot Exp $"
+--><!--#set var="date" value="\$Date: 2003-08-04 06:35:04 $"
 --><!--#set var="title" value="Help for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -46,16 +46,18 @@
 	<li>
 		<a href="#cleanup">I don't want error messages, I want you to clean up my page!</a>
 	</li>
+	<li>
+		<a href="#icon">My document is valid, can I use your "valid" icon?</a>
+	</li>
   </ul>
   </li>
   <li>Miscellaneous (Very) Frequently Asked Questions
   <ul>
 	<li>
-		<a href="#faq-doctype">No DOCTYPE Declaration Found!</a>
+		<a href="#faq-doctype"><q>No DOCTYPE Declaration Found!</q></a>
 	</li>
 	<li>
-		<a href="#faq-charset">The validator is <q>not able to extract 
-		a character encoding</q></a> 
+		<a href="#faq-charset"><q>No Character Encoding Found!</q></a> 
 	</li>
 	<li>
 		<a href="#faq-ampersand">The validator complains about "&amp;" in my URLs!</a>
@@ -201,6 +203,45 @@
        <p>The Markup Validator can not do this for you. You may want to have a look
 	at tools such as <a href="http://tidy.sourceforge.net">HTML Tidy</a>.</p>
 
+      <h4 id="icon">My document is valid, can I use your "valid" icon?</h4>
+  <h5>practical use of the icon</h5>
+  <p>
+      <img class="inline-badge" src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!" height="31" width="88" />
+      Yes. To show readers that one has taken some care to create an
+      interoperable Web page, a "W3C valid" badge may be displayed 
+      (here, the "valid XHTML 1.0" badge) <strong>on any page
+      that validates</strong>. 
+  </p>
+  <p>
+   We encourage you to use the XHTML code below (or its HTML equivalent),
+   but you may use a different code to integrate the icon within your webpage
+   as long as the icon is used as a link to revalidate the Web page it is in.
+   Sample code is as follows:
+  </p>
+  <pre>
+   &lt;p&gt;
+      &lt;a href="http://wasabi.w3.mag.keio.ac.jp/validator/check/referer"&gt;&lt;img
+          src="http://www.w3.org/Icons/valid-xhtml10"
+          alt="Valid XHTML 1.0!" height="31" width="88" /&gt;&lt;/a&gt;
+    &lt;/p&gt;
+  </pre>
+  <h5>License for usage of the logo, liability, validity claims</h5>
+  <p>Web content providers are granted the right to use the "W3C valid" logo
+  on pages that pass validation for the W3C technology represented by 
+  the icon, and <strong>only</strong> on pages that pass validation.</p>
+  </p>
+  
+  <p>Note that "W3C Valid" icons are not an endorsement by the W3C of the page's 
+  author, the substantive content of the page, nor its design. 
+  Instead, the icons are <strong>only</strong> a mechanism to identify 
+  pages that have been determined to be valid, and to easily 
+  re-validate pages as often as as they are modified.</p>
+
+  <p>Consequently, the use of the badge is in accordance with and governed by 
+  the W3C <a href="http://www.w3.org/Consortium/Legal/trademark-license">Trademark License</a> 
+  and <a href="http://www.w3.org/Consortium/Legal/logo-usage">Logo and Icon usage</a>
+  policy.</p>
+
 </div>
 
 <div>
@@ -245,8 +286,7 @@
         "<a href="http://htmlhelp.com/tools/validator/doctype.html">Choosing
            a DOCTYPE</a>".
       </p>
-<h4 id="faq-charset">The validator is <q>not able to extract 
-a character encoding</q></h4>
+<h4 id="faq-charset"><q>No Character Encoding Found! </q></h4>
 
 <p>An HTML document should be served along with its character encoding.</p>
 
@@ -260,10 +300,24 @@ a character encoding</q></h4>
            title="A Few Tips On How To Specify The Character Encoding">a few
           tips on how to do this</a> in popular web server implementations.
 </p>
-<p>WDG also has some good documentation on 
-<a href="http://www.htmlhelp.com/tools/validator/charset.html">using
-character encodings</a> that will help you fix your document or the way it is served
-by adding the proper character encoding information.</p>
+    <p>
+      <a href="http://www.iana.org/"><abbr
+      title="Internet Assigned Numbers Authority">IANA</abbr></a>
+      maintains the list of <a
+      href="http://www.iana.org/assignments/character-sets">official
+      names for character sets</a> and the <abbr
+        title="Web Design Group">WDG</abbr> has some <a
+        href="http://www.htmlhelp.com/tools/validator/charset.html">information
+        to help you correctly specify the character encoding</a>.
+    </p>
+    <p>
+      To quickly check whether the document would validate after addressing
+      the missing character encoding information, you can use the "Encoding"
+      form control (accesskey "2") earlier in the page to force an encoding
+      override to take effect. "iso-8859-1" (Western Europe and North America)
+      and "utf-8" (Universal, but not commonly used in legacy documents) are
+      common encodings if you are not sure what encoding to choose.
+    </p>
 
 
 
