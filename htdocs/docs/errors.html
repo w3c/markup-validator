@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: errors.html,v 1.29 2004-07-21 23:43:21 link Exp $"
---><!--#set var="date" value="\$Date: 2004-07-21 23:43:21 $"
+<!--#set var="revision" value="\$Id: errors.html,v 1.30 2005-03-18 06:43:33 ot Exp $"
+--><!--#set var="date" value="\$Date: 2005-03-18 06:43:33 $"
 --><!--#set var="title" value="Error Explanations for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -11,141 +11,372 @@
     </p>
 
 <h3 id="TableOfContents">Table of Contents</h3>
+  <div id="toc">
+    <ul>
+	<li>...</li>
+    </ul>
+  </div>
 
-    <div id="toc">
-      <ul>
-        <li><a href="#undef-id">ID "<var>FOO</var>" already defined</a></li>
-        <li><a href="#unterm-comment-1">entity end not allowed in comment</a></li>
-        <li><a href="#unterm-comment-2">name start character invalid: only s and comment allowed in comment declaration</a></li>
-        <li><a href="#bad-comment">unknown declaration type "<var>FOO</var>"</a></li>
-        <li><a href="#attr-quoted">an attribute value must be a literal unless it contains only name characters</a></li>
-        <li><a href="#attr-char">character `X' not allowed in attribute specification list</a></li>
-        <li><a href="#name-length">length of attribute value must not exceed LITLEN less NORMSEP (1022)</a></li>
-        <li><a href="#undef-tag">element "<var>FOO</var>" undefined</a></li>
-        <li><a href="#not-allowed">document type does not allow element "<var>FOO</var>" here</a></li>
-        <li><a href="#not-contained">document type does not allow element "<var>FOO</var>" here; assuming missing "<var>BAR</var>" start-tag</a></li>
-        <li><a href="#attr-undef">there is no attribute "<var>FOO</var>" for this element (in this <abbr title="HyperText Markup Language">HTML</abbr> version)</a></li>
-        <li><a href="#undef-attr-val">"<var>FOO</var>" is not a member of the group specified in the declared value of this attribute</a></li>
-        <li><a href="#bad-attr-char">syntax of attribute value does not conform to declared value</a></li>
-        <li><a href="#attr-bad-name">value of attribute "<var>FOO</var>" invalid: "#" cannot start a name</a></li>
-        <li><a href="#bad-abbrev-attr">"<var>FOO</var>" is not a member of a group specified for any attribute</a></li>
-        <li><a href="#attr-missing">required attribute "<var>FOO</var>" not specified</a></li>
-        <li><a href="#no-end-tag">end tag for "<var>FOO</var>" omitted, but its declaration does not permit this</a></li>
-        <li><a href="#floating-close">end tag for element "<var>FOO</var>" which is not open</a></li>
-        <li><a href="#omitted-content">end tag for "<var>FOO</var>" which is not finished</a></li>
-        <li><a href="#no-start-tag">start tag for "<var>FOO</var>" omitted, but its declaration does not permit this</a></li>
-        <li><a href="#bad-entity">unknown entity "<var>FOO</var>"</a></li>
-        <li><a href="#bad-char">non <abbr title="Standard Generalized Markup Language">SGML</abbr> character number ###</a></li>
-        <li><a href="#bad-pub-id">cannot generate system identifier for entity `HTML'</a></li>
-        <li><a href="#missing-subel">missing a required sub-element of "<var>FOO</var>"</a></li>
-        <li><a href="#start-tag">start tag was here</a></li>
-        <li><a href="#text-not-allowed"> text is not allowed here; try wrapping the text in a more descriptive container</a></li>
-        <li><a href="#unkn-att-val"> value of attribute "<var>FOO</var>" cannot be "<var>BAR</var>"; must be one of "<var>FOO</var>", "<var>BAR</var>", "<var>BAZ</var>"</a></li>
-        <li><a href="#no-attr-end">character "<var>FOO</var>" not allowed in attribute specification list possibly caused by a missing quotation mark ending a previous attribute value</a></li>
-        <li><a href="#dup-attr">duplicate specification of attribute "<var>FOO</var>"</a></li>
-        <li><a href="#invalid-attr-val">invalid attribute value</a></li>
-        <li><a href="#attr-spec-nmtoken">an attribute specification must start with a name or name token</a></li>
-        <li><a href="#inval-comment">invalid comment declaration; check your comment syntax</a></li>
-        <li><a href="#assuming-missing-starttag">element "<var>FOO</var>" not allowed here; assuming missing "<var>BAR</var>" start-tag</a></li>
-      </ul>
-    </div>
+  <div>
+    <h3 id="hasverbose">List of Validator errors and their explanation</h3>
+    <p>Below are all the validator's error messages for which we have an "explanation".</p>
 
-    <div><a name="skip" id="skip"></a>
-      <h3>Listing of errors and their explanation</h3>
-      <dl id="expl">
-        <dt id="undef-id"><code>ID "<var>FOO</var>" already defined</code></dt>
-        <dd>
-          <p>
-            You have defined the id/name "<var>FOO</var>" more
-            then once. You will also get a message telling you where it was
-            first defined. Be aware that this message may be the result of an
-            ambiguity in the specification. While user-agents must treat
-            values of the id attribute as case-sensitive, they must still be
-            case-insensitive unique in the document. See
-            <a href="http://www.w3.org/TR/html4/struct/links.html#h-12.2.1">Section
-            12.2.1 Syntax of anchor names</a> in the <abbr title="HyperText Markup Language">HTML</abbr> 4.01 Recommendation
-            for further information.
-          </p>
-        </dd>
-        <dt id="unterm-comment-1"><code>entity end not allowed in comment</code></dt>
-        <dd>
-          <p>
-            Unterminated comment. The position indicator points to the very end of
-            the file, where the problem was detected; to find the beginning of the
-            comment, try searching for the last occurrence of
-            "<code class="inline">&lt;!--</code>" in the document.
-          </p>
-        </dd>
-        <dt id="unterm-comment-2"><code>name start character invalid: only s and comment allowed in comment declaration</code></dt>
-        <dd>
-          <p>
-            Unterminated comments again. This time, you have a case like:
-          </p>
-          <code class="block">
-            &lt;!-- This is the first unterminated comment &gt;<br />
-            &lt;!-- This is the second one &gt;
-          </code>
-          <p>
-            The validator (correctly) interprets the "<code class="inline">--</code>"
-            in the second comment as terminating the first comment, and then interprets
-            the text of the second comment as text between comments, which is not
-            allowed.
-          </p>
-        </dd>
-        <dt id="bad-comment"><code>unknown declaration type "<var>FOO</var>"</code></dt>
-        <dd>
-          <p>
-            Most likely an invalid comment of the form
-            "<code class="inline">&lt;!invalid comment&gt;</code>"; the validator is
-            (correctly) attempting to interpret it as an
-            <a href="sgml.html#sgml"><abbr
-              title="Standard Generalized Markup Language">SGML</abbr></a>
-            markup declaration.
-          </p>
-        </dd>
-        <dt id="attr-quoted"><code>an attribute value must be a literal unless it contains only name characters</code></dt>
-        <dd>
-          <p>
-            You have an attribute whose value needs to be in quotes. If an
-            attribute value contains any character other than letters, digits,
-            hyphens and periods, it must be enclosed in double quotes (single
-            quotes would also be OK from an <a href="sgml.html#sgml"><abbr
-              title="Standard Generalized Markup Language">SGML</abbr></a>
-            standpoint, but some browsers don't recognize them).
-          </p>
-        </dd>
-        <dt id="attr-char"><code>character "<var>X</var>" not allowed in attribute specification list</code></dt>
-        <dd>
-          <p>
-            The validator has found a character inside an <abbr title="HyperText Markup Language">HTML</abbr> tag that isn't
-            allowed there. This usually means you didn't put an attribute value in
-            quotes when necessary. It also probably means that the character in
-            question is not allowed in the value of the attribute at all, or you
-            would have received the <a href="#attr-quoted">previous error</a>
-            instead. See <a href="#bad-attr-char">below</a> for more information.
-          </p>
-          <p>
-            You can also get in trouble by forgetting the closing quote on an
-            attribute. For instance:
-          </p>
-          <code class="block">
-            &lt;img src="http://foo.com/fred.gif&gt;<br />
-            &lt;img src="http://foo.com/joe.gif&gt;
-          </code>
-          <p>
-            The validator will (correctly) interpret this as a <code class="inline">src</code>
-            value of <code class="inline">"http://example.com/fred.gif&gt; &lt;img src="</code>, and then
-            choke on the following "<code>:</code>". In this case, the position indicator in
-            the error message may be several lines below the line with the missing
-            quote.
-          </p>
-        </dd>
-        <dt id="name-length"><code>length of attribute value must not exceed LITLEN less NORMSEP (1022)</code></dt>
-        <dd>
-          <p>
-            This usually occurs in conjunction with the
-            <a href="#attr-char">previous error</a>. It almost always means that
-            you've forgotten a closing quote on an attribute value. For instance,
+      <dl>
+      
+        <dt>25: general entity X not defined and no default entity</dt>
+        <dd><div class="ve mid-25">
+    <p>
+      This is usually a cascading error caused by a an undefined entity
+      reference or use of an unencoded ampersand (&amp;) in an URL or body
+      text. See the previous message for further details.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=25#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>28: unterminated comment: found end of entity inside comment</dt>
+        <dd><div class="ve mid-28">
+    <p>
+        Check that you are using a proper syntax for you comments, e.g: &lt;!-- comment here --&gt;. 
+        This error may appear if you forget the last "--" to close one comment, therefore including the rest 
+        of the content in your comment.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=28#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>38: literal is missing closing delimiter</dt>
+        <dd><div class="ve mid-38">
+    <p>
+     Did you forget to close a (double) quote mark?
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=38#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>42: unknown declaration type X</dt>
+        <dd><div class="ve mid-42">
+    <p>
+        This error may appear if you are using a bad syntax for you comments, such as "&lt;!invalid comment&gt;"
+        The proper syntax for comments is &lt;!-- your comment here --&gt;. 
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=42#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>63: character data is not allowed here</dt>
+        <dd><div class="ve mid-63">
+    <p>
+      You have used character data somewhere it is not permitted to appear.
+      Mistakes that can cause this error include putting text directly in the
+      body of the document without wrapping it in a container element (such as
+      a &lt;p&gt;aragraph&lt;/p&gt;) or forgetting to quote an attribute value
+      (where characters such as "%" and "/" are common, but cannot appear
+      without surrounding quotes).
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=63#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>64: document type does not allow element X here</dt>
+        <dd><div class="ve mid-64">
+    <p>
+      The element named above was found in a context where it is not allowed.
+      This could mean that you have incorrectly nested elements -- such as a
+      "style" element in the "body" section instead of inside "head" -- or
+      two elements that overlap (which is not allowed).
+    </p>
+    <p>
+      One common cause for this error is the use of XHTML syntax in HTML
+      documents. Due to HTML's rules of implicitly closed elements, this error
+      can create cascading effects. For instance, using XHTML's "self-closing"
+      tags for "meta" and "link" in the "head" section of a HTML document may
+      cause the parser to infer the end of the "head" section and the
+      beginning of the "body" section (where "link" and "meta" are not
+      allowed; hence the reported error).
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=64#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>65: document type does not allow element X here; missing one of Y start-tag</dt>
+        <dd><div class="ve mid-65">
+    <p>
+      The mentioned element is not allowed to appear in the context in which
+      you've placed it; the other mentioned elements are the only ones that
+      are both allowed there <em>and</em> can contain the element mentioned.
+      This might mean that you need a containing element, or possibly that
+      you've forgotten to close a previous element.
+    </p>
+    <p> 
+      One possible cause for this message is that you have attempted to put a
+      block-level element (such as "&lt;p&gt;" or "&lt;table&gt;") inside an
+      inline element (such as "&lt;a&gt;", "&lt;span&gt;", or "&lt;font&gt;").
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=65#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>68: end tag for X omitted, but its declaration does not permit this</dt>
+        <dd><div class="ve mid-68">
+    <ul>
+        <li>You forgot to close a tag, or</li>
+        <li>you used something inside this tag that was not allowed, and the validator
+        is complaining that the tag should be closed before such content can be allowed.</li>
+    </ul>
+    <p>    
+        The next message, "<code class="inline">start tag was here</code>"
+        points to the particular instance of the tag in question); the
+        positional indicator points to where the validator expected you to close the
+        tag.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=68#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>69: start tag was here</dt>
+        <dd><div class="ve mid-69">
+    <p>    
+        This is not an error, but rather  a pointer to the start tag of the element
+        the previous error referred to.    
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=69#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>70: end tag for X omitted, but OMITTAG NO was specified</dt>
+        <dd><div class="ve mid-70">
+      <p>
+      You may have neglected to close an element, or perhaps you meant to 
+      "self-close" an element, that is, ending it with "/&gt;" instead of "&gt;".
+    </p>
+</div>
+	<p>
+	  <a href="feedback.html?errmsg_id=70#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>71: start tag was here</dt>
+        <dd><div class="ve mid-71">
+    <p>    
+        This is not an error, but rather a pointer to the start tag of the element
+        the previous error referred to.    
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=71#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>73: end tag for X which is not finished</dt>
+        <dd><div class="ve mid-73">
+    <p>
+      Most likely, You nested tags and closed them in the wrong order. For 
+      example &lt;p&gt;&lt;em&gt;...&lt;/p&gt; is not acceptable, as &lt;em&gt;
+      must be closed before &lt;p&gt;. Acceptable nesting is: 
+      &lt;p&gt;&lt;em&gt;...&lt;/em&gt;&lt;/p&gt;  
+    </p>
+    <p>
+      Another possibility is that you used an element (e.g. 'ul') which requires
+      a child element (e.g. 'li') that you did not include. Hence the parent element
+      is "not finished", not complete.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=73#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>76: element X undefined</dt>
+        <dd><div class="ve mid-76">
+    <p>
+      You have used the element named above in your document, but the
+      document type you are using does not define an element of that name.
+      This error is often caused by:
+    </p> 
+    <ul>
+      <li>incorrect use of the "Strict" document type with a document that 
+      uses frames (e.g. you must use the "Frameset" document type to get 
+      the "&lt;frameset&gt;" element),
+      <li>by using vendor proprietary extensions such as "&lt;spacer&gt;"
+      or "&lt;marquee&gt;" (this is usually fixed by using CSS to achieve
+      the desired effect instead).</li>
+      <li>by using upper-case tags in XHTML (in XHTML attributes and elements
+      must be all lower-case.</li>
+    </ul>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=76#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>79: end tag for element X which is not open</dt>
+        <dd><div class="ve mid-79">
+    <p>
+      The Validator found an end tag for the above element, but that element is
+      not currently open. This is often caused by a leftover end tag from an
+      element that was removed during editing, or by an implicitly closed
+      element (if you have an error related to an element being used where it
+      is not allowed, this is almost certainly the case). In the latter case
+      this error will disappear as soon as you fix the original problem.
+    </p>
+    <p>
+      If this error occured in a script section of your document, you should probably
+      read this <a href="http://validator.w3.org/docs/help.html#faq-javascript">FAQ entry</a>.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=79#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>82: an attribute value must be a literal unless it contains only name characters</dt>
+        <dd><div class="ve mid-82">
+    <p>
+      You have used a character that is not considered a "name character" in an
+      attribute value. Which characters are considered "name characters" varies
+      between the different document types, but a good rule of thumb is that
+      unless the value contains <em>only</em> lower or upper case letters in the
+      range a-z you must put quotation marks around the value. In fact, unless
+      you have <em>extreme</em> file size requirements it is a very very good
+      idea to <em>always</em> put quote marks around your attribute values. It
+      is never wrong to do so, and very often it is absolutely necessary.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=82#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>105: an attribute specification must start with a name or name token</dt>
+        <dd><div class="ve mid-105">
+    <p>
+      An attribute name (and some attribute values) must start with one of
+      a restricted set of characters. This error usually indicates that
+        you have failed to add a closing quotation mark on a previous
+        attribute value (so the attribute value looks like the start of a
+        new attribute) or have used an attribute that is not defined
+        (usually a typo in a common attribute name).
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=105#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>107: the name and VI delimiter can be omitted from an attribute specification only if SHORTTAG YES is specified</dt>
+        <dd><div class="ve mid-107">
+    <p>"VI delimiter" is a technical term for the equal sign. This error message 
+    means that the name of an attribute and the equal sign cannot be omitted 
+    when specifying an attribute. A common cause for this error message is 
+    the use of "Attribute Minimization" in document types where it is not allowed, 
+    in <a href="http://www.w3.org/TR/xhtml1/#h-4.5">XHTML</a> for instance.</p>
+    <p>How to fix: For attributes such as compact, checked or selected, do not write
+    e.g &lt;option selected ... but rather &lt;option selected="selected" ...
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=107#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>108: there is no attribute X</dt>
+        <dd><div class="ve mid-108">
+    <p>
+      You have used the attribute named above in your document, but the
+      document type you are using does not support that attribute for this
+      element. This error is often caused by incorrect use of the "Strict"
+      document type with a document that uses frames (e.g. you must use
+      the "Transitional" document type to get the "target" attribute), or
+      by using vendor proprietary extensions such as "marginheight" (this
+      is usually fixed by using CSS to achieve the desired effect instead).
+    </p>
+    <p>
+      This error may also result if the element itself is not supported in
+      the document type you are using, as an undefined element will have no
+      supported attributes; in this case, see the element-undefined error
+      message for further information.
+    </p>
+    <p>
+      How to fix: check the spelling and case of the element and attribute, 
+      (Remember XHTML is all lower-case) and/or 
+      check that they are both allowed in the chosen document type, and/or
+      use CSS instead of this attribute.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=108#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>111: an attribute value literal can occur in an attribute specification list only after a VI delimiter</dt>
+        <dd><div class="ve mid-111">
+    <p>
+      Have you forgotten the "equal" sign marking the separation 
+      between the attribute and its declared value? 
+      Typical  syntax is <code>attribute="value"</code>.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=111#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>112: duplicate specification of attribute X</dt>
+        <dd><div class="ve mid-112">
+    <p>
+            You have specified an attribute more than once. For instance, you have
+            used the "<code class="inline">height</code>" attribute twice on the same
+            "<code class="inline">img</code>" tag.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=112#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>120: normalized length of attribute value literal must not exceed LITLEN (X); length was Y</dt>
+        <dd><div class="ve mid-120">
+    <p>
+    This error almost always means that you've forgotten a closing quote on an attribute value. For instance,
             in:
           </p>
           <code class="block">
@@ -164,393 +395,139 @@
             message points to where the attribute value <em>ended</em> &mdash; in
             this case, the <code class="inline">"joe.gif"</code> line.
           </p>
-        </dd>
-        <dt id="undef-tag"><code>element "<var>FOO</var>" undefined</code></dt>
-        <dd>
-          <p>
-            You've used an unknown tag (represented here by "<var>FOO</var>"). Make sure the
-            <abbr title="Document Type Definition">DTD</abbr> indicated by your
-            <code class="inline">DOCTYPE</code> actually includes this element.
-          </p>
-          <p>
-            If the tag in question is a frame-related tag you must use the
-            "Frameset" <abbr title="Document Type Definition">DTD</abbr>,
-            and if you use (deprecated) physical markup ("FONT"
-            and friends) you must use the "Transitional" <abbr
-              title="Document Type Definition">DTD</abbr>.
-          </p>
-        </dd>
-        <dt id="not-allowed"><code>document type does not allow element "<var>FOO</var>" here</code></dt>
-        <dd>
-          <p>
-            Straightforward, but not terribly informative. There are several
-            different mistakes that will generate this error message:
-          </p>
-          <ul>
-            <li>
-              Using an unknown tag. In this case, the next error will be
-              <a href="#undef-tag">element "<var>FOO</var>" undefined"</a>.
-            </li>
-            <li>
-              Using a tag in the wrong place. For instance,
-              <code class="inline">&lt;table&gt;&lt;td&gt;blah&lt;/table&gt;</code>
-              will cause this error. The trick here is that a <code
-                class="inline">&lt;table&gt;</code> element
-              cannot <em>directly</em> contain <code class="inline">&lt;td&gt;</code>
-              elements; it contains
-              one or more <code class="inline">&lt;tr&gt;</code> elements which in turn
-              contain <code class="inline">&lt;td&gt;</code> elements.
-              The above example should be
-              <code class="inline">&lt;table&gt;&lt;tr&gt;&lt;td&gt;blah&lt;/table&gt;</code>.
-            </li>
-          </ul>
-        </dd>
-        <dt><a id="not-contained"><code>document type does not allow element "<var>FOO</var>" here; assuming missing "<var>BAR</var>" start-tag</code></a></dt>
-        <dd>
-          <p>
-            Similar to the <a href="#not-allowed">previous error</a>, but more
-            specific: in this case, you have a "<var>FOO</var>" element that is not contained
-            in a "<var>BAR</var>" element when "<var>FOO</var>" is not allowed outside of
-            "<var>BAR</var>". Some of the most common causes of this error are:
-          </p>
-          <ul>
-            <li>
-              Using the "<code class="inline">&lt;dd&gt;</code>" element as a fake paragraph
-              indent. "<code class="inline">&lt;dd&gt;</code>" is not allowed outside of a
-              "<code class="inline">&lt;dl&gt;</code>" element.
-            </li>
-            <li>
-              Improper construction of a nested list. An inner "<code
-                class="inline">&lt;ul&gt;</code>" or "<code class="inline">&lt;ol&gt;</code>"
-              in a nested list may not appear directly within an outer
-              "<code class="inline">&lt;ol&gt;</code>" or "<code class="inline">&lt;ul&gt;</code>",
-              but only within an "<code class="inline">&lt;li&gt;</code>" of the outer
-              "<code class="inline">&lt;ol&gt;</code>" or "<code class="inline">&lt;ul&gt;</code>", as in the following example:
-              <code class="block">
-&lt;ol&gt;<br />
-&nbsp;&lt;li&gt;<samp>Obtain the following items:</samp><br />
-&nbsp;&nbsp;&lt;ul&gt;<br />
-&nbsp;&nbsp;&nbsp;&lt;li&gt;<samp>Ham</samp>&lt;/li&gt;<br />
-&nbsp;&nbsp;&nbsp;&lt;li&gt;<samp>Bread; one of:</samp><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;ul&gt;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;<samp>White</samp>&lt;/li&gt;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;<samp>Rye</samp>&lt;/li&gt;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;<samp>Whole wheat</samp>&lt;/li&gt;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;/ul&gt;<br />
-&nbsp;&nbsp;&nbsp;&lt;/li&gt;  &lt;!-- End of the "Bread" &lt;li&gt; --&gt;<br />
-&nbsp;&nbsp;&nbsp;&lt;li&gt;<samp>Cheese</samp>&lt;/li&gt;<br />
-&nbsp;&nbsp;&lt;/ul&gt;<br />
-&nbsp;&lt;/li&gt;  &lt;!-- End of the "Obtain" &lt;li&gt; --&gt;<br />
-&nbsp;&lt;li&gt;<samp>Place ham and cheese between two slices of bread</samp>&lt;/li&gt;<br />
-&nbsp;&lt;li&gt;<samp>Consume the resulting ham-and-cheese sandwich</samp>&lt;/li&gt;<br />
-&lt;/ol&gt;<br />
-              </code>
-              <p>
-                The "<code class="inline">&lt;/li&gt;</code>" end tags are optional and are only
-                included above to emphasize how the structure of the nested list
-                is arranged; if you omit them, the parser will infer their
-                presence in the locations shown above. 
-              </p>
-            </li>
-          </ul>
-          <p>
-            The validator has inserted a "<var>BAR</var>" start tag where it thinks there needs
-            to be one; it will probably complain later on that <a href="#no-end-tag">the
-            corresponding end tag is also missing</a>.
-          </p>
-        </dd>
-        <dt id="attr-undef"><code>there is no attribute "<var>FOO</var>" for this element</code></dt>
-        <dd>
-          <p>
-            You have used an attribute with an element that is defined not to have
-            that attribute. This is most commonly caused by using
-            vendor-specific attributes without setting the document type
-            appropriately.
-          </p>
-        </dd>
-        <dt id="undef-attr-val"><code>"<var>FOO</var>" is not a member of the group specified in the declared value of this attribute</code></dt>
-        <dd>
-          <p>
-            Similar to the <a href="#attr-undef">previous error</a>; this time,
-            you're using an attribute that is defined for the element, but with a
-            value that isn't defined for the attribute. For instance, the Netscape
-            extension <code class="inline">&lt;img align="absmiddle"&gt;</code> will
-            cause this error; "<code class="inline">absmiddle</code>" is not one of
-            the allowed values for the "<code class="inline">align</code>" attribute
-            of <code class="inline">&lt;img&gt;</code> (unless, of course, you provided
-            a Netscape document type).
-          </p>
-          <p>
-            If you're using the Netscape document type, the
-            "<code class="inline">border</code>" attribute of
-            "<code class="inline">&lt;table&gt;</code>" can cause this error.
-          </p>
-          <p>
-            This error can also be caused, oddly enough, by missing close quotes
-            on attribute values. For instance, given:
-          </p>
-          <code class="block">
-            &lt;img src="fred.png&gt; &lt;img src="joe.png&gt;
-          </code>
-          <p>
-            The validator will (correctly) see a <code class="inline">src</code> attribute of
-            "<code class="inline">fred.png&gt; &lt;img src=</code>", and then try to
-            interpret <code class="inline">joe.png</code> as an attribute of
-            <code class="inline">&lt;img&gt;</code>.
-          </p>
-        </dd>
-        <dt id="bad-attr-char"><code>syntax of attribute value does not conform to declared value</code></dt>
-        <dd>
-          <p>
-            Yet another attribute error; this time, the attribute in question was
-            defined to take a numeric value, or an <a href="sgml.html#sgml"><abbr
-              title="Standard Generalized Markup Language">SGML</abbr></a> identifier
-            value, and you used a character that doesn't match what it was expecting.
-          </p>
-          <p>
-            One potentially annoying source of this error is the
-            <code class="inline">width</code> attribute on the <code class="inline">td</code>
-            element. Whether intentionally or by oversight, the <abbr
-              title="HyperText Markup Language">HTML</abbr> 3.2 <abbr
-              title="Document Type Definition">DTD</abbr> defines this attribute to have a
-            value type of <code class="inline">NUMBER</code>, which means that
-            <code class="inline">&lt;td width="50%"&gt;</code> is not allowed.
-          </p>
-        </dd>
-        <dt id="attr-bad-name"><code>value of attribute "<var>FOO</var>" invalid: "<var>#</var>" cannot start a name</code></dt>
-        <dd>
-          <p>
-            A special case of <a href="#bad-attr-char">the previous error</a>; the
-            attribute in question is defined to take as value an <abbr
-              title="Standard Generalized Markup Language">SGML</abbr>
-            <code class="inline">NMTOKEN</code>, a name token, which must begin with
-            a letter.
-          </p>
-        </dd>
-        <dt id="bad-abbrev-attr"><code>"<var>FOO</var>" is not a member of a group specified for any attribute</code></dt>
-        <dd>
-          <p>
-            Another attribute error, this time referring to an "abbreviated"
-            (minimized) attribute. <a href="sgml.html#sgml"><abbr
-              title="Standard Generalized Markup Language">SGML</abbr></a> allows
-            you to omit the name of an attribute if the attribute value is unambiguous.
-            For instance, "<code class="inline">&lt;img ismap&gt;</code>" is actually an
-            abbreviation of <code class="inline">&lt;img ismap="ismap"&gt;</code>.
-            The validator has found something that looks like an abbreviated attribute
-            but doesn't match the value of any attribute for this element. For instance,
-            a typo like "<code class="inline">&lt;img is<em>n</em>ap&gt;</code>" would
-            produce this error.
-          </p>
-          <p>
-            A missing close quote on a previous attribute value can also trigger
-            this error if the next quote it finds is followed by something that
-            looks like an abbreviated attribute; for instance,
-          </p>
-          <code class="block">&lt;img src="fred.png&gt;&lt;img src="joe.png&gt;</code>
-          <p>
-            would produce this error, referring to the "attribute value"
-            <code class="inline">joe.png</code>.
-          </p>
-        </dd>
-        <dt id="attr-missing"><code>required attribute "<var>FOO</var>" not specified</code></dt>
-        <dd>
-          <p>
-            You left off a required attribute of the indicated element. The most
-            common such omitted attribute is the <code class="inline">alt</code>
-            attribute of the <code class="inline">area</code> or <code
-              class="inline">img</code> element; browsers will typically
-            use these to build a menu equivalent to your client-side image map if
-            the user has disabled image loading, so you'll want to use a
-            meaningful value here.
-          </p>
-        </dd>
-        <dt id="no-end-tag"><code>end tag for "<var>FOO</var>" omitted, but its declaration does not permit this</code></dt>
-        <dd>
-          <p>
-            You forgot to close something. "<var>FOO</var>" is the element you forgot to
-            close (and the next message, "<code class="inline">start tag was here</code>"
-            points to the particular instance of "<var>FOO</var>" in question); the
-            positional indicator points to where the validator expected you to close the
-            element. There are a few common ways that this can happen:
-          </p>
-          <ul>
-            <li>
-              <p>
-                You've put something inside the "<var>FOO</var>" element that isn't allowed
-                there. For instance,
-              </p>
-              <code class="block">
-                &lt;ul&gt;&lt;li&gt;&lt;h4&gt;<samp>fake font change</samp>&lt;/h4&gt;&lt;/li&gt;&lt;/ul&gt;
-              </code>
-              <p>
-                will cause this error, since headers aren't allowed inside <code
-                  class="inline">&lt;ul&gt;</code> elements; the validator assumes that you
-                meant to close the <code class="inline">&lt;ul&gt;</code> before opening the
-                <code class="inline">&lt;h4&gt;</code>.
-              </p>
-            </li>
-            <li>
-              Interlocked elements. For instance,
-              <code class="inline">&lt;b&gt;&lt;i&gt;<samp>nope</samp>&lt;/b&gt;&lt;/i&gt;</code> will cause
-              this error. <abbr title="HyperText Markup Language">HTML</abbr> requires that you close elements inside-out
-              &mdash; that is, the last element you opened is the first element you should
-              close. In this example, you'd have to close the <code
-                class="inline">&lt;i&gt;</code> before the <code
-                class="inline">&lt;b&gt;</code>.
-            </li>
-            <li>
-              Unclosed <code class="inline">&lt;a&gt;</code> tags. Yes, even
-              <code class="inline">&lt;a name="foo"&gt;</code> has to have a corresponding
-              <code class="inline">&lt;/a&gt;</code>. Note that an empty
-              <code class="inline">&lt;a name="foo"&gt;</code> element won't be recognized by some
-              browsers; be sure to put at least a word or two inside the
-              <code class="inline">&lt;a&gt;</code>.
-            </li>
-            <li>
-              Having unadorned text where the validator was expecting a
-              sub-element of "<var>FOO</var>". For instance,
-              <code class="inline">&lt;dl&gt;<samp>fake indent</samp>&lt;/dl&gt;</code>
-              will produce this error, since inside a
-              <code class="inline">&lt;dl&gt;</code>, the validator only expects to see
-              <code class="inline">&lt;dt&gt;</code> and <code
-                class="inline">&lt;dd&gt;</code> elements (i.e. you can't just put text
-              in there).
-            </li>
-            <li>
-              <p>
-                A tag of the form <code class="inline">&lt;table width=100%&gt;</code>.
-                The previous error should have been that the "<code class="inline">%</code>"
-                was "<a href="#attr-char"><code class="inline">not allowed in attribute
-                  specification list</code></a>".
-              </p>
-              <p>
-                What's happening here is that, in trying to get past the "<code
-                  class="inline">%</code>", the validator has become confused and
-                thinks the "<code class="inline">%</code>" is <em>inside</em> the
-                <code class="inline">&lt;table&gt;&hellip;&lt;/table&gt;</code>,
-                thus triggering the error message for the previous reason. This error
-                will likely be followed by mistaken complaints that your <code
-                  class="inline">&lt;tr&gt;</code> elements are "<a
-                  href="#not-allowed"><code class="inline">not allowed here</code></a>",
-                plus a complaint about your <code class="inline">&lt;/table&gt;</code>
-                end tag. The solution is to put the attribute value in quotes; ie.
-                <code class="inline">&lt;table width="100%"&gt;</code>.
-              </p>
-            </li>
-          </ul>
-          <p>
-            <strong>In general, you should always explicitly close all elements and
-            quote all attribute values!</strong>
-          </p>
-        </dd>
-        <dt id="floating-close"><code>end tag for element "<var>FOO</var>" which is not open</code></dt>
-        <dd>
-          <p>
-            The validator found an end tag, represented here by "<var>FOO</var>", without a
-            corresponding start tag. This frequently occurs in conjunction with
-            the <a href="#no-end-tag">previous error</a>. For instance, given
-            <code class="inline">&lt;b&gt;&lt;i&gt;<samp>nope</samp>&lt;/b&gt;&lt;/i&gt;</code>,
-            the validator will insert a <code class="inline">&lt;/i&gt;</code> before the
-            <code class="inline">&lt;/b&gt;</code>, and then will find the
-            <code class="inline">&lt;/i&gt;</code> after the <code
-              class="inline">&lt;/b&gt;</code> and will have nothing to match it with.
-          </p>
-          <p>
-            A subtle variation of this is <code
-              class="inline">&lt;p&gt;&lt;h4&gt;<samp>fake font change</samp>&lt;/h4&gt;&lt;/p&gt;</code>.
-            <code class="inline">&lt;h4&gt;</code> elements are not allowed inside
-            <code class="inline">&lt;p&gt;</code> elements, but since <abbr
-              title="HyperText Markup Language">HTML</abbr> allows you to
-            omit the <code class="inline">&lt;/p&gt;</code> end tag for paragraphs
-            (unlike <abbr title="eXtensible HyperText Markup Language">XHTML</abbr>),
-            the validator assumes that you meant <code
-              class="inline">&lt;p&gt;<em>&lt;/p&gt;</em>&lt;h4&gt;<samp>fake font
-                change</samp>&lt;/h4&gt;&lt;/p&gt;</code>, in which case the final
-            <code class="inline">&lt;/p&gt;</code> is indeed superfluous.
-          </p>
-          <p>
-            This error can also be caused by incorrectly supplying an end tag for
-            "empty" elements like <code class="inline">&lt;hr&gt;</code>,
-            <code class="inline">&lt;br&gt;</code>
-            or <code class="inline">&lt;img&gt;</code>. This is why they are written
-            <code class="inline">&lt;hr /&gt;</code>, <code class="inline">&lt;br /&gt;</code>, and
-            <code class="inline">&lt;img /&gt;</code> in <abbr title="eXtensible HyperText Markup Language">XHTML</abbr>.
-          </p>
-        </dd>
-        <dt id="omitted-content"><code>end tag for "<var>FOO</var>" which is not finished</code></dt>
-        <dd>
-          <p>
-            You have a "<var>FOO</var>" element, but you have omitted some required
-            sub-element of it. For instance, a <code class="inline">table</code>
-            with no <code class="inline">tr</code>'s would cause this error.
-          </p>
-        </dd>
-        <dt id="no-start-tag"><code>start tag for "<var>FOO</var>" omitted, but its declaration does not permit this</code></dt>
-        <dd>
-          <p>
-            The validator expected you to start a "<var>FOO</var>" element at the indicated
-            point. This probably means you've put unadorned text somewhere it
-            isn't allowed; for instance, <code class="inline">&lt;ul&gt;<samp>fake
-            indent</samp>&lt;/ul&gt;</code> will cause this error.
-          </p>
-        </dd>
-        <dt id="bad-entity"><code>unknown entity "<var>FOO</var>"</code></dt>
-        <dd>
-          <p>
-            The validator has found an entity (something like
-            <code class="inline">&amp;this;</code>) that it doesn't recognize.
-            There are a few possibilities:
-          </p>
-          <ul>
-            <li>
-              <p>
-                A reference to a <abbr title="Uniform Resource Locator">URL</abbr>
-                that uses "<code class="inline">&amp;</code>" as a separator between
-                parameters, such as "<code
-                  class="inline">http://example.com/cgi-bin/prog?x=1&amp;y=2</code>".
-              </p>
-              <p>
-                To solve this problem, simply replace all the <code
-                  class="inline">&amp;</code>'s
-                in attribute values with <code class="inline">&amp;amp;</code>
-                (user agents will convert them back before following the links).
-              </p>
-              <p>
-                Another way to get around this problem is for the author of the
-                <abbr title="Common Gateway Interface">CGI</abbr>
-                program to allow a different value to be used between arguments,
-                like "<code class="inline">;</code>" or "<code class="inline">|</code>",
-                which would allow the link to be coded as e.g.
-                <code class="inline">&lt;a href="http://example.com/cgi-bin/prog?x=1;y=2"&gt;</code>
-              </p>
-            </li>
-            <li>
-              An unterminated entity; for instance, "<code
-                class="inline">this&amp;ampthat</code>"
-              for "<code class="inline">this&amp;that</code>", which the validator
-              (correctly) interprets as a request for the entity "<code
-                class="inline">&amp;ampthat;</code>". Technically, any
-              non-alphanumeric character (such as a space) will suffice to
-              terminate the entity, but some browsers get this wrong; the safest
-              thing to do is to terminate all entities with a semicolon, turning
-              our example into "<code class="inline">this&amp;amp;that</code>".
-            </li>
-            <li>
-              The entity <code class="inline">&amp;quot;</code> in conjunction with the
-              <abbr title="HyperText Markup Language">HTML</abbr> 3.2 <code>DOCTYPE</code>.
-              This entity was <a
-                href="http://lists.w3.org/Archives/Public/www-html/1997Mar/0003.html">accidentally
-                omitted</a> from the most recent version of the <abbr
-                title="HyperText Markup Language">HTML</abbr> 3.2 <abbr
-                title="Document Type Definition">DTD</abbr>. You
-              should be able to ignore this error safely, though if you wish, you
-              can replace <code class="inline">&amp;quot;</code> with the equivalent
-              character entity <code class="inline">&amp;#34;</code>.
-            </li>
-          </ul>
-        </dd>
-        <dt id="bad-char"><code>non <abbr title="Standard Generalized Markup Language">SGML</abbr> character number ###</code></dt>
-        <dd>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=120#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>121: syntax of attribute value does not conform to declared value</dt>
+        <dd><div class="ve mid-121">
+    <p>
+      The value of an attribute contained something that is not allowed by
+      the specified syntax for that type of attribute. For instance, the
+      &ldquo;<code class="inline">selected</code>&rdquo; attribute must be
+      either minimized as &ldquo;<code class="inline">selected</code>&rdquo;
+      or spelled out in full as &ldquo;<code
+        class="inline">selected="selected"</code>&rdquo;; the variant
+      &ldquo;<code class="inline">selected=""</code>&rdquo; is not allowed.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=121#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>122: character X is not allowed in the value of attribute Y</dt>
+        <dd><div class="ve mid-122">
+    <p>
+      It is possible that you violated the naming convention for this attribute.
+      For example, <code>id</code> and <code>name</code> attributes must begin with
+      a letter, not a digit.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=122#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>123: value of attribute X must be a single token</dt>
+        <dd><div class="ve mid-123">
+    <p>
+      This attribute can not take a space-separated list of words as a value, but only one word ("token"). 
+      This may also be caused by the use of a space for the value of an attribute which does not permit it.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=123#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>124: value of attribute Y invalid: X cannot start a number token</dt>
+        <dd><div class="ve mid-124">
+    <p>
+      The value of this attribute should be a number, and you probably used a wrong syntax.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=124#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>125: value of attribute Y invalid: X cannot start a name</dt>
+        <dd><div class="ve mid-125">
+    <p>
+      It is possible that you violated the naming convention for this attribute.
+      For example, <code>id</code> and <code>name</code> attributes must begin with
+      a letter, not a digit.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=125#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>127: required attribute X not specified</dt>
+        <dd><div class="ve mid-127">
+    <p>
+      The attribute given above is required for an element that you've used,
+      but you have omitted it. For instance, in most HTML and XHTML document
+      types the "type" attribute is required on the "script" element and the
+      "alt" attribute is required for the "img" element.
+    </p>
+    <p>
+      Typical values for <code>type</code> are 
+      <code>type="text/css"</code> for <code>&lt;style&gt;</code>
+      and <code>type="text/javascript"</code> for <code>&lt;script&gt;</code>.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=127#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>131: value of attribute Y cannot be X; must be one of Z</dt>
+        <dd><div class="ve mid-131">
+    <p>
+      The value of the attribute is defined to be one of a list of possible
+      values but in the document it contained something that is not allowed
+      for that type of attribute. For instance, the &ldquo;<code
+        class="inline">selected</code>&rdquo; attribute must be either
+      minimized as &ldquo;<code class="inline">selected</code>&rdquo;
+      or spelled out in full as &ldquo;<code
+        class="inline">selected="selected"</code>&rdquo;; a value like
+      &ldquo;<code class="inline">selected="true"</code>&rdquo; is not
+      allowed.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=131#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>137: invalid comment declaration: found character X outside comment but inside comment declaration</dt>
+        <dd><div class="ve mid-137">
+    <p>
+        Check that you are using a proper syntax for you comments, e.g: &lt;!-- comment here --&gt;. 
+        This error may appear if you forget the last "--" to close one comment, and later open another.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=137#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>139: non SGML character number X</dt>
+        <dd><div class="ve mid-139">
           <p>
             You have used an illegal character in your text.
             <abbr title="HyperText Markup Language">HTML</abbr> uses the standard
@@ -579,113 +556,3036 @@
             your <abbr title="HyperText Markup Language">HTML</abbr> documents, be sure to use the "Save as ASCII" or similar
             command to save the document without formatting information.
           </p>
-        </dd>
-        <dt id="bad-pub-id"><code>cannot generate system identifier for entity "HTML"</code></dt>
-        <dd>
-          <p>
-            Your <code class="inline">DOCTYPE</code> declaration contains a public identifier
-            that the validator does not recognize. See the <a
-              href="sgml.html#doctype">discussion of <code class="inline">DOCTYPE</code></a>
-            for an explanation of what's happening, and what public identifiers the
-            validator recognizes.
-          </p>
-        </dd>
-        <dt id="missing-subel"><code>missing a required sub-element of "<var>FOO</var>"</code></dt>
-        <dd>
-          <p>
-            The element "<var>FOO</var>" is defined to <em>require</em> one or more
-            sub-elements. One example is <code class="inline">tr</code> which requires
-            one or more <code class="inline">td</code> or <code class="inline">th</code>
-            elements.
-          </p>
-        </dd>
-        <dt id="start-tag"><code>start tag was here</code></dt>
-        <dd>
-          <p>
-            Not an error, but rather a pointer to the start tag of the element
-            the previous error referred to.
-          </p>
-        </dd>
-        <dt id="text-not-allowed"><code> text is not allowed here; try wrapping the text in a more descriptive container</code></dt>
-        <dd>
-          <p>
-            The document contained bare text where an element was expected.
-            For instance, you must wrap text in <code class="inline">&lt;p&gt;</code>
-            if it appears directly inside the <code class="inline">&lt;body&gt;</code>.
-          </p>
-          <p>
-            This error may also indicate an unquoted attribute value containing
-            a reserved character (such as "<code class="inline">/</code>") which
-            terminates the attribute. The net effect is that the rest of the attribute
-            value appears to be plain text, outside any element, to an <abbr
-              title="Standard Generalized Markup Language">SGML</abbr> parser.
-           </p>
-        </dd>
-        <dt id="unkn-att-val"><code> value of attribute "<var>FOO</var>" cannot be "<var>BAR</var>"; must be one of "<var>FOO</var>", "<var>BAR</var>", "<var>BAZ</var>"</code></dt>
-        <dd>
-          <p>
-            An attribute was specified to contain one of a set of predefined
-            values and you have used a value that is not in that set. The error
-            message tells which attribute value was unknown and the possible
-            legal values for this attribute.
-          </p>
-        </dd>
-        <dt id="no-attr-end"><code>character "<var>FOO</var>" not allowed in attribute specification list possibly caused by a missing quotation mark ending a previous attribute value</code></dt>
-        <dd>
-          <p>
-            A character that is illegal in the attribute list for a particular
-            attribute was encountered. It's is likely that this is a result of
-            a missing quote character on a previous attribute value.
-          </p>
-        </dd>
-        <dt id="dup-attr"><code>duplicate specification of attribute "<var>FOO</var>"</code></dt>
-        <dd>
-          <p>
-            You have specified an attribute more than once. For instance, you have
-            used the "<code class="inline">height</code>" attribute twice on the same
-            "<code class="inline">img</code>" tag.
-          </p>
-        </dd>
-        <dt id="invalid-attr-val"><code>invalid attribute value</code></dt>
-        <dd>
-          <p>
-            The value of this attribute is not a legal value for attributes. For
-            instance, the attribute cannot be the empty string. This is distinct
-            from errors related to illegal values for a specific attribute.
-          </p>
-        </dd>
-        <dt id="attr-spec-nmtoken"><code>an attribute specification must start with a name or name token</code></dt>
-        <dd>
-          <p>
-            An attribute name (and some attribute values) must start with one of
-            a restricted set of characters. This error usually indicates that
-            you have failed to add a closing quotation mark on a previous
-            attribute value (so the attribute value looks like the start of a
-            new attribute) or have used an attribute that is not defined
-            (usually a typo in a common attribute name).
-          </p>
-        </dd>
-        <dt id="inval-comment"><code>invalid comment declaration; check your comment syntax</code></dt>
-        <dd>
-          <p>
-            There is a syntax error in an <abbr title="Standard Generalized Markup Language">SGML</abbr> Comment Declaration. This may be
-            caused by too many or too few hyphens "-" or that you have included
-            an invalid character in the comment. The next message will be
-            "comment declaration started here".
-          </p>
-        </dd>
-        <dt id="assuming-missing-starttag"><code>element "<var>FOO</var>" not allowed here; assuming missing "<var>BAR</var>" start-tag</code></dt>
-        <dd>
-          <p>
-            The referenced element "<var>FOO</var>" isn't allowed in the context it occurs
-            in, but it would be if it was wrapped in a "<var>BAR</var>" element. The
-            Validator has assumed that you have forgotten to add a "<var>BAR</var>"
-            start tag and continued validation as if it was there. You should
-            check if this is the case and insert the proper tag.
-          </p>
-        </dd>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=139#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>141: ID X already defined</dt>
+        <dd><div class="ve mid-141">
+    <p>
+      An "id" is a unique identifier. Each time this attribute is used in a document
+      it must have a different value. If you are using this attribute as a hook for
+      style sheets it may be more appropriate to use classes (which group elements)
+      than id (which are used to identify exactly one element).
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=141#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>183: reference to non-existent ID X</dt>
+        <dd><div class="ve mid-183">
+    <p>This error can be triggered by:</p>
+    <ul>
+      <li>A non-existent input, select or textarea element</li>
+      <li>A missing id attribute</li>
+      <li>A typographical error in the id attribute</li>
+    </ul>
+    <p>Try to check the spelling and case of the id you are referring to.</p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=183#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>247: NET-enabling start-tag requires SHORTTAG YES</dt>
+        <dd><div class="ve mid-247">
+    <p>
+      The sequence &lt;FOO /&gt; can be interpreted in at least two different ways,
+      depending on the DOCTYPE of the document. For HMTL 4.01 Strict, the '/'
+      terminates the tag &lt;FOO (with an implied '&gt;').  However, since many
+      browsers don't interpret it this way, even in the presence of an HMTL 4.01 Strict
+     DOCTYPE, it is best to avoid it completely in pure HTML documents and 
+     reserve its use solely for those written in XHTML.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=247#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>325: reference to entity X for which no system identifier could be generated</dt>
+        <dd><div class="ve mid-325">
+    <p>
+      This is usually a cascading error caused by a an undefined entity
+      reference or use of an unencoded ampersand (&amp;) in an URL or body
+      text. See the previous message for further details.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=325#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>338: cannot generate system identifier for general entity X</dt>
+        <dd><div class="ve mid-338">
+    <p>
+      An entity reference was found in the document, but there is no reference
+      by that name defined. Often this is caused by misspelling the reference
+      name, unencoded ampersands, or by leaving off the trailing semicolon (;).
+      <strong>The most common cause of this error is unencoded ampersands in
+      URLs</strong> as described by the <a
+        href="http://www.htmlhelp.com/">WDG</a> in "<a
+        href="http://www.htmlhelp.com/tools/validator/problems.html#amp">Ampersands
+        in URLs</a>".
+    </p>
+    <p>
+      Entity references start with an ampersand (&amp;) and end with a
+      semicolon (;). If you want to use a literal ampersand in your document
+      you must encode it as "&amp;amp;" (<em>even inside URLs!</em>). Be
+      careful to end entity references with a semicolon or your entity
+      reference may get interpreted in connection with the following text.
+      Also keep in mind that named entity references are case-sensitive;
+      &amp;Aelig; and &amp;aelig; are different characters.
+    </p>
+    <p>
+      Note that in most documents, errors related to entity references will
+      trigger up to 5 separate messages from the Validator. Usually these
+      will all disappear when the original problem is fixed.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=338#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>344: no document type declaration; implying X</dt>
+        <dd><div class="ve mid-344">
+    <p>
+	The checked page did not contain a document type ("DOCTYPE") declaration.
+	The Validator has tried to validate with a fallback DTD,
+        but this is quite likely to be incorrect and will generate a large number
+        of incorrect error messages. It is highly recommended that you insert the
+	proper DOCTYPE declaration in your document -- instructions for doing this
+	are given above -- and it is necessary to have this declaration before the
+ 	page can be declared to be valid.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=344#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>387: S separator in comment declaration</dt>
+        <dd><div class="ve mid-387">
+    <p>
+    This may happen if you have consecutive comments but did not close one of them properly. 
+    The proper syntax for comments is &lt;!-- my comment --&gt;.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=387#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>394: reference not terminated by REFC delimiter</dt>
+        <dd><div class="ve mid-394">
+    <p>
+      If you meant to include an entity that starts with "&amp;", then you should 
+      terminate it with ";".  Another reason for this error message is that 
+      you inadvertently created an entity by failing to escape an "&amp;" 
+      character just before this text.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=394#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>403: reference to external entity in attribute value</dt>
+        <dd><div class="ve mid-403">
+    <p>
+      This is generally the sign of an ampersand that was not properly escaped for inclusion 
+      in an attribute, in a href for example. You will need to escape all instances of '&amp;'
+      into '&amp;amp;'.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=403#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>404: character X is the first character of a delimiter but occurred as data</dt>
+        <dd><div class="ve mid-404">
+    <p>
+      If you wish to include the "&lt;" character in your output, you should escape it as "&amp;lt;".  
+      Another possibility is that you forgot to close quotes in a previous tag.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=404#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt>410: reference to non-SGML character</dt>
+        <dd><div class="ve mid-410">
+    <p>
+      You've included a character reference to a character that is not defined
+      in the document type you've chosen. This is most commonly caused by
+      numerical references to characters from vendor proprietary
+      character repertoires. Often the culprit will be fancy or typographical
+      quote marks from either the Windows or Macintosh character repertoires.
+    </p>
+    <p>
+      The solution is to reference UNICODE characters instead. A list of
+      common characters from the Windows character repertoire and their
+      UNICODE equivalents can be found in the document "<a
+        href="http://www.cs.tut.fi/~jkorpela/www/windows-chars.html#list"
+      >On the use of some MS Windows characters in HTML</a>" maintained by
+      <a href="http://www.cs.tut.fi/~jkorpela/">Jukka Korpela</a>
+      &lt;<a href="mailto:jkorpela@cs.tut.fi">jkorpela@cs.tut.fi</a>&gt;.
+    </p>
+  </div>
+	<p>
+	  <a href="feedback.html?errmsg_id=410#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
       </dl>
-    </div>
+
+    <h3 id="noverbose">Errors without explanation</h3>
+    <p>The following validation errors do not have an explanation yet. We invite you to use the 
+    <a href="../feedback.html#errormsg">feedback channels</a> to send your suggestions.</p>
+    <ul>
+	
+        <li><p>1: length of parameter entity name must not exceed NAMELEN less the length of the PERO delimiter (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=1#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>2: length of number must not exceed NAMELEN (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=2#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>3: length of attribute value must not exceed LITLEN less NORMSEP (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=3#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>4: a name group is not allowed in a parameter entity reference in the prolog</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=4#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>5: an entity end in a token separator must terminate an entity referenced in the same group</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=5#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>6: character X invalid: only Y and token separators allowed</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=6#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>7: a parameter separator is required after a number that is followed by a name start character</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=7#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>8: character X invalid: only Y and parameter separators allowed</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=8#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>9: an entity end in a parameter separator must terminate an entity referenced in the same declaration</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=9#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>10: an entity end is not allowed in a token separator that does not follow a token</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=10#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>11: X is not a valid token here</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=11#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>12: a parameter entity reference can only occur in a group where a token could occur</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=12#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>13: token X has already occurred in this group</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=13#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>14: the number of tokens in a group must not exceed GRPCNT (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=14#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>15: an entity end in a literal must terminate an entity referenced in the same literal</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=15#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>16: character X invalid: only minimum data characters allowed</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=16#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>18: a parameter literal in a data tag pattern must not contain a numeric character reference to a non-SGML character</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=18#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>19: a parameter literal in a data tag pattern must not contain a numeric character reference to a function character</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=19#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>20: a name group is not allowed in a general entity reference in a start tag</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=20#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>21: a name group is not allowed in a general entity reference in the prolog</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=21#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>22: X is not a function name</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=22#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>23: X is not a character number in the document character set</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=23#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>24: parameter entity X not defined</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=24#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>26: RNI delimiter must be followed by name start character</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=26#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>29: comment started here</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=29#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>30: only one type of connector should be used in a single group</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=30#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>31: X is not a reserved name</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=31#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>32: X is not allowed as a reserved name here</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=32#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>33: length of interpreted minimum literal must not exceed reference LITLEN (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=33#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>34: length of tokenized attribute value must not exceed LITLEN less NORMSEP (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=34#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>35: length of system identifier must not exceed LITLEN (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=35#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>36: length of interpreted parameter literal must not exceed LITLEN (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=36#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>37: length of interpreted parameter literal in data tag pattern must not exceed DTEMPLEN (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=37#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>39: X invalid: only Y and parameter separators are allowed</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=39#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>40: X invalid: only Y and token separators are allowed</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=40#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>41: X invalid: only Y and token separators are allowed</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=41#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>43: X declaration not allowed in DTD subset</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=43#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>44: character X not allowed in declaration subset</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=44#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>45: end of document in DTD subset</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=45#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>46: character X not allowed in prolog</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=46#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>47: end of document in prolog</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=47#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>48: X declaration not allowed in prolog</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=48#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>49: X used both a rank stem and generic identifier</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=49#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>50: omitted tag minimization parameter can be omitted only if OMITTAG NO is specified</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=50#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>51: element type X already defined</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=51#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>52: entity reference with no applicable DTD</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=52#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>53: invalid comment declaration: found X outside comment but inside comment declaration</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=53#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>54: comment declaration started here</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=54#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>55: X declaration not allowed in instance</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=55#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>56: non-SGML character not allowed in content</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=56#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>57: no current rank for rank stem X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=57#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>58: duplicate attribute definition list for notation X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=58#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>59: duplicate attribute definition list for element X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=59#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>60: entity end not allowed in end tag</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=60#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>61: character X not allowed in end tag</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=61#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>62: X invalid: only S separators and TAGC allowed here</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=62#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>66: document type does not allow element X here; assuming missing Y start-tag</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=66#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>67: no start tag specified for implied empty element X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=67#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>72: start tag omitted for element X with declared content</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=72#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>74: start tag for X omitted, but its declaration does not permit this</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=74#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>75: number of open elements exceeds TAGLVL (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=75#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>77: empty end tag but no open elements</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=77#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>78: X not finished but containing element ended</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=78#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>80: internal parameter entity X cannot be CDATA or SDATA</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=80#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>81: character X not allowed in attribute specification list</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=81#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>83: entity end not allowed in attribute specification list except in attribute value literal</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=83#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>84: external parameter entity X cannot be CDATA, SDATA, NDATA or SUBDOC</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=84#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>85: duplicate declaration of entity X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=85#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>86: duplicate declaration of parameter entity X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=86#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>87: a reference to a PI entity is allowed only in a context where a processing instruction could occur</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=87#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>88: a reference to a CDATA or SDATA entity is allowed only in a context where a data character could occur</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=88#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>89: a reference to a subdocument entity or external data entity is allowed only in a context where a data character could occur</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=89#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>90: a reference to a subdocument entity or external data entity is not allowed in replaceable character data</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=90#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>91: the number of open entities cannot exceed ENTLVL (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=91#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>92: a reference to a PI entity is not allowed in replaceable character data</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=92#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>93: entity X is already open</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=93#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>94: short reference map X not defined</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=94#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>95: short reference map in DTD must specify associated element type</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=95#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>96: short reference map in document instance cannot specify associated element type</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=96#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>97: short reference map X for element Y not defined in DTD</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=97#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>98: X is not a short reference delimiter</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=98#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>99: short reference delimiter X already mapped in this declaration</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=99#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>100: no document element</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=100#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>102: entity end not allowed in processing instruction</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=102#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>103: length of processing instruction must not exceed PILEN (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=103#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>104: missing PIC delimiter</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=104#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>106: X is not a member of a group specified for any attribute</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=106#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>109: an attribute value specification must start with a literal or a name character</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=109#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>110: length of name token must not exceed NAMELEN (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=110#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>113: duplicate definition of attribute X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=113#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>114: data attribute specification must be omitted if attribute specification list is empty</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=114#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>115: marked section end not in marked section declaration</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=115#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>116: number of open marked sections must not exceed TAGLVL (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=116#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>117: missing marked section end</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=117#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>118: marked section started here</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=118#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>119: entity end in character data, replaceable character data or ignored marked section</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=119#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>126: non-impliable attribute X not specified but OMITTAG NO and SHORTTAG NO</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=126#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>128: first occurrence of CURRENT attribute X not specified</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=128#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>129: X is not a notation name</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=129#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>130: X is not a general entity name</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=130#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>132: X is not a data or subdocument entity</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=132#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>133: content model is ambiguous: when no tokens have been matched, both the Y and Z occurrences of X are possible</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=133#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>134: content model is ambiguous: when the current token is the Y occurrence of X, both the a and b occurrences of Z are possible</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=134#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>135: content model is ambiguous: when the current token is the Y occurrence of X and the innermost containing AND group has been matched, both the a and b occurrences of Z are possible</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=135#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>136: content model is ambiguous: when the current token is the Y occurrence of X and the innermost Z containing AND groups have been matched, both the b and c occurrences of a are possible</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=136#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>138: comment declaration started here</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=138#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>140: data or replaceable character data in declaration subset</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=140#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>142: ID X first defined here</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=142#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>143: value of fixed attribute X not equal to default</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=143#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>144: character X is not significant in the reference concrete syntax and so cannot occur in a comment in the SGML declaration</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=144#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>145: minimum data of first minimum literal in SGML declaration must be ""ISO 8879:1986"" or ""ISO 8879:1986 (ENR)"" or ""ISO 8879:1986 (WWW)"" not X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=145#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>146: parameter before LCNMSTRT must be NAMING not X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=146#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>147: unexpected entity end in SGML declaration: only X, S separators and comments allowed</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=147#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>148: X invalid: only Y and parameter separators allowed</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=148#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>149: magnitude of X too big</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=149#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>150: character X is not significant in the reference concrete syntax and so cannot occur in a literal in the SGML declaration except as the replacement of a character reference</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=150#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>151: X is not a valid syntax reference character number</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=151#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>152: a parameter entity reference cannot occur in an SGML declaration</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=152#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>153: X invalid: only Y and parameter separators are allowed</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=153#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>154: cannot continue because of previous errors</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=154#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>155: SGML declaration cannot be parsed because the character set does not contain characters having the following numbers in ISO 646: X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=155#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>156: the specified character set is invalid because it does not contain the minimum data characters having the following numbers in ISO 646: X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=156#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>157: character numbers declared more than once: X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=157#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>158: character numbers should have been declared UNUSED: X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=158#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>159: character numbers missing in base set: X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=159#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>160: characters in the document character set with numbers exceeding X not supported</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=160#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>161: invalid formal public identifier X: missing //</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=161#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>162: invalid formal public identifier X: no SPACE after public text class</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=162#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>163: invalid formal public identifier X: invalid public text class</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=163#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>164: invalid formal public identifier X: public text language must be a name containing only upper case letters</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=164#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>165: invalid formal public identifer X: public text display version not permitted with this text class</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=165#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>166: invalid formal public identifier X: extra field</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=166#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>167: public text class of public identifier in notation identifier must be NOTATION</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=167#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>168: base character set X is unknown</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=168#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>169: delimiter set is ambiguous: X and Y can be recognized in the same mode</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=169#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>170: characters with the following numbers in the syntax reference character set are significant in the concrete syntax but are not in the document character set: X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=170#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>171: there is no unique character in the document character set corresponding to character number X in the syntax reference character set</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=171#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>172: there is no unique character in the internal character set corresponding to character number X in the syntax reference character set</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=172#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>173: the character with number X in ISO 646 is significant but has no representation in the syntax reference character set</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=173#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>174: capacity set X is unknown</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=174#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>175: capacity X already specified</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=175#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>176: value of capacity X exceeds value of TOTALCAP</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=176#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>177: syntax X is unknown</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=177#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>178: UCNMSTRT must have the same number of characters as LCNMSTRT</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=178#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>179: UCNMCHAR must have the same number of characters as LCNMCHAR</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=179#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>180: number of open subdocuments exceeds quantity specified for SUBDOC parameter in SGML declaration (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=180#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>181: entity X declared SUBDOC, but SUBDOC NO specified in SGML declaration</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=181#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>182: a parameter entity referenced in a parameter separator must end in the same declaration</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=182#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>184: generic identifier X used in DTD but not defined</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=184#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>185: X not finished but document ended</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=185#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>186: cannot continue with subdocument because of previous errors</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=186#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>187: no document type declaration; will parse without validation</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=187#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>188: no internal or external document type declaration subset; will parse without validation</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=188#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>189: this is not an SGML document</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=189#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>190: length of start-tag before interpretation of literals must not exceed TAGLEN (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=190#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>191: a parameter entity referenced in a token separator must end in the same group</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=191#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>192: the following character numbers are shunned characters that are not significant and so should have been declared UNUSED: X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=192#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>193: there is no unique character in the specified document character set corresponding to character number X in ISO 646</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=193#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>194: length of attribute value must not exceed LITLEN less NORMSEP (-X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=194#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>195: length of tokenized attribute value must not exceed LITLEN less NORMSEP (-X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=195#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>196: concrete syntax scope is INSTANCE but value of X quantity is less than value in reference quantity set</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=196#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>197: public text class of formal public identifier of base character set must be CHARSET</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=197#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>198: public text class of formal public identifier of capacity set must be CAPACITY</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=198#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>199: public text class of formal public identifier of concrete syntax must be SYNTAX</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=199#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>200: when there is an MSOCHAR there must also be an MSICHAR</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=200#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>201: character number X in the syntax reference character set was specified as a character to be switched but is not a markup character</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=201#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>202: character number X was specified as a character to be switched but is not in the syntax reference character set</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=202#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>203: character numbers X in the document character set have been assigned the same meaning, but this is the meaning of a significant character</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=203#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>204: character number X assigned to more than one function</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=204#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>205: X is already a function name</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=205#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>206: characters with the following numbers in ISO 646 are significant in the concrete syntax but are not in the document character set: X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=206#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>207: general delimiter X consists solely of function characters</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=207#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>208: letters assigned to LCNMCHAR, UCNMCHAR, LCNMSTRT or UCNMSTRT: X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=208#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>209: digits assigned to LCNMCHAR, UCNMCHAR, LCNMSTRT or UCNMSTRT: X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=209#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>210: character number X cannot be assigned to LCNMCHAR, UCNMCHAR, LCNMSTRT or UCNMSTRT because it is RE</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=210#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>211: character number X cannot be assigned to LCNMCHAR, UCNMCHAR, LCNMSTRT or UCNMSTRT because it is RS</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=211#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>212: character number X cannot be assigned to LCNMCHAR, UCNMCHAR, LCNMSTRT or UCNMSTRT because it is SPACE</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=212#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>213: separator characters assigned to LCNMCHAR, UCNMCHAR, LCNMSTRT or UCNMSTRT: X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=213#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>214: character number X cannot be switched because it is a Digit, LC Letter or UC Letter</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=214#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>215: pointless for number of characters to be 0</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=215#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>216: X cannot be the replacement for a reference reserved name because it is another reference reserved name</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=216#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>217: X cannot be the replacement for a reference reserved name because it is the replacement of another reference reserved name</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=217#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>218: replacement for reserved name X already specified</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=218#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>219: X is not a valid name in the declared concrete syntax</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=219#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>220: X is not a valid short reference delimiter because it has more than one B sequence</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=220#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>221: X is not a valid short reference delimiter because it is adjacent to a character that can occur in a blank sequence</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=221#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>222: length of delimiter X exceeds NAMELEN (Y)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=222#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>223: length of reserved name X exceeds NAMELEN (Y)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=223#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>224: character numbers assigned to both LCNMCHAR or UCNMCHAR and LCNMSTRT or UCNMSTRT: X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=224#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>225: when the concrete syntax scope is INSTANCE the syntax reference character set of the declared syntax must be the same as that of the reference concrete syntax</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=225#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>226: end-tag minimization should be O for element with declared content of EMPTY</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=226#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>227: end-tag minimization should be O for element X because it has CONREF attribute</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=227#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>228: element X has a declared content of EMPTY and a CONREF attribute</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=228#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>229: element X has a declared content of EMPTY and a NOTATION attribute</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=229#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>230: declared value of data attribute cannot be ENTITY, ENTITIES, ID, IDREF, IDREFS or NOTATION</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=230#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>231: default value of data attribute cannot be CONREF or CURRENT</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=231#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>232: number of attribute names and name tokens (X) exceeds ATTCNT (Y)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=232#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>233: if the declared value is ID the default value must be IMPLIED or REQUIRED</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=233#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>234: the attribute definition list already declared attribute X as the ID attribute</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=234#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>235: the attribute definition list already declared attribute X as the NOTATION attribute</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=235#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>236: token X occurs more than once in attribute definition list</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=236#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>237: no attributes defined for notation X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=237#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>238: notation X for entity Y undefined</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=238#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>239: entity X undefined in short reference map Y</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=239#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>240: notation X is undefined but had attribute definition</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=240#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>241: length of interpreted parameter literal in bracketed text plus the length of the bracketing delimiters must not exceed LITLEN (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=241#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>242: length of rank stem plus length of rank suffix must not exceed NAMELEN (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=242#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>243: document instance must start with document element</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=243#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>244: content model nesting level exceeds GRPLVL (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=244#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>245: grand total of content tokens exceeds GRPGTCNT (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=245#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>246: unclosed start-tag requires SHORTTAG YES</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=246#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>248: unclosed end-tag requires SHORTTAG YES</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=248#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>249: DTDs other than base allowed only if CONCUR YES or EXPLICIT YES</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=249#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>250: end of entity other than document entity after document element</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=250#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>251: X declaration illegal after document element</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=251#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>252: character reference illegal after document element</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=252#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>253: entity reference illegal after document element</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=253#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>254: marked section illegal after document element</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=254#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>255: the X occurrence of Y in the content model for Z cannot be excluded at this point because it is contextually required</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=255#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>256: the X occurrence of Y in the content model for Z cannot be excluded because it is neither inherently optional nor a member of an OR group</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=256#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>257: an attribute value specification must be an attribute value literal unless SHORTTAG YES is specified</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=257#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>258: value cannot be specified both for notation attribute and content reference attribute</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=258#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>259: notation X already defined</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=259#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>260: short reference map X already defined</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=260#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>261: first defined here</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=261#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>262: general delimiter role X already defined</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=262#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>263: number of ID references in start-tag must not exceed GRPCNT (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=263#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>264: number of entity names in attribute specification list must not exceed GRPCNT (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=264#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>265: normalized length of attribute specification list must not exceed ATTSPLEN (X); length was Y</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=265#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>266: short reference delimiter X already specified</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=266#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>267: single character short references were already specified for character numbers: X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=267#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>268: default entity used in entity attribute X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=268#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>269: reference to entity X uses default entity</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=269#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>270: entity X in short reference map Y uses default entity</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=270#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>271: no DTD X declared</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=271#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>272: LPD X has neither internal nor external subset</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=272#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>273: element types have different link attribute definitions</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=273#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>274: link set X already defined</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=274#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>275: empty result attribute specification</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=275#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>276: no source element type X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=276#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>277: no result element type X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=277#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>278: end of document in LPD subset</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=278#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>279: X declaration not allowed in LPD subset</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=279#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>280: ID link set declaration not allowed in simple link declaration subset</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=280#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>281: link set declaration not allowed in simple link declaration subset</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=281#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>282: attributes can only be defined for base document element (not X) in simple link declaration subset</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=282#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>283: a short reference mapping declaration is allowed only in the base DTD</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=283#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>284: a short reference use declaration is allowed only in the base DTD</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=284#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>285: default value of link attribute cannot be CURRENT or CONREF</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=285#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>286: declared value of link attribute cannot be ID, IDREF, IDREFS or NOTATION</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=286#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>287: only fixed attributes can be defined in simple LPD</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=287#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>288: only one ID link set declaration allowed in an LPD subset</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=288#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>289: no initial link set defined for LPD X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=289#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>290: notation X not defined in source DTD</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=290#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>291: result document type in simple link specification must be implied</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=291#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>292: simple link requires SIMPLE YES</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=292#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>293: implicit link requires IMPLICIT YES</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=293#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>294: explicit link requires EXPLICIT YES</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=294#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>295: LPD not allowed before first DTD</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=295#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>296: DTD not allowed after an LPD</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=296#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>297: definition of general entity X is unstable</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=297#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>298: definition of parameter entity X is unstable</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=298#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>299: multiple link rules for ID X but not all have link attribute specifications</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=299#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>300: multiple link rules for element type X but not all have link attribute specifications</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=300#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>301: link type X does not have a link set Y</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=301#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>302: link set use declaration for simple link process</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=302#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>303: no link type X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=303#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>304: both document type and link type X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=304#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>305: link type X already defined</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=305#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>306: document type X already defined</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=306#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>307: link set X used in LPD but not defined</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=307#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>308: #IMPLIED already linked to result element type X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=308#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>309: number of active simple link processes exceeds quantity specified for SIMPLE parameter in SGML declaration (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=309#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>310: only one chain of explicit link processes can be active</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=310#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>311: source document type name for link type X must be base document type since EXPLICIT YES 1</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=311#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>312: only one implicit link process can be active</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=312#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>313: sorry, link type X not activated: only one implicit or explicit link process can be active (with base document type as source document type)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=313#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>314: name missing after name group in entity reference</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=314#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>315: source document type name for link type X must be base document type since EXPLICIT NO</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=315#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>316: link process must be activated before base DTD</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=316#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>317: unexpected entity end while starting second pass</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=317#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>318: type X of element with ID Y not associated element type for applicable link rule in ID link set</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=318#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>319: DATATAG feature not implemented</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=319#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>320: generic identifier specification missing after document type specification in start-tag</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=320#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>321: generic identifier specification missing after document type specification in end-tag</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=321#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>322: a NET-enabling start-tag cannot include a document type specification</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=322#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>323: DTD did not contain element declaration for document type name</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=323#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>324: invalid default SGML declaration</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=324#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>326: entity was defined here</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=326#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>327: content model is mixed but does not allow #PCDATA everywhere</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=327#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>328: start or end of range must specify a single character</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=328#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>329: number of first character in range must not exceed number of second character in range</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=329#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>330: delimiter cannot be an empty string</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=330#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>331: too many characters assigned same meaning with minimum literal</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=331#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>332: earlier reference to entity X used default entity</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=332#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>333: empty start-tag</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=333#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>334: empty end-tag</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=334#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>335: unused short reference map X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=335#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>336: unused parameter entity X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=336#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>337: cannot generate system identifier for public text X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=337#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>339: cannot generate system identifier for parameter entity X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=339#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>340: cannot generate system identifier for document type X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=340#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>341: cannot generate system identifier for link type X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=341#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>342: cannot generate system identifier for notation X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=342#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>343: element type X both included and excluded</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=343#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>345: minimum data of AFDR declaration must be ""ISO/IEC 10744:1997"" not X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=345#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>346: AFDR declaration required before use of AFDR extensions</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=346#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>347: ENR extensions were used but minimum literal was not ""ISO 8879:1986 (ENR)"" or ""ISO 8879:1986 (WWW)""</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=347#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>348: illegal numeric character reference to non-SGML character X in literal</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=348#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>349: cannot convert character reference to number X because description Y unrecognized</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=349#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>350: cannot convert character reference to number X because character Y from baseset Z unknown</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=350#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>351: character reference to number X cannot be converted because of problem with internal character set</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=351#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>352: cannot convert character reference to number X because character not in internal character set</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=352#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>353: Web SGML adaptations were used but minimum literal was not ""ISO 8879:1986 (WWW)""</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=353#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>354: token X can be value for multiple attributes so attribute name required</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=354#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>355: length of hex number must not exceed NAMELEN (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=355#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>356: X is not a valid name in the declared concrete syntax</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=356#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>357: CDATA declared content</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=357#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>358: RCDATA declared content</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=358#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>359: inclusion</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=359#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>360: exclusion</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=360#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>361: NUMBER or NUMBERS declared value</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=361#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>362: NAME or NAMES declared value</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=362#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>363: NUTOKEN or NUTOKENS declared value</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=363#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>364: CONREF attribute</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=364#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>365: CURRENT attribute</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=365#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>366: TEMP marked section</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=366#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>367: included marked section in the instance</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=367#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>368: ignored marked section in the instance</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=368#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>369: RCDATA marked section</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=369#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>370: processing instruction entity</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=370#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>371: bracketed text entity</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=371#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>372: internal CDATA entity</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=372#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>373: internal SDATA entity</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=373#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>374: external CDATA entity</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=374#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>375: external SDATA entity</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=375#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>376: attribute definition list declaration for notation</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=376#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>377: rank stem</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=377#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>378: no system id specified</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=378#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>379: comment in parameter separator</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=379#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>380: named character reference</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=380#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>381: AND group</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=381#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>382: attribute value not a literal</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=382#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>383: attribute name missing</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=383#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>384: element declaration for group of element types</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=384#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>385: attribute definition list declaration for group of element types</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=385#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>386: empty comment declaration</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=386#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>388: multiple comments in comment declaration</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=388#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>389: no status keyword</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=389#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>390: multiple status keywords</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=390#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>391: parameter entity reference in document instance</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=391#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>392: CURRENT attribute</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=392#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>393: element type minimization parameter</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=393#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>395: #PCDATA not first in model group</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=395#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>396: #PCDATA in SEQ group</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=396#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>397: #PCDATA in nested model group</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=397#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>398: #PCDATA in model group that does not have REP occurrence indicator</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=398#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>399: name group or name token group used connector other than OR</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=399#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>400: processing instruction does not start with name</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=400#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>401: S separator in status keyword specification in document instance</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=401#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>402: reference to external data entity</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=402#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>405: SGML declaration was not implied</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=405#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>406: marked section in internal DTD subset</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=406#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>407: NET-enabling start-tag not immediately followed by null end-tag</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=407#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>408: entity end in different element from entity reference</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=408#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>409: NETENABL IMMEDNET requires EMPTYNRM YES</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=409#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>411: declaration of default entity</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=411#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>412: reference to parameter entity in parameter separator in internal subset</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=412#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>413: reference to parameter entity in token separator in internal subset</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=413#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>414: reference to parameter entity in parameter literal in internal subset</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=414#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>415: cannot generate system identifier for SGML declaration reference</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=415#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>416: public text class of formal public identifier of SGML declaration must be SD</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=416#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>417: SGML declaration reference was used but minimum literal was not ""ISO 8879:1986 (WWW)""</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=417#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>418: member of model group containing #PCDATA has occurrence indicator</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=418#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>419: member of model group containing #PCDATA is a model group</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=419#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>420: reference to non-predefined entity</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=420#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>421: reference to external entity</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=421#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>422: declaration of default entity conflicts with IMPLYDEF ENTITY YES</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=422#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>423: parsing with respect to more than one active doctype not supported</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=423#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>424: cannot have active doctypes and link types at the same time</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=424#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>425: number of concurrent document instances exceeds quantity specified for CONCUR parameter in SGML declaration (X)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=425#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>426: datatag group can only be specified in base document type</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=426#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>427: element not in the base document type can't have an empty start-tag</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=427#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>428: element not in base document type can't have an empty end-tag</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=428#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>429: immediately recursive element</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=429#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>430: invalid URN X: missing "":""</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=430#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>431: invalid URN X: missing ""urn:"" prefix</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=431#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>432: invalid URN X: invalid namespace identifier</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=432#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>433: invalid URN X: invalid namespace specific string</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=433#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>434: invalid URN X: extra field</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=434#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>435: prolog can't be omitted unless CONCUR NO and LINK EXPLICIT NO and either IMPLYDEF ELEMENT YES or IMPLYDEF DOCTYPE YES</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=435#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>436: can't determine name of #IMPLIED document element</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=436#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>437: can't use #IMPLICIT doctype unless CONCUR NO and LINK EXPLICIT NO</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=437#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>438: Sorry, #IMPLIED doctypes not implemented</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=438#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>439: reference to DTD data entity ignored</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=439#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>440: notation X for parameter entity Y undefined</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=440#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>441: notation X for external subset undefined</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=441#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>442: attribute X can't be redeclared</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=442#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>443: #IMPLICIT attributes have already been specified for notation X</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=443#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>444: a name group is not allowed in a parameter entity reference in a start tag</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=444#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>445: name group in a parameter entity reference in an end tag (SGML forbids them in start tags)</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=445#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>446: if the declared value is NOTATION a default value of CONREF is useless</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=446#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+        <li><p>447: Sorry, #ALL and #IMPLICIT content tokens not implemented</p>
+	<p class="helpwanted">
+	  <a href="feedback.html?errmsg_id=447#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
+    </ul>
+  </div>
 <!--#include virtual="../footer.html" -->
   </body>
 </html>
