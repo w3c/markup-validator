@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.86 2001-03-07 23:03:33 link Exp $
+# $Id: check,v 1.87 2001-03-07 23:44:01 link Exp $
 
 #
 # We need Perl 5.004.
@@ -73,9 +73,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.86 $;
+$VERSION    =  q$Revision: 1.87 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-03-07 23:03:33 $;
+$DATE       =  q$Date: 2001-03-07 23:44:01 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -564,6 +564,14 @@ if ( $? || ($guessed_doctype == 1) ) {
 	    &output_doctype_spiel;
 	    last;
 	}
+        if ( $msg =~ /unrecognized ({{)?DOCTYPE(}})?/i ) {
+	    print "<p><b>Fatal error</b>! $msg\n\n";
+	    print "<p>I couldn't parse this document, because it " .
+		  "uses a public\n    identifier that's not in my <a\n " .
+		  "    href=\"sgml-lib/catalog\">catalog</a>!\n  </p>\n";
+	    &output_doctype_spiel;
+	    last;
+	}
 	if ( $msg =~ /^cannot open / ) {
 	    print "<p>Fatal error! $msg\n\n";
 	    print "<p>I couldn't parse this document, because it " .
@@ -573,6 +581,16 @@ if ( $? || ($guessed_doctype == 1) ) {
 	    &output_doctype_spiel;
 	    last;
 	}
+	if ( $msg =~ /^cannot find / ) {
+	    print "<p>Fatal error! $msg\n\n";
+	    print "<p>I couldn't parse this document, because it " .
+		  "makes reference to\n    a system-specific file instead of " .
+		  "using a well-known public identifier\n    to specify the " .
+		  "level of HTML being used.\n  </p>\n";
+	    &output_doctype_spiel;
+	    last;
+	}
+
 	$line-- if ( $guessed_doctype == 1 );
 	my $newline = $File->{Content}->[$line - 1];
 	
