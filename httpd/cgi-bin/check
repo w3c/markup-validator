@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.224 2002-08-30 08:27:51 duerst Exp $
+# $Id: check,v 1.225 2002-08-31 03:38:21 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.224 $;
+  $VERSION    =  q$Revision: 1.225 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-30 08:27:51 $,
+			      Date => q$Date: 2002-08-31 03:38:21 $,
 			     });
 
 #
@@ -176,12 +176,12 @@ $File->{Env}->{'Self URI'} = $q->url(-query => 0);
 #
 # Initialize parameters we'll need (and override) later.
 # (casing policy: lowercase early)
-$File->{Charset}->{Use}  = ''; # The charset used for validation.
-$File->{Charset}->{Auto} = ''; # Autodetion using XML rules (Appendix F).
-$File->{Charset}->{HTTP} = ''; # From HTTP's "charset" parameter.
-$File->{Charset}->{META} = ''; # From HTML's <meta http-equiv>.
-$File->{Charset}->{XML}  = ''; # From the XML Declaration.
-$File->{Charset}->{Override}=''# From override.
+$File->{Charset}->{Use}      = ''; # The charset used for validation.
+$File->{Charset}->{Auto}     = ''; # Autodetion using XML rules (Appendix F).
+$File->{Charset}->{HTTP}     = ''; # From HTTP's "charset" parameter.
+$File->{Charset}->{META}     = ''; # From HTML's <meta http-equiv>.
+$File->{Charset}->{XML}      = ''; # From the XML Declaration.
+$File->{Charset}->{Override} = ''; # From override.
 
 #
 # Array (ref) used to store character offsets for the XML report.
@@ -260,7 +260,7 @@ if ($File->{Charset}->{HTTP}) {
   $File->{Charset}->{Use} = $File->{Charset}->{HTTP}; # HTTP, if given, is authorative.
 } elsif ($File->{Type} =~ m(^text/\w+\+xml$)) {
   $File->{Charset}->{Use} = 'us-ascii'; # Act as if $http_charset was 'us-ascii'. (MIME rules)
-  &add_warning($File, <<"      .EOF.");
+  &add_warning($File, <<".EOF.");
       <em>Note:</em>
       The HTTP Content-Type field did not contain a "charset" attribute,
       but the Content-Type was one of the XML text/* sub-types. The relevant
@@ -268,14 +268,14 @@ if ($File->{Charset}->{HTTP}) {
       we will use this value regardless of any encoding you may have indicated
       elsewhere. If you would like to use a different encoding, you should
       arrange to have your server send this new encoding information.
-      .EOF.
+.EOF.
 } elsif ($File->{Charset}->{XML}) {
   $File->{Charset}->{Use} = $File->{Charset}->{XML};
-} elsif ($File->{Charset}->{Auto} =~ "^utf-16[bl]e$" && $File->{BOM} == 2) {
+} elsif ($File->{Charset}->{Auto} =~ /^utf-16[bl]e$/ && $File->{BOM} == 2) {
   $File->{Charset}->{Use} = 'utf-16';
 } elsif ($File->{Type} =~ m(^application/\w+\+xml$)) {
   $File->{Charset}->{Use} = "utf-8";
-} 
+}
 
 $File->{Content} = &normalize_newlines($File->{Bytes}, $File->{Charset}->{Use});
 $File->{Content}->[0] = substr $File->{Content}->[0], $File->{BOM}; # remove BOM
@@ -290,14 +290,14 @@ unless ($File->{Charset}->{Use}) {
 }
 
 if (&conflict($File->{Opt}->{'Charset'}, '(detect automatically)')) {
-  $File->{Charset}->{Override} = split $File->{Opt}->{'Charset'}, ' ', 1;
+  ($File->{Charset}->{Override}) = split($File->{Opt}->{'Charset'}, ' ', 1);
   $File->{Charset}->{Use} = $File->{Charset}->{Override} = lc $File->{Charset}->{Override};
   # message about 'charset override' in effect comes later
 }
 
 unless ($File->{Charset}->{Use}) {
-    $File->{'Error Flagged'} = TRUE;
-    $File->{'Error Message'} = <<".EOF.";
+  $File->{'Error Flagged'} = TRUE;
+  $File->{'Error Message'} = <<".EOF.";
     <p>
       I was not able to extract a character encoding labeling from any of
       the valid sources for such information. Without encoding information it
@@ -319,7 +319,6 @@ unless ($File->{Charset}->{Use}) {
       character encoding in use.
     </p>
 .EOF.
-  }
 }
 
 #
@@ -944,7 +943,7 @@ EOF
 #
 # Generate HTML for the "Jump to:" links in results.
 sub jump_links {
-  return <<"  .EOF.";
+  return <<".EOF.";
       <p id="skip" class="jumpbar">
         Jump To:
         [<a title="Result of Validation" href="#results">Results</a>]
@@ -952,7 +951,7 @@ sub jump_links {
         [<a title="Document Parse Tree" href="#parse">Parse&nbsp;Tree</a>]
         [<a title="Document Outline" href="#outline">Outline</a>]
       </p>
-  .EOF.
+.EOF.
 }
 
 
@@ -2009,14 +2008,14 @@ sub charset_conflicts {
   #
   # Handle the case where there was no charset to be found.
   unless ($File->{Charset}->{Use}) {
-    &add_warning($File, <<"      .EOF.");
+    &add_warning($File, <<".EOF.");
       <strong>No Character Encoding detected!</strong>
       To ensure correct validation, processing, and display,
       it is important that the character encoding is properly
       labeled.
       <a href="http://www.w3.org/International/O-charset.html">More
       information...</a>
-    .EOF.
+.EOF.
     $File->{Tentative} |= T_WARN;
   }
 
@@ -2024,13 +2023,13 @@ sub charset_conflicts {
   # warn about charset override
   if ($File->{Charset}->{Override} &&
         $File->{Charset}->{Override} ne $File->{Charset}->{Use}) {
-    &add_warning($File, <<"      .EOF.");
+    &add_warning($File, <<".EOF.");
       <strong>Character Encoding Override in effect!</strong>
       The detected character encoding,
       &#171;<code>$File->{Charset}->{Use}</code>&#187;, has been supressed and the
       character encoding &#171;<code>$File->{Opt}->{Charset}</code>&#187; is
       used instead.
-      .EOF.
+.EOF.
     $File->{Tentative} |= T_ERROR;
   }
 
@@ -2038,7 +2037,7 @@ sub charset_conflicts {
   # Add a warning if there was charset info conflict (HTTP header,
   # XML declaration, or <meta> element).
   if (&conflict($File->{Charset}->{HTTP}, $File->{Charset}->{XML})) {
-    &add_warning($File, <<"        .EOF.");
+    &add_warning($File, <<".EOF.");
       <strong>Character Encoding mismatch!</strong>
       The character encoding specified in the
         HTTP header (<code>$File->{Charset}->{HTTP}</code>)
@@ -2047,9 +2046,9 @@ sub charset_conflicts {
       I will use the value from the
         HTTP header (<code>$File->{Charset}->{Use}</code>)
       for this validation.
-        .EOF.
+.EOF.
   } elsif (&conflict($File->{Charset}->{HTTP}, $File->{Charset}->{META})) {
-    &add_warning($File, <<"        .EOF.");
+    &add_warning($File, <<".EOF.");
       <strong>Character Encoding mismatch!</strong>
       The character encoding specified in the
         HTTP header (<code>$File->{Charset}->{HTTP}</code>)
@@ -2058,10 +2057,10 @@ sub charset_conflicts {
       I will use the value from the
         HTTP header (<code>$File->{Charset}->{Use}</code>)
       for this validation.
-        .EOF.
+.EOF.
   }
   elsif (&conflict($File->{Charset}->{XML}, $File->{Charset}->{META})) {
-    &add_warning($File, <<"        .EOF.");
+    &add_warning($File, <<".EOF.");
       <strong>Character Encoding mismatch!</strong>
       The character encoding specified in the
         XML declaration (<code>$File->{Charset}->{XML}</code>)
@@ -2070,7 +2069,7 @@ sub charset_conflicts {
       I will use the value from the
         XML declaration (<code>$File->{Charset}->{XML}</code>)
       for this validation.
-        .EOF.
+.EOF.
   }
 
   return $File;
@@ -2102,7 +2101,7 @@ sub transcode {
 
   if ($command ne 'I') {
     $File->{'Error Flagged'} = TRUE;
-    $File->{'Error Message'} = <<"      .EOF.";
+    $File->{'Error Message'} = <<".EOF.";
       <p>Sorry!
         A fatal error occurred when attempting to transcode the character encoding
         of the document. Either we do not support this character encoding yet, or you
@@ -2115,7 +2114,7 @@ sub transcode {
         that character encoding (see the <a href="feedback.html">feedback page</a>
         for details) and we will look into supporting it in the future.
       </p>
-    .EOF.
+.EOF.
     return $File;
   }
 
@@ -2172,7 +2171,7 @@ sub byte_error {
     $File->{'Error Flagged'} = TRUE;
     my $s = $#lines ? 's' : '';
     my $lines = join ', ', split ',', Set::IntSpan->new(\@lines)->run_list;
-    $File->{'Error Message'} = <<"    .EOF.";
+    $File->{'Error Message'} = <<".EOF.";
       <p class="error">
         Sorry, I am unable to validate this document because on line$s
         <strong>$lines</strong>
@@ -2182,7 +2181,7 @@ sub byte_error {
         Please check both the content of the file and the character
         encoding indication.
       </p>
-    .EOF.
+.EOF.
   }
   return $File;
 }
