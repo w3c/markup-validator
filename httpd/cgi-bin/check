@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.127 2004-05-17 04:38:04 link Exp $
+# $Id: check,v 1.305.2.128 2004-05-17 06:52:12 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.127 $;
+  $VERSION    =  q$Revision: 1.305.2.128 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-17 04:38:04 $,
+                              Date => q$Date: 2004-05-17 06:52:12 $,
                              });
 
 #
@@ -1191,14 +1191,6 @@ sub jump_links {
       if $File->{Opt}->{'Show Parsetree'};
     $links .= '<li><a title="Document Outline" href="#outline">Outline</a></li>'
       if $File->{Opt}->{'Outline'};
-  }
-  if ($File->{Opt}->{Verbose} or not $File->{Valid}) {
-    $links .= qq(<li><a class="comma" title="Go to a text version of the results." );
-    $links .= qq(href="http://cgi.w3.org/cgi-bin/html2txt?url=$me">,text</a></li>);
-    $links .= qq(<li><a class="comma" title="Go to a version with tables linearized" );
-    $links .= qq(href="http://jiggles.w3.org/servlet/tablin?url=$me&amp;tableno=&amp;);
-    $links .= qq(cellSeparator=&amp;headerSeparator=&amp;valueSeparator=&amp;orient=row);
-    $links .= qq(&amp;repeat=4&amp;interact=0">,tablin</a></li>);
   }
   $links .= "      </ul></div>\n";
   return $links;
