@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.142 2004-06-18 16:55:32 ville Exp $
+# $Id: check,v 1.305.2.143 2004-06-18 23:17:44 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.142 $;
+  $VERSION    =  q$Revision: 1.305.2.143 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-06-18 16:55:32 $,
+                              Date => q$Date: 2004-06-18 23:17:44 $,
                              });
 
 #
@@ -1219,7 +1219,7 @@ Content-Type: text/html; charset=utf-8
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
   "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
-<html lang="en" xml:lang="en">
+<html lang="en">
   <head><title>401 Authorization Required</title></head>
   <body>
     <h1>Authorization Required</h1>
