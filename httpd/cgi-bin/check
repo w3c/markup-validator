@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.408 2005-03-24 08:37:26 ot Exp $
+# $Id: check,v 1.409 2005-03-24 09:01:37 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -220,7 +220,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.408 $;
+  $VERSION    =  q$Revision: 1.409 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1334,7 +1334,7 @@ sub override_doctype {
   $File->{Content} = [split /\n/, $HTML];
 
   if ($seen) {
-    unless ($File->{Opt}->{FB}->{DOCTYPE}) {
+    unless (($File->{Opt}->{FB}->{DOCTYPE}) or ($File->{Opt}->{DOCTYPE} eq $CFG->{Types}->{$File->{DOCTYPE}}->{Display} )) {
       &add_warning('W13', {
         W13_org => $org_dtd,
         W13_new => $File->{Opt}->{DOCTYPE},
