@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: favlets.html,v 1.1.2.3 2002-06-06 02:55:03 link Exp $"
---><!--#set var="date" value="\$Date: 2002-06-06 02:55:03 $"
+<!--#set var="revision" value="\$Id: favlets.html,v 1.1.2.4 2002-06-09 11:17:38 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-06-09 11:17:38 $"
 --><!--#set var="title" value="Favlets For The W3C HTML Validation Service"
 --><!--#include virtual="/header.html" -->
     <script type="text/javascript">
@@ -73,7 +73,7 @@
       </div>
       <div>
         <dl>
-          <dt>"<a href="javascript:void(document.location='http://validator.w3.org/check?uri='+document.location)"
+          <dt>"<a href="javascript:void(location='http://validator.w3.org/check?uri='+location)"
                  title="Validate This Page">Validate <em>This</em> Page</a>"</dt>
           <dd>
             This is the basic "Validate This Page" Favlet.
@@ -86,7 +86,7 @@
             page to the Validator for processing, but this version will show
             the results in a new window.
           </dd>
-          <dt>"<a href="javascript:void(q=prompt('Validate Page:',''));if(q)void(document.location='http://validator.w3.org/check?uri='+escape(q))"
+          <dt>"<a href="javascript:void(q=prompt('Validate Page:',''));if(q)void(location='http://validator.w3.org/check?uri='+escape(q))"
                  title="Validate Page...">Validate Page...</a>"</dt>
           <dd>
             Puts up a dialog with a text entry field where you can type in the

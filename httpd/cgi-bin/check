@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.39 2002-06-06 03:06:12 link Exp $
+# $Id: check,v 1.200.2.40 2002-06-09 11:17:38 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -78,7 +78,7 @@ $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.39 $;
+$VERSION    =  q$Revision: 1.200.2.40 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 #
@@ -107,7 +107,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-06-06 03:06:12 $,
+			      Date => q$Date: 2002-06-09 11:17:38 $,
 			     });
 
 #
@@ -157,11 +157,14 @@ $File->{Opt}->{'Show Parsetree'} = $q->param('sp')      ? TRUE                 :
 $File->{Opt}->{'No Attributes'}  = $q->param('noatt')   ? TRUE                 :  FALSE;
 $File->{Opt}->{'Show ESIS'}      = $q->param('esis')    ? TRUE                 :  FALSE;
 $File->{Opt}->{'Show Errors'}    = $q->param('errors')  ? TRUE                 :  FALSE;
+$File->{Opt}->{'Verbose'}        = $q->param('verbose') ? TRUE                 :  FALSE;
+$File->{Opt}->{'Debug'}          = $q->param('debug')   ? TRUE                 :  FALSE;
 $File->{Opt}->{'Charset'}        = $q->param('charset') ? $q->param('charset') :     '';
 $File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') ? $q->param('doctype') :     '';
 $File->{Opt}->{'URI'}            = $q->param('uri')     ? $q->param('uri')     :     '';
 $File->{Opt}->{'Output'}         = $q->param('output')  ? $q->param('output')  : 'html';
 
+$DEBUG = $File->{Opt}->{Debug};
 
 #
 # Get the file and metadata.
@@ -270,12 +273,12 @@ if ($File->{'Is Upload'}) {
   $size = 70 if $size > 70;
 
   if (URI::eq("$File->{Opt}->{URI}", $File->{URI})) {
-    &add_table($File, qq(<label title="Address of Page to Validate" for="uri">Address</label>),
-	       '<input type="text" id="uri" name="uri" size="' . $size
-	       . '" value="' . $File->{Opt}->{URI} . '" />');
+    &add_table($File, qq(<label title="Address of Page to Validate (accesskey: 1)" for="uri">Address</label>),
+	       [1, 2, '<input accesskey="1" type="text" id="uri" name="uri" size="' . $size
+	       . '" value="' . $File->{Opt}->{URI} . '" />']);
   } else {
-    &add_table($File, qq(<label title="Address of Page to Validate" for="uri">URI</label>),
-	       '<input type="text" id="uri" name="uri" size="' . $size
+    &add_table($File, qq(<label title="Address of Page to Validate (accesskey: 1)" for="uri">URI</label>),
+	       '<input accesskey="1" type="text" id="uri" name="uri" size="' . $size
 	       . '" value="' . $File->{URI} . '" />');
     &add_warning($File, '<em>Note:</em> The URI you gave me, &#171;<code>' .
 		 $File->{Opt}->{URI} . '</code>&#187;, ' .
@@ -285,53 +288,58 @@ if ($File->{'Is Upload'}) {
 }
 
 
-&add_table($File, "Modified", $File->{Modified})  if $File->{Modified};
-&add_table($File, "Server", $File->{Server})  if $File->{Server};
-&add_table($File, "Size", $File->{Size})  if $File->{Size};
+if ($File->{Opt}->{Verbose}) {
+  &add_table($File, "Modified", $File->{Modified}) if $File->{Modified};
+  &add_table($File, "Server",   $File->{Server})   if $File->{Server};
+  &add_table($File, "Size",     $File->{Size})     if $File->{Size};
+}
 
 if ($File->{'Is Upload'}) {
   &add_table($File, 'Encoding', $File->{Charset}->{Use});
 } else {
   &add_table($File,
-	     qq(<label title="Character Encoding" for="charset">Encoding</label>),
-	     $File->{Charset}->{Use} . ' ' .
-	     &CGI::popup_menu(-name => 'charset', -id => 'charset',
-			    -values => [
-					'(detect automatically)',
-					'utf-8 (Unicode, worldwide)',
-					'iso-8859-1 (Western Europe)',
-					'iso-8859-2 (Central Europe)',
-					'iso-8859-3 (Maltese)',
-					'iso-8859-4 (Baltic Rim)',
-					'iso-8859-5 (Cyrillic)',
-					'iso-8859-6-i (Arabic)',
-					'iso-8859-7 (Greek)',
-					'iso-8859-8-i (Hebrew)',
-					'iso-8859-9 (Turkish)',
-					'iso-8859-10 (Latin 6)',
-					'iso-8859-13 (Latin 7)',
-					'iso-8859-14 (Celtic)',
-					'iso-8859-15 (Latin 9)',
-					'us-ascii (basic English)',
-					'euc-jp (Japanese, Unix)',
-					'shift_jis (Japanese, Win/Mac)',
-					'iso-2022-jp (Japanese, email)',
-					'euc-kr (Korean)',
-					'gb2312 (Chinese, simplified)',
-					'big5 (Chinese, traditional)',
-					'tis-620 (Thai)',
-					'koi8-r (Russian)',
-					'koi8-u (Ukrainian)',
-					'macintosh (MacRoman)',
-					'windows-1250 (Central Europe)',
-					'windows-1251 (Cyrillic)',
-					'windows-1252 (Western Europe)',
-					'windows-1253 (Greek)',
-					'windows-1254 (Turkish)',
-					'windows-1255 (Hebrew)',
-					'windows-1256 (Arabic)',
-					'windows-1257 (Baltic Rim)',
-				       ],
+	     qq(<label title="Character Encoding (accesskey: 2)" for="charset">Encoding</label>),
+	     $File->{Charset}->{Use},
+	     &CGI::popup_menu(
+			      -name      => 'charset',
+			      -id        => 'charset',
+			      -accesskey => '2',
+			      -values => [
+					  '(detect automatically)',
+					  'utf-8 (Unicode, worldwide)',
+					  'iso-8859-1 (Western Europe)',
+					  'iso-8859-2 (Central Europe)',
+					  'iso-8859-3 (Maltese)',
+					  'iso-8859-4 (Baltic Rim)',
+					  'iso-8859-5 (Cyrillic)',
+					  'iso-8859-6-i (Arabic)',
+					  'iso-8859-7 (Greek)',
+					  'iso-8859-8-i (Hebrew)',
+					  'iso-8859-9 (Turkish)',
+					  'iso-8859-10 (Latin 6)',
+					  'iso-8859-13 (Latin 7)',
+					  'iso-8859-14 (Celtic)',
+					  'iso-8859-15 (Latin 9)',
+					  'us-ascii (basic English)',
+					  'euc-jp (Japanese, Unix)',
+					  'shift_jis (Japanese, Win/Mac)',
+					  'iso-2022-jp (Japanese, email)',
+					  'euc-kr (Korean)',
+					  'gb2312 (Chinese, simplified)',
+					  'big5 (Chinese, traditional)',
+					  'tis-620 (Thai)',
+					  'koi8-r (Russian)',
+					  'koi8-u (Ukrainian)',
+					  'macintosh (MacRoman)',
+					  'windows-1250 (Central Europe)',
+					  'windows-1251 (Cyrillic)',
+					  'windows-1252 (Western Europe)',
+					  'windows-1253 (Greek)',
+					  'windows-1254 (Turkish)',
+					  'windows-1255 (Hebrew)',
+					  'windows-1256 (Arabic)',
+					  'windows-1257 (Baltic Rim)',
+					 ],
 			   )
 	    );
 }
@@ -501,11 +509,12 @@ $File->{Version} = $CFG->{'FPI to Text'}->{$File->{Version}} || $File->{Version}
 if ($File->{'Is Upload'}) {
   &add_table($File, 'Doctype', $File->{Version});
 } else {
-  &add_table($File, qq(<label for="doctype">Doctype</label>),
-	     $File->{Version} . ' ' .
+  &add_table($File, qq(<label for="doctype" title="Document Type of Validate Page  (accesskey: 3)">Doctype</label>),
+	     $File->{Version},
 	     &CGI::popup_menu(
 			      -name => 'doctype',
 			      -id => 'doctype',
+			      -accesskey => '3',
 			      -values => [
 					  '(detect automatically)',
 					  'XHTML 1.0 Strict',
@@ -565,7 +574,8 @@ if ($File->{Opt}->{Output} eq 'xml') {
   # Print header.
   print $File->{Results};
 
-  print qq(<div class="meat">\n);
+  print qq(    <div class="meat">\n);
+  print &jump_links($File);
   print qq(<div class="splash">\n);
   &print_table($File);
   &print_warnings($File);
@@ -625,54 +635,144 @@ exit;
 #############################################################################
 
 #
-# Add info to the metadata table datastructure.
-sub add_table {push @{shift->{Table}}, { Head => $_[0], Tail => $_[1]}};
+# Add a row to the metadata-table datastructure.
+#
+# Takes 3 or more arguments. The first is the reference to the datastructure to
+# use for storing the table. The second is the header for this row. The third
+# and subsequent arguments are table data cells. Each argument corresponds to
+# exactly one table data cell. If the argument is a string it is inserted
+# directly. If it is a reference it is assumed to be a reference to an array
+# of 3 elements. The 3 are: rowspan, colspan, and data.
+#
+sub add_table {
+  my $File = shift;
+  my $TH   = shift;
+  my @td;
+
+  foreach my $td (@_) {
+    if (ref $td) {
+      push @td, $td;
+    } else {
+      push @td, [1, 1, $td];
+    }
+  }
+
+  if (defined $File->{Table}->{Max}) {
+    $File->{Table}->{Max} = scalar @td
+      if $File->{Table}->{Max} < scalar @td;
+  } else {
+    $File->{Table}->{Max} = scalar @td;
+  }
+
+  push @{$File->{Table}->{Data}}, { Head => $TH, Tail => \@td};
+}
+
+
 
 #
 # Print the table containing the metadata about the Document Entity.
 sub print_table {
   my $File = shift;
-  my $tableEntry;
-  unless ($File->{'Is Upload'}) {
-    add_table($File, '<input type="submit" value="Revalidate" />',
-	      qq(\n         <label title="Show Page Source"><input type="checkbox" value="" name="ss") .
-	      ($File->{Opt}->{'Show Source'}      ? 'checked="checked"' : '') . " />Show Source</label></td><td>\n" .
-	      '         <label title="Show an Outline of the document"><input type="checkbox" value="" name="outline"' .
-	      ($File->{Opt}->{'Outline'} ? 'checked="checked"' : '') . " />Outline</label></td></tr><tr><td>\n" .
-	      '         <label title="Show Parse Tree"><input type="checkbox" value="" name="sp"' .
-	      ($File->{Opt}->{'Show Parsetree'}      ? 'checked="checked"' : '') . " />Parse Tree</label></td><td>\n" .
-	      '         <label title="Exclude Attributes from Parse Tree"><input type="checkbox" value="" name="noatt"' .
-	      ($File->{Opt}->{'No Attributes'}   ? 'checked="checked"' : '') . " />...no attributes</label>\n"
-	     );
-  }
-  print qq(  <form id="form" method="get" action="/check">\n)
-    unless $File->{'Is Upload'};
-  print qq(    <table class="header">\n);
+
   unless ($File->{'Is Valid'}) {
-    &add_table($File, 'Errors', scalar(@{$File->{Errors}}) . ' (approximate)');
+    &add_table($File, 'Errors', scalar(@{$File->{Errors}}));
   }
 
-  for $tableEntry (@{$File->{Table}}) {
-    if ($$tableEntry{Head} =~ m(Revalidate)) {
-      print "    <tr>\n";
-      print ' ' x 6, qq(<th rowspan="2">), $$tableEntry{Head}, ": </th>\n";
-      print ' ' x 6, "<td>", $$tableEntry{Tail}, "      </td>\n";
-      print "    </tr>\n";
-    } else {
-      print "    <tr>\n";
-      print ' ' x 6, "<th>", $$tableEntry{Head}, ": </th>\n";
-      print ' ' x 6, qq(<td colspan="2">), $$tableEntry{Tail}, "</td>\n";
-      print "    </tr>\n";
-    }
-  }
-  print qq(    </table>\n);
-  print qq(  </form>\n)
+  print qq(  <form id="form" method="get" action="/check">\n)
     unless $File->{'Is Upload'};
+
+  print join '', @{&serialize_table($File, 'header')};
+
+  my $Options = {};
+  my $Form    = {};
+  $Form->{Table}->{Fieldset}  = TRUE;
+  $Form->{Table}->{Accesskey} = '4';
+  $Form->{Table}->{Legend}    = 'Revalidate With Options: (accesskey: 4)';
+
+
+  add_table($Options, '', qq(<label title="Show Page Source (accesskey: 5)"><input type="checkbox" value="" name="ss" ) .
+	    qq(accesskey="5" ) .
+	     ($File->{Opt}->{'Show Source'}      ? 'checked="checked"' : '') . ' />Show Source</label>',
+	    '<label title="Show an Outline of the document (accesskey: 6)"><input type="checkbox" value="" name="outline" ' .
+	    qq(accesskey="6" ) .
+	    ($File->{Opt}->{'Outline'} ? 'checked="checked"' : '') . ' />Outline</label>');
+  add_table($Options, '',
+	    '<label title="Show Parse Tree (accesskey: 7)"><input type="checkbox" value="" name="sp" ' .
+	    qq(accesskey="7" ) .
+	    ($File->{Opt}->{'Show Parsetree'}      ? 'checked="checked"' : '') . ' />Parse Tree</label>',
+	    '<label title="Exclude Attributes from Parse Tree (accesskey: 8)"><input type="checkbox" value="" name="noatt" ' .
+	    qq(accesskey="8" ) .
+	    ($File->{Opt}->{'No Attributes'}   ? 'checked="checked"' : '') . ' />...no attributes</label>'
+	   );
+
+  add_table(
+	    $Form,
+	    '<input type="submit" value="Revalidate" accesskey="9" title="Revalidate file (accesskey: 9)" />',
+	    [1, $File->{Table}->{Max}, join('', @{&serialize_table($Options, 'options')})]
+	   );
+
+  print <<".EOF.";
+      <fieldset>
+        <legend>Revalidate With Options</legend>
+.EOF.
+  print join '', @{&serialize_table($Form, 'header')};
+  print qq(      </fieldset>\n);
+
+  print qq(  </form>\n) unless $File->{'Is Upload'};
 }
+
+#
+# Serialize a table datastructure ($th, @td) into HTML.
+# Takes two arguments; the datastructure, and a CSS class name for the table.
+# Returns a reference to an array of lines (to enable reindentation).
+sub serialize_table {
+  my $table = shift;
+  my $class = shift;
+  my @table = ();
+
+  push @table, qq(<table class="$class">\n);
+
+  foreach my $tr (@{$table->{Table}->{Data}}) {
+    if (ref $tr->{Head}) {
+      my $opts = '';
+      push @table, "  <tr>\n";
+      if ($tr->{Head}->[0] > 1) {
+	$opts .= qq( rowspan="$tr->{Head}->[0]");
+      }
+      if ($tr->{Head}->[1] > 1) {
+	$opts .= qq( colspan="$tr->{Head}->[1]");
+      }
+      push @table, "    <th$opts>" . $tr->{Head}->[2] . ": </th>\n";
+    } elsif ($tr->{Head}) {
+      push @table, "  <tr>\n";
+      push @table, "    <th>" . $tr->{Head} . ": </th>\n";
+    } else {
+      push @table, "  <tr>\n";
+      # Table has no header column.
+    }
+
+    for (my $i = 0; $i < scalar @{$tr->{Tail}}; $i++) {
+      my $opts = '';
+      if ($tr->{Tail}->[$i]->[0] > 1) {
+	$opts .= qq( rowspan="$tr->{Tail}->[$i]->[0]");
+      }
+      if ($tr->{Tail}->[$i]->[1] > 1) {
+	$opts .= qq( colspan="$tr->{Tail}->[$i]->[1]");
+      }
+      push @table, qq(    <td$opts>) . $tr->{Tail}->[$i]->[2] . "</td>\n";
+    }
+    push @table, "  </tr>\n";
+  }
+  push @table, qq(</table>\n);
+
+  return \@table;
+}
+
 
 #
 # Add a waring message to the output.
 sub add_warning {push @{shift->{Warnings}}, shift};
+
 
 #
 # Print out a list of warnings.
@@ -727,29 +827,27 @@ EOF
 
 #
 # Generate HTML for the "Jump to:" links in results.
-sub print_jump_links {
+sub jump_links {
   my $File = shift;
-  my $text  = '';
   my $count = 0;
+  my $text = <<".EOF.";
+      <p id="skip" class="jumpbar">
+        Jump To:
+        [<a title="Result of Validation" href="#results">Results</a>]
+.EOF.
 
-  $count++ if $File->{Opt}->{'Show Source'};
-  $count++ if $File->{Opt}->{'Show Parsetree'};
-  $count++ if $File->{Opt}->{'Outline'};
-
-  if ($count) {
-    $text .= qq(  <p class="jumpbar">\n   );
-    if ($File->{Opt}->{'Show Source'}) {
-      $text .= qq(<a href="#source">Source&nbsp;Listing</a>\n    );
-    }
-    if ($File->{Opt}->{'Show Parsetree'}) {
-      $text .= qq(<a href="#parse">Parse&nbsp;Tree</a>\n  );
-    }
-    if ($File->{Opt}->{'Outline'}) {
-      $text .= qq(<a href="#outline">Outline</a>\n    );
-    }
-    $text .= qq(</p>\n\n);
+  if ($File->{Opt}->{'Show Source'}) {
+    $text .= qq(        [<a title="Listing of Source Input" href="#source">Source&nbsp;Listing</a>]\n);
   }
-  print $text;
+  if ($File->{Opt}->{'Show Parsetree'}) {
+    $text .= qq(        [<a title="Document Parse Tree" href="#parse">Parse&nbsp;Tree</a>]\n);
+  }
+  if ($File->{Opt}->{'Outline'}) {
+    $text .= qq(        [<a title="Document Outline" href="#outline">Outline</a>]\n);
+  }
+  $text .= qq(      </p>\n\n);
+
+  return $text;
 }
 
 
@@ -1182,7 +1280,7 @@ sub report_errors ($) {
   my $File = shift;
 
   print <<"EOHD";
-    <h2 class="invalid">This Page Is <strong>NOT</strong> Valid $File->{Version}!</h2>
+    <h2 id="results" class="invalid">This Page Is <strong>NOT</strong> Valid $File->{Version}!</h2>
 EOHD
 
   if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 'svg' or $File->{Type} eq 'smil') {
@@ -1272,11 +1370,8 @@ EOHD
 
     print qq(  <li><em>Line <a href="#line-$err->{line}">$err->{line}</a>, column $col</em>: );
     print qq{<span class="msg">$err->{msg}</span>};
-    print qq(offset: $File->{Offsets}->[$err->{line}]->[0]/$File->{Offsets}->[$err->{line} - 1]->[1]/);
-    print $File->{Offsets}->[$err->{line} - 1]->[1] + $col + $err->{line};
-    warn qq(Generating message for line "$err->{line}": $File->{Offsets}->[$err->{line}]->[0]/$File->{Offsets}->[$err->{line}]->[1]\n);
     if (defined $CFG->{'Error to URI'}->{$err->{idx}}) {
-      print qq{ (<a href="$CFG->{'Msg FAQ URI'}#$CFG->{'Error to URI'}->{$err->{idx}}">explanation...</a>)};
+      print qq{ (<a href="$CFG->{'Msg FAQ URI'}#$CFG->{'Error to URI'}->{$err->{idx}}">explain...</a>).};
     } elsif ($DEBUG) {
       print qq{ (<code style="background: red">"$err->{idx}"</code>)};
     }
@@ -1356,11 +1451,11 @@ sub report_valid {
 
     if (defined $image_uri) {
       print <<".EOF.";
-    <h2 class="valid"><img src="$image_uri" alt="$alttext"$gifhw />
+    <h2 id="results" class="valid"><img src="$image_uri" alt="$alttext"$gifhw />
                       This Page Is Valid $File->{Version}!</h2>
 .EOF.
       &print_tip_of_the_day($File, $CFG->{'Tips DB'});
-      &print_jump_links($File);
+      print &jump_links($File);
 
       print <<".EOF.";
     <p>
@@ -1433,8 +1528,7 @@ sub outline {
 
   print <<'EOF';
   <div id="outline" class="mtb">
-    <hr />
-    <h2><a name="outline">Outline</a></h2>
+    <h2>Outline</h2>
     <p>
       Below is an outline for this document, automatically generated from the
       heading tags (<code>&lt;H1&gt;</code> through <code>&lt;H6&gt;</code>.)
@@ -1501,8 +1595,7 @@ sub show_source {
 
   print <<'EOF';
   <div id="source" class="mtb">
-    <hr />
-    <h2><a name="source">Source Listing</a></h2>
+    <h2>Source Listing</h2>
 
     <p>Below is the source input I used for this validation:</p>
     <pre>
@@ -1523,8 +1616,7 @@ sub parse_tree {
 
   print <<'EOF';
   <div id="parse" class="mtb">
-    <hr />
-    <h2><a name="parse">Parse Tree</a></h2>
+    <h2>Parse Tree</h2>
 EOF
   if ($File->{Opt}->{'No Attributes'}) {
     print <<'EOF';

@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.20.2.12 2002-05-13 22:36:42 link Exp $
+   $Id: base.css,v 1.20.2.13 2002-06-09 11:17:38 link Exp $
 */
 
 @import url(/results.css); /* CSS for validation results. */
@@ -84,20 +84,26 @@ address {
 }
 
 p.jumpbar {
-  float: left;
-  clear: left;
-  text-align: left;
+/*  float: left;
+  clear: left; */
+  text-align: center;
   text-decoration: none;
-  margin: 0em 1em .5em 0em;
+/*  margin: 0em 1em .5em 0em; */
+  margin-left: auto;
+  margin-right: auto;
   padding: 1ex;
-  width: 12ex;
+  /* width: 12ex; */
   background-color: #eee;
-  border:1px dashed #999;
+/*  border:1px dashed #999; */
+  border-bottom: 1px solid black;
 }
 
+/*
 p.jumpbar a {
+  text-decoration: none;
   display: block;;
 }
+*/
 
 p.jumpbar a:hover {
   background: #ccc;
