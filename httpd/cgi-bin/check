@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.350 2004-10-25 21:26:10 bjoern Exp $
+# $Id: check,v 1.351 2004-11-06 11:46:44 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -227,7 +227,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.350 $;
+  $VERSION    =  q$Revision: 1.351 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1190,22 +1190,20 @@ sub handle_uri {
     return $File;
   }
 
-  my $addr = my $iptype = undef;
-  if (my $host = gethostbyname($uri->host())) {
-    $addr = inet_ntoa($host->addr()) if $host->addr();
-    if ($addr && (my $ip = Net::IP->new($addr))) {
-      $iptype = $ip->iptype();
+  unless ($CFG->{'Allow Private IPs'}) {
+    my $addr = my $iptype = undef;
+    if (my $host = gethostbyname($uri->host())) {
+      $addr = inet_ntoa($host->addr()) if $host->addr();
+      if ($addr && (my $ip = Net::IP->new($addr))) {
+        $iptype = $ip->iptype();
+      }
+    }
+    if ($iptype && $iptype ne 'PUBLIC') {
+      $File->{'Error Flagged'} = TRUE;
+      $File->{'Error Message'} = &ip_rejected($uri->host(), $addr);
+      return $File;
     }
   }
-  $iptype = 'PUBLIC'
-    if ($iptype && $iptype eq 'PRIVATE' && $CFG->{'Allow Private IPs'});
-  if ($iptype && $iptype ne 'PUBLIC') {
-    $File->{'Error Flagged'} = TRUE;
-    $File->{'Error Message'} = &ip_rejected($uri->host(), $addr);
-    return $File;
-  }
-  undef $iptype;
-  undef $addr;
 
   my $req = new HTTP::Request(GET => $uri);
 
