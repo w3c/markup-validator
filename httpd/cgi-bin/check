@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.375 2005-01-15 16:14:05 ville Exp $
+# $Id: check,v 1.376 2005-01-15 16:18:38 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -222,7 +222,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.375 $;
+  $VERSION    =  q$Revision: 1.376 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -422,9 +422,9 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
   }
   my $ct = &ent($File->{ContentType});
   &add_warning($File, 'note', 'Note:', <<".EOF.");
-      The HTTP Content-Type header $_source[0] ($_source[1]) did not contain
-      a "charset" parameter, but the Content-Type was one of the XML text/*
-      sub-types (<code>$ct</code>). The relevant specification
+      The HTTP Content-Type header (<code>$ct</code>) $_source[0] ($_source[1])
+      did not contain a "charset" parameter, but the Content-Type was one of
+      the XML text/* sub-types. The relevant specification
       (<a href="http://www.ietf.org/rfc/rfc3023.txt">RFC 3023</a>)
       specifies a strong default of "us-ascii" for
       such documents so we will use this value regardless of any encoding you
