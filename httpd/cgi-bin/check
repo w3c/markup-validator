@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.300 2002-11-19 14:45:05 link Exp $
+# $Id: check,v 1.301 2002-11-19 15:34:04 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.300 $;
+  $VERSION    =  q$Revision: 1.301 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-19 14:45:05 $,
+                              Date => q$Date: 2002-11-19 15:34:04 $,
                              });
 
 #
@@ -215,6 +215,7 @@ $File->{Opt}->{'No Attributes'}  = $q->param('noatt')   ? TRUE                  
 $File->{Opt}->{'Show ESIS'}      = $q->param('esis')    ? TRUE                   :  FALSE;
 $File->{Opt}->{'Show Errors'}    = $q->param('errors')  ? TRUE                   :  FALSE;
 $File->{Opt}->{'Verbose'}        = $q->param('verbose') ? TRUE                   :  FALSE;
+$File->{Opt}->{'Debug'}          = $q->param('debug')   ? TRUE                   :  FALSE;
 $File->{Opt}->{'No200'}          = $q->param('No200')   ? TRUE                   :  FALSE;
 $File->{Opt}->{'Charset'}        = $q->param('charset') ? lc $q->param('charset'):     '';
 $File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') ? $q->param('doctype')   :     '';
@@ -224,7 +225,7 @@ $File->{Opt}->{'Output'}         = $q->param('output')  ? $q->param('output')   
 #
 # If ";debug" was given, let it overrule the value from the config file,
 # regardless of whether it's "0" or "1" (on or off).
-$DEBUG = $q->param('debug') if $q->param('debug');
+$DEBUG = $q->param('debug') if defined $q->param('debug');
 
 &abort_if_error_flagged($File, 0);
 
@@ -1466,39 +1467,41 @@ EOHD
 EOHD
   }
 
-  print qq(  <ol>\n);
+  if (scalar @{$File->{Errors}}) {
+    print qq(  <ol>\n);
 
-  foreach my $err (@{$File->{Errors}}) {
-    my($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $err->{char});
+    foreach my $err (@{$File->{Errors}}) {
+      my($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $err->{char});
 
-    # Strip curlies from lq-nsgmls output.
-    $err->{msg} =~ s/[{}]//g;
+      # Strip curlies from lq-nsgmls output.
+      $err->{msg} =~ s/[{}]//g;
 
-    # Find index into the %frag hash for the "explanation..." links.
-    $err->{idx} =  $err->{msg};
-    $err->{idx} =~ s/"[^\"]*"/FOO/g;
-    $err->{idx} =~ s/[^A-Za-z ]//g;
-    $err->{idx} =~ s/\s+/ /g; # Collapse spaces
-    $err->{idx} =~ s/(^\s|\s$)//g; # Remove leading and trailing spaces. )
-    $err->{idx} =~ s/(FOO )+/FOO /g; # Collapse FOOs.
-    $err->{idx} =~ s/FOO FOO/FOO/g; # Collapse FOOs.
+      # Find index into the %frag hash for the "explanation..." links.
+      $err->{idx} =  $err->{msg};
+      $err->{idx} =~ s/"[^\"]*"/FOO/g;
+      $err->{idx} =~ s/[^A-Za-z ]//g;
+      $err->{idx} =~ s/\s+/ /g; # Collapse spaces
+      $err->{idx} =~ s/(^\s|\s\Z)//g; # Remove leading and trailing spaces. )
+      $err->{idx} =~ s/(FOO )+/FOO /g; # Collapse FOOs.
+      $err->{idx} =~ s/FOO FOO/FOO/g; # Collapse FOOs.
 
-    $line = &ent($line); # Entity encode.
-    $line =~ s/\t/ /g;   # Collapse TABs.
+      $line = &ent($line); # Entity encode.
+      $line =~ s/\t/ /g;   # Collapse TABs.
 
-    print qq(  <li><em>Line <a href="#line-$err->{line}">$err->{line}</a>, column $err->{char}</em>: );
-    print qq{<span class="msg">$err->{msg}</span>};
-    if (defined $CFG->{'Error to URI'}->{$err->{idx}}) {
-      print qq{ (<a href="$CFG->{'Msg FAQ URI'}#$CFG->{'Error to URI'}->{$err->{idx}}">explain...</a>).};
-    } elsif ($DEBUG) {
-      print qq{ (<code style="background: red">"$err->{idx}"</code>)};
+      print qq(  <li><em>Line <a href="#line-$err->{line}">$err->{line}</a>, column $err->{char}</em>: );
+      print qq{<span class="msg">$err->{msg}</span>};
+      if (defined $CFG->{'Error to URI'}->{$err->{idx}}) {
+	print qq{ (<a href="$CFG->{'Msg FAQ URI'}#$CFG->{'Error to URI'}->{$err->{idx}}">explain...</a>).};
+      } elsif ($DEBUG) {
+	print qq{ (<code style="background: red">"$err->{idx}"</code>)};
+      }
+
+      print qq(\n<pre>  <code class="input">$line</code>\n);
+      print ' ' x ($col + 2); # 2 is the number of spaces before <code> above
+      print qq(<span class="markup">^</span></pre></li>\n);
     }
-
-    print qq(\n<pre>  <code class="input">$line</code>\n);
-    print ' ' x ($col + 2); # 2 is the number of spaces before <code> above
-    print qq(<span class="markup">^</span></pre></li>\n);
+    print qq(  </ol>\n);
   }
-  print qq(  </ol>\n);
 }
 
 
@@ -1647,7 +1650,8 @@ sub report_valid {
 
   unless ($File->{'Is Upload'}) {
     my $thispage = $File->{Env}->{'Self URI'};
-    $thispage .= qq(?uri=$URI);
+    my $escaped_uri = uri_escape($File->{URI});
+    $thispage .= qq(?uri=$escaped_uri);
     $thispage .= ';ss=1'      if $File->{Opt}->{'Show Source'};
     $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
     $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
