@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.29 2004-03-27 10:28:24 ville Exp $
+   $Id: base.css,v 1.26.2.30 2004-03-27 14:51:31 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -40,10 +40,23 @@ dt {
   margin-top: 1em;
 }
 
+/* Fieldsets in general */
 fieldset {
   margin-bottom: 3em;
   max-width:     80%;
   margin-left:   1em;
+}
+
+/* The front-page fieldsets */
+fieldset.front {
+  background: inherit;
+  border: 1px dotted #053188;
+}
+
+fieldset.front legend {
+  color: #053188;
+  font-variant: small-caps;
+  padding: .1ex .5ex;
 }
 
 .intro {
@@ -131,6 +144,15 @@ address {
   clear:            right;
 }
 
+address {
+  background-image: url(images/footer);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 50px;
+  background-position: center;
+  margin:0; padding:0;
+}
+
 p.copyright {
   margin-top:     5em;
   padding-top:    .5em;
@@ -174,7 +196,7 @@ h1 {
 #banner h1 {font-size: 1.3em;
 border-bottom: 1px solid black;}
 
-#banner {background-image: url(/validator/banner-qa.jpg);
+#banner {background-image: url(images/header);
 background-repeat: no-repeat;
 background-attachment: scroll;
 height: 50px;
