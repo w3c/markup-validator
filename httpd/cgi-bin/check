@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.110 2001-06-03 23:55:53 duerst Exp $
+# $Id: check,v 1.111 2001-06-06 09:07:32 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -74,9 +74,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.110 $;
+$VERSION    =  q$Revision: 1.111 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-03 23:55:53 $;
+$DATE       =  q$Date: 2001-06-06 09:07:32 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -282,8 +282,8 @@ foreach my $line (@{$File->{Content}}) {
   if ($line =~ /<\?xml\s/) {
     if ($line =~ /encoding\s*=[\s\"\']*([^\s;\"\'>]*)/) {
       $File->{XML_Charset} = lc $1;
-      last;
-    } else {last};
+    }
+    last;
   }
 }
 
@@ -378,11 +378,7 @@ my $command  = "$sp -f$temp -E0 $xmlflags -c $catalog";
 
 print "\t<li>nsgmls command line: <code>$command</code>\n" if $DEBUG;
 
-if (   $File->{Charset} eq 'utf-8'
-    or $File->{Charset} eq 'us-ascii'
-    or $File->{Charset} eq 'unknown') {
-  ; # do nothing
-} else {
+unless (   $File->{Charset} eq 'utf-8' $File->{Charset} eq 'unknown') {
   # workaround for windows-nnnn charsets missing from glibc<2.2
   my $temp_charset = $File->{Charset};
   $temp_charset =~ s/^windows-(\d+)$/CP$1/i;
@@ -392,7 +388,7 @@ if (   $File->{Charset} eq 'utf-8'
   eval {my $c = Text::Iconv->new($temp_charset, 'utf-8')};
   if (not $@) {
     my $c = Text::Iconv->new($temp_charset, 'utf-8');
-    for (@{$File->{Content}}) {$_ = $c->convert($_)};
+    for (@{$File->{Content}}) {$_ = $c->convert($_)}; # $_ is local!!
   } else {
     &print_charset_error($@, $File->{Charset});
     &clean_up_and_exit;
