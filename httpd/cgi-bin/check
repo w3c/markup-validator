@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.336 2004-09-04 22:36:29 link Exp $
+# $Id: check,v 1.337 2004-09-05 10:27:13 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -225,7 +225,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.336 $;
+  $VERSION    =  q$Revision: 1.337 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2368,16 +2368,17 @@ X-W3C-Validator-Errors: $errs
 <!DOCTYPE result [
   <!ELEMENT result (meta, warnings?, messages?)>
   <!ATTLIST result
-    version CDATA #FIXED '0.9'
+    version CDATA #FIXED '0.9.1'
   >
 
-  <!ELEMENT meta (uri, modified, server, size, encoding, doctype)>
+  <!ELEMENT meta (uri, modified, server, size, encoding, doctype, errors)>
   <!ELEMENT uri      (#PCDATA)>
   <!ELEMENT modified (#PCDATA)>
   <!ELEMENT server   (#PCDATA)>
   <!ELEMENT size     (#PCDATA)>
   <!ELEMENT encoding (#PCDATA)>
   <!ELEMENT doctype  (#PCDATA)>
+  <!ELEMENT errors   (#PCDATA)>
 
   <!ELEMENT warnings (warning)+>
   <!ELEMENT warning  (#PCDATA)>
@@ -2401,6 +2402,7 @@ X-W3C-Validator-Errors: $errs
     <size>), &ent($File->{Size}), qq(</size>
     <encoding>), &ent($File->{Charset}->{Use}), qq(</encoding>
     <doctype>), &ent($File->{DOCTYPE}), qq(</doctype>
+    <errors>), $errs, qq(</errors>
   </meta>
 );
 
