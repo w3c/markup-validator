@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.120 2004-05-16 02:55:53 link Exp $
+# $Id: check,v 1.305.2.121 2004-05-16 02:57:10 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.120 $;
+  $VERSION    =  q$Revision: 1.305.2.121 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-16 02:55:53 $,
+                              Date => q$Date: 2004-05-16 02:57:10 $,
                              });
 
 #
@@ -893,13 +893,11 @@ results</a> by setting the corresponding option on the <a
     &report_errors($File);
   }
 
-  if (not $File->{'Is Valid'} or $File->{Opt}->{Verbose}) {
-    &outline($File)     if $File->{Opt}->{'Outline'};
-    &show_source($File) if $File->{Opt}->{'Show Source'};
-    &parse_tree($File)  if $File->{Opt}->{'Show Parsetree'};
-    &show_esis($File)   if $File->{Opt}->{'Show ESIS'};
-    &show_errors($File) if $File->{Opt}->{'Show Errors'};
-  }
+  &outline($File)     if $File->{Opt}->{'Outline'};
+  &show_source($File) if $File->{Opt}->{'Show Source'};
+  &parse_tree($File)  if $File->{Opt}->{'Show Parsetree'};
+  &show_esis($File)   if $File->{Opt}->{'Show ESIS'};
+  &show_errors($File) if $File->{Opt}->{'Show Errors'};
 
   print qq(</div> <!-- End of "meat". -->\n); # End of "Meat".
   print $File->{'Footer'};
