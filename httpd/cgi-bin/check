@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.384 2005-02-04 19:44:42 link Exp $
+# $Id: check,v 1.385 2005-02-04 21:01:54 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -239,7 +239,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.384 $;
+  $VERSION    =  q$Revision: 1.385 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1434,9 +1434,26 @@ sub parse_content_type {
           . uri_escape $url;
       exit;
     } else {
+      my $msie = '';
       $File->{'Error Flagged'} = TRUE;
+      if ($File->{'Is Upload'} and $ct eq 'text/plain'
+          and $q->http('User-Agent') eq 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322)') {
+        $msie = <<".EOF.";
+
+      <p id="msie">
+        <strong>Note:</strong>
+        a bug in the version of Microsoft's Internet Explorer that comes with
+        Windows XP's Service Pack 2 causes it to mislabel uploaded files as
+        "<code>text/plain</code>". If this is the browser you are using you
+        can work around this problem by using a different browser &mdash;
+        such as <a href="http://getfirefox.com/">Firefox</a> &mdash; for
+        validating uploaded files; or by publishing the page in question
+        and validating it by URL instead.
+      </p>
+.EOF.
+      }
       $File->{'Error Message'} = sprintf(<<"      EOF", &ent($ct));
-    <div class="error">
+    <div class="error">$msie
       <p>
         Sorry, I am unable to validate this document because its content type
         is <code>%s</code>, which is not currently supported by this service.
