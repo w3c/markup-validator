@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.329 2004-05-11 17:48:21 ville Exp $
+# $Id: check,v 1.330 2004-05-21 15:42:50 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -187,7 +187,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.329 $;
+  $VERSION    =  q$Revision: 1.330 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1455,9 +1455,6 @@ sub parse_errors ($$) {
     if ($err->{type} eq 'E' or $err->{type} eq 'X' or $err->{type} eq 'Q') {
       $err->{msg}  = join ':', @errors[6 .. $#errors];
     } elsif ($err->{type} eq 'W') {
-      &add_warning($File, 'fake', 'Warning:',
-        "Line $err->{line}, column $err->{char}: $errors[6]",
-      );
       $err->{msg}  = join ':', @errors[6 .. $#errors];
     } else {
       $err->{type} = 'I';
@@ -1506,10 +1503,12 @@ sub parse_errors ($$) {
            a DOCTYPE</a>".
       </p>
 .EOF.
-      }
- else {
-   $message .= <<".EOF.";
-   <p>So what should I do? <a href="docs/help.html#faq-doctype">Tell me more...</a></p>
+      } else {
+        $message .= <<".EOF.";
+      <p>
+        So what should I do?
+        <a href="docs/help.html#faq-doctype">Tell me more...</a>
+      </p>
 .EOF.
  }
       &add_warning($File, $class, $title, $message);
@@ -1541,72 +1540,7 @@ sub report_errors ($) {
       my $adjcol = $col;
       #DEBUG;
 
-      #
-      # Chop the source line into 3 pieces; the character at which the error
-      # was detected, and everything to the left and right of that position.
-      # That way we can add markup to the relevant char without breaking &ent().
-      #
-
-      #
-      # Left side...
-      my $left;
-      {
-        my $offset = 0; # Left side allways starts at 0.
-        my $length;
-
-        if ($col - 1 < 0) { # If error is at start of line...
-          $length = 0; # ...floor to 0 (no negative offset).
-        } elsif ($col == length $line) { # If error is at EOL...
-          $length = $col - 1; # ...leave last char to indicate position.
-        } else { # Otherwise grab everything up to pos of error.
-          $length = $col;
-        }
-        $left = substr $line, $offset, $length;
-        $left = &ent($left);
-      }
-
-      #
-      # The character where the error was detected.
-      my $char;
-      {
-        my $offset;
-        my $length = 1; # Length is always 1; the char where error was found.
-
-        if ($col == length $line) { # If err is at EOL...
-          $offset = $col - 1; # ...then grab last char on line instead.
-        } else {
-          $offset = $col; # Otherwise just grab the char.
-        }
-        $char = substr $line, $offset, $length;
-        $char = &ent($char);
-      }
-
-      #
-      # The right side up to the end of the line...
-      my $right;
-      {
-        my $offset;
-        my $length;
-
-        # Offset...
-        if ($col == length $line) { # If at EOL...
-          $offset = 0; # Don't bother as there is nothing left to grab.
-        } else {
-          $offset = $col + 1; # Otherwise get everything from char-after-error.
-        }
-
-        # Length...
-        if ($col == length $line) { # If at end of line...
-          $length = 0; # ...then don't grab anything.
-        } else {
-          $length = length($line) - ($col - 1); # Otherwise get the rest of the line.
-        }
-        $right = substr $line, $offset, $length;
-        $right = &ent($right);
-      }
-
-      $char = qq(<strong title="Position where error was detected.">$char</strong>);
-      $line = $left . $char . $right;
+      $line = &mark_error($line, $col);
 
       #DEBUG: Print misc. vars relevant to source display.
       if ($DEBUG) {
@@ -1614,10 +1548,10 @@ sub report_errors ($) {
       }
       #DEBUG;
 
-      if (defined $CFG->{Error_to_URI}->{$err->{idx}}) {
-        $err->{uri} = $CFG->{Msg_FAQ_URI} . '#'
-          . $CFG->{Error_to_URI}->{$err->{idx}};
-      }
+#      if (defined $CFG->{Error_to_URI}->{$err->{idx}}) {
+#        $err->{uri} = $CFG->{Msg_FAQ_URI} . '#'
+#          . $CFG->{Error_to_URI}->{$err->{idx}};
+#      }
       $err->{src} = $line;
       $err->{col} = ' ' x $col;
 
@@ -1625,6 +1559,78 @@ sub report_errors ($) {
     }
   }
   return $Errors;
+}
+
+#
+# Chop the source line into 3 pieces; the character at which the error
+# was detected, and everything to the left and right of that position.
+# That way we can add markup to the relevant char without breaking &ent().
+sub mark_error (\$\$) {
+  my $line = shift;
+  my $col  = shift;
+
+  #
+  # Left side...
+  my $left;
+  {
+    my $offset = 0; # Left side allways starts at 0.
+    my $length;
+
+    if ($col - 1 < 0) { # If error is at start of line...
+      $length = 0; # ...floor to 0 (no negative offset).
+    } elsif ($col == length $line) { # If error is at EOL...
+      $length = $col - 1; # ...leave last char to indicate position.
+    } else { # Otherwise grab everything up to pos of error.
+      $length = $col;
+    }
+    $left = substr $line, $offset, $length;
+    $left = &ent($left);
+  }
+
+  #
+  # The character where the error was detected.
+  my $char;
+  {
+    my $offset;
+    my $length = 1; # Length is always 1; the char where error was found.
+
+    if ($col == length $line) { # If err is at EOL...
+      $offset = $col - 1; # ...then grab last char on line instead.
+    } else {
+      $offset = $col; # Otherwise just grab the char.
+    }
+    $char = substr $line, $offset, $length;
+    $char = &ent($char);
+  }
+
+  #
+  # The right side up to the end of the line...
+  my $right;
+  {
+    my $offset;
+    my $length;
+
+    # Offset...
+    if ($col == length $line) { # If at EOL...
+      $offset = 0; # Don't bother as there is nothing left to grab.
+    } else {
+      $offset = $col + 1; # Otherwise get everything from char-after-error.
+    }
+
+    # Length...
+    if ($col == length $line) { # If at end of line...
+      $length = 0; # ...then don't grab anything.
+    } else {
+      $length = length($line) - ($col - 1); # Otherwise get the rest of the line.
+    }
+    $right = substr $line, $offset, $length;
+    $right = &ent($right);
+  }
+
+  $char = qq(<strong title="Position where error was detected.">$char</strong>);
+  $line = $left . $char . $right;
+
+  return $line;
 }
 
 
