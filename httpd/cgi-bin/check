@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.51 2003-05-24 12:30:50 link Exp $
+# $Id: check,v 1.305.2.52 2003-05-24 15:16:47 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.51 $;
+  $VERSION    =  q$Revision: 1.305.2.52 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -172,7 +172,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-05-24 12:30:50 $,
+                              Date => q$Date: 2003-05-24 15:16:47 $,
                              });
 
 #
@@ -366,7 +366,7 @@ if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
     if ($File->{Opt}->{FB}->{Charset} and not $File->{Charset}->{Use}) {
       &add_warning($File, 'fallback', 'No Character Encoding Found!', <<".EOF."); # Warn about fallback...
   Falling back to "$File->{Charset}->{Override}"
-  (<a href="docs/errors.html#fbc">explain...</a>).
+  (<a href="docs/users.html#fbc">explain...</a>).
 .EOF.
       $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
     } else {
@@ -1531,7 +1531,7 @@ it to reflect this new DOCTYPE.
 
     if ($File->{Opt}->{FB}->{DOCTYPE}) {
       &add_warning($File, 'fallback', 'No DOCTYPE Found!', <<".EOF.");
-Falling back to HTML 4.01 Transitional. (<a href="docs/errors.html#fbd">explain...</a>)
+Falling back to HTML 4.01 Transitional. (<a href="docs/users.html#fbd">explain...</a>)
 .EOF.
       $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
     } else {
