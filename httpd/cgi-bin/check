@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.181 2001-09-14 02:31:27 link Exp $
+# $Id: check,v 1.182 2001-09-14 03:13:44 link Exp $
 
 #
 # We need Perl 5.004.
@@ -91,9 +91,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.181 $;
+$VERSION    =  q$Revision: 1.182 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-09-14 02:31:27 $;
+$DATE       =  q$Date: 2001-09-14 03:13:44 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -1711,8 +1711,11 @@ sub preparse {
     ($File->{Root}, $File->{DOCTYPE}) = shift =~  m(<!DOCTYPE\s+(\w+)\s+PUBLIC\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
   };
   my $pi = sub {
+    return if $File->{XML_Charset};
     my $pi = shift;
-    $pi =~ m(<\?xml[^>]*\sencoding\s*=\s*([\"\'])([A-Za-z][A-Za-z0-9._\-]*)\1)s;
+    return unless $pi =~ m(<\?xml);
+    $pi =~ m(<\?xml[^>]*\sencoding\s*=\s*([\"\'])([A-Za-z][-A-Za-z0-9._]*)\1)s;
+    warn qq("$1" - "$2"\n);
     $File->{XML_Charset} = lc $2;
   };
   my $start = sub {
