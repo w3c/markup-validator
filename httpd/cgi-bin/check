@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.136 2001-07-01 13:33:24 duerst Exp $
+# $Id: check,v 1.137 2001-07-02 09:19:16 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.136 $;
+$VERSION    =  q$Revision: 1.137 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-01 13:33:24 $;
+$DATE       =  q$Date: 2001-07-02 09:19:16 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -285,14 +285,10 @@ if ($q->param('charset')) {
 #
 # If we find a XML declaration with charset information,
 # we take it into account.
-foreach my $line (@{$File->{Content}}) {
-  # @@ needs to handle declarations that span more than one line
-  if ($line =~ /<\?xml\s/) {
-    if ($line =~ /encoding\s*=[\s\"\']*([^\s;\"\'>]*)/) {
-      $File->{XML_Charset} = lc $1;
-    }
-    last;
-  }
+# @@ needs to handle declarations that span more than one line
+if (${$File->{Content}}[0] =~
+         /^<\?xml[^>]*\sencoding\s*=\s*([\"\'])([A-Za-z][A-Za-z0-9._\-]*)\1/) {
+  $File->{XML_Charset} = lc $2;
 }
 
 #
