@@ -40,15 +40,15 @@ PUBLIC "-//W3C//ENTITIES XHTML 1.1 Document Model 1.0//EN" "REC-xhtml11-20010531
 
         -- Oasis entity catalog for Extensible HTML 1.0 --
 
-PUBLIC  "-//W3C//DTD XHTML 1.0 Strict//EN"       "REC-xhtml1-20000126/xhtml1-strict.dtd"
-PUBLIC  "-//W3C//DTD XHTML 1.0 Transitional//EN" "REC-xhtml1-20000126/xhtml1-transitional.dtd"
-PUBLIC  "-//W3C//DTD XHTML 1.0 Frameset//EN"     "REC-xhtml1-20000126/xhtml1-frameset.dtd"
+PUBLIC  "-//W3C//DTD XHTML 1.0 Strict//EN"       "REC-xhtml1-20020801/xhtml1-strict.dtd"
+PUBLIC  "-//W3C//DTD XHTML 1.0 Transitional//EN" "REC-xhtml1-20020801/xhtml1-transitional.dtd"
+PUBLIC  "-//W3C//DTD XHTML 1.0 Frameset//EN"     "REC-xhtml1-20020801/xhtml1-frameset.dtd"
 
         -- ISO latin 1 entity set for Extensible HTML (XML 1.0 format) --
 
-PUBLIC	"-//W3C//ENTITIES Latin 1 for XHTML//EN" "REC-xhtml1-20000126/xhtml-lat1.ent"
-PUBLIC	"-//W3C//ENTITIES Symbols for XHTML//EN" "REC-xhtml1-20000126/xhtml-symbol.ent"
-PUBLIC	"-//W3C//ENTITIES Special for XHTML//EN" "REC-xhtml1-20000126/xhtml-special.ent"
+PUBLIC	"-//W3C//ENTITIES Latin 1 for XHTML//EN" "REC-xhtml1-20020801/xhtml-lat1.ent"
+PUBLIC	"-//W3C//ENTITIES Symbols for XHTML//EN" "REC-xhtml1-20020801/xhtml-symbol.ent"
+PUBLIC	"-//W3C//ENTITIES Special for XHTML//EN" "REC-xhtml1-20020801/xhtml-special.ent"
 
         -- XHTML Basic DTD modular driver file --
 PUBLIC "-//W3C//DTD XHTML Basic 1.0//EN" "REC-xhtml-basic-20001219/xhtml-basic10.dtd"
