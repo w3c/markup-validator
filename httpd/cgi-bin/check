@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.46 2003-05-20 16:26:34 link Exp $
+# $Id: check,v 1.305.2.47 2003-05-23 14:25:23 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.46 $;
+  $VERSION    =  q$Revision: 1.305.2.47 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -172,7 +172,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-05-20 16:26:34 $,
+                              Date => q$Date: 2003-05-23 14:25:23 $,
                              });
 
 #
@@ -407,6 +407,17 @@ unless ($File->{Charset}->{Use}) { # No charset given...
       Since none of these sources yielded any usable information, I will not be
       able to validate this document. Sorry. Please make sure you specify the
       character encoding in use.
+    </p>
+    <p class="note">
+      Specifying a character encoding is normally done in the web server
+      configuration file or administration program. The <a
+        href="http://www.w3.org/><abbr
+          title="World Wide Web Consortium">W3C</abbr></a> <a
+        href="http://www.w3.org/International/"><abbr
+          title="Internationalization">I18N</abbr> Activity</a> has collected
+        <a href="http://www.w3.org/International/O-HTTP-charset"
+           title="A Few Tips On How To Specify The Character Encoding">a few
+          tips on how to do this</a> in popular web server implementations.
     </p>
 .EOF.
   $File->{'Error Message'} .= &iana_charset_blurb();
