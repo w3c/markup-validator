@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.73 2002-08-17 17:11:46 link Exp $
+# $Id: check,v 1.200.2.74 2002-08-17 17:41:02 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.200.2.73 $;
+  $VERSION    =  q$Revision: 1.200.2.74 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-08-17 17:11:46 $,
+			      Date => q$Date: 2002-08-17 17:41:02 $,
 			     });
 
 #
@@ -206,6 +206,8 @@ $File->{Opt}->{'URI'}            = $q->param('uri')     ? $q->param('uri')     :
 $File->{Opt}->{'Output'}         = $q->param('output')  ? $q->param('output')  : 'html';
 
 $DEBUG = $File->{Opt}->{Debug};
+
+&abort_if_error_flagged;
 
 #
 # Get the file and metadata.
@@ -1923,6 +1925,13 @@ sub prepCGI {
   # Munge the URI to include commonly omitted prefix.
   $q->param('uri', 'http://' . $q->param('uri')) if $q->param('uri') =~ m(^www)i;
 
+  #
+  # Flag an error if we didn't get a file to validate.
+  unless ($q->param('uri')) {
+    $File->{'Error Flagged'} = TRUE;
+    $File->{'Error Message'} = &uri_rejected;
+  }
+
   return $q;
 }
 
@@ -1955,7 +1964,10 @@ sub prepSSI {
 #
 # Output errors for a rejected URI.
 sub uri_rejected {
-  my $scheme = shift->scheme() || 'undefined';
+  my $scheme = shift || 'undefined';
+  unless ($scheme == 'undefined') {
+    $scheme = $scheme->scheme();
+  }
 
   return <<".EOF.";
     <div class="error">
