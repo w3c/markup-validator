@@ -5,7 +5,7 @@
 # (c) 1999-2001 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.76 2001-03-26 22:46:05 hugo Exp $
+# $Id: checklink.pl,v 2.77 2001-03-26 23:12:52 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -20,7 +20,7 @@
 #	http://validator.w3.org/checklink
 #
 # Comments and suggestions should be sent to the www-validator mailing list:
-#	mailto:www-validator@w3.org
+#	www-validator@w3.org (with 'checklink' in the subject)
 #	http://lists.w3.org/Archives/Public/www-validator/ (archives)
 
 use strict;
@@ -38,7 +38,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.76 $ . '(c) 1999-2001 W3C';
+my $VERSION = q$Revision: 2.77 $ . '(c) 1999-2001 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -58,7 +58,6 @@ my $_http_proxy;
 my $_accept_language = 1;
 my $_languages = '*';
 my $_base_location = '.';
-my $_contact_address = 'www-validator@w3.org';
 my $_masquerade = 0;
 my $_local_dir = my $_remote_masqueraded_uri = '';
 my $_hide_same_realm = 0;
@@ -294,7 +293,7 @@ Options:
 
 Documentation at: http://www.w3.org/2000/07/checklink
 Please send bug reports and comments to the www-validator mailing list:
-  $_contact_address
+  www-validator\@w3.org (with 'checklink' in the subject)
   Archives are at: http://lists.w3.org/Archives/Public/www-validator/
 ";
     exit(0);
@@ -1745,8 +1744,19 @@ sub html_footer() {
 <hr>
 <address>
 $PROGRAM $VERSION<br>
-Written by <a href=\"http://www.w3.org/People/Hugo/\">Hugo Haas</a>. Please send bug reports and comments to the <a href=\"mailto:$_contact_address\">www-validator mailing list</a> (<a href=\"http://lists.w3.org/Archives/Public/www-validator/\">archives</a>).<br>
-Check out the <a href=\"http://www.w3.org/2000/07/checklink\">documentation</a>. Download the <a href=\"http://dev.w3.org/cvsweb/~checkout~/validator/httpd/cgi-bin/checklink.pl?rev=".$REVISION."&amp;content-type=text/plain\">source code</a> from the <a href=\"http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/checklink.pl\">CVS log</a>.
+Written by <a href=\"http://www.w3.org/People/Hugo/\">Hugo Haas</a>.
+Please send bug reports, suggestions and comments to the
+<a href=\"mailto:www-validator\@w3.org?subject=checklink%3A%20\">www-validator
+mailing list</a>
+(<a href=\"http://lists.w3.org/Archives/Public/www-validator/\">archives</a>).
+<br>
+Check out the
+<a href=\"http://www.w3.org/2000/07/checklink\">documentation</a>.
+Download the
+<a href=\"http://dev.w3.org/cvsweb/~checkout~/validator/httpd/cgi-bin/checklink.pl?rev=".$REVISION."&amp;content-type=text/plain\">source
+code</a> from the
+<a href=\"http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/checklink.pl\">CVS
+log</a>.
 </address>
 </body>
 </html>
