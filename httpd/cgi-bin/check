@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.54 2002-07-21 17:35:10 link Exp $
+# $Id: check,v 1.200.2.55 2002-07-22 01:49:58 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.200.2.54 $;
+  $VERSION    =  q$Revision: 1.200.2.55 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-07-21 17:35:10 $,
+			      Date => q$Date: 2002-07-22 01:49:58 $,
 			     });
 
 #
@@ -296,13 +296,13 @@ if ($File->{Charset}->{HTTP}) {
     </p>
     <dl>
       <dt>The "charset" parameter on the HTTP Content-Type field:</dt>
-      <dd>$File->{Charset}->{HTTP}</dd>
-      <dt>The "encoding" attribute on the XML Declaration (if this was an XML document instance):</dt>
-      <dd>$File->{Charset}->{XML}</dd>
-      <dt>Any "charset" value given as an attribute in a HTML "META" element:</dt>
-      <dd>$File->{Charset}->{META}</dd>
-      <dt>And the Character Encoding Auto-Detection Algorithm from Appendix F of the XML Reccomendation:</dt>
-      <dd>$File->{Charset}->{AUTO}</dd>
+      <dd>"$File->{Charset}->{HTTP}"</dd>
+      <dt>The "encoding" attribute on the XML Declaration:</dt>
+      <dd>"$File->{Charset}->{XML}"</dd>
+      <dt>Any "charset" value given in a HTML "META" element:</dt>
+      <dd>"$File->{Charset}->{META}"</dd>
+      <dt>And the charset autodetect from the XML Reccomendation:</dt>
+      <dd>"$File->{Charset}->{AUTO}"</dd>
     </dl>
     <p>
       Since none of these sources yielded any usable information, I will not be
@@ -320,6 +320,10 @@ if ($File->{Charset}->{HTTP}) {
     }
   }
 }
+
+#
+# Abort if an error was flagged while finding the encoding.
+&abort_if_error_flagged($File);
 
 
 #
@@ -2075,8 +2079,6 @@ sub validate_encoding {
         <p>The detected character encoding was "$File->{Charset}->{Use}".</p>
         <p>The error was "$@".</p>
         <p>The command was "$command".</p>
-        <p>The Result Charset was "$result_charset".</p>
-        <p>The Use Charset was "$File->{Charset}->{Use}".</p>
         <p>
           If you believe the character encoding to be valid you can submit a request for
           that character encoding (see the <a href="feedback.html">feedback page</a>
