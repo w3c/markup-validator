@@ -1,14 +1,15 @@
 <dl id="warnings">
 
 <TMPL_IF NAME="W01">
-  <dt id="W01">Missing "<code>charset</code>" attribute for "<code><TMPL_VAR NAME="W01_ct" ESCAPE="HTML"></code>" document.</dt>
+  <dt id="W01">Missing "<code>charset</code>" attribute for
+    "<code><TMPL_VAR NAME="W01_ct" ESCAPE="HTML"></code>" document.</dt>
   <dd>
     <p>
       The HTTP <code>Content-Type</code> header
       (<code><TMPL_VAR NAME="W01_ct" ESCAPE="HTML"></code>) sent by your web
       <TMPL_IF NAME="W01_upload">browser<TMPL_ELSE>server</TMPL_IF>
-      (<code><TMPL_VAR NAME="W01_agent" ESCAPE="HTML"></code>) did not contain a
-      "<code>charset</code>" parameter, but the Content-Type was one of
+      (<code><TMPL_VAR NAME="W01_agent" ESCAPE="HTML"></code>) did not contain
+      a "<code>charset</code>" parameter, but the Content-Type was one of
       the XML <code>text/*</code> sub-types.
     </p>
     <p>
@@ -27,19 +28,27 @@
 <TMPL_IF NAME="W02">
   <dt id="W02">No Character Encoding Found!</dt>
   <dd>
-    Falling back to "<code><TMPL_VAR NAME="W02_charset" ESCAPE="HTML"></code>"
-    (<a href="docs/users.html#fbc">explain...</a>).
+    <p>
+      Falling back to
+      "<code><TMPL_VAR NAME="W02_charset" ESCAPE="HTML"></code>"
+      (<a href="docs/users.html#fbc">explain...</a>).
+    </p>
   </dd>
 </TMPL_IF>
 <TMPL_IF NAME="W03">
   <dt id="W03">Character Encoding Override in effect!</dt>
   <dd>
-    The detected character encoding "<code><TMPL_VAR NAME="W03_use" ESCAPE="HTML"></code>"
-    has been suppressed and "<code><TMPL_VAR NAME="W03_opt" ESCAPE="HTML"></code>" used instead.
+    <p>
+      The detected character encoding
+      "<code><TMPL_VAR NAME="W03_use" ESCAPE="HTML"></code>"
+      has been suppressed and
+      "<code><TMPL_VAR NAME="W03_opt" ESCAPE="HTML"></code>" used instead.
+    </p>
   </dd>
 </TMPL_IF>
 <TMPL_IF NAME="W04">
-  <dt id="W04">No Character Encoding Found! Falling back to <code>UTF-8</code>.</dt>
+  <dt id="W04">No Character Encoding Found!
+    Falling back to <code>UTF-8</code>.</dt>
   <dd>
     <p>
       I was not able to extract a character encoding labeling from any of
@@ -86,107 +95,136 @@
       common encodings if you are not sure what encoding to choose.
     </p>
   <TMPL_ELSE>
-    <p>So what should I do? <a href="docs/help.html#faq-charset">Tell me more...</a></p>
+    <p>So what should I do?
+      <a href="docs/help.html#faq-charset">Tell me more...</a></p>
   </TMPL_IF>
   </dd>
 </TMPL_IF>
 <TMPL_IF NAME="W05">
   <dt id="W05"><code>DOCTYPE</code> Override in effect!</dt>
   <dd>
-    Any DOCTYPE Declaration in the document has been suppressed and the DOCTYPE
-    for "<code><TMPL_VAR NAME="W05_dtd" ESCAPE="HTML"></code>" inserted instead. The document
-    will not be Valid until you alter the source file to reflect this new DOCTYPE.
+    <p>
+      Any DOCTYPE Declaration in the document has been suppressed and the
+      DOCTYPE for "<code><TMPL_VAR NAME="W05_dtd" ESCAPE="HTML"></code>"
+      inserted instead. The document will not be Valid until you alter the
+      source file to reflect this new DOCTYPE.
+    </p>
   </dd>
 </TMPL_IF>
 <TMPL_IF NAME="W06">
   <dt id="W06">Unable to Determine Parse Mode!</dt>
-  <dd>Falling back to SGML mode.</dd>
+  <dd><p>Falling back to SGML mode.</p></dd>
 </TMPL_IF>
 <TMPL_IF NAME="W07">
   <dt id="W07">Contradictory Parse Modes Detected!</dt>
   <dd>
-    The MIME Media Type (<code><TMPL_VAR NAME="W07_mime" ESCAPE="HTML"></code>)
-    indicated parse mode should be <TMPL_VAR NAME="W07_ct" ESCAPE="HTML">, but the
-    <code>DOCTYPE</code> Declaration indicates <TMPL_VAR NAME="W07_dtd" ESCAPE="HTML"> mode.
-    Using <TMPL_VAR NAME="W07_ct" ESCAPE="HTML"> mode based on <code>Content-Type</code> header.
+    <p>
+      The MIME Media Type
+      (<code><TMPL_VAR NAME="W07_mime" ESCAPE="HTML"></code>) indicated parse
+       mode should be <TMPL_VAR NAME="W07_ct" ESCAPE="HTML">, but the
+       <code>DOCTYPE</code> Declaration indicates
+       <TMPL_VAR NAME="W07_dtd" ESCAPE="HTML"> mode.  Using
+       <TMPL_VAR NAME="W07_ct" ESCAPE="HTML"> mode based on the
+       <code>Content-Type</code> header.
+    </p>
   </dd>
 </TMPL_IF>
 <TMPL_IF NAME="W08">
   <dt id="W08">Unknown Document Type and Parse Mode!</dt>
   <dd>
-    The MIME Media Type (<code><TMPL_VAR NAME="W08_mime" ESCAPE="HTML"></code>) for
-    this document is used to serve both SGML and XML based documents, and
-    no <code>DOCTYPE</code> Declaration was found to disambiguate it.
-    Parsing will continue in SGML mode and with a fallback <code>DOCTYPE</code>
-    similar to HTML 4.01 Transitional.
+    <p>
+      The MIME Media Type
+      (<code><TMPL_VAR NAME="W08_mime" ESCAPE="HTML"></code>) for this
+      document is used to serve both SGML and XML based documents, and no
+      <code>DOCTYPE</code> Declaration was found to disambiguate it. Parsing
+      will continue in SGML mode and with a fallback
+      <code>DOCTYPE</code> similar to HTML 4.01 Transitional.
+    </p>
   </dd>
 </TMPL_IF>
 <TMPL_IF NAME="W09">
   <dt id="W09"><code>DOCTYPE</code> Fallback in effect!</dt>
   <dd>
-    The DOCTYPE Declaration was not recognized or is missing. This
-    probably means that the Formal Public Identifier contains a spelling
-    error, or that the Declaration is not using correct syntax. Validation
-    has been performed using a default "fallback" Document Type Definition
-    that closely resembles $dtd, but the document will not
-    be Valid until you have corrected the problem with the DOCTYPE
-    Declaration.
+    <p>
+      The DOCTYPE Declaration was not recognized or is missing. This
+      probably means that the Formal Public Identifier contains a spelling
+      error, or that the Declaration is not using correct syntax. Validation
+      has been performed using a default "fallback" Document Type Definition
+      that closely resembles $dtd, but the document will not
+      be Valid until you have corrected the problem with the DOCTYPE
+      Declaration.
+    </p>
   </dd>
 </TMPL_IF>
 <TMPL_IF NAME="W10">
   <dt id="W10">Unknown Namespace Found</dt>
   <dd>
-    Unknown namespace "<code><TMPL_VAR NAME="W10_ns" ESCAPE="HTML"></code>" for
-    <TMPL_VAR NAME="W10_type" ESCAPE="HTML"> document!",
+    <p>
+      Unknown namespace "<code><TMPL_VAR NAME="W10_ns" ESCAPE="HTML"></code>"
+      for <TMPL_VAR NAME="W10_type" ESCAPE="HTML"> document!
+    </p>
   </dd>
 </TMPL_IF>
 <TMPL_IF NAME="W11">
   <dt id="W11">Namespace Found in non-XML Document</dt>
   <dd>
-    Namespace "<code><TMPL_VAR NAME="W11_rns" ESCAPE="HTML"></code>" found, but document
-    type is not XML!
+    <p>
+      Namespace "<code><TMPL_VAR NAME="W11_rns" ESCAPE="HTML"></code>" found,
+      but document type is not XML!
+    </p>
   </dd>
 </TMPL_IF>
 <TMPL_IF NAME="W12">
   <dt id="W12">No Namespace Found</dt>
   <dd>
-    No Namespace was found, but document type requires one to be present!
+    <p>
+      No Namespace was found, but document type requires one to be present!
+    </p>
   </dd>
 </TMPL_IF>
 <TMPL_IF NAME="W13">
   <dt id="W13"><code>DOCTYPE</code> Override in effect!</dt>
   <dd>
-    The detected DOCTYPE Declaration "<code><TMPL_VAR NAME="W13_org" ESCAPE="HTML"></code>"
-    has been suppressed and the DOCTYPE for
-    "<code><TMPL_VAR NAME="W13_new" ESCAPE="HTML"></code>" inserted instead, but even if no
-    errors are shown below the document will not be Valid until you update
-    it to reflect this new DOCTYPE.
+    <p>
+      The detected DOCTYPE Declaration
+      "<code><TMPL_VAR NAME="W13_org" ESCAPE="HTML"></code>" has been
+      suppressed and the DOCTYPE for
+      "<code><TMPL_VAR NAME="W13_new" ESCAPE="HTML"></code>" inserted instead,
+      but even if no errors are shown below the document will not be Valid
+      until you update it to reflect this new DOCTYPE.
+    </p>
   </dd>
 </TMPL_IF>
 <TMPL_IF NAME="W14">
   <dt id="W14">No <code>DOCTYPE</code> Found!</dt>
   <dd>
-    Falling back to HTML 4.01 Transitional.
-    (<a href="docs/users.html#fbd">explain...</a>)
+    <p>
+      Falling back to HTML 4.01 Transitional.
+      (<a href="docs/users.html#fbd">explain...</a>)
+    </p>
   </dd>
 </TMPL_IF>
 <TMPL_IF NAME="W15">
   <dt id="W15"><code>DOCTYPE</code> Override in effect!</dt>
   <dd>
-    The DOCTYPE Declaration for "<TMPL_VAR NAME="W15_dtd" ESCAPE="HTML">" has been inserted
-    at the start of the document, but even if no errors are shown below the
-    document will not be Valid until you add the new DOCTYPE Declaration.
+    <p>
+      The DOCTYPE Declaration for "<TMPL_VAR NAME="W15_dtd" ESCAPE="HTML">"
+      has been inserted at the start of the document, but even if no errors
+      are shown below the document will not be Valid until you add the new
+      DOCTYPE Declaration.
+    </p>
   </dd>
 </TMPL_IF>
 <TMPL_IF NAME="W16">
-  <dt id="W16">No DOCTYPE Found! Falling Back to <TMPL_VAR NAME="W16_dtd" ESCAPE="HTML">.</dt>
+  <dt id="W16">No DOCTYPE Found! Falling Back to
+    <TMPL_VAR NAME="W16_dtd" ESCAPE="HTML">.</dt>
   <dd>
     <p>
       A DOCTYPE Declaration is mandatory for most current markup languages
       and without one it is impossible to reliably validate this document.
-      I am falling back to "<TMPL_VAR NAME="W16_dtd" ESCAPE="HTML">" and will attempt to
-      validate the document anyway, but this is very likely to produce
-      spurious error messages for most non-trivial documents.
+      I am falling back to "<TMPL_VAR NAME="W16_dtd" ESCAPE="HTML">" and will
+      attempt to validate the document anyway, but this is very likely to
+      produce spurious error messages for most non-trivial documents.
     </p>
   <TMPL_IF NAME="opt_verbose">
     <TMPL_INCLUDE NAME="doctype_spiel.tmpl">
@@ -208,61 +246,72 @@
 <TMPL_IF NAME="W17">
   <dt id="W17">No Character Encoding detected!</dt>
   <dd>
-    To ensure correct validation, processing, and display, it is important
-    that the character encoding is properly labeled.
-    <a href="http://www.w3.org/International/O-charset.html">More
-    information...</a>
+    <p>
+      To ensure correct validation, processing, and display, it is important
+      that the character encoding is properly labeled.
+      <a href="http://www.w3.org/International/O-charset.html">More
+      information...</a>
+    </p>
   </dd>
 </TMPL_IF>
 <TMPL_IF NAME="W18">
   <dt id="W18">Character Encoding mismatch!</dt>
   <dd>
-    The character encoding specified in the HTTP header
-      (<code><TMPL_VAR NAME="W18_http" ESCAPE="HTML"></code>)
-    is different from the value in the XML declaration
-      (<code><TMPL_VAR NAME="W18_xml" ESCAPE="HTML"></code>).
-    I will use the value from the HTTP header
-      (<code><TMPL_VAR NAME="W18_use" ESCAPE="HTML"></code>).
+    <p>
+      The character encoding specified in the HTTP header
+        (<code><TMPL_VAR NAME="W18_http" ESCAPE="HTML"></code>)
+      is different from the value in the XML declaration
+        (<code><TMPL_VAR NAME="W18_xml" ESCAPE="HTML"></code>).
+      I will use the value from the HTTP header
+        (<code><TMPL_VAR NAME="W18_use" ESCAPE="HTML"></code>).
+    </p>
   </dd>
 </TMPL_IF>
 <TMPL_IF NAME="W19">
   <dt id="W19">Character Encoding mismatch!</dt>
   <dd>
-    The character encoding specified in the HTTP header
-      (<code><TMPL_VAR NAME="W19_http" ESCAPE="HTML"></code>)
-    is different from the value in the <code>&lt;meta&gt;</code> element
-    (<code><TMPL_VAR NAME="W19_meta" ESCAPE="HTML"></code>). I will use the value from the
-    HTTP header (<code><TMPL_VAR NAME="W19_use" ESCAPE="HTML"></code>) for this validation.
+    <p>
+      The character encoding specified in the HTTP header
+        (<code><TMPL_VAR NAME="W19_http" ESCAPE="HTML"></code>)
+      is different from the value in the <code>&lt;meta&gt;</code> element
+      (<code><TMPL_VAR NAME="W19_meta" ESCAPE="HTML"></code>). I will use the
+      value from the HTTP header
+      (<code><TMPL_VAR NAME="W19_use" ESCAPE="HTML"></code>) for this
+      validation.
+    </p>
   </dd>
 </TMPL_IF>
 <TMPL_IF NAME="W20">
   <dt id="W20">Character Encoding mismatch!</dt>
   <dd>
-    The character encoding specified in the XML declaration
-    (<code><TMPL_VAR NAME="W20_xml" ESCAPE="HTML"></code>)
-    is different from the value in the <code>&lt;meta&gt;</code> element
-    (<code><TMPL_VAR NAME="W20_meta" ESCAPE="HTML"></code>). I will use the value from the
-    XML declaration (<code><TMPL_VAR NAME="W20_xml" ESCAPE="HTML"></code>) for this validation.
+    <p>
+      The character encoding specified in the XML declaration
+      (<code><TMPL_VAR NAME="W20_xml" ESCAPE="HTML"></code>)
+      is different from the value in the <code>&lt;meta&gt;</code> element
+      (<code><TMPL_VAR NAME="W20_meta" ESCAPE="HTML"></code>). I will use the
+      value from the XML declaration
+      (<code><TMPL_VAR NAME="W20_xml" ESCAPE="HTML"></code>) for this
+      validation.
+    </p>
   </dd>
 </TMPL_IF>
 <TMPL_IF NAME="W21">
   <dt id="W21">Byte-Order Mark found in UTF-8 File.</dt>
   <dd>
-    The Unicode Byte-Order Mark (BOM) in UTF-8 encoded files is known to cause
-    problems for some text editors and older browsers. You may want to consider
-    avoiding its use until it is better supported.
+    <p>
+      The Unicode Byte-Order Mark (BOM) in UTF-8 encoded files is known to
+      cause problems for some text editors and older browsers. You may want
+      to consider avoiding its use until it is better supported.
+    </p>
   </dd>
 </TMPL_IF>
 
 <TMPL_IF NAME="W@@">
   <dt id="W@@"></dt>
   <dd>
+    <p>
+    </p>
   </dd>
 </TMPL_IF>
 
 </dl><!-- End of "warnings". -->
-
-
-
-
-
