@@ -5,7 +5,7 @@
 # (c) 1999-2001 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.86 2001-09-21 14:15:53 hugo Exp $
+# $Id: checklink.pl,v 2.87 2001-11-26 18:18:49 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -38,7 +38,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.86 $ . '(c) 1999-2001 W3C';
+my $VERSION = q$Revision: 2.87 $ . '(c) 1999-2001 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -1200,10 +1200,8 @@ sub authentication() {
 ##################
 
 sub get_timestamp() {
-    require 'sys/syscall.ph';
-    my $timestamp = pack('LL', ());
-    syscall(&SYS_gettimeofday, $timestamp, 0) != -1 or $timestamp = 0;
-    return($timestamp);
+    use Time::HiRes;
+    return pack('LL', Time::HiRes::gettimeofday());
 }
 
 sub time_diff() {
