@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.62 2003-07-24 02:53:18 link Exp $
+# $Id: check,v 1.305.2.63 2003-07-24 03:10:01 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -130,7 +130,7 @@ BEGIN
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.62 $;
+  $VERSION    =  q$Revision: 1.305.2.63 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -202,7 +202,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-07-24 02:53:18 $,
+                              Date => q$Date: 2003-07-24 03:10:01 $,
                              });
 
 #
@@ -2053,7 +2053,7 @@ EOF
 
   for (@{$File->{Content}}) {
     my $hline = ('&nbsp;' x (4 - length "$line")) . $line;
-    printf qq(<code id="line-%s">%s: %s</code>\n), $line, $hline, ent $_;
+    printf qq(<code id="line-%s">%s: %s</code><br/>\n), $line, $hline, ent $_;
     $line++;
   }
   print "    </div>\n  </div>";

@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.12 2003-07-24 02:53:18 link Exp $ */
+/* $Id: results.css,v 1.13.2.13 2003-07-24 03:10:01 link Exp $ */
 
 .input {
   color: black;
@@ -50,7 +50,6 @@
 }
 
 #source code {
-  display: block;
   white-space: normal;
   font-family: "Bitstream Vera Mono", monospace;
   font-size: smaller;
