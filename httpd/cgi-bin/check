@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.288 2002-11-03 22:09:51 link Exp $
+# $Id: check,v 1.289 2002-11-11 22:39:25 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.288 $;
+  $VERSION    =  q$Revision: 1.289 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -157,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-11-03 22:09:51 $,
+			      Date => q$Date: 2002-11-11 22:39:25 $,
 			     });
 
 #
@@ -1927,14 +1927,6 @@ EOF
 sub prepCGI {
   my $File = shift;
   my    $q = shift;
-
-  # Avoid CGI.pm's "exists but undef" behaviour.
-  if (scalar $q->param) {
-    foreach my $param ($q->param) {
-      next if $param eq 'uploaded_file'; # 'uploaded_file' contains data.
-      $q->param($param, TRUE) unless $q->param($param);
-    }
-  }
 
   # Futz the URI so "/referer" works.
   if ($q->path_info) {
