@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.260 2002-10-25 05:58:43 link Exp $
+# $Id: check,v 1.261 2002-10-25 06:06:11 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.260 $;
+  $VERSION    =  q$Revision: 1.261 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -108,8 +108,9 @@ BEGIN {
     my $fh = new IO::File $file;
     unless (defined $fh) {
       die <<".EOF.";
-open($file) returned: $! (Did you forget to set \$ENV{W3C_VALIDATOR_CFG}
-or copy htdocs/config/check.cfg to /etc/w3c/validator.cfg?)
+open($file) returned: $!
+(Did you forget to set \$ENV{W3C_VALIDATOR_CFG}
+ or to copy htdocs/config/check.cfg to /etc/w3c/validator.conf?)
 .EOF.
     }
 
@@ -156,7 +157,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-25 05:58:43 $,
+			      Date => q$Date: 2002-10-25 06:06:11 $,
 			     });
 
 #
