@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.254 2002-10-23 21:51:22 link Exp $
+# $Id: check,v 1.255 2002-10-23 21:57:09 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.254 $;
+  $VERSION    =  q$Revision: 1.255 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -156,7 +156,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-23 21:51:22 $,
+			      Date => q$Date: 2002-10-23 21:57:09 $,
 			     });
 
 #
@@ -2286,7 +2286,7 @@ X-W3C-Validator-Errors: $errs
     my @offsets = (
 		   $File->{Offsets}->[$err->{line}    ]->[0],
 		   $File->{Offsets}->[$err->{line} - 1]->[1],
-		   $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char} + $err->{line}
+		   $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char}
 		  );
     printf <<".EOF.", &ent($err->{msg});
     <error><line>$err->{line}</line><column>$err->{char}</column><offset>@offsets</offset><msg>%s</msg></error>
@@ -2358,7 +2358,7 @@ X-W3C-Validator-Errors: $errs
       my @offsets = (
 		     $File->{Offsets}->[$err->{line}    ]->[0],
 		     $File->{Offsets}->[$err->{line} - 1]->[1],
-		     $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char} + $err->{line}
+		     $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char}
 		    );
       printf <<".EOF.", &ent($File->{URI}), &ent($err->{msg});
     <asserts>
@@ -2439,7 +2439,7 @@ X-W3C-Validator-Errors: $errs
       my @offsets = (
 		     $File->{Offsets}->[$err->{line}    ]->[0],
 		     $File->{Offsets}->[$err->{line} - 1]->[1],
-		     $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char} + $err->{line}
+		     $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char}
 		    );
       print <<".EOF.";
     [
