@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.368 2005-01-09 14:29:34 ville Exp $
+# $Id: check,v 1.369 2005-01-09 19:19:20 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -222,7 +222,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.368 $;
+  $VERSION    =  q$Revision: 1.369 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -694,7 +694,7 @@ sub parse (\$) {
 
   #
   # Set debug info for HTML report.
-  $T->param(is_debug => $DEBUG);
+  $T->param(opt_debug => $DEBUG);
   $T->param(
             debug => [
                       {name => 'Command',          value => &ent("@cmd")},
