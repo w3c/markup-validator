@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.9 2003-05-24 11:38:05 link Exp $
+   $Id: base.css,v 1.26.2.10 2003-06-01 08:51:41 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -191,7 +191,7 @@ h5, dt {
   text-decoration: none;
   margin-top: 1em;
 }
-		
+
 h6 {
   font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
   font-size-adjust: .53;
@@ -213,7 +213,7 @@ td.comma-tool { background: #e7e7ff;  border : 1px solid black;}
 
 
 /* documentation - table of contents */
-#toc {	
+#toc {
   border-bottom : 2px dotted black;
 }
 
