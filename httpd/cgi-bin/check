@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.100 2004-05-06 15:40:57 ot Exp $
+# $Id: check,v 1.305.2.101 2004-05-06 15:49:03 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.100 $;
+  $VERSION    =  q$Revision: 1.305.2.101 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-06 15:40:57 $,
+                              Date => q$Date: 2004-05-06 15:49:03 $,
                              });
 
 #
@@ -1025,6 +1025,17 @@ sub print_table {
         <legend accesskey="4">Revalidate With Options</legend>
 .EOF.
   print join '', @{&serialize_table($Form, 'header')};
+
+  # this code should not be redundant - we have the same if page is valid
+  my $thispage = $File->{Env}->{'Self URI'};
+  my $escaped_uri = uri_escape($File->{URI});
+  $thispage .= qq(?uri=$escaped_uri);
+  $thispage .= ';ss=1'      if $File->{Opt}->{'Show Source'};
+  $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
+  $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
+  $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
+  $thispage .= ';No200=1'   if $File->{Opt}->{'No200'};
+  # end redundant code
   print <<".EOF.";
       <p><a href='http://qa-dev.w3.org/wmvs/0.6/docs/users.html#Options'>Help</a> on the options is available. 
 	<a href="$thispage;verbose=1">Verbose output</a> will give you explanations in addition to the error messages.);
