@@ -4,15 +4,15 @@
    Copyright 2000-2004 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: navbar.css,v 1.3.2.7 2004-02-17 01:01:36 link Exp $
+   $Id: navbar.css,v 1.3.2.8 2004-03-27 14:36:58 link Exp $
 */
 
 html {
-  min-width: 55em;
+/*  min-width: 55em; */
 }
 
 #menu {
-  min-width: 63em;
+/*  min-width: 63em; */
   list-style-type: none;
   padding: 0;
   margin: 0;
@@ -38,7 +38,8 @@ html {
   background-color: #eee;
   color: #053188;
   font-size: smaller;
-  border-right: solid 1px #ddd;
+  font-variant: small-caps;
+  border-right: solid 1px #bbb;
   border-bottom: solid 1px #ddd;
 }
 
@@ -75,26 +76,31 @@ html {
   font-size:        smaller;
 }
 
-#misclinks p {
-  text-align: left;
+#misclinks dt {
+  text-align: center;
+  background: #ddd;
+  color:      #053188;
+  font-variant: small-caps;
+}
+#misclinks dd {
+  text-align: right;
   margin: 0;
+  padding-bottom: 2ex;
 }
 
-#misclinks ul {
-  padding: 0;
-  margin:  0;
-}
-
+#misclinks ul {margin: 0; padding: 0;}
 #misclinks li {
   list-style-type: none;
   text-align: right;
+}
+#misclinks ul li a {
+  display: block;
 }
 
 #misclinks li a:link, #misclinks li a:visited, div.jumpbar li a:link, div.jumpbar li a:visited {
   text-decoration: none;
   display: block;
-  width: 8em;
-  padding: 2px 0px;
+  padding: 1px 0px;
   margin: 0;
   background-color: #eee;
   color: #053188;
@@ -103,6 +109,8 @@ html {
 
 #misclinks li a:hover {
   text-decoration: underline;
+  background-color: #fff;
+  color: #053188;
 }
 
 #misclinks li a#selected:link, div.jumpbar li a#selected:visited {
