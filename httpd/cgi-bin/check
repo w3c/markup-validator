@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.317 2002-12-07 03:30:52 link Exp $
+# $Id: check,v 1.318 2002-12-07 04:00:18 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -99,8 +99,9 @@ BEGIN {
       (-ConfigFile     => $ENV{W3C_VALIDATOR_CFG} || '/etc/w3c/validator.conf',
        -MergeDuplicateOptions => 'yes',
        -SplitPolicy      => 'equalsign',
-       -UseApacheInclude => 1,
-       -IncludeRelative  => 1,
+       -UseApacheInclude => TRUE,
+       -IncludeRelative  => TRUE,
+       -InterPolateVars  => TRUE,
        -DefaultConfig    => { Allowed_Protocols => 'http,https',
                               SGML_Parser       => '/usr/bin/onsgmls',
                             },
@@ -133,7 +134,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.317 $;
+  $VERSION    =  q$Revision: 1.318 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 } # end of BEGIN block.
