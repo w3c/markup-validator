@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.39 1999-10-04 18:35:29 gerald Exp $
+# $Id: check,v 1.40 1999-10-05 18:58:55 gerald Exp $
 
 #
 # Load modules
@@ -27,8 +27,8 @@ use constant UNDEF => undef;
 # Constant definitions
 #############################################################################
 
-my $cvsrevision	= '$Revision: 1.39 $';
-my $cvsdate	= '$Date: 1999-10-04 18:35:29 $';
+my $cvsrevision	= '$Revision: 1.40 $';
+my $cvsdate	= '$Date: 1999-10-05 18:58:55 $';
 
 my $logfile	= "/var/log/httpd/val-svc";
 
@@ -660,47 +660,47 @@ else {
     print "\n  <pre>\n    No errors found!</pre>\n\n";
     if ( $version ne "unknown" ) {
 	if ( $version =~ /^HTML 2\.0$/ ) {
-	    $gifname = "vh20.gif";
+	    $gifname = "vh20";
 	    $alttext = "Valid HTML 2.0!";
             $gifborder = "";
 	}
 	elsif ( $version =~ /HTML 3\.2</ ) {
-	    $gifname = "vh32.gif";
+	    $gifname = "vh32";
 	    $alttext = "Valid HTML 3.2!";
             $gifhw   = " height=31 width=88";
 	}
 	elsif ( $version =~ /HTML 4\.0<\/a> Strict$/ ) {
-	    $gifname = "vh40.gif";
+	    $gifname = "vh40";
 	    $alttext = "Valid HTML 4.0!";
             $gifborder = "";
             $gifhw   = " height=31 width=88";
 	}
 	elsif ( $version =~ /HTML 4\.0<\/a> / ) {
-	    $gifname = "vh40.gif";
+	    $gifname = "vh40";
 	    $alttext = "Valid HTML 4.0!";
             $gifhw   = " height=31 width=88";
 	}
 	elsif ( $version =~ /HTML 4\.01<\/a> Strict$/ ) {
-	    $gifname = "vh40.gif";
+	    $gifname = "vh40";
 	    $alttext = "Valid HTML 4.01!";
             $gifborder = "";
             $gifhw   = " height=31 width=88";
 	}
 	elsif ( $version =~ /HTML 4\.01<\/a> / ) {
-	    $gifname = "vh40.gif";
+	    $gifname = "vh40";
 	    $alttext = "Valid HTML 4.01!";
             $gifhw   = " height=31 width=88";
 	}
 	elsif ( $version =~ /HTML 3\.0/ ) {
-	    $gifname = "vh30.gif";
+	    $gifname = "vh30";
 	    $alttext = "Valid HTML 3.0!";
 	}
 	elsif ( $version =~ /Netscape/ ) {
-	    $gifname = "vhns.gif";
+	    $gifname = "vhns";
 	    $alttext = "Valid Netscape-HTML!";
 	}
 	elsif ( $version =~ /Hotjava/ ) {
-	    $gifname = "vhhj.gif";
+	    $gifname = "vhhj";
 	    $alttext = "Valid Hotjava-HTML!";
 	}
 	if ( defined $gifname ) {
@@ -1028,7 +1028,7 @@ sub output_closing {
 
 <address>
   <a href="http://validator.w3.org/check/referer"><img
-     src="http://validator.w3.org/images/vh40.gif" height=31 width=88
+     src="http://validator.w3.org/images/vh40" height=31 width=88
      align=right border=0 alt="Valid HTML 4.0!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</A><br>
   $cvsdate
