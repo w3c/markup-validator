@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.86 2004-04-13 01:45:51 ot Exp $
+# $Id: check,v 1.305.2.87 2004-04-17 01:55:26 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -36,27 +36,27 @@ use warnings;
 # when loading modules to prevent non-OO or poorly written modules from
 # polluting our namespace.
 #
-use CGI            2.81 qw(
-			   -newstyle_urls
-			   -private_tempfiles
-			   redirect
-			  ); # 2.81 for XHTML, and import redirect() function.
+use CGI             2.81 qw(
+                            -newstyle_urls
+                            -private_tempfiles
+                            redirect
+                           ); # 2.81 for XHTML, and import redirect() function.
 
-use CGI::Carp           qw(carp croak fatalsToBrowser);
+use CGI::Carp            qw(carp croak fatalsToBrowser);
 use Config::General 2.06 qw(); # Need 2.06 for -SplitPolicy
-use File::Spec          qw();
-use HTML::Parser   3.25 qw(); # Need 3.25 for $p->ignore_elements.
-use HTTP::Request       qw();
-use IO::File            qw();
-use LWP::UserAgent 1.90 qw(); # Need 1.90 for protocols_(allowed|forbidden)
-use Net::hostent        qw(gethostbyname);
-use Net::IP             qw();
-use Set::IntSpan        qw();
-use Socket              qw(inet_ntoa);
-use Text::Iconv         qw();
-use Text::Wrap          qw(wrap);
-use URI                 qw();
-use URI::Escape         qw(uri_escape);
+use File::Spec           qw();
+use HTML::Parser    3.25 qw(); # Need 3.25 for $p->ignore_elements.
+use HTTP::Request        qw();
+use IO::File             qw();
+use LWP::UserAgent  1.90 qw(); # Need 1.90 for protocols_(allowed|forbidden)
+use Net::hostent         qw(gethostbyname);
+use Net::IP              qw();
+use Set::IntSpan         qw();
+use Socket               qw(inet_ntoa);
+use Text::Iconv          qw();
+use Text::Wrap           qw(wrap);
+use URI                  qw();
+use URI::Escape          qw(uri_escape);
 
 
 ###############################################################################
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.86 $;
+  $VERSION    =  q$Revision: 1.305.2.87 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-04-13 01:45:51 $,
+                              Date => q$Date: 2004-04-17 01:55:26 $,
                              });
 
 #
@@ -354,13 +354,12 @@ if ($File->{'Is Upload'}) {
     &add_table($File, qq(<label title="Address of Page to Validate (accesskey: 1)" for="uri">URI</label>),
                '<input accesskey="1" type="text" id="uri" name="uri" size="' . $size
              . '" value="' . $furi . '" />');
-    &add_warning(
-		 $File, 'note', 'Note:',
-		 sprintf(
-			 'The URI you gave me, &lt;%s&gt;, returned a redirect to &lt;%s&gt;.',
-			 &ent($File->{Opt}->{URI}), $furi
-			)
-		);
+    &add_warning($File, 'note', 'Note:',
+      sprintf(
+        'The URI you gave me, &lt;%s&gt;, returned a redirect to &lt;%s&gt;.',
+          &ent($File->{Opt}->{URI}), $furi
+      )
+    );
   }
 }
 
@@ -427,13 +426,13 @@ if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
     } else {
       # Warn about Override...
       unless ($File->{Charset}->{Override} eq $File->{Charset}->{Use}) {
-	my $cs_use = &ent($File->{Charset}->{Use});
-	my $cs_opt = &ent($File->{Charset}->{Override});
-	&add_warning($File, 'override', 'Character Encoding Override in effect!', <<".EOF.");
+        my $cs_use = &ent($File->{Charset}->{Use});
+        my $cs_opt = &ent($File->{Charset}->{Override});
+        &add_warning($File, 'override', 'Character Encoding Override in effect!', <<".EOF.");
       The detected character encoding "<code>$cs_use</code>"
       has been suppressed and "<code>$cs_opt</code>" used instead.
 .EOF.
-	$File->{Tentative} |= T_ERROR;
+        $File->{Tentative} |= T_ERROR;
       }
     }
     $File->{Charset}->{Use} = $File->{Charset}->{Override};
@@ -603,11 +602,11 @@ sub parse (\$) {
   # By default, use SGML catalog file and SGML Declaration.
   my $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'sgml.soc');
   my @spopt = qw(
-		 -R
-		 -wvalid
-		 -wnon-sgml-char-ref
-		 -wno-duplicate
-		);
+                 -R
+                 -wvalid
+                 -wnon-sgml-char-ref
+                 -wno-duplicate
+                );
 
   #
   # Switch to XML semantics if file is XML.
@@ -672,13 +671,13 @@ sub parse (\$) {
 
   if ($DEBUG) {
     &add_table($File, 'Command',
-	       [1, 2, &ent("@cmd")]);
+      [1, 2, &ent("@cmd")]);
     &add_table($File, 'SP_CHARSET_FIXED',
-	       [1, 2, '<code>' . &ent($ENV{SP_CHARSET_FIXED}) . '</code>']);
+      [1, 2, '<code>' . &ent($ENV{SP_CHARSET_FIXED}) . '</code>']);
     &add_table($File, 'SP_ENCODING',
-	       [1, 2, '<code>' . &ent($ENV{SP_ENCODING})      . '</code>']);
+      [1, 2, '<code>' . &ent($ENV{SP_ENCODING})      . '</code>']);
     &add_table($File, 'SP_BCTF',
-	       [1, 2, '<code>' . &ent($ENV{SP_BCTF})          . '</code>']);
+      [1, 2, '<code>' . &ent($ENV{SP_BCTF})          . '</code>']);
   }
 
   #
@@ -728,7 +727,7 @@ sub parse (\$) {
 
     if (/^Axmlns() \w+ (.*)/ or /^Axmlns:([^ ]+) \w+ (.*)/) {
       if (not $File->{Namespace} and $elements_found == 0 and $1 eq "") {
-	$File->{Namespace} = $2;
+        $File->{Namespace} = $2;
       }
       $File->{Namespaces}->{$2}++;
     }
@@ -793,15 +792,13 @@ if ($File->{'Is Upload'}) {
 if (&is_xml($File->{Type}) and $File->{Namespace}) {
   my $rns = &ent($File->{Namespace});
   if (&is_xhtml($File->{Type}) and $File->{Namespace} ne 'http://www.w3.org/1999/xhtml') {
-    &add_warning(
-		 $File, 'warning', 'Warning:',
-		 "Unknown namespace (&#171;<code>$rns</code>&#187;) for text/html document!",
-		);
+    &add_warning($File, 'warning', 'Warning:',
+      "Unknown namespace (&#171;<code>$rns</code>&#187;) for text/html document!",
+    );
   } elsif (&is_svg($File->{Type}) and $File->{Namespace} ne 'http://www.w3.org/2000/svg') {
-    &add_warning(
-		 $File, 'warning', 'Warning:',
-		 "Unknown namespace (&#171;<code>$rns</code>&#187;) for SVG document!",
-		);
+    &add_warning($File, 'warning', 'Warning:',
+      "Unknown namespace (&#171;<code>$rns</code>&#187;) for SVG document!",
+    );
   }
 
   &add_table($File, 'Root Namespace', [1, 2, qq(<a href="$rns">$rns</a>)])
@@ -1091,10 +1088,10 @@ sub add_warning ($$$$) {
   my $Message = shift;
 
   push @{$File->{Warnings}}, {
-			      Class   => $Class,
-			      Title   => $Title,
-			      Message => $Message,
-			     };
+                              Class   => $Class,
+                              Title   => $Title,
+                              Message => $Message,
+                             };
 }
 
 
@@ -1365,11 +1362,12 @@ sub handle_uri {
     exit;
   }
 
-  my($type, $ct, $charset) = &parse_content_type(
-						 $File,
-						 $res->header('Content-Type'),
-						 scalar($res->request->url),
-						);
+  my($type, $ct, $charset)
+    = &parse_content_type(
+                          $File,
+                          $res->header('Content-Type'),
+                          scalar($res->request->url),
+                         );
 
   my $lastmod = undef;
   if ( $res->last_modified ) {
@@ -1463,8 +1461,8 @@ sub parse_content_type {
   if ($type =~ m(/)) {
     if ($type =~ m(text/css) and defined $url) {
       print redirect
-	'http://jigsaw.w3.org/css-validator/validator?uri='
-	  . uri_escape $url;
+        'http://jigsaw.w3.org/css-validator/validator?uri='
+          . uri_escape $url;
       exit;
     } else {
       $File->{'Error Flagged'} = TRUE;
@@ -1693,10 +1691,9 @@ sub parse_errors ($$) {
     if ($err->{type} eq 'E' or $err->{type} eq 'X' or $err->{type} eq 'Q') {
       $err->{msg}  = join ':', @errors[6 .. $#errors];
     } elsif ($err->{type} eq 'W') {
-      &add_warning(
-		   $File, 'fake', 'Warning:',
-		   "Line $err->{line}, column $err->{char}: $errors[6]",
-		  );
+      &add_warning($File, 'fake', 'Warning:',
+        "Line $err->{line}, column $err->{char}: $errors[6]",
+      );
       $err->{msg}  = join ':', @errors[6 .. $#errors];
     } else {
       $err->{type} = 'I';
@@ -1734,8 +1731,8 @@ sub parse_errors ($$) {
       </p>
 .EOF.
       if ($File->{Opt}->{Verbose}) {
-	$message .= &doctype_spiel();
-	$message .= <<".EOF.";
+        $message .= &doctype_spiel();
+        $message .= <<".EOF.";
       <p>
         The W3C QA Activity maintains a <a
           href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">List of
@@ -1819,58 +1816,58 @@ EOHD
       # Left side...
       my $left;
       {
-	my $offset = 0; # Left side allways starts at 0.
-	my $length;
+        my $offset = 0; # Left side allways starts at 0.
+        my $length;
 
-	if ($col - 1 < 0) { # If error is at start of line...
-	  $length = 0; # ...floor to 0 (no negative offset).
-	} elsif ($col == length $line) { # If error is at EOL...
-	  $length = $col - 1; # ...leave last char to indicate position.
-	} else { # Otherwise grab everything up to pos of error.
-	  $length = $col;
-	}
-	$left = substr $line, $offset, $length;
-	$left = &ent($left);
+        if ($col - 1 < 0) { # If error is at start of line...
+          $length = 0; # ...floor to 0 (no negative offset).
+        } elsif ($col == length $line) { # If error is at EOL...
+          $length = $col - 1; # ...leave last char to indicate position.
+        } else { # Otherwise grab everything up to pos of error.
+          $length = $col;
+        }
+        $left = substr $line, $offset, $length;
+        $left = &ent($left);
       }
 
       #
       # The character where the error was detected.
       my $char;
       {
-	my $offset;
-	my $length = 1; # Length is always 1; the char where error was found.
+        my $offset;
+        my $length = 1; # Length is always 1; the char where error was found.
 
-	if ($col == length $line) { # If err is at EOL...
-	  $offset = $col - 1; # ...then grab last char on line instead.
-	} else {
-	  $offset = $col; # Otherwise just grab the char.
-	}
-	$char = substr $line, $offset, $length;
-	$char = &ent($char);
+        if ($col == length $line) { # If err is at EOL...
+          $offset = $col - 1; # ...then grab last char on line instead.
+        } else {
+          $offset = $col; # Otherwise just grab the char.
+        }
+        $char = substr $line, $offset, $length;
+        $char = &ent($char);
       }
 
       #
       # The right side up to the end of the line...
       my $right;
       {
-	my $offset;
-	my $length;
+        my $offset;
+        my $length;
 
-	# Offset...
-	if ($col == length $line) { # If at EOL...
-	  $offset = 0; # Don't bother as there is nothing left to grab.
-	} else {
-	  $offset = $col + 1; # Otherwise get everything from char-after-error.
-	}
+        # Offset...
+        if ($col == length $line) { # If at EOL...
+          $offset = 0; # Don't bother as there is nothing left to grab.
+        } else {
+          $offset = $col + 1; # Otherwise get everything from char-after-error.
+        }
 
-	# Length...
-	if ($col == length $line) { # If at end of line...
-	  $length = 0; # ...then don't grab anything.
-	} else {
-	  $length = length($line) - ($col - 1); # Otherwise get the rest of the line.
-	}
-	$right = substr $line, $offset, $length;
-	$right = &ent($right);
+        # Length...
+        if ($col == length $line) { # If at end of line...
+          $length = 0; # ...then don't grab anything.
+        } else {
+          $length = length($line) - ($col - 1); # Otherwise get the rest of the line.
+        }
+        $right = substr $line, $offset, $length;
+        $right = &ent($right);
       }
 
       $char = qq(<strong title="Position where error was detected.">$char</strong>);
@@ -1878,7 +1875,7 @@ EOHD
 
       #DEBUG: Print misc. vars relevant to source display.
       if ($DEBUG) {
-	$line .= "<br/> <strong>org length: $orglength - adj length: $adjlength - org col: $orgcol - adj col: $adjcol</strong>";
+        $line .= "<br/> <strong>org length: $orglength - adj length: $adjlength - org col: $orgcol - adj col: $adjcol</strong>";
       }
       #DEBUG;
 
@@ -1890,14 +1887,14 @@ EOHD
       print qq(<p><code class="input">$line</code></p>);
 
       if ($err->{num} and $File->{Opt}->{Verbose}) {
-	my(undef, $num) = split /\./, $err->{num};
-	if (exists $Msgs{$num}) {
-	  print qq(\n<div class="hidden mid-$num"></div>\n);
-	} else {
-	  $Msgs{$num} = 1;
-	  print $RSRC->{msg}->{$num}->{verbose}
-	    if $RSRC->{msg}->{$num};
-	}
+        my(undef, $num) = split /\./, $err->{num};
+        if (exists $Msgs{$num}) {
+          print qq(\n<div class="hidden mid-$num"></div>\n);
+        } else {
+          $Msgs{$num} = 1;
+          print $RSRC->{msg}->{$num}->{verbose}
+            if $RSRC->{msg}->{$num};
+        }
       }
       print "</li>\n";
     }
@@ -2138,24 +2135,24 @@ EOF
       print "    <ul>\n";
     } else {
       if ($level < $prevlevel) {
-	print "</li>\n";
-	for (my $i = $prevlevel; $i > $level; $i--) {
-	  print "  " x ($i + 2), "</ul>\n";
-	  print "  " x (($i + 2) - 1), "</li>\n";
-	}
+        print "</li>\n";
+        for (my $i = $prevlevel; $i > $level; $i--) {
+          print "  " x ($i + 2), "</ul>\n";
+          print "  " x (($i + 2) - 1), "</li>\n";
+        }
       } elsif ($level == $prevlevel) {
-	print "</li>\n";
+        print "</li>\n";
       } elsif ($level > $prevlevel) {
-	if ($level - $prevlevel > 1) {
-	  foreach my $i (($prevlevel + 1) .. ($level - 1)) {
-	    print "\n", "  " x ($i + 2), "<ul>\n", "  " x ($i + 2);
-	    print qq(<li class="warning">A level $i heading is missing!);
-	  }
-	  print "\n", "  " x $TAB, "<ul>\n";
-	} else {
-	  print "\n", "  " x $TAB;
-	  print "<ul>\n";
-	}
+        if ($level - $prevlevel > 1) {
+          foreach my $i (($prevlevel + 1) .. ($level - 1)) {
+            print "\n", "  " x ($i + 2), "<ul>\n", "  " x ($i + 2);
+            print qq(<li class="warning">A level $i heading is missing!);
+          }
+          print "\n", "  " x $TAB, "<ul>\n";
+        } else {
+          print "\n", "  " x $TAB;
+          print "<ul>\n";
+        }
       }
     }
 
@@ -2419,12 +2416,12 @@ sub prepCGI {
   if ($q->path_info) {
     if ($q->path_info eq '/referer' or $q->path_info eq '/referrer') {
       if ($q->referer) {
-	$q->param('uri', $q->referer);
-	print redirect &self_url_q($q, $File);
-	exit;
+        $q->param('uri', $q->referer);
+        print redirect &self_url_q($q, $File);
+        exit;
       } else {
-	print redirect $q->url() . '?uri=' . 'referer';
-	exit;
+        print redirect $q->url() . '?uri=' . 'referer';
+        exit;
       }
     } else {
       print redirect &self_url_q($q, $File);
