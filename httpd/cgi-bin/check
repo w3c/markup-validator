@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.73 2003-07-29 22:06:06 link Exp $
+# $Id: check,v 1.305.2.74 2003-07-30 02:11:33 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -130,7 +130,7 @@ BEGIN
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.73 $;
+  $VERSION    =  q$Revision: 1.305.2.74 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -202,7 +202,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-07-29 22:06:06 $,
+                              Date => q$Date: 2003-07-30 02:11:33 $,
                              });
 
 #
@@ -262,6 +262,7 @@ $File->{Opt}->{'Show Errors'}    = $q->param('errors')  ? TRUE                  
 $File->{Opt}->{'Verbose'}        = $q->param('verbose') ? TRUE                   :  FALSE;
 $File->{Opt}->{'Debug'}          = $q->param('debug')   ? TRUE                   :  FALSE;
 $File->{Opt}->{'No200'}          = $q->param('No200')   ? TRUE                   :  FALSE;
+$File->{Opt}->{'Fussy'}          = $q->param('fussy')   ? TRUE                   :  FALSE;
 $File->{Opt}->{'Charset'}        = $q->param('charset') ? lc $q->param('charset'):     '';
 $File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') ? $q->param('doctype')   :     '';
 $File->{Opt}->{'URI'}            = $q->param('uri')     ? $q->param('uri')       :     '';
@@ -573,7 +574,7 @@ if ($File->{'Is Upload'}) {
 #
 # By default, use SGML catalog file and SGML Declaration.
 my $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'sgml.soc');
-my @xmlflags = qw(
+my @spopt = qw(
                   -R
                   -wvalid
                   -wnon-sgml-char-ref
@@ -584,12 +585,25 @@ my @xmlflags = qw(
 # Switch to XML semantics if file is XML.
 if (&is_xml($File->{Type})) {
   $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'xml.soc');
-  push(@xmlflags, '-wxml');
+  push(@spopt, '-wxml');
   &add_warning($File, 'note', 'Note:', <<".EOF.");
   The Validator XML support has
   <a href="http://openjade.sourceforge.net/doc/xml.htm"
      title="Limitations in Validator XML support">some limitations</a>.
 .EOF.
+} else { # Only add these in SGML mode.
+  if ($File->{Opt}->{'Fussy'}) {
+    push @spopt, '-wmin-tagged';
+    push @spopt, '-wfully-tagged';
+    &add_warning($File, 'note', 'Note:', <<".EOF.");
+    The Validator is running in "Fussy" mode. In this mode it will generate
+    warnings about some things that are not strictly forbidden in the HTML
+    Recommendation, but that are known to be problematic in popular browsers.
+    In general it is recommended that you fix any such errors regardless, but
+    if in doubt you can rerun the Validator in its lax mode to find out if it
+    will pass your document then.
+.EOF.
+  }
 }
 
 
@@ -605,7 +619,7 @@ $ENV{SGML_SEARCH_PATH} = $CFG->{'SGML Library'};
 
 #
 # Set the command to execute.
-my @cmd = ($CFG->{'SGML Parser'}, '-n', '-c', $catalog, @xmlflags);
+my @cmd = ($CFG->{'SGML Parser'}, '-n', '-c', $catalog, @spopt);
 
 #FIXME: This needs a UI and testing!
 #
@@ -624,7 +638,6 @@ if ($File->{Opt}->{'Max Errors'} =~ m(^all$)i) {
   push @cmd, '-E' . ($CFG->{'Max Errors'} || 0); # "-E0" means "all".
 }
 #FIXME;
-
 
 if ($DEBUG) {
   &add_table($File, 'Command',
@@ -961,6 +974,13 @@ sub print_table {
              # @@@ accesskey missing
              ($File->{Opt}->{'Verbose'}         ? q(checked="checked" ) : '') .
              q(/>Verbose&nbsp;Output</label>)
+           );
+  add_table($Options, '',
+            # Fussy Parse Mode?
+             q(<label title="Use Fussy Error Reporting" for="fussy"><input type="checkbox" value="1" id="fussy" name="fussy" ) .
+             # @@@ accesskey missing
+             ($File->{Opt}->{Fussy}         ? q(checked="checked" ) : '') .
+             q(/>Fussy&nbsp;Parsing</label>),
            );
 
   add_table(
