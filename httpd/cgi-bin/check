@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.6 2002-03-18 01:01:30 link Exp $
+# $Id: check,v 1.200.2.7 2002-03-18 03:17:15 link Exp $
 
 #
 # We need Perl 5.004.
@@ -38,8 +38,6 @@ use HTML::Parser 3.25; # Need 3.25 for $p->ignore_elements.
 # Define global constants
 use constant TRUE  => 1;
 use constant FALSE => 0;
-use constant UNDEF => undef;
-use constant DEBUG => 0;
 
 #
 # Tentative Validation Severeties.
@@ -53,51 +51,21 @@ use constant T_CHARSET_KLUDGE => 128; # 1000 0000
 
 
 #
-# Define global variables
-use vars qw($DEBUG); # Switch to turn debugging on and off.
-use vars qw($VERSION $DATE $MAINTAINER $NOTICE);               # Strings.
-use vars qw($frag $pub_ids $element_uri $file_type $doctypes $charsets);
-                                                               # Cfg hashes.
-
-$DEBUG += 1 unless $ENV{SERVER_PORT} == 80;
+# Define global variables.
+use vars qw($DEBUG $CFG $VERSION);
 
 #
-# Paths and file locations
+# Read COnfig Files.
+$CFG = &read_cfg($ENV{W3C_VALIDATOR_CFG} || '/etc/w3c/validator.conf');
 
 #
-# CONFIG: Change this to the directory that contains "htdocs/".
-my $base_path = '/usr/local/validator/';
-
-my $html_path = $base_path . 'htdocs/';
-my $elem_db   = $html_path . 'config/eref.cfg';
-my $fpis_db   = $html_path . 'config/fpis.cfg';
-my $frag_db   = $html_path . 'config/frag.cfg';
-my $type_db   = $html_path . 'config/type.cfg';
-my $dtds_db   = $html_path . 'config/doctypes.cfg';
-my $chst_db   = $html_path . 'config/charset.cfg';
-my $tips_db   = $html_path . 'config/tips.html';
-my $sgmlstuff = $html_path . 'sgml-lib';
-
-#
-# Executables and binaries
-my $sp = '/usr/local/bin/onsgmls';
+# Set debug flag.
+$DEBUG += 1 if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.6 $;
+$VERSION    =  q$Revision: 1.200.2.7 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2002-03-18 01:01:30 $;
-$MAINTAINER =  'gerald@w3.org';
-$NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
-
-#
-# Read configuration files.
-$frag        = &read_cfg($frag_db); # FPIs    -> plain text version string
-$pub_ids     = &read_cfg($fpis_db); # Errors  -> fragment identifier
-$element_uri = &read_cfg($elem_db); # Element -> URI fragment
-$file_type   = &read_cfg($type_db); # Content -> File -type
-$doctypes    = &read_cfg($dtds_db); # Name    -> doctype
-$charsets    = &read_cfg($chst_db); # charset -> iconv parameter
 
 #
 # Get rid of (possibly insecure) $PATH.
@@ -123,17 +91,6 @@ my $File;
 #
 # The URL to this CGI Script.
 $File->{Env}->{'Self URI'} = $q->url(-query => 0);
-
-
-################################################
-# Populate $File->{Cfg} -- Configuration Data. #
-################################################
-
-#
-# The URI to various things.
-$File->{Cfg}->{'Home Page'}       = 'http://validator.w3.org/';
-$File->{Cfg}->{'Msg FAQ URI'}     = 'http://validator.w3.org/docs/errors.html';
-$File->{Cfg}->{'Element Ref URI'} = 'http://www.htmlhelp.com/reference/html40/';
 
 
 #########################################
@@ -187,7 +144,7 @@ Content-Type: text/html; charset=utf-8
   <head>
     <meta http-equiv='Content-Type' content='text/html;charset=utf-8'>
     <title>W3C HTML Validation Service Results</title>
-    <link rev="made" href="mailto:$MAINTAINER">
+    <link rev="made" href="mailto:$CFG->{Maintainer}">
     <style type="text/css" media="screen">\@import "/results.css";</style>
   </head>
 
@@ -215,7 +172,6 @@ Content-Type: text/html; charset=utf-8
       <h1 id="title"><a href="http://www.w3.org/"><img height="48" alt="W3C" id="logo"
          src="http://www.w3.org/Icons/WWW/w3c_home" /></a> HTML Validation Service Results</h1>
     </div>
-    $NOTICE
 EOF
 
 
@@ -233,7 +189,7 @@ unless ($File->{Opt}->{URI} =~ m(^(http|upload)://)) {
     URIs should be in the form:
   </p>
   <blockquote>
-    <code>$File->{Cfg}->{'Home Page'}</code>
+    <code>$CFG->{'Home Page'}</code>
   </blockquote>
   <p>
     (There are other types of URIs, too, but only <code>http://</code> URIs
@@ -277,7 +233,7 @@ $File->{Content}[0] =~ s/^\xEF\xBB\xBF//
   and &add_warning($File, <<".EOF.");
      <em>Note:</em> UTF-8 'BOM' detected and removed. (This message is
      informational. See the
-     <a href="$File->{Cfg}->{'Msg FAQ URI'}#utf8-bom">explanation</a> for details.)
+     <a href="$CFG->{'Msg FAQ URI'}#utf8-bom">explanation</a> for details.)
 .EOF.
 
 
@@ -286,7 +242,7 @@ $File->{Content}[0] =~ s/^\xEF\xBB\xBF//
 if (defined $File->{Opt}->{DOCTYPE}
     and not $File->{Opt}->{DOCTYPE} =~ /(Inline|detect)/i) {
   $File->{Content} = &supress_doctype($File->{Content});
-  unshift @{$File->{Content}}, $doctypes->{$File->{Opt}->{DOCTYPE}};
+  unshift @{$File->{Content}}, $CFG->{'Doctypes'}->{$File->{Opt}->{DOCTYPE}};
   my $dtd = ent($File->{Opt}->{DOCTYPE});
   &add_warning($File, <<".EOF.");
   <strong>DOCTYPE Override in effect!</strong> Any DOCTYPE Declaration in the
@@ -457,7 +413,7 @@ if ( $File->{Use_Charset} eq 'macintosh' ) {
 {  # block for character conversion and checking
   my @lines;
   unless ($File->{Use_Charset} eq 'utf-8' or $File->{Use_Charset} eq 'unknown') {
-    my ($command, $result_charset) = split " ", $charsets->{$File->{Use_Charset}}, 2;
+    my ($command, $result_charset) = split " ", $CFG->{'Charsets'}->{$File->{Use_Charset}}, 2;
     if ($command eq 'I') {
       eval {my $c = Text::Iconv->new($result_charset, 'utf-8')};
       $command = '' if ($@);
@@ -518,39 +474,39 @@ EOF
 }
 
 my $xmlflags = '-wnon-sgml-char-ref';
-my $catalog  = $sgmlstuff . '/catalog';
+my $catalog  = $CFG->{'SGML Library'} . '/catalog';
 
 if ($File->{Type} eq 'xhtml') {
-  $catalog               = $sgmlstuff . '/xhtml.soc';
+  $catalog               = $CFG->{'SGML Library'} . '/xhtml.soc';
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'UTF-8';
   $xmlflags              = '-wxml';
 } elsif ($File->{Type} eq 'svg') {
-  $catalog               = $sgmlstuff . '/svg.soc';
+  $catalog               = $CFG->{'SGML Library'} . '/svg.soc';
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'UTF-8';
   $xmlflags              = '-wxml';
 } elsif ($File->{Type} eq 'smil') {
-  $catalog               = $sgmlstuff . '/smil.soc';
+  $catalog               = $CFG->{'SGML Library'} . '/smil.soc';
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'UTF-8';
   $xmlflags              = '-wxml';
 } elsif ($File->{Type} eq 'mathml') {
-  $catalog               = $sgmlstuff . '/mathml.soc';
+  $catalog               = $CFG->{'SGML Library'} . '/mathml.soc';
   $ENV{SP_CHARSET_FIXED} = 'NO';
   $ENV{SP_ENCODING}      = 'XML';
   $xmlflags              = '-wxml ';
 } elsif ($File->{Type} eq 'xml' or $File->{Namespace}) {
   # no doctype, with xmlns attr on 1st element
   $File->{Type} = 'xml'; # @@ probably a better way to do this
-  $catalog               = $sgmlstuff . '/sp-1.3/pubtext/xml.soc';
+  $catalog               = $CFG->{'SGML Library'} . '/sp-1.3/pubtext/xml.soc';
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'XML';
   $xmlflags              = '-wxml';
   $xmlflags             .= ' -wno-valid' unless $File->{DOCTYPE};
 }
 
-my $cmd = "$sp -c $catalog -E0 $xmlflags";
+my $cmd = $CFG->{'SGML Parser'} . " -c $catalog -E0 $xmlflags";
 &add_table($File, "commandline", "<code>$cmd</code>") if $DEBUG;
 
 #
@@ -623,7 +579,7 @@ if ($File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 's
   # Needed for HTML4 Strict, which has no version attribute on the HTML element
   if (length $File->{DOCTYPE} and not defined $fpi) {$fpi = $File->{DOCTYPE}};
 }
-$File->{Version} = $pub_ids->{$fpi} || 'unknown';
+$File->{Version} = $CFG->{'FPI to Text'}->{$fpi} || 'unknown';
 
 if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
   &add_table($File, "Document Type", $File->{Version});
@@ -678,7 +634,7 @@ unless ($File->{Opt}->{'Is Upload'}) { # @@@FIXME@@@: Temporarily Broken.
 }
 
 &print_table($File);
-&print_tip_of_the_day($File, $tips_db);
+&print_tip_of_the_day($File, $CFG->{'Tips DB'});
 &print_warnings($File);
 
 print "<h2>Validation Results</h2>\n";
@@ -833,7 +789,7 @@ sub output_closing {
      src="http://www.w3.org/Icons/valid-html401" height="31" width="88"
      align=right border="0" alt="Valid HTML 4.01!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</a><br>
-  Last modified: $DATE
+  Last modified: \$Date: 2002-03-18 03:17:15 $
 </address>
 
 </body>
@@ -851,7 +807,7 @@ sub internal_error {
   print <<"EOF";
     <hr>
     <strong class="error">Internal server error ($dieMessage).</strong>
-    Please contact <a href="mailto:$MAINTAINER">maintainer</a>.
+    Please contact <a href="mailto:$CFG->{Maintainer}">maintainer</a>.
 EOF
   &output_closing($File);
   die "$dieMessage\n";
@@ -958,7 +914,7 @@ Content-Type: text/html
   Of course, you may not want to trust me with this information,
   which is fine. I can tell you that I don't log it or do
   anything else nasty with it, and you can <a
-  href="$File->{Cfg}->{'Home Page'}source/">download the source for
+  href="$CFG->{'Home Page'}source/">download the source for
   this service</a> to see what it does, but you have no guarantee
   that this is actually the code I'm using; you basically have to
   decide whether to trust me or not. :-)
@@ -1142,14 +1098,21 @@ sub read_cfg {
   my %cfg;
 
   open CFG, $file or die "open($file) returned: $!\n";
-  while (<CFG>) {
-    next if /^\s*$/;
-    next if /^\s*#/;
-    chomp;
-    my($k, $v) = split /\t+/, $_;
-    $cfg{$k} = $v;
+
+  my $fh = new IO::File $file;
+  if (defined $fh) {
+    while (<$fh>) {
+      next if /^\s*$/;
+      next if /^\s*\#/;
+      chomp;
+      my($k, $v) = split /\t+/, $_;
+      $v = &read_cfg($v) if $v =~ s(^file://){};
+      $cfg{$k} = $v;
+    }
+    undef $fh;
+  } else {
+    croak "open($file) returned: $!\n";
   }
-  close CFG;
   return \%cfg;
 }
 
@@ -1254,7 +1217,7 @@ sub parse_content_type {
 
   my($ct, @param) = split /\s*;\s*/, lc $Content_Type;
 
-  $type = $file_type->{$ct} || $ct;
+  $type = $CFG->{'File Type'}->{$ct} || $ct;
 
   foreach my $param (@param) {
     my($p, $v) = split /\s*=\s*/, $param;
@@ -1442,9 +1405,9 @@ sub report_errors ($) {
     print qq(  <li><em>Line <a href="#line-$err->{line}">$err->{line}</a>, column $col</em>: );
     print qq{<span class="msg">$err->{msg}</span>};
 
-    if (defined $frag->{$err->{idx}}) {
-      print qq{ (<a href="$File->{Cfg}->{'Msg FAQ URI'}#$frag->{$err->{idx}}">explanation...</a>)};
-    } elsif (DEBUG) {
+    if (defined $CFG->{'Error to URI'}->{$err->{idx}}) {
+      print qq{ (<a href="$CFG->{'Msg FAQ URI'}#$CFG->{'Error to URI'}->{$err->{idx}}">explanation...</a>)};
+    } elsif ($DEBUG) {
       print qq{ (<code style="background: red">"$err->{idx}"</code>)};
     }
 
@@ -1483,7 +1446,7 @@ sub report_valid {
 
   unless ($File->{Version} eq 'unknown' or defined $File->{Tentative}) {
     if ($File->{Version} =~ /^HTML 2\.0$/) {
-      $image_uri = "$File->{Cfg}->{'Home Page'}images/vh20";
+      $image_uri = "$CFG->{'Home Page'}images/vh20";
       $alttext = "Valid HTML 2.0!";
       $gifborder = "";
     } elsif ($File->{Version} =~ /HTML 3\.2</) {
@@ -1515,7 +1478,7 @@ sub report_valid {
       $gifhw   = ' height="31" width="88"';
       $xhtmlendtag = " /";
 #    } elsif ($File->{Version} =~ /XHTML Basic 1.0/) {
-#      $image_uri = "$File->{Cfg}->{'Home Page'}/images/vxhtml-basic10";
+#      $image_uri = "$CFG->{'Home Page'}/images/vxhtml-basic10";
 #      $alttext = "Valid XHTML Basic 1.0!";
 #      $gifborder = "";
 #      $gifhw   = ' height="31" width="88"';
@@ -1527,13 +1490,13 @@ sub report_valid {
       $gifhw   = ' height="31" width="88"';
       $xhtmlendtag = " /";
     } elsif ($File->{Version} =~ /HTML 3\.0/) {
-      $image_uri = "$File->{Cfg}->{'Home Page'}images/vh30";
+      $image_uri = "$CFG->{'Home Page'}images/vh30";
       $alttext = "Valid HTML 3.0!";
     } elsif ($File->{Version} =~ /Netscape/) {
-      $image_uri = "$File->{Cfg}->{'Home Page'}images/vhns";
+      $image_uri = "$CFG->{'Home Page'}images/vhns";
       $alttext = "Valid Netscape-HTML!";
     } elsif ($File->{Version} =~ /Hotjava/) {
-      $image_uri = "$File->{Cfg}->{'Home Page'}images/vhhj";
+      $image_uri = "$CFG->{'Home Page'}images/vhhj";
       $alttext = "Valid Hotjava-HTML!";
     }
 
@@ -1552,7 +1515,7 @@ sub report_valid {
   </p>
   <pre>
   &lt;p&gt;
-    &lt;a href="$File->{Cfg}->{'Home Page'}check/referer"&gt;&lt;img$gifborder
+    &lt;a href="$CFG->{'Home Page'}check/referer"&gt;&lt;img$gifborder
         src="$image_uri"
         alt="$alttext"$gifhw$xhtmlendtag&gt;&lt;/a&gt;
   &lt;/p&gt;</pre>
@@ -1770,7 +1733,7 @@ EOF
 		 { my $close = '';
 		      $close = "/" if $1 eq ")";	# ")" -> close-tag
 		   "&lt;" . $close . "<a href=\"" .
-		   $File->{Cfg}->{'Element Ref URI'} . $element_uri->{lc($2)} .
+		   $CFG->{'Element Ref URI'} . $CFG->{'Element Map'}->{lc($2)} .
 		   "\">$2<\/a>&gt;"
 		 }egx;
     $printme =~ s,^A,  A,;	# indent attributes a bit

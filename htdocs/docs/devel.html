@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: devel.html,v 1.5 2002-02-11 22:09:10 link Exp $"
---><!--#set var="date" value="\$Date: 2002-02-11 22:09:10 $"
+<!--#set var="revision" value="\$Id: devel.html,v 1.5.2.1 2002-03-18 03:17:15 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-03-18 03:17:15 $"
 --><!--#set var="title" value="Developer Documentation for The W3C HTML Validation Service"
 --><!--#include virtual="/header.html" -->
 
@@ -39,7 +39,7 @@
         for the "check" CGI script. There is a bunch of lines that of the form
         "use Foo::Bar" where each "Foo::Bar" represents a module. Most modules
         can be found on <a href="http://www.cpan.org/">CPAN</a>. The following
-        list was complete when CVS spit out: <code>$Date: 2002-02-11 22:09:10 $</code>. <tt>:-)</tt>
+        list was complete when CVS spit out: <code>$Date: 2002-03-18 03:17:15 $</code>. <tt>:-)</tt>
       </p>
       <dl>
         <dt><code>LWP::UserAgent</code></dt>
@@ -103,10 +103,11 @@
           Maps MIME/HTTP Content-Types to an internal "document type" which
           is used for treating HTML, XML, and XHTML in different ways.
         </dd>
-        <dt>"check.cfg"</dt>
+        <dt>check.cfg</dt>
         <dd>
-          We don't have one yet, but we intend to. Maybe you'll write the
-          support for us? <tt>:-)</tt>
+          Main configuration file. Gives various parameters (such as the
+          address of the maintainer and the URL for the "Home Page") and
+          the locations of the other configuration files and mapping tables.
         </dd>
        </dl>
     </div>
