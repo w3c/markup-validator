@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.57 2002-07-28 12:28:17 link Exp $
+# $Id: check,v 1.200.2.58 2002-08-17 14:03:48 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -91,7 +91,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.200.2.57 $;
+  $VERSION    =  q$Revision: 1.200.2.58 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -147,7 +147,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-07-28 12:28:17 $,
+			      Date => q$Date: 2002-08-17 14:03:48 $,
 			     });
 
 #
@@ -271,11 +271,38 @@ $File->{Charset}->{Auto} = &find_encoding($File);
 # Decide on a charset to use.
 if ($File->{Charset}->{HTTP}) {
   $File->{Charset}->{Use} = $File->{Charset}->{HTTP}; # HTTP, if given, is authorative.
+      &add_warning($File, <<"      .EOF.");
+      <em>Note:</em>
+      The HTTP Content-Type field contained a "charset" attribute with the
+      value "$File->{Charset}->{HTTP}". Since the character encoding in the
+      HTTP transaction is authorative, this encoding will be used even if
+      you have set a different encoding elsewhere. If you would like to use
+      a different encoding, you should arrange to have your server send
+      this new encoding information.
+      .EOF.
 } elsif ($File->{Type} =~ m(text/\w+\+xml)) {
   $File->{Charset}->{Use} = 'us-ascii'; # Act as if $http_charset was 'us-ascii'. (MIME rules)
+      &add_warning($File, <<"      .EOF.");
+      <em>Note:</em>
+      The HTTP Content-Type field did not contain a "charset" attribute,
+      but the Content-Type was one of the XML text/* sub-types. The relevant
+      standards specify a strong default of "us-ascii" for such documents so
+      we will use this value regardless of any encoding you may have indicated
+      elsewhere.If you would like to use a different encoding, you should
+      arrange to have your server send this new encoding information.
+      .EOF.
 } else {
   if ($File->{Charset}->{Auto}) {
     $File->{Charset}->{Use} = $File->{Charset}->{Auto}; # Trust it, transcode, validate...
+      &add_warning($File, <<"      .EOF.");
+      <strong>No Character Encoding detected!</strong>
+      To ensure correct validation, processing, and display,
+      it is important that the character encoding is properly
+      labeled.
+      <a href="http://www.w3.org/International/O-charset.html">More
+      information...</a>
+      .EOF.
+      $File->{Tentative} |= T_CHARSET_KLUDGE; # Would be T_WARN, but the complaints...
   } else { # Autodetect failed... Assume ASCII/UTF-8 compatible.
 
     #
