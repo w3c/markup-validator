@@ -1,17 +1,17 @@
 # RPM spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.1.2.20 2004-06-04 06:47:23 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.1.2.21 2004-07-21 18:13:15 link Exp $
 
 Name:           w3c-markup-validator
-Version:        0.6.6
-Release:        2
+Version:        0.6.7
+Release:        1
 Epoch:          0
 Summary:        W3C Markup Validator
 
 Group:          Applications/Internet
 License:        W3C Software License
 URL:            http://validator.w3.org/
-Source0:        http://validator.w3.org/validator-0_6_6.tar.gz
-Source1:        http://validator.w3.org/sgml-lib-0_6_6.tar.gz
+Source0:        http://validator.w3.org/validator-0_6_7.tar.gz
+Source1:        http://validator.w3.org/sgml-lib-0_6_7.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -129,6 +129,9 @@ done
 
 
 %changelog
+* Wed Jul 21 2004 Terje Bless <link@pobox.com> - 0:0.6.7-1
+- Update to 0.6.7.
+
 * Fri Jun  4 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.6-2
 - Fix Home Page and Msg FAQ URI in %%{_sysconfdir}/w3c/validator.conf.
 
