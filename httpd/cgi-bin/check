@@ -3,12 +3,13 @@
 # W3C HTML Validation Service
 # A CGI script to retrieve and validate an HTML file
 #
-# Copyright 1995-1999 Gerald Oskoboiny <gerald@w3.org>
+# Copyright 1995-2001 Gerald Oskoboiny <gerald@w3.org>
+# for additional contributors, see http://dev.w3.org/cvsweb/validator/
 #
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.133 2001-06-27 08:42:25 duerst Exp $
+# $Id: check,v 1.134 2001-06-27 08:50:58 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -79,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.133 $;
+$VERSION    =  q$Revision: 1.134 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-27 08:42:25 $;
+$DATE       =  q$Date: 2001-06-27 08:50:58 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
