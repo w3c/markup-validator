@@ -1,0 +1,5 @@
+SGMLDECL "smil.dcl"
+OVERRIDE YES
+
+PUBLIC "-//W3C//DTD SMIL 1.0//EN"	REC-smil-19980615/smil10.dtd
+

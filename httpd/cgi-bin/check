@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.167 2001-07-29 07:15:08 link Exp $
+# $Id: check,v 1.168 2001-07-29 08:00:51 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.167 $;
+$VERSION    =  q$Revision: 1.168 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-29 07:15:08 $;
+$DATE       =  q$Date: 2001-07-29 08:00:51 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -496,6 +496,11 @@ if ($File->{Type} eq 'xhtml') {
   $ENV{SP_CHARSET_FIXED} = 'YES';
   $ENV{SP_ENCODING}      = 'UTF-8';
   $xmlflags              = '-wxml';
+} elsif ($File->{Type} eq 'smil') {
+  $catalog               = $sgmlstuff . '/smil.soc';
+  $ENV{SP_CHARSET_FIXED} = 'YES';
+  $ENV{SP_ENCODING}      = 'UTF-8';
+  $xmlflags              = '-wxml';
 } elsif ($File->{Type} eq 'mathml') {
   $catalog               = $sgmlstuff . '/mathml.soc';
   $ENV{SP_CHARSET_FIXED} = 'NO';
@@ -549,7 +554,7 @@ close ESIS              or warn "close($temp.esis) returned: $!";
 
 my $fpi;
 my $version = 'unknown';
-if ($File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 'svg') {
+if ($File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 'svg' or $File->{Type} eq 'smil') {
   $fpi = $File->{DOCTYPE};
 } elsif ($File->{Type} eq 'xml') {
   $fpi = 'XML';
@@ -614,7 +619,7 @@ if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
 &print_table;
 &print_warnings;
 
-if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml') {
+if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml' or $File->{Type} eq 'mathml' or $File->{Type} eq 'svg' or $File->{Type} eq 'smil') {
   my $xmlvalid = ($File->{DOCTYPE} ? ' and validity' : '');
   print <<"EOHD";
   <p>
