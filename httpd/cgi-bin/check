@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.316 2002-12-07 03:14:32 link Exp $
+# $Id: check,v 1.317 2002-12-07 03:30:52 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -133,7 +133,7 @@ The error reported was: '$@'
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.316 $;
+  $VERSION    =  q$Revision: 1.317 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 } # end of BEGIN block.
@@ -154,6 +154,7 @@ my $q = new CGI;
 # The data structure that will hold all session data.
 my $File;
 
+
 ##############################################
 # Populate $File->{Env} -- Session Metadata. #
 ##############################################
@@ -162,9 +163,13 @@ my $File;
 # The URL to this CGI Script.
 $File->{Env}->{'Self URI'} = $q->url(-query => 0);
 
+
+#################################
+# Initialize the datastructure. #
+#################################
+
 #
-# Initialize parameters we'll need (and override) later.
-# (casing policy: lowercase early)
+# Charset data (casing policy: lowercase early).
 $File->{Charset}->{Use}      = ''; # The charset used for validation.
 $File->{Charset}->{Auto}     = ''; # Autodetection using XML rules (Appendix F)
 $File->{Charset}->{HTTP}     = ''; # From HTTP's "charset" parameter.
@@ -173,11 +178,15 @@ $File->{Charset}->{XML}      = ''; # From the XML Declaration.
 $File->{Charset}->{Override} = ''; # From CGI/user override.
 
 #
+# Misc simple types.
+$File->{Type} = '';
+
+#
 # Array (ref) used to store character offsets for the XML report.
 $File->{Offsets}->[0] = [0, 0]; # The first item isn't used...
 
 #
-# Initialize datastructures.
+# Listrefs.
 $File->{Lines}              = []; # Line numbers for encoding errors.
 $File->{Warnings}           = []; # Warnings...
 $File->{'Other Namespaces'} = []; # Other (non-root) Namespaces.
@@ -240,6 +249,9 @@ if ($q->param('uploaded_file')) {
   $File = &handle_uri($q, $File);
 }
 
+#
+# Abort if an error was flagged during initialization.
+&abort_if_error_flagged($File, 0);
 
 #
 # Get rid of the CGI object.
@@ -249,11 +261,6 @@ undef $q;
 # We don't need STDIN any more, so get rid of it to avoid getting clobbered
 # by Apache::Registry's idiotic interference under mod_perl.
 untie *STDIN;
-
-
-#
-# Abort if an error was flagged during initialization.
-&abort_if_error_flagged($File, 0);
 
 
 ###############################################################################
@@ -952,7 +959,7 @@ sub http_error {
   my $code = &ent(shift);
   my $message = &ent(shift);
 
-  printf <<"EOF";
+  return <<"EOF";
   <p>
     I got the following unexpected response when trying to
     retrieve &lt;<a href="$uri">$uri</a>&gt;:
@@ -1009,11 +1016,10 @@ sub handle_uri {
     if ($res->code == 401) {
       &authenticate($File, $res->request->url, $res->www_authenticate);
     } else {
-      print $File->{Results};
-      &http_error($uri->as_string, $res->code, $res->message);
+      $File->{'Error Flagged'} = TRUE;
+      $File->{'Error Message'} = &http_error($uri->as_string, $res->code, $res->message);
     }
-    print $File->{'Footer'};
-    exit;
+    return $File;
   }
 
   my($type, $ct, $charset) = &parse_content_type(
