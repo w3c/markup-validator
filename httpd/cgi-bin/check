@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.4 2002-03-18 00:26:22 link Exp $
+# $Id: check,v 1.200.2.5 2002-03-18 00:32:47 link Exp $
 
 #
 # We need Perl 5.004.
@@ -89,9 +89,9 @@ my $uri_def_uri	= 'http://www.w3.org/Addressing/#terms';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.4 $;
+$VERSION    =  q$Revision: 1.200.2.5 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2002-03-18 00:26:22 $;
+$DATE       =  q$Date: 2002-03-18 00:32:47 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -871,21 +871,6 @@ sub clean_up_and_exit {
   exit;
 }
 
-
-#
-# Redirect them to the home page. Simplistic error handling.
-sub redirect_to_home_page {
-  my $File = shift;
-  print <<".EOF.";
-Status: 301 Moved Permanently
-Content-Type: text/html
-Location: $File->{Cfg}->{'Home Page'}
-
-<title>Moved!</title>
-<p>Please see <a href="$File->{Cfg}->{'Home Page'}">the home page.</a></p>
-.EOF.
-  &clean_up_and_exit($File);
-}
 
 #
 # Generate HTML for the "Jump to:" links in results.
@@ -1909,7 +1894,6 @@ sub prepCGI {
 
   # Supercede URI with an uploaded file.
   if ($q->param('uploaded_file')) {
-    &redirect_to_home_page($File) unless length($q->param('uploaded_file')); # Must have filename.
     $q->param('uri', 'upload://' . $q->param('uploaded_file'));
     $File->{Opt}->{'Is Upload'} = TRUE; # Tag it for later use.
   }
