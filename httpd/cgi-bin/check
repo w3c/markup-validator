@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305 2002-11-25 19:24:51 ville Exp $
+# $Id: check,v 1.306 2002-11-26 21:40:19 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -36,19 +36,20 @@ use warnings;
 # when loading modules to prevent non-OO or poorly written modules from
 # polluting our namespace.
 #
-use CGI            2.81 qw(-newstyle_urls -private_tempfiles); # 2.81 for XHTML
-use CGI::Carp           qw(carp croak);
-use File::Spec          qw();
-use HTML::Parser   3.25 qw(); # Need 3.25 for $p->ignore_elements.
-use HTTP::Request       qw();
-use IO::File            qw();
-use IPC::Open3          qw(open3);
-use LWP::UserAgent 1.90 qw(); # Need 1.90 for protocols_(allowed|forbidden)
-use Set::IntSpan        qw();
-use Text::Iconv         qw();
-use Text::Wrap          qw(wrap);
-use URI                 qw();
-use URI::Escape         qw(uri_escape);
+use CGI             2.81 qw(-newstyle_urls -private_tempfiles); # 2.81: XHTML
+use CGI::Carp            qw(carp croak);
+use Config::General 2.06 qw(); # Need 2.06 for -SplitPolicy
+use File::Spec           qw();
+use HTML::Parser    3.25 qw(); # Need 3.25 for $p->ignore_elements.
+use HTTP::Request        qw();
+use IO::File             qw();
+use IPC::Open3           qw(open3);
+use LWP::UserAgent  1.90 qw(); # Need 1.90 for protocols_(allowed|forbidden)
+use Set::IntSpan         qw();
+use Text::Iconv          qw();
+use Text::Wrap           qw(wrap);
+use URI                  qw();
+use URI::Escape          qw(uri_escape);
 
 
 ###############################################################################
@@ -87,7 +88,36 @@ BEGIN {
 
   #
   # Read Config Files.
-  $CFG = &read_cfg($ENV{W3C_VALIDATOR_CFG} || '/etc/w3c/validator.conf');
+  eval {
+    my %config_opts =
+      (-ConfigFile     => $ENV{W3C_VALIDATOR_CFG} || '/etc/w3c/validator.conf',
+       -MergeDuplicateOptions => 'yes',
+       -SplitPolicy      => 'equalsign',
+       -UseApacheInclude => 1,
+       -IncludeRelative  => 1,
+       -DefaultConfig    => { Allowed_Protocols => 'http,https',
+                              SGML_Parser       => '/usr/bin/onsgmls',
+                            },
+      );
+    my %cfg = Config::General->new(%config_opts)->getall();
+    $CFG = \%cfg;
+  };
+  if ($@) {
+    die <<".EOF.";
+Couldn't read configuration.  Set the W3C_VALIDATOR_CFG environment variable
+or copy conf/* to /etc/w3c/, and make sure that the configuration file, as
+well as all included files are readable by the web server user.
+The error reported was: '$@'
+.EOF.
+  }
+  # Split allowed protocols into a list.
+  # We could use the array / identical values feature of Config::General,
+  # but that has unwanted effects when the only array type option we need is
+  # Allowed_Protocols.
+  if (my $allowed = delete($CFG->{Allowed_Protocols})) {
+    $CFG->{Allowed_Protocols} = [ split(/\s*,\s*/, $allowed) ];
+  }
+
 
   #
   # Set debug flag.
@@ -95,39 +125,8 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305 $;
+  $VERSION    =  q$Revision: 1.306 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-
-
-  #
-  # Read TAB-delimited configuration files. Returns a hash reference.
-  sub read_cfg {
-    my $file = shift;
-    my %cfg;
-
-    my $fh = new IO::File $file;
-    unless (defined $fh) {
-      die <<".EOF.";
-open($file) returned: $!
-(Did you forget to set \$ENV{W3C_VALIDATOR_CFG}
- or to copy htdocs/config/check.cfg to /etc/w3c/validator.conf?)
-.EOF.
-    }
-
-    while (<$fh>) {
-      next if /^\s*$/;
-      next if /^\s*\#/;
-      chomp;
-      my($k, $v) = split /\t+/, $_, 2;
-      $v = '' unless defined $v;
-
-      if    ($v =~ s(^file://){}) {$cfg{$k} = &read_cfg($v)  }
-      elsif ($v =~ /,/)           {$cfg{$k} = [split /,/, $v]}
-      else                        {$cfg{$k} = $v             }
-    }
-    undef $fh;
-    return \%cfg;
-  }
 
 } # end of BEGIN block.
 
@@ -151,13 +150,13 @@ my $File;
 #
 # Pseudo-SSI include header and footer for output.
 $File->{'Header'} = &prepSSI({
-                              File     => $CFG->{'Header'},
+                              File     => $CFG->{Header},
                               Title    => 'Validation Results',
                               Revision => $VERSION,
                              });
 $File->{'Footer'} = &prepSSI({
-                              File => $CFG->{'Footer'},
-                              Date => q$Date: 2002-11-25 19:24:51 $,
+                              File => $CFG->{Footer},
+                              Date => q$Date: 2002-11-26 21:40:19 $,
                              });
 
 #
@@ -448,7 +447,7 @@ if ($File->{'Is Upload'}) {
 
 #
 # By default, use SGML catalog file and SGML Declaration.
-my $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'sgml.soc');
+my $catalog  = File::Spec->catfile($CFG->{SGML_Library}, 'sgml.soc');
 my @xmlflags = qw(
                   -R
                   -wvalid
@@ -459,7 +458,7 @@ my @xmlflags = qw(
 #
 # Switch to XML semantics if file is XML.
 if (&is_xml($File->{Type})) {
-  $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'xml.soc');
+  $catalog  = File::Spec->catfile($CFG->{SGML_Library}, 'xml.soc');
   push(@xmlflags, '-wxml');
   &add_warning($File, <<".EOF.");
   <em>Note</em>: The Validator XML support has
@@ -477,7 +476,7 @@ $ENV{SP_BCTF}          = 'UTF-8';
 
 #
 # Tell onsgmls about the SGML Library.
-$ENV{SGML_SEARCH_PATH} = $CFG->{'SGML Library'};
+$ENV{SGML_SEARCH_PATH} = $CFG->{SGML_Library};
 
 
 ##
@@ -485,20 +484,20 @@ $ENV{SGML_SEARCH_PATH} = $CFG->{'SGML Library'};
 #if (&is_html($File->{Type})) {
 #  $ENV{SP_CHARSET_FIXED} = 'YES';
 #  $ENV{SP_ENCODING}      = 'UTF-8';
-#  $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'catalog');
+#  $catalog  = File::Spec->catfile($CFG->{SGML_Library}, 'catalog');
 #  @xmlflags = '-wnon-sgml-char-ref';
 #}
 
 ##
 ## MathML and XHTML. Must be here because they're usually served as text/html
 ## to deal with braindead browsers. In other words, these override the check for &is_html.
-#$catalog = File::Spec->catfile($CFG->{'SGML Library'}, 'xhtml.soc')
+#$catalog = File::Spec->catfile($CFG->{SGML_Library}, 'xhtml.soc')
 #  if &is_xhtml($File->{Type});
-#$catalog = File::Spec->catfile($CFG->{'SGML Library'}, 'mathml.soc')
+#$catalog = File::Spec->catfile($CFG->{SGML_Library}, 'mathml.soc')
 #  if &is_mathml($File->{Type});
 
 
-my @cmd = ($CFG->{'SGML Parser'}, '-c', $catalog, '-E0', @xmlflags);
+my @cmd = ($CFG->{SGML_Parser}, '-c', $catalog, '-E0', @xmlflags);
 
 if ($DEBUG) {
   &add_table($File, 'Command',
@@ -605,7 +604,7 @@ if (&is_xml($File->{Type}) and not $File->{DOCTYPE}) {
 
 #
 # Get the pretty text version of the FPI if a mapping exists.
-if (my $prettyver = $CFG->{'FPI to Text'}->{$File->{Version}}) {
+if (my $prettyver = $CFG->{FPI_to_Text}->{$File->{Version}}) {
   $File->{Version} = $prettyver;
 } else {
   $File->{Version} = &ent($File->{Version});
@@ -991,7 +990,7 @@ Content-Type: text/html; charset=utf-8
       Of course, you may not want to trust me with this information,
       which is fine. I can tell you that I don't log it or do
       anything else nasty with it, and you can <a
-        href="$CFG->{'Home Page'}source/">download the source for
+        href="$CFG->{Home_Page}source/">download the source for
       this service</a> to see what it does, but you have no guarantee
       that this is actually the code I'm using; you basically have to
       decide whether to trust me or not. :-)
@@ -1067,10 +1066,10 @@ EOHD
 
 
 sub daily_tip {
-  my @tipAddrs = keys %{$CFG->{'Tips DB'}};
+  my @tipAddrs = keys %{$CFG->{Tips_DB}};
   srand(time());
   my $tipAddr = $tipAddrs[rand scalar @tipAddrs];
-  my $tipSlug = $CFG->{'Tips DB'}->{$tipAddr};
+  my $tipSlug = $CFG->{Tips_DB}->{$tipAddr};
 
   return <<"EOHD";
   <dl class="tip">
@@ -1097,8 +1096,9 @@ sub handle_uri {
   #   Disable checking if the URI is local (or private) for security reasons,
   #   or at least make it configurable to do so.
   #   eg. /^(localhost(\.localdomain)?|127\..+)$/ (+ private networks)
+  #   Net::IP from CPAN could be useful here.
   #
-  $ua->protocols_allowed($CFG->{'Allowed Protocols'} || ['http', 'https']);
+  $ua->protocols_allowed($CFG->{Allowed_Protocols});
 
   unless ($ua->is_protocol_supported($uri)) {
     $File->{'Error Flagged'} = TRUE;
@@ -1206,7 +1206,7 @@ sub parse_content_type {
 
   my($ct, @param) = split /\s*;\s*/, lc $Content_Type;
 
-  $type = $CFG->{'File Type'}->{$ct} || $ct;
+  $type = $CFG->{File_Type}->{$ct} || $ct;
 
   foreach my $param (@param) {
     my($p, $v) = split /\s*=\s*/, $param;
@@ -1337,7 +1337,7 @@ sub truncate_line {
 sub override_doctype {
   no strict 'vars';
   my $File    = shift;
-  local $dtd  = $CFG->{'Doctypes'}->{$File->{Opt}->{DOCTYPE}};
+  local $dtd  = $CFG->{Doctypes}->{$File->{Opt}->{DOCTYPE}};
   local $HTML = '';
   local $seen = FALSE;
 
@@ -1363,7 +1363,7 @@ sub parse_errors ($$) {
   my $fh   = shift;
 
   $File->{Errors} = []; # Initialize to an (empty) anonymous array ref.
-
+warn('@@@-> ' . $CFG->{SGML_Parser});
   for (<$fh>) {
     push @{$File->{'DEBUG'}->{Errors}}, $_;
     my($err, @errors);
@@ -1513,8 +1513,8 @@ EOHD
 
       print qq(  <li><em>Line <a href="#line-$err->{line}">$err->{line}</a>, column $err->{char}</em>: );
       print qq{<span class="msg">$err->{msg}</span>};
-      if (defined $CFG->{'Error to URI'}->{$err->{idx}}) {
-	print qq{ (<a href="$CFG->{'Msg FAQ URI'}#$CFG->{'Error to URI'}->{$err->{idx}}">explain...</a>).};
+      if (defined $CFG->{Error_to_URI}->{$err->{idx}}) {
+	print qq{ (<a href="$CFG->{Msg_FAQ_URI}#$CFG->{Error_to_URI}->{$err->{idx}}">explain...</a>).};
       } elsif ($DEBUG) {
 	print qq{ (<code style="background: red">"$err->{idx}"</code>)};
       }
@@ -1539,7 +1539,7 @@ sub report_valid {
 
   unless ($File->{Version} eq 'unknown' or defined $File->{Tentative}) {
     if ($File->{Version} =~ /^HTML 2\.0$/) {
-      $image_uri = "$CFG->{'Home Page'}images/vh20";
+      $image_uri = "$CFG->{Home_Page}images/vh20";
       $alttext = "Valid HTML 2.0!";
       $gifborder = "";
     } elsif ($File->{Version} =~ /HTML 3\.2</) {
@@ -1571,7 +1571,7 @@ sub report_valid {
       $gifhw   = ' height="31" width="88"';
       $xhtmlendtag = " /";
     } elsif ($File->{Version} =~ /XHTML Basic 1.0/) {
-      $image_uri = "$CFG->{'Home Page'}/images/vxhtml-basic10";
+      $image_uri = "$CFG->{Home_Page}/images/vxhtml-basic10";
       $alttext = "Valid XHTML Basic 1.0!";
       $gifborder = "";
       $gifhw   = ' height="31" width="88"';
@@ -1583,16 +1583,16 @@ sub report_valid {
       $gifhw   = ' height="31" width="88"';
       $xhtmlendtag = " /";
     } elsif ($File->{Version} =~ /HTML 3\.0/) {
-      $image_uri = "$CFG->{'Home Page'}images/vh30";
+      $image_uri = "$CFG->{Home_Page}images/vh30";
       $alttext = "Valid HTML 3.0!";
     } elsif ($File->{Version} =~ /Netscape/) {
-      $image_uri = "$CFG->{'Home Page'}images/vhns";
+      $image_uri = "$CFG->{Home_Page}images/vhns";
       $alttext = "Valid Netscape-HTML!";
     } elsif ($File->{Version} =~ /Hotjava/) {
-      $image_uri = "$CFG->{'Home Page'}images/vhhj";
+      $image_uri = "$CFG->{Home_Page}images/vhhj";
       $alttext = "Valid Hotjava-HTML!";
     } elsif ($File->{Version} =~ /ISO\/IEC 15445:2000/) {
-      $image_uri = "$CFG->{'Home Page'}images/v15445";
+      $image_uri = "$CFG->{Home_Page}images/v15445";
       $alttext = "Valid ISO-HTML!";
     }
 
@@ -1602,7 +1602,7 @@ sub report_valid {
       print qq(<h2 id="skip" class="valid">This Page Is Valid!</h2>\n);
     }
 
-    print &daily_tip($File, $CFG->{'Tips DB'});
+    print &daily_tip($File, $CFG->{Tips_DB});
     &print_warnings($File);
 
     print <<".EOF.";
@@ -1627,7 +1627,7 @@ sub report_valid {
     </p>
     <pre>
     &lt;p&gt;
-      &lt;a href="$CFG->{'Home Page'}check/referer"&gt;&lt;img$gifborder
+      &lt;a href="$CFG->{Home_Page}check/referer"&gt;&lt;img$gifborder
           src="$image_uri"
           alt="$alttext"$gifhw$xhtmlendtag&gt;&lt;/a&gt;
     &lt;/p&gt;
@@ -1644,7 +1644,7 @@ sub report_valid {
     print qq(  <h2 class="valid">This document is well-formed XML.</h2>\n);
   } elsif (defined $File->{Tentative}) {
     print qq(<h2 class="valid">This Page <em>Tentatively</em> Validates As $File->{Version} (Tentatively Valid)!</h2>);
-    print &daily_tip($File, $CFG->{'Tips DB'});
+    print &daily_tip($File, $CFG->{Tips_DB});
     &print_warnings($File);
     print <<".EOF.";
       <p>
@@ -1852,7 +1852,7 @@ EOF
                  { my $close = '';
                       $close = "/" if $1 eq ")"; # ")" -> close-tag
                    "&lt;" . $close . "<a href=\"" .
-                   $CFG->{'Element Ref URI'} . $CFG->{'Element Map'}->{lc($2)} .
+                   $CFG->{Element_Ref_URI} . $CFG->{Element_Map}->{lc($2)} .
                    "\">$2<\/a>&gt;"
                  }egx;
     $printme =~ s,^A,  A,; # indent attributes a bit
