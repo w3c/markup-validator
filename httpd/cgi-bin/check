@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.54 2003-06-09 02:23:43 link Exp $
+# $Id: check,v 1.305.2.55 2003-06-15 21:32:49 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,8 +104,12 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.54 $;
+  $VERSION    =  q$Revision: 1.305.2.55 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
+
+  #
+  # Use passive FTP by default.
+  $ENV{FTP_PASSIVE} = 1 unless exists($ENV{FTP_PASSIVE});
 
 
   #
@@ -172,7 +176,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-06-09 02:23:43 $,
+                              Date => q$Date: 2003-06-15 21:32:49 $,
                              });
 
 #
@@ -2304,9 +2308,9 @@ sub uri_rejected {
         using the File Upload interface.
       </p>
       <p>
-        Support for <abbr title="Secure Sockets Layer">SSL</abbr> and
-        <abbr title="Transport Layer Security">TLS</abbr> is a known
-        limitation and is beeing tracked as
+        Incomplete support for <abbr title="Secure Sockets Layer">SSL</abbr>
+        and <abbr title="Transport Layer Security">TLS</abbr> is a known
+        limitation and is being tracked as
         <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=77">Issue #77</a>.
       </p>
     </div>
