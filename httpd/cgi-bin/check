@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.242 2002-10-10 05:09:53 duerst Exp $
+# $Id: check,v 1.243 2002-10-10 05:22:45 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.242 $;
+  $VERSION    =  q$Revision: 1.243 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-10 05:09:53 $,
+			      Date => q$Date: 2002-10-10 05:22:45 $,
 			     });
 
 #
@@ -1836,14 +1836,7 @@ sub preparse {
     return if $File->{Root};
     ($File->{Root}, $File->{DOCTYPE}) = shift =~  m(<!DOCTYPE\s+(\w+)\s+PUBLIC\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
   };
-  # my $pi = sub {
-  #   return if $File->{Charset}->{XML};
-  #   my $pi = shift;
-  #   return unless $pi =~ m(<\?xml);
-  #   $pi =~ m(<\?xml[^>]*\sencoding\s*=\s*([\"\'])([A-Za-z][-A-Za-z0-9._]*)\1)s;
-  #   warn qq('$1' - '$2'\n) if $DEBUG;
-  #   $File->{Charset}->{XML} = lc $2;
-  # };
+
   my $start = sub {
     my $tag  = shift;
     my $attr = shift;
