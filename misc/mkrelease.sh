@@ -27,7 +27,7 @@ cd $tmpdir
 
 find validator-$version -type d -name CVS | xargs -r rm -rf
 find validator-$version -name .cvsignore | xargs -r rm -rf
-rm -rf validator-$version/misc/bundle validator-$version/misc/mkrelease.sh
+rm -f validator-$version/misc/mkrelease.sh
 
 find . -type d | xargs -r chmod 755
 find . -type f | xargs -r chmod 644
