@@ -1,258 +1,199 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
-
-<head>
-  <title>W3C HTML Validation Service: What's New</title>
-  <link rev="made" href="mailto:gerald@w3.org">
-  <meta name="keywords" content="HTML, Hypertext Markup Language, Validation,
-    W3C HTML Validation Service, What's New">
-  <meta name="description" content="What's New with W3C's Validation Service.">
-  <meta name="revision"
-    content="$Id: whatsnew.html,v 1.19 2001-07-26 13:27:33 link Exp $">
-</head>
-
-<body bgcolor="#FFFFFF" text="#000000" link="#0000ee" vlink="#551a8b">
-
-<p>
-  <a href="http://www.w3.org/"><img
-     src="http://www.w3.org/Icons/WWW/w3c_home" height=48 border=0
-     alt="W3C"></a>
-</p>
-
-<h1>W3C HTML Validation Service: What's New</h1>
-
-<p>
-  This page lists recent changes to <a href="/">the W3C HTML
-  Validation Service</a>.
-</p>
-
-<p>
-  For minor changes and bug fixes that aren't listed on this page, see <a
-  href="http://dev.w3.org/cgi-bin/cvsweb/validator/httpd/cgi-bin/check">the
-  CVS log</a>.
-</p>
-
-<dl>
-<dt><a name="2001-07-26"><strong>June 26, 2001</strong></a>:</dt>
-<dd>
-  <ul>
-    <li>Added support for XHTML 1.1 and XHTML Basic 1.0.</li>
-    <li>Added experimental support for MathML 2.0.</li>
-    <li>You can now tweak options from results page.</li>
-    <li>Added option to override Character Encoding.</li>
-    <li>Various bug fixes and minor changes.</li>
-  </ul>
-</dd>
-
-<dt><a name="2001-06-22"><strong>June 22, 2001</strong></a>:</dt>
-<dd>
-  <ul>
-    <li>Various bugfixes; notably two related to the File Upload feature.</li>
-    <li>Some changes to make local installations easier.</li>
-    <li>Support for more Character Encodings (e.g. ISO-8859-8-I).</li>
-    <li>Generally improved handling of Character Encodings.</li>
-    <li>Documentation donated by Scott Bigham (Thanks Scott!).</li>
-  </ul>
-</dd>
-
-<dt><a name="2000-10-18"><strong>October 18, 2000</strong></a>:
-<dd>
-  <p>
-    Added support for <a
-    href="http://purl.org/NET/ISO+IEC.15445/15445.html">ISO/IEC 15445:2000</a>
-    (ISO-HTML). See also: <a
-    href="http://purl.org/NET/ISO+IEC.15445/Users-Guide.html">User's Guide to
-    ISO-HTML</a>.
-  </p>
-
-<dt><a name="2000-06-30"><strong>June 30, 2000</strong></a>:
-<dd>
-  <p>
-    The service now checks XHTML documents for validity as well as
-    XML well-formedness.
-  </p>
-
-<dt><a name="2000-04-28"><strong>April 28, 2000</strong></a>:
-<dd>
-  <p>
-    Added the <a href="file-upload.html">file upload</a> feature.
-    (Thanks to Terje Bless for the patches!)
-  </p>
-
-  <p>
-    Created the <a
-    href="http://lists.w3.org/Archives/Public/www-validator-cvs/">www-validator-cvs
-    mailing list</a>.
-  </p>
-
-  <p>
-    Updated the <a
-    href="./">home page</a>, moved some things to <a
-    href="about.html">another page</a>.
-  </p>
-
-<dt><a name="2000-01-26"><strong>January 26, 2000</strong></a>:
-<dd>
-  <p>
-    Updated <a href="sgml-lib/">the DTDs</a>
-    and added <a href="images/">icons</a>
-    for <a
-    href="http://www.w3.org/TR/2000/REC-xhtml1-20000126/">XHTML
-    1.0</a>, <a
-    href="http://www.w3.org/TR/1999/REC-html401-19991224/">HTML
-    4.01</a>.
-  </p>
-
-<dt><a name="1999.08.24"><strong>August 24, 1999</strong></a>:
-<dd>
-  <p>
-    Added <a href="sgml-lib/PR-html40-19990824/">the DTDs</a> for
-    <a href="http://www.w3.org/TR/1999/PR-html40-19990824/">HTML
-    4.01</a>.
-  </p>
-
-  <p>
-    Updated <a href="sgml-lib/PR-xhtml1-19990824/">the DTDs</a>
-    for <a
-    href="http://www.w3.org/TR/1999/PR-xhtml1-19990824/">XHTML
-    1.0</a>.
-  </p>
-
-<dt><a name="1999.04.08"><strong>April 8, 1999</strong></a>:
-<dd>
-  <p>
-    Added username/password proxying for validation of documents
-    protected by HTTP Basic Authentication, thanks to patches
-    from <a href="http://www.w3.org/People/Renaud/">Renaud
-    Bruyeron</a>. (see <a
-    href="http://dev.w3.org/cgi-bin/cvsweb/validator/httpd/cgi-bin/check.diff?r1=text&amp;tr1=1.16&amp;r2=text&amp;tr2=1.18&amp;f=h">the
-    changes</a>)
-  </p>
-
-  <p>
-    This revision also includes patches to use the Perl5 version
-    of libwww-perl, <a href="http://www.linpro.no/lwp/">LWP</a>.
-  </p>
-
-<p>
-<dt><a name="1999.03.04"><strong>March 4, 1999</strong></a>:
-<dd>
-  <p>
-    Added support for <a
-    href="http://www.w3.org/MarkUp/#future">XHTML</a>, using
-    the DTDs from <a
-    href="http://www.w3.org/TR/1999/WD-html-in-xml-19990304/">the
-    19990304 working draft</a>. (see <a
-    href="http://dev.w3.org/cgi-bin/cvsweb/validator/httpd/cgi-bin/check.diff?r1=text&amp;tr1=1.13&amp;r2=text&amp;tr2=1.16&amp;f=h">the changes</a>)
-  </p>
-
-<p>
-<dt><a name="1999.02.25"><strong>February 25, 1999</strong></a>:
-<dd>
-  <p>
-    Added support for ISO-2022-JP and Shift_JIS character
-    encodings. Thanks to <a
-    href="http://www.w3.org/People/W3Cpeople.html#Asada">Takuya
-    Asada</a>, <a
-    href="http://www.w3.org/People/W3Cpeople.html#Ishikawa">Masayasu
-    Ishikawa</a>, and <a
-    href="http://www.w3.org/People/D%C3%BCrst/">Martin
-    D&uuml;rst</a> for their patches and advice.
-  </p>
-
-  <p>
-  Updated <a href="sgml-lib/REC-html40-971218/HTML4.decl">the
-  SGML declaration</a> according to the <a
-  href="http://www.w3.org/MarkUp/html40-updates/REC-html40-19980424-errata.html">HTML
-  4.0 spec errata</a>. (see <a
-  href="http://dev.w3.org/cgi-bin/cvsweb/validator/htdocs/sgml-lib/REC-html40-971218/HTML4.decl?r1=1.1&amp;r2=1.2">the
-  changes</a>)
-
-<p>
-<dt><a name="1998.08.26"><strong>August 26, 1998</strong></a>:
-<dd>
-  <p>
-    Put a <a href="/sgml-lib.tar.gz">tarred and gzipped version</a> of <a
-    href="/sgml-lib/">the SGML library files</a> (DTDs etc.) on the Web.
-  </p>
-
-<p>
-<dt><a name="1998.08.05"><strong>August 5, 1998</strong></a>:
-<dd>
-  <p>
-    Posted some new documents on the Web:
-  </p>
-  
-  <ul>
-    <li> <a href="/source/">information on the source code</a>,
-    <li> <a href="/todo.html">the to-do list for the service</a>,
-    <li> <a href="/feedback.html">a page explaining how to give feedback</a>
-    (including information on the new <a
-    href="http://lists.w3.org/Archives/Public/www-validator/">www-validator
-    mailing list</a>),
-  </ul>
-
-<p>
-<dt><a name="1998.07.24"><strong>July 24, 1998</strong></a>:
-<dd>
-  <p>
-    Made the <a href="/source/">source code</a> available via <a
-    href="http://dev.w3.org/cgi-bin/cvsweb">W3C's public CVS tree</a>.
-  </p>
-
-  <p>
-    Upgraded the HTTP server to <a href="http://www.apache.org/">Apache
-    1.3.1.</a>
-  </p>
-
-<p>
-<dt><a name="1998.06.19"><strong>June 19, 1998</strong></a>:
-<dd>
-  <p>
-    Added a page about <a href="about.html">the hardware/network
-    behind this service</a>.
-  </p>
-
-<p>
-<dt><a name="1998.04.20"><strong>April 20, 1998</strong></a>:
-<dd>
-  <p>
-    Added support for a parameter to check the referring Web page for mistakes.
-  </p>
-
-  <p>
-    To use it, just link to the following URI when linking to the service:
-  </p>
-
-  <blockquote><code>
-    <a href="http://validator.w3.org/check/referer">http://validator.w3.org/check/referer</a>
-  </code></blockquote>
-
-  <p>
-    (you can try the link above to see how it works.)
-  </p>
-
-<p>
-<dt><a name="1997.12.18"><strong>December 18, 1997</strong></a>:
-<dd>
-  <p>
-    Updated HTML 4.0 materials to match the <a
-    href="http://www.w3.org/TR/REC-html40/">HTML 4.0 Recommendation</a>.
-  </p>
-
-</dl>
-
-<hr>
-
-<address>
-  <a href="http://validator.w3.org/check/referer"><img
-     src="http://validator.w3.org/images/vh40.gif" height=31 width=88
-     align=right border=0 alt="Valid HTML 4.0!"></a>
-  <a href="/feedback.html">Gerald Oskoboiny</A><br>
-     $Date: 2001-07-26 13:27:33 $
-</address>
-
-</body>
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>W3C HTML Validation Service: What's New</title>
+    <link rev="made" href="mailto:gerald@w3.org" />
+    <link rel="stylesheet" type="text/css" href="base.css" />
+    <meta name="keywords" content="HTML, Hypertext Markup Language, Validation,
+      W3C HTML Validation Service, What's New" />
+    <meta name="description" content="What's New with the W3C Validation Service." />
+    <meta name="revision"
+      content="$Id: whatsnew.html,v 1.20 2001-07-27 11:27:39 link Exp $" />
+  </head>
+  <body>
+    <h1><a href="http://www.w3.org/"><img height="48" alt="W3C" id="logo"
+      src="http://www.w3.org/Icons/WWW/w3c_home" /></a>
+      W3C HTML Validation Service: What's New</h1>
+    <div class="intro">
+      <p>
+        This page lists recent changes to <a href="/">the W3C HTML Validation
+        Service</a>. For minor changes and bug fixes that aren't listed on this
+        page, see <a href="http://dev.w3.org/cgi-bin/cvsweb/validator/">the
+        CVS log</a>.
+      </p>
+    </div>
+    <dl>
+      <dt><a name="2001-07-26"><strong>July 26, 2001</strong></a>:</dt>
+      <dd>
+        <ul>
+          <li>Added support for XHTML 1.1 and XHTML Basic 1.0.</li>
+          <li>Added experimental support for MathML 2.0.</li>
+          <li>You can now tweak options from results page.</li>
+          <li>Added option to override Character Encoding.</li>
+          <li>Various bug fixes and minor changes.</li>
+        </ul>
+      </dd>
+      <dt><a name="2001-06-22"><strong>June 22, 2001</strong></a>:</dt>
+      <dd>
+        <ul>
+          <li>Various bugfixes; notably two related to the File Upload feature.</li>
+          <li>Some changes to make local installations easier.</li>
+          <li>Support for more Character Encodings (e.g. ISO-8859-8-I).</li>
+          <li>Generally improved handling of Character Encodings.</li>
+          <li>Documentation donated by Scott Bigham (Thanks Scott!).</li>
+        </ul>
+      </dd>
+      <dt><a name="2000-10-18"><strong>October 18, 2000</strong></a>:</dt>
+      <dd>
+        <p>
+          Added support for <a href="http://purl.org/NET/ISO+IEC.15445/15445.html">ISO/IEC 15445:2000</a>
+          (ISO-HTML). See also: <a href="http://purl.org/NET/ISO+IEC.15445/Users-Guide.html">User's Guide to
+          ISO-HTML</a>.
+        </p>
+      </dd>
+      <dt><a name="2000-06-30"><strong>June 30, 2000</strong></a>:</dt>
+      <dd>
+        <p>
+          The service now checks XHTML documents for validity as well as
+          XML well-formedness.
+        </p>
+      </dd>
+      <dt><a name="2000-04-28"><strong>April 28, 2000</strong></a>:</dt>
+      <dd>
+        <p>
+          Added the <a href="file-upload.html">file upload</a> feature.
+          (Thanks to Terje Bless for the patches!)
+        </p>
+        <p>
+          Created the <a href="http://lists.w3.org/Archives/Public/www-validator-cvs/">www-validator-cvs
+          mailing list</a>.
+        </p>
+        <p>
+          Updated the <a href="/">home page</a>, moved some things to
+          <a href="about.html">another page</a>.
+        </p>
+      </dd>
+      <dt><a name="2000-01-26"><strong>January 26, 2000</strong></a>:</dt>
+      <dd>
+        <p>
+          Updated <a href="sgml-lib/">the DTDs</a> and added
+          <a href="images/">icons</a> for
+          <a href="http://www.w3.org/TR/2000/REC-xhtml1-20000126/">XHTML 1.0</a>,
+          <a href="http://www.w3.org/TR/1999/REC-html401-19991224/">HTML 4.01</a>.
+        </p>
+      </dd>
+      <dt><a name="1999.08.24"><strong>August 24, 1999</strong></a>:</dt>
+      <dd>
+        <p>
+          Added <a href="sgml-lib/PR-html40-19990824/">the DTDs</a> for
+          <a href="http://www.w3.org/TR/1999/PR-html40-19990824/">HTML 4.01</a>.
+        </p>
+        <p>
+          Updated <a href="sgml-lib/PR-xhtml1-19990824/">the DTDs</a> for
+          <a href="http://www.w3.org/TR/1999/PR-xhtml1-19990824/">XHTML 1.0</a>.
+        </p>
+      </dd>
+      <dt><a name="1999.04.08"><strong>April 8, 1999</strong></a>:</dt>
+      <dd>
+        <p>
+          Added username/password proxying for validation of documents protected
+          by HTTP Basic Authentication, thanks to patches from
+          <a href="http://www.w3.org/People/Renaud/">Renaud Bruyeron</a>. (see
+          <a href="http://dev.w3.org/cgi-bin/cvsweb/validator/httpd/cgi-bin/check.diff?r1=text&amp;tr1=1.16&amp;r2=text&amp;tr2=1.18&amp;f=h">the
+          changes</a>)
+        </p>
+        <p>
+          This revision also includes patches to use the Perl5 version
+          of libwww-perl, <a href="http://www.linpro.no/lwp/">LWP</a>.
+        </p>
+      </dd>
+      <dt><a name="1999.03.04"><strong>March 4, 1999</strong></a>:</dt>
+      <dd>
+        <p>
+          Added support for <a href="http://www.w3.org/MarkUp/#future">XHTML</a>,
+          using the DTDs from <a href="http://www.w3.org/TR/1999/WD-html-in-xml-19990304/">the
+          19990304 working draft</a>. (see <a href="http://dev.w3.org/cgi-bin/cvsweb/validator/httpd/cgi-bin/check.diff?r1=text&amp;tr1=1.13&amp;r2=text&amp;tr2=1.16&amp;f=h">the changes</a>)
+        </p>
+      </dd>
+      <dt><a name="1999.02.25"><strong>February 25, 1999</strong></a>:</dt>
+      <dd>
+        <p>
+          Added support for ISO-2022-JP and Shift_JIS character encodings.
+          Thanks to <a href="http://www.w3.org/People/W3Cpeople.html#Asada">Takuya
+          Asada</a>, <a href="http://www.w3.org/People/W3Cpeople.html#Ishikawa">Masayasu
+          Ishikawa</a>, and <a href="http://www.w3.org/People/D%C3%BCrst/">Martin
+          D&uuml;rst</a> for their patches and advice.
+        </p>
+        <p>
+          Updated <a href="sgml-lib/REC-html40-971218/HTML4.decl">the
+          SGML declaration</a> according to the <a href="http://www.w3.org/MarkUp/html40-updates/REC-html40-19980424-errata.html">HTML
+          4.0 spec errata</a>. (see <a href="http://dev.w3.org/cgi-bin/cvsweb/validator/htdocs/sgml-lib/REC-html40-971218/HTML4.decl?r1=1.1&amp;r2=1.2">the
+          changes</a>).
+        </p>
+      </dd>
+      <dt><a name="1998.08.26"><strong>August 26, 1998</strong></a>:</dt>
+      <dd>
+        <p>
+          Put a <a href="/sgml-lib.tar.gz">tarred and gzipped version</a> of
+          <a  href="/sgml-lib/">the SGML library files</a> (DTDs etc.) on the
+          Web.
+        </p>
+      </dd>
+      <dt><a name="1998.08.05"><strong>August 5, 1998</strong></a>:</dt>
+      <dd>
+        <p>Posted some new documents on the Web:</p>
+        <ul>
+          <li><a href="/source/">information on the source code</a></li>
+          <li><a href="/todo.html">the to-do list for the service</a></li>
+          <li>
+            <a href="/feedback.html">a page explaining how to give feedback</a>
+            (including information on the new <a href="http://lists.w3.org/Archives/Public/www-validator/">www-validator
+            mailing list</a>)
+          </li>
+        </ul>
+      </dd>
+      <dt><a name="1998.07.24"><strong>July 24, 1998</strong></a>:</dt>
+      <dd>
+        <p>
+          Made the <a href="/source/">source code</a> available via
+          <a href="http://dev.w3.org/cgi-bin/cvsweb">W3C's public CVS tree</a>.
+        </p>
+        <p>
+          Upgraded the HTTP server to <a href="http://www.apache.org/">Apache
+          1.3.1.</a>
+        </p>
+      </dd>
+      <dt><a name="1998.06.19"><strong>June 19, 1998</strong></a>:</dt>
+      <dd>
+        <p>
+          Added a page about <a href="about.html">the hardware/network
+          behind this service</a>.
+        </p>
+      </dd>
+      <dt><a name="1998.04.20"><strong>April 20, 1998</strong></a>:</dt>
+      <dd>
+        <p>
+          Added support for a parameter to check the referring Web page for
+          mistakes. To use it, just link to the following URI when linking to
+          the service &lt;URL:<code><a href="http://validator.w3.org/check/referer">http://validator.w3.org/check/referer</a></code>&gt;
+          (you can try the link to see how it works.)
+        </p>
+      </dd>
+      <dt><a name="1997.12.18"><strong>December 18, 1997</strong></a>:</dt>
+      <dd>
+        <p>
+          Updated HTML 4.0 materials to match the
+          <a href="http://www.w3.org/TR/REC-html40/">HTML 4.0 Recommendation</a>.
+        </p>
+      </dd>
+    </dl>
+    <address>
+      <a href="http://validator.w3.org/check/referer"><img
+        src="http://validator.w3.org/images/vh40.gif" height="31" width="88"
+        alt="Valid HTML 4.0!" /></a>
+      <a href="/feedback.html">Gerald Oskoboiny</a><br />
+      $Date: 2001-07-27 11:27:39 $
+    </address>
+  </body>
 </html>
-
