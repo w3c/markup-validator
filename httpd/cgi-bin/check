@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.60 2003-07-23 19:43:22 link Exp $
+# $Id: check,v 1.305.2.61 2003-07-23 22:21:08 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -130,7 +130,7 @@ BEGIN
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.60 $;
+  $VERSION    =  q$Revision: 1.305.2.61 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -202,7 +202,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-07-23 19:43:22 $,
+                              Date => q$Date: 2003-07-23 22:21:08 $,
                              });
 
 #
@@ -2048,14 +2048,15 @@ sub show_source {
 
     <p>Below is the source input I used for this validation:</p>
     $comment
-    <pre>
+    <div>
 EOF
 
   for (@{$File->{Content}}) {
-    printf "<a name=\"line-%s\">%4d</a>: %s\n", $line, $line, ent $_;
+    my $hline = ('&nbsp;' x (4 - length "$line")) . $line;
+    printf qq(<code id="line-%s">%s: %s</code>\n), $line, $hline, ent $_;
     $line++;
   }
-  print "    </pre>\n  </div>";
+  print "    </div>\n  </div>";
 }
 
 

@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.10 2003-07-23 19:43:22 link Exp $ */
+/* $Id: results.css,v 1.13.2.11 2003-07-23 22:21:08 link Exp $ */
 
 .markup {
   color: red;
@@ -43,10 +43,28 @@
   font-weight: bolder;
 }
 
+#source div {
+  background: #eee;
+  border: 1px solid black;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#source code {
+  display: block;
+  white-space: normal;
+  font-family: "Bitstream Vera Mono", monospace;
+  font-size: smaller;
+}
+
+#source code:hover {
+  background: yellow;
+  font-weight: bolder;
+}
 
 ol#errors li {
   clear: right;
-  margin-top: 2em;
+  padding-top: 2em;
 }
 
 
