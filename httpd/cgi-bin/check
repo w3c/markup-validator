@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.21 1999-04-30 02:19:09 gerald Exp $
+# $Id: check,v 1.22 1999-05-04 11:15:06 gerald Exp $
 
 use LWP::UserAgent;
 
@@ -16,8 +16,8 @@ use LWP::UserAgent;
 # Constant definitions
 #############################################################################
 
-$cvsrevision	= '$Revision: 1.21 $';
-$cvsdate	= '$Date: 1999-04-30 02:19:09 $';
+$cvsrevision	= '$Revision: 1.22 $';
+$cvsdate	= '$Date: 1999-05-04 11:15:06 $';
 
 $logfile	= "/var/log/httpd/val-svc";
 
@@ -817,7 +817,9 @@ EOF
     open( WEBLINT,
 	"| $weblint -s $pedanticflags - 2>&1 >$temp.weblint" )
 	    || die "couldn't open weblint: $!";
-    print WEBLINT @file;
+    for (@file) {
+	print WEBLINT $_, "\n";
+    }
     close( WEBLINT ) || "couldn't close weblint: $!";
 
     print "\n\n";
