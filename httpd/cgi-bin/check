@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.164 2001-07-26 13:40:25 link Exp $
+# $Id: check,v 1.165 2001-07-26 13:52:39 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.164 $;
+$VERSION    =  q$Revision: 1.165 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-26 13:40:25 $;
+$DATE       =  q$Date: 2001-07-26 13:52:39 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -348,16 +348,37 @@ if (URI::eq("$File->{URI}", $q->param('uri'))) { # @@ Why do we need to stringif
                                    "$File->{Charset} (as detected)",
                                    'utf-8 (Unicode, worldwide)',
                                    'iso-8859-1 (Western Europe)',
-                                   'iso-8859-2 (Eastern Europe)',
+                                   'iso-8859-2 (Central Europe)',
+                                   'iso-8859-3 (Maltese)',
+                                   'iso-8859-4 (Baltic Rim)',
                                    'iso-8859-5 (Cyrillic)',
+                                   'iso-8859-6-i (Arabic)',
                                    'iso-8859-7 (Greek)',
+                                   'iso-8859-8-i (Hebrew)',
+                                   'iso-8859-9 (Turkish)',
+                                   'iso-8859-10 (Latin 6)',
+                                   'iso-8859-13 (Latin 7)',
+                                   'iso-8859-14 (Celtic)',
+                                   'iso-8859-15 (Latin 9)',
+                                   'us-ascii (basic English)',
                                    'euc-jp (Japanese, Unix)',
                                    'shift_jis (Japanese, Win/Mac)',
                                    'iso-2022-jp (Japanese, email)',
                                    'euc-kr (Korean)',
-                                   'GB2312 (Chinese, simplified)',
-                                   'Big5 (Chinese, traditional)',
-                                   # add more@@@@ '',
+                                   'gb2312 (Chinese, simplified)',
+                                   'big5 (Chinese, traditional)',
+                                   'tis-620 (Thai)',
+                                   'koi8-r (Russian)',
+                                   'koi8-u (Ukrainian)',
+                                   'macistosh (MacRoman)',
+                                   'windows-1250 (Central Europe)',
+                                   'windows-1251 (Cyrillic)',
+                                   'windows-1252 (Western Europe)',
+                                   'windows-1253 (Greek)',
+                                   'windows-1254 (Turkish)',
+                                   'windows-1255 (Hebrew)',
+                                   'windows-1256 (Arabic)',
+                                   'windows-1257 (Baltic Rim)',
                                   ],
                        -default => $q->param('doctype'),
         ));
