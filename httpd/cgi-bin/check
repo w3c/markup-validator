@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.23 2002-05-29 02:40:24 link Exp $
+# $Id: check,v 1.200.2.24 2002-05-29 02:49:45 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -70,7 +70,7 @@ $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.23 $;
+$VERSION    =  q$Revision: 1.200.2.24 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 #
@@ -99,7 +99,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-05-29 02:40:24 $,
+			      Date => q$Date: 2002-05-29 02:49:45 $,
 			     });
 
 #
@@ -1169,9 +1169,10 @@ EOHD
     Below are the results of attempting to parse this document with
     an SGML parser.
   </p>
-  <ul>
 EOHD
   }
+
+  print qq(  <ol>\n);
 
   foreach my $err (@{$File->{Errors}}) {
 
@@ -1231,9 +1232,9 @@ EOHD
     $err->{idx} =~ s/"[^\"]*"/FOO/g;
     $err->{idx} =~ s/[^A-Za-z ]//g;
     $err->{idx} =~ s/\s+/ /g; # Collapse spaces
-    $err->{idx} =~ s/(^\s|\s$)//g; # Remove leading and trailing spaces.
-    $err->{idx} =~ s/(FOO )+/FOO /g; # Collapse FOOs. :-)
-    $err->{idx} =~ s/FOO FOO/FOO/g; # Collapse FOOs. :-)
+    $err->{idx} =~ s/(^\s|\s$)//g; # Remove leading and trailing spaces. )
+    $err->{idx} =~ s/(FOO )+/FOO /g; # Collapse FOOs.
+    $err->{idx} =~ s/FOO FOO/FOO/g; # Collapse FOOs.
 
     $line = &ent($line); # Entity encode.
     $line =~ s/\t/ /g;   # Collapse TABs.
@@ -1252,9 +1253,9 @@ EOHD
     print qq(\n<pre>  <code class="input">$line</code>\n);
     print ' ' x ($col + 2); # 2 is the number of spaces before <code> above
     print ' ' x 4 if $col != $err->{char}; # only for truncated lines
-    print qq(<span class="markup">^</span></pre>\n);
+    print qq(<span class="markup">^</span></pre></li>\n);
   }
-  print "</ul>\n";
+  print qq(  </ol>\n);
 }
 
 
