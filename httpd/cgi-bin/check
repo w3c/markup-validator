@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.3 2002-03-17 23:15:52 link Exp $
+# $Id: check,v 1.200.2.4 2002-03-18 00:26:22 link Exp $
 
 #
 # We need Perl 5.004.
@@ -89,19 +89,11 @@ my $uri_def_uri	= 'http://www.w3.org/Addressing/#terms';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.3 $;
+$VERSION    =  q$Revision: 1.200.2.4 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2002-03-17 23:15:52 $;
+$DATE       =  q$Date: 2002-03-18 00:26:22 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
-
-#
-# DOCTYPEs
-my $html32_doctype  = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">);
-my $html40s_doctype = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/strict.dtd">);
-my $html40t_doctype = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">);
-my $html40f_doctype = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/frameset.dtd">);
-my $xhtmlt_doctype  = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN");
 
 #
 # Read configuration files.
@@ -191,9 +183,11 @@ undef $q;
 # We save it in a string instead of printing it in case we need to abort before
 # we have any meaningfull results to report. @@ May not be necessary!
 $File->{Results} = <<"EOF";
+Content-Language: en
 Content-Type: text/html; charset=utf-8
 
-$html40t_doctype
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
 <html>
   <head>
     <meta http-equiv='Content-Type' content='text/html;charset=utf-8'>
