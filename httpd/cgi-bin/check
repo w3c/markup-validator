@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.109 2001-05-27 16:23:53 link Exp $
+# $Id: check,v 1.110 2001-06-03 23:55:53 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -74,9 +74,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.109 $;
+$VERSION    =  q$Revision: 1.110 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-05-27 16:23:53 $;
+$DATE       =  q$Date: 2001-06-03 23:55:53 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -378,13 +378,10 @@ my $command  = "$sp -f$temp -E0 $xmlflags -c $catalog";
 
 print "\t<li>nsgmls command line: <code>$command</code>\n" if $DEBUG;
 
-open CHECKER, "|$command - >$temp.esis"
-  or die "open(|$command - >$temp.esis) returned: $!\n";
-
 if (   $File->{Charset} eq 'utf-8'
     or $File->{Charset} eq 'us-ascii'
     or $File->{Charset} eq 'unknown') {
-  for (@{$File->{Content}}) {print CHECKER $_, "\n"};
+  ; # do nothing
 } else {
   # workaround for windows-nnnn charsets missing from glibc<2.2
   my $temp_charset = $File->{Charset};
@@ -395,12 +392,17 @@ if (   $File->{Charset} eq 'utf-8'
   eval {my $c = Text::Iconv->new($temp_charset, 'utf-8')};
   if (not $@) {
     my $c = Text::Iconv->new($temp_charset, 'utf-8');
-    for (@{$File->{Content}}) {print CHECKER $c->convert("$_\n")};
+    for (@{$File->{Content}}) {$_ = $c->convert($_)};
   } else {
     &print_charset_error($@, $File->{Charset});
     &clean_up_and_exit;
   }
 }
+
+open CHECKER, "|$command - >$temp.esis"
+  or die "open(|$command - >$temp.esis) returned: $!\n";
+
+for (@{$File->{Content}}) {print CHECKER $_, "\n"};
 close CHECKER;
 
 open ERRORS, "<$temp"   or die  "open($temp) returned: $!\n";
