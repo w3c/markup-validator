@@ -5,7 +5,7 @@
 # (c) 1999-2002 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.2 2002-12-08 14:47:02 ville Exp $
+# $Id: checklink.pl,v 3.6.2.3 2002-12-09 00:16:04 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -84,7 +84,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.2 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.3 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2002 W3C', $CVS_VERSION);
 
@@ -230,7 +230,7 @@ if ($_cl) {
   # Save, clear or leave cookie as is.
   my $cookie = '';
   if (my $action = $query->param('cookie')) {
-    my %cookie = $query->cookie($AGENT);
+    my %cookie = (-name => $AGENT);
     if ($action eq 'clear') {
       # Clear the cookie.
       $cookie{-value}   = '';
@@ -241,9 +241,11 @@ if ($_cl) {
       if ($action eq 'set') {
         # Set the options.
         my %options = $query->Vars();
-        delete($options{$_}) for ('url', 'uri', 'check'); # Non-persistent.
+        delete($options{$_}) for qw(url uri check cookie); # Non-persistent.
         $cookie{-value}   = \%options;
-        $cookie{-expires} = '+1M';
+      } else {
+        # Use the old values.
+        $cookie{-value} = { $query->cookie($AGENT) };
       }
     }
     $cookie = $query->cookie(%cookie);
