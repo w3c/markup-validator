@@ -80,11 +80,11 @@ use CGI;
 ###############
 # Global Variables
 
-my $VERSION= '$Id: checklink.pl,v 1.24 1999-03-01 22:35:08 renaudb Exp $ ';
+my $VERSION= '$Id: checklink.pl,v 1.25 1999-03-08 22:19:52 renaudb Exp $ ';
 my %ALLOWED_SCHEMES = ( "http" => 1 );
 my %SCHEMES = (); # for report
 my %URL = ();
-my %COLORS = ( 200 => '', 301 => ' BGCOLOR="yellow"', 302 => ' BGCOLOR="yellow"', 404 => ' BGCOLOR="red"' , 403 => ' BGCOLOR="red"' , 401 => ' BGCOLOR="aqua"' );
+my %COLORS = ( 200 => '', 301 => ' BGCOLOR="yellow"', 302 => ' BGCOLOR="yellow"', 404 => ' BGCOLOR="red"' , 403 => ' BGCOLOR="red"' , 401 => ' BGCOLOR="aqua"' , 500 => ' BGCOLOR="red"');
 my %HTTP_CODES = ( 200 => 'ok' , 
 		  201 => '201',
 		  301 => 'redirect' , 
