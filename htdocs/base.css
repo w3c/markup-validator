@@ -4,7 +4,7 @@
   Copyright © 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
   See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-  $Id: base.css,v 1.16 2001-09-20 18:14:12 link Exp $
+  $Id: base.css,v 1.17 2001-09-24 10:05:41 link Exp $
 */
 
 @import url(non-netscape.css);
@@ -85,9 +85,10 @@ p.navbar {
   padding: 1ex;
   min-width: 13ex;
   max-width: 15em;
-  width: 13ex;
+  width:     13ex;
   background-color: #eee;
   border:1px dashed #999;
+  clear: both;
 }
 
 table th {
@@ -97,10 +98,8 @@ table th {
 
 div.stb {clear: both}
 
-.intro {
+p {
   max-width: 75ex;
-  margin: .1ex;
-  padding: .1ex;
 }
 
 /* Various header(ish) things. Definitions cribbed from the CORE Styles. */
@@ -114,7 +113,8 @@ h1	{
 	word-spacing:	normal;
 	letter-spacing:	normal;
 	text-transform:	none;
-	}	
+	color: RGB(0,90,156);
+	}
 		
 h2	{	
 	font-family:	Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
@@ -132,8 +132,8 @@ h3	{
 	font-family:	Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
 	font-size-adjust:	.53;
 	font-size:	1.58em;
-	font-weight:	600;
-	font-style:	normal;
+	font-weight:	500;
+	font-style:	italic;
 	text-decoration:	none;
 	word-spacing:	normal;
 	letter-spacing:	normal;
@@ -144,7 +144,7 @@ h4	{
 	font-family:	Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
 	font-size-adjust:	.53;
 	font-size:	1.33em;
-	font-weight:	600;
+	font-weight:	500;
 	font-style:	normal;
 	text-decoration:	none;
 	word-spacing:	normal;
@@ -156,19 +156,20 @@ h5, dt	{
 	font-family:	Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
 	font-size-adjust:	.53;
 	font-size:	1.17em;
-	font-weight:	600;
+	font-weight:	500;
 	font-style:	normal;
 	text-decoration:	none;
 	word-spacing:	normal;
 	letter-spacing:	normal;
 	text-transform:	none;
+	margin-top: 1em;
 	}	
 		
 h6	{	
 	font-family:	Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
 	font-size-adjust:	.53;
 	font-size:	1em;
-	font-weight:	700;
+	font-weight:	500;
 	font-style:	normal;
 	text-decoration:	none;
 	word-spacing:	normal;

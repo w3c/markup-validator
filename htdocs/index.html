@@ -1,8 +1,9 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.44 2001-09-20 16:59:12 link Exp $" -->
-<!--#set var="date" value="\$Date: 2001-09-20 16:59:12 $" -->
+<!--#set var="revision" value="\$Id: index.html,v 1.45 2001-09-24 10:05:41 link Exp $" -->
+<!--#set var="date" value="\$Date: 2001-09-24 10:05:41 $" -->
+<!--#set var="title" value="The W3C HTML Validation Service" -->
 <!--#include virtual="/header.html" -->
 
-    <div class="intro">
+    <div id="skip" class="intro">
       <p>
         Welcome to the W3C HTML Validation Service; a free service that checks
         documents like HTML and XHTML for conformance to W3C Recommendations
@@ -18,7 +19,6 @@
         <a href="http://www.w3.org/TR/REC-CSS1">Recommendation</a>. 
       </p>
     </div>
-
     <div>
       <h2><a name="recent">Recent Updates</a></h2>
       <p class="intro">
@@ -32,98 +32,21 @@
           Encoding support</a> <small>(June 22, 2001)</small></li>
       </ul>
     </div>
-
-    <div id="skip" class="stb">
-      <h2><a id="byURI" name="byURI">Validate by URI</a></h2>
-      <form method="get" action="/check">
-        <table>
-          <tr><th><label title="Address of page to Validate" for="uri">Address:</label></th><td colspan="2"><input id="uri" name="uri" size="50" /></td></tr>
-          <tr>
-            <th><label title="Character Encoding" for="charset">Character Encoding:</label></th>
-            <td colspan="2">
-              <select id="charset" name="charset">
-                <option value="(detect automatically)">(detect automatically)</option>
-                <option value="utf-8 (Unicode, worldwide)">utf-8 (Unicode, worldwide)</option>
-                <option value="iso-8859-1 (Western Europe)">iso-8859-1 (Western Europe)</option>
-                <option value="iso-8859-2 (Central Europe)">iso-8859-2 (Central Europe)</option>
-                <option value="iso-8859-3 (Maltese)">iso-8859-3 (Maltese)</option>
-                <option value="iso-8859-4 (Baltic Rim)">iso-8859-4 (Baltic Rim)</option>
-                <option value="iso-8859-5 (Cyrillic)">iso-8859-5 (Cyrillic)</option>
-                <option value="iso-8859-6-i (Arabic)">iso-8859-6-i (Arabic)</option>
-                <option value="iso-8859-7 (Greek)">iso-8859-7 (Greek)</option>
-                <option value="iso-8859-8-i (Hebrew)">iso-8859-8-i (Hebrew)</option>
-                <option value="iso-8859-9 (Turkish)">iso-8859-9 (Turkish)</option>
-                <option value="iso-8859-10 (Latin 6)">iso-8859-10 (Latin 6)</option>
-                <option value="iso-8859-13 (Latin 7)">iso-8859-13 (Latin 7)</option>
-                <option value="iso-8859-14 (Celtic)">iso-8859-14 (Celtic)</option>
-                <option value="iso-8859-15 (Latin 9)">iso-8859-15 (Latin 9)</option>
-                <option value="us-ascii (basic English)">us-ascii (basic English)</option>
-                <option value="euc-jp (Japanese, Unix)">euc-jp (Japanese, Unix)</option>
-                <option value="shift_jis (Japanese, Win/Mac)">shift_jis (Japanese, Win/Mac)</option>
-                <option value="iso-2022-jp (Japanese, email)">iso-2022-jp (Japanese, email)</option>
-                <option value="euc-kr (Korean)">euc-kr (Korean)</option>
-                <option value="gb2312 (Chinese, simplified)">gb2312 (Chinese, simplified)</option>
-                <option value="big5 (Chinese, traditional)">big5 (Chinese, traditional)</option>
-                <option value="tis-620 (Thai)">tis-620 (Thai)</option>
-                <option value="koi8-r (Russian)">koi8-r (Russian)</option>
-                <option value="koi8-u (Ukrainian)">koi8-u (Ukrainian)</option>
-                <option value="macintosh (MacRoman)">macintosh (MacRoman)</option>
-                <option value="windows-1250 (Central Europe)">windows-1250 (Central Europe)</option>
-                <option value="windows-1251 (Cyrillic)">windows-1251 (Cyrillic)</option>
-                <option value="windows-1252 (Western Europe)">windows-1252 (Western Europe)</option>
-                <option value="windows-1253 (Greek)">windows-1253 (Greek)</option>
-                <option value="windows-1254 (Turkish)">windows-1254 (Turkish)</option>
-                <option value="windows-1255 (Hebrew)">windows-1255 (Hebrew)</option>
-                <option value="windows-1256 (Arabic)">windows-1256 (Arabic)</option>
-                <option value="windows-1257 (Baltic Rim)">windows-1257 (Baltic Rim)</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <th><label title="Document Type" for="doctype">Document Type:</label></th>
-            <td colspan="2">
-              <select id="doctype" name="doctype">
-                <option value="Inline">(detect automatically)</option>
-                <option>XHTML 1.0 Strict</option>
-                <option>XHTML 1.0 Transitional</option>
-                <option>XHTML 1.0 Frameset</option>
-                <option>HTML 4.01 Strict</option>
-                <option>HTML 4.01 Transitional</option>
-                <option>HTML 4.01 Frameset</option>
-                <option>HTML 3.2</option>
-                <option>HTML 2.0</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <th rowspan="2">Options:</th>
-            <td><label title="Show Page Source"><input name="ss" type="checkbox" value="" /> Show Source</label></td>
-            <td><label title="Show Parse Tree"><input name="sp" type="checkbox" value="" /> Show Parse Tree</label></td>
-          </tr>
-          <tr>
-            <td><label title="Show an Outline of the document"><input name="outline" type="checkbox" value="" /> Show Outline</label></td>
-            <td><label title="Exclude Attributes from Parse Tree"><input name="noatt" type="checkbox" value="" /> ...exclude attributes</label></td>
-          </tr>
-          <tr><td />
-            <td><input type="submit" value="Validate this page" /></td>
-	    <td />
-          </tr>
-        </table>
-      </form>
-    </div>
-
     <div>
+      <h2>Validate Files</h2>
       <p>
-        Alternatively, you can <a href="file-upload.html">upload
-        files</a> from your computer to have them checked.
+        You can enter a URI in the <code>Address</code> field below, or choose
+        a file to upload. There is also an <a title="Extended Interface to the
+        W3C HTML Validation Service" href="/detailed.html">Extended
+        Interface</a> available if you want to set any advanced options.
       </p>
-
+      <form method="post" enctype="multipart/form-data" action="/check">
       <p>
-        You can also check your
-        <a href="http://www.w3.org/Style/CSS/">Cascading Style Sheets</a>
-        using W3C's
-        <a href="http://jigsaw.w3.org/css-validator/">CSS Validation Service</a>.
+        <label title="Address of page to Validate">Address (URI): <input id="uri" name="uri" size="50" /></label>
+        <label title="Choose a Local File to Upload and Validate">Local File: <input type="file" name="uploaded_file" size="50" /></label>
       </p>
+      <p><input type="submit" value="Validate" /></p>
+      </form>
     </div>
 
 

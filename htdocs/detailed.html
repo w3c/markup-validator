@@ -1,17 +1,17 @@
-<!--#set var="revision" value="\$Id: file-upload.html,v 1.8 2001-09-24 10:05:41 link Exp $" -->
+<!--#set var="revision" value="\$Id: detailed.html,v 1.1 2001-09-24 10:05:41 link Exp $" -->
 <!--#set var="date" value="\$Date: 2001-09-24 10:05:41 $" -->
-<!--#set var="title" value="About the W3C HTML Validation Service" -->
+<!--#set var="title" value="The W3C HTML Validation Service" -->
 <!--#include virtual="/header.html" -->
 
-  <p>
-    This form allows you to upload files from your computer and have
-    them validated.
+  <p name="skip" id="skip">
+    This form allows you to enter a URI or upload files from your computer and
+    have them validated.
   </p>
     <div>
-      <h2>Validate Uploaded File</h2>
       <form method="post" enctype="multipart/form-data" action="/check">
         <table>
-          <tr><th><label for="uploaded_file">File:</label></th><td colspan="2"><input type="file" name="uploaded_file" size="50" /></td></tr>
+          <tr><th><label title="Address of page to Validate" for="uri">Address (URI):</label></th><td colspan="2"><input id="uri" name="uri" size="50" /> or...</td></tr>
+          <tr><th><label for="uploaded_file">Local File:</label></th><td colspan="2"><input type="file" name="uploaded_file" size="50" /></td></tr>
           <tr>
             <th><label for="charset">Character Encoding:</label></th>
             <td colspan="2">
@@ -85,13 +85,6 @@
         </table>
       </form>
     </div>
-
-  <p>
-    If your document is on the Web, you can validate
-    it by <a title="Validate files by URI" href="./">entering its address</a> instead.
-  </p>
-
-
 <!--#include virtual="/footer.html" -->
   </body>
 </html>
