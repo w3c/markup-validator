@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.22 1999-05-04 11:15:06 gerald Exp $
+# $Id: check,v 1.23 1999-08-03 03:35:50 gerald Exp $
 
 use LWP::UserAgent;
 
@@ -16,8 +16,8 @@ use LWP::UserAgent;
 # Constant definitions
 #############################################################################
 
-$cvsrevision	= '$Revision: 1.22 $';
-$cvsdate	= '$Date: 1999-05-04 11:15:06 $';
+$cvsrevision	= '$Revision: 1.23 $';
+$cvsdate	= '$Date: 1999-08-03 03:35:50 $';
 
 $logfile	= "/var/log/httpd/val-svc";
 
@@ -1196,10 +1196,11 @@ sub check_for_doctype {
 	    return 0, "";	# doc does have a doctype
 	}
 
+	$line =~ s/<!--([^-]|-[^-])*--\s*>//go;	# strip comments,
+	    # so the next line doesn't find commented-out markup etc.
+	    # (this doesn't handle multi-line comments, unfortunately)
+
 	last if ( $line =~ /<[a-z]/i );		# found an element
-	    # @@ this needs to be fixed to handle commented-out markup
-	    # which appears before the doctype
-    }
 
     # do several loops of increasing lengths to avoid iterating over
     # the whole file if possible.
