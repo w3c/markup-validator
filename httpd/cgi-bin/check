@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.374 2005-01-15 15:21:24 ville Exp $
+# $Id: check,v 1.375 2005-01-15 16:14:05 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -222,7 +222,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.374 $;
+  $VERSION    =  q$Revision: 1.375 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -288,9 +288,9 @@ $File->{Offsets}->[0] = [0, 0]; # The first item isn't used...
 
 #
 # Listrefs.
-$File->{Lines}              = []; # Line numbers for encoding errors.
-$File->{Warnings}           = []; # Warnings...
-$File->{'Other Namespaces'} = []; # Other (non-root) Namespaces.
+$File->{Lines}      = []; # Line numbers for encoding errors.
+$File->{Warnings}   = []; # Warnings...
+$File->{Namespaces} = []; # Other (non-root) Namespaces.
 
 
 ###############################################################################
@@ -775,10 +775,16 @@ sub parse (\$) {
     $elements_found++ if /^\(/;
 
     if (/^Axmlns() \w+ (.*)/ or /^Axmlns:([^ ]+) \w+ (.*)/) {
-      if (not $File->{Namespace} and $elements_found == 0 and $1 eq "") {
-        $File->{Namespace} = $2;
+      if (not $File->{Namespace}) {
+        if ($elements_found == 0 and $1 eq "") {
+          $File->{Namespace} = $2;
+        } else {
+          # @@@ should not happen
+          push(@{$File->{Namespaces}}, $2);
+        }
+      } else {
+        push(@{$File->{Namespaces}}, $2) if ($2 ne $File->{Namespace});
       }
-      $File->{Namespaces}->{$2}++;
     }
 
     next if / IMPLIED$/;
@@ -965,8 +971,8 @@ sub prep_template ($$) {
   #
   # Namespaces...
   $T->param(file_namespace  => $File->{Namespace});
-#  $T->param(file_namespaces => $File->{Namespaces})
-#    if $File->{Namespaces};
+  my @nss                   =  map({uri => $_}, @{$File->{Namespaces}});
+  $T->param(file_namespaces => \@nss) if @nss;
 }
 
 #
