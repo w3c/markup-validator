@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.87 2001-03-07 23:44:01 link Exp $
+# $Id: check,v 1.88 2001-03-08 00:36:21 link Exp $
 
 #
 # We need Perl 5.004.
@@ -73,9 +73,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.87 $;
+$VERSION    =  q$Revision: 1.88 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-03-07 23:44:01 $;
+$DATE       =  q$Date: 2001-03-08 00:36:21 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -381,14 +381,14 @@ if ($File->{Type} eq 'xhtml') {
   $catalog = "-c $sgmlstuff/catalog";
 }
 
-my $command  = "$sp -E0 $xmlflags $catalog $decl";
+my $command  = "$sp -f$temp -E0 $xmlflags $catalog $decl";
 
 if ( $ENV{SERVER_PORT} eq "8000" ) {	# running on the test server?
     print "    <li>nsgmls command line: <code>$command</code>\n";
 }
 
-open CHECKER, "|$command - >$temp.esis 2>$temp"
-  or die "open(|$command - >$temp.esis 2>$temp) returned: $!\n";
+open CHECKER, "|$command - >$temp.esis"
+  or die "open(|$command - >$temp.esis) returned: $!\n";
 
 print CHECKER $doctype, "\n" if $guessed_doctype == 1;
 if (   $File->{Charset} eq 'utf-8'
