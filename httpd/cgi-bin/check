@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.335 2004-09-04 22:27:43 link Exp $
+# $Id: check,v 1.336 2004-09-04 22:36:29 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -225,7 +225,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.335 $;
+  $VERSION    =  q$Revision: 1.336 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1814,7 +1814,6 @@ sub source {
 #
 # Create a HTML Parse Tree of the document for validation report.
 sub parsetree {
-  return;
   my $File = shift;
   my $tree = '';
 
