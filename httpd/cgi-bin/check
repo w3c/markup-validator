@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.156 2001-07-21 12:05:46 duerst Exp $
+# $Id: check,v 1.157 2001-07-22 18:47:40 link Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.156 $;
+$VERSION    =  q$Revision: 1.157 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-21 12:05:46 $;
+$DATE       =  q$Date: 2001-07-22 18:47:40 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -405,10 +405,8 @@ if ($File->{Use_Charset} ne $File->{Charset}) {
 EOHD
 }
 
-if ($File->{Use_Charset} eq 'utf-8' and $File->{Content}[0] =~ m/^\xEF\xBB\xBF/) {
-  $File->{Content}[0] =~ s/^...//;
-  &add_warning("UTF-8 'BOM' detected and removed.");
-}
+$File->{Content}[0] =~ s/^\xEF\xBB\xBF//
+  and &add_warning("UTF-8 'BOM' detected and removed.");
 
 {  # block for character conversion and checking
   my @lines;
@@ -438,15 +436,11 @@ if ($File->{Use_Charset} eq 'utf-8' and $File->{Content}[0] =~ m/^\xEF\xBB\xBF/)
   }
   # check correctness of UTF-8 both for UTF-8 input and for conversion results
   unless ($File->{Use_Charset} eq 'unknown') {
-    my $line = 0;
-    my $p;
-    for (@{$File->{Content}}) {
-      $line++;
+    for (my $i = 0; $i < $#{$File->{Content}}; $i++) {
       # substitution needed for very long lines (>32K),
       # to avoid backtrack stack overflow
-      my $l = $_;
-      $l =~ s/
-          [\x00-\x7F]                           # ASCII
+      local $_ = $File->{Content}->[$i];
+      s/  [\x00-\x7F]                           # ASCII
         | [\xC2-\xDF]        [\x80-\xBF]        # non-overlong 2-byte sequences
         |  \xE0[\xA0-\xBF]   [\x80-\xBF]        # excluding overlongs
         | [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}     # straight 3-byte sequences
@@ -454,8 +448,8 @@ if ($File->{Use_Charset} eq 'utf-8' and $File->{Content}[0] =~ m/^\xEF\xBB\xBF/)
         |  \xF0[\x90-\xBF]   [\x80-\xBF]{2}     # planes 1-3
         | [\xF1-\xF3]        [\x80-\xBF]{3}     # planes 4-15
         |  \xF4[\x80-\x8F][\x80-\xBF]{2}        # plane 16
-        //xg;
-      push @lines, $line if (length $l);
+       //xg;
+      push @lines, $i if length;
     }
   }
   if(@lines) {
