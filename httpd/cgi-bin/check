@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.251 2002-10-12 12:55:23 duerst Exp $
+# $Id: check,v 1.252 2002-10-12 13:17:48 duerst Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.251 $;
+  $VERSION    =  q$Revision: 1.252 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,7 +151,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-10-12 12:55:23 $,
+			      Date => q$Date: 2002-10-12 13:17:48 $,
 			     });
 
 #
@@ -337,7 +337,7 @@ if (&conflict($File->{Charset}->{Use}, 'utf-8')) {
 }
 
 
-$File = &check_utf8($File) unless $File->{Charset}->{Use};
+$File = &check_utf8($File); # always check
 $File = &byte_error($File);
 
 #
