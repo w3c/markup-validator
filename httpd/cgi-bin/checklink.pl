@@ -5,7 +5,7 @@
 # (c) 1999-2002 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.6.2.3 2002-12-09 00:16:04 ville Exp $
+# $Id: checklink.pl,v 3.6.2.4 2003-01-07 20:07:48 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -84,7 +84,7 @@ BEGIN
   # Version info
   $PROGRAM       = 'W3C checklink';
   ($AGENT        = $PROGRAM) =~ s/\s+/-/g;
-  ($CVS_VERSION) = q$Revision: 3.6.2.3 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.6.2.4 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2002 W3C', $CVS_VERSION);
 
@@ -1215,7 +1215,7 @@ sub authentication ($)
     printf(STDERR "The realm is %s.\n", $realm);
     print(STDERR "Use the -u and -p options to specify a username and password.\n");
   } else {
-    printf("Status: 401 Authorization Required\nWWW-Authenticate: %s\nConnection: close\nContent-Language: en\nContent-Type: text/html\n\n", $r->headers->www_authenticate);
+    printf("Status: 401 Authorization Required\nWWW-Authenticate: %s\nConnection: close\nContent-Language: en\nContent-Type: text/html; charset=iso-8859-1\n\n", $r->headers->www_authenticate);
     printf("%s
 <html lang=\"en\">
 <head>
@@ -1224,8 +1224,6 @@ sub authentication ($)
 <body>
 <h1>Authorization Required</h1>
 <p>You need %s access to %s to perform Link Checking.</p>
-</body>
-</html>
 ", $DocType, &encode($realm), $r->request->url);
   }
 }
