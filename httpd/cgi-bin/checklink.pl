@@ -72,7 +72,7 @@ use CGI;
 ###############
 # Global Variables
 
-my $VERSION= '$Id: checklink.pl,v 1.17 1998-09-24 00:24:40 renaudb Exp $ ';
+my $VERSION= '$Id: checklink.pl,v 1.18 1998-09-28 19:24:34 renaudb Exp $ ';
 my %ALLOWED_SCHEMES = ( "http" => 1 );
 my %SCHEMES = (); # for report
 my %URL = ();
@@ -262,7 +262,7 @@ sub print_result{
     }
     # first a sumary, which also acts as a legend
     if($CGI){
-	print $q->h2('Sumary and Legend');
+	print $q->h2('Summary and Legend');
 	print "<TABLE BORDER=\"1\"><TR ALIGN=\"center\"><TD>Return Code</TD><TD>Occurrences</TD><TD>Meaning and color</TD><TD>What to do</TD></TR>\n";
 	foreach(sort keys %{$URL{Legend}}){
 	    print "<TR ALIGN=\"center\"><TD>$_</TD><TD>".$URL{Legend}{$_}."</TD><TD".$COLORS{$_}.">".$HTTP_CODES{$_}."</TD><TD>".$TODO{$_}."</TD></TR>\n";
@@ -322,6 +322,6 @@ sub html_header {
 sub recurse_redirect {
     my $url = shift;
     my $q = shift;
-    my $rec = $URL{Redirect}{$URL{Redirect}{$url}}? "<BR>".&recurse_redirect($URL{Redirect}{$url},$q):"</TD><TD ALIGN=\"center\">".$HTTP_CODES{$URL{Codes}{$URL{Redirect}{$url}}}."</TD><TD>";
+    my $rec = $URL{Redirect}{$URL{Redirect}{$url}}? "<BR>".&recurse_redirect($URL{Redirect}{$url},$q):"</TD><TD ALIGN=\"center\"".$COLORS{$URL{Codes}{$URL{Redirect}{$url}}}.">".$HTTP_CODES{$URL{Codes}{$URL{Redirect}{$url}}}."</TD><TD>";
     return "-&gt; ".$q->a({href=>$URL{Redirect}{$url}},$URL{Redirect}{$url}).$rec;
 }
