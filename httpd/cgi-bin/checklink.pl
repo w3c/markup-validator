@@ -5,7 +5,7 @@
 # (c) 1999-2002 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 3.2 2002-10-27 12:08:42 ville Exp $
+# $Id: checklink.pl,v 3.3 2002-10-27 13:04:51 ville Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -83,7 +83,7 @@ BEGIN
 {
   # Version info
   $PROGRAM       = 'W3C checklink';
-  ($CVS_VERSION) = q$Revision: 3.2 $ =~ /(\d+[\d\.]*\.\d+)/;
+  ($CVS_VERSION) = q$Revision: 3.3 $ =~ /(\d+[\d\.]*\.\d+)/;
   $VERSION       = sprintf('%d.%02d', $CVS_VERSION =~ /(\d+)\.(\d+)/);
   $REVISION      = sprintf('version %s (c) 1999-2002 W3C', $VERSION);
 
@@ -96,8 +96,10 @@ BEGIN
 # Autoflush
 $| = 1;
 
+# Am I being run as a CGI or from the command line?
+my $_cl = ! ($ENV{GATEWAY_INTERFACE} && $ENV{GATEWAY_INTERFACE} =~ /^CGI/);
+
 # Different options specified by the user
-my $_cl;
 my $_quiet = 0;
 my $_summary = 0;
 my $_verbose = 0;
@@ -136,8 +138,8 @@ my $doc_count = 0;
 # Time stamp
 my $timestamp = &get_timestamp;
 
-if ($#ARGV >= 0 && !(@ARGV == 1 && $ARGV[0] eq 'DEBUG')) {
-  $_cl = 1;
+if ($_cl) {
+
   # Parse command line
   &parse_arguments();
   if ($_user && (! $_password)) {
@@ -158,33 +160,11 @@ if ($#ARGV >= 0 && !(@ARGV == 1 && $ARGV[0] eq 'DEBUG')) {
     printf("\n%s\n", &global_stats());
   }
 } else {
-  if (0) { # Uncomment if you want to replay HTTP requests in the debugger.
-    if ($ARGV[0] eq 'DEBUG') {
-      open (OUT, "/tmp/checklink.pl.log");
-      foreach my $e (<OUT>) {
-        chomp $e;
-        my ($key, $value) = split(': ', $e, 2);
-        $ENV{$key} = $value;
-        print "$key: $value\n";
-      }
-      close OUT;
-    } else {
-      open (OUT, ">/tmp/checklink.pl.log");
-      use POSIX qw(strftime);
-      foreach my $e (keys %ENV) {
-        print OUT "$e: $ENV{$e}\n";
-      }
-      my $now_string = strftime "%a %b %e %H:%M:%S %Y", localtime;
-      print OUT "Run-Date: $now_string\n";
-      close OUT;
-    }
-  }
 
   use CGI ();
   use CGI::Carp qw(fatalsToBrowser);
   $query = new CGI;
   # Set a few parameters in CGI mode
-  $_cl = 0;
   $_verbose = 0;
   $_progress = 0;
   if ($query->param('summary')) {
