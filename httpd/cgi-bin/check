@@ -8,18 +8,19 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.10 1999-01-21 08:43:28 gerald Exp $
+# $Id: check,v 1.11 1999-02-25 04:21:32 gerald Exp $
 
 #############################################################################
 # Constant definitions
 #############################################################################
 
-$cvsrevision	= '$Revision: 1.10 $';
-$cvsdate	= '$Date: 1999-01-21 08:43:28 $';
+$cvsrevision	= '$Revision: 1.11 $';
+$cvsdate	= '$Date: 1999-02-25 04:21:32 $';
 
 $logfile	= "/var/log/httpd/val-svc";
 $reflogfile	= "/var/log/httpd/val-svc-referers";
 
+$uri_def_uri	= "http://www.w3.org/Addressing/#terms";
 $faqloc		= "http://www.cs.duke.edu/~dsb/kgv-faq/";
 $faqerrloc	= "${faqloc}errors.html";
 $abs_svc_uri	= "http://validator.w3.org/";
@@ -52,7 +53,6 @@ $nice_html40f_doctype = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset/
 $html40_doctype	 = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN "http://www.w3.org/TR/REC-html40/strict.dtd">};
 $html40t_doctype = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">};
 $html40f_doctype = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN" "http://www.w3.org/TR/REC-html40/frameset.dtd">};
-$default_doctype = $html2_doctype;
 $temp		 = "/tmp/validate.$$";
 $lt		 = "\020";
 $gt		 = "\021";
@@ -213,7 +213,7 @@ $html40t_doctype
 <html>
 
   <head>
-    <title>W3C HTML Validation Service Results for $uri</title>
+    <title>W3C HTML Validation Service Results</title>
     <link rev="made" href="mailto:gerald\@w3.org">
   </head>
 
@@ -225,57 +225,10 @@ $html40t_doctype
        alt="W3C"></a>
   </p>
 
-  <h1>W3C HTML Validation Service Results</h1>
+  <h1><a href="/">W3C HTML Validation Service</a> Results</h1>
 
 $notice$debugmessage
 EOF
-
-print <<"EOF";
-  <p>
-    Here are the <a href="/">W3C HTML Validation Service</a> results
-    for the document at URI:
-  </p>
-
-  <blockquote>
-    <a href="$uri"><code>$uri</code></a>
-  </blockquote>
-
-EOF
-
-#############################################################################
-# Print the "Jump to: " line with fragment-ID links
-#############################################################################
-
-$count = 0;
-$count++ if $FORM{"ss"} eq "true";
-$count++ if $FORM{"sp"}  eq "true";
-$count++ if $FORM{"weblint"}     eq "true";
-$count++ if $FORM{"outline"}     eq "true";
-if ( $count ) {
-    print "  <p>\n    Jump to: ";
-    if ( $FORM{"weblint"} eq "true" ) {
-	print "<a\n      href=\"#weblint\">Weblint Results</a>";
-	$count--;
-	print " or " if ( $count == 1 );
-	print ", "   if ( $count >  1 );
-    }
-    if ( $FORM{"outline"} eq "true" ) {
-	print "<a\n      href=\"#outline\">Outline</a>";
-	$count--;
-	print " or " if ( $count == 1 );
-	print ", "   if ( $count >  1 );
-    }
-    if ( $FORM{"ss"} eq "true" ) {
-	print "<a\n      href=\"#source\">Source Listing</a>";
-	$count--;
-	print " or " if ( $count == 1 );
-	print ", "   if ( $count >  1 );
-    }
-    if ( $FORM{"sp"} eq "true" ) {
-	print "<a\n      href=\"#parse\">Parse Tree</a>";
-    }
-    print ".\n  </p>\n\n";
-}
 
 if ( $uri !~ m#^http://# ) {
     print <<"EOF";
@@ -322,17 +275,26 @@ while ( $_ = shift( @file ) ) {
 	( ( $httpversion, $response, $message ) =
 	    ( /^(HTTP\/[0-9\.]+) ([0-9][0-9][0-9]) (.*)/ ) );
     }
-    if (/^Location: / ) {
-	( ( $redirect_uri ) = ( /^Location: (.*)/ ) );
+    if (/^Last-Modified: /i ) {
+	( $lastmod ) = ( /^Last-Modified: (.*)/i );
+    }
+    if (/^Content-Length: /i ) {
+	( $length ) = ( /^Content-Length: (.*)/i );
+    }
+    if (/^Server: /i ) {
+	( $server ) = ( /^Server: (.*)/i );
+    }
+    if (/^Location: /i ) {
+	( $redirect_uri ) = ( /^Location: (.*)/i );
 	$redirect_uri =~ s/\s*$//g;	# it has a trailing space sometimes (?)
     }
     if (/^Content-Type: /i) {
-        ( ( $content_type ) = ( /^Content-Type: (.*)/i ) );
-        ( ( $charset ) = ( $content_type =~ /;\s*charset=(.*)/i ) );
+        ( $content_type ) = ( /^Content-Type: (.*)/i );
+        ( $http_charset ) = ( $content_type =~ /;\s*charset=(.*)/i );
         $content_type =~ s/;.*$//;
         $content_type =~ s/\s*$//g;
-	$charset =~ s/;.*//;
-        $charset =~ s/\s*//g;
+	$http_charset =~ s/;.*//;
+        $http_charset =~ s/\s*//g;
     }
 
     last if /^$/;
@@ -414,92 +376,20 @@ EOF
     &clean_up_and_exit;
 }
 
-print <<'EOF';
-  <hr>
-  <h2><a name="validation">HTML Validation Results</a></h2>
+    $jump_links = &build_jump_links;
+    $count = 1; # @@ should loop over many uris instead
 
-  <p>
-    Below are the results of attempting to parse this document with
-    an SGML parser.
-  </p>
+print <<"EOF";
+  <h2><a name="doc$count">Document Checked</a></h2>
+
+$jump_links
 EOF
 
-$no_doctype=1;
-foreach $line (@file) {
-    if ( $line =~ /<[a-z].*<!doctype/i ) {
-	$no_doctype = 1;
-	last;
-    }
-    if ( $line =~ /<!doctype/i ) {
-	$no_doctype = 0;
-	last;
-    }
-    if ( $line =~ /<[a-z]/i ) {
-	$no_doctype = 1;
-	last;
-    }
-}
-
-# do several loops of increasing lengths to avoid iterating over
-# the whole file if possible.
-#
-# these heuristics could be improved a lot.
-if ( $no_doctype ) {
-    foreach $line (@file[0..20]) {
-        if ( $line =~ /<frame/i ) {
-	    $default_doctype = $html40f_doctype;
-            $guessed_doctype_already = 1;
-	    last;
-	}
-    }
-}
-
-if ( $no_doctype && ! $guessed_doctype_already ) {
-    foreach $line (@file[0..20]) {
-        if ( $line =~ /<table/i ) {
-	    $default_doctype = $html40t_doctype;
-            $guessed_doctype_already = 1;
-	    last;
-	}
-        if ( $line =~ /<body /i ) {
-	    $default_doctype = $html40t_doctype;
-            $guessed_doctype_already = 1;
-	    last;
-	}
-    }
-}
-
-if ( $no_doctype && ! $guessed_doctype_already ) {
-    foreach $line (@file) {
-        if ( $line =~ /<table/i ) {
-	    $default_doctype = $html40t_doctype;
-            $guessed_doctype_already = 1;
-	    last;
-	}
-        if ( $line =~ /<body /i ) {
-	    $default_doctype = $html40t_doctype;
-            $guessed_doctype_already = 1;
-	    last;
-	}
-    }
-}
-
-if ( $no_doctype && ! $guessed_doctype_already ) {
-    foreach $line (@file) {
-        if ( $line =~ /<center>/i ) {
-	    $default_doctype = $html32_doctype;
-	    last;
-	}
-        if ( $line =~ /<[h0-9p]*\s*align\s*=\s*center>/i ) {
-	    $default_doctype = $html32_doctype;
-	    last;
-	}
-    }
-}
+$guessed_doctype = &check_for_doctype( \@file );
 
 foreach $line (@file) {
     # @@ needs to handle meta elements that span more than one line
-    if ( $line =~ /<meta/i ) { 
+    if ( $line =~ /<meta/i ) {
 	if ( $line =~ /charset\s*=[\s"]*([^\s;">]*)/i ) {
 	    $meta_charset = $1;
 	    last;
@@ -507,38 +397,54 @@ foreach $line (@file) {
     }
 }
 
-print "<p>\n  debug: [$charset],[$meta_charset]\n</p>";
-
-if ($charset ne '') {
-    if ($meta_charset ne '' && $charset !~ /$meta_charset/i) {
-        print "<p>\n  <strong>Warning:</strong> Charset in HTTP header and in META tag are different.\n</p>";
-        print "<p>\n  $charset != $meta_charset\n</p>";
+if ( $http_charset ne '' ) {
+    $effective_charset = $http_charset;
+    if ( $meta_charset ne '' && $http_charset !~ /$meta_charset/i ) {
+    	    # @@ the above needs work
+        $charsets_differ = 1;
     }
-} else {
-    if ($meta_charset ne '') {
-        $charset = $meta_charset;
-    } else {
-        print "<p>\n  <strong>Note:</strong> Charset is unknown.\n</p>";
+}
+else {
+    if ( $meta_charset ne '' ) {
+        $effective_charset = $meta_charset;
+    }
+    else {
+        $effective_charset = "unknown";
     }
 }
 
-if ( $charset =~ /iso-2022-jp/i ) {
+if ( $effective_charset =~ /iso-2022-jp/i ) {
     $codeconv = "$nkf -Jex | ";
 }
-elsif ( $charset =~ /Shift_JIS/i ) {
+elsif ( $effective_charset =~ /Shift_JIS/i ) {
     $codeconv = "$nkf -Sex | ";
 }
 else {
     $codeconv = "";
 }
 
-print "<p>\n  debug: [$charset],[$codeconv]\n</p>";
+print qq{<ul>\n  <li><a href="$uri_def_uri">URI</a>: <a href="$uri">$uri</a>\n};
+
+if ( defined $lastmod ) {
+    print qq{  <li>Last modified: $lastmod\n};
+}
+
+# @@ add a "verbose" option or something on the advanced form, then
+# display a bunch of stuff like this if it's selected
+#
+# if ( defined $server ) {
+#     print qq{<li>Server: $server\n};
+# }
+# 
+# if ( defined $length ) {
+#     print qq{<li>Content length: $length\n};
+# }
 
 open( CHECKER,
    "| $codeconv $sp -E0 -m $sgmlstuff/catalog - >$temp.esis 2>$temp" )
 	|| die "couldn't open checker: $!";
 
-print CHECKER "$default_doctype\n" if $no_doctype;
+print CHECKER "$guessed_doctype\n" if $guessed_doctype;
 # this is a kludge for DOS users with their entire file on a single line
 # like http://bogo.w3.org/test/samuels.html
 if ( $#file == 0 ) {
@@ -575,37 +481,44 @@ for (@esis) {
 }
 $version = $pub_ids{$fpi} || "unknown";
 
-if ( $no_doctype ) {
-    push( @fake_errors, "nsgmls:<OSFD>0:2:1:E: Missing DOCTYPE declaration at start of document\n" );
+if ( $guessed_doctype ) {
+    push( @fake_errors, "nsgmls:<OSFD>0:2:1:E: Missing DOCTYPE declaration at start of document (${lt}a href=\"/docs/doctypes.html\"${gt}explanation...${lt}/a${gt})\n" );
 }
 
-if ( $no_doctype ) {
-
-        $escaped_doctype = $default_doctype;
-	$escaped_doctype =~ s/" "/"\n            "/;
-	$escaped_doctype =~ s/&/\&amp;/g;
-	$escaped_doctype =~ s/</\&lt;/g;
-
-	print <<"EOF";
-    <p>
-      <strong>Note</strong>: This document didn't start with the required
-      DOCTYPE declaration, so I inserted the following doctype before
-      attempting to validate the page:
-    </p>
-
-    <pre>
-    $escaped_doctype
-    </pre>
-
-    <p>
-      This document needs a doctype before it will be valid.
-    </p>
-EOF
+if ( $guessed_doctype ) {
+    $escaped_doctype = $guessed_doctype;
+    $escaped_doctype =~ s/" "/"\n            "/;
+    $escaped_doctype =~ s/&/\&amp;/g;
+    $escaped_doctype =~ s/</\&lt;/g;
 }
 
-print "\n  <p>\n    Version of HTML selected: <b>$version</b>.\n  </p>\n";
+print qq{  <li>Character encoding: $http_charset\n};
 
-if ( $? || $no_doctype ) {
+if ( $charsets_differ ) {
+    print <<"EOHD";
+<br>
+  <strong>Warning:</strong> the character encoding specified in the HTTP header
+  (<code>$http_charset</code>) is different from the one specified in the META
+  element (<code>$meta_charset</code>).
+  I will use <code>$effective_charset</code> for this validation.
+
+EOHD
+
+}
+
+print "  <li>Level of HTML: <b>$version</b>.\n";
+
+print "</ul>\n\n";
+
+print <<"EOHD";
+  <p>
+    Below are the results of attempting to parse this document with
+    an SGML parser.
+  </p>
+
+EOHD
+
+if ( $? || $guessed_doctype ) {
     print "<pre>\n";
     for ((@fake_errors,@errors)) {
 	next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
@@ -637,7 +550,7 @@ if ( $? || $no_doctype ) {
 	    last;
 	}
 	$extraspaces = "";	# in case we put "(truncated)" gif on LHS
-	$line-- if $no_doctype;
+	$line-- if $guessed_doctype;
 	$newline = $file[$line-1];
 
 	# make sure there's no ^P or ^Q's in the file, since we need to use
@@ -739,7 +652,7 @@ if ( $? || $no_doctype ) {
     $validity="invalid";
 }
 else {
-    print "\n  <pre>\n    No errors found!</pre>\n";
+    print "\n  <pre>\n    No errors found!</pre>\n\n";
     if ( $version ne "unknown" ) {
 	if ( $version =~ /^HTML 2\.0$/ ) {
 	    $gifname = "vh20.gif";
@@ -959,10 +872,10 @@ if ( $FORM{"ss"} eq "true" ) {
 EOF
 
     print "<pre>\n";
-    if ( $no_doctype ) {
-	$dd = "$default_doctype\n";
-	$dd =~ s/&/&amp;/go; $dd =~ s/</&lt;/go; # $dd =~ s/>/&gt;/go;
-	printf "%4d: %s", 0, $dd;
+    if ( $guessed_doctype ) {
+	$gd = "$guessed_doctype\n";
+	$gd =~ s/&/&amp;/go; $gd =~ s/</&lt;/go; # $gd =~ s/>/&gt;/go;
+	printf "%4d: %s", 0, $gd;
     }
     $line = 1;
     for (@file) {
@@ -1293,7 +1206,7 @@ sub clean_up_and_exit {
 
     &output_closing;
     &erase_stuff;
-    &make_log_entry;
+#    &make_log_entry;
     exit;
 
 }
@@ -1311,3 +1224,90 @@ sub redirect_to_home_page {
     &clean_up_and_exit;
 
 }
+
+sub build_jump_links {
+
+    my $text;
+    my $count = 0;
+
+    $count++ if $FORM{ss}      eq "true";
+    $count++ if $FORM{sp}      eq "true";
+    $count++ if $FORM{weblint} eq "true";
+    $count++ if $FORM{outline} eq "true";
+
+    if ( $count ) {
+	$text .= "  <p>\n    Jump to: ";
+	if ( $FORM{"weblint"} eq "true" ) {
+	    $text .= "<a\n      href=\"#weblint\">Weblint Results</a>";
+	    $count--;
+	    $text .= " or " if ( $count == 1 );
+	    $text .= ", "   if ( $count >  1 );
+	}
+	if ( $FORM{"outline"} eq "true" ) {
+	    $text .= "<a\n      href=\"#outline\">Outline</a>";
+	    $count--;
+	    $text .= " or " if ( $count == 1 );
+	    $text .= ", "   if ( $count >  1 );
+	}
+	if ( $FORM{"ss"} eq "true" ) {
+	    $text .= "<a\n      href=\"#source\">Source Listing</a>";
+	    $count--;
+	    $text .= " or " if ( $count == 1 );
+	    $text .= ", "   if ( $count >  1 );
+	}
+	if ( $FORM{"sp"} eq "true" ) {
+	    $text .= "<a\n      href=\"#parse\">Parse Tree</a>";
+	}
+	$text .= ".\n  </p>\n\n";
+    }
+    return $text;
+
+}
+
+sub check_for_doctype {
+    # check if the document has a doctype; if it doesn't, try to
+    # guess an appropriate one given the elements used
+    #
+    # if the document has a doctype, it returns 0; if not, it
+    # returns a text string with the inferred doctype
+
+    my $fileref = shift;		# a reference to @file, for efficiency
+    my @file = @$fileref;		# dereference $fileref
+
+    foreach $line (@file) {
+	# does an HTML element precede the doctype on the same line?
+	last if $line =~ /<[a-z].*<!doctype/i;
+	return 0 if $line =~ /<!doctype/i;	# found a doctype
+	last if ( $line =~ /<[a-z]/i );		# found an element
+	    # @@ this needs to be fixed to handle commented-out markup
+	    # which appears before the doctype
+    }
+
+    # do several loops of increasing lengths to avoid iterating over
+    # the whole file if possible.
+    #
+    # these heuristics could be improved a lot.
+
+    foreach $line (@file[0..20]) {
+	return $html40f_doctype if $line =~ /<frame/i;
+    }
+
+    foreach $line (@file[0..20]) {
+	return $html40t_doctype if $line =~ /<(table|body )/i;
+    }
+
+    # go through the whole file
+    foreach $line (@file) {
+	return $html40t_doctype if $line =~ /<(table|body )/i;
+    }
+
+    foreach $line (@file) {
+	return $html32_doctype if $line =~ /<center>/i;
+	return $html32_doctype if $line =~ /<[h0-9p]*\s*align\s*=\s*center>/i;
+    }
+
+    # no luck earlier; guess HTML 4.0 transitional
+    return $html40t_doctype;
+
+}
+
