@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.168 2001-07-29 08:00:51 link Exp $
+# $Id: check,v 1.169 2001-08-25 01:41:35 duerst Exp $
 
 #
 # We need Perl 5.004.
@@ -80,9 +80,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.168 $;
+$VERSION    =  q$Revision: 1.169 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-07-29 08:00:51 $;
+$DATE       =  q$Date: 2001-08-25 01:41:35 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -370,7 +370,7 @@ if (URI::eq("$File->{URI}", $q->param('uri'))) { # @@ Why do we need to stringif
                                    'tis-620 (Thai)',
                                    'koi8-r (Russian)',
                                    'koi8-u (Ukrainian)',
-                                   'macistosh (MacRoman)',
+                                   'macintosh (MacRoman)',
                                    'windows-1250 (Central Europe)',
                                    'windows-1251 (Cyrillic)',
                                    'windows-1252 (Western Europe)',
