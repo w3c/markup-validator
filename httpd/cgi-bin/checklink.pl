@@ -5,7 +5,7 @@
 # (c) 1999-2001 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.83 2001-07-25 11:34:22 hugo Exp $
+# $Id: checklink.pl,v 2.84 2001-08-01 11:53:15 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -38,7 +38,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.83 $ . '(c) 1999-2001 W3C';
+my $VERSION = q$Revision: 2.84 $ . '(c) 1999-2001 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -718,6 +718,7 @@ sub get_uri() {
     my $ua = new W3C::UserAgent;
     $ua->timeout($_timeout);
     $ua->agent('W3C-checklink/'.$REVISION.' '.$ua->agent());
+    $ua->env_proxy();
     if ($_http_proxy) {
         $ua->proxy('http', 'http://'.$_http_proxy);
     }
