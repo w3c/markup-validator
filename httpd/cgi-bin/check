@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.132 2004-05-18 00:38:13 link Exp $
+# $Id: check,v 1.305.2.133 2004-05-18 01:19:17 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.132 $;
+  $VERSION    =  q$Revision: 1.305.2.133 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2004-05-18 00:38:13 $,
+                              Date => q$Date: 2004-05-18 01:19:17 $,
                              });
 
 #
@@ -1043,16 +1043,20 @@ sub print_table {
   $thispage .= ';No200=1'   if $File->{Opt}->{'No200'};
   # end redundant code
   print <<".EOF.";
-      <p>
-        <a href="docs/users.html#Options">Help</a> on the options is available.
+      <div class="moreinfo">
+        <p>
+          <a href="docs/users.html#Options">Help</a> on the options is available.
+        </p>
 .EOF.
-  if (! $File->{Opt}->{'Verbose'}) {
+  unless ($File->{Opt}->{'Verbose'}) {
     print <<".EOF.";
-	      <a href="$thispage;verbose=1">Verbose output</a> will give you
-        explanations in addition to the error messages.
+        <p>
+          <a href="$thispage;verbose=1">Verbose output</a> will give you
+          explanations in addition to the error messages.
+        </p>
 .EOF.
   }
-  print qq(      </p>\n);
+  print qq(      </div>\n);
   print qq(      </fieldset>\n);
 
   print qq(  </form>\n);

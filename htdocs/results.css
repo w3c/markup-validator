@@ -1,11 +1,37 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.13.2.33 2004-05-18 00:49:38 link Exp $ */
+/* $Id: results.css,v 1.13.2.34 2004-05-18 01:19:17 link Exp $ */
 
 .input {
   color: black;
   background-color: #eee;
   font-family: "Bitstream Vera Sans Mono", monospace;
   font-size: small;
+}
+
+/* Various Bits of the Table Header */
+/*
+*/
+div.moreinfo {
+  float: right;
+  width: 30%;
+}
+
+div.moreinfo p {
+  background: #FFF;
+  border: 1px solid #CCC;
+  text-align: justify;
+  font-size: smaller;
+}
+
+table.header {
+  clear: left;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+fieldset table.header {
+  float: left;
+  margin: 1ex;
 }
 
 /* Error Messages Display */
