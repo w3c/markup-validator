@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.100 2001-05-22 23:59:58 duerst Exp $
+# $Id: check,v 1.101 2001-05-26 06:05:56 link Exp $
 
 #
 # We need Perl 5.004.
@@ -75,9 +75,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.100 $;
+$VERSION    =  q$Revision: 1.101 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-05-22 23:59:58 $;
+$DATE       =  q$Date: 2001-05-26 06:05:56 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -141,7 +141,7 @@ if ($q->param('url') and not $q->param('uri')) {
 #
 # Supercede URI with an uploaded file.
 if ($q->param('uploaded_file')) {
-  &redirect_to_home_page unless length($q->param('uri')); # Must have filename.
+  &redirect_to_home_page unless length($q->param('uploaded_file')); # Must have filename.
   $q->param('uri', 'upload://' . $q->param('uploaded_file'));
 }
 
@@ -404,6 +404,9 @@ if (   $File->{Charset} eq 'utf-8'
   # workaround for windows-nnnn charsets missing from glibc<2.2
   my $temp_charset = $File->{Charset};
   $temp_charset =~ s/^windows-(\d+)$/CP$1/i;
+  # workaround for iso-8859-8-i charset and Windows 3.1 cruft.
+  $temp_charset = 'iso-8859-8'   if $temp_charset =~ m(iso-8859-8-i)i;
+  $temp_charset = 'windows-1252' if $temp_charset =~ m(iso-8859-1-Windows-3.1-Latin-1)i;
   eval {my $c = Text::Iconv->new($temp_charset, 'utf-8')};
   if (not $@) {
     my $c = Text::Iconv->new($temp_charset, 'utf-8');
@@ -1355,7 +1358,7 @@ sub handle_uri {
     }
     &clean_up_and_exit;
   }
-  
+
   my($type, $charset) = &parse_content_type($res->header('Content-Type'));
 
   my $lastmod = undef;
@@ -1408,7 +1411,8 @@ sub handle_frag {
 # Parse a Content-Type and parameters. Return document type and charset.
 sub parse_content_type {
   my $Content_Type = shift;
-  my ($charset, $type);
+  my $charset      = '';
+  my $type         = '';
 
   my($ct, @param) = split /\s*;\s*/, lc $Content_Type;
 
