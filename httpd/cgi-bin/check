@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.80 2003-08-26 06:42:33 link Exp $
+# $Id: check,v 1.305.2.81 2003-08-27 09:28:39 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -143,7 +143,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.80 $;
+  $VERSION    =  q$Revision: 1.305.2.81 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -218,7 +218,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-08-26 06:42:33 $,
+                              Date => q$Date: 2003-08-27 09:28:39 $,
                              });
 
 #
@@ -623,6 +623,9 @@ sub parse (\$) {
     if ($File->{Opt}->{'Fussy'}) {
       push @spopt, '-wmin-tagged';
       push @spopt, '-wfully-tagged';
+      push @spopt, '-wrefc';
+      push @spopt, '-wmissing-att-name';
+      push @spopt, '-wdata-delim';
       &add_warning($File, 'note', 'Note:', <<".EOF.");
     The Validator is running in "Fussy" mode. In this mode it will generate
     warnings about some things that are not strictly forbidden in the HTML
