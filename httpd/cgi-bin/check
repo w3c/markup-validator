@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.70 2000-10-21 06:39:19 gerald Exp $
+# $Id: check,v 1.71 2000-10-21 07:51:47 gerald Exp $
 
 #
 # We need Perl 5.004.
@@ -50,7 +50,7 @@ my $fpis_db   = $html_path . 'config/fpis.cfg';
 my $frag_db   = $html_path . 'config/frag.cfg';
 my $type_db   = $html_path . 'config/type.cfg';
 my $sgmlstuff = $html_path . 'sgml-lib';
-my $sgmldecl  = $sgmlstuff . '/REC-html40-19980424/HTML4.decl';
+my $sgmldecl  = $sgmlstuff . '/REC-html401-19991224/HTML4.decl';
 my $xhtmldecl = $sgmlstuff . '/REC-xhtml1-20000126/xhtml1.dcl';
 my $xmldecl   = $sgmlstuff . '/sp-1.3/pubtext/xml.dcl';
 my $temp      = "/tmp/validate.$$"; # @@ Use POSIX/IO::File tmpfiles instead!
@@ -71,18 +71,18 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.70 $;
+$VERSION    =  q$Revision: 1.71 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2000-10-21 06:39:19 $;
+$DATE       =  q$Date: 2000-10-21 07:51:47 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
 #
 # DOCTYPEs
 my $html32_doctype  = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">);
-my $html40s_doctype = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">);
-my $html40t_doctype = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">);
-my $html40f_doctype = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN" "http://www.w3.org/TR/REC-html40/frameset.dtd">);
+my $html40s_doctype = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/strict.dtd">);
+my $html40t_doctype = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">);
+my $html40f_doctype = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/frameset.dtd">);
 my $xhtmlt_doctype  = q(<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN");
 
 #
@@ -521,7 +521,7 @@ if ( $? || ($guessed_doctype == 1) ) {
 	    print "<p>Fatal error! $msg\n\n";
 	    print "<p>I couldn't parse this document, because it " .
 		  "makes reference to\n    a system-specific file instead of " .
-		  "simply using a public identifier\n    to specify the " .
+		  "using a well-known public identifier\n    to specify the " .
 		  "level of HTML being used.\n  </p>\n";
 	    &output_doctype_spiel;
 	    last;
@@ -984,11 +984,12 @@ sub output_doctype_spiel {
 
     <p>
       You should make the first line of your HTML document a DOCTYPE
-      declaration, like this:
+      declaration, for example, for a typical <a
+      href="http://www.w3.org/TR/html4/">HTML 4.01</a> document:
     </p>
 
     <pre>
-      &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN"&gt;
+      &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
       &lt;HTML&gt;
 	&lt;HEAD&gt;
 	  &lt;TITLE&gt;Title&lt;/TITLE&gt;
@@ -998,17 +999,6 @@ sub output_doctype_spiel {
 	  &lt;-- ... body of document ... --&gt;
 	&lt;/BODY&gt;
       &lt;/HTML&gt;</pre>
-
-    <p>
-      Or, if you are using features from <a
-      href="http://www.w3.org/TR/REC-html40/">HTML 4.0</a>,
-      one of these:
-    </p>
-
-    <pre>
-      &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"&gt;
-      &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;
-      &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"&gt;</pre>
 
 EOF
 
@@ -1022,8 +1012,8 @@ sub output_closing {
 
 <address>
   <a href="http://validator.w3.org/check/referer"><img
-     src="http://www.w3.org/Icons/valid-html40" height=31 width=88
-     align=right border=0 alt="Valid HTML 4.0!"></a>
+     src="http://www.w3.org/Icons/valid-html401" height=31 width=88
+     align=right border=0 alt="Valid HTML 4.01!"></a>
   <a href="/feedback.html">Gerald Oskoboiny</a><br>
   Last modified: $DATE
 </address>
@@ -1163,7 +1153,7 @@ sub check_for_doctype {
   for (@{$file}[0 .. 20]) {
     return 1, $html40f_doctype if /<frame/i;
   }
-  return 1, $html40t_doctype; # no luck earlier; guess HTML 4.0 transitional
+  return 1, $html40t_doctype; # no luck earlier; guess HTML 4 transitional
 }
 
 
