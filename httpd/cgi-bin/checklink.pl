@@ -5,7 +5,7 @@
 # (c) 1999-2001 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.77 2001-03-26 23:12:52 hugo Exp $
+# $Id: checklink.pl,v 2.78 2001-03-27 12:58:15 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -38,7 +38,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.77 $ . '(c) 1999-2001 W3C';
+my $VERSION = q$Revision: 2.78 $ . '(c) 1999-2001 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -1338,7 +1338,20 @@ sub show_link_report {
         my $whattodo;
         my $redirect_too;
         if ($todo) {
-            if ($c == 500) {
+            if ($u =~ m/^javascript:/) {
+                if ($_html) {
+                    $whattodo =
+'You must change this link: people using a browser without Javascript support
+will <em>not</em> be able to follow this link. See the
+<a href="http://www.w3.org/TR/1999/WAI-WEBCONTENT-19990505/#tech-scripts">Web 
+Content Accessibility Guidelines on the use of scripting on the Web</a> and
+the
+<a href="http://www.w3.org/TR/WCAG10-HTML-TECHS/#directly-accessible-scripts">techniques
+on how to solve this</a>.';
+                } else {
+                    $whattodo = 'Change this link: people using a browser without Javascript support will not be able to follow this link.';
+                }
+            } elsif ($c == 500) {
                 # 500's could be a real 500 or a DNS lookup problem
                 if ($results->{$u}{location}{message} =~
                     m/Bad hostname '[^\']*'/) {
