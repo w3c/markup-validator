@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.347 2004-10-10 15:12:18 ville Exp $
+# $Id: check,v 1.348 2004-10-10 15:23:21 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -227,7 +227,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.347 $;
+  $VERSION    =  q$Revision: 1.348 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -302,17 +302,22 @@ $File->{'Other Namespaces'} = []; # Other (non-root) Namespaces.
 #### Generate Template for Result. ############################################
 ###############################################################################
 
+my $lang = 'en_US'; # @@@ TODO: conneg
+
 my $T = HTML::Template->new(
-  filename          => File::Spec->catfile($CFG->{Paths}->{Templates}, 'result.tmpl'),
+  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
+                                           $lang, 'result.tmpl'),
   die_on_bad_params => FALSE,
 );
 my $E = HTML::Template->new(
-  filename          => File::Spec->catfile($CFG->{Paths}->{Templates}, 'fatal-error.tmpl'),
+  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
+                                           $lang, 'fatal-error.tmpl'),
   die_on_bad_params => FALSE,
 );
 
 $T->param(cfg_home_page => $CFG->{'Home Page'});
 
+undef $lang;
 
 #########################################
 # Populate $File->{Opt} -- CGI Options. #
