@@ -1,5 +1,5 @@
 	-- SGML catalog for the W3C Markup Validation Service --
-	-- $Id: sgml.soc,v 1.9 2004-09-12 20:37:27 link Exp $ --
+	-- $Id: sgml.soc,v 1.10 2004-09-12 20:38:39 link Exp $ --
 
 OVERRIDE YES	-- prefer public identifiers to system identifiers --
 SGMLDECL sgml.dcl
@@ -51,10 +51,6 @@ PUBLIC "-//IETF//DTD HTML 2.1E//EN"			html-2.1e.dtd
 PUBLIC "-//W3C//DTD HTML 3.2//EN"			html-3.2.dtd
 PUBLIC "-//W3C//DTD HTML 3.2 Final//EN"			html-3.2.dtd
 PUBLIC "-//W3C//DTD HTML 3.2 Draft//EN"			html-3.2.dtd
-
-	-- HTML 3.2 + Style --
-PUBLIC "-//W3C//DTD HTML Experimental 970421//EN" html-970421.dtd
-PUBLIC "-//W3C//DTD HTML 3.2S Draft//EN"	html-970421.dtd
 
 	-- HTML 4.0 --
 PUBLIC "-//W3C//DTD HTML 4.0//EN"		REC-html40-19980424/strict.dtd
