@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.400 2005-02-14 01:46:08 link Exp $
+# $Id: check,v 1.401 2005-02-22 18:01:05 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -51,11 +51,7 @@ use HTTP::Request        qw();
 use HTTP::Headers::Auth  qw(); # Needs to be imported after other HTTP::*.
 use IO::File             qw();
 use IPC::Open3           qw(open3);
-use LWP::UserAgent  1.90 qw(); # Need 1.90 for protocols_(allowed|forbidden)
-use Net::hostent         qw(gethostbyname);
-use Net::IP              qw();
 use Set::IntSpan         qw();
-use Socket               qw(inet_ntoa);
 use Text::Iconv          qw();
 use Text::Wrap           qw(wrap);
 use URI                  qw();
@@ -224,7 +220,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.400 $;
+  $VERSION    =  q$Revision: 1.401 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1002,7 +998,7 @@ sub handle_uri {
   my $uri = new URI (ref $q ? $q->param('uri') : $q)->canonical();
   $uri->fragment(undef);
 
-  my $ua = new LWP::UserAgent;
+  my $ua = new W3C::Validator::UserAgent ($CFG, $File);
   $ua->env_proxy();
   $ua->agent("W3C_Validator/$VERSION");
   $ua->parse_head(0);  # Don't parse the http-equiv stuff.
@@ -1016,23 +1012,7 @@ sub handle_uri {
     return $File;
   }
 
-  unless ($CFG->{'Allow Private IPs'} or !$uri->can('host')) {
-    my $addr = my $iptype = undef;
-    if (my $host = gethostbyname($uri->host())) {
-      $addr = inet_ntoa($host->addr()) if $host->addr();
-      if ($addr && (my $ip = Net::IP->new($addr))) {
-        $iptype = $ip->iptype();
-      }
-    }
-    if ($iptype && $iptype ne 'PUBLIC') {
-      $File->{'Error Flagged'} = TRUE;
-      $File->{E}->param(fatal_ip_error    => TRUE);
-      $File->{E}->param(fatal_ip_hostname => TRUE)
-        if $addr and $uri->host() ne $addr;
-      $File->{E}->param(fatal_ip_host => ($uri->host() || 'undefined'));
-      return $File;
-    }
-  }
+  return $File unless $ua->uri_ok($uri);
 
   my $req = new HTTP::Request(GET => $uri);
 
@@ -1043,6 +1023,8 @@ sub handle_uri {
   }
 
   my $res = $ua->request($req);
+
+  return $File if $File->{'Error Flagged'}; # Redirect IP rejected?
 
   unless ($res->code == 200 or $File->{Opt}->{'No200'}) {
     if ($res->code == 401) {
@@ -2527,6 +2509,58 @@ sub self_url_file {
   return $thispage;
 }
 
+
+#####
+
+package W3C::Validator::UserAgent;
+
+use LWP::UserAgent  1.90 qw(); # Need 1.90 for protocols_(allowed|forbidden)
+use Net::hostent         qw(gethostbyname);
+use Net::IP              qw();
+use Socket               qw(inet_ntoa);
+
+use base qw(LWP::UserAgent);
+
+sub new
+{
+  my ($proto, $CFG, $File, @rest) = @_;
+  my $class = ref($proto) || $proto;
+  my $self = $class->SUPER::new(@rest);
+  $self->{'W3C::Validator::CFG'}  = $CFG;
+  $self->{'W3C::Validator::File'} = $File;
+  return $self;
+}
+
+sub redirect_ok
+{
+  my ($self, $req, $res) = @_;
+  return $self->SUPER::redirect_ok($req, $res) && $self->uri_ok($req->uri());
+}
+
+sub uri_ok
+{
+  my ($self, $uri) = @_;
+  return 1 if ($self->{'W3C::Validator::CFG'}->{'Allow Private IPs'} or
+               !$uri->can('host'));
+
+  my $addr = my $iptype = undef;
+  if (my $host = gethostbyname($uri->host())) {
+    $addr = inet_ntoa($host->addr()) if $host->addr();
+    if ($addr && (my $ip = Net::IP->new($addr))) {
+      $iptype = $ip->iptype();
+    }
+  }
+  if ($iptype && $iptype ne 'PUBLIC') {
+    my $File = $self->{'W3C::Validator::File'};
+    $File->{'Error Flagged'}            =  1;
+    $File->{E}->param(fatal_ip_error    => 1);
+    $File->{E}->param(fatal_ip_hostname => 1)
+      if $addr and $uri->host() ne $addr;
+    $File->{E}->param(fatal_ip_host => ($uri->host() || 'undefined'));
+    return 0;
+  }
+  return 1;
+}
 
 # Local Variables:
 # mode: perl
