@@ -5,7 +5,7 @@
 # (c) 1999-2001 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.84 2001-08-01 11:53:15 hugo Exp $
+# $Id: checklink.pl,v 2.85 2001-09-17 20:23:39 hugo Exp $
 #
 # This program is licensed under the W3C(r) License:
 #	http://www.w3.org/Consortium/Legal/copyright-software
@@ -38,7 +38,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = q$Revision: 2.84 $ . '(c) 1999-2001 W3C';
+my $VERSION = q$Revision: 2.85 $ . '(c) 1999-2001 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # Different options specified by the user
@@ -375,6 +375,7 @@ sub check_uri() {
     if ($_html) {
         print("</h2>\n");
         if (! $_summary) {
+            use URI;
             printf("<p>Go to <a href='#%s'>the results</a>.</p>\n",
                    $result_anchor);
             printf("<p>Check also:
@@ -382,7 +383,8 @@ sub check_uri() {
 <a href=\"http://jigsaw.w3.org/css-validator/validator?uri=%s\">CSS
 Validity</a></p>
 <p>Back to the <a href=\"checklink\">link checker</a>.</p>\n",
-                   map{&encode($absolute_uri)}(1..2));
+                   map{&encode(URI::Escape::uri_escape($absolute_uri,
+                               "^A-Za-z"))}(1..2));
             print("<pre>\n");
         }
     }
