@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.44 2003-05-20 15:30:52 link Exp $
+# $Id: check,v 1.305.2.45 2003-05-20 15:40:18 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -104,7 +104,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.44 $;
+  $VERSION    =  q$Revision: 1.305.2.45 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -172,7 +172,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-05-20 15:30:52 $,
+                              Date => q$Date: 2003-05-20 15:40:18 $,
                              });
 
 #
@@ -387,7 +387,7 @@ if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
 
 unless ($File->{Charset}->{Use}) { # No charset given...
   $File->{'Error Flagged'} = TRUE;
-  $File->{'Error Message'} = <<".EOF." . &iana_charset_blurb();
+  $File->{'Error Message'} = <<".EOF.";
     <p>
       I was not able to extract a character encoding labeling from any of
       the valid sources for such information. Without encoding information it
@@ -407,6 +407,17 @@ unless ($File->{Charset}->{Use}) { # No charset given...
       Since none of these sources yielded any usable information, I will not be
       able to validate this document. Sorry. Please make sure you specify the
       character encoding in use.
+    </p>
+.EOF.
+  $File->{'Error Message'} .= &iana_charset_blurb();
+  $File->{'Error Message'} .= <<".EOF.";
+    <p>
+      To quickly check whether the document would validate after addressing
+      the missing character encoding information, you can use the "Encoding"
+      form control (accesskey "2") earlier in the page to force an encoding
+      override to take effect. "iso-8859-1" (Western Europe and North America)
+      and "utf-8" (Universal, but not commonly used in legacy documents) are
+      common encodings if you are not sure what encoding to choose.
     </p>
 .EOF.
 }
