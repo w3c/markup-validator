@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.200.2.32 2002-06-04 22:58:36 link Exp $
+# $Id: check,v 1.200.2.33 2002-06-06 01:39:55 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -78,7 +78,7 @@ $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{DEBUG};
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.200.2.32 $;
+$VERSION    =  q$Revision: 1.200.2.33 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 #
@@ -107,7 +107,7 @@ $File->{'Header'} = &prepSSI({
 			     });
 $File->{'Footer'} = &prepSSI({
 			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-06-04 22:58:36 $,
+			      Date => q$Date: 2002-06-06 01:39:55 $,
 			     });
 
 #
@@ -558,6 +558,8 @@ if ($File->{Opt}->{Output} eq 'xml') {
   &report_xml($File);
 } elsif ($File->{Opt}->{Output} eq 'earl') {
   &report_earl($File);
+} elsif ($File->{Opt}->{Output} eq 'n3') {
+  &report_n3($File);
 } else {
   #
   # Print header.
@@ -2085,4 +2087,81 @@ X-W3C-Validator-Errors: $errs
   </Assertor>
 </rdf:RDF>
 .EOF.
+}
+
+
+
+#
+# Return an XML report for the page.
+sub report_n3 {
+  my $File = shift;
+
+  my $valid = ($File->{'Is Valid'} ? 'Valid' : 'Invalid');
+  my $errs  = ($File->{'Is Valid'} ? '0' : scalar @{$File->{Errors}});
+
+  print <<".EOF.";
+Content-Type: text/plain; charset=UTF-8
+X-W3C-Validator-Status: $valid
+X-W3C-Validator-Errors: $errs
+
+\@prefix earl: <http://www.w3.org/2001/03/earl/1.0-test#> .
+\@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+\@prefix val: <http://validator.w3.org/this_will_change/do_not_rely_on_it!> .
+
+<http://validator.w3.org/> a earl:Assertor;
+  earl:name "W3 Validator"
+    earl:asserts
+.EOF.
+
+  unless ($File->{'Is Valid'}) {
+    foreach my $err (@{$File->{Errors}}) {
+      # Strip curlies from lq-nsgmls output.
+      $err->{msg} =~ s/[{}]//g;
+      chomp $err->{msg};
+
+      # Find index into the %frag hash for the "explanation..." links.
+      $err->{idx} =  $err->{msg};
+      $err->{idx} =~ s/"[^\"]*"/FOO/g;
+      $err->{idx} =~ s/[^A-Za-z ]//g;
+      $err->{idx} =~ s/\s+/ /g; # Collapse spaces
+      $err->{idx} =~ s/(^\s|\s\Z)//g; # Remove leading and trailing spaces.
+      $err->{idx} =~ s/(FOO )+/FOO /g; # Collapse FOOs.
+      $err->{idx} =~ s/FOO FOO/FOO/g; # Collapse FOOs.
+
+      my @offsets = (
+		     $File->{Offsets}->[$err->{line}    ]->[0],
+		     $File->{Offsets}->[$err->{line} - 1]->[1],
+		     $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char} + $err->{line}
+		    );
+      print <<".EOF.";
+    [
+      rdf:subject [
+                    val:column "$err->{char}";
+                    val:line   "$err->{line}";
+                    val:offset "@offsets";
+                    earl:testSubject <$File->{URI}>
+                  ];
+      rdf:predicate earl:fails;
+      rdf:object [
+                   earl:id <http://www.w3.org/HTML/>;
+                   earl:note "$err->{msg}"
+                 ];
+      earl:testMode earl:Auto
+    ],
+.EOF.
+    }
+  } else {
+    print <<".EOF.";
+    [
+      earl:testMode earl:Auto
+      rdf:predicate earl:passes;
+      rdf:subject   [earl:testSubject <$File->{URI}>];
+      rdf:object    [
+                      earl:id <http://www.w3.org/HTML/>;
+                      earl:note "Valid"
+                    ];
+    ],
+.EOF.
+  }
+  print " .\n";
 }
