@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.305.2.67 2003-07-28 03:57:00 link Exp $
+# $Id: check,v 1.305.2.68 2003-07-28 06:42:16 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -130,7 +130,7 @@ BEGIN
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.305.2.67 $;
+  $VERSION    =  q$Revision: 1.305.2.68 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -202,7 +202,7 @@ $File->{'Header'} = &prepSSI({
                              });
 $File->{'Footer'} = &prepSSI({
                               File => $CFG->{'Footer'},
-                              Date => q$Date: 2003-07-28 03:57:00 $,
+                              Date => q$Date: 2003-07-28 06:42:16 $,
                              });
 
 #
@@ -1941,7 +1941,7 @@ sub report_valid {
       <img class="inline-badge" src="$image_uri" alt="$alttext"$gifhw />
       To show your readers that you have taken the care to create an
       interoperable Web page, you may display this icon on any page
-      that validates. Here is the HTML you could use to add this icon
+      that validates. Here is the HTML you should use to add this icon
       to your Web page:
     </p>
     <pre>
@@ -1952,10 +1952,9 @@ sub report_valid {
     &lt;/p&gt;
     </pre>
     <p>
-      If you like, you can download a copy of this image (in <a
-      href="${image_uri}.png">PNG</a> or <a href="${image_uri}.gif">GIF</a>
-      format) to keep in your local web directory, and change the HTML fragment
-      above to reference your local image rather than the one on this server.
+    Thanks to this code, you will be able to re-validate your Web page by
+    following the link (click on the image), and we encourage you to do so 
+    every time you modify your document.
     </p>
 .EOF.
     }
