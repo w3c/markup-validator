@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.125 2001-06-23 01:16:42 link Exp $
+# $Id: check,v 1.126 2001-06-23 01:24:24 link Exp $
 
 #
 # We need Perl 5.004.
@@ -77,9 +77,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.125 $;
+$VERSION    =  q$Revision: 1.126 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-06-23 01:16:42 $;
+$DATE       =  q$Date: 2001-06-23 01:24:24 $;
 $MAINTAINER =  'gerald@w3.org';
 $NOTICE     =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -176,7 +176,7 @@ $q->param('uri', 'http://' . $q->param('uri')) if $q->param('uri') =~ m(^www)i;
 # A string containing the HTML header for validation results.
 # We save it in a string instead of printing it in case we need to abort before
 # we have any meaningfull results to report. @@ May not be necessary!
-my $header = <<"EOF";
+$File->{Results} = <<"EOF";
 Content-Type: text/html; charset=utf-8
 
 $html40t_doctype
@@ -200,7 +200,7 @@ EOF
 # Punt if we don't recognize this URI scheme.
 # @@ LWP does a whole bunch more: transparently!
 unless ($q->param('uri') =~ m(^(http|upload)://)) {
-  print $header;
+  print $File->{Results};
   print <<"EOF";
   <p>
     Sorry, this type of <a href="http://www.w3.org/Addressing/#terms">URI</a>
@@ -231,7 +231,7 @@ elsif ($q->param('uri'))           {$File = &handle_uri($q)};
 # Abort if there was no document type mapping for this Content-Type, in which
 # case the document type will be equal to the content type (contains a "/").
 if ($File->{'Type'} =~ m(/) and not $q->param('uploaded_file')) {
-  print $header;
+  print $File->{Results};
   print <<"EOF";
     <p class="error">
       Sorry, I am unable to validate this document because its returned
@@ -323,7 +323,7 @@ if ($File->{Charset} ne 'unknown' and $File->{Charset} ne 'us-ascii') {
 
 #
 # Print header and jump links.
-print $header, qq(\n    <h2>Document Checked</h2>\n), &build_jump_links;
+print $File->{Results}, qq(\n    <h2>Document Checked</h2>\n), &build_jump_links;
 
 #
 # Print the list of meta data.
@@ -855,7 +855,7 @@ sub handle_uri {
     if ($res->code == 401) {
       &authenticate($res->request->url, $res->www_authenticate);
     } else {
-      print $header;
+      print $File->{Results};
       &print_unknown_http_error_message($uri, $res->code, $res->message);
     }
     &clean_up_and_exit;
