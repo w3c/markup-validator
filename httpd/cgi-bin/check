@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.333 2004-09-03 01:26:33 link Exp $
+# $Id: check,v 1.334 2004-09-04 21:06:17 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -98,12 +98,17 @@ our $HAVE_SOAP_LITE;
 # Things inside BEGIN don't happen on every request in persistent
 # environments, such as mod_perl.  So let's do globals, eg. read config here.
 BEGIN {
+  # Launder data for -T; -AutoLaunder doesn't catch this one.
+  if (exists $ENV{W3C_VALIDATOR_HOME}) {
+    $ENV{W3C_VALIDATOR_HOME} =~ /^(.*)$/;
+    $ENV{W3C_VALIDATOR_HOME} = $1;
+  }
 
   #
   # Read Config Files.
   eval {
-    my %config_opts =
-      (-ConfigFile     => $ENV{W3C_VALIDATOR_CFG} || '/etc/w3c/validator.conf',
+    my %config_opts = (
+       -ConfigFile => ($ENV{W3C_VALIDATOR_CFG} || '/etc/w3c/validator.conf'),
        -MergeDuplicateOptions => TRUE,
        -MergeDuplicateBlocks  => TRUE,
        -SplitPolicy      => 'equalsign',
@@ -113,10 +118,12 @@ BEGIN {
        -AutoLaunder      => TRUE,
        -AutoTrue         => TRUE,
        -DefaultConfig    => {
-                             Protocols => {Allow => 'http,https'},
-                             'SGML Parser'   => '/usr/bin/onsgmls',
-                             'Template Path' => '/usr/local/validator/share/templates/en_US',
-                            },
+          Protocols => {Allow => 'http,https'},
+          Paths => {
+            Base => ($ENV{W3C_VALIDATOR_HOME} || '/usr/local/validator'),
+            SGML => {Parser => '/usr/bin/onsgmls'},
+          },
+       },
       );
     my %cfg = Config::General->new(%config_opts)->getall();
     $CFG = \%cfg;
@@ -124,10 +131,34 @@ BEGIN {
   if ($@) {
     die <<".EOF.";
 Could not read configuration.  Set the W3C_VALIDATOR_CFG environment variable
-or copy conf/* to /etc/w3c/, and make sure that the configuration file, as well
-as all included files are readable by the web server user. The error was:
-'$@'
+or copy conf/* to /etc/w3c/. Make sure that the configuration file and all
+included files are readable by the web server user. The error was:\n'$@'
 .EOF.
+  }
+
+  #
+  # Check a filesystem path for existance and "readability".
+  sub pathcheck (@) {
+    my %paths = map {$_ => [-d $_, -r _]} @_;
+    my @_d = grep {not $paths{$_}->[0]} keys %paths;
+    my @_r = grep {not $paths{$_}->[1]} keys %paths;
+    return TRUE if (scalar(@_d) + scalar(@_r) == 0);
+    die <<".EOF." if scalar @_d;
+Does not exist or is not a directory: @_d
+.EOF.
+    die <<".EOF." if scalar @_r;
+Directory not readable (permission denied): @_r
+.EOF.
+  }
+
+  #
+  # Check paths in config...
+  {
+    my @dirs = ();
+    push @dirs, $CFG->{Paths}->{Base};
+    push @dirs, $CFG->{Paths}->{Templates};
+    push @dirs, $CFG->{Paths}->{SGML}->{Library};
+    &pathcheck(@dirs);
   }
 
   #
@@ -138,8 +169,8 @@ as all included files are readable by the web server user. The error was:
 
   #
   # Make sure onsgmls exists and is executable.
-  unless (-x $CFG->{'SGML Parser'}) {
-    die qq(Configured SGML Parser "$CFG->{'SGML Parser'}" not executable!\n);
+  unless (-x $CFG->{Paths}->{SGML}->{Parser}) {
+    die qq(Configured SGML Parser "$CFG->{Paths}->{SGML}->{Parser}" not executable!\n);
   }
 
   { # Make types config indexed by FPI.
@@ -194,7 +225,7 @@ as all included files are readable by the web server user. The error was:
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.333 $;
+  $VERSION    =  q$Revision: 1.334 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -270,11 +301,11 @@ $File->{'Other Namespaces'} = []; # Other (non-root) Namespaces.
 ###############################################################################
 
 my $T = HTML::Template->new(
-  filename          => File::Spec->catfile($CFG->{'Template Path'}, 'result.tmpl'),
+  filename          => File::Spec->catfile($CFG->{Paths}->{Templates}, 'result.tmpl'),
   die_on_bad_params => FALSE,
 );
 my $E = HTML::Template->new(
-  filename          => File::Spec->catfile($CFG->{'Template Path'}, 'fatal-error.tmpl'),
+  filename          => File::Spec->catfile($CFG->{Paths}->{Templates}, 'fatal-error.tmpl'),
   die_on_bad_params => FALSE,
 );
 
@@ -599,7 +630,7 @@ sub parse (\$) {
 
   #
   # By default, use SGML catalog file and SGML Declaration.
-  my $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'sgml.soc');
+  my $catalog  = File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'sgml.soc');
   my @spopt = qw(
                  -R
                  -wvalid
@@ -610,7 +641,7 @@ sub parse (\$) {
   #
   # Switch to XML semantics if file is XML.
   if (&is_xml($File)) {
-    $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'xml.soc');
+    $catalog  = File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc');
     push(@spopt, '-wxml');
     &add_warning($File, 'note', 'Note:', <<".EOF.");
   The Validator XML support has
@@ -644,11 +675,13 @@ sub parse (\$) {
 
   #
   # Tell onsgmls about the SGML Library.
-  $ENV{SGML_SEARCH_PATH} = $CFG->{'SGML Library'};
+  $ENV{SGML_SEARCH_PATH} = $CFG->{Paths}->{SGML}->{Library};
 
   #
   # Set the command to execute.
-  my @cmd = ($CFG->{'SGML Parser'}, '-n', '-c', $catalog, @spopt);
+  my @cmd = ($CFG->{Paths}->{SGML}->{Parser}, '-n', '-c', $catalog, @spopt);
+
+
 
   #
   # Set debug info for HTML report.
