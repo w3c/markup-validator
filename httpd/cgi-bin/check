@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.35 1999-09-27 10:12:31 gerald Exp $
+# $Id: check,v 1.36 1999-09-29 00:50:41 gerald Exp $
 
 use LWP::UserAgent;
 use strict;
@@ -17,8 +17,8 @@ use strict;
 # Constant definitions
 #############################################################################
 
-my $cvsrevision	= '$Revision: 1.35 $';
-my $cvsdate	= '$Date: 1999-09-27 10:12:31 $';
+my $cvsrevision	= '$Revision: 1.36 $';
+my $cvsdate	= '$Date: 1999-09-29 00:50:41 $';
 
 my $logfile	= "/var/log/httpd/val-svc";
 
@@ -366,6 +366,10 @@ else {
 
 if ( $effective_charset =~ /iso-2022-jp/i ) {
     $codeconv = "$nkf -Jex | ";
+}
+elsif ( $effective_charset =~ /utf-8/i ) {
+    $ENV{SP_CHARSET_FIXED}="YES";
+    $ENV{SP_ENCODING}="utf-8";
 }
 elsif ( $effective_charset =~ /Shift_JIS/i ) {
     $codeconv = "$nkf -Sex | ";
