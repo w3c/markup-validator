@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.1.2.11 2004-05-06 21:58:12 ot Exp $"
---><!--#set var="date" value="\$Date: 2004-05-06 21:58:12 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.1.2.12 2004-05-11 17:53:10 ville Exp $"
+--><!--#set var="date" value="\$Date: 2004-05-11 17:53:10 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -67,10 +67,10 @@
 
      <p>
         Apart from a properly configured Web server, the Validator needs a
-        SGML parser -- that does all the hard work -- and several Perl
-        modules used by the "check" CGI script.
+        SGML parser -- that does all the hard work --, Perl (version 5.6.0
+        or newer) and several Perl modules used by the "check" CGI script.
       </p>
-     <h5>SGML Parser: Open SP</h5>
+     <h5>SGML Parser: OpenSP</h5>
       <p>
         The SGML parser we're currently using is <code>OpenSP 1.5</code>,
         which can be found on the
@@ -81,48 +81,60 @@
       <p>
         The canonical list of Perl modules we use can be found in the source
         for the "check" CGI script. There is a bunch of lines that of the form
-        "use Foo::Bar" where each "Foo::Bar" represents a module. Most modules
-        can be found on <a href="http://www.cpan.org/">CPAN</a> (minimum
-        versions in parenthesis after the name). The following
-        list was complete when CVS spit out:
-        <code>$Date: 2004-05-06 21:58:12 $</code>. <tt>:-)</tt>
+        "use Foo::Bar" where each "Foo::Bar" represents a module. The modules
+        can be found on <a href="http://www.cpan.org/"><acronym title="Comprehensive Perl Archive Network">CPAN</acronym></a>.
+        The following list was complete when CVS spit out:
+        <code>$Date: 2004-05-11 17:53:10 $</code>. <tt>:-)</tt>
       </p>
 
-     <p>One easy - and strongly recommended - way to take care of all these Perl module dependencies is to 
-     install the <a href="http://search.cpan.org/dist/Bundle-W3C-Validator/">bundle available through CPAN</a>
-     as Bundle-W3C-Validator.</p>
+     <p>
+       One easy - and strongly recommended - way to take care of all these
+       Perl module dependencies is to install
+       <a href="http://search.cpan.org/dist/Bundle-W3C-Validator/">Bundle-W3C-Validator</a>
+       from CPAN.  See the <a href="http://search.cpan.org/dist/Bundle-W3C-Validator/lib/Bundle/W3C/Validator.pm">documentation included with it</a>
+       for more details.
+     </p>
 
-     <h5>List of required Perl modules</h5>
+     <h5>List of required Perl module distributions</h5>
 
       <dl>
-        <dt><code>CGI (2.81)</code></dt>
+        <dt><a href="http://search.cpan.org/dist/CGI.pm/">CGI.pm</a> &gt;= 2.81</dt>
         <dd>
           The all-singing, all-dancing,
           everything-<em>and</em>-the-kitchen-sink, Perl CGI library. This
           takes care of all those niggly little bits of CGI for us and make
           options parsing and file upload a breeze.
         </dd>
-        <dt><code>CGI::Carp</code></dt>
-        <dd>CGI-aware warn()/die()</dd>
-        <dt><code>File::Spec</code></dt>
-        <dd>Portable file and path name operations.</dd>
-        <dt><code>HTML::Parser (3.25)</code></dt>
-        <dd>Minimal HTML Parser used for preparse and finding metadata.</dd>
-        <dt><code>LWP::UserAgent (1.90)</code></dt>
+        <dt><a href="http://search.cpan.org/dist/Config-General/">Config-General</a></dt>
+        <dd>
+          Configuration file handling.
+        </dd>
+        <dt><a href="http://search.cpan.org/dist/HTML-Parser/">HTML-Parser</a> &gt;= 3.25</dt>
+        <dd>
+          Minimal HTML parser used for preparse and finding metadata.
+        </dd>
+        <dt><a href="http://search.cpan.org/dist/libwww-perl/">libwww-perl</a> &gt;= 5.60</dt>
         <dd>
           Gisle Aas' most excellent WWW library for Perl. This is where our
           support for downloading pages off the net comes from.
         </dd>
-        <dt><code>Set::IntSpan</code></dt><dd>Efficient Set operations.</dd>
-        <dt><code>Text::Iconv</code></dt>
+        <dt><a href="http://search.cpan.org/dist/Net-IP/">Net-IP</a></dt>
+        <dd>
+          IP address manipulation.
+        </dd>
+        <dt><a href="http://search.cpan.org/dist/Set-IntSpan/">Set-IntSpan</a></dt>
+        <dd>
+          Efficient set operations.
+        </dd>
+        <dt><a href="http://search.cpan.org/dist/Text-Iconv/">Text-Iconv</a></dt>
         <dd>
           Perl-native interface to the (g)libc iconv(3) library. Handles
           character set conversion issues.
         </dd>
-        <dt><code>Text::Wrap</code></dt>
-        <dd>Wrap text to a sane width. Needed for source output in results.</dd>
-        <dt><code>URI::Escape</code></dt>
-        <dd>Module to handle escaping special characters in URIs.</dd>
+        <dt><a href="http://search.cpan.org/dist/URI/">URI</a></dt>
+        <dd>
+          Library to handle URIs and escaping special characters in them.
+        </dd>
       </dl>
 
     <h4><a id="install-components" name="install-components"></a>Install the various necessary components:</h4>
