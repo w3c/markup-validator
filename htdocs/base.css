@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.26.2.45 2004-05-28 02:51:37 ot Exp $
+   $Id: base.css,v 1.26.2.46 2004-06-08 15:24:15 ot Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -146,7 +146,7 @@ address {
 }
 
 address {
-  background-image: url(images/footer);
+  background-image: url(images/footer.jpg);
   background-repeat: no-repeat;
   background-attachment: scroll;
   height: 50px;
