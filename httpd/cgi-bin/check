@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.291 2002-11-11 23:31:31 ville Exp $
+# $Id: check,v 1.292 2002-11-14 17:16:51 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -95,7 +95,7 @@ BEGIN {
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.291 $;
+  $VERSION    =  q$Revision: 1.292 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
 
@@ -151,14 +151,14 @@ my $File;
 #
 # Pseudo-SSI include header and footer for output.
 $File->{'Header'} = &prepSSI({
-			      File     => $CFG->{'Header'},
-			      Title    => 'Validation Results',
-			      Revision => $VERSION,
-			     });
+                              File     => $CFG->{'Header'},
+                              Title    => 'Validation Results',
+                              Revision => $VERSION,
+                             });
 $File->{'Footer'} = &prepSSI({
-			      File => $CFG->{'Footer'},
-			      Date => q$Date: 2002-11-11 23:31:31 $,
-			     });
+                              File => $CFG->{'Footer'},
+                              Date => q$Date: 2002-11-14 17:16:51 $,
+                             });
 
 #
 # SSI Footer for static pages does not include closing tags for body & html.
@@ -266,17 +266,16 @@ if ($File->{'Is Upload'}) {
 
   if (URI::eq("$File->{Opt}->{URI}", $File->{URI})) {
     &add_table($File, qq(<label title="Address of Page to Validate (accesskey: 1)" for="uri">Address</label>),
-	       [1, 2, '<input accesskey="1" type="text" id="uri" name="uri" size="' . $size
-	       . '" value="' . &ent($File->{Opt}->{URI}) . '" />']);
+               [1, 2, '<input accesskey="1" type="text" id="uri" name="uri" size="' . $size
+             . '" value="' . &ent($File->{Opt}->{URI}) . '" />']);
   } else {
     my $furi = &ent($File->{URI});
     &add_table($File, qq(<label title="Address of Page to Validate (accesskey: 1)" for="uri">URI</label>),
-	       '<input accesskey="1" type="text" id="uri" name="uri" size="' . $size
-	       . '" value="' . $furi . '" />');
+               '<input accesskey="1" type="text" id="uri" name="uri" size="' . $size
+             . '" value="' . $furi . '" />');
     &add_warning($File, '<em>Note:</em> The URI you gave me, &#171;<code>' .
-		 &ent($File->{Opt}->{URI}) . '</code>&#187;, ' .
-		 'returned a redirect to ' .
-		 '&#171;<code>' . $furi . '</code>&#187;.');
+    &ent($File->{Opt}->{URI}) . '</code>&#187;, ' . 'returned a redirect to ' .
+         '&#171;<code>' . $furi . '</code>&#187;.');
   }
 }
 
@@ -439,8 +438,8 @@ if ($File->{'Is Upload'}) {
   &add_table($File, 'Encoding', &ent($File->{Charset}->{Use}));
 } else {
   &add_table($File,
-	     qq(<label accesskey="2" title="Character Encoding (accesskey: 2)" for="charset">Encoding</label>),
-	     &ent($File->{Charset}->{Use}), &popup_charset);
+             qq(<label accesskey="2" title="Character Encoding (accesskey: 2)" for="charset">Encoding</label>),
+             &ent($File->{Charset}->{Use}), &popup_charset);
 }
 
 
@@ -448,12 +447,12 @@ if ($File->{'Is Upload'}) {
 # By default, use SGML catalog file and SGML Declaration.
 my $catalog  = File::Spec->catfile($CFG->{'SGML Library'}, 'sgml.soc');
 my @xmlflags = qw(
-		  -R
-		  -wvalid
-		  -wnon-sgml-char-ref
-		  -wno-duplicate
-		  -wunclosed
-		 );
+                  -R
+                  -wvalid
+                  -wnon-sgml-char-ref
+                  -wno-duplicate
+                  -wunclosed
+                 );
 
 #
 # Switch to XML semantics if file is XML.
@@ -553,7 +552,7 @@ while (<$spout>) {
   if ($File->{Type} eq 'xml' or $File->{Type} eq 'xhtml') {
     if (/^Axmlns() \w+ (.*)/ or /^Axmlns:([^ ]+) \w+ (.*)/) {
       if (not $File->{Namespace} and $elements_found == 0 and $1 eq "") {
-	$File->{Namespace} = $2;
+        $File->{Namespace} = $2;
       }
       $File->{Namespaces}->{$2}++;
     }
@@ -614,7 +613,7 @@ if ($File->{'Is Upload'}) {
   &add_table($File, 'Doctype', $File->{Version});
 } else {
   &add_table($File, qq(<label accesskey="3" for="doctype" title="Document Type (accesskey: 3)">Doctype</label>),
-	     $File->{Version}, &popup_doctype);
+             $File->{Version}, &popup_doctype);
 }
 
 
@@ -772,25 +771,25 @@ sub print_table {
 
 
   add_table($Options, '', qq(<label title="Show Page Source (accesskey: 5)"><input type="checkbox" value="" name="ss" ) .
-	    qq(accesskey="5" ) .
-	     ($File->{Opt}->{'Show Source'}      ? 'checked="checked"' : '') . ' />Show&nbsp;Source</label>',
-	    '<label title="Show an Outline of the document (accesskey: 6)"><input type="checkbox" value="" name="outline" ' .
-	    qq(accesskey="6" ) .
-	    ($File->{Opt}->{'Outline'} ? 'checked="checked"' : '') . ' />Outline</label>');
+            qq(accesskey="5" ) .
+            ($File->{Opt}->{'Show Source'}      ? 'checked="checked"' : '') . ' />Show&nbsp;Source</label>',
+            '<label title="Show an Outline of the document (accesskey: 6)"><input type="checkbox" value="" name="outline" ' .
+            qq(accesskey="6" ) .
+            ($File->{Opt}->{'Outline'} ? 'checked="checked"' : '') . ' />Outline</label>');
   add_table($Options, '',
-	    '<label title="Show Parse Tree (accesskey: 7)"><input type="checkbox" value="" name="sp" ' .
-	    qq(accesskey="7" ) .
-	    ($File->{Opt}->{'Show Parsetree'}      ? 'checked="checked"' : '') . ' />Parse&nbsp;Tree</label>',
-	    '<label title="Exclude Attributes from Parse Tree (accesskey: 8)"><input type="checkbox" value="" name="noatt" ' .
-	    qq(accesskey="8" ) .
-	    ($File->{Opt}->{'No Attributes'}   ? 'checked="checked"' : '') . ' />...no&nbsp;attributes</label>'
-	   );
+            '<label title="Show Parse Tree (accesskey: 7)"><input type="checkbox" value="" name="sp" ' .
+            qq(accesskey="7" ) .
+            ($File->{Opt}->{'Show Parsetree'}      ? 'checked="checked"' : '') . ' />Parse&nbsp;Tree</label>',
+            '<label title="Exclude Attributes from Parse Tree (accesskey: 8)"><input type="checkbox" value="" name="noatt" ' .
+            qq(accesskey="8" ) .
+            ($File->{Opt}->{'No Attributes'}   ? 'checked="checked"' : '') . ' />...no&nbsp;attributes</label>'
+           );
 
   add_table(
-	    $Form,
-	    '<input type="submit" value="Revalidate" accesskey="9" title="Revalidate file (accesskey: 9)" />',
-	    [1, $File->{Table}->{Max}, join('', @{&serialize_table($Options, 'options')})]
-	   );
+            $Form,
+            '<input type="submit" value="Revalidate" accesskey="9" title="Revalidate file (accesskey: 9)" />',
+            [1, $File->{Table}->{Max}, join('', @{&serialize_table($Options, 'options')})]
+           );
 
   print <<".EOF.";
       <fieldset>
@@ -818,10 +817,10 @@ sub serialize_table {
       my $opts = '';
       push @table, "  <tr>\n";
       if ($tr->{Head}->[0] > 1) {
-	$opts .= qq( rowspan="$tr->{Head}->[0]");
+        $opts .= qq( rowspan="$tr->{Head}->[0]");
       }
       if ($tr->{Head}->[1] > 1) {
-	$opts .= qq( colspan="$tr->{Head}->[1]");
+        $opts .= qq( colspan="$tr->{Head}->[1]");
       }
       push @table, "    <th$opts>" . $tr->{Head}->[2] . ": </th>\n";
     } elsif ($tr->{Head}) {
@@ -835,10 +834,10 @@ sub serialize_table {
     for (my $i = 0; $i < scalar @{$tr->{Tail}}; $i++) {
       my $opts = '';
       if ($tr->{Tail}->[$i]->[0] > 1) {
-	$opts .= qq( rowspan="$tr->{Tail}->[$i]->[0]");
+        $opts .= qq( rowspan="$tr->{Tail}->[$i]->[0]");
       }
       if ($tr->{Tail}->[$i]->[1] > 1) {
-	$opts .= qq( colspan="$tr->{Tail}->[$i]->[1]");
+        $opts .= qq( colspan="$tr->{Tail}->[$i]->[1]");
       }
       push @table, qq(    <td$opts>) . $tr->{Tail}->[$i]->[2] . "</td>\n";
     }
@@ -878,13 +877,13 @@ sub doctype_spiel {
       &lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
       &lt;html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"&gt;
-	      &lt;head&gt;
-	        &lt;title&gt;Title&lt;/title&gt;
-	      &lt;/head&gt;
+        &lt;head&gt;
+          &lt;title&gt;Title&lt;/title&gt;
+        &lt;/head&gt;
 
-	      &lt;body&gt;
-	        &lt;!-- ... body of document ... --&gt;
-	      &lt;/body&gt;
+        &lt;body&gt;
+          &lt;!-- ... body of document ... --&gt;
+        &lt;/body&gt;
       &lt;/html&gt;
     </pre>
     <p>
@@ -1241,7 +1240,7 @@ sub exact_charset {
 
   if ($general_charset eq 'utf-16') {
     if ($File->{Charset}->{Auto} =~ m/^utf-16[bl]e$/) {
-	$exact_charset = $File->{Charset}->{Auto};
+      $exact_charset = $File->{Charset}->{Auto};
     } else { $exact_charset = 'utf-16be'; }
   }
   # add same code for ucs-4 here
@@ -1276,19 +1275,19 @@ sub truncate_line {
       my $diff = $col - 50;
       $line = "... " . substr($line, $diff, 70);
       if (length $line == 70 + 4) {
-	$line .= " ...";
+        $line .= " ...";
       }
       if ($col > $diff) {
-	$col -= $diff;
+        $col -= $diff;
       } else {
-	$col -= 70;
+        $col -= 70;
       }
     } else { # Truncate both sides; leave more on left, and 30 chars on right.
       if ($col < 35) {
-	$line = "... " . substr($line, 0, 60);
+        $line = "... " . substr($line, 0, 60);
       } else {
-	$line = "... " . substr($line, $col - 35, 60);
-	$col = 35;
+        $line = "... " . substr($line, $col - 35, 60);
+        $col = 35;
       }
       if (length $line == 60 + 4) {$line .= " ..."};
     }
@@ -1313,8 +1312,8 @@ sub override_doctype {
   };
 
   HTML::Parser->new(default_h     => [sub {$HTML .= shift}, 'text'],
-		    declaration_h => [$declaration, 'text']
-		   )->parse(join "\n", @{$File->{Content}})->eof();
+                    declaration_h => [$declaration, 'text']
+                   )->parse(join "\n", @{$File->{Content}})->eof();
 
   $File->{Content} = [split /\n/, $HTML];
   unshift @{$File->{Content}}, $dtd unless $seen;
@@ -1348,18 +1347,9 @@ sub parse_errors ($$) {
     $err->{line} = $errors[2];
     $err->{char} = $errors[3];
     $err->{type} = $errors[4];
-    if (
-	   $err->{type} eq 'W'
-	or $err->{type} eq 'E'
-	or $err->{type} eq 'X'
-	or $err->{type} eq 'Q'
-       ) {
+    if ($err->{type} eq 'W' or $err->{type} eq 'E'
+     or $err->{type} eq 'X' or $err->{type} eq 'Q') {
       $err->{msg}  = $errors[5];
-#      # get rid of non-BMP related error messages
-#      # (pretending SP understands characters beyond the BMP)
-#      if ($errors[5] =~ m/"(\d*)" is not a character number in the document character set/) {
-#	next if $1 >= 65536 && $1 <= 1114110;
-#      }
     } else {
       $err->{type} = 'I';
       $err->{msg}  = $errors[4];
@@ -1370,8 +1360,8 @@ sub parse_errors ($$) {
 
     # An unknown FPI and no SI.
     if ($err->{msg} =~ m(cannot generate system identifier for entity)
-	or $err->{msg} =~ m(unrecognized DOCTYPE)i
-	or $err->{msg} =~ m(no document type declaration)i) {
+     or $err->{msg} =~ m(unrecognized DOCTYPE)i
+     or $err->{msg} =~ m(no document type declaration)i) {
       $File->{'Error Flagged'} = TRUE;
       $File->{'Error Message'} = <<".EOF.";
      <div class="fatal">
@@ -1589,7 +1579,7 @@ sub report_valid {
     </p>
 .EOF.
       if (defined $image_uri) {
-	print <<".EOF.";
+        print <<".EOF.";
     <p>
       <img class="inline-badge" src="$image_uri" alt="$alttext"$gifhw />
       To show your readers that you have taken the care to create an
@@ -1615,8 +1605,7 @@ sub report_valid {
   } elsif (&is_xml($File->{Type}) and not $File->{DOCTYPE}) {
     print qq(  <h2 class="valid">This document is well-formed XML.</h2>\n);
   } elsif (defined $File->{Tentative}) {
-    print qq(<h2 class="valid">This Page <em>Tentatively</em> Validates As $File->{Version}
-	     (Tentatively Valid)!</h2>);
+    print qq(<h2 class="valid">This Page <em>Tentatively</em> Validates As $File->{Version} (Tentatively Valid)!</h2>);
     print &daily_tip($File, $CFG->{'Tips DB'});
     &print_warnings($File);
     print <<".EOF.";
@@ -1704,14 +1693,14 @@ EOF
       $line =~ s/\\011/ /g;
       $line =~ s/\\012/ /g;
       if ($line =~ /^-/) {
-	my $headcont = $line;
-	substr($headcont, 0, 1) = " ";
-	$headcont =~ s/\\n/ /g;
-	$heading .= $headcont;
+        my $headcont = $line;
+        substr($headcont, 0, 1) = " ";
+        $headcont =~ s/\\n/ /g;
+        $heading .= $headcont;
       } elsif ($line =~ /^AALT CDATA( .+)/i) {
-	my $headcont = $1;
-	$headcont =~ s/\\n/ /g;
-	$heading .= $headcont;
+        my $headcont = $1;
+        $headcont =~ s/\\n/ /g;
+        $heading .= $headcont;
       }
     }
 
@@ -1820,14 +1809,14 @@ EOF
 
     my $printme;
     chomp($printme = $line);
-    $printme =~ s{^([()])(.*)}	# reformat and add links on HTML elements
-		 { my $close = '';
-		      $close = "/" if $1 eq ")";	# ")" -> close-tag
-		   "&lt;" . $close . "<a href=\"" .
-		   $CFG->{'Element Ref URI'} . $CFG->{'Element Map'}->{lc($2)} .
-		   "\">$2<\/a>&gt;"
-		 }egx;
-    $printme =~ s,^A,  A,;	# indent attributes a bit
+    $printme =~ s{^([()])(.*)} # reformat and add links on HTML elements
+                 { my $close = '';
+                      $close = "/" if $1 eq ")"; # ")" -> close-tag
+                   "&lt;" . $close . "<a href=\"" .
+                   $CFG->{'Element Ref URI'} . $CFG->{'Element Map'}->{lc($2)} .
+                   "\">$2<\/a>&gt;"
+                 }egx;
+    $printme =~ s,^A,  A,; # indent attributes a bit
     print ' ' x $indent, $printme, "\n";
     if ($line =~ /^\(/) {
       $indent += 2;
@@ -1861,11 +1850,11 @@ sub preparse {
 
     if ($File->{Root}) {
       if (lc $tag eq 'meta') {
-	if (lc $attr{'http-equiv'} eq 'content-type') {
-	  if ($attr{content} =~ m(charset\s*=[\s\"\']*([^\s;\"\'>]*))si) {
-	    $File->{Charset}->{META} = lc $1;
+        if (lc $attr{'http-equiv'} eq 'content-type') {
+          if ($attr{content} =~ m(charset\s*=[\s\"\']*([^\s;\"\'>]*))si) {
+            $File->{Charset}->{META} = lc $1;
           }
-	}
+        }
       }
       return unless $tag eq $File->{Root};
     } else {
@@ -2223,7 +2212,7 @@ sub byte_error {
       <p class="error">
         Sorry, I am unable to validate this document because on line$s
         <strong>$lines</strong>
-	it contained one or more bytes that I cannot interpret as
+        it contained one or more bytes that I cannot interpret as
         <code>$cs</code> (in other words, the bytes
         found are not valid values in the specified Character Encoding).
         Please check both the content of the file and the character
@@ -2379,15 +2368,15 @@ X-W3C-Validator-Errors: $errs
       $err->{idx} =~ s/FOO FOO/FOO/g; # Collapse FOOs.
 
       my @offsets = (
-		     $File->{Offsets}->[$err->{line}    ]->[0],
-		     $File->{Offsets}->[$err->{line} - 1]->[1],
-		     $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char}
-		    );
+                     $File->{Offsets}->[$err->{line}    ]->[0],
+                     $File->{Offsets}->[$err->{line} - 1]->[1],
+                     $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char}
+                    );
       printf <<".EOF.", &ent($File->{URI}), &ent($err->{msg});
     <asserts>
       <Assertion rdf:ID="err$errnum">
         <subject rdf:parseType="Resource">
-	  <reprOf rdf:resource="%s"/>
+          <reprOf rdf:resource="%s"/>
           <val:line>$err->{line}</val:line>
           <val:column>$err->{char}</val:column>
           <val:offset>@offsets</val:offset>
@@ -2461,10 +2450,10 @@ X-W3C-Validator-Errors: $errs
       $err->{idx} =~ s/FOO FOO/FOO/g; # Collapse FOOs.
 
       my @offsets = (
-		     $File->{Offsets}->[$err->{line}    ]->[0],
-		     $File->{Offsets}->[$err->{line} - 1]->[1],
-		     $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char}
-		    );
+                     $File->{Offsets}->[$err->{line}    ]->[0],
+                     $File->{Offsets}->[$err->{line} - 1]->[1],
+                     $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char}
+                    );
       print <<".EOF.";
     [
       earl:testMode earl:Auto;
@@ -2594,7 +2583,7 @@ sub abort_if_error_flagged {
       # Don't add popup for uploads.
       push(@data, &popup_doctype) unless ($File->{'Is Upload'});
       &add_table($File,
-		 qq(<label accesskey="3" for="doctype" title="Document Type (accesskey: 3)">Doctype</label>),
+                 qq(<label accesskey="3" for="doctype" title="Document Type (accesskey: 3)">Doctype</label>),
                  @data);
     }
 
@@ -2634,69 +2623,69 @@ sub conflict {
 # Return a text string suitable for inclusion in the result table.
 sub popup_doctype {
   return &CGI::popup_menu(
-			  -name => 'doctype',
-			  -id => 'doctype',
-			  -values => [
-				      '(detect automatically)',
-				      'XHTML 1.1',
-				      'XHTML Basic 1.0',
-				      'XHTML 1.0 Strict',
-				      'XHTML 1.0 Transitional',
-				      'XHTML 1.0 Frameset',
-				      'HTML 4.01 Strict',
-				      'HTML 4.01 Transitional',
-				      'HTML 4.01 Frameset',
-				      'HTML 3.2',
-				      'HTML 2.0',
-				     ],
-			 );
+                          -name => 'doctype',
+                            -id => 'doctype',
+                        -values => [
+                                    '(detect automatically)',
+                                    'XHTML 1.1',
+                                    'XHTML Basic 1.0',
+                                    'XHTML 1.0 Strict',
+                                    'XHTML 1.0 Transitional',
+                                    'XHTML 1.0 Frameset',
+                                    'HTML 4.01 Strict',
+                                    'HTML 4.01 Transitional',
+                                    'HTML 4.01 Frameset',
+                                    'HTML 3.2',
+                                    'HTML 2.0',
+                                   ],
+                          );
 }
 
 #
 # Return a text string suitable for inclusion in the result table.
 sub popup_charset {
   return &CGI::popup_menu(
-			  -name      => 'charset',
-			  -id        => 'charset',
-			  -values => [
-				      '(detect automatically)',
-				      'utf-8 (Unicode, worldwide)',
-				      'utf-16 (Unicode, worldwide)',
-				      'iso-8859-1 (Western Europe)',
-				      'iso-8859-2 (Central Europe)',
-				      'iso-8859-3 (Southern Europe)',
-				      'iso-8859-4 (Baltic Rim)',
-				      'iso-8859-5 (Cyrillic)',
-				      'iso-8859-6-i (Arabic)',
-				      'iso-8859-7 (Greek)',
-				      'iso-8859-8-i (Hebrew)',
-				      'iso-8859-9 (Turkish)',
-				      'iso-8859-10 (Latin 6)',
-				      'iso-8859-13 (Latin 7)',
-				      'iso-8859-14 (Celtic)',
-				      'iso-8859-15 (Latin 9)',
-				      'us-ascii (basic English)',
-				      'euc-jp (Japanese, Unix)',
-				      'shift_jis (Japanese, Win/Mac)',
-				      'iso-2022-jp (Japanese, email)',
-				      'euc-kr (Korean)',
-				      'gb2312 (Chinese, simplified)',
-				      'gb18030 (Chinese, simplified)',
-				      'big5 (Chinese, traditional)',
-				      'tis-620 (Thai)',
-				      'koi8-r (Russian)',
-				      'koi8-u (Ukrainian)',
-				      'macintosh (MacRoman)',
-				      'windows-1250 (Central Europe)',
-				      'windows-1251 (Cyrillic)',
-				      'windows-1252 (Western Europe)',
-				      'windows-1253 (Greek)',
-				      'windows-1254 (Turkish)',
-				      'windows-1255 (Hebrew)',
-				      'windows-1256 (Arabic)',
-				      'windows-1257 (Baltic Rim)',
-				     ],
-			 );
+                          -name      => 'charset',
+                          -id        => 'charset',
+                          -values => [
+                                      '(detect automatically)',
+                                      'utf-8 (Unicode, worldwide)',
+                                      'utf-16 (Unicode, worldwide)',
+                                      'iso-8859-1 (Western Europe)',
+                                      'iso-8859-2 (Central Europe)',
+                                      'iso-8859-3 (Southern Europe)',
+                                      'iso-8859-4 (Baltic Rim)',
+                                      'iso-8859-5 (Cyrillic)',
+                                      'iso-8859-6-i (Arabic)',
+                                      'iso-8859-7 (Greek)',
+                                      'iso-8859-8-i (Hebrew)',
+                                      'iso-8859-9 (Turkish)',
+                                      'iso-8859-10 (Latin 6)',
+                                      'iso-8859-13 (Latin 7)',
+                                      'iso-8859-14 (Celtic)',
+                                      'iso-8859-15 (Latin 9)',
+                                      'us-ascii (basic English)',
+                                      'euc-jp (Japanese, Unix)',
+                                      'shift_jis (Japanese, Win/Mac)',
+                                      'iso-2022-jp (Japanese, email)',
+                                      'euc-kr (Korean)',
+                                      'gb2312 (Chinese, simplified)',
+                                      'gb18030 (Chinese, simplified)',
+                                      'big5 (Chinese, traditional)',
+                                      'tis-620 (Thai)',
+                                      'koi8-r (Russian)',
+                                      'koi8-u (Ukrainian)',
+                                      'macintosh (MacRoman)',
+                                      'windows-1250 (Central Europe)',
+                                      'windows-1251 (Cyrillic)',
+                                      'windows-1252 (Western Europe)',
+                                      'windows-1253 (Greek)',
+                                      'windows-1254 (Turkish)',
+                                      'windows-1255 (Hebrew)',
+                                      'windows-1256 (Arabic)',
+                                      'windows-1257 (Baltic Rim)',
+                                     ],
+                         );
 }
 
 #
