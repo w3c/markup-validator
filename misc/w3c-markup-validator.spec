@@ -1,8 +1,8 @@
 # RPM Spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.1.2.4 2003-04-24 16:49:24 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.1.2.5 2003-07-04 13:51:56 ville Exp $
 
-%define httpd_confdir %{_sysconfdir}/httpd/conf.d
-%define htmldir       %{_var}/www/html
+%{!?apxs: %{expand:   %%define apxs %{_sbindir}/apxs}}
+%define httpd_confdir %(test -d %{_sysconfdir}/httpd/conf.d && echo %{_sysconfdir}/httpd/conf.d || %{apxs} -q SYSCONFDIR)
 %define sgmldir       %{_datadir}/sgml
 
 # -----------------------------------------------------------------------------
@@ -10,16 +10,16 @@
 Summary:        W3C Markup Validator
 Name:           w3c-markup-validator
 Version:        0.6.2
-Release:        1w3c
+Release:        2w3c
 Epoch:          0
 URL:            http://validator.w3.org/
 License:        http://www.w3.org/Consortium/Legal/copyright-software
 Source0:        http://validator.w3.org/dist/validator-0_6_2.tar.gz
 Source1:        http://validator.w3.org/dist/sgml-lib-0_6_2.tar.gz
 Group:          Applications/Internet
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires:  perl
-Requires:       httpd, %{name}-libs = 0:0.6.2
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:  perl, %{apxs}
+Requires:       httpd, %{name}-libs = %{epoch}:%{version}
 Requires:       perl >= 5.6, perl-HTML-Parser >= 3.25, perl-libwww-perl
 Requires:       perl-URI, perl-Text-Iconv, perl(CGI) >= 2.81, perl(Time::HiRes)
 Requires:       perl(Set::IntSpan), perl(Config::General) >= 2.06
@@ -31,9 +31,7 @@ BuildArch:      noarch
 The W3C Markup Validator checks documents like HTML and XHTML for
 conformance to W3C Recommendations and other standards.
 
-# -----------------------------------------------------------------------------
-
-%package libs
+%package        libs
 Summary:        SGML and XML DTDs for the W3C Markup Validator
 Group:          Applications/Text
 Obsoletes:      w3c-validator-libs
@@ -51,20 +49,22 @@ SGML and XML DTDs for the W3C Markup Validator.
 perl -pi -e 's|\bwww-validator\@w3\.org\b|root\@localhost| ;
              s|/validator\.w3\.org/|/localhost/%{name}/| ;
              s|/usr/local/validator/htdocs/config/|%{_sysconfdir}/w3c/| ;
-             s|/usr/local/validator/htdocs/|%{htmldir}/%{name}/| ;
+             s|/usr/local/validator/htdocs/|%{_datadir}/%{name}/| ;
              s|^(SGML\s+Library\s+).*|${1}%{sgmldir}/%{name}|' \
   htdocs/config/validator.conf
-perl -pi -e 's|/var/www/html/|%{htmldir}/|' httpd/conf/httpd.conf
+perl -pi -e 's|/usr/share/w3c-markup-validator|%{_datadir}/%{name}|g' \
+  httpd/conf/httpd.conf
 
 # Cleanup of unused files
-rm -f httpd/cgi-bin/[Lprt]*
+rm -rf httpd/cgi-bin/[Lprt]* htdocs/p3p.html htdocs/source
+
+# Rename checklink
 rename .pl '' httpd/cgi-bin/checklink.pl
-rm -rf htdocs/p3p.html htdocs/source
 
 # Fixup permissions
 find . -type d -exec chmod 0755 {} ';'
 find . -type f -exec chmod 0644 {} ';'
-chmod 0755 httpd/cgi-bin/*
+chmod 0755 httpd/cgi-bin/check*
 
 # -----------------------------------------------------------------------------
 
@@ -75,11 +75,11 @@ chmod 0755 httpd/cgi-bin/*
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT{%{htmldir}/%{name},%{httpd_confdir},%{_bindir}}
+mkdir -p $RPM_BUILD_ROOT{%{_datadir}/%{name},%{httpd_confdir},%{_bindir}}
 
 # Scripts
-cp -p httpd/cgi-bin/* $RPM_BUILD_ROOT%{htmldir}/%{name}
-ln -s %{htmldir}/%{name}/checklink $RPM_BUILD_ROOT/%{_bindir}
+cp -p httpd/cgi-bin/check* $RPM_BUILD_ROOT%{_datadir}/%{name}
+ln -s %{_datadir}/%{name}/checklink $RPM_BUILD_ROOT%{_bindir}
 
 # Config files
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/w3c
@@ -88,12 +88,12 @@ cp -p httpd/conf/httpd.conf $RPM_BUILD_ROOT%{httpd_confdir}/%{name}.conf
 
 # HTML and stuff
 rm -rf htdocs/config
-cp -a htdocs/* $RPM_BUILD_ROOT%{htmldir}/%{name}
+cp -a htdocs/* $RPM_BUILD_ROOT%{_datadir}/%{name}
 
 # SGML library
 mkdir -p $RPM_BUILD_ROOT{%{sgmldir},%{_sysconfdir}/sgml}
 cp -pr sgml-lib $RPM_BUILD_ROOT%{sgmldir}/%{name}
-> %{buildroot}%{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat
+> $RPM_BUILD_ROOT%{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat
 
 # -----------------------------------------------------------------------------
 
@@ -103,7 +103,7 @@ rm -rf $RPM_BUILD_ROOT
 # -----------------------------------------------------------------------------
 
 %post libs
-# Note that we're using versioned catalog, so this is always ok.
+# Note that we're using a fully versioned catalog, so this is always ok.
 if [ -x %{_bindir}/install-catalog -a -d %{_sysconfdir}/sgml ]; then
   for catalog in "mathml.soc sgml.soc svg.soc xhtml.soc xml.soc"; do
     %{_bindir}/install-catalog --add \
@@ -113,7 +113,7 @@ if [ -x %{_bindir}/install-catalog -a -d %{_sysconfdir}/sgml ]; then
 fi
 
 %preun libs
-# Note that we're using versioned catalog, so this is always ok.
+# Note that we're using a fully versioned catalog, so this is always ok.
 if [ -x %{_bindir}/install-catalog -a -d %{_sysconfdir}/sgml ]; then
   for catalog in "mathml.soc sgml.soc svg.soc xhtml.soc xml.soc"; do
     %{_bindir}/install-catalog --remove \
@@ -126,27 +126,30 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%config(noreplace) %{httpd_confdir}/*
-%config(noreplace) %{_sysconfdir}/w3c/*
-%{htmldir}/%{name}
-%{_bindir}/*
+%config(noreplace) %{httpd_confdir}/%{name}.conf
+%config(noreplace) %{_sysconfdir}/w3c
+%{_datadir}/%{name}
+%{_bindir}/checklink
 
 %files libs
 %defattr(0644,root,root,0755)
-%config %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat
+%ghost %config %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat
 %{sgmldir}/%{name}
 
 # -----------------------------------------------------------------------------
 
 %changelog
-* Mon Apr 21 2003 Ville Skytt‰ <ville.skytta at iki.fi> - 0:0.6.2-1w3c
+* Fri Jul  4 2003 Ville Skytt√§ <ville.skytta at iki.fi> - 0:0.6.2-2w3c
+- Use aliasing instead of hardcoded docroot in httpd configuration.
+
+* Mon Apr 21 2003 Ville Skytt√§ <ville.skytta at iki.fi> - 0:0.6.2-1w3c
 - Update to 0.6.2.
 - Rename to w3c-markup-validator.
 - Install our catalogs if %%{_bindir}/install-catalog is available.
 - Add Epoch: 0.
 
-* Sun Dec  1 2002 Ville Skytt‰ <ville.skytta at iki.fi> - 0.6.1-1w3c
+* Sun Dec  1 2002 Ville Skytt√§ <ville.skytta at iki.fi> - 0.6.1-1w3c
 - Update to 0.6.1.
 
-* Fri Nov 29 2002 Ville Skytt‰ <ville.skytta at iki.fi> - 0.6.0-1w3c
+* Fri Nov 29 2002 Ville Skytt√§ <ville.skytta at iki.fi> - 0.6.0-1w3c
 - First release.
