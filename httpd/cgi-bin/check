@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.2 1998-07-24 22:13:05 gerald Exp $
+# $Id: check,v 1.3 1998-07-24 23:26:08 gerald Exp $
 
 #############################################################################
 # Constant definitions
@@ -16,8 +16,8 @@
 
 $ENV{USER_AGENT} = 'W3C_Validator/1.0';
 
-$logfile	= "/usr/local/lib/httpd/logs/val-svc";
-$reflogfile	= "/usr/local/lib/httpd/logs/val-svc-referers";
+$logfile	= "/usr/local/apache/logs/val-svc";
+$reflogfile	= "/usr/local/apache/logs/val-svc-referers";
 
 $faqloc		= "http://www.cs.duke.edu/~dsb/kgv-faq/";
 $faqerrloc	= "${faqloc}errors.html";
@@ -26,21 +26,13 @@ $rel_img_uri	= "/images/";
 $abs_img_uri	= "${abs_svc_uri}images/";
 
 $grabber	= "/usr/local/lib/libwww-perl/get";
-$sgmlstuff	= "/usr/local/lib/sgml";
+$sgmlstuff	= "/usr/local/validator/htdocs/sgml-lib";
 $sp		= "/usr/local/bin/nsgmls";
 $tidy		= "/usr/local/bin/tidy";
 
 $sgmldecl	= "$sgmlstuff/REC-html40-971218/HTML4.decl";
 
-# $testing = 1;
-
 # $notice		= "<p><strong>Note: This service will be intermittently unavailable for the next few hours for an operating system upgrade.</strong>";
-
-# use the new stuff only for me for testing
-if ( ( $ENV{REMOTE_ADDR} =~ /18\.29\.0\.60/i ) && ( $testing ) ) {
-    $sgmldecl	 =
-     "/usr/local/lib/sgml/html40-970917/HTML4.decl";
-}
 
 umask( 022 );
 $weblint	 = "/usr/local/bin/weblint";
@@ -1211,7 +1203,7 @@ sub output_closing {
      align=right border=0 alt="Valid HTML 4.0!"></a>
   <a href="http://www.w3.org/People/Gerald/">Gerald Oskoboiny</A><br><A
      href="http://www.w3.org/Help/Webmaster">Webmaster</A><br>
-     \$Date: 1998-07-24 22:13:05 $ \
+     \$Date: 1998-07-24 23:26:08 $ \
 </address>
 
 </body>
