@@ -5,7 +5,7 @@
 # (c) 1999 World Wide Web Consortium
 # based on Renaud Bruyeron's checklink.pl
 #
-# $Id: checklink.pl,v 2.12 1999-12-14 15:20:23 hugo Exp $
+# $Id: checklink.pl,v 2.13 1999-12-15 18:03:17 hugo Exp $
 #
 # This program is licensed under the W3C License.
 
@@ -21,7 +21,7 @@ $| = 1;
 
 # Version info
 my $PROGRAM = 'W3C checklink';
-my $VERSION = '$Revision: 2.12 $ (c) 1999 W3C';
+my $VERSION = q$Revision: 2.13 $ . '(c) 1999 W3C';
 my $REVISION; ($REVISION = $VERSION) =~ s/Revision: (\d+\.\d+) .*/$1/;
 
 # State of the program
@@ -37,6 +37,7 @@ my $_redirects = 1;
 my $_user;
 my $_password;
 my $_trusted = '\.w3\.org';
+my $_http_proxy;
 my $query;
 
 if ($#ARGV >= 0) {
@@ -100,7 +101,7 @@ sub parse_arguments() {
             push(@uris, $_);
         } elsif (m/^--$/) {
             $uris = 1;
-        } elsif (m/^-[^-uptc]/) {
+        } elsif (m/^-[^-upytdc]/) {
             if (m/q/) {
                 $_quiet = 1;
             }
@@ -139,6 +140,10 @@ sub parse_arguments() {
             $_password = shift(@ARGV);
         } elsif (m/^-t|--timeout$/) {
             $_timeout = shift(@ARGV);
+        } elsif (m/^-d|--domain$/) {
+            $_trusted = shift(@ARGV);
+        } elsif (m/^-y|--proxy$/) {
+            $_http_proxy = shift(@ARGV);
         } elsif (m/^-c|--chunksize$/) {
             $_chunksize = shift(@ARGV);
         } else {
@@ -160,6 +165,10 @@ Options:
 	-u/--user username	Specify a username for authentication.
 	-p/--password password	Specify a password.
 	-t/--timeout value	Timeout for the HTTP requests.
+	-d/--domain domain	Regular expression describing the domain to
+				which the authetication information will be
+				sent (default: $_trusted).
+	-y/--proxy proxy	Specify an HTTP proxy server.
 	-c/--chunk-size size	Size of the blocks parsed (default: $_chunksize).
 	-h/--html		HTML output.
 	--help			Show this message.
@@ -376,6 +385,9 @@ sub get_uri() {
     my $ua = new W3C::UserAgent;
     $ua->timeout($_timeout);
     $ua->agent('W3Cchecklink/'.$REVISION.' '.$ua->agent());
+    if ($_http_proxy) {
+        $ua->proxy('http', 'http://'.$_http_proxy);
+    }
     $ua->{uri} = $uri;
     $ua->{fetching} = $uri;
     if (defined($redirects)) {
@@ -389,8 +401,14 @@ sub get_uri() {
     my $request = new HTTP::Request($method, $uri);
     # Are we providing authentication info?
     if (defined($tested)
-        && ($request->url->netloc =~ /$_trusted$/) && defined($ENV{HTTP_AUTHORIZATION})) {
-        $request->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
+        && ($request->url->netloc =~ /$_trusted$/)) {
+        if (defined($ENV{HTTP_AUTHORIZATION})) {
+            $request->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION});
+        } elsif (defined($_user) && defined($_password)) {
+            use MIME::Base64;
+            my $authorization = encode_base64($_user.':'.$_password);
+            $request->headers->header(Authorization => 'Basic '.$authorization);
+        }
     }
     # Do the query
     $response = $ua->request($request);
@@ -403,7 +421,8 @@ sub get_uri() {
     }
     # Authentication requested?
     if (($response->code() == 401)
-        && defined($ENV{HTTP_AUTHORIZATION})
+        && (defined($ENV{HTTP_AUTHORIZATION})
+            || (defined($_user) && defined($_password)))
         && !defined ($tested)) {
         # Deal with authentication and avoid loops
         if (! defined ($realm)) {
