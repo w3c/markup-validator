@@ -4,7 +4,7 @@
   Copyright © 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
   See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-  $Id: base.css,v 1.17 2001-09-24 10:05:41 link Exp $
+  $Id: base.css,v 1.18 2001-09-25 01:06:22 link Exp $
 */
 
 @import url(non-netscape.css);
@@ -107,13 +107,13 @@ h1	{
 	font-family:	Tahoma, Verdana, Myriad Web, Syntax, sans-serif;
 	font-size-adjust:	.53;
 	font-size:	2em;
-	font-weight:	500;
+	font-weight:	bold;
 	font-style:	normal;
 	text-decoration:	none;
 	word-spacing:	normal;
 	letter-spacing:	normal;
 	text-transform:	none;
-	color: RGB(0,90,156);
+	color: #005A9C;
 	}
 		
 h2	{	
