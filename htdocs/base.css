@@ -4,7 +4,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.28 2002-12-02 02:52:53 link Exp $
+   $Id: base.css,v 1.29 2002-12-08 01:46:44 link Exp $
 */
 
 @import url(results.css); /* CSS for validation results. */
@@ -211,17 +211,6 @@ h6 {
   text-transform: none;
 }
 
-/* comma tools table */
-
-td.comma-desc { background: #ffeecc;  
-border : 1px solid black;
-font-family: sans-serif }
-td.comma-shortcut { background: #e7e7ff; 
-border : 1px solid black;
-font-family: monospace }
-td.comma-tool { background: #e7e7ff;  border : 1px solid black;}
-
-
 /* documentation - table of contents */
 #toc {	
   border-bottom : 2px dotted black;
@@ -257,3 +246,30 @@ input.default {
   font-family: monospace;
 }
 
+/* comma tools table */
+
+td.comma-desc { background: #ffeecc;  
+border : 1px solid black;
+font-family: sans-serif }
+td.comma-shortcut { background: #e7e7ff; 
+border : 1px solid black;
+font-family: monospace }
+td.comma-tool { background: #e7e7ff;  border : 1px solid black;}
+
+
+/* config param table */
+
+table.config tr th {
+  text-align: left;
+  background: #e7e7ff;
+}
+table.config tr td {
+  background: #ffeecc;  
+  border : 1px solid black;
+  font-family: sans-serif;
+}
+
+table.config tr td.subtable {
+  background: white;
+  border: none;
+}

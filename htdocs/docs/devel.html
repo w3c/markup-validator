@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: devel.html,v 1.11 2002-12-01 13:40:33 link Exp $"
---><!--#set var="date" value="\$Date: 2002-12-01 13:40:33 $"
+<!--#set var="revision" value="\$Id: devel.html,v 1.12 2002-12-08 01:46:44 link Exp $"
+--><!--#set var="date" value="\$Date: 2002-12-08 01:46:44 $"
 --><!--#set var="title" value="Developer Documentation for The W3C MarkUp Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -36,7 +36,7 @@
         can be found on <a href="http://www.cpan.org/">CPAN</a> (minimum
         versions in parenthesis after the name). The following
         list was complete when CVS spit out:
-        <code>$Date: 2002-12-01 13:40:33 $</code>. <tt>:-)</tt>
+        <code>$Date: 2002-12-08 01:46:44 $</code>. <tt>:-)</tt>
       </p>
       <dl>
         <dt><code>CGI (2.81)</code></dt>
@@ -82,31 +82,101 @@
         here is a short description to get you started.
       </p>
       <dl>
+        <dt>validator.conf</dt>
+        <dd>
+          Main configuration file. Gives various parameters (such as the
+          address of the maintainer and the URL for the "Home Page") and
+          the locations of the other configuration files and mapping tables.
+        </dd>
+        <dt>types.conf</dt>
+        <dd>
+          <p>
+	    The main document type database for the Validator. This file
+            contains information on all the document types we know of. It
+            lets us map from a Public Identifier to a plain text version
+            string, lookup an URL for more information on a DOCTYPE, and
+            check which Content-Types and Namespaces are legal for this
+            particular DOCTYPE.
+          </p>
+          <p>And entry in this file looks like this:</p>
+<pre>
+&lt;XHTML_1_1&gt;
+  Name       = html
+  Display    = XHTML 1.1
+  Info_URL   = http://www.w3.org/TR/xhtml11/
+  PubID      = -//W3C//DTD XHTML 1.1//EN
+  SysID      = http://www.w3.org/TR/2001/REC-xhtml11-20010531/DTD/xhtml11-flat.dtd
+  Parse_Mode = XML
+  &lt;Content_Types&gt;
+    Allowed   = application/xhtml+xml
+    Forbidden = text/html
+    Preferred = application/xhtml+xml
+  &lt;/Content_Types&gt;
+  &lt;Namespaces&gt;
+    Allowed   = http://www.w3.org/1999/xhtml
+    Required  = 1
+  &lt;/Namespaces&gt;
+  &lt;Badge&gt;
+    URI    = http://www.w3.org/Icons/valid-xhtml11
+    Height = 31
+    Width  = 88
+  &lt;/Badge&gt;
+&lt;/XHTML_1_1&gt;
+</pre>
+          <p>
+            The name used for each section (e.g. "XHTML_1_1") is arbitrary.
+            The file will be turned inside out and will end up indexed by
+            the "PubID". This means that you cannot have two entries with
+            the same PubID. The rest of the parameters are:
+          </p>
+          <table class="config">
+            <tr><th>Name</th><td>The "Document Type Name" for this document type.</td></tr>
+	    <tr><th>Display</th><td>The pretty text version for the PubID.</td></tr>
+	    <tr><th>Info_URL</th><td>URL for more information on the PubID.</td></tr>
+            <tr><th>PubID</th><td>The Formal Public Identifier for this document type.</td></tr>
+	    <tr><th>SysID</th><td>A System Identifier for the DTD.</td></tr>
+	    <tr><th>Parse_Mode</th><td>Boolean describing whether to treat this as XML or SGML.</td></tr>
+	    <tr>
+	      <th>Content_Types</th>
+              <td class="subtable">
+	        <table>
+	          <tr><th>Allowed</th><td>Allowed Content-Types</td></tr>
+	          <tr><th>Forbidden</th><td>Forbidden Content-Types</td></tr>
+	          <tr><th>Preferred</th><td>Preferred Content-Types</td></tr>
+	        </table>
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>Namespaces</th>
+	      <td class="subtable">
+	        <table>
+	          <tr><th>Allowed</th><td>Allowed Namespaces</td></tr>
+	          <tr><th>Required</th><td>Boolean describing whether a Namespace is required in this document type.</td></tr>
+	        </table>
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>Badge</th>
+	      <td class="subtable">
+	        <table>
+	          <tr><th>URI</th><td>URI for a "Valid Foo" badge.</td></tr>
+	          <tr><th>Height</th><td>Height of this image.</td></tr>
+	          <tr><th>Width</th><td>Width of this image.</td></tr>
+	        </table>
+	      </td>
+	    </tr>
+          </table>
+        </dd>
         <dt>eref.cfg</dt>
         <dd>
           Contains the mappings from element names to an URI fragment
           (relative to a configurable URI) for their definitions. Used
           in output when the "Show Source Input" option is enabled.
         </dd>
-        <dt>fpis.cfg</dt>
-        <dd>
-          Maps FPIs to plain text version strings.
-        </dd>
         <dt>frag.cfg</dt>
         <dd>
           Maps error messages to an URI fragment identifier where an
           explanation of that error can be found.
-        </dd>
-        <dt>type.cfg</dt>
-        <dd>
-          Maps MIME/HTTP Content-Types to an internal "document type" which
-          is used for treating HTML, XML, and XHTML in different ways.
-        </dd>
-        <dt>check.cfg</dt>
-        <dd>
-          Main configuration file. Gives various parameters (such as the
-          address of the maintainer and the URL for the "Home Page") and
-          the locations of the other configuration files and mapping tables.
         </dd>
        </dl>
     </div>
