@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.378 2005-02-04 13:20:31 link Exp $
+# $Id: check,v 1.379 2005-02-04 16:36:49 link Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -222,7 +222,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.378 $;
+  $VERSION    =  q$Revision: 1.379 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -945,6 +945,10 @@ sub prep_template ($$) {
   # The URI...
   $T->param(file_uri => $File->{URI});
   $T->param(file_uri_param => uri_escape($File->{URI}));
+
+  #
+  # Set URL for page title.
+  $T->param(page_title_url => $File->{URI});
 
   #
   # Metadata...
