@@ -8,7 +8,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.78 2001-02-21 08:56:32 link Exp $
+# $Id: check,v 1.79 2001-03-05 03:30:26 link Exp $
 
 #
 # We need Perl 5.004.
@@ -74,9 +74,9 @@ my $element_ref = 'http://www.htmlhelp.com/reference/html40/';
 
 #
 # Strings
-$VERSION    =  q$Revision: 1.78 $;
+$VERSION    =  q$Revision: 1.79 $;
 $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
-$DATE       =  q$Date: 2001-02-21 08:56:32 $;
+$DATE       =  q$Date: 2001-03-05 03:30:26 $;
 $MAINTAINER =  'gerald@w3.org';
 my $notice  =  ''; # "<p><strong>Note: This service will be ...</strong>";
 
@@ -388,6 +388,7 @@ if (   $File->{Charset} eq 'utf-8'
     or $File->{Charset} eq 'unknown') {
   for (@{$File->{Content}}) {print CHECKER $_, "\n"};
 } else {
+  $File->{Charset} =~ s/^windows-(\d+)$/CP$1/i;
   eval {my $c = Text::Iconv->new($File->{Charset}, 'utf-8')};
   if (not $@) {
     my $c = Text::Iconv->new($File->{Charset}, 'utf-8');
