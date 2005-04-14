@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.67 2005-02-16 23:29:15 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-02-16 23:29:15 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.68 2005-04-14 06:41:57 ot Exp $"
+--><!--#set var="date" value="\$Date: 2005-04-14 06:41:57 $"
 --><!--#set var="title" value="The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -15,7 +15,15 @@
 
     <div>
       <h2>Validate Your Markup</h2>
-      <fieldset class="front"><legend>Validate by URL</legend>
+      
+            <p class="navigate">
+        Validate your documents: 
+	<a href="#validate-by-uri">by URI</a> |
+        <a href="#validate-by-upload">by File Upload</a> |
+        <a href="#validate-by-input">by direct Input</a>
+      </p>
+      
+      <fieldset class="front" id="validate-by-uri"><legend>Validate by URL</legend>
       <form method="get" action="check">
         <p>
           <label title="Address of page to Validate" for="uri">Address:
@@ -31,7 +39,7 @@
       </p>
       </fieldset>
 	<br />
-      <fieldset class="front"><legend>Validate by File Upload</legend>
+      <fieldset class="front" id="validate-by-upload"><legend>Validate by File Upload</legend>
       <form method="post" enctype="multipart/form-data" action="check">
         <p>
           <label title="Choose a Local File to Upload and Validate" for="uploaded_file">Local File:
@@ -50,6 +58,22 @@
       <a href="http://www.w3.org/QA/2005/01/Validator-IE_WinXP_SP2">information page</a> 
       on the W3C QA Website.</p>
       </fieldset>
+    <br />
+    <fieldset class="front" id="validate-by-input"><legend>Validate by Direct Input</legend>
+    <form method="post" enctype="multipart/form-data" action="check">
+    <p>Input the markup you would like to validate in the text area below:</p>
+    <p>
+      <label title="Paste a complete (HTML) Document here" for="fragment">
+      <textarea cols="75" rows="12" name="fragment"></textarea></label><br />
+      <label title="Submit markup for validation"><input type="submit" value="Check" /></label>
+    </p>
+    </form>
+    <p>Only complete documents (along with a 
+    <a href="docs/help.html#faq-doctype">Doctype declaration</a>) will be validated.
+    Advanced options are available from the 
+    <a href="fragment-upload.html">Extended Direct Input Interface</a>.</p>
+    </fieldset>
+
     </div>
 
     <div id="recent">
