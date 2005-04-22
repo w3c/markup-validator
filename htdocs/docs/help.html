@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: help.html,v 1.21 2005-01-19 08:16:48 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-01-19 08:16:48 $"
+<!--#set var="revision" value="\$Id: help.html,v 1.22 2005-04-22 00:26:27 ot Exp $"
+--><!--#set var="date" value="\$Date: 2005-04-22 00:26:27 $"
 --><!--#set var="title" value="Help for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -93,6 +93,7 @@ mailing-list.</p>
 		<a href="#faq-referer">/check/referer does not work</a> or the validator says it does not support 
 		my <a href="#faq-referer">"undefined" URL scheme</a>
 	</li>
+	<li><a href="#faq-batchvalidation">Can the validator check all the pages in my site in one batch?</li>
    </ol>
    </li>
 </ol>
@@ -476,6 +477,12 @@ of WDG's excellent
 	<li>If you have no control over the page or annoying software, simply append the address of the page you wanted validated
 	to the <code>http://validator.w3.org/check?uri=</code> address.</li>
      </ul>
+  <h4 id="faq-batchvalidation">Can the validator check all the pages in my site in one batch?</h4>
+    <p>At the moment, the Markup Validator does not have a batch, or recursive, validation feature.
+    As an alternative, the W3C maintains the <a href="http://www.w3.org/QA/Tools/LogValidator/">LogValidator</a>, 
+    a software tool that interacts with the validator to check the log of your Web site (or any list of URLs) 
+    and reports a list of the most popular invalid documents.</p>
+    <p>The <a href="http://www.htmlhelp.com/validator/">WDG Validator</a> also does recursive validation.</p>
 </div>
 </div>
 <!--#include virtual="../footer.html" -->
