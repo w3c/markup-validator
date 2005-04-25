@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.33 2004-09-15 18:20:28 ville Exp $"
---><!--#set var="date" value="\$Date: 2004-09-15 18:20:28 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.34 2005-04-25 05:12:22 ot Exp $"
+--><!--#set var="date" value="\$Date: 2005-04-25 05:12:22 $"
 --><!--#set var="title" value="Source Code Availability for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -47,10 +47,10 @@
           </p>
           <p>
             The most interesting files are currently
-            <a href="http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/check?only_with_tag=validator-0_6_0-branch">a
+            <a href="http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/check">a
               CGI script called "check"</a> that does pretty much everything,
             and possibly also <a
-              href="http://dev.w3.org/cvsweb/validator/httpd/conf/httpd.conf?only_with_tag=validator-0_6_0-branch">the
+              href="http://dev.w3.org/cvsweb/validator/httpd/conf/httpd.conf">the
               httpd.conf configuration file snippet for Apache</a>.
             Select the topmost revision numbers on these
             pages to see the most recent revision of each file.
@@ -100,25 +100,26 @@
         <h4><a name="deb" id="deb"></a>Debian package</h4>
           <p>
             A Debian package is available, courtesy of Fr&eacute;d&eacute;ric
-            Sch&uuml;tz. The latest version is available for the Debian Woody
-            (current stable), Sarge (current testing) or Sid (unstable)
-            distributions at
-            &lt;<a href="http://www.mathgen.ch/debian/">http://www.mathgen.ch/debian/</a>&gt;.
-            If you want to use the <kbd>apt-get</kbd> command, add the line
-            <kbd>deb http://www.mathgen.ch/debian/woody ./</kbd>
-            in the /etc/apt/sources.list file (replace woody by testing or sid
-            if you use another distribution). All dependencies that are not
-            part of the standard Debian archive are provided at the same
-            address, and running the command <kbd>apt-get install
-            w3c-markup-validator</kbd> as root will install all the packages
-            needed.
+            Sch&uuml;tz. 
           </p>
-          <p>
+          <ul>
+            <li>
             If you are using the Debian Testing or Unstable distribution, the
             package is already included in the offical archive and you can
             directly use the <kbd>apt-get</kbd> command if your
             /etc/apt/sources.list file is correctly configured.
+            </li>
+            <li>
+            If you are using the stable (woody) Debian distribution, add the 
+            following line in the /etc/apt/sources.list file.
+            <pre><kbd>deb http://www.mathgen.ch/debian/woody ./</kbd></pre>
+            </li>
+          </ul>
+          <p>
+            Running the command <kbd>apt-get install w3c-markup-validator</kbd> 
+            as root will then install all the packages needed.
           </p>
+
         <h4><a id="CVS" name="CVS"></a>CVS repository</h4>
           <p>
             If you intend to actively mirror the code and/or contribute
@@ -146,9 +147,9 @@
     ...
           </pre>
           <p>
-            This will get you the current release version. For intermediate
-            updates, use the <code>validator-0_6_0-branch</code> branch tag
-            instead. Major new development is done in <code>HEAD</code> and
+            This will get you the last release version. use <kbd>cvs get validator</kbd>
+            to retrieve the <code>HEAD</code>. Be aware that constant development is made
+            on this latest version, and
             the trunk is more or less guaranteed to be in a state of greater
             or lesser breakage at any given point in time. <em>Approach with
             caution!</em>
