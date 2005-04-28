@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.414 2005-04-09 17:31:42 ville Exp $
+# $Id: check,v 1.415 2005-04-28 06:13:22 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -220,7 +220,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.414 $;
+  $VERSION    =  q$Revision: 1.415 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -595,6 +595,10 @@ sub parse (\$) {
   #
   # By default, use SGML catalog file and SGML Declaration.
   my $catalog  = File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'sgml.soc');
+  #
+  # Note: if you feel the urge to remove -R from here, please understand that
+  # doing so opens a potential security hole.  Don't do that; instead just
+  # make sure you're running OpenSP 1.5 or later.
   my @spopt = qw(
                  -R
                  -wvalid

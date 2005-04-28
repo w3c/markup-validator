@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.10 2005-01-09 19:46:19 ville Exp $"
---><!--#set var="date" value="\$Date: 2005-01-09 19:46:19 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.11 2005-04-28 06:13:22 ville Exp $"
+--><!--#set var="date" value="\$Date: 2005-04-28 06:13:22 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -78,6 +78,10 @@
         The SGML parser we're currently using is <code>OpenSP 1.5</code>,
         which can be found on the
         <a href="http://openjade.sourceforge.net/">OpenJade home page</a>.
+        Do <em>not</em> try to run the Validator with an earlier than 1.5
+        version of OpenSP.  It will not work.  If one hacks it to "work"
+        with such a version, a potential security hole will also open.
+        Just use OpenSP 1.5 or later.
       </p>
 
       <h5>Perl Modules</h5>
@@ -89,7 +93,7 @@
             title="Comprehensive Perl Archive Network">CPAN</acronym></a>
         (minimum versions in parenthesis after the name). The following
         list was complete when CVS spit out:
-        <code>$Date: 2005-01-09 19:46:19 $</code>. <tt>:-)</tt>
+        <code>$Date: 2005-04-28 06:13:22 $</code>. <tt>:-)</tt>
       </p>
      <p>
        One easy - and strongly recommended - way to take care of all these
