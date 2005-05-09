@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.416 2005-05-09 05:51:33 ot Exp $
+# $Id: check,v 1.417 2005-05-09 08:55:31 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -220,7 +220,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.416 $;
+  $VERSION    =  q$Revision: 1.417 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -935,6 +935,14 @@ sub prep_template ($$) {
   #
   # Namespaces...
   $T->param(file_namespace  => $File->{Namespace});
+  my %seen_ns = ();
+  my @bulk_ns =  @{$File->{Namespaces}};
+  $File->{Namespaces} = []; # reinitialize the list of non-root namespaces
+  my  $single_namespace;
+  # ... and then get a uniq version of it
+  foreach $single_namespace (@bulk_ns) {
+     push(@{$File->{Namespaces}}, $single_namespace) unless $seen_ns{$single_namespace}++;
+  }
   my @nss                   =  map({uri => $_}, @{$File->{Namespaces}});
   $T->param(file_namespaces => \@nss) if @nss;
   
