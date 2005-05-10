@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.24 2005-03-01 16:47:14 ot Exp $ */
+/* $Id: results.css,v 1.25 2005-05-10 07:13:44 ot Exp $ */
 
 .input {
   color: black;
@@ -45,6 +45,10 @@ fieldset table.header {
 */
 .msg {
   font-weight: bold;
+}
+
+span.msg_info { /* these messages are not errors */
+  font-weight: normal;  
 }
 
 .ve {

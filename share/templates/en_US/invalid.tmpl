@@ -18,7 +18,7 @@
       <li>
         <em>Line <a href="#line-<TMPL_VAR NAME="line" ESCAPE="HTML">"><TMPL_VAR NAME="line" ESCAPE="HTML"></a>,
             column <TMPL_VAR NAME="char" ESCAPE="HTML"></em>:
-        <span class="msg"><TMPL_VAR NAME="msg" ESCAPE="HTML"></span>
+        <span class="msg<TMPL_IF NAME="class"> <TMPL_VAR NAME="class"></TMPL_IF>"><TMPL_VAR NAME="msg" ESCAPE="HTML"></span>
 <TMPL_IF NAME="uri">(<a href="<TMPL_VAR NAME="uri" ESCAPE="HTML">">explain...</a>)</TMPL_IF>.
 <pre><code class="input"><TMPL_VAR NAME="src"></code></pre>
 <TMPL_IF NAME="expl"><TMPL_VAR NAME="expl"></TMPL_IF>
@@ -29,7 +29,7 @@
       <li>
         <em>Line <TMPL_VAR NAME="line" ESCAPE="HTML">
             column <TMPL_VAR NAME="char" ESCAPE="HTML"></em>:
-        <span class="msg"><TMPL_VAR NAME="msg" ESCAPE="HTML"></span>
+        <span class="msg<TMPL_IF NAME="class"> <TMPL_VAR NAME="class"></TMPL_IF>"><TMPL_VAR NAME="msg" ESCAPE="HTML"></span>
 <TMPL_IF NAME="uri">(<a href="<TMPL_VAR NAME="uri" ESCAPE="HTML">">explain...</a>)</TMPL_IF>.
 <pre><code class="input"><TMPL_VAR NAME="src"></code></pre>
 <TMPL_IF NAME="expl"><TMPL_VAR NAME="expl"></TMPL_IF>

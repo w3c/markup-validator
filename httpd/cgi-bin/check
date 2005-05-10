@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.417 2005-05-09 08:55:31 ot Exp $
+# $Id: check,v 1.418 2005-05-10 07:13:43 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -220,7 +220,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.417 $;
+  $VERSION    =  q$Revision: 1.418 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1507,6 +1507,11 @@ sub report_errors ($) {
       $err->{src} = $line;
       $err->{col} = ' ' x $col;
       $err->{expl} = $explanation;
+      if ($err->{type} eq 'I') 
+      {
+        $err->{class} = 'msg_info';
+      }
+      # TODO other classes for "W", "E" etc?
 
       push @{$Errors}, $err;
     }
