@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.50 2005-05-09 02:07:45 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-05-09 02:07:45 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.51 2005-05-10 05:30:31 ot Exp $"
+--><!--#set var="date" value="\$Date: 2005-05-10 05:30:31 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -74,14 +74,9 @@
       <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict-minimal.html;ss">validate</a> - 
       <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict-minimal.html;ss">with v.w.o</a> - 
       <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict-minimal.html">view</a>:
-      XHTML 1.0 Strict from XHTML Spec
-    <br />
-      
-      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict-missing-xmlns.html;ss">validate</a> - 
-      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict-missing-xmlns.html;ss">with v.w.o</a> -
-      <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict-missing-xmlns.html">view</a>:
-      XHTML 1.0 Strict missing xmlns attribute (valid)
+      XHTML 1.0 Strict (from XHTML Spec)
     </li>
+
     <li>
       <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-basic10.html;ss">validate</a> - 
       <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-basic10.html;ss">with v.w.o</a> - 
@@ -133,24 +128,57 @@
       XHTML + MathML + SVG 
       (from the 9 August 2002 WD)
     </li>
+
+  </ul>
+
+<h4>Document types outside the main catalogue</h4>
+<p>Below is a number of other types of documents that the validator does not have in its "hardcoded" catalogue, but should support anyway.
+All these documents should validate, without "pretty print" for the document type</p>
+
+<ul>
 	<li>
       <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/sgml_customdtd.html">validate</a> -
       <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/sgml_customdtd.html">with v.w.o</a> - 
       <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/sgml_customdtd.html">view</a>:
 	  HTML4.0 plus blink ("Custom" SGML DTD)
     </li>
-  </ul>
+    <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/rddl_fpi.xhtml">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/rddl_fpi.xhtml">with v.w.o</a> - 
+      <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/rddl_fpi.xhtml">view</a>:
+      RDDL (with FPI)
+    </li>
+    <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/rddl_si.xhtml">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/rddl_si.xhtml">with v.w.o</a> - 
+      <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/rddl_si.xhtml">view</a>:
+      RDDL (no FPI)
+    </li>
+    <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-print_1_0.xhtml">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-print_1_0.xhtml">with v.w.o</a> - 
+      <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-print_1_0.xhtml">view</a>:
+      XHTML-Print (not yet a REC)
+    </li>
+</ul>
 
-      <h3 id="invalid">Docs that are probably invalid</h3>
+
+
+
+
+  <h3 id="invalid">Docs that are probably invalid</h3>
       <p><strong>we must FIX THIS!</strong> It's not reliable any more...</p>
+      
+      
       <ul>
-	<li><a href="../../check?uri=http://www.yahoo.com/">Yahoo!</a></li>
+
+    	<li><a href="../../check?uri=http://www.yahoo.com/">Yahoo!</a></li>
 	<li><a href="../../check?uri=http://www.microsoft.com/">Microsoft</a></li>
 	<li><a href="../../check?uri=http://www.netscape.com/">Netscape</a></li>
         <li><a href="../../check?uri=http://www.w3.org/TR/1998/REC-xml-19980210.xml">XML 1.0</a></li>
       </ul>
 
-      <h3 id="well-formed">Docs that should be Well Formed</h3>
+  <h3 id="well-formed">Docs that should be Well Formed</h3>
       <ul>
         <li><a href="../../check?uri=http://www.w3.org/Protocols/rfc2616/rfc2616.html">XHTML sans DOCTYPE</a> (DanC's HTMLized RFC 2616;well-formed, but not valid!)</li>
         <li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-mathml2.html;ss">XHTML/MathML2</a>
@@ -175,19 +203,7 @@
       <p>This should be split in UI testing and regression tests</p>
       
       <ul>
-	<li><a href="../../check/referer">/check/referer</a> (deprecated)</li>
-	<li><a href="../../check/referer;verbose=1">/check/referer;verbose=1</a> (unsupported)</li>
-	<li><a href="../../check/referer;verbose=1;No200=1">/check/referer;verbose=1;No200=1</a> (unsupported)</li>
-	<li><a href="../../check?uri=referer">/check?uri=referer</a></li>
-	<li><a href="../../check?uri=referer;verbose=1">/check?uri=referer;verbose=1</a></li>
-	<li><a href="../../check?uri=referer;verbose=1;No200=1">/check?uri=referer;verbose=1;No200=1</a></li>
-	<li><a href="../../check?uri=http://www.w3.org/MarkUp">Directory Redirect</a></li>
-	<li><a href="../../check">script invoked with no parameters</a></li>
-	<li><a href="../../check?uri=">uri parameter is empty</a></li>
-	<li><a href="../../check?uri=www.w3.org/">uri is missing http://</a></li>
-	<li><a href="../../check?uri=http://www.w3.org/bogus">404 not found</a></li>
-	<li><a href="../../check?uri=http://validator.w3.org/sgml-lib/catalog">text/plain</a></li>
-	<li><a href="../../check?uri=http://validator.w3.org:8000/">httpd on a non-standard port</a></li>
+
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.html;ss">XHTML, no DOCTYPE, no xmlns</a> (invalid)</li>
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi.html;ss">bogus FPI #1: lowercase "doctype".</a></li>
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi2.html;ss">bogus FPI #2: HTML 4.01 "Strict"</a></li>
@@ -207,7 +223,86 @@
       </ul>
  
       <h3 id="ui">User Interface tests</h3>
-      <p>TBD</p>
+      <p>The following tests do not test the binary "validity" results, but the proper handling of options, errors, various outputs, etc. 
+      "validate" links use this instance, with validator.w3.org links added for reference comparison</p>
+<ul>
+	<li>
+	  <a href="../../check/referer">validate</a> - 
+	  <a href="http://validator.w3.org/check/referer">with v.w.o</a> - 
+	  /check/referer (deprecated)
+	</li>
+	<li>
+	  <a href="../../check/referer;verbose=1">validate</a> - 
+	  <a href="http://validator.w3.org/check/referer;verbose=1">with v.w.o</a> - 
+	  /check/referer;verbose=1 (unsupported)
+	</li>
+	<li>
+	  <a href="../../check/referer;verbose=1;No200=1">validate</a> - 
+	  <a href="http://validator.w3.org/check/referer;verbose=1;No200=1">with v.w.o</a> -
+	  /check/referer;verbose=1;No200=1 (unsupported)
+	</li>
+	<li>
+	  <a href="../../check?uri=referer">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=referer">with v.w.o</a> -
+	  /check?uri=referer (supported, should validate this test collection)
+	</li>
+	<li>
+	  <a href="../../check?uri=referer;verbose=1">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=referer;verbose=1">with v.w.o</a> - 
+	  /check?uri=referer;verbose=1 (supported, should validate this test collection)
+	</li>
+	<li>
+	  <a href="../../check?uri=referer&amp;verbose=1">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=refererr&amp;verbose=1">with v.w.o</a> - 
+	  /check?uri=refererr&amp;verbose=1 (supported, should validate this test collection)
+	</li>
+	<li>
+	  <a href="../../check?uri=referer;verbose=1;No200=1">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=referer;verbose=1;No200=1">with v.w.o</a> - 
+	  /check?uri=referer;verbose=1;No200=1 (supported, should validate this test collection)
+	</li>
+	<li>
+	  <a href="../../check?uri=http://www.w3.org/MarkUp">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=http://www.w3.org/MarkUp">with v.w.o</a> - 
+	  Directory Redirect (should mention the redirect and validate the redirection target
+	</li>
+	<li>
+	  <a href="../../check">validate</a> - 
+	  <a href="http://validator.w3.org/check">with v.w.o</a> - 
+	  script invoked with no parameters (gives an error)
+	</li>
+	<li>
+	  <a href="../../check?uri=">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=">with v.w.o</a> - 
+	  uri parameter is empty
+	</li>
+	<li>
+	  <a href="../../check?uri=www.w3.org/">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=www.w3.org/">with v.w.o</a> - 
+	  uri is missing http:// (silent fix)
+	</li>
+	<li>
+	  <a href="../../check?uri=http://www.w3.org/bogus">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=http://www.w3.org/bogus">with v.w.o</a> - 
+	  404 not found
+	</li>
+	<li>
+	  <a href="../../check?uri=http://www.w3.org/bogus;no200=1">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=http://www.w3.org/bogus;no200=1">with v.w.o</a> - 
+	  404 not found, with "validate error pages" ON 
+	</li>
+	<li>
+	  <a href="../../check?uri=http://validator.w3.org/sgml-lib/catalog">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=http://validator.w3.org/sgml-lib/catalog">with v.w.o</a> - 
+	  text/plain resource (refuses to validate)
+	</li>
+	<li>
+	  <a href="../../check?uri=http://validator.w3.org:8000/">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=http://validator.w3.org:8000/">with v.w.o</a> - 
+	  httpd on a non-standard port (should be working transparently if :8000 server is running)
+	</li>
+
+</ul>
 
       <h3  id="regress">Bugs and Regression Tests</h3>
       <p>These should be tied to a bug report on either mailing-list and/or bugzilla whenever possible.</p>
@@ -217,6 +312,20 @@
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/trailing-nul.html">A trailing ASCII NUL character</a> (trips up HTML::Parser (not really))</li>
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/colons.html">Undeclared namespace prefixes</a> (colons ":" in element names (trips up parsing of onsgmls output))</li>
       </ul>
+
+
+<h3>Mixed bag</h3>
+<p>Don't know where to put these yet</p>
+
+<ul>
+    <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict-missing-xmlns.html;ss">validate</a> - 
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict-missing-xmlns.html;ss">with v.w.o</a> -
+      <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict-missing-xmlns.html">view</a>:
+      XHTML 1.0 Strict missing xmlns attribute (valid)
+    </li>
+
+</ul>
 
     <div id="suites">
       <h2>Other Test Suites</h2>
