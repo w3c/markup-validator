@@ -4,7 +4,7 @@
    Copyright 2000-2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.48 2005-03-11 02:37:39 ot Exp $
+   $Id: base.css,v 1.49 2005-05-11 05:52:29 ot Exp $
 */
 
 @import url("results.css"); /* CSS for validation results. */
@@ -30,7 +30,7 @@ p#msie { /* msie-bug note for text/plain */
    General styling 
                    */
 html {
-    background-image:url(images/bg1.gif);
+    background: #fffaf5;
 }
 
 body {  
@@ -44,6 +44,7 @@ body {
     color: #11111A;
     font-family: Helvetica, Arial, sans-serif;
     font-size: 1em; /* setting base font to user's prefered size */
+    line-height: 130%;
 }
 
 /*                                                   
@@ -61,11 +62,8 @@ body {
     margin-bottom: 0;
     margin-top: 20px;
     margin-left: 42px;
-/*    width: 780px; */
-    border-bottom: 0;
-    border-top: 1px solid #E8E8FA;
-    border-left: 1px solid #E8E8FA;
-    border-right: 1px solid #E8E8FA;
+    border: 0;
+
 }
 
 #banner h1 { 
@@ -75,14 +73,19 @@ body {
     display: inline;
 }
 
+#main {
+    border-bottom: 0;
+    border-top: 0;
+    border-left: 1px solid #dfebf7;
+    border-right: 1px solid #dfebf7;
+}
 #main, address { 
     margin: 0;
     margin-left: 42px;
     padding: 15px;
     padding-left: 0;
     padding-right: 0;
-    background: white;
-    border: 1px solid #E8E8FA;
+/*    border: 1px solid #E8E8FA; */
 }
 
 address {
@@ -106,9 +109,6 @@ address img {
    width: 88px;
 }
 
-#main {
-    border-bottom: 0;
-}
 
 .intro {
   font-style: italic;
@@ -135,6 +135,7 @@ h2 {
     margin-bottom: 20px;
     font-size: 1.3em;
     text-decoration: none;
+    font-family: Georgia, Didot, serif;
 }
 
 h3 {
@@ -146,6 +147,7 @@ h3 {
     border-top: 1px dotted #f93;
     border-bottom: 1px dotted #f93;
     text-decoration: none;
+    font-family: Georgia, Didot, serif;
 } 
 
 h4 {
@@ -154,6 +156,7 @@ h4 {
     font-style: normal;
     text-decoration: none;
     font-size: 1.0em;
+    font-family: Georgia, Didot, serif;
 }
 
 /* 
@@ -259,15 +262,15 @@ p.copyright a {
 
 /* Fieldsets */
 fieldset {
-    background: #FCFCFC;
-    border: 1px dotted #f93;
+    background: white;
+    border: 1px dotted #005A9C;
     margin-left: 20px;
     margin-right: 20px;
 }
 
 fieldset legend {
     color: #C60;
-    background: #FCFCFC;
+    background: white;
     padding: .1ex .5ex;
     border-right: 1px solid gray;
     border-bottom: 1px solid gray;
