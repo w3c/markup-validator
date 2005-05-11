@@ -4,7 +4,7 @@
    Copyright 2000-2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: navbar.css,v 1.17 2005-02-16 03:50:27 ot Exp $
+   $Id: navbar.css,v 1.18 2005-05-11 05:56:07 ot Exp $
 */
 
 
@@ -19,9 +19,6 @@
         vertical-align: bottom;
         font-size: 0.9em;
         list-style-type: none;
-	border-left: 1px solid #E8E8FA;
-	border-right: 1px solid #E8E8FA;
-       
 }
 
 #menu li {
@@ -38,7 +35,7 @@
 
 /* Jump Bar  - results page*/
 #jumpbar {
-    background-color: white;
+    background-color: #dfebf7;
     float:            right;
     width: 8em;
     margin-right: 0; 
