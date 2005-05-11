@@ -4,7 +4,7 @@
    Copyright 2003 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See <http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright>
  
-   $Id: docs.css,v 1.5 2005-02-16 03:28:54 ot Exp $
+   $Id: docs.css,v 1.6 2005-05-11 05:53:41 ot Exp $
 */
 
 /*
@@ -24,9 +24,9 @@
 margin-right: 1em;
 }
 
-/* Set line height to 1.5x to allow for various inline decoration. */
+/* Set line height to 1.4x (from 1.3x on general site) to allow for various inline decoration. */
 .doc {
-  line-height: 115%; 
+  line-height: 140%; 
 }
 
 /* documentation - table of contents */
