@@ -4,7 +4,7 @@
    Copyright 2000-2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: navbar.css,v 1.18 2005-05-11 05:56:07 ot Exp $
+   $Id: navbar.css,v 1.19 2005-05-14 07:24:36 ot Exp $
 */
 
 
@@ -42,8 +42,8 @@
     text-align:       left;
     text-decoration:  none;
     padding:          1ex;
-    border-left:     1px solid black;
-    border-bottom:    1px solid black;
+    border-left:     1px solid #005A9C;
+    border-bottom:    1px solid #005A9C;
     margin-top:       -15px; 
     font-size: 0.9em;
     font-weight:      bold;

@@ -4,7 +4,7 @@
    Copyright 2000-2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.50 2005-05-12 08:39:57 ot Exp $
+   $Id: base.css,v 1.51 2005-05-14 07:24:36 ot Exp $
 */
 
 @import url("results.css"); /* CSS for validation results. */
@@ -81,6 +81,7 @@ body {
     border-top: 0;
     border-left: 1px solid #dfebf7;
     border-right: 1px solid #dfebf7;
+
 }
 #main, address { 
     background-color: white;
@@ -133,36 +134,43 @@ h1 {
 }
 
 h2 { 
-    color: #C60;
+    color: #777742;
+    background: white;
     padding: 5px 15px;
     margin-top: 20px;
     margin-bottom: 20px;
     font-size: 1.3em;
+    text-align: center;
     text-decoration: none;
     font-family: Georgia, Didot, serif;
 }
 
 h3 {
    /* color: #C65831; */
-    color: #c60;
+    color: #fff;
+    background-color: #aaaa77;
     font-size: 1.1em;
-    padding: 5px 15px;
-    background-color: #f6f6ff;
-    border-top: 1px dotted #f93;
-    border-bottom: 1px dotted #f93;
+    padding: 2px 15px;
+    border-top: 1px dotted #777742;
+    border-bottom: 1px dotted #777742;
     text-decoration: none;
     font-family: Georgia, Didot, serif;
 } 
 
 h4 {
-    color: #C60;
+    color: #777742;
     font-weight: 600;
-    font-style: normal;
+    font-style: italic;
     text-decoration: none;
     font-size: 1.0em;
     font-family: Georgia, Didot, serif;
 }
 
+h5,h6 {
+    color: #777742;
+    background-color: white;
+    font-family: Georgia, Didot, serif;
+    }
 /* 
    General link styling
                          */
@@ -273,7 +281,7 @@ fieldset {
 }
 
 fieldset legend {
-    color: #C60;
+    color: #777742;
     background: white;
     padding: .1ex .5ex;
     border-right: 1px solid gray;
