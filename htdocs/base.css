@@ -4,7 +4,7 @@
    Copyright 2000-2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.51 2005-05-14 07:24:36 ot Exp $
+   $Id: base.css,v 1.52 2005-05-16 04:29:10 ot Exp $
 */
 
 @import url("results.css"); /* CSS for validation results. */
@@ -274,15 +274,18 @@ p.copyright a {
 
 /* Fieldsets */
 fieldset {
+    padding: .5em;
     background: white;
-    border: 1px dotted #005A9C;
+    border: 1px dotted #aaaa77;
     margin-left: 20px;
     margin-right: 20px;
+    margin-top: .5em;
 }
 
 fieldset legend {
-    color: #777742;
-    background: white;
+    color: #fff;
+    background-color: #aaaa77;
+    font-size: smaller;
     padding: .1ex .5ex;
     border-right: 1px solid gray;
     border-bottom: 1px solid gray;
