@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.26 2005-05-11 05:53:41 ot Exp $ */
+/* $Id: results.css,v 1.27 2005-05-16 08:43:26 ot Exp $ */
 
 .input {
   color: black;
@@ -43,12 +43,34 @@ fieldset table.header {
 /* Error Messages Display */
 /*
 */
+
+li.msg_info span.err_type{
+  background-color: #888;
+  padding: .1em .5em;
+  color: white;
+  font-size: smaller;
+}
+
+li.msg_warn span.err_type{
+  padding: .1em .5em;
+  background-color: #FA9084;
+  color: #333;
+  font-size: smaller;
+}
+
+li.msg_err span.err_type{
+  padding: .1em .5em;
+  background-color: #D23D24;
+  color:white;
+  font-size: smaller;
+}
+
 .msg {
   font-weight: bold;
 }
 
-span.msg_info { /* these messages are not errors */
-  font-weight: normal;  
+li.msg_info span.msg { /* these messages are not errors */
+  font-weight: normal !important;  
 }
 
 .ve {
@@ -63,11 +85,16 @@ span.msg_info { /* these messages are not errors */
   text-align: justify;
 }
 
+/* no Helpwanted, hence giving it a bit of space instead */
+li.msg_info {
+  padding-bottom: 2em;
+}
+
 p.helpwanted {
   padding: 0;
   margin-left:  auto;
   margin-right: 5px;
-  margin-top: -2em;
+  /*margin-top: -2em;*/
   margin-bottom: 2em;
   font-size: x-small;
   color:        #888;
