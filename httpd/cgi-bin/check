@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.418 2005-05-10 07:13:43 ot Exp $
+# $Id: check,v 1.419 2005-05-16 08:41:46 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -220,7 +220,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.418 $;
+  $VERSION    =  q$Revision: 1.419 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -855,6 +855,7 @@ if ($File->{Opt}->{Output} eq 'xml') {
   if ($File->{'Is Valid'}) {
     $T->param(VALID => TRUE);
     $T->param(valid_status => 'Valid');
+    $T->param(file_errors => &report_errors($File));
     &report_valid($File, $T);
   } else {
     $T->param(VALID => FALSE);
@@ -1510,6 +1511,17 @@ sub report_errors ($) {
       if ($err->{type} eq 'I') 
       {
         $err->{class} = 'msg_info';
+        $err->{err_type_info} = 1;
+      }
+      elsif ($err->{type} eq 'E')
+      {
+        $err->{class} = 'msg_err';
+        $err->{err_type_err} = 1;
+      }
+      elsif ($err->{type} eq 'W')
+      {
+        $err->{class} = 'msg_warn';
+        $err->{err_type_warn} = 1;
       }
       # TODO other classes for "W", "E" etc?
 

@@ -12,33 +12,7 @@
       an SGML parser.
     </p>
 </TMPL_IF>
-    <ol>
-<TMPL_IF NAME="opt_show_source">
-  <TMPL_LOOP NAME="file_errors">
-      <li>
-        <em>Line <a href="#line-<TMPL_VAR NAME="line" ESCAPE="HTML">"><TMPL_VAR NAME="line" ESCAPE="HTML"></a>,
-            column <TMPL_VAR NAME="char" ESCAPE="HTML"></em>:
-        <span class="msg<TMPL_IF NAME="class"> <TMPL_VAR NAME="class"></TMPL_IF>"><TMPL_VAR NAME="msg" ESCAPE="HTML"></span>
-<TMPL_IF NAME="uri">(<a href="<TMPL_VAR NAME="uri" ESCAPE="HTML">">explain...</a>)</TMPL_IF>.
-<pre><code class="input"><TMPL_VAR NAME="src"></code></pre>
-<TMPL_IF NAME="expl"><TMPL_VAR NAME="expl"></TMPL_IF>
-      </li>
-  </TMPL_LOOP>
-<TMPL_ELSE>
-  <TMPL_LOOP NAME="file_errors">
-      <li>
-        <em>Line <TMPL_VAR NAME="line" ESCAPE="HTML">
-            column <TMPL_VAR NAME="char" ESCAPE="HTML"></em>:
-        <span class="msg<TMPL_IF NAME="class"> <TMPL_VAR NAME="class"></TMPL_IF>"><TMPL_VAR NAME="msg" ESCAPE="HTML"></span>
-<TMPL_IF NAME="uri">(<a href="<TMPL_VAR NAME="uri" ESCAPE="HTML">">explain...</a>)</TMPL_IF>.
-<pre><code class="input"><TMPL_VAR NAME="src"></code></pre>
-<TMPL_IF NAME="expl"><TMPL_VAR NAME="expl"></TMPL_IF>
-      </li>
-  </TMPL_LOOP>
 
-</TMPL_IF>
-    </ol>
-<TMPL_IF NAME="opt_verbose">
-    <script type="text/javascript" src="loadexplanation.js"></script>
-</TMPL_IF>
+<TMPL_INCLUDE NAME="error_loop.tmpl">
+
   </div>
