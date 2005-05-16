@@ -1,8 +1,22 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.68 2005-04-14 06:41:57 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-04-14 06:41:57 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.69 2005-05-16 04:30:39 ot Exp $"
+--><!--#set var="date" value="\$Date: 2005-05-16 04:30:39 $"
 --><!--#set var="title" value="The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
+
+     <div id="head">
+
+        <div id="jumpbar">
+        Validate:
+        <ul>
+          <li><a href="#validate-by-uri" title="validate an online document by entering their URL">by URL</a></li>
+          <li><a href="#validate-by-upload" title="validate a local document by uploading it to the validator">by File Upload</a></li>
+          <li><a href="#validate-by-input" title="validate a local document by pasting its source in a text field">by direct Input</a></li>
+        </ul>
+      </div>
+    
+                                                                                                       
+      </div><!-- end of "head" -->
 
 
     <div class="intro">
@@ -15,13 +29,6 @@
 
     <div>
       <h2>Validate Your Markup</h2>
-      
-            <p class="navigate">
-        Validate your documents: 
-	<a href="#validate-by-uri">by URI</a> |
-        <a href="#validate-by-upload">by File Upload</a> |
-        <a href="#validate-by-input">by direct Input</a>
-      </p>
       
       <fieldset class="front" id="validate-by-uri"><legend>Validate by URL</legend>
       <form method="get" action="check">
@@ -64,7 +71,7 @@
     <p>Input the markup you would like to validate in the text area below:</p>
     <p>
       <label title="Paste a complete (HTML) Document here" for="fragment">
-      <textarea cols="75" rows="12" name="fragment"></textarea></label><br />
+      <textarea cols="75" rows="12" name="fragment" id="fragment"></textarea></label><br />
       <label title="Submit markup for validation"><input type="submit" value="Check" /></label>
     </p>
     </form>
