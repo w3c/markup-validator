@@ -4,7 +4,7 @@
    Copyright 2000-2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.52 2005-05-16 04:29:10 ot Exp $
+   $Id: base.css,v 1.53 2005-05-17 05:46:58 ot Exp $
 */
 
 @import url("results.css"); /* CSS for validation results. */
@@ -43,7 +43,7 @@ body {
     background-position: 0 0;
     background-repeat: no-repeat;
     color: #11111A;
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: Helvetica, "Trebuchet MS", Arial, sans-serif;
     font-size: 1em; /* setting base font to user's prefered size */
     line-height: 130%;
 }
