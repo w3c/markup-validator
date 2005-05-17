@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.27 2005-05-16 08:43:26 ot Exp $ */
+/* $Id: results.css,v 1.28 2005-05-17 05:22:36 ot Exp $ */
 
 .input {
   color: black;
@@ -218,15 +218,9 @@ div#result {
   padding-top: 1em;
 }
 
-h2.valid, h2.invalid {
+h2.valid, h2.invalid, h2.tentative_valid {
     text-align: center;
     margin: 0;
-}
-
-
-.valid {
-  background:		#55B05A;
-  color:		white;
   font-family: "Bitstream Vera Sans", sans-serif;
   font-size-adjust:	.53;
   font-size:		1.5em;
@@ -241,60 +235,22 @@ h2.valid, h2.invalid {
   padding-bottom: 	.5em;
 }
 
-.valid a:link {
-  color:      yellow;
-  background: #053188;
+.valid {
+  background-color:	#55B05A;
+  color:		white;
 }
 
-.valid a:visited {
-  color: silver;
-  background: #053188;
+.tentative_valid {
+/* we could use a different color than for "valid" */
+/*  background-color:	#888; */
+/* ... or simply use the same */
+  background:           #55B05A;
+  color:		white;
 }
-
-.valid a:hover {
-  color: #053188;
-  background: #eee;
-}
-
-.valid a:active {
-  color: red;
-  background: yellow;
-}
-
 
 .invalid {
-  background:		#D23D24;
+  background-color:	#D23D24;
   color:		white;
-  font-family: "Bitstream Vera Sans", sans-serif;
-  font-size-adjust:	.53;
-  font-size:		1.5em;
-  font-weight:		500;
-  font-style:		normal;
-  text-decoration:	none;
-  word-spacing:		normal;
-  letter-spacing:	normal;
-  text-transform:	none;
-  border-color: 	black;
-  padding-top:		.5em;
-  padding-bottom: 	.5em;
-}
-
-.invalid a:link {
-  color: white;
-}
-
-.invalid a:visited {
-  color: white; 
-}
-
-.invalid a:hover {
-  color: #880531;
-  background: white;
-}
-
-.invalid a:active {
-  background: white;
-  color: red;
 }
 
 img.inline-badge {
