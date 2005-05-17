@@ -1,6 +1,6 @@
 <div id="result">
 <TMPL_IF NAME="is_tentative">
-  <h2 class="valid">This Page Is <em>Tentatively</em> Valid <TMPL_VAR NAME="file_version" ESCAPE="HTML"> (Tentatively Valid)!</h2>
+  <h2 class="tentative_valid">This Page Is <em>Tentatively</em> Valid <TMPL_VAR NAME="file_version" ESCAPE="HTML"></h2>
 <TMPL_ELSE>
   <h2 class="valid">This Page Is Valid <TMPL_VAR NAME="file_version" ESCAPE="HTML">!</h2>
 </TMPL_IF>
@@ -18,12 +18,22 @@
     The document located at
     &lt;<a href="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">"><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></a>&gt;
 </TMPL_IF>
+<TMPL_IF NAME="is_tentative">
+    was checked and found to be <em>tentatively</em> valid <TMPL_VAR NAME="file_version" ESCAPE="HTML">.
+    This means that with the use of some fallback or override mechanism, 
+    we successfully performed a formal validation using an SGML or XML 
+    Parser. In other words, the document would validate as 
+    <TMPL_VAR NAME="file_version" ESCAPE="HTML"> if you changed the markup
+    to match the changes we have performed automatically, but 
+    <strong>it will not be valid until you make these changes</strong>.
+<TMPL_ELSE>
     was checked and found to be valid
     <TMPL_VAR NAME="file_version" ESCAPE="HTML">.  This means that the
     resource in question identified itself as
     "<TMPL_VAR NAME="file_version" ESCAPE="HTML">" and that we successfully
     performed a formal validation using an SGML or XML Parser (depending on
     the markup language used).
+</TMPL_IF>
   </p>
 <TMPL_IF NAME="have_badge">
   <p>
