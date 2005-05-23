@@ -4,7 +4,7 @@
    Copyright 2000-2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.53 2005-05-17 05:46:58 ot Exp $
+   $Id: base.css,v 1.54 2005-05-23 22:00:32 ot Exp $
 */
 
 @import url("results.css"); /* CSS for validation results. */
@@ -224,7 +224,7 @@ abbr[title], acronym[title], span[title], strong[title] {
 }
 
 pre, code, tt {
-    font-family: "Bitstream Vera Sans Mono", monospace;
+    font-family: "Bitstream Vera Sans Mono", Monaco, "Andale Mono", monospace;
     line-height: 100%;
     white-space: pre;
 }

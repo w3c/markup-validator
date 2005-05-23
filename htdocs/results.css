@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.28 2005-05-17 05:22:36 ot Exp $ */
+/* $Id: results.css,v 1.29 2005-05-23 22:00:32 ot Exp $ */
 
 .input {
   color: black;
@@ -140,6 +140,10 @@ ol#errors li {
   background-color: transparent;
   text-decoration: none;
 }
+ol.source li {
+  white-space: normal;
+  font-family: "Bitstream Vera Sans Mono", Monaco, "Andale Mono", monospace;
+}
 
 
 /* Style for non-parser warnings. */
@@ -257,9 +261,6 @@ img.inline-badge {
   float: left;
 }
 
-.source code {
-  white-space: normal;
-}
 
 div.mtb { /* "Medium Thematic Break" */
   margin-top: 5em;
