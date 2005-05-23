@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.419 2005-05-16 08:41:46 ot Exp $
+# $Id: check,v 1.420 2005-05-23 05:50:45 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -220,7 +220,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.419 $;
+  $VERSION    =  q$Revision: 1.420 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -851,17 +851,20 @@ if ($File->{Opt}->{Output} eq 'xml') {
   else {
     $T->param(file_version => $File->{Version});
   }
-  
+  my $num_errors = scalar @{$File->{Errors}};
+  if ($num_errors >0)
+  {
+    $T->param(has_errors => 1);
+  }
+  $T->param(valid_errors_num => $num_errors);
+  $T->param(file_errors => &report_errors($File));
   if ($File->{'Is Valid'}) {
     $T->param(VALID => TRUE);
     $T->param(valid_status => 'Valid');
-    $T->param(file_errors => &report_errors($File));
     &report_valid($File, $T);
   } else {
     $T->param(VALID => FALSE);
     $T->param(valid_status => 'Invalid');
-    $T->param(valid_errors_num => scalar @{$File->{Errors}});
-    $T->param(file_errors => &report_errors($File));
   }
 
   $T->param(file_warnings  => $File->{Warnings});
