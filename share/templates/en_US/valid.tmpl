@@ -8,9 +8,12 @@
     <dt><a href="http://www.w3.org/2001/06tips/">Tip Of The Day</a>:</dt>
     <dd><a href="<TMPL_VAR NAME="tip_uri" ESCAPE="HTML">"><TMPL_VAR NAME="tip_slug"></a></dd>
   </dl>
-
+<TMPL_IF NAME="has_errors">
+    <p>
+      Below is a list of warning produced when validating your document.
+    </p>
 <TMPL_INCLUDE NAME="error_loop.tmpl">
-
+</TMPL_IF>
   <p>
 <TMPL_IF NAME="is_upload">
     The uploaded document "<TMPL_VAR NAME="file_uri" ESCAPE="HTML">"
