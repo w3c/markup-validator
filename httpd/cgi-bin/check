@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.420 2005-05-23 05:50:45 ot Exp $
+# $Id: check,v 1.421 2005-05-23 12:08:34 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -220,7 +220,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.420 $;
+  $VERSION    =  q$Revision: 1.421 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -977,7 +977,7 @@ sub report_valid {
       $T->param(badge_alt  => $cfg->{Badge}->{Alt});
       $T->param(badge_h    => $cfg->{Badge}->{Height});
       $T->param(badge_w    => $cfg->{Badge}->{Width});
-      $T->param(badge_tagc => ($cfg->{'Parse Mode'} eq 'XML' ? '/' : ''));
+      $T->param(badge_tagc => ($cfg->{'Parse Mode'} eq 'XML' ? ' /' : ''));
     }
   } elsif (defined $File->{Tentative}) {
     $T->param(is_tentative => TRUE);
