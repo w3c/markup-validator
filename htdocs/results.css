@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.29 2005-05-23 22:00:32 ot Exp $ */
+/* $Id: results.css,v 1.30 2005-05-24 00:50:55 ot Exp $ */
 
 .input {
   color: black;
@@ -124,27 +124,23 @@ ol#errors li {
 /* Source Code Display */
 /*
 */
-#source div {
+#source ol {
+
   font-family: "Bitstream Vera Sans Mono", monospace;
   font-size: smaller;
-  background: 1#eee;
+  background: #eee;
   border: 1px solid black;
   margin: 1em;
 }
-#source div pre {
+#source ol li {
   margin: 1em;
 }
 
-#source div pre a {
+#source ol li a {
   color: inherit;
   background-color: transparent;
   text-decoration: none;
 }
-ol.source li {
-  white-space: normal;
-  font-family: "Bitstream Vera Sans Mono", Monaco, "Andale Mono", monospace;
-}
-
 
 /* Style for non-parser warnings. */
 /*
