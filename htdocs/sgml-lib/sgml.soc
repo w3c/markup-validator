@@ -1,5 +1,5 @@
 	-- SGML catalog for the W3C Markup Validation Service --
-	-- $Id: sgml.soc,v 1.16 2005-04-27 08:54:10 ot Exp $ --
+	-- $Id: sgml.soc,v 1.17 2005-05-24 06:12:45 ot Exp $ --
 
 OVERRIDE YES	-- prefer public identifiers to system identifiers --
 SGMLDECL sgml.dcl
@@ -8,6 +8,7 @@ SGMLDECL sgml.dcl
 PUBLIC  "ISO 8879-1986//ENTITIES Added Latin 1//EN//HTML" IETF/ISOlat1.ent
 PUBLIC  "ISO 8879-1986//ENTITIES Added Latin 1//EN"       IETF/ISOlat1.ent
 
+        -- HTML 2 --
 	-- Ways to refer to Level 2: most general to most specific --
 PUBLIC  "HTML"                                  IETF/HTML-2_0.dtd
 PUBLIC  "-//IETF//DTD HTML//EN"                 IETF/HTML-2_0.dtd
@@ -16,6 +17,18 @@ PUBLIC  "-//IETF//DTD HTML 2.0//EN"             IETF/HTML-2_0.dtd
 PUBLIC  "-//IETF//DTD HTML Level 2//EN"         IETF/HTML-2_0.dtd
 PUBLIC  "-//IETF//DTD HTML Level 2//EN//2.0"    IETF/HTML-2_0.dtd
 PUBLIC  "-//IETF//DTD HTML 2.0 Level 2//EN"     IETF/HTML-2_0.dtd
+        -- Ways to refer to Level 1: most general to most specific --
+PUBLIC  "-//IETF//DTD HTML Level 1//EN"         IETF/HTML-2_0-Level_1.dtd
+PUBLIC  "-//IETF//DTD HTML 2.0 Level 1//EN"     IETF/HTML-2_0-Level_1.dtd
+        -- Ways to refer to Strict Level 2: most general to most specific --
+PUBLIC  "-//IETF//DTD HTML Strict//EN"          IETF/HTML-2_0-Strict.dtd
+PUBLIC  "-//IETF//DTD HTML 2.0 Strict//EN"      IETF/HTML-2_0-Strict.dtd
+PUBLIC  "-//IETF//DTD HTML Strict Level 2//EN"  IETF/HTML-2_0-Strict.dtd 
+PUBLIC  "-//IETF//DTD HTML 2.0 Strict Level 2//EN"      IETF/HTML-2_0-Strict.dtd
+        -- Ways to refer to Strict Level 1: most general to most specific --
+PUBLIC  "-//IETF//DTD HTML Strict Level 1//EN"          IETF/HTML-2_0-Strict-Level_1.dtd
+PUBLIC  "-//IETF//DTD HTML 2.0 Strict Level 1//EN"      IETF/HTML-2_0-Strict-Level_1.dtd
+
 
 	-- HTML 3.2 --
 PUBLIC "-//W3C//DTD HTML 3.2//EN"		REC-html32-19970114/HTML32.dtd
