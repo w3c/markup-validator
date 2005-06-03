@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: about.html,v 1.24 2004-05-09 15:56:49 link Exp $"
---><!--#set var="date" value="\$Date: 2004-05-09 15:56:49 $"
+<!--#set var="revision" value="\$Id: about.html,v 1.25 2005-06-03 04:58:38 ot Exp $"
+--><!--#set var="date" value="\$Date: 2005-06-03 04:58:38 $"
 --><!--#set var="title" value="About the W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -7,36 +7,56 @@
 <div class="doc">
     <div><a id="skip" name="skip"></a>
       <h2>About The W3C Markup Validation Service</h2>
-      <!-- @@@TODO: bring this paragraph up to date -->
+      <h3 id="TableOfContents">Table of contents</h3>
+      <div id="toc">
+        <ol>
+          <li><a href="#about">About this service</a></li>
+          <li><a href="#others">Other resources</a></li>
+          <li><a href="#credits">Credits</a></li>
+        </ol>
+      </div>
+      
+      <h3 id="about">About this service</h3>
       <p>
         <a href="./">The
           <acronym title="World Wide Web Consortium">W3C</acronym>
-          Markup Validation Service</a> checks
-        <acronym title="HyperText Markup Language">HTML</acronym>
-        documents for conformance to
-        <acronym title="World Wide Web Consortium">W3C</acronym>
-        <acronym title="HyperText Markup Language">HTML</acronym> and
-        <acronym title="eXtensible HyperText Markup Language">XHTML</acronym>
-        Recommendations and other
-        <acronym title="HyperText Markup Language">HTML</acronym>
-        standards. Related resources include:
+          Markup Validation Service</a> is a free (Open source) tool and online service 
+          that checks Web documents for validity. 
+      </p>
+      <p>
+        Validating Web documents is an important step which can dramatically help improving 
+        and ensuring their quality, and it can save a lot of time and money (read more on
+        <a href="docs/why.html" title="Why validate? A document answering questions on the importance of validation." >why validating matters</a>). 
+        Validation is not, however, 
+        <a href="docs/help.html#validandconform" 
+        title="Read more about the difference between validation and conformance checking, from our FAQ.">strictly equivalent to <em>conformance checking</em></a>.
+      </p>
+      <p>
+        Supported document types include the HTML  (through HTML 4.01) and XHTML (1.0 and 1.1) family, 
+        MathML, SMIL and SVG (1.0 and 1.1, including the mobile profiles). The Markup Validator can
+        also validate Web documents written with an SGML or XML DTD, provided they use a proper 
+        document type declaration. 
+      </p>      
+      <p>
+      Related resources include:
       </p>
       <ul>
-        <li><a title="Source Code for The W3C Markup Validation Service"
-          href="source/">Source code availability</a>.</li>
+        <li>The <a href="docs/">Documentation repository</a> for the Markup validation 
+        contains a lot of information on usage, installation, and development. Notably, 
+        the <a href="docs/help.html">Help and <acronym title="Frequently Asked Questions">FAQ</acronym>
+        document contains a lot of information, and is a recommended reading.</li>
+        <li>The <a title="Source Code for The W3C Markup Validation Service"
+          href="source/">Source code availability</a> information page .</li>
         <li><a href="todo.html">The TODO list for The <acronym
           title="World Wide Web Consortium">W3C</acronym>
           Markup Validation Service</a>.</li>
-        <li><a href="http://lists.w3.org/Archives/Public/www-validator/">The
-          www-validator mailing list</a>.</li>
         <li><a href="feedback.html">How to provide feedback on The
         	<acronym title="World Wide Web Consortium">W3C</acronym>
         	Markup Validation Service</a>.</li>
       </ul>
     </div>
 
-    <div id="others">
-      <h3>Other resources</h3>
+      <h3 id="others">Other resources</h3>
       <div>
         <h4>Documentation &amp; Specifications</h4>
         <ul>
@@ -97,11 +117,13 @@
             <acronym title="eXtensible Markup Language">XML</acronym>
             Schema Validator</a>.</li>
         </ul>
+        <p>
+          The <acronym title="World Wide Web Consortium">W3C</acronym> also hosts
+          a number of other <a href="http://www.w3.org/Status">Open Source software projects</a>.
+        </p>
       </div>
-    </div>
 
-    <div id="credits">
-      <h3>Credits</h3>
+      <h3 id="credits">Credits</h3>
       <p>
         The
         <a href="http://lists.w3.org/Archives/Public/www-html/1994Jul/0015">first
@@ -175,7 +197,6 @@
           </ul>
         </li>
       </ul>
-    </div>
 </div>
 <!--#include virtual="footer.html" -->
   </body>
