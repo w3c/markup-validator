@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.421 2005-05-23 12:08:34 ot Exp $
+# $Id: check,v 1.422 2005-06-03 05:03:28 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -220,7 +220,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.421 $;
+  $VERSION    =  q$Revision: 1.422 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -803,35 +803,6 @@ if ($File->{Namespace}) {
   }
 }
 
-
-#
-#@@FIXME: This logic belongs in the templates.
-if (defined $File->{Tentative}) {
-  my $class = '';
-     $class .= ($File->{Tentative} & T_INFO  ? ' info'    :'');
-     $class .= ($File->{Tentative} & T_WARN  ? ' warning' :'');
-     $class .= ($File->{Tentative} & T_ERROR ? ' error'   :'');
-     $class .= ($File->{Tentative} & T_FATAL ? ' fatal'   :'');
-
-  unless ($File->{Tentative} == T_DEBUG) {
-    $File->{Notice} = <<".EOF.";
-    <p id="Notice" class="$class">
-      Please note that you have chosen one or more options that alter the
-      content of the document before validation, or have not provided enough
-      information to accurately validate the document. Even if no errors are
-      reported below, the document will not be valid until you manually make
-      the changes we have performed automatically. Specifically, if you used
-      some of the options that override a property of the document (e.g. the
-      DOCTYPE or Character Encoding), you must make the same change to the
-      source document or the server setup before it can be valid. You will
-      also need to insert an appropriate DOCTYPE Declaration or Character
-      Encoding (the "charset" parameter for the Content-Type HTTP header) if
-      any of those are missing.
-    </p>
-.EOF.
-  }
-}
-#@@FIXME;
 
 if ($File->{Opt}->{Output} eq 'xml') {
   &report_xml($File);
