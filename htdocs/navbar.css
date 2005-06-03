@@ -4,7 +4,7 @@
    Copyright 2000-2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: navbar.css,v 1.20 2005-05-16 04:29:40 ot Exp $
+   $Id: navbar.css,v 1.21 2005-06-03 04:58:53 ot Exp $
 */
 
 
@@ -21,15 +21,14 @@
         list-style-type: none;
 }
 
+#menu { padding-left: 1em; padding-right: 1em}
 #menu li {
   display: inline;
 }
 
 #menu li a {
-
-  height: 20px;
-  padding-right: 20px;
-  padding-left: 25px;
+  padding-right: 1.2em;
+  padding-left: 1.2em;
   color: white;
 }
 
