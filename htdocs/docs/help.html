@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: help.html,v 1.24 2005-05-30 01:46:49 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-05-30 01:46:49 $"
+<!--#set var="revision" value="\$Id: help.html,v 1.25 2005-06-03 06:23:10 ot Exp $"
+--><!--#set var="date" value="\$Date: 2005-06-03 06:23:10 $"
 --><!--#set var="title" value="Help for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -143,15 +143,24 @@ mailing-list.</p>
 
      <p>As for every language, these have their own <em>grammar</em>, <em>vocabulary</em>
 	and <em>syntax</em>, and every document written with these computer languages
-	are supposed to follow these rules. However, just as texts in a natural language
-	can include spelling or grammar errors, documents using Markup  languages
-	may (for various reasons) not be following these rules.</p>
-
-      <p>The process of verifying whether a document actually follows the rules for the
+	are supposed to follow these rules. The (X)HTML languages, for all versions up 
+	to XHTML 1.1, are using machine-readable grammars called 
+    <acronym title="Document Type Definition">DTD</acronym>s, a mechanism inherited from
+	<a href="sgml.html"><acronym title="Standard Generalized Markup Language">SGML</acronym></a>.
+	</p>
+	<p>
+	However, Just as texts in a natural language
+	can include spelling or grammar errors, documents using Markup languages
+	may (for various reasons) not be following these rules.
+    The process of verifying whether a document actually follows the rules for the
 	language(s) it uses is called <em>validation</em>, and the tool used for that
 	is a validator. A document that passes this process with success is called 
 	<em>valid</em>.
-      </p>
+    </p>
+    
+    <p>With these concepts in mind, we can define "markup validation" as the process of 
+    checking a Web document against the grammar (generally a DTD) it claims to be using.</p>
+        
 
     <h4 id="validandquality">Is validation some kind of quality control? 
 	Does "valid" mean "quality approved by W3C"?</h4>
