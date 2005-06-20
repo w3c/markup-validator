@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.422 2005-06-03 05:03:28 ot Exp $
+# $Id: check,v 1.423 2005-06-20 08:11:44 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -220,7 +220,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.422 $;
+  $VERSION    =  q$Revision: 1.423 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -754,13 +754,12 @@ sub parse (\$) {
   for (@{$File->{ESIS}}) {
     no warnings 'uninitialized';
     next unless /^AVERSION CDATA (.*)/i;
+    push @{$File->{Version_ESIS}}, $1;
     if ($1 =~ '-//W3C//DTD (SGML|XML) Fallback//EN') {
       $File->{Tentative} |= (T_ERROR | T_FALL);
       my $dtd = $1 eq 'SGML' ? 'HTML 4.01 Transitional' : 'XHTML 1.0 Strict';
       &add_warning('W09', { W09_dtd => $dtd });
     }
-    $File->{Version} = $1;
-    last;
   }
 
   return $File;
@@ -816,8 +815,9 @@ if ($File->{Opt}->{Output} eq 'xml') {
   
   
   
-  if (! $File->{Doctype} and ($File->{Version} eq 'unknown' or $File->{Version} eq 'SGML')) {
-      $T->param(file_version => '(no Doctype found)');
+  if (! $File->{Doctype} and ($File->{Version} eq 'unknown' or $File->{Version} eq 'SGML' or (!$File->{Version}))) {
+    # @@TODO@@ we should try falling back on other version info, such as the ones stored in Version_ESIS 
+    $T->param(file_version => '(no Doctype found)');
   }
   else {
     $T->param(file_version => $File->{Version});
