@@ -8,6 +8,15 @@
       <TMPL_IF NAME="have_warnings">
         <TMPL_INCLUDE NAME="warnings.tmpl">
       </TMPL_IF>
+
+      <TMPL_IF NAME="is_xml">
+        <p><strong>Note</strong>:
+        The Validator XML support has
+        <a href="http://openjade.sourceforge.net/doc/xml.htm"
+        title="Limitations in Validator XML support">some limitations</a>.
+        </p>
+      </TMPL_IF>
+
       <TMPL_IF NAME="VALID">
         <TMPL_INCLUDE NAME="valid.tmpl">
       <TMPL_ELSE>
