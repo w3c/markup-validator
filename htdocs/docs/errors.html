@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: errors.html,v 1.31 2005-03-31 21:31:16 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-03-31 21:31:16 $"
+<!--#set var="revision" value="\$Id: errors.html,v 1.32 2005-06-21 05:56:12 ot Exp $"
+--><!--#set var="date" value="\$Date: 2005-06-21 05:56:12 $"
 --><!--#set var="title" value="Error Explanations for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -203,9 +203,11 @@
       &lt;p&gt;&lt;em&gt;...&lt;/em&gt;&lt;/p&gt;  
     </p>
     <p>
-      Another possibility is that you used an element (e.g. 'ul') which requires
-      a child element (e.g. 'li') that you did not include. Hence the parent element
-      is "not finished", not complete.
+      Another possibility is that you used an element which requires
+      a child element that you did not include. Hence the parent element
+      is "not finished", not complete. For instance, &lt;head&gt; generally
+      requires a &lt;title&gt;, lists (ul, ol, dl) require list items (li, 
+      or dt, dd), and so on. 
     </p>
   </div>
 	<p>
@@ -724,6 +726,19 @@
   </div>
 	<p>
 	  <a href="../feedback.html?errmsg_id=404#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt id="ve-407">407: NET-enabling start-tag not immediately followed by null end-tag</dt>
+        <dd><div class="ve mid-407">
+    <p>
+      This error may occur when there is a mistake in how a self-closing tag is closed, e.g '.../ &gt;'.
+      The proper syntax is '... /&gt;' (note the position of the space).
+    </p>
+  </div>
+	<p>
+	  <a href="../feedback.html?errmsg_id=407#errormsg"
 	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
 	</p>
 	</dd>  
@@ -2938,12 +2953,6 @@
 	</p>
 	</li>
       
-        <li id="ve-407"><p>407: NET-enabling start-tag not immediately followed by null end-tag
-	  <a href="../feedback.html?errmsg_id=407#errormsg"
-	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
-	</p>
-	</li>
-      
         <li id="ve-408"><p>408: entity end in different element from entity reference
 	  <a href="../feedback.html?errmsg_id=408#errormsg"
 	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
@@ -3183,3 +3192,4 @@
 <!--#include virtual="../footer.html" -->
   </body>
 </html>
+
