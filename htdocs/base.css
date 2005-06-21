@@ -4,7 +4,7 @@
    Copyright 2000-2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.54 2005-05-23 22:00:32 ot Exp $
+   $Id: base.css,v 1.55 2005-06-21 05:18:12 ot Exp $
 */
 
 @import url("results.css"); /* CSS for validation results. */
@@ -35,13 +35,13 @@ html {
 
 body {  
     margin: auto auto;
-    padding-left: 5%;
-    padding-right: 5%;
+    padding-left: 6%;
+    padding-right: 6%;
     background-color: white;
-    background-image: url(http://www.w3.org/Icons/logo-WMVS.png);
+/*    background-image: url(http://www.w3.org/Icons/logo-WMVS.png);
     background-attachment: fixed;
     background-position: 0 0;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat; */
     color: #11111A;
     font-family: Helvetica, "Trebuchet MS", Arial, sans-serif;
     font-size: 1em; /* setting base font to user's prefered size */
@@ -63,8 +63,8 @@ body {
     margin-bottom: 0;
 /*
     margin-top: 20px;
-*/
     margin-left: 42px;
+*/
     border: 0;
 
 }
@@ -86,7 +86,7 @@ body {
 #main, address { 
     background-color: white;
     margin: 0;
-    margin-left: 42px;
+    /*margin-left: 42px; */
     padding: 15px;
     padding-left: 0;
     padding-right: 0;
