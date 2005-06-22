@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: sgml.html,v 1.17 2005-06-08 09:19:32 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-06-08 09:19:32 $"
+<!--#set var="revision" value="\$Id: sgml.html,v 1.18 2005-06-22 02:49:39 ot Exp $"
+--><!--#set var="date" value="\$Date: 2005-06-22 02:49:39 $"
 --><!--#set var="title" value="Introduction To SGML for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -56,19 +56,21 @@
         <code>&lt;!DOCTYPE html PUBLIC "quoted string"&gt;</code>
       </p>
       <p>
-        The quoted string is called a <dfn>public identifier</dfn>; it refers
+        The "quoted string" is called a <dfn>public identifier</dfn>; it refers
         to the desired DTD by a "well-known" name, usually defined by an
         associated standard.
       </p>
+      <h4>Why add a DOCTYPE declaration?</h4>
       <p>
-        Most Web browsers don't actually use an SGML parser (in fact, none
-        that I'm aware of do), and so they don't need a <code>DOCTYPE</code>
-        declaration, and will ignore it if present. The Validator, however,
-        does use an SGML parser, and therefore needs a <code>DOCTYPE</code>
-        declaration. The Validator is more insistent on this point than
-        WebTechs was, which would insert a <code>DOCTYPE</code> on the fly
-        for you; The Validator requires that your <code>DOCTYPE</code> already
-        be in the document.
+        The Validator uses an SGML parser, and a <code>DOCTYPE</code> declaration
+        is the most, if not the only way to know which markup language it should 
+        validate documents against.
+      </p>
+      <p>
+        Note that most Web browsers don't actually use an SGML parser, many of them display
+        the documents differently based on the document's <code>DOCTYPE</code>
+        declaration, or lack thereof. This alone is a good reason to always
+        add a <code>DOCTYPE</code> declaration to Web documents.
       </p>
       <p>
         So now you're preparing to add a <code>DOCTYPE</code> to your document.
@@ -77,22 +79,22 @@
         DTD, or will be unable to find a DTD at all, and will produce a huge
         list of absolutely meaningless errors.
       </p>
+      <h4>How do I add a DOCTYPE declaration?</h4>
       <p>
         The W3C QA Activity maintains a <a
         href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">List of
-        Valid Doctypes</a> that you can choose from, and the <acronym
+        Doctypes</a> that you can choose from, and the <acronym
         title="Web Design Group">WDG</acronym> maintains a document on
         "<a href="http://www.htmlhelp.com/tools/validator/doctype.html">Choosing
         a DOCTYPE</a>".
       </p>
       <p class="warning">
         <strong>WARNING:</strong> Some HTML editors will insert a
-        <code>DOCTYPE</code> declaration for you. Unfortunately, this
-        pre-inserted <code>DOCTYPE</code> will sometimes confuse
-        The Validator. This usually occurs when the inserted
-        <code>DOCTYPE</code> does not correspond to the generated HTML.
+        <code>DOCTYPE</code> declaration for you. Unfortunately, sometimes 
+        thia <code>DOCTYPE</code> does not correspond to the generated HTML,
+        which can sometimes confuse The Validator.
         If your editor adds a <code>DOCTYPE</code> to your page, you may
-        need to correct it as described above before running your page through
+        need to correct it as described above before running your documents through
         The Validator.
       </p>
     </div>
