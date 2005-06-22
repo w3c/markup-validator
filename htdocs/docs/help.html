@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: help.html,v 1.27 2005-06-21 05:26:05 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-06-21 05:26:05 $"
+<!--#set var="revision" value="\$Id: help.html,v 1.28 2005-06-22 02:51:06 ot Exp $"
+--><!--#set var="date" value="\$Date: 2005-06-22 02:51:06 $"
 --><!--#set var="title" value="Help for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -179,22 +179,32 @@ mailing-list.</p>
 	should never be considered as a "W3C seal of quality".</p>
 
     <h4 id="validandconform">Is validity the same thing as conformance?</h4>
-    <p>No, they are different. A document is valid when it is written in accordance
-    to a formal grammar, whereas conformance to a specification is defined by the 
-    specification itself. The two <em>might</em> be equivalent, but in most cases, 
-    some conformance requirements can not be expressed in the grammar, making validity
-    only a part of the conformance.</p>
+      <p>
+        No, they are different concepts. 
+      </p>
+      <p>
+        Markup languages are defined in <em>technical specifications</em>, 
+        which generally include a <em>formal grammar</em>.
+        A document is valid when it is correctly written in accordance
+        to the formal grammar, whereas conformance relates to the
+        specification itself. The two <em>might</em> be equivalent, but in most cases, 
+        some conformance requirements can not be expressed in the grammar, making validity
+        only a part of the conformance.
+      </p>
 
     <h4 id="what-is-it">What is the Markup Validator and what does it do?</h4>
       <p>
-	The Markup Validator is a free tool and service that checks the 
-	syntax of (X)HTML documents.</p> 
+	The Markup Validator is a free tool and service that 
+        <a href="#validation_basics">validates markup</a>: 
+        in other words, it checks the syntax of Web documents, written in formats 
+        such as (X)HTML.
+      </p> 
       <p>
 	The Validator is sort of like <code>lint</code> for C. It compares
         your HTML document to the defined syntax of HTML and reports any
         discrepancies. 
       </p>
-      <p><a href="../about.html">Learn more</a> about the Markup Validator.</p>
+      <p><a href="../about.html">Learn more</a> about the Markup Validator and the languages it can validate.</p>
 
     <h4 id="why-validate">Why should I validate my HTML pages?</h4>
       <p>
@@ -250,10 +260,11 @@ mailing-list.</p>
 
     <h4 id="how">How does The Validator work?</h4>
       <p>
-	The Validator is based on <a href="http://www.jclark.com/">James
-        Clark</a>'s <code><a href="http://www.jclark.com/sp/">nsgmls</a></code>
-        SGML parser. The Validator itself is a CGI script that fetches your
-        URL, passes it through <code>nsgmls</code>, and post-processes the
+	The Validator is based on <a href="http://openjade.sourceforge.net/">OpenSP</a>,
+        an SGML parser based on <a href="http://www.jclark.com/">James
+        Clark</a>'s <a href="http://www.jclark.com/sp/">SP</a>
+        SGML parser. The Validator itself is a CGI script that (basically) fetches your
+        document, passes it through the parser, and post-processes the
         resulting error list for easier reading. 
       </p>
 
