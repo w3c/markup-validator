@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: about.html,v 1.28 2005-06-21 05:39:27 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-06-21 05:39:27 $"
+<!--#set var="revision" value="\$Id: about.html,v 1.29 2005-06-22 02:46:01 ot Exp $"
+--><!--#set var="date" value="\$Date: 2005-06-22 02:46:01 $"
 --><!--#set var="title" value="About the W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -18,25 +18,41 @@
       
       <h3 id="about">About this service</h3>
       <p>
-        <a href="./">The
-          <acronym title="World Wide Web Consortium">W3C</acronym>
-          Markup Validation Service</a> (or <em>HTML Validator</em>, as it used to 
-          be called) is a free (Open Source) tool that checks Web documents for 
-          <a href="docs/help.html#validation_basics" 
-          title="Introducing and defining the concept of Markup Validation">validity</a>. 
+        The <a href="./">Markup Validator</a> is a free service by 
+        <acronym title="World Wide Web Consortium">W3C</acronym>
+        that helps check the validity of Web documents.
       </p>
+        
+      <p>
+        Most Web documents are written using <em>markup languages</em>, such as 
+        <acronym title="HyperText Markup Language">HTML</acronym> or
+        <acronym title="eXtensible HyperText Markup Language">XHTML</acronym>. 
+        These languages are defined by <em>technical specifications</em>, which 
+        usually include a machine-readable <em>formal grammar</em> (and vocabulary). The act of checking
+        a document against these constraints is called <a href="docs/help.html#validation_basics" 
+        title="Introducing and defining the concept of Markup Validation">validation</a>, and this
+        is what the Markup Validator does.
+      </p>
+
       <p>
         Validating Web documents is an important step which can dramatically help improving 
         and ensuring their quality, and it can save a lot of time and money (read more on
         <a href="docs/why.html" title="Why validate? A document answering questions on the importance of validation." >why validating matters</a>). 
-        Validation is not, however, 
-        <a href="docs/help.html#validandconform" 
-        title="Read more about the difference between validation and conformance checking, from our FAQ.">strictly equivalent to <em>conformance checking</em></a>.
+        Validation is, however, neither a full <a href="docs/help.html#validandquality">quality
+        check</a>, nor is it strictly equivalent to <a href="docs/help.html#validandconform" 
+        title="Read more about the difference between validation and conformance checking"><em>checking for conformance</em></a> to the specification.
       </p>
       <p>
-        Supported document types include the HTML  (through HTML 4.01) and XHTML (1.0 and 1.1) family, 
-        MathML, SMIL and SVG (1.0 and 1.1, including the mobile profiles). The Markup Validator can
-        also validate Web documents written with an SGML or XML DTD, provided they use a proper 
+        This validator can process documents written in most markup languages. 
+        Supported document types include the <acronym title="HyperText Markup Language">HTML</acronym>
+        (through <acronym title="HyperText Markup Language">HTML</acronym> 4.01) and 
+        <acronym title="eXtensible HyperText Markup Language">XHTML</acronym> (1.0 and 1.1) family, 
+        MathML, SMIL and <acronym title="Scalable Vector Graphics">SVG</acronym> 
+        (1.0 and 1.1, including the mobile profiles). The Markup Validator can
+        also validate Web documents written with an <a href="docs/sgml.html" 
+        title="introduction to the concepts of SGML and DTDs"><acronym title="Standard Generalized 
+        Markup Language">SGML</acronym> or <acronym title="eXtensible Markup Language">XML</acronym> 
+        <acronym title="Document Type Definition">DTD</acronym></a>, provided they use a proper 
         document type declaration. 
       </p>      
       <p>
