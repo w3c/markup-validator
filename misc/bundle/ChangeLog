@@ -1,3 +1,18 @@
+2005-01-09  ville
+
+	* README, lib/Bundle/W3C/Validator.pm: 2005.
+
+2004-10-10  ville
+
+	* lib/Bundle/W3C/Validator.pm: Add HTML::Template dependency and
+	minimum Config::General version.
+
+2004-07-21  link
+
+	* README, lib/Bundle/W3C/Validator.pm, t/00load.t: Re-adding
+	bundle/* taken from validator-0_6_0-branch at tag
+	validator-0_6_7-pre3 (0.6.7-release candidate).
+
 2004-05-05  ville
 
 	* README, lib/Bundle/W3C/Validator.pm, t/00load.t: First release,
