@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.43 2005-02-16 23:29:15 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-02-16 23:29:15 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.44 2005-07-08 08:34:33 ot Exp $"
+--><!--#set var="date" value="\$Date: 2005-07-08 08:34:33 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -14,10 +14,50 @@
           <acronym title="Concurrent Versions System">CVS</acronym> log</a>.
       </p>
     </div>
-    <dl id="news">
-      <dt id="t2004-07-23">2004-07-23 &mdash; 0.6.7 Release:</dt>
+    <dl>
+      <dt id="t2005-07-12">2005-07-12 &mdash; 0.7.0 Beta #1:</dt>
       <dd>
         <p>
+          Testing version 0.7.0 Beta #1 of the Markup Validator; a new version including
+          small architectural changes, improvements to the User Interface, documentation
+          and user-friendliness, as well as a number of bug fixes.</p>
+        <p>Most bugs and issues resolved were recorded in <a href="http://www.w3.org/Bugs/Public/buglist.cgi?query_format=advanced&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&bug_id=1184%2C1181%2C1161%2C1071%2C981%2C980%2C932%2C926%2C919%2C900%2C887%2C880%2C877%2C866%2C847%2C811%2C798%2C789%2C786%2C773%2C772%2C752%2C749%2C747%2C736%2C705%2C213%2C204%2C194%2C109%2C98%2C84%2C75%2C63%2C48%2C45">our bugzilla database</a>.
+          Changes include:
+        </p>
+        <ul>
+          <li>Templated output for the XHTML output of validation results:
+            <ul>
+              <li>less inline markup</li>
+              <li>easier for multi-format output</li>
+              <li>getting close to the possibility of localization</li>
+            </ul>
+          </li>
+          <li>Better <a href="feedback.html">feedback</a> mechanisms
+            <ul>
+              <li>Integration of the feedback page with validation results for better error message feedback</li>
+              <li>The feedback page now allows direct search of the mailing-list and bug database</li>
+            </ul>
+          </li>
+          <li>Additional and improved error messages explanations and documentation</li>
+          <li>Variants of HTML2, MathML and SVG added to the bundled SGML and XML catalogs</li>
+          <li>Better support for validation of non-W3C document types, including <em>custom DTDs</em></li>
+          <li> User Interface and style changes for a user-friendlier experience, including 
+            <ul>
+              <li>New print stylesheet, handheld stylesheets</li>
+              <li>Style differentiating errors, warnings and information in validation results</li>
+            </ul>
+          </li>
+          <li>(re-)Added the possibility of validating markup by direct input</li>
+          <li>Simplified and documented configuration syntax</li>
+          <li> made easier to run on Windows platform (still needs testing and documentation)</li>
+          <li> global updates to the <a href="docs/">documentation</a></li>
+          <li> simplified <a href="accesskeys.html">Access Keys</a>, used more consistently throughout the tool and documentation</li>
+        </ul>
+      </dd>
+
+      <dt id="t2004-07-23">2004-07-23 &mdash; 0.6.7 Release:</dt>
+      <dd>
+        
           A maintenance release that fixes a 
           <a href="http://www.w3.org/Bugs/Public/buglist.cgi?product=Validator&amp;target_milestone=0.6.7">few minor bugs</a>,
           improves authentication proxying, and makes some slight tweaks to the
