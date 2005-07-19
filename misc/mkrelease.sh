@@ -42,6 +42,7 @@ rm -f validator-$version/misc/mkrelease.sh
 find . -type d | xargs -r chmod 755
 find . -type f | xargs -r chmod 644
 chmod 755 validator-$version/httpd/cgi-bin/check
+chmod 755 validator-$version/httpd/cgi-bin/sendfeedback.pl
 
 # sgml-lib tarball
 tar zc --owner=0 --group=0 -f $topdir/sgml-lib-$tbversion.tar.gz \
