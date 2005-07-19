@@ -146,15 +146,15 @@
   </dd>
 </TMPL_IF>
 <TMPL_IF NAME="W08">
-  <dt id="W08">Unknown Document Type and Parse Mode!</dt>
+  <dt id="W08">Unknown Parse Mode!</dt>
   <dd>
     <p>
       The MIME Media Type
       (<code><TMPL_VAR NAME="W08_mime" ESCAPE="HTML"></code>) for this
-      document is used to serve both SGML and XML based documents, and no
-      <code>DOCTYPE</code> Declaration was found to disambiguate it. Parsing
-      will continue in SGML mode and with a fallback
-      <code>DOCTYPE</code> similar to HTML 4.01 Transitional.
+      document is used to serve both SGML and XML based documents, 
+      and it is not possible to disambiguate it 
+      based on the <code>DOCTYPE</code> Declaration in your document. Parsing
+      will continue in SGML mode.
     </p>
   </dd>
 </TMPL_IF>
