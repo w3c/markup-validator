@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.423 2005-06-20 08:11:44 ot Exp $
+# $Id: check,v 1.424 2005-07-20 13:26:01 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -94,7 +94,7 @@ use constant MODE_WF   => 8; # 0000 1000, only XML well-formed checking.
 
 #
 # Define global variables.
-use vars qw($DEBUG $CFG $RSRC $VERSION $HAVE_IPC_RUN);
+use vars qw($DEBUG $CFG $RSRC $VERSION);
 
 
 #
@@ -195,22 +195,6 @@ Directory not readable (permission denied): @_r
   }
 
   #
-  # Use IPC::Run on mod_perl if it's available, IPC::Open3 otherwise.
-  $HAVE_IPC_RUN = 0;
-  if ($ENV{MOD_PERL}) {
-    eval {
-      local $SIG{__DIE__};
-      require IPC::Run;
-      IPC::Run->import('run', 'timeout');
-    };
-    $HAVE_IPC_RUN = !$@;
-  }
-  unless ($HAVE_IPC_RUN) {
-    require IPC::Open3;
-    IPC::Open3->import('open3');
-  }
-
-  #
   # Set debug flag.
   if ($CFG->{'Allow Debug'} == TRUE) {
     $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{'Enable Debug'};
@@ -220,7 +204,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.423 $;
+  $VERSION    =  q$Revision: 1.424 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -687,19 +671,13 @@ sub parse (\$) {
 
   #
   # Run it through SP, redirecting output to temporary files.
-  if ($HAVE_IPC_RUN) {
-    local $^W = 0;
-    run(\@cmd, $spin, $spout, $sperr, timeout(60));
-    undef $spin;
-  } else {
-    my $pid = do {
-      no warnings 'once';
-      local(*SPIN, *SPOUT, *SPERR)  = ($spin, $spout, $sperr);
-      open3("<&SPIN", ">&SPOUT", ">&SPERR", @cmd);
-    };
-    undef $spin;
-    waitpid $pid, 0;
-  }
+  my $pid = do {
+    no warnings 'once';
+    local(*SPIN, *SPOUT, *SPERR)  = ($spin, $spout, $sperr);
+    open3("<&SPIN", ">&SPOUT", ">&SPERR", @cmd);
+  };
+  undef $spin;
+  waitpid $pid, 0;
 
   #
   # Rewind temporary filehandles.
