@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.30 2005-05-24 00:50:55 ot Exp $ */
+/* $Id: results.css,v 1.31 2005-07-21 01:32:21 ot Exp $ */
 
 .input {
   color: black;
@@ -94,9 +94,7 @@ p.helpwanted {
   padding: 0;
   margin-left:  auto;
   margin-right: 5px;
-  /*margin-top: -2em;*/
   margin-bottom: 2em;
-  font-size: x-small;
   color:        #888;
   text-align:       right;
 }
