@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.426 2005-07-22 16:29:47 ville Exp $
+# $Id: check,v 1.427 2005-07-22 16:49:55 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -204,7 +204,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.426 $;
+  $VERSION    =  q$Revision: 1.427 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1835,9 +1835,8 @@ sub prepCGI {
       # the browser didn't send a Referer header, or the request was
       # for /check?uri=referer but no Referer header was found.
       $File->{'Error Flagged'} = TRUE;
-      
+
       $File->{E}->param(fatal_referer_error => TRUE);
-      $File->{E}->param(fatal_referer_uri   => $CFG->{'Home Page'});
     }
   }
 
