@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.427 2005-07-22 16:49:55 ville Exp $
+# $Id: check,v 1.428 2005-07-22 20:12:30 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -204,7 +204,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.427 $;
+  $VERSION    =  q$Revision: 1.428 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1116,6 +1116,7 @@ sub handle_frag {
   $File->{Modified}    = '';
   $File->{Server}      = '';
   $File->{Size}        = '';
+  $File->{ContentType} = ''; # @@TODO?
   $File->{URI}         = 'upload://Form Submission';
   $File->{'Is Upload'} = TRUE;
 
