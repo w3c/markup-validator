@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.424 2005-07-20 13:26:01 ville Exp $
+# $Id: check,v 1.425 2005-07-22 15:20:01 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -204,7 +204,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.424 $;
+  $VERSION    =  q$Revision: 1.425 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1785,6 +1785,7 @@ sub prepCGI {
   if (scalar $q->param) {
     foreach my $param ($q->param) {
       next if $param eq 'uploaded_file'; # 'uploaded_file' contains data.
+      next if $param eq 'fragment';      # Ditto 'fragment'.
       next if $q->param($param) eq '0';  # Keep false-but-set params.
       #
       # Parameters that are given to us without specifying a value get
