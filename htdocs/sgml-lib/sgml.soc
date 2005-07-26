@@ -1,5 +1,5 @@
 	-- SGML catalog for the W3C Markup Validation Service --
-	-- $Id: sgml.soc,v 1.17 2005-05-24 06:12:45 ot Exp $ --
+	-- $Id: sgml.soc,v 1.18 2005-07-26 03:22:32 ot Exp $ --
 
 OVERRIDE YES	-- prefer public identifiers to system identifiers --
 SGMLDECL sgml.dcl
@@ -45,6 +45,7 @@ PUBLIC "-//W3C//DTD HTML 4.01//EN"		REC-html401-19991224/strict.dtd
 PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"	REC-html401-19991224/loose.dtd
 PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"	REC-html401-19991224/frameset.dtd
 PUBLIC "-//W3C//ENTITIES Latin 1//EN//HTML"	REC-html401-19991224/HTMLlat1.ent
+PUBLIC "-//W3C//ENTITIES Latin1//EN//HTML"	REC-html401-19991224/HTMLlat1.ent
 PUBLIC "-//W3C//ENTITIES Special//EN//HTML"	REC-html401-19991224/HTMLspecial.ent
 PUBLIC "-//W3C//ENTITIES Symbols//EN//HTML"	REC-html401-19991224/HTMLsymbol.ent
 
