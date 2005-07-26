@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.428 2005-07-22 20:12:30 ville Exp $
+# $Id: check,v 1.429 2005-07-26 06:50:42 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -204,7 +204,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.428 $;
+  $VERSION    =  q$Revision: 1.429 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -823,8 +823,10 @@ if ($File->{Opt}->{Output} eq 'xml') {
     if $T->param('opt_show_source');
   $T->param(file_parsetree => &parsetree($File))
     if $T->param('opt_show_parsetree');
-  #    &show_esis($File)   if $File->{Opt}->{'Show ESIS'};
-  #    &show_errors($File) if $File->{Opt}->{'Show Errors'};
+  $T->param('opt_show_esis' => TRUE)   if $File->{Opt}->{'Show ESIS'};
+  $T->param('file_esis' => &show_esis($File))   if $T->param('opt_show_esis');
+  $T->param('opt_show_raw_errors' => TRUE) if $File->{Opt}->{'Show Errors'};
+  $T->param('file_raw_errors' =>    &show_errors($File)) if  $T->param('opt_show_raw_errors');
 
   print $T->output;
 }
@@ -1748,31 +1750,25 @@ sub preparse_doctype {
 #
 # Print out the raw ESIS output for debugging.
 sub show_esis ($) {
-  print <<'EOF';
-  <div id="raw_esis" class="mtb">
-    <hr />
-    <h2><a name="raw_esis">Raw ESIS Output</a></h2>
-    <pre>
-EOF
+  my $file_esis = "";
   for (@{shift->{ESIS}}) {
     s/\\012//g;
     s/\\n/\n/g;
-    print ent $_;
+    
+     $file_esis .= ent $_;
+     $file_esis .= "\n";
   }
-  print "    </pre>\n  </div>";
+  return  $file_esis;  
 }
 
 #
 # Print out the raw error output for debugging.
 sub show_errors ($) {
-  print <<'EOF';
-  <div id="raw_errors" class="mtb">
-    <hr />
-    <h2><a name="raw_errors">Raw Error Output</a></h2>
-    <pre>
-EOF
-  for (@{shift->{DEBUG}->{Errors}}) {print ent $_};
-  print "    </pre>\n  </div>";
+  my $file_raw_errors = "";
+  for (@{shift->{DEBUG}->{Errors}}) {
+  $file_raw_errors .= ent $_
+  };
+  return $file_raw_errors;
 }
 
 
