@@ -1,10 +1,10 @@
-<!--#set var="revision" value="\$Id: errors.html,v 1.34 2005-07-22 18:58:24 ville Exp $"
---><!--#set var="date" value="\$Date: 2005-07-22 18:58:24 $"
+<!--#set var="revision" value="\$Id: errors.html,v 1.35 2005-07-26 23:15:04 ot Exp $"
+--><!--#set var="date" value="\$Date: 2005-07-26 23:15:04 $"
 --><!--#set var="title" value="Error Explanations for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
 
-<h2 id="skip">Explanation of the error messages<br />for the W3C Markup Validator</h2>
+<h2 id="skip">Explanation of the error messages<br /> for the W3C Markup Validator</h2>
 
 <h3 id="TableOfContents">Table of Contents</h3>
   <div id="toc">
@@ -677,6 +677,26 @@
   </div>
 	<p>
 	  <a href="../feedback.html?errmsg_id=344#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt id="ve-378">378: no system id specified</dt>
+        <dd><div class="ve mid-378">
+    <p>
+      Your document includes a DOCTYPE declaration with a public identifier 
+      (e.g. "-//W3C//DTD XHTML 1.0 Strict//EN") but no system identifier
+      (e.g. "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"). This is
+      authorized in HTML (based on SGML), but not in XML-based languages.
+    </p>
+    <p>
+      If you are using a standard XHTML document type, it is recommended to use exactly
+      one of the DOCTYPE declarations from the 
+      <a href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">recommended list on the W3C QA Website</a>.
+    </p>
+  </div>
+	<p>
+	  <a href="../feedback.html?errmsg_id=378#errormsg"
 	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
 	</p>
 	</dd>  
@@ -2810,12 +2830,6 @@
       
         <li id="ve-377"><p>377: rank stem
 	  <a href="../feedback.html?errmsg_id=377#errormsg"
-	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
-	</p>
-	</li>
-      
-        <li id="ve-378"><p>378: no system id specified
-	  <a href="../feedback.html?errmsg_id=378#errormsg"
 	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
 	</p>
 	</li>
