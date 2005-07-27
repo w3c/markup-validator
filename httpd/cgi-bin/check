@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.430 2005-07-27 04:32:01 ot Exp $
+# $Id: check,v 1.431 2005-07-27 09:23:51 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -204,7 +204,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.430 $;
+  $VERSION    =  q$Revision: 1.431 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -806,7 +806,15 @@ if ($File->{Opt}->{Output} eq 'xml') {
     $T->param(has_errors => 1);
   }
   $T->param(valid_errors_num => $num_errors);
-  $T->param(file_errors => &report_errors($File));
+  my ($number_of_errors, $reported_errors) = &report_errors($File);
+  if ($number_of_errors > 1) {
+    $number_of_errors = "$number_of_errors errors"
+  }
+  else {
+    $number_of_errors = "$number_of_errors error"
+  }
+  $T->param(file_errors => $reported_errors);
+   $T->param(number_of_errors => $number_of_errors);
   if ($File->{'Is Valid'}) {
     $T->param(VALID => TRUE);
     $T->param(valid_status => 'Valid');
@@ -1423,6 +1431,7 @@ sub parse_errors ($$) {
 sub report_errors ($) {
   my $File = shift;
   my $Errors = [];
+  my $number_of_errors = 0;
 
   # Hash to keep track of how many of each error is reported.
   my %Msgs; # Used to generate a UID for explanations.
@@ -1472,18 +1481,19 @@ sub report_errors ($) {
       {
         $err->{class} = 'msg_err';
         $err->{err_type_err} = 1;
+        $number_of_errors += 1;
       }
-      elsif ($err->{type} eq 'W')
+      elsif (($err->{type} eq 'W') or ($err->{type} eq 'X') ) 
       {
         $err->{class} = 'msg_warn';
         $err->{err_type_warn} = 1;
       }
-      # TODO other classes for "W", "E" etc?
+      # TODO other classes for "X" etc? FIXME find all types of message.
 
       push @{$Errors}, $err;
     }
   }
-  return $Errors;
+  return $number_of_errors, $Errors;
 }
 
 #

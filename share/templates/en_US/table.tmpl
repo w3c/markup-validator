@@ -2,6 +2,21 @@
 <form id="form" method="get" action="check">
   <table class="header">
     <tr>
+    <th>Result:</th>
+    <TMPL_IF NAME="VALID">
+    <td colspan="2" class="valid">
+      <TMPL_IF NAME="is_tentative">
+        Tentatively passed validation
+      <TMPL_ELSE>
+        Passed validation
+      </TMPL_IF>
+    <TMPL_ELSE>
+    <td colspan="2" class="invalid">
+      Failed validation, <TMPL_VAR NAME="number_of_errors" ESCAPE="HTML">
+    </TMPL_IF>
+    </td>
+    </tr>
+    <tr>
 <TMPL_IF NAME="is_upload">
       <th>File:</th><td colspan="2"><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></td>
 <TMPL_ELSE>

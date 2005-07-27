@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.31 2005-07-21 01:32:21 ot Exp $ */
+/* $Id: results.css,v 1.32 2005-07-27 09:23:51 ot Exp $ */
 
 .input {
   color: black;
@@ -249,6 +249,17 @@ h2.valid, h2.invalid, h2.tentative_valid {
 .invalid {
   background-color:	#D23D24;
   color:		white;
+}
+
+td.valid {
+  background-color:		white;
+  color:           #55B05A;
+}
+
+td.invalid 
+{
+  color:	#D23D24;
+  background-color:	white;
 }
 
 img.inline-badge {
