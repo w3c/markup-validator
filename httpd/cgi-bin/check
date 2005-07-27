@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.429 2005-07-26 06:50:42 ot Exp $
+# $Id: check,v 1.430 2005-07-27 04:32:01 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -204,7 +204,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.429 $;
+  $VERSION    =  q$Revision: 1.430 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1297,7 +1297,7 @@ sub override_doctype {
   my $sysid = $dt->{SysID};
   my $name  = $dt->{Name};
   local $dtd = qq(<!DOCTYPE $name PUBLIC "$pubid");
-  $dtd .= qq(\n  "$sysid") if $sysid; # We don't have one for all types.
+  $dtd .= qq( "$sysid") if $sysid; # We don't have one for all types.
   $dtd .= '>';
   local $org_dtd = '';
   local $HTML = '';
