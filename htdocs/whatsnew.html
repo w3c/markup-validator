@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.48 2005-07-28 02:01:07 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-07-28 02:01:07 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.49 2005-07-28 07:01:56 ot Exp $"
+--><!--#set var="date" value="\$Date: 2005-07-28 07:01:56 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -21,11 +21,21 @@
           Testing version 0.7.0 Beta #2 of the Markup Validator, the second phase
           of beta test of a new version, including the results of feedback
           during the  <a href="#t2005-07-12">first phase</a> of beta testing.
-          Additional changes include:
+        </p>
+        <p>
+          Most bugs and issues resolved were recorded in <a href="http://www.w3.org/Bugs/Public/buglist.cgi?query_format=advanced&amp;bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;bug_id=%2C941%2C1810%2C1815%2C1816%2C1819">our bugzilla database</a>. Changes from version <a href="#t2005-07-12">0.7.0 Beta#1</a> include:
         </p>
         <ul>
-          <li><a href="http://www.w3.org/Bugs/Public/buglist.cgi?query_format=advanced&amp;bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;bug_id=%2C941%2C1810%2C1815%2C1816%2C1819">Bug fixes</a>. (@@ finish this @@)
-          </li>
+          <li>Improvements in the way the results and errors number is displayed, with a bug fix in error count.</li>
+          <li>Bug fixes:
+          <ul> 
+            <li> The error number count in resuts now only counts errors, not warnings or other messages</li>
+            <li> A missing entry in the SGML catalog was added</li>
+            <li> The direct input interface now handles cases where no content is set properly</li>
+          </ul>
+	  <li>Running the validator under mod_perl is no longer supported</li>
+          <li>Simplified configuration sample for an installation on the Apache Server</li>
+          <li>Documentation updates</li>
         </ul>
       </dd>
       <dt id="t2005-07-12">2005-07-12 &mdash; 0.7.0 Beta #1:</dt>
