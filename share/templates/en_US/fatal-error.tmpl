@@ -58,6 +58,19 @@
         using the File Upload interface.
       </p>
 </TMPL_IF>
+<TMPL_IF NAME="fatal_no_content">
+      <p>
+        Sorry, I could not find any content to validate. It is probable that you
+        clicked on the "check" button without choosing a URL, a file or entering
+        the content of the document you would like to validate.
+      </p>
+      <p>
+        Read the <a href="docs/users.html">User's guide</a> for quick instructions
+        on using this validator.
+      </p>
+</TMPL_IF>
+
+
 
 <TMPL_IF NAME="fatal_ip_error">
       <p>

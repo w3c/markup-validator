@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.431 2005-07-27 09:23:51 ot Exp $
+# $Id: check,v 1.432 2005-07-29 06:26:15 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -204,7 +204,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.431 $;
+  $VERSION    =  q$Revision: 1.432 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1015,8 +1015,15 @@ sub handle_uri {
 
   unless ($ua->is_protocol_supported($uri)) {
     $File->{'Error Flagged'} = TRUE;
-    $File->{E}->param(fatal_uri_error  => TRUE);
-    $File->{E}->param(fatal_uri_scheme => $uri->scheme());
+    if (($uri->canonical() eq "1") ) 
+    #if uri param is empty (also for empty direct or upload), it's been set to TRUE in sub prepCGI()
+    {
+      $File->{E}->param(fatal_no_content  => TRUE);      
+    }
+    else { 
+      $File->{E}->param(fatal_uri_error  => TRUE);
+      $File->{E}->param(fatal_uri_scheme => $uri->scheme());
+    }
     return $File;
   }
 
