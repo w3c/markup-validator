@@ -1,0 +1,528 @@
+<!--#set var="revision" value="\$Id: install_win.html,v 1.1 2005-08-03 04:15:25 ot Exp $" -->
+<!--#set var="date" value="\$Date: 2005-08-03 04:15:25 $" -->
+<!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service (Windows, Apache)" -->
+<!--#set var="relroot" value="../" -->
+<!--#include virtual="../header.html" -->
+<div class="doc">
+<h2>Installing the W3C-Validator on a Apache under Windows</h2>
+
+<h3 id="TableOfContents">Table of Contents</h3>
+<div id="toc">
+  <ul>
+    <li><a href="#about">About this guide</a></li>
+    <li><a href="#needed-programs">Needed programs</a></li>
+    <li><a href="#directory-structure">Directory Structure</a></li>
+    <li><a href="#install-programs">Installation of the Programs</a></li>
+    <li><a href="#modules">Integration of the Perl-Modules</a>
+      <ul>
+        <li><a href="#modules-local">Integration from a local repository</a></li>
+        <li><a href="#modules-remote">Integration from a remote repository</a></li>
+      </ul></li>
+    <li><a href="#config-apache">Configuration of the Apache</a></li>
+    <li><a href="#adaption-of-hosts">Adaptation of the hosts-File</a></li>
+    <li><a href="#config-validator">Configuration of the Validator</a></li>
+    <li><a href="#adaption-of-check">Adaptation of the check-Script</a></li>
+    <li><a href="#hints">Hints</a></li>
+  </ul>
+</div>
+
+<div id="install" class="stb">
+<a name="skip" id="skip"></a>  
+<h3 id="about">About this guide</h3>
+
+<p>This guide for the installation of the W3C Markup Validator was
+contributed by David Tibbe. It is also available 
+<a href="http://aktuell.de.selfhtml.org/artikel/server/validator/">in german</a>.</p>
+
+<p>See the <a href="install.html">generic installation guide</a> for instructions on how
+to install the Markup Validator on other platforms and <a href="install.html#otherguides">links
+to other platform-specific guides</a>.</p>
+
+<h3 id="needed-programs">Needed programs</h3>
+<p>For running the validator on your system, a web server is
+  required for sure. On my PC, I am running an Apache
+  (<a href="http://httpd.apache.org/">http://httpd.apache.org/</a>),
+  Version 2.0.49. Its installation and configuration will not be
+  discussed here.<br />
+  If you are running an Apache in another Version, you can use it
+  either. The changes in the configuration are quite similar to
+  the newer version.</p>
+<p>The Validator-script itself is written in Perl, so you will
+  need it, too. I use ActivePerl 5.8
+  (<a href="www.activestate.com/Products/Download/Download.plex?id=ActivePerl">www.activestate.com/Products/Download/Download.plex?id=ActivePerl</a>)
+  which installation is not difficult either because of an installer.<br />
+  As mentioned in the changelog, the Validator supports <code>mod_perl</code>. But I have
+  not tried it yet, so it will not be described in here.</p>
+<p>Of course, you need the Validator itself. Packed as a tar-archive
+  you can download it at
+  <a href="http://validator.w3.org/validator.tar.gz">http://validator.w3.org/validator.tar.gz</a>
+  (~900KB). Version 7 is current.</p>
+<p>For parsing the files, a <acronym title="Structured Generalized Markup Language">SGML</acronym>-parser
+  is responsible. Therefore, the program OpenSP 1.5 is proposed. Its
+  sources are available at SourceForge
+  (<a href="http://www.sourceforge.net/projects/opensp/">http://www.sourceforge.net/projects/opensp/</a>)
+  but compiling them on Windows just causes problems. Some time ago,
+  Bj&ouml;rn H&ouml;hrmann succeeded in compiling them and made the
+  binaries available (<a href="http://bjoern.hoehrmann.de/ports/OpenSP-1.5.1-win32-bin.zip">http://bjoern.hoehrmann.de/ports/OpenSP-1.5.1-win32-bin.zip</a>,
+  ~600KB). You can use them but it is recommended to have a look at the
+  OpenSP-Project page for newer binaries.</p>
+<p>The validator needs some Perl-modules. At <a href="http://ppm.activestate.com/">http://ppm.activestate.com/</a>,
+  there is a list of all available modules. In this list is also mentioned
+  if a module is &quot;Core&quot; (which means it is build in) or if it
+  is downloadable.<br />
+  For the validator, the following modules are required:</p>
+<ul>
+  <li>Config-General</li>
+  <li>File-Spec</li>
+  <li>HTML-Template</li>
+  <li>Net-IP</li>
+  <li>Set-IntSpan</li>
+  <li>Text-Iconv</li>
+</ul>
+<p>You can get them each of them in a single package at ActiveState; I have
+  packed them ready-to-install in a zip-file
+  (<a href="http://www.myhpi.de/~dtibbe/download/ppm.zip">http://www.myhpi.de/~dtibbe/download/ppm.zip</a>).</p>
+<p>Finally you will need some calm and patience. A whole installation of
+  the validator (including the Apache and Perl) will take about an hour 
+  if you do not have much experience.</p>
+  
+<h3 id="directory-structure">Directory Structure</h3>
+<p>It might be a good idea to think about the directories the program should be
+installed to. Just clicking &quot;Next&quot; in all installation routines is not good at all.
+On my PC, I have a directory <code>C:\www</code> in which all programs concerning my server
+are located (in subfolders for sure). So the Apache is installed to <code>C:\www\Apache2</code>,
+Perl to <code>C:\www\perl</code>, OpenSP to <code>C:\www\opensp</code> and finally the validator itself
+to <code>C:\www\validator</code>. The modules for Perl should be unzipped in a separate
+folder; <code>C:\www\pmm</code> in my case. In the following, these paths are used.</p>
+
+<h3 id="install-programs">Installation of the Programs</h3>
+<p>Now, the programs are getting installed one after the other. First, the Apache
+  should be installed and successfully started. As mentioned, this will not be
+  described in here, but you will find a lot of How-Tos all over the net, e.g.
+  in the Apache-Documentation:
+  <a href="http://httpd.apache.org/docs/2.0/platform/windows.html">http://httpd.apache.org/docs/2.0/platform/windows.html</a>.
+  The only fact that is important to know is that the installation
+  routine will create a subfolder <code>Apache2</code> by itself. When choosing
+  <code>C:\www</code> as installation directory, the Apache will be installed to
+  <code>C:\www\Apache2</code>.</p>
+<p>Perl is the next program to be installed. Because of the installer, it is
+  no problem either. Just make sure that you install ppm3, too. This
+  program is needed for adding the Perl-modules.</p>
+<p>OpenSP is available in a zip-file, you just need to unzip it in
+  the corresponding folder. It is the same for the Validator and,
+  if downloaded, my Perl-module collection.</p>
+
+<h3 id="modules">Adding the Perl-Modules</h3>
+<p>Now, there is a bit more difficult step: adding the Perl-Modules.
+  Therefore, the program ppm3 is used (ppm means &quot;Programmer's
+  Package Manager&quot;). You can start it by clicking the
+  <kbd>Start</kbd>-Button, selecting <kbd>Run...</kbd>, typing <kbd>ppm3</kbd> and pressing return.
+  The program will look like this:</p>
+<p style="text-align: center"><img src="<!--#echo var="relroot" -->images/ppm_1.png" alt="PPM after the startup" /></p>
+<p>When typing <kbd>rep</kbd>, you will get a list of all (in)active repositories. These are
+  locations for modules out of which you can download and install the needed
+  ones.</p>
+<p>You can add the modules in two ways: In the first case, the modules can be
+  found local (e.g. extracted from the zip-archive) or in the second case they will
+  be downloaded from a server (e.g. the ActiveState-Server). In the following,
+  the first way will be discussed, but is is quite similar to the second one.
+  So it is recommended in any case to read this section.</p>
+  
+<h4 id="modules-local">Integration from a local repository</h4>
+<p>When ppm3 is started, it has to be told that such a repository can be found
+  on the local hard disk, precise at <code>C:\www\ppm</code>. Therefore,
+  <kbd>rep add local C:\www\ppm</kbd> is typed. Afterwards, a repository
+  called local exists.<br />
+  Since you want ppm to search packages only in local, all the others have
+  to be disabled. When having a look at the output of the <kbd>rep</kbd>-command, you
+  will find numbers in front of each repository. Typing <kbd>rep off 1</kbd> will
+  disable the repository identified by the number 1. Do this for
+  all repositories except the local one. When having finished, you might
+  see a screen like this:</p>
+<p style="text-align: center"><img src="<!--#echo var="relroot" -->images/ppm_2.png" alt="PPM displaying the available repositories" /></p>
+<p>Now, ppm3 is ready for the installation of the modules. When typing <kbd>s *</kbd>,
+  local is searched and all five modules will be found. Typing <kbd>install 1</kbd> will
+  install the modules identified by the number 1. You have to repeat this for
+  all modules (by typing their numbers instead, of course). The result should be
+  similar to this:</p>
+<p style="text-align: center"><img src="<!--#echo var="relroot" -->images/ppm_3.png" alt="PPM after having installed the modules" /></p>
+<p>If you do not get a &quot;Successfully installed...&quot;-message as the
+  last output of such an installation, something has failed and you
+  should try again.<br />
+  After having done that, you can leave ppm3 by typing <kbd>quit</kbd>. The
+  modules are ready to use now. All programs are installed right now,
+  but they do not work together yet. You have to do some configuration
+  changes.</p>
+
+<h4 id="modules-remote">Integration from a remote repository</h4>
+<p>The installation from a remote repository is quite the same as from a local one.
+  First, you have to check which repositories are active, but you might not need
+  to change anything. After that, the procedure is the same: By typing <kbd>s *</kbd>
+  you will get a list of all available modules again. But it is much longer,
+  so restrict your search. Instead of typing <kbd>s *</kbd>, type e.g 
+  <kbd>s Conf</kbd> for retrieving a list of all modules beginning 
+  with Conf. Download and install all needed modules in this way
+  (again by typing <kbd>install 5</kbd> for the 5th
+  result of your search). When getting different versions of a module,
+  the newest might be the best choice.</p>
+  
+<h3 id="config-apache">Configuration of the Apache</h3>
+<p>The first file to edit is the <code>httpd.conf</code> located at 
+  <code>C:\www\Apache2\conf</code>, the central configuration file 
+  of your Apache. It is recommended to make a backup before editing
+  it.</p>
+<p>The validator pages are composed by using 
+  <acronym title="Server Side Include">SSI</acronym>. Therefore, the 
+  Apache has to load the required module. In
+  &quot;Section&nbsp;1&nbsp;Global&nbsp;Environment&quot;, the different
+  modules are loaded. SSI needs <code>mod_include</code> for working.
+  The line</p>
+<pre>
+LoadModule include_module modules/mod_include.so
+</pre>
+<p>has to be unquoted (by deleting the # at the beginning of the line) or added
+  completely if the module is not loaded yet.</p>
+<p>The next step is to create a virtual host. It is needed, because the validator
+  should be run from a different directory and logically separated from the
+  default host. At the end of the <code>httpd.conf</code>, in 
+  &quot;Section&nbsp;3:&nbsp;Virtual&nbsp;Hosts&quot;, the following lines have to be added:</p>
+<pre>
+NameVirtualHost 127.0.0.2:80
+
+&lt;VirtualHost 127.0.0.2:80&gt;
+    ServerName validator.example.org
+    DocumentRoot &quot;C:/www/validator/htdocs&quot;
+
+    ErrorLog logs/error_validator.log
+    CustomLog logs/access_validator.log common
+
+    ScriptAlias /cgi-bin &quot;C:/www/validator/httpd/cgi-bin&quot;
+    ScriptAlias /check &quot;C:/www/validator/httpd/cgi-bin/check&quot;
+
+    AddType text/html .html
+    AddOutputFilter INCLUDES .html
+
+    &lt;Directory &quot;C:/www/validator/htdocs&quot;&gt;
+        Options ExecCGI Includes Indexes MultiViews
+        AllowOverride None
+        Order deny,allow
+        Allow from localhost
+    &lt;/Directory&gt;
+    
+    &lt;Directory &quot;C:/www/validator/httpd/cgi-bin&quot;&gt;
+        Options ExecCGI Includes Indexes MultiViews
+        AllowOverride None
+        Order deny,allow
+        Allow from localhost
+    &lt;/Directory&gt;
+    
+&lt;/VirtualHost&gt;
+</pre>
+<p>The meaning of all these lines will not be discussed here. Who is
+  interested in their sense can have a look to the manual or in one
+  of the many How-Tos found by Google. Just some short notes about:
+  The first line specifies the IP-address, the validator should run
+  at. It is a loop back address, so the validator will be accessible
+  only from your machine. The following lines specify the name of
+  the host, the locations of the log files and some &quot;short
+  cuts&quot; for the cgi-bin directory and check-script. The next 
+  three lines make the Apache parsing HTML-files for SSI-directives.
+  The last two sections set some permission for the used
+  directories.<br />
+  The files <code>error_validator.log</code> and
+  <code>access_validator.log</code> can be found in the 
+  <code>C:\www\Apache2\logs</code>-directory. They log every 
+  request and error occurring on this host and give you some 
+  helpful advices in these cases.</p>
+<p>Finally, the Apache has to be restarted so that the changes
+  take effect. You can do that by choosing the shortcut in the 
+  Apache-program group (<kbd>Start</kbd>, <kbd>Programs</kbd>,
+  <kbd>Apache HTTP Server</kbd>, <kbd>Control Apache Server</kbd>
+  <kbd>Restart</kbd>). A DOS-box will appear shortly;
+  when it disappears, the Apache is restarted.</p>
+<p>When you call http://127.0.0.2/ in your browser, you should 
+  see the well-known site from 
+  <a href="http://validator.w3.org/">http://validator.w3.org/</a>.
+  In the configuration file of the Apache, a name for the Virtual
+  Host was defined (validator.example.org), but it is not 
+  resolved yet. That is changed in the next step.</p>
+
+<h3 id="adaption-of-hosts">Adaptation of the hosts-File</h3>
+<p>The <code>hosts</code>-file can be seen as a local
+  DNS-configuration. It is located in at
+  <code>C:\windows\hosts</code> on Win9x and at
+  <code>C:\Windows\system32\drivers\etc\hosts</code> on
+  WinXP. It might be possible, that the file is missing,
+  but a file <code>hosts.sam</code> can be found instead.
+  In that case you have to rename it by deleting the file
+  extension and its leading dot.</p>
+<p>When opening it in an editor, you will find a leading 
+  comment in there. A line</p>
+<pre>
+127.0.0.1 localhost
+</pre>
+<p>follows.</p>
+<p>That line means that a request to localhost is redirected
+  to 127.0.0.1 (i.e. calling http://localhost/ in your browser
+  effects a request to http://127.0.01/).</p>
+<p>Edit the file to the following:</p>
+<pre>
+127.0.0.1 localhost
+127.0.0.1 www.example.org
+127.0.0.2 validator.example.org
+</pre>
+<p>After these changes, the server is available at 
+  http://localhost/ but can be accessed also at 
+  http://www.example.org/, too. Requests for 
+  http://validator.example.org/ are redirected to 
+  http://127.0.0.2/.</p>
+<p>The server configuration is finished right now. But if you 
+  try to validate a page, you will get an &quot;Internal Server Error&quot;,
+  because the <code>check</code>-script has not been configured yet.</p>
+
+<h3 id="config-validator">Configuration of the Validator</h3>
+<p>In the directory <code>c:\www\validator\htdocs\config</code>, a file 
+  called <code>validator.conf</code> can be found. Open it with the editor.
+  Lines beginning with # are comments.</p>
+<p>Because of using a Windows-system, we have to define a
+  base path to the validator's directory. That is done by
+  uncommenting the line</p>
+<pre>
+#Base = /usr/local/validator
+</pre>
+<p>and changing it to</p>
+<pre>
+Base = D:/www/validator
+</pre>
+<p>The next step to do is to define where to find OpenSP.
+  So we have to change</p>
+<pre>  
+Parser = /usr/bin/onsgmls
+</pre>
+<p>to</p>
+<pre>
+Parser = D:/www/opensp/onsgmls.exe  
+</pre>
+<p>The option <code>Home Page</code> has to be changed to the URL of 
+  the validator, http://validator.example.org/ in our case.</p>
+<p>The last option that has to be modified is Allow Private 
+  <code>IPs = { no | yes }</code>. It must be set to
+  &quot;yes&quot;. Otherwise, you cannot validate files 
+  from the local PC and you will get just an access fault
+  because of security reasons.</p>
+<p>After that, the configuration file will look like this:</p>
+<pre>
+#
+# Main Configuration File for the W3C Markup Validation Service.
+#
+# $Id: install_win.html,v 1.1 2005-08-03 04:15:25 ot Exp $
+#
+# See 'perldoc Config::General' for the syntax, and be aware that the
+# 'SplitPolicy' is 'equalsign', ie. keys and values are separated by '\s*=\s*',
+# and that 'InterPolateVars' is in effect.
+#
+
+#
+# Base Path for Markup Validator files.
+#
+# You MUST set these unless you use the default locations for the files.
+# e.g. the config files in &quot;/etc/w3c/&quot; and everything else in
+# &quot;/usr/local/validator/&quot;.
+#
+# Make sure all file paths below do NOT end with a slash
+
+&lt;Paths&gt;
+    #
+    # Base path. Defaults to the value of the W3C_VALIDATOR_HOME environment
+    # variable or /usr/local/validator if the variable does not exist.
+    Base = D:/www/validator
+    
+    #
+    # Location of template files
+    Templates = $Base/share/templates
+    
+    &lt;SGML&gt;
+        #
+        # The SGML Library Path.
+        Library = $Base/htdocs/sgml-lib
+        
+        #
+        # The SGML Parser to use. Defaults to /usr/bin/onsgmls.
+        Parser = D:/www/opensp/onsgmls.exe
+    &lt;/SGML&gt;
+&lt;/Paths&gt;
+
+#
+# This controls whether the debugging options are allowed to be enabled.
+Allow Debug = yes
+
+#
+# This lets you permanently enable the debugging options. Can be overridden
+# with CGI options (unlike &quot;Allow Debug&quot; above).
+Enable Debug = no
+
+#
+# Whether private RFC1918 addresses are allowed.
+Allow Private IPs = yes
+#
+
+# Whether the (highly experimental!) SOAP support should be enabled.
+Enable SOAP = no
+
+#
+# Whether the validator will check its own output.
+# 0 means it will refuse to check its own output, 1 means it will but it will
+# refuse to check the results of it checking itself. Etc.
+Max Recursion = 0
+
+#
+# Protocols the validator is allowed to use for retrieving documents.
+# The default is to allow http and https.
+&lt;Protocols&gt;
+    Allow = data,http,https
+&lt;/Protocols&gt;
+
+#
+# Email address of the maintainer of this service.
+Maintainer = mail@validator.example.org
+
+#
+# The &quot;Home Page&quot; for the service. Make sure this ends with a slash.
+Home Page = http://validator.example.org/
+
+#
+# Base URI for the Element Reference.
+Element Ref URI = http://www.htmlhelp.com/reference/html40/
+
+#
+# Mapping tables etc...
+#
+
+#
+# Maps element names to URLs (cf. &quot;Element Ref URI&quot; above).
+&lt;Elements&gt;
+    Include eref.cfg
+&lt;/Elements&gt;
+
+#
+# Main document Type Registry; contains all information on the types
+# of documents we support and how they are processed.
+&lt;Types&gt;
+    Include types.conf
+&lt;/Types&gt;
+
+#
+# Mapping of charset names to their IANA names and how iconv(3) knows them.
+&lt;Charsets&gt;
+    Include charset.cfg
+&lt;/Charsets&gt;
+
+#
+# Map MIME Media Type to Parse Mode mapping.
+&lt;MIME&gt;
+    text/xml               = XML
+    image/svg              = XML
+    image/svg+xml          = XML
+    application/smil       = XML
+    application/xml        = XML
+    text/html              = TBD
+    text/vnd.wap.wml       = XML
+    application/xhtml+xml  = XML
+    application/mathml+xml = XML
+&lt;/MIME&gt;
+
+#
+# Source for the &quot;Tip of The Day&quot; blurbs.
+&lt;Tips&gt;
+    Include tips.cfg
+&lt;/Tips&gt;
+</pre>
+<p>Now, the validator has been successfully configured. But it
+  is not ready for use yet, some lines in the validator script
+  itself have to be changed before.</p>
+
+<h3 id="adaption-of-check">Adaptation of the check-Script</h3>
+<p>The following changes are necessary because the script is 
+  written for a Unixserver where some things are different to
+  a Windows-system.</p>
+<p>The <code>check</code>-script located in the directory 
+  <code>C:\www\validator\httpd\cgi-bin</code> can be opened
+  with the editor. I will not mention any line numbers in 
+  the following steps, because they might differ in
+  later versions. Some advices are always placed in the lines above
+  in the script so that you can orientate yourself to those lines.</p>
+<p>The very first line of the script has to be changed to</p>
+<pre>
+#!c:/www/perl/bin/perl.exe
+</pre>
+<p>This is the path to the Perl interpreter, up to now in
+  Unix-style. So it has to be changed to Windows-style. The
+  parameter <code>-T</code> is replaced by that, too.</p>
+<p>In a next step, the script is told where to find the 
+  configuration file. That is done after the comment in these lines</p>
+<pre>
+#
+# Read Config Files.
+eval {
+  my %config_opts = (
+     -ConfigFile =&gt; ($ENV{W3C_VALIDATOR_CFG} || '/etc/w3c/validator.conf'),
+</pre>
+<p>We do not define an environment variable but specify the full path
+  to the file. So the lines have to be changed to</p>
+<pre>
+#
+# Read Config Files.
+eval {
+  my %config_opts = (
+     -ConfigFile =&gt; ('D:/www/validator/htdocs/config/validator.conf'),
+</pre>     
+<p>Later in the script, the command line parameters for OpenSP are
+  defined:</p>
+<pre>
+# Note: if you feel the urge to remove -R from here, please understand that
+# doing so opens a potential security hole. Don't do that; instead just
+# make sure you're running OpenSP 1.5 or later.
+my @spopt = qw(
+               -R
+               -wvalid
+               -wnon-sgml-char-ref
+               -wno-duplicate
+              );
+</pre>
+<p>The option <code>-R</code> has to be deleted, so that there remains</p>              
+<pre>
+# Note: if you feel the urge to remove -R from here, please understand that
+# doing so opens a potential security hole. Don't do that; instead just
+# make sure you're running OpenSP 1.5 or later.
+my @spopt = qw(
+               -wvalid
+               -wnon-sgml-char-ref
+               -wno-duplicate
+              );
+</pre>
+<p>After saving the script, you can use it at http://validator.example.org/
+  as you know it from http://validator.w3.org/.</p>
+<p>That is it, your own validator is working.</p>
+
+<h3 id="hints">Hints</h3>
+<p>In further versions of the validator, some other Perl modules
+  will be needed perhaps. They can be downloaded by ppm3. You 
+  can discover that case very easily: When trying to run the script,
+  you will get an output like</p>
+<pre>
+Can't locate Config/General.pm in @INC (@INC contains: C:/www/perl/lib C:/www/perl/site/lib .)
+    at C:/www/validator/httpd/cgi-bin/check line 46.
+BEGIN failed--compilation aborted at C:/www/validator/httpd/cgi-bin/check line 46.
+</pre>  
+<p>It is easy to see that the missing module is &quot;Config General&quot;,
+  that has to be installed.</p>
+<p>Windows XP with Service Pack 2 installed might have problems with the
+  loop back address 127.0.0.2. The Problem and its solution are 
+  described at <a href="http://support.microsoft.com/default.aspx?kbid=884020">http://support.microsoft.com/default.aspx?kbid=884020</a>.</p>
+<p>If you do have any further questions, you can send a mail to the author of this
+  installation guide: <a href="mailto:david@tibbe-online.de">david@tibbe-online.de</a>.</p>
+</div>
+</div>
+<!--#include virtual="../footer.html" -->
+  </body>
+</html>
