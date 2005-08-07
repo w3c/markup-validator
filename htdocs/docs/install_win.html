@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install_win.html,v 1.1 2005-08-03 04:15:25 ot Exp $" -->
-<!--#set var="date" value="\$Date: 2005-08-03 04:15:25 $" -->
+<!--#set var="revision" value="\$Id: install_win.html,v 1.2 2005-08-07 22:38:34 ot Exp $" -->
+<!--#set var="date" value="\$Date: 2005-08-07 22:38:34 $" -->
 <!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service (Windows, Apache)" -->
 <!--#set var="relroot" value="../" -->
 <!--#include virtual="../header.html" -->
@@ -57,6 +57,9 @@ to other platform-specific guides</a>.</p>
   you can download it at
   <a href="http://validator.w3.org/validator.tar.gz">http://validator.w3.org/validator.tar.gz</a>
   (~900KB). Version 7 is current.</p>
+<p>Besides the validator, a collection of <acronym title="Document Type Definition">DTDs</acronym>
+  is needed. It is downloadable from <a href="http://validator.w3.org/sgml-lib.tar.gz">http://validator.w3.org/sgml-lib.tar.gz</a>
+  (~3MB).</p> 
 <p>For parsing the files, a <acronym title="Structured Generalized Markup Language">SGML</acronym>-parser
   is responsible. Therefore, the program OpenSP 1.5 is proposed. Its
   sources are available at SourceForge
@@ -91,7 +94,8 @@ to other platform-specific guides</a>.</p>
 installed to. Just clicking &quot;Next&quot; in all installation routines is not good at all.
 On my PC, I have a directory <code>C:\www</code> in which all programs concerning my server
 are located (in subfolders for sure). So the Apache is installed to <code>C:\www\Apache2</code>,
-Perl to <code>C:\www\perl</code>, OpenSP to <code>C:\www\opensp</code> and finally the validator itself
+Perl to <code>C:\www\perl</code>, OpenSP to <code>C:\www\opensp</code>, the DTD-Collection 
+to <code>C:\www\sgml-lib</code> and finally the validator itself
 to <code>C:\www\validator</code>. The modules for Perl should be unzipped in a separate
 folder; <code>C:\www\pmm</code> in my case. In the following, these paths are used.</p>
 
@@ -294,6 +298,10 @@ NameVirtualHost 127.0.0.2:80
 <pre>
 Base = D:/www/validator
 </pre>
+<p>For the SGML <code>Library</code>, <code>c:/www/sgml-lib</code>
+  is declared. Notice that slashes are used here instead of 
+  windows-like back slashes.</p>
+
 <p>The next step to do is to define where to find OpenSP.
   So we have to change</p>
 <pre>  
@@ -315,7 +323,7 @@ Parser = D:/www/opensp/onsgmls.exe
 #
 # Main Configuration File for the W3C Markup Validation Service.
 #
-# $Id: install_win.html,v 1.1 2005-08-03 04:15:25 ot Exp $
+# $Id: install_win.html,v 1.2 2005-08-07 22:38:34 ot Exp $
 #
 # See 'perldoc Config::General' for the syntax, and be aware that the
 # 'SplitPolicy' is 'equalsign', ie. keys and values are separated by '\s*=\s*',
