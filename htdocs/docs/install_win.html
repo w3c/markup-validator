@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install_win.html,v 1.2 2005-08-07 22:38:34 ot Exp $" -->
-<!--#set var="date" value="\$Date: 2005-08-07 22:38:34 $" -->
+<!--#set var="revision" value="\$Id: install_win.html,v 1.3 2005-08-08 01:12:33 ot Exp $" -->
+<!--#set var="date" value="\$Date: 2005-08-08 01:12:33 $" -->
 <!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service (Windows, Apache)" -->
 <!--#set var="relroot" value="../" -->
 <!--#include virtual="../header.html" -->
@@ -10,7 +10,7 @@
 <div id="toc">
   <ul>
     <li><a href="#about">About this guide</a></li>
-    <li><a href="#needed-programs">Needed programs</a></li>
+    <li><a href="#needed-programs">Needed programs and other prerequisites</a></li>
     <li><a href="#directory-structure">Directory Structure</a></li>
     <li><a href="#install-programs">Installation of the Programs</a></li>
     <li><a href="#modules">Integration of the Perl-Modules</a>
@@ -18,7 +18,7 @@
         <li><a href="#modules-local">Integration from a local repository</a></li>
         <li><a href="#modules-remote">Integration from a remote repository</a></li>
       </ul></li>
-    <li><a href="#config-apache">Configuration of the Apache</a></li>
+    <li><a href="#config-apache">Configuration of the Apache Web server</a></li>
     <li><a href="#adaption-of-hosts">Adaptation of the hosts-File</a></li>
     <li><a href="#config-validator">Configuration of the Validator</a></li>
     <li><a href="#adaption-of-check">Adaptation of the check-Script</a></li>
@@ -38,39 +38,36 @@ contributed by David Tibbe. It is also available
 to install the Markup Validator on other platforms and <a href="install.html#otherguides">links
 to other platform-specific guides</a>.</p>
 
-<h3 id="needed-programs">Needed programs</h3>
-<p>For running the validator on your system, a web server is
-  required for sure. On my PC, I am running an Apache
-  (<a href="http://httpd.apache.org/">http://httpd.apache.org/</a>),
-  Version 2.0.49. Its installation and configuration will not be
-  discussed here.<br />
-  If you are running an Apache in another Version, you can use it
-  either. The changes in the configuration are quite similar to
-  the newer version.</p>
-<p>The Validator-script itself is written in Perl, so you will
-  need it, too. I use ActivePerl 5.8
-  (<a href="www.activestate.com/Products/Download/Download.plex?id=ActivePerl">www.activestate.com/Products/Download/Download.plex?id=ActivePerl</a>)
-  which installation is not difficult either because of an installer.<br />
-  As mentioned in the changelog, the Validator supports <code>mod_perl</code>. But I have
-  not tried it yet, so it will not be described in here.</p>
-<p>Of course, you need the Validator itself. Packed as a tar-archive
-  you can download it at
-  <a href="http://validator.w3.org/validator.tar.gz">http://validator.w3.org/validator.tar.gz</a>
-  (~900KB). Version 7 is current.</p>
-<p>Besides the validator, a collection of <acronym title="Document Type Definition">DTDs</acronym>
-  is needed. It is downloadable from <a href="http://validator.w3.org/sgml-lib.tar.gz">http://validator.w3.org/sgml-lib.tar.gz</a>
-  (~3MB).</p> 
-<p>For parsing the files, a <acronym title="Structured Generalized Markup Language">SGML</acronym>-parser
-  is responsible. Therefore, the program OpenSP 1.5 is proposed. Its
-  sources are available at SourceForge
+<h3 id="needed-programs">Needed programs and other prerequisites</h3>
+<p>The first prerequisite to run the validator on your system is a Web server. 
+  This guide will assume that the server is already installed, and its configuration
+  will not be discussed here. The server used in this guide is 
+  <a href="http://httpd.apache.org/">Apache</a> 2, and the instructions should be applicable
+  to most versions of Apache.</p>
+  
+<p>The Markup Validator itself is basically a script written in Perl, so you will
+  need that, too. <a href="http://www.activestate.com/Products/Download/Download.plex?id=ActivePerl">ActivePerl</a> (version 5.8),
+  is one of the options, and thanks to its installer should not be difficult to set up.</p>
+  
+<p>Of course, you will also need the Validator itself. It is available for 
+ <a href="http://validator.w3.org/source/">download</a> as two tar-archives:
+ the <a href="http://validator.w3.org/validator.tar.gz">validator itself</a>
+  (~300kB), and a <a href="http://validator.w3.org/sgml-lib.tar.gz">collection of 
+  <acronym title="Document Type Definition">DTDs</acronym></a>
+  (~400kB).</p> 
+  
+<p>At the back-end of the validator is an <acronym title="Structured Generalized Markup Language">SGML</acronym>-parser, named OpenSP. The validator needs version 1.5 or above. 
+Its source are available at SourceForge
   (<a href="http://www.sourceforge.net/projects/opensp/">http://www.sourceforge.net/projects/opensp/</a>)
-  but compiling them on Windows just causes problems. Some time ago,
+  but compiling them on Windows can be problematic. Some time ago,
   Bj&ouml;rn H&ouml;hrmann succeeded in compiling them and made the
   binaries available (<a href="http://bjoern.hoehrmann.de/ports/OpenSP-1.5.1-win32-bin.zip">http://bjoern.hoehrmann.de/ports/OpenSP-1.5.1-win32-bin.zip</a>,
-  ~600KB). You can use them but it is recommended to have a look at the
+  ~600KB). You can use them, but it is recommended to have a look at the
   OpenSP-Project page for newer binaries.</p>
-<p>The validator needs some Perl-modules. At <a href="http://ppm.activestate.com/">http://ppm.activestate.com/</a>,
-  there is a list of all available modules. In this list is also mentioned
+  
+<p>The validator relies on a number of Perl libraries, or "modules". 
+At <a href="http://ppm.activestate.com/">Active State</a>,
+  has a list of all available modules for Active Perl. In this list is also mentioned
   if a module is &quot;Core&quot; (which means it is build in) or if it
   is downloadable.<br />
   For the validator, the following modules are required:</p>
@@ -82,44 +79,54 @@ to other platform-specific guides</a>.</p>
   <li>Set-IntSpan</li>
   <li>Text-Iconv</li>
 </ul>
-<p>You can get them each of them in a single package at ActiveState; I have
-  packed them ready-to-install in a zip-file
-  (<a href="http://www.myhpi.de/~dtibbe/download/ppm.zip">http://www.myhpi.de/~dtibbe/download/ppm.zip</a>).</p>
+<p>You can get each of them in a single package at ActiveState. They are also 
+  packed  ready-to-install <a href="http://www.myhpi.de/~dtibbe/download/ppm.zip">in a single zip-file</a>,
+  (courtesy of the guide's author).
+  </p>
+
 <p>Finally you will need some calm and patience. A whole installation of
   the validator (including the Apache and Perl) will take about an hour 
   if you do not have much experience.</p>
   
 <h3 id="directory-structure">Directory Structure</h3>
 <p>It might be a good idea to think about the directories the program should be
-installed to. Just clicking &quot;Next&quot; in all installation routines is not good at all.
-On my PC, I have a directory <code>C:\www</code> in which all programs concerning my server
-are located (in subfolders for sure). So the Apache is installed to <code>C:\www\Apache2</code>,
-Perl to <code>C:\www\perl</code>, OpenSP to <code>C:\www\opensp</code>, the DTD-Collection 
-to <code>C:\www\sgml-lib</code> and finally the validator itself
-to <code>C:\www\validator</code>. The modules for Perl should be unzipped in a separate
-folder; <code>C:\www\pmm</code> in my case. In the following, these paths are used.</p>
+installed to. Just clicking &quot;Next&quot; in all installation routines is not a very good idea.</p>
+
+<p>One suggested method is to  have a directory <code>C:\www</code> in which all programs concerning the 
+Web server are located (in subfolders, obviously). For instance, Apache is installed in 
+<code>C:\www\Apache2</code>, Perl in <code>C:\www\perl</code>, the perl modules unzipped in <code>C:\www\pmm</code>, OpenSP in <code>C:\www\opensp</code>, the DTD-Collection in <code>C:\www\sgml-lib</code> and finally the validator itself
+in <code>C:\www\validator</code>.</p>
+
+<p>The rest of this guide will assume that these paths are being used. If you want to use another 
+directory structure, you will have to adapt the instructions and sample configuration to your
+own setup.</p>
 
 <h3 id="install-programs">Installation of the Programs</h3>
-<p>Now, the programs are getting installed one after the other. First, the Apache
-  should be installed and successfully started. As mentioned, this will not be
-  described in here, but you will find a lot of How-Tos all over the net, e.g.
-  in the Apache-Documentation:
-  <a href="http://httpd.apache.org/docs/2.0/platform/windows.html">http://httpd.apache.org/docs/2.0/platform/windows.html</a>.
-  The only fact that is important to know is that the installation
-  routine will create a subfolder <code>Apache2</code> by itself. When choosing
-  <code>C:\www</code> as installation directory, the Apache will be installed to
+<p>Next, you will be installing all the programs and libraries one after the other.</p>
+
+<p>The Apache Web server
+  should first be installed and successfully started. As mentioned, this will not be
+  explained in here, but you will find a lot of How-Tos all over the net, e.g.
+  in the <a href="http://httpd.apache.org/docs/2.0/platform/windows.html">Documentation on the Apache site</a>
+  The only thing that is important to know is that the installation
+  routine will create a subfolder <code>Apache2</code> by itself. Therefore, you will want to choose
+  <code>C:\www</code> as installation directory, and Apache will be installed to
   <code>C:\www\Apache2</code>.</p>
+  
 <p>Perl is the next program to be installed. Because of the installer, it is
-  no problem either. Just make sure that you install ppm3, too. This
+  also easy. Just make sure that you install ppm3, too. This
   program is needed for adding the Perl-modules.</p>
+  
 <p>OpenSP is available in a zip-file, you just need to unzip it in
   the corresponding folder. It is the same for the Validator and,
   if downloaded, my Perl-module collection.</p>
 
 <h3 id="modules">Adding the Perl-Modules</h3>
-<p>Now, there is a bit more difficult step: adding the Perl-Modules.
-  Therefore, the program ppm3 is used (ppm means &quot;Programmer's
-  Package Manager&quot;). You can start it by clicking the
+<p>Now comes a slightly more difficult step: installing the Perl Modules.</p>
+<p>ppm3 (the &quot;Programmer's
+  Package Manager&quot;), which you downloaded and installed with ActivePerl, should be used.</p>
+<p> 
+  You can start ppm3 by clicking the
   <kbd>Start</kbd>-Button, selecting <kbd>Run...</kbd>, typing <kbd>ppm3</kbd> and pressing return.
   The program will look like this:</p>
 <p style="text-align: center"><img src="<!--#echo var="relroot" -->images/ppm_1.png" alt="PPM after the startup" /></p>
@@ -170,7 +177,7 @@ folder; <code>C:\www\pmm</code> in my case. In the following, these paths are us
   result of your search). When getting different versions of a module,
   the newest might be the best choice.</p>
   
-<h3 id="config-apache">Configuration of the Apache</h3>
+<h3 id="config-apache">Configuration of the Apache Web server</h3>
 <p>The first file to edit is the <code>httpd.conf</code> located at 
   <code>C:\www\Apache2\conf</code>, the central configuration file 
   of your Apache. It is recommended to make a backup before editing
@@ -323,7 +330,7 @@ Parser = D:/www/opensp/onsgmls.exe
 #
 # Main Configuration File for the W3C Markup Validation Service.
 #
-# $Id: install_win.html,v 1.2 2005-08-07 22:38:34 ot Exp $
+# $Id: install_win.html,v 1.3 2005-08-08 01:12:33 ot Exp $
 #
 # See 'perldoc Config::General' for the syntax, and be aware that the
 # 'SplitPolicy' is 'equalsign', ie. keys and values are separated by '\s*=\s*',
@@ -527,8 +534,8 @@ BEGIN failed--compilation aborted at C:/www/validator/httpd/cgi-bin/check line 4
 <p>Windows XP with Service Pack 2 installed might have problems with the
   loop back address 127.0.0.2. The Problem and its solution are 
   described at <a href="http://support.microsoft.com/default.aspx?kbid=884020">http://support.microsoft.com/default.aspx?kbid=884020</a>.</p>
-<p>If you do have any further questions, you can send a mail to the author of this
-  installation guide: <a href="mailto:david@tibbe-online.de">david@tibbe-online.de</a>.</p>
+<p>If you do have any further questions or suggestions to improve this guide,
+ you can use our <a href="../feedback.html">feedback</a> channels.</p>
 </div>
 </div>
 <!--#include virtual="../footer.html" -->
