@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.13 2005-08-03 04:15:25 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-08-03 04:15:25 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.14 2005-08-08 15:11:37 ville Exp $"
+--><!--#set var="date" value="\$Date: 2005-08-08 15:11:37 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -94,7 +94,7 @@
             title="Comprehensive Perl Archive Network">CPAN</acronym></a>
         (minimum versions in parenthesis after the name). The following
         list was complete when CVS spit out:
-        <code>$Date: 2005-08-03 04:15:25 $</code>. <tt>:-)</tt>
+        <code>$Date: 2005-08-08 15:11:37 $</code>. <tt>:-)</tt>
       </p>
      <p>
        One easy - and strongly recommended - way to take care of all these
@@ -169,14 +169,24 @@
             <li><p>Proceed with the  Prerequisites, as detailed above.</p></li>
                 
             <li><p>Create a directory for the validator's installation. On Unix-based systems, 
-            the default will be <code>/usr/local/validator</code>.This directory
-            will be referred as [validatorpath]  throughout this guide.</p></li>
+            the default will be <code>/usr/local/validator</code>. This
+            directory will be referred to as <code>[validatorpath]</code>
+            throughout this guide.</p></li>
                 
-            <li><p>Unpack the archives of the validator and DTD library into <code>[validatorpath]</code></p>
-            <p>The <code>[validatorpath]</code> directory should now have subdirectories named 
-            <code>htdocs</code>, <code>httpd</code>, <code>config</code> and <code>sgml-lib</code> 
-            (if you used CVS, the latter is actually in the <code>htdocs</code> subdirectory, 
-            but that is not really important).</p></li>
+            <li>
+              <p>
+                Unpack the archives of the validator and DTD library into a
+                temporary directory, and copy the directories
+                <code>htdocs</code>, <code>httpd/cgi-bin</code>, and
+                <code>share</code> from <code>validator-<em>X.X.X</em></code>
+                into <code>[validatorpath]</code>.
+              </p>
+              <p>
+                The <code>[validatorpath]</code> directory should now have
+                subdirectories named <code>cgi-bin</code>, <code>htdocs</code>,
+                and and <code>share</code>.
+              </p>
+            </li>
         </ol>
     <h4><a id="install-configure" name="install-configure"></a>Configure</h4>
 	<h5>Configuration files</h5>
@@ -191,29 +201,25 @@
         are really mapping tables of some form -- to avoid having to check in
         a new version of the code every time a new version of HTML comes out.
         All configuration files can be found in
-        <code>$CVSROOT/validator/htdocs/config/</code>.
+        <code>htdocs/config/</code>.
       </p>
       <p>
         To really understand what each does you should read the source, but
         here is a short description to get you started.
       </p>
       <dl>
+        <dt>charset.cfg</dt>
+        <dd>
+          Maps character sets to conversion parameters for validator's
+          internal UTF-8 conversion.
+        </dd>
         <dt>eref.cfg</dt>
         <dd>
-          Contains the mappings from element names to an URL fragment
+          Contains the mappings from element names to a URL path
           (relative to a configurable URL) for their definitions. Used
-          in output when the "Show Source Input" option is enabled.
+          in output when the "Show Parse Tree" option is enabled.
         </dd>
-        <dt>fpis.cfg</dt>
-        <dd>
-          Maps FPIs to plain text version strings.
-        </dd>
-        <dt>frag.cfg</dt>
-        <dd>
-          Maps error messages to an URL fragment identifier where an
-          explanation of that error can be found.
-        </dd>
-        <dt>type.cfg</dt>
+        <dt>types.conf</dt>
         <dd>
           Maps MIME/HTTP Content-Types to an internal "document type" which
           is used for treating HTML, XML, and XHTML in different ways.
@@ -232,15 +238,23 @@
 	<p>The following instructions are for the Apache Web server, and should be adapted 
 	if you plan on using another server.</p>
         <ol>
-            <li><p>Edit the configuration of your Web server to refer to the specific configuration file
-            for the Validation service.</p>
-            <p>This can be done by adding this line:</p>
-            <pre>Include [validatorpath]/httpd/conf/validator-httpd.conf</pre>
+            <li>
+              <p>
+                Edit the configuration of your Web server to refer to the
+                specific configuration file for the validator.
+              </p>
+              <p>
+                This can be done by inserting the contents of the
+                <code>httpd/conf/httpd.conf</code> file (from where you
+                unpacked the validator's tarball above) in your
+                <code>httpd.conf</code>, or by copying the file somewhere
+                and including it like:
+              </p>
+              <pre>Include /where/you/copied/it/httpd.conf</pre>
+              <p>
+                Then, start editing the validator specific part.
+              </p>
             </li>
-
-            <li><p>Copy <code>[validatorpath]/httpd/conf/httpd.conf</code> to 
-            <code>[validatorpath]/httpd/conf/validator-httpd.conf</code> and start 
-            editing this file.</p></li>
             
             <li><p>You may want to set up a "virtual server" for the service. This can be done
             by adding something similar to the following :</p>
@@ -262,15 +276,22 @@
             <code>apachectl configtest</code> then <code>apachectl restart</code>)</p></li>
        </ol>
 
-       <h5>Configure the Validator itself</h5>
+    <h5>Configure the Validator itself</h5>
     <ol>
-            <li><p>Create the directory <code>/etc/w3c</code> and create a file called 
-            <code>validator.conf</code> using the file 
-            <code>[validatorpath]/htdocs/config/validator.conf</code> as
-             template.</p></li>
-	    <li><p> 
-             Make changes to reflect where files are in your installation.</p>
-            This file is well commented and this should be relatively straightforward. </li>
+        <li>
+          <p>
+            Create the directory <code>/etc/w3c</code> and copy a the files
+            from <code>[validatorpath]/htdocs/config/</code> to it.
+          </p>
+        </li>
+        <li>
+          <p>
+            Edit <code>/etc/w3c/validator.conf</code> to reflect where files
+            are in your installation, and configure other parameters there as
+            you wish.  This file is well commented and modifying it should be
+            relatively straightforward.
+          </p>
+        </li>
     </ol>
     <h4><a id="install-check" name="install-check"></a>Check the installation</h4>
     <ol>
