@@ -4,14 +4,15 @@
    Copyright 2000-2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.55 2005-06-21 05:18:12 ot Exp $
+   $Id: base.css,v 1.56 2005-08-12 01:56:47 ot Exp $
 */
 
 @import url("results.css"); /* CSS for validation results. */
 @import url("navbar.css");  /* CSS for navigation menu. */
 @import url("tips.css");    /* CSS for Quality Tips. */
 @import url("docs.css");    /* CSS for the Documentation. */
-/* the print/handheld CSS imports are at the end of this document */
+@import url("print.css") print;
+@import url("handheld.css") handheld;
 
 
 /* Special Notices */
@@ -306,6 +307,4 @@ input.default {
     font-weight: bold;
 }
 
-@import url("print.css") print;
-@import url("handheld.css") handheld;
 

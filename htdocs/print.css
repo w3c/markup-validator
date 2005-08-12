@@ -2,7 +2,7 @@
 /* should not be necessary to wrap this way, but safer is better */
 {
     #menu, .jumpbar, address, .copyright, #revalidate { 
-        display: none 
+        display: none; 
         }
 
     html {
