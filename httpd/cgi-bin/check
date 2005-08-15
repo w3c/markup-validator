@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.433 2005-08-15 20:54:51 bjoern Exp $
+# $Id: check,v 1.434 2005-08-15 21:08:50 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -169,7 +169,7 @@ Directory not readable (permission denied): @_r
   #
   # Split allowed protocols into a list.
   if (my $allowed = delete($CFG->{Protocols}->{Allow})) {
-    $CFG->{Protocols}->{Allow} = [ split(/\s*,\s*/, $allowed) ];
+    $CFG->{Protocols}->{Allow} = [split(/\s*,\s*/, $allowed)];
   }
 
   #
@@ -188,10 +188,10 @@ Directory not readable (permission denied): @_r
   #
   # Change strings to internal constants in MIME type mapping.
   for (keys %{$CFG->{MIME}}) {
-    if    ($CFG->{MIME}->{$_} eq 'SGML') {$CFG->{MIME}->{$_} = MODE_SGML}
-    elsif ($CFG->{MIME}->{$_} eq 'XML')  {$CFG->{MIME}->{$_} = MODE_XML}
-    elsif ($CFG->{MIME}->{$_} eq 'TBD')  {$CFG->{MIME}->{$_} = MODE_TBD}
-    else                                 {$CFG->{MIME}->{$_} = MODE_TBD};
+    if    ($CFG->{MIME}->{$_} eq 'SGML') { $CFG->{MIME}->{$_} = MODE_SGML }
+    elsif ($CFG->{MIME}->{$_} eq 'XML')  { $CFG->{MIME}->{$_} = MODE_XML }
+    elsif ($CFG->{MIME}->{$_} eq 'TBD')  { $CFG->{MIME}->{$_} = MODE_TBD }
+    else                                 { $CFG->{MIME}->{$_} = MODE_TBD }
   }
 
   #
@@ -204,8 +204,8 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.433 $;
-  $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
+  $VERSION =  q$Revision: 1.434 $;
+  $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
   # Use passive FTP by default.
@@ -215,7 +215,6 @@ Directory not readable (permission denied): @_r
 #
 # Get rid of (possibly insecure) $PATH.
 delete $ENV{PATH};
-
 
 #@@DEBUG: Dump $CFG datastructure. Used only as a developer aid.
 #use Data::Dumper qw(Dumper);
@@ -235,7 +234,6 @@ my $q = new CGI;
 # The data structure that will hold all session data.
 my $File;
 
-
 ##############################################
 # Populate $File->{Env} -- Session Metadata. #
 ##############################################
@@ -243,7 +241,6 @@ my $File;
 #
 # The URL to this CGI Script.
 $File->{Env}->{'Self URI'} = $q->url(-query => 0);
-
 
 #################################
 # Initialize the datastructure. #
@@ -271,7 +268,6 @@ $File->{Offsets}->[0] = [0, 0]; # The first item isn't used...
 $File->{Lines}      = []; # Line numbers for encoding errors.
 $File->{Warnings}   = []; # Warnings...
 $File->{Namespaces} = []; # Other (non-root) Namespaces.
-
 
 ###############################################################################
 #### Generate Template for Result. ############################################
@@ -464,9 +460,6 @@ if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
         $File->{Charset}->{Use} = $File->{Charset}->{Override};
       } 
     }
-    
-    
-    
   }
 }
 
@@ -476,11 +469,9 @@ unless ($File->{Charset}->{Use}) { # No charset given...
   $File->{Charset}->{Use} = 'utf-8';
 }
 
-
 #
 # Abort if an error was flagged while finding the encoding.
 &abort_if_error_flagged($File, O_CHARSET|O_DOCTYPE);
-
 
 #
 # Check the detected Encoding and transcode.
@@ -489,15 +480,12 @@ if (&conflict($File->{Charset}->{Use}, 'utf-8')) {
   &abort_if_error_flagged($File, O_CHARSET);
 }
 
-
 $File = &check_utf8($File); # always check
 $File = &byte_error($File);
 
 #
 # Abort if an error was flagged during transcoding
 &abort_if_error_flagged($File, O_SOURCE|O_CHARSET);
-
-
 
 #
 # Overall parsing algorithm for documents returned as text/html:
@@ -604,7 +592,6 @@ sub parse (\$) {
 #    }
   }
 
-
   #
   # Defaults for SP; turn off fixed charset mode and set encoding to UTF-8.
   $ENV{SP_CHARSET_FIXED} = 'NO';
@@ -618,7 +605,6 @@ sub parse (\$) {
   #
   # Set the command to execute.
   my @cmd = ($CFG->{Paths}->{SGML}->{Parser}, '-n', '-c', $catalog, @spopt);
-
 
   #
   # Set debug info for HTML report.
@@ -757,7 +743,6 @@ if (my $prettyver = $CFG->{Types}->{$File->{Version}}->{Display}) {
   $File->{Version} = $prettyver;
 }
 
-
 #
 # Warn about unknown, incorrect, or missing Namespaces.
 if ($File->{Namespace}) {
@@ -789,9 +774,6 @@ if ($File->{Opt}->{Output} eq 'xml') {
 } else {
   &prep_template($File, $T);
 
-  
-  
-  
   if (! $File->{Doctype} and ($File->{Version} eq 'unknown' or $File->{Version} eq 'SGML' or (!$File->{Version}))) {
     # @@TODO@@ we should try falling back on other version info, such as the ones stored in Version_ESIS 
     $T->param(file_version => '(no Doctype found)');
@@ -842,7 +824,6 @@ if ($File->{Opt}->{Output} eq 'xml') {
 # Get rid of $File object and exit.
 undef $File;
 exit;
-
 
 #############################################################################
 # Subroutine definitions
@@ -917,7 +898,6 @@ sub prep_template ($$) {
       my $over_charset_param = "override charset $File->{Opt}->{Charset}";
        $T->param($over_charset_param => TRUE);   
   }
-  
 }
 
 #
@@ -2174,10 +2154,10 @@ X-W3C-Validator-Errors: $errs
       $err->{idx} =  $err->{msg};
       $err->{idx} =~ s/"[^\"]*"/FOO/g;
       $err->{idx} =~ s/[^A-Za-z ]//g;
-      $err->{idx} =~ s/\s+/ /g; # Collapse spaces
-      $err->{idx} =~ s/(^\s|\s$)//g; # Remove leading and trailing spaces.
+      $err->{idx} =~ s/\s+/ /g;        # Collapse spaces
+      $err->{idx} =~ s/(^\s|\s$)//g;   # Remove leading and trailing spaces.
       $err->{idx} =~ s/(FOO )+/FOO /g; # Collapse FOOs.
-      $err->{idx} =~ s/FOO FOO/FOO/g; # Collapse FOOs.
+      $err->{idx} =~ s/FOO FOO/FOO/g;  # Collapse FOOs.
 
       my $offset = $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char};
       printf <<".EOF.", &ent($err->{msg});
@@ -2566,7 +2546,7 @@ sub uri_ok {
   }
   if ($iptype && $iptype ne 'PUBLIC') {
     my $File = $self->{'W3C::Validator::File'};
-    $File->{'Error Flagged'}            =  1;
+    $File->{'Error Flagged'} = 1;
     $File->{E}->param(fatal_ip_error    => 1);
     $File->{E}->param(fatal_ip_hostname => 1)
       if $addr and $uri->host() ne $addr;
