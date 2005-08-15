@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.434 2005-08-15 21:08:50 bjoern Exp $
+# $Id: check,v 1.435 2005-08-15 22:12:43 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -57,7 +57,6 @@ use Text::Wrap           qw(wrap);
 use URI                  qw();
 use URI::Escape          qw(uri_escape);
 
-
 ###############################################################################
 #### Constant definitions. ####################################################
 ###############################################################################
@@ -95,7 +94,6 @@ use constant MODE_WF   => 8; # 0000 1000, only XML well-formed checking.
 #
 # Define global variables.
 use vars qw($DEBUG $CFG $RSRC $VERSION);
-
 
 #
 # Things inside BEGIN don't happen on every request in persistent environments
@@ -142,7 +140,7 @@ included files are readable by the web server user. The error was:\n'$@'
   #
   # Check a filesystem path for existance and "readability".
   sub pathcheck (@) {
-    my %paths = map {$_ => [-d $_, -r _]} @_;
+    my %paths = map { $_ => [-d $_, -r _] } @_;
     my @_d = grep {not $paths{$_}->[0]} keys %paths;
     my @_r = grep {not $paths{$_}->[1]} keys %paths;
     return TRUE if (scalar(@_d) + scalar(@_r) == 0);
@@ -180,7 +178,7 @@ Directory not readable (permission denied): @_r
 
   { # Make types config indexed by FPI.
     my $_types = {};
-    map {$_types->{$CFG->{Types}->{$_}->{PubID}} = $CFG->{Types}->{$_}}
+    map { $_types->{$CFG->{Types}->{$_}->{PubID}} = $CFG->{Types}->{$_} }
       keys %{$CFG->{Types}};
     $CFG->{Types} = $_types;
   }
@@ -204,7 +202,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.434 $;
+  $VERSION =  q$Revision: 1.435 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -296,13 +294,11 @@ $File->{T} = $T;
 $File->{E} = $E;
 $File->{H} = $H;
 
-
 # Read friendly error message file
 my $error_messages_list =  File::Spec->catfile($CFG->{Paths}->{Templates}, $lang, 'error_messages.cfg');
 my %config_opts = (-ConfigFile => $error_messages_list);
 my %rsrc = Config::General->new(%config_opts)->getall();
 $RSRC = \%rsrc;
-
 
 $T->param(cfg_home_page => $CFG->{'Home Page'});
 
@@ -377,7 +373,6 @@ undef $q;
 # by Apache::Registry's idiotic interference under mod_perl.
 untie *STDIN;
 
-
 ###############################################################################
 #### Output validation results. ###############################################
 ###############################################################################
@@ -410,8 +405,6 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
 } elsif (&is_xml($File) and not $File->{ContentType} =~ m(^text/)) {
   $File->{Charset}->{Use} = 'utf-8'; # UTF-8 (image/svg+xml etc.)
 }
-
-
 
 $File->{Content} = &normalize_newlines($File->{Bytes},
                        exact_charset($File, $File->{Charset}->{Use}));
@@ -447,9 +440,9 @@ if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
       $File->{Tentative} |= T_ERROR;
       $File->{Charset}->{Use} = $File->{Charset}->{Override};
      }
-     else { #actually overriding something 
+     else { #actually overriding something
       # Warn about Override unless it's the same as the real charset...
-    
+
       unless ($File->{Charset}->{Override} eq $File->{Charset}->{Use}) {
         &add_warning('W03', {
           W03_use => $File->{Charset}->{Use},
@@ -458,7 +451,7 @@ if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
 
         $File->{Tentative} |= T_ERROR;
         $File->{Charset}->{Use} = $File->{Charset}->{Override};
-      } 
+      }
     }
   }
 }
@@ -518,13 +511,13 @@ if ($File->{DOCTYPE}) {
     my $cfg  = $CFG->{Types}->{$fpi};
     my $mode = $cfg->{'Parse Mode'};
 
-    if    ($mode eq 'SGML') {$mode = MODE_SGML}
-    elsif ($mode eq 'XML')  {$mode = MODE_XML}
-    else                    {$mode = MODE_TBD}
+    if    ($mode eq 'SGML') { $mode = MODE_SGML }
+    elsif ($mode eq 'XML')  { $mode = MODE_XML }
+    else                    { $mode = MODE_TBD }
 
     if ($File->{Mode} == MODE_TBD) {
-      if    ($mode == MODE_SGML) {$File->{Mode} = MODE_SGML}
-      elsif ($mode == MODE_XML)  {$File->{Mode} = MODE_XML}
+      if    ($mode == MODE_SGML) { $File->{Mode} = MODE_SGML }
+      elsif ($mode == MODE_XML)  { $File->{Mode} = MODE_XML }
       else {
         $File->{Mode} = MODE_SGML;
         &add_warning('W06', {});
@@ -534,9 +527,9 @@ if ($File->{DOCTYPE}) {
         my $dtd = $mode;
         my $ct  = $File->{Mode};
         for ($dtd, $ct) {
-          if    ($_ == MODE_SGML) {$_ = 'SGML'}
-          elsif ($_ == MODE_XML)  {$_ =  'XML'}
-          else                    {$_ = 'SGML'};
+          if    ($_ == MODE_SGML) { $_ = 'SGML' }
+          elsif ($_ == MODE_XML)  { $_ =  'XML' }
+          else                    { $_ = 'SGML' }
         }
         unless ($File->{Mode} == MODE_TBD) {
           &add_warning('W07', {
@@ -775,7 +768,7 @@ if ($File->{Opt}->{Output} eq 'xml') {
   &prep_template($File, $T);
 
   if (! $File->{Doctype} and ($File->{Version} eq 'unknown' or $File->{Version} eq 'SGML' or (!$File->{Version}))) {
-    # @@TODO@@ we should try falling back on other version info, such as the ones stored in Version_ESIS 
+    # @@TODO@@ we should try falling back on other version info, such as the ones stored in Version_ESIS
     $T->param(file_version => '(no Doctype found)');
   }
   else {
@@ -888,15 +881,15 @@ sub prep_template ($$) {
   }
   my @nss                   =  map({uri => $_}, @{$File->{Namespaces}});
   $T->param(file_namespaces => \@nss) if @nss;
-  
+
   if ($File->{Opt}->{DOCTYPE}) {
       my $over_doctype_param = "override doctype $File->{Opt}->{DOCTYPE}";
-       $T->param($over_doctype_param => TRUE);   
+       $T->param($over_doctype_param => TRUE);
   }
-  
+
   if ($File->{Opt}->{Charset}) {
       my $over_charset_param = "override charset $File->{Opt}->{Charset}";
-       $T->param($over_charset_param => TRUE);   
+       $T->param($over_charset_param => TRUE);
   }
 }
 
@@ -991,12 +984,12 @@ sub handle_uri {
 
   unless ($ua->is_protocol_supported($uri)) {
     $File->{'Error Flagged'} = TRUE;
-    if (($uri->canonical() eq "1") ) 
+    if (($uri->canonical() eq "1") )
     #if uri param is empty (also for empty direct or upload), it's been set to TRUE in sub prepCGI()
     {
-      $File->{E}->param(fatal_no_content  => TRUE);      
+      $File->{E}->param(fatal_no_content  => TRUE);
     }
-    else { 
+    else {
       $File->{E}->param(fatal_uri_error  => TRUE);
       $File->{E}->param(fatal_uri_scheme => $uri->scheme());
     }
@@ -1065,7 +1058,6 @@ sub handle_uri {
   $File->{'Is Upload'}     = FALSE;
 
   return $File;
-
 }
 
 #
@@ -1274,9 +1266,10 @@ sub truncate_line {
 # Suppress any existing DOCTYPE by commenting it out.
 sub override_doctype {
   no strict 'vars';
-  my $File  = shift;
-  my ($dt)  =
+  my $File = shift;
+  my ($dt) =
     grep { $_->{Display} eq $File->{Opt}->{DOCTYPE} } values %{$CFG->{Types}};
+
   # @@TODO: abort/whine about unrecognized doctype if $dt is undef.;
   my $pubid = $dt->{PubID};
   my $sysid = $dt->{SysID};
@@ -1284,9 +1277,10 @@ sub override_doctype {
   local $dtd = qq(<!DOCTYPE $name PUBLIC "$pubid");
   $dtd .= qq( "$sysid") if $sysid; # We don't have one for all types.
   $dtd .= '>';
+  
   local $org_dtd = '';
-  local $HTML = '';
-  local $seen = FALSE;
+  local $HTML    = '';
+  local $seen    = FALSE;
 
   my $declaration = sub {
     $seen = TRUE;
@@ -1294,7 +1288,8 @@ sub override_doctype {
     # No Override if Fallback was requested.
     if ($File->{Opt}->{FB}->{DOCTYPE}) {
       $HTML .= $_[0]; # Stash it as is...
-    } else { # Comment it out and insert the new one...
+    } else {
+      # Comment it out and insert the new one...
       $HTML .= "$dtd\n" . '<!-- ' . $_[0] . ' -->';
       $org_dtd = &ent($_[0]);
     }
@@ -1359,6 +1354,7 @@ sub parse_errors ($$) {
     $err->{src}  = $errors[1];
     $err->{line} = $errors[2];
     $err->{char} = $errors[3];
+    
     # Workaround for onsgmls 1.5 sometimes reporting errors beyond EOL.
     if ((my $l = length($File->{Content}->[$err->{line}-1])) < $err->{char}) {
       $err->{char} = $l;
@@ -1368,6 +1364,7 @@ sub parse_errors ($$) {
     if ($err->{type} eq 'E' or $err->{type} eq 'X' or $err->{type} eq 'Q') {
       $err->{msg}  = join ':', @errors[6 .. $#errors];
     } elsif ($err->{type} eq 'W') {
+
       #@@FIXME: This is borked after templatification.
       # &add_warning($File, 'fake', 'Warning:',
       #  "Line $err->{line}, column $err->{char}: " . &ent($errors[6]));
@@ -1437,7 +1434,7 @@ sub report_errors ($) {
 	{
 		$_msg =~ s/<!--URI-->//g
 	}
-	else 
+	else
 	{
 		my $escaped_uri = uri_escape($File->{URI});
         	$_msg =~ s/<!--URI-->/$escaped_uri/g;
@@ -1448,7 +1445,7 @@ sub report_errors ($) {
       $err->{src} = $line;
       $err->{col} = ' ' x $col;
       $err->{expl} = $explanation;
-      if ($err->{type} eq 'I') 
+      if ($err->{type} eq 'I')
       {
         $err->{class} = 'msg_info';
         $err->{err_type_info} = 1;
@@ -1459,7 +1456,7 @@ sub report_errors ($) {
         $err->{err_type_err} = 1;
         $number_of_errors += 1;
       }
-      elsif (($err->{type} eq 'W') or ($err->{type} eq 'X') ) 
+      elsif (($err->{type} eq 'W') or ($err->{type} eq 'X') )
       {
         $err->{class} = 'msg_warn';
         $err->{err_type_warn} = 1;
@@ -1554,7 +1551,7 @@ sub outline {
   my $prevlevel = 0;
   my $level     = 0;
 
-  for (1 .. $#{$File->{ESIS}}) {
+  for (1..$#{$File->{ESIS}}) {
     my $line = $File->{ESIS}->[$_];
     next unless ($line && $line =~ /^\(H([1-6])$/i);
 
@@ -1736,11 +1733,10 @@ sub show_esis ($) {
   for (@{shift->{ESIS}}) {
     s/\\012//g;
     s/\\n/\n/g;
-    
-     $file_esis .= ent $_;
-     $file_esis .= "\n";
+    $file_esis .= ent $_;
+    $file_esis .= "\n";
   }
-  return  $file_esis;  
+  return  $file_esis;
 }
 
 #
@@ -1757,7 +1753,7 @@ sub show_errors ($) {
 # Preprocess CGI parameters.
 sub prepCGI {
   my $File = shift;
-  my    $q = shift;
+  my $q    = shift;
 
   # Avoid CGI.pm's "exists but undef" behaviour.
   if (scalar $q->param) {
@@ -1765,6 +1761,7 @@ sub prepCGI {
       next if $param eq 'uploaded_file'; # 'uploaded_file' contains data.
       next if $param eq 'fragment';      # Ditto 'fragment'.
       next if $q->param($param) eq '0';  # Keep false-but-set params.
+
       #
       # Parameters that are given to us without specifying a value get
       # set to "1" (the "TRUE" constant). This is so we can test for the
@@ -1809,6 +1806,7 @@ sub prepCGI {
       print redirect &self_url_q($q, $File);
       exit;
     } else {
+        
       # Redirected from /check/referer to /check?uri=referer because
       # the browser didn't send a Referer header, or the request was
       # for /check?uri=referer but no Referer header was found.
@@ -1999,10 +1997,13 @@ sub transcode {
     $_ = $c->convert($_); # $_ is local!!
     if ($in ne "" and (!defined($_) || $_ eq "")) {
       push @{$File->{Lines}}, $line;
+      
       # try to decoded as much as possible of the line
-      my $short = 0;               # longest okay
-      my $long = (length $in) - 1; # longest unknown
-      while ($long > $short) { # binary search
+      my $short = 0;                # longest okay
+      my $long  = (length $in) - 1; # longest unknown
+      
+      while ($long > $short) {
+        # binary search
         my $try = int (($long+$short+1) / 2);
         my $converted = $c->convert(substr($in, 0, $try));
         if (!defined($converted) || $converted eq "") {
@@ -2079,7 +2080,7 @@ sub report_xml {
   my $errs  = ($File->{'Is Valid'} ? '0'     : scalar @{$File->{Errors}});
   if ($File->{E}->param('fatal_http_error')) {
     $valid = 'Could not validate';
-  } 
+  }
 
   print <<".EOF.";
 Content-Type: application/xml; charset=UTF-8
@@ -2151,7 +2152,7 @@ X-W3C-Validator-Errors: $errs
       chomp $err->{msg};
 
       # Find index into the %frag hash for the "explanation..." links.
-      $err->{idx} =  $err->{msg};
+      $err->{idx} = $err->{msg};
       $err->{idx} =~ s/"[^\"]*"/FOO/g;
       $err->{idx} =~ s/[^A-Za-z ]//g;
       $err->{idx} =~ s/\s+/ /g;        # Collapse spaces
@@ -2178,7 +2179,7 @@ sub report_earl {
   my $errs  = ($File->{'Is Valid'} ? '0'     : scalar @{$File->{Errors}});
   if ($File->{E}->param('fatal_http_error')) {
     $valid = 'Could not validate';
-  } 
+  }
 
   print <<".EOF.";
 Content-Type: application/rdf+xml; charset=UTF-8
@@ -2219,10 +2220,10 @@ X-W3C-Validator-Errors: $errs
       $err->{idx} =  $err->{msg};
       $err->{idx} =~ s/"[^\"]*"/FOO/g;
       $err->{idx} =~ s/[^A-Za-z ]//g;
-      $err->{idx} =~ s/\s+/ /g; # Collapse spaces
-      $err->{idx} =~ s/(^\s|\s\Z)//g; # Remove leading and trailing spaces.
+      $err->{idx} =~ s/\s+/ /g;        # Collapse spaces
+      $err->{idx} =~ s/(^\s|\s\Z)//g;  # Remove leading and trailing spaces.
       $err->{idx} =~ s/(FOO )+/FOO /g; # Collapse FOOs.
-      $err->{idx} =~ s/FOO FOO/FOO/g; # Collapse FOOs.
+      $err->{idx} =~ s/FOO FOO/FOO/g;  # Collapse FOOs.
 
       my @offsets = (
                      $File->{Offsets}->[$err->{line}    ]->[0],
@@ -2275,7 +2276,7 @@ sub report_n3 {
   my $errs  = ($File->{'Is Valid'} ? '0' : scalar @{$File->{Errors}});
   if ($File->{E}->param('fatal_http_error')) {
     $valid = 'Could not validate';
-  } 
+  }
 
   print <<".EOF.";
 Content-Type: text/plain; charset=UTF-8
@@ -2300,10 +2301,10 @@ X-W3C-Validator-Errors: $errs
       $err->{idx} =  $err->{msg};
       $err->{idx} =~ s/"[^\"]*"/FOO/g;
       $err->{idx} =~ s/[^A-Za-z ]//g;
-      $err->{idx} =~ s/\s+/ /g; # Collapse spaces
-      $err->{idx} =~ s/(^\s|\s\Z)//g; # Remove leading and trailing spaces.
+      $err->{idx} =~ s/\s+/ /g;        # Collapse spaces
+      $err->{idx} =~ s/(^\s|\s\Z)//g;  # Remove leading and trailing spaces.
       $err->{idx} =~ s/(FOO )+/FOO /g; # Collapse FOOs.
-      $err->{idx} =~ s/FOO FOO/FOO/g; # Collapse FOOs.
+      $err->{idx} =~ s/FOO FOO/FOO/g;  # Collapse FOOs.
 
       my @offsets = (
                      $File->{Offsets}->[$err->{line}    ]->[0],
@@ -2394,20 +2395,24 @@ sub find_xml_encoding {
 
   ($File->{Charset}->{Auto}, $File->{BOM}, $CodeUnitSize, $Pattern)
     = &find_base_encoding($File->{Bytes});
+
+  # 100 arbitrary, but enough in any case
   my $someBytes = substr $File->{Bytes}, $File->{BOM}, ($CodeUnitSize * 100);
-  my $someText = '';                  # 100 arbitrary, but enough in any case
+  my $someText  = '';
 
   # translate from guessed encoding to ascii-compatible
   if ($File->{Charset}->{Auto} eq 'ebcdic') {
+
     # special treatment for EBCDIC, maybe use tr///
     # work on this later
   }
   elsif (!$Pattern) {
     $someText = $someBytes; # efficiency shortcut
   }
-  else { # generic code for UTF-16/UCS-4
+  else {
+    # generic code for UTF-16/UCS-4
     $someBytes =~ /^(($Pattern)*)/s;
-    $someText = $1;       # get initial piece without chars >255
+    $someText = $1;                   # get initial piece without chars >255
     $someText =~ s/$Pattern/$1/sg;    # select the relevant bytes
   }
 
@@ -2435,6 +2440,7 @@ sub abort_if_error_flagged {
     print $E->output;
     exit;
   } else {
+
     #@@FIXME: This is borked after templatification.
     # &add_warning($File, 'fatal', 'Fatal Error', <<".EOF.");
     # A fatal error has occurred while processing the requested document. Processing
@@ -2461,13 +2467,13 @@ sub conflict {
 sub self_url_q {
   my ($q, $File) = @_;
   my $thispage = $File->{Env}->{'Self URI'};
-     $thispage .= '?uri='       . uri_escape($q->param('uri'));
-     $thispage .= ';ss=1'      if $q->param('ss');
-     $thispage .= ';sp=1'      if $q->param('sp');
-     $thispage .= ';noatt=1'   if $q->param('noatt');
-     $thispage .= ';outline=1' if $q->param('outline');
-     $thispage .= ';No200=1'   if $q->param('No200');
-     $thispage .= ';verbose=1' if $q->param('verbose');
+  $thispage .= '?uri='       . uri_escape($q->param('uri'));
+  $thispage .= ';ss=1'      if $q->param('ss');
+  $thispage .= ';sp=1'      if $q->param('sp');
+  $thispage .= ';noatt=1'   if $q->param('noatt');
+  $thispage .= ';outline=1' if $q->param('outline');
+  $thispage .= ';No200=1'   if $q->param('No200');
+  $thispage .= ';verbose=1' if $q->param('verbose');
   if ($q->param('doctype')
       and not $q->param('doctype') =~ /(Inline|detect)/i) {
     $thispage .= ';doctype=' . uri_escape($q->param('doctype'));
@@ -2482,8 +2488,8 @@ sub self_url_q {
 # Return random Tip with it's URL.
 sub get_tip {
   my @tipAddrs = keys %{$CFG->{Tips}};
-  my $tipAddr = $tipAddrs[rand scalar @tipAddrs];
-  my $tipSlug = $CFG->{Tips}->{$tipAddr};
+  my $tipAddr  = $tipAddrs[rand scalar @tipAddrs];
+  my $tipSlug  = $CFG->{Tips}->{$tipAddr};
 
   return [$tipAddr, $tipSlug];
 }
@@ -2505,7 +2511,6 @@ sub self_url_file {
 
   return $thispage;
 }
-
 
 #####
 
