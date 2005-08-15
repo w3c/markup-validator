@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.432 2005-07-29 06:26:15 ot Exp $
+# $Id: check,v 1.433 2005-08-15 20:54:51 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -204,7 +204,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION    =  q$Revision: 1.432 $;
+  $VERSION    =  q$Revision: 1.433 $;
   $VERSION    =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -565,7 +565,6 @@ if ($File->{DOCTYPE}) {
   }
 }
 
-
 #
 # Sanity check Charset information and add any warnings necessary.
 $File = &charset_conflicts($File);
@@ -673,7 +672,7 @@ sub parse (\$) {
   # Run it through SP, redirecting output to temporary files.
   my $pid = do {
     no warnings 'once';
-    local(*SPIN, *SPOUT, *SPERR)  = ($spin, $spout, $sperr);
+    local (*SPIN, *SPOUT, *SPERR)  = ($spin, $spout, $sperr);
     open3("<&SPIN", ">&SPOUT", ">&SPERR", @cmd);
   };
   undef $spin;
@@ -708,7 +707,7 @@ sub parse (\$) {
       }
     }
 
-    next if / IMPLIED$/ && not $DEBUG;;
+    next if / IMPLIED$/ && not $DEBUG;
     next if /^ASDAFORM CDATA /;
     next if /^ASDAPREF CDATA /;
     chomp; # Removes trailing newlines
@@ -891,7 +890,7 @@ sub prep_template ($$) {
 
   #
   # Tip of the Day...
-  my $tip = &get_tip;
+  my $tip = &get_tip();
   $T->param(tip_uri  => $tip->[0]);
   $T->param(tip_slug => $tip->[1]);
 
@@ -951,7 +950,6 @@ sub report_valid {
   $T->param(file_thispage => $thispage);
 }
 
-
 #
 # Add a waring message to the output.
 sub add_warning ($$) {
@@ -961,7 +959,6 @@ sub add_warning ($$) {
   $File->{T}->param($WID => TRUE, %{$params});
   $File->{T}->param(have_warnings => TRUE);
 }
-
 
 #
 # Proxy authentication requests.
@@ -995,7 +992,6 @@ sub authenticate {
 
   exit; # Further interaction will be a new HTTP request.
 }
-
 
 #
 # Fetch an URL and return the content and selected meta-info.
@@ -1061,7 +1057,7 @@ sub handle_uri {
   # Enforce Max Recursion level.
   &check_recursion($File, $res);
 
-  my($mode, $ct, $charset)
+  my ($mode, $ct, $charset)
     = &parse_content_type(
                           $File,
                           $res->header('Content-Type'),
@@ -1105,7 +1101,7 @@ sub handle_file {
   local $/ = undef; # set line delimiter so that <> reads rest of file
   $file = <$f>;
 
-  my($mode, $ct, $charset) = &parse_content_type($File, $h->{'Content-Type'});
+  my ($mode, $ct, $charset) = &parse_content_type($File, $h->{'Content-Type'});
 
   $File->{Bytes}           = $file;
   $File->{Mode}            = $mode;
@@ -1140,7 +1136,6 @@ sub handle_frag {
   return $File;
 }
 
-
 #
 # Parse a Content-Type and parameters. Return document type and charset.
 sub parse_content_type {
@@ -1150,12 +1145,12 @@ sub parse_content_type {
   my $charset      = '';
   my $mode         = '';
 
-  my($ct, @param) = split /\s*;\s*/, lc $Content_Type;
+  my ($ct, @param) = split /\s*;\s*/, lc $Content_Type;
 
   $mode = $CFG->{MIME}->{$ct} || $ct;
 
   foreach my $param (@param) {
-    my($p, $v) = split /\s*=\s*/, $param;
+    my ($p, $v) = split /\s*=\s*/, $param;
     next unless $p =~ m(charset)i;
     if ($v =~ m/([\'\"]?)(\S+)\1/i) {
       $charset = lc $2;
@@ -1198,8 +1193,6 @@ sub check_recursion ($$) {
   }
 }
 
-
-
 #
 # Normalize newline forms (CRLF/CR/LF) to native newline.
 sub normalize_newlines {
@@ -1237,7 +1230,6 @@ sub exact_charset {
   return $exact_charset;
 }
 
-
 #
 # Return $_[0] encoded for HTML entities (cribbed from merlyn).
 #
@@ -1249,7 +1241,6 @@ sub ent {
   s(["<&>"]){'&#' . ord($&) . ';'}ge;  # should switch to hex sooner or later
   return $_;
 }
-
 
 #
 # Truncate source lines for report.
@@ -1298,7 +1289,6 @@ sub truncate_line {
 
   return $line, $col;
 }
-
 
 #
 # Suppress any existing DOCTYPE by commenting it out.
@@ -1359,7 +1349,6 @@ sub override_doctype {
   return $File;
 }
 
-
 #
 # Parse errors reported by SP.
 sub parse_errors ($$) {
@@ -1375,12 +1364,12 @@ sub parse_errors ($$) {
 
     push @{$File->{DEBUG}->{Errors}}, $_;
     chomp;
-    my($err, @errors);
+    my ($err, @errors);
     next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
     next if /numbers exceeding 65535 not supported/;
     next if /URL Redirected to/;
 
-    my(@_err) = split /:/;
+    my (@_err) = split /:/;
     next unless $_err[1] eq '<OSFD>0'; #@@FIXME: This is a polite fiction!;
     if ($_err[1] =~ m(^<URL>)) {
       @errors = ($_err[0], join(':', $_err[1], $_err[2]), @_err[3..$#_err]);
@@ -1445,13 +1434,13 @@ sub report_errors ($) {
 
   if (scalar @{$File->{Errors}}) {
     foreach my $err (@{$File->{Errors}}) {
-      my($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $err->{char});
+      my ($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $err->{char});
 
       $line = &mark_error($line, $col);
 
       my $explanation;
       if ($err->{num}) {
-        my(undef, $num) = split /\./, $err->{num};
+        my (undef, $num) = split /\./, $err->{num};
         if (exists $Msgs{$num}) { # We've already seen this message...
           if ($File->{Opt}->{Verbose}) { # ...so only repeat it in Verbose mode.
             $explanation = qq(\n    <div class="hidden mid-$num"></div>\n);
@@ -1575,7 +1564,6 @@ sub mark_error (\$\$) {
   return $line;
 }
 
-
 #
 # Produce an outline of the document based on Hn elements from the ESIS.
 sub outline {
@@ -1646,7 +1634,6 @@ sub outline {
   return $outline;
 }
 
-
 #
 # Create a HTML representation of the document.
 sub source {
@@ -1659,7 +1646,6 @@ sub source {
   my @source = map({file_source_line => $_}, @{$File->{Content}});
   return \@source;
 }
-
 
 #
 # Create a HTML Parse Tree of the document for validation report.
@@ -1719,7 +1705,6 @@ sub parsetree {
   return $tree;
 }
 
-
 #
 # Do an initial parse of the Document Entity to extract FPI.
 sub preparse_doctype {
@@ -1732,7 +1717,7 @@ sub preparse_doctype {
 
   my $dtd = sub {
     return if $File->{Root};
-    ($File->{Root}, $File->{DOCTYPE}) = shift =~  m(<!DOCTYPE\s+(\w+)\s+(?:PUBLIC|SYSTEM)\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
+    ($File->{Root}, $File->{DOCTYPE}) = shift =~ m(<!DOCTYPE\s+(\w+)\s+(?:PUBLIC|SYSTEM)\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
   };
 
   my $start = sub {
@@ -1787,7 +1772,6 @@ sub show_errors ($) {
   };
   return $file_raw_errors;
 }
-
 
 #
 # Preprocess CGI parameters.
@@ -1909,7 +1893,6 @@ sub prepSSI {
   return $ssi;
 }
 
-
 #
 # Utility sub to tell if mode "is" XML.
 sub is_xml {shift->{Mode} == MODE_XML};
@@ -1922,7 +1905,7 @@ sub preparse_meta {
 
   my $dtd = sub {
     return if $File->{Root};
-    ($File->{Root}, $File->{DOCTYPE}) = shift =~  m(<!DOCTYPE\s+(\w+)\s+PUBLIC\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
+    ($File->{Root}, $File->{DOCTYPE}) = shift =~ m(<!DOCTYPE\s+(\w+)\s+PUBLIC\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
   };
 
   my $start = sub {
@@ -1998,7 +1981,6 @@ sub charset_conflicts {
 
   return $File;
 }
-
 
 #
 # Transcode to UTF-8
@@ -2108,14 +2090,13 @@ sub byte_error {
   return $File;
 }
 
-
 #
 # Return an XML report for the page.
 sub report_xml {
   my $File = shift;
 
   my $valid = ($File->{'Is Valid'} ? 'Valid' : 'Invalid');
-  my $errs  = ($File->{'Is Valid'} ? '0' : scalar @{$File->{Errors}});
+  my $errs  = ($File->{'Is Valid'} ? '0'     : scalar @{$File->{Errors}});
   if ($File->{E}->param('fatal_http_error')) {
     $valid = 'Could not validate';
   } 
@@ -2208,15 +2189,13 @@ X-W3C-Validator-Errors: $errs
   print qq(</result>\n);
 }
 
-
-
 #
 # Return an EARL report for the page.
 sub report_earl {
   my $File = shift;
 
   my $valid = ($File->{'Is Valid'} ? 'Valid' : 'Invalid');
-  my $errs  = ($File->{'Is Valid'} ? '0' : scalar @{$File->{Errors}});
+  my $errs  = ($File->{'Is Valid'} ? '0'     : scalar @{$File->{Errors}});
   if ($File->{E}->param('fatal_http_error')) {
     $valid = 'Could not validate';
   } 
@@ -2305,8 +2284,6 @@ X-W3C-Validator-Errors: $errs
 .EOF.
 }
 
-
-
 #
 # Return a Notation3 EARL report for the page.
 #
@@ -2391,7 +2368,6 @@ X-W3C-Validator-Errors: $errs
   print " .\n";
 }
 
-
 #
 # Autodetection as in Appendix F of the XML 1.0 Recommendation.
 # <http://www.w3.org/TR/2000/REC-xml-20001006#sec-guessing>
@@ -2428,7 +2404,6 @@ sub find_base_encoding {
   return ('',         0, 1, '');
                             # nothing in particular
 }
-
 
 #
 # Find encoding in document according to XML rules
@@ -2501,7 +2476,6 @@ sub conflict {
   return $encodingA && $encodingB && ($encodingA ne $encodingB);
 }
 
-
 #
 # Construct a self-referential URL from a CGI.pm $q object.
 sub self_url_q {
@@ -2564,8 +2538,7 @@ use Socket               qw(inet_ntoa);
 
 use base qw(LWP::UserAgent);
 
-sub new
-{
+sub new {
   my ($proto, $CFG, $File, @rest) = @_;
   my $class = ref($proto) || $proto;
   my $self = $class->SUPER::new(@rest);
@@ -2574,14 +2547,12 @@ sub new
   return $self;
 }
 
-sub redirect_ok
-{
+sub redirect_ok {
   my ($self, $req, $res) = @_;
   return $self->SUPER::redirect_ok($req, $res) && $self->uri_ok($req->uri());
 }
 
-sub uri_ok
-{
+sub uri_ok {
   my ($self, $uri) = @_;
   return 1 if ($self->{'W3C::Validator::CFG'}->{'Allow Private IPs'} or
                !$uri->can('host'));
