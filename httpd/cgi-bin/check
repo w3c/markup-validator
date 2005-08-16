@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.437 2005-08-16 04:40:52 bjoern Exp $
+# $Id: check,v 1.438 2005-08-16 06:28:06 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -202,7 +202,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.437 $;
+  $VERSION =  q$Revision: 1.438 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -592,6 +592,9 @@ sub parse (\$) {
   # doing so opens a potential security hole.  Don't do that; instead just
   # make sure you're running OpenSP 1.5 or later.
   $opensp->restrict_file_reading(1);
+
+  # workaround for odd O::S::P behavior...
+  $opensp->pass_file_descriptor(1) unless $^O eq 'MSWin32';
   
   #
   # Set debug info for HTML report.
