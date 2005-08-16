@@ -9,15 +9,15 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.436 2005-08-15 22:23:57 bjoern Exp $
+# $Id: check,v 1.437 2005-08-16 04:40:52 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
 $| = 1;
 
 #
-# We need Perl 5.6.0+.
-use 5.006;
+# We need Perl 5.8.0+.
+use 5.008;
 
 ###############################################################################
 #### Load modules. ############################################################
@@ -87,9 +87,9 @@ use constant O_NONE    => 8; # 0000 1000
 use constant MODE_SGML => 1; # 0000 0001
 use constant MODE_XML  => 2; # 0000 0010
 use constant MODE_TBD  => 4; # 0000 0100, needs further info to decide.
+
 #@@FIXME: XML WF checking isn't implemented.
 use constant MODE_WF   => 8; # 0000 1000, only XML well-formed checking.
-#@@FIXME;
 
 #
 # Define global variables.
@@ -202,12 +202,20 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.436 $;
+  $VERSION =  q$Revision: 1.437 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
   # Use passive FTP by default.
   $ENV{FTP_PASSIVE} = 1 unless exists($ENV{FTP_PASSIVE});
+
+  #
+  # Read friendly error message file
+  my $error_messages_list =  File::Spec->catfile($CFG->{Paths}->{Templates}, 'en_US', 'error_messages.cfg');
+  my %config_opts = (-ConfigFile => $error_messages_list);
+  my %rsrc = Config::General->new(%config_opts)->getall();
+  $RSRC = \%rsrc;
+  
 } # end of BEGIN block.
 
 #
@@ -230,7 +238,10 @@ my $q = new CGI;
 
 #
 # The data structure that will hold all session data.
-my $File;
+# @@FIXME This can't be my() as $File will sooner or
+# later be undef and add_warning will cause the script
+# to die. our() seems to work but has other problems.
+our $File;
 
 ##############################################
 # Populate $File->{Env} -- Session Metadata. #
@@ -278,27 +289,24 @@ my $T = HTML::Template->new(
                                            $lang, 'result.tmpl'),
   die_on_bad_params => FALSE,
   loop_context_vars => TRUE,
+  cache             => TRUE,
 );
 my $E = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                            $lang, 'fatal-error.tmpl'),
   die_on_bad_params => FALSE,
+  cache             => TRUE,
 );
 my $H = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                            $lang, 'http_401_authrequired.tmpl'),
   die_on_bad_params => FALSE,
+  cache             => TRUE,
 );
 
 $File->{T} = $T;
 $File->{E} = $E;
 $File->{H} = $H;
-
-# Read friendly error message file
-my $error_messages_list =  File::Spec->catfile($CFG->{Paths}->{Templates}, $lang, 'error_messages.cfg');
-my %config_opts = (-ConfigFile => $error_messages_list);
-my %rsrc = Config::General->new(%config_opts)->getall();
-$RSRC = \%rsrc;
 
 $T->param(cfg_home_page => $CFG->{'Home Page'});
 
@@ -554,161 +562,81 @@ $File = &charset_conflicts($File);
 $File = &parse($File);
 sub parse (\$) {
   my $File = shift;
-
+  
+  use SGML::Parser::OpenSP 0.99 qw();
+  
+  my $opensp = SGML::Parser::OpenSP->new();
+  
   #
   # By default, use SGML catalog file and SGML Declaration.
   my $catalog  = File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'sgml.soc');
+  
   #
-  # Note: if you feel the urge to remove -R from here, please understand that
-  # doing so opens a potential security hole.  Don't do that; instead just
-  # make sure you're running OpenSP 1.5 or later.
-  my @spopt = qw(
-                 -R
-                 -wvalid
-                 -wnon-sgml-char-ref
-                 -wno-duplicate
-                );
-
+  my @spopt = qw(valid non-sgml-char-ref no-duplicate);
+  
   #
   # Switch to XML semantics if file is XML.
   if (&is_xml($File)) {
     $catalog  = File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc');
-    push(@spopt, '-wxml');
+    push(@spopt, 'xml');
   }
   
   #
-  # Defaults for SP; turn off fixed charset mode and set encoding to UTF-8.
-  $ENV{SP_CHARSET_FIXED} = 'NO';
-  $ENV{SP_ENCODING}      = 'UTF-8';
-  $ENV{SP_BCTF}          = 'UTF-8';
-
+  # Parser configuration
+  $opensp->search_dirs($CFG->{Paths}->{SGML}->{Library});
+  $opensp->catalogs($catalog);
+  $opensp->show_error_numbers(1);
+  
   #
-  # Tell onsgmls about the SGML Library.
-  $ENV{SGML_SEARCH_PATH} = $CFG->{Paths}->{SGML}->{Library};
-
-  #
-  # Set the command to execute.
-  my @cmd = ($CFG->{Paths}->{SGML}->{Parser}, '-n', '-c', $catalog, @spopt);
-
+  # Note: if you feel the urge to remove -R from here, please understand that
+  # doing so opens a potential security hole.  Don't do that; instead just
+  # make sure you're running OpenSP 1.5 or later.
+  $opensp->restrict_file_reading(1);
+  
   #
   # Set debug info for HTML report.
   $T->param(opt_debug => $DEBUG);
   $T->param(debug =>
             [
-             {name => 'Command',           value => "@cmd"},
-             {name => 'SP_CHARSET_FIXED',  value => $ENV{SP_CHARSET_FIXED}},
-             {name => 'SP_ENCODING',       value => $ENV{SP_ENCODING}},
-             {name => 'SP_BCTF',           value => $ENV{SP_BCTF}},
-             {name => 'Content-Encoding',  value => $File->{ContentEnc}},
-             {name => 'Transfer-Encoding', value => $File->{TransferEnc}},
+             # This is obsolete now?
+             { name => 'Command',           value => "SGML::Parser::OpenSP->new" },
+             
+             # These are probably obsolete now, SGML::Parser::OpenSP will
+             # always use <spec encoding="utf-8">... for parse_string. It
+             # might be possible that messing with these variables makes
+             # OpenSP fail to recognize the encoding, I remember something
+             # to this effect but can't reproduce this at the moment. We
+             # rely on SGML::Parser::OpenSP to get this right because it
+             # seems there is no way for Apache2+mod_perl2+OpenSP+SPO to
+             # communicate the correct environment settings to OpenSP.
+             # @@FIXME this note should be removed after some testing.
+             { name => 'SP_CHARSET_FIXED',  value => $ENV{SP_CHARSET_FIXED} },
+             { name => 'SP_ENCODING',       value => $ENV{SP_ENCODING} },
+             { name => 'SP_BCTF',           value => $ENV{SP_BCTF} },
+             
+             { name => 'Content-Encoding',  value => $File->{ContentEnc} },
+             { name => 'Transfer-Encoding', value => $File->{TransferEnc} },
             ],
            );
-
-  #@@FIXME: This needs a UI and testing!
-  #
-  # Set onsgmls' -E switch to the number of errors requested.
-  if ($File->{Opt}->{'Max Errors'} =~ m(^all$)i) {
-    push @cmd, '-E0';
-  } elsif ($File->{Opt}->{'Max Errors'} =~ m(^(\d+)$)) {
-    my $numErr = $1;
-    if ($numErr >= 200) {
-      $numErr = 200;
-    } elsif ($numErr <= 0) {
-      $numErr = 0; #@@FIXME: Should add feature to supress error output in this case.;
-    }
-    push @cmd, '-E' . $numErr;
-  } else {
-    push @cmd, '-E' . ($CFG->{'Max Errors'} || 0); # "-E0" means "all".
-  }
-  #@@FIXME;
-
-  #
-  # Temporary filehandles.
-  my $spin  = IO::File->new_tmpfile;
-  my $spout = IO::File->new_tmpfile;
-  my $sperr = IO::File->new_tmpfile;
-
-  #
-  # Dump file to a temp file for parsing.
-  for (@{$File->{Content}}) {
-    print $spin $_, "\n";
-  }
-
-  #
-  # seek() to beginning of the file.
-  seek $spin, 0, 0;
-
-  #
-  # Run it through SP, redirecting output to temporary files.
-  my $pid = do {
-    no warnings 'once';
-    local (*SPIN, *SPOUT, *SPERR)  = ($spin, $spout, $sperr);
-    open3("<&SPIN", ">&SPOUT", ">&SPERR", @cmd);
-  };
-  undef $spin;
-  waitpid $pid, 0;
-
-  #
-  # Rewind temporary filehandles.
-  seek $_, 0, 0 for $spout, $sperr;
-
-  #
-  # Proper text mode for Win32 systems
-  binmode($spout, ':crlf') if $^O eq "MSWin32";
-
-  $File = &parse_errors($File, $sperr); # Parse error output.
-  undef $sperr; # Get rid of no longer needed filehandle.
-
-  $File->{ESIS} = [];
-  my $elements_found = 0;
-  while (<$spout>) {
-    $elements_found++ if /^\(/;
-
-    if (/^Axmlns() \w+ (.*)/ or /^Axmlns:([^ ]+) \w+ (.*)/) {
-      if (not $File->{Namespace}) {
-        if ($elements_found == 0 and $1 eq "") {
-          $File->{Namespace} = $2;
-        } else {
-          # @@FIXME: should not happen;
-          push(@{$File->{Namespaces}}, $2);
-        }
-      } else {
-        push(@{$File->{Namespaces}}, $2) if ($2 ne $File->{Namespace});
-      }
-    }
-
-    next if / IMPLIED$/ && not $DEBUG;
-    next if /^ASDAFORM CDATA /;
-    next if /^ASDAPREF CDATA /;
-    chomp; # Removes trailing newlines
-    push @{$File->{ESIS}}, $_;
-  }
-  undef $spout;
-
-  if (@{$File->{ESIS}} && $File->{ESIS}->[-1] =~ /^C$/) {
-    pop(@{$File->{ESIS}});
-    $File->{'Is Valid'} = TRUE;
-  } else {
-    $File->{'Is Valid'} = FALSE;
-  }
-
+  
+  my $h = W3C::Validator::ErrorHandler->new($opensp, $File);
+  
+  $opensp->handler($h);
+  $opensp->parse_string(join"\n",@{$File->{Content}});
+  
+  # Make sure there are no circular references, otherwise the script
+  # would leak memory until mod_perl unloads it which could take some
+  # time. @@FIXME It's probably overly careful though.
+  $opensp->handler(undef);
+  undef $h->{_parser};
+  undef $h->{_file};
+  undef $h;
+  undef $opensp;
+  
   #
   # Set Version to be the FPI initially.
   $File->{Version} = $File->{DOCTYPE};
-
-  #
-  # Extract any version attribute from the ESIS.
-  for (@{$File->{ESIS}}) {
-    no warnings 'uninitialized';
-    next unless /^AVERSION CDATA (.*)/i;
-    push @{$File->{Version_ESIS}}, $1;
-    if ($1 =~ '-//W3C//DTD (SGML|XML) Fallback//EN') {
-      $File->{Tentative} |= (T_ERROR | T_FALL);
-      my $dtd = $1 eq 'SGML' ? 'HTML 4.01 Transitional' : 'XHTML 1.0 Strict';
-      &add_warning('W09', { W09_dtd => $dtd });
-    }
-  }
-
+  
   return $File;
 }
 
@@ -790,14 +718,9 @@ if ($File->{Opt}->{Output} eq 'xml') {
   }
 
   $T->param(file_warnings  => $File->{Warnings});
-  $T->param(file_outline   => &outline($File))
-    if $T->param('opt_show_outline');
   $T->param(file_source    => &source($File))
     if $T->param('opt_show_source');
-  $T->param(file_parsetree => &parsetree($File))
-    if $T->param('opt_show_parsetree');
   $T->param('opt_show_esis' => TRUE)   if $File->{Opt}->{'Show ESIS'};
-  $T->param('file_esis' => &show_esis($File))   if $T->param('opt_show_esis');
   $T->param('opt_show_raw_errors' => TRUE) if $File->{Opt}->{'Show Errors'};
   $T->param('file_raw_errors' =>    &show_errors($File)) if  $T->param('opt_show_raw_errors');
 
@@ -919,7 +842,7 @@ sub report_valid {
 sub add_warning ($$) {
   my $WID    = shift;
   my $params = shift;
-
+  
   $File->{T}->param($WID => TRUE, %{$params});
   $File->{T}->param(have_warnings => TRUE);
 }
@@ -1258,6 +1181,7 @@ sub truncate_line {
 sub override_doctype {
   no strict 'vars';
   my $File = shift;
+  
   my ($dt) =
     grep { $_->{Display} eq $File->{Opt}->{DOCTYPE} } values %{$CFG->{Types}};
 
@@ -1316,81 +1240,6 @@ sub override_doctype {
 }
 
 #
-# Parse errors reported by SP.
-sub parse_errors ($$) {
-  my $File = shift;
-  my $fh   = shift;
-
-  $File->{Errors} = []; # Initialize to an (empty) anonymous array ref.
-  for (<$fh>) {
-
-    # remove SGML Parser path if it contains colons
-    s/^\Q$CFG->{Paths}->{SGML}->{Parser}\E// if
-         $CFG->{Paths}->{SGML}->{Parser} =~ /:/;
-
-    push @{$File->{DEBUG}->{Errors}}, $_;
-    chomp;
-    my ($err, @errors);
-    next if /^<OSFD>0:[0-9]+:[0-9]+:[^A-Z]/;
-    next if /numbers exceeding 65535 not supported/;
-    next if /URL Redirected to/;
-
-    my (@_err) = split /:/;
-    next unless $_err[1] eq '<OSFD>0'; #@@FIXME: This is a polite fiction!;
-    if ($_err[1] =~ m(^<URL>)) {
-      @errors = ($_err[0], join(':', $_err[1], $_err[2]), @_err[3..$#_err]);
-    } else {
-      @errors = @_err;
-    }
-    $err->{src}  = $errors[1];
-    $err->{line} = $errors[2];
-    $err->{char} = $errors[3];
-    
-    # Workaround for onsgmls 1.5 sometimes reporting errors beyond EOL.
-    if ((my $l = length($File->{Content}->[$err->{line}-1])) < $err->{char}) {
-      $err->{char} = $l;
-    }
-    $err->{num}  = $errors[4] || '';
-    $err->{type} = $errors[5] || '';
-    if ($err->{type} eq 'E' or $err->{type} eq 'X' or $err->{type} eq 'Q') {
-      $err->{msg}  = join ':', @errors[6 .. $#errors];
-    } elsif ($err->{type} eq 'W') {
-
-      #@@FIXME: This is borked after templatification.
-      # &add_warning($File, 'fake', 'Warning:',
-      #  "Line $err->{line}, column $err->{char}: " . &ent($errors[6]));
-      #@@FIXME;
-      $err->{msg}  = join ':', @errors[6 .. $#errors];
-    } else {
-      $err->{type} = 'I';
-      $err->{num}  = '';
-      $err->{msg}  = join ':', @errors[4 .. $#errors];
-    }
-
-    # No or unknown FPI and a relative SI.
-    if ($err->{msg} =~ m(cannot (open|find))) {
-      $File->{'Error Flagged'} = TRUE;
-      $File->{E}->param(fatal_parse_extid_error => TRUE);
-      $File->{E}->param(fatal_parse_extid_msg   => $err->{msg});
-    }
-
-    # No DOCTYPE.
-    if ($err->{msg} =~ m(prolog can\'t be omitted)) {
-      my $dtd = ($File->{Mode} == MODE_SGML ?
-                   'HTML 4.01 Transitional' : 'XHTML 1.0 Transitional');
-      &add_warning('W09', {W09_dtd => $dtd});
-      next; # Don't report this as a normal error.
-    }
-
-    &abort_if_error_flagged($File, O_DOCTYPE);
-    $err->{msg} =~ s/^\s*//;
-    push @{$File->{Errors}}, $err;
-  }
-  undef $fh;
-  return $File;
-}
-
-#
 # Generate a HTML report of detected errors.
 sub report_errors ($) {
   my $File = shift;
@@ -1408,7 +1257,7 @@ sub report_errors ($) {
 
       my $explanation;
       if ($err->{num}) {
-        my (undef, $num) = split /\./, $err->{num};
+        my $num = $err->{num};
         if (exists $Msgs{$num}) { # We've already seen this message...
           if ($File->{Opt}->{Verbose}) { # ...so only repeat it in Verbose mode.
             $explanation = qq(\n    <div class="hidden mid-$num"></div>\n);
@@ -1422,14 +1271,14 @@ sub report_errors ($) {
         my $_msg = $RSRC->{msg}->{nomsg}->{verbose};
         $_msg =~ s/<!--MID-->/$num/g;
         if ($File->{'Is Upload'})
-	{
-		$_msg =~ s/<!--URI-->//g
-	}
-	else
-	{
-		my $escaped_uri = uri_escape($File->{URI});
-        	$_msg =~ s/<!--URI-->/$escaped_uri/g;
-	}
+        {
+          $_msg =~ s/<!--URI-->//g
+        }
+        else
+        {
+          my $escaped_uri = uri_escape($File->{URI});
+          $_msg =~ s/<!--URI-->/$escaped_uri/g;
+        }
         $explanation .= "    $_msg\n"; # The send feedback plea.
       }
 
@@ -1533,76 +1382,6 @@ sub mark_error (\$\$) {
 }
 
 #
-# Produce an outline of the document based on Hn elements from the ESIS.
-sub outline {
-  my $File = shift;
-
-  my $outline = '';
-
-  my $prevlevel = 0;
-  my $level     = 0;
-
-  for (1..$#{$File->{ESIS}}) {
-    my $line = $File->{ESIS}->[$_];
-    next unless ($line && $line =~ /^\(H([1-6])$/i);
-
-    $prevlevel = $level;
-    $level     = $1;
-
-    my $TAB = $level + 2;
-
-    if ($prevlevel == 0) {
-      $outline .= "    <ul>\n";
-    } else {
-      if ($level < $prevlevel) {
-        $outline .= "</li>\n";
-        for (my $i = $prevlevel; $i > $level; $i--) {
-          $outline .= "  " x ($i + 2)       . "</ul>\n";
-          $outline .= "  " x (($i + 2) - 1) . "</li>\n";
-        }
-      } elsif ($level == $prevlevel) {
-        $outline .= "</li>\n";
-      } elsif ($level > $prevlevel) {
-        if ($level - $prevlevel > 1) {
-          foreach my $i (($prevlevel + 1) .. ($level - 1)) {
-            $outline .= "\n". "  " x ($i + 2) . "<ul>\n" . "  " x ($i + 2);
-            $outline .= qq(<li class="warning">A level $i heading is missing!);
-          }
-          $outline .= "\n" . "  " x $TAB . "<ul>\n";
-        } else {
-          $outline .= "\n" . "  " x $TAB;
-          $outline .= "<ul>\n";
-        }
-      }
-    }
-
-    $line       = '';
-    my $heading = '';
-    until (substr($line, 0, 3) =~ /^\)H$level/i) {
-      $line = $File->{ESIS}->[$_++];
-      if ($line =~ /^-/) {
-        my $headcont = $line;
-        substr($headcont, 0, 1) = " ";
-        $heading .= $headcont;
-      } elsif ($line =~ /^AALT CDATA( .+)/i) {
-        my $headcont = $1;
-        $heading .= $headcont;
-      }
-    }
-
-    $heading =~ s/\\011/ /g;
-    $heading =~ s/\\012/ /g;
-    $heading =~ s/\\n/ /g;
-    $heading =~ s/\s+/ /g;
-    $heading =~ s/^[- ]//;
-    $heading = &ent($heading);
-    $outline .= "    <li>$heading";
-  }
-  $outline .= "    </li></ul>\n" x $level;
-  return $outline;
-}
-
-#
 # Create a HTML representation of the document.
 sub source {
   my $File = shift;
@@ -1613,64 +1392,6 @@ sub source {
 
   my @source = map({file_source_line => $_}, @{$File->{Content}});
   return \@source;
-}
-
-#
-# Create a HTML Parse Tree of the document for validation report.
-sub parsetree {
-  my $File = shift;
-  my $tree = '';
-
-  $T->param(file_parsetree_noatt => TRUE) if $File->{Opt}->{'No Attributes'};
-
-  my $indent   = 0;
-  my $prevdata = '';
-
-  foreach my $line (@{$File->{ESIS}}) {
-
-    next if ($File->{Opt}->{'No Attributes'} && $line =~ /^A/);
-
-    $line =~ s/\\n/ /g;
-    $line =~ s/\\011/ /g;
-    $line =~ s/\\012/ /g;
-    $line =~ s/\s+/ /g;
-    next if $line =~ /^-\s*$/;
-
-    if ($line =~ /^-/) {
-      substr($line, 0, 1) = ' ';
-      $prevdata .= $line;
-      next;
-    } elsif ($prevdata) {
-      $prevdata =~ s/\s+/ /g;
-      $tree .= &ent(wrap(' ' x $indent, ' ' x $indent, $prevdata)) . "\n";
-      undef $prevdata;
-    }
-
-    $line = &ent($line);
-    if ($line =~ /^\)/) {
-      $indent -= 2;
-    }
-
-    my $printme;
-    chomp($printme = $line);
-    if (my ($close, $elem) = $printme =~ /^([()])(.+)/) {
-      # reformat and add links on HTML elements
-      $close = ($close eq ')') ? '/' : ''; # ")" -> close-tag
-      if (my $u = $CFG->{Elements}->{lc($elem)}) {
-        $elem = '<a href="' . $CFG->{'Element Ref URI'} . "$u\">$elem</a>";
-      }
-      $printme = "&lt;$close$elem&gt;";
-    } else {
-      $printme =~ s,^A,  A,; # indent attributes a bit
-    }
-
-    $tree .= ' ' x $indent . $printme . "\n";
-
-    if ($line =~ /^\(/) {
-      $indent += 2;
-    }
-  }
-  return $tree;
 }
 
 #
@@ -1715,19 +1436,6 @@ sub preparse_doctype {
   $File->{DOCTYPE} =~ s(\s+) { }g;
 
   return $File;
-}
-
-#
-# Print out the raw ESIS output for debugging.
-sub show_esis ($) {
-  my $file_esis = "";
-  for (@{shift->{ESIS}}) {
-    s/\\012//g;
-    s/\\n/\n/g;
-    $file_esis .= ent $_;
-    $file_esis .= "\n";
-  }
-  return  $file_esis;
 }
 
 #
@@ -1820,7 +1528,8 @@ sub prepCGI {
   }
 
   # Redirect to a GETable URL if method is POST without a file upload.
-  if ($q->request_method eq 'POST' and not $File->{'Is Upload'}) {
+  if (defined $q->request_method and $q->request_method eq 'POST'
+      and not $File->{'Is Upload'}) {
     my $thispage = &self_url_q($q, $File);
     print redirect $thispage;
     exit;
@@ -2502,6 +2211,79 @@ sub self_url_file {
 
   return $thispage;
 }
+
+#####
+
+sub W3C::Validator::ErrorHandler::new
+{
+  my $class = shift;
+  my $parser = shift;
+  my $File = shift;
+  
+  my $self = { _file => $File, _parser => $parser };
+  
+  # ...
+  $File->{'Is Valid'} = TRUE;
+  $File->{Errors} = [];
+  
+  bless $self, $class;
+}
+
+sub W3C::Validator::ErrorHandler::error
+{
+  my $self = shift;
+  my $error = shift;
+  my $mess = $self->{_parser}->split_message($error);
+  my $File = $self->{_file};
+  
+  my $err;
+  
+  $err->{src}  = '...'; # do this with show_open_entities()?
+  $err->{line} = $mess->{primary_message}{LineNumber};
+  $err->{char} = $mess->{primary_message}{ColumnNumber};
+  $err->{num}  = $mess->{primary_message}{Number};
+  $err->{type} = $mess->{primary_message}{Severity};
+  $err->{msg}  = $mess->{primary_message}{Text};
+  
+  # ...
+  $File->{'Is Valid'} = FALSE if $err->{type} eq 'E';
+  
+  # Workaround for onsgmls 1.5 sometimes reporting errors beyond EOL.
+  # (How true is that? Test cases please.)
+  if ((my $l = length($File->{Content}->[$err->{line}-1])) < $err->{char}) {
+    $err->{char} = $l;
+  }
+  
+  # No or unknown FPI and a relative SI.
+  if ($err->{msg} =~ m(cannot (open|find))) {
+    $File->{'Error Flagged'} = TRUE;
+    $File->{E}->param(fatal_parse_extid_error => TRUE);
+    $File->{E}->param(fatal_parse_extid_msg   => $err->{msg});
+  }
+
+  # No DOCTYPE.
+  if ($err->{msg} =~ m(prolog can\'t be omitted)) {
+    my $dtd = ($File->{Mode} == MODE_SGML ?
+               'HTML 4.01 Transitional' : 'XHTML 1.0 Transitional');
+  
+    add_warning('W09', {W09_dtd => $dtd});
+    return; # Don't report this as a normal error.
+  }
+  
+  abort_if_error_flagged($File, O_DOCTYPE);
+  $err->{msg} =~ s/^\s*//;
+  push @{$File->{Errors}}, $err;
+  
+  if (defined $mess->{aux_message})
+  {
+    # "duplicate id ... first defined here" style messages
+    push @{$File->{Errors}}, { line => $mess->{aux_message}{LineNumber},
+                               char => $mess->{aux_message}{ColumnNumber},
+                               msg  => $mess->{aux_message}{Text},
+                               type => 'I',
+                             };
+  }
+} 
 
 #####
 
