@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.439 2005-08-17 00:25:01 bjoern Exp $
+# $Id: check,v 1.440 2005-08-17 00:43:16 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -195,7 +195,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.439 $;
+  $VERSION =  q$Revision: 1.440 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1822,15 +1822,6 @@ X-W3C-Validator-Errors: $errs
     foreach my $err (@{$File->{Errors}}) {
       chomp $err->{msg};
 
-      # Find index into the %frag hash for the "explanation..." links.
-      $err->{idx} = $err->{msg};
-      $err->{idx} =~ s/"[^\"]*"/FOO/g;
-      $err->{idx} =~ s/[^A-Za-z ]//g;
-      $err->{idx} =~ s/\s+/ /g;        # Collapse spaces
-      $err->{idx} =~ s/(^\s|\s$)//g;   # Remove leading and trailing spaces.
-      $err->{idx} =~ s/(FOO )+/FOO /g; # Collapse FOOs.
-      $err->{idx} =~ s/FOO FOO/FOO/g;  # Collapse FOOs.
-
       my $offset = $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char};
       printf <<".EOF.", &ent($err->{msg});
     <msg line="$err->{line}" col="$err->{char}" offset="$offset">%s</msg>
@@ -1886,15 +1877,6 @@ X-W3C-Validator-Errors: $errs
     foreach my $err (@{$File->{Errors}}) {
       ++$errnum ;
       chomp $err->{msg};
-
-      # Find index into the %frag hash for the "explanation..." links.
-      $err->{idx} =  $err->{msg};
-      $err->{idx} =~ s/"[^\"]*"/FOO/g;
-      $err->{idx} =~ s/[^A-Za-z ]//g;
-      $err->{idx} =~ s/\s+/ /g;        # Collapse spaces
-      $err->{idx} =~ s/(^\s|\s\Z)//g;  # Remove leading and trailing spaces.
-      $err->{idx} =~ s/(FOO )+/FOO /g; # Collapse FOOs.
-      $err->{idx} =~ s/FOO FOO/FOO/g;  # Collapse FOOs.
 
       my @offsets = (
                      $File->{Offsets}->[$err->{line}    ]->[0],
@@ -1967,15 +1949,6 @@ X-W3C-Validator-Errors: $errs
     for (my $i = 0; $i <= scalar @{$File->{Errors}}; $i++) {
       my $err = $File->{Errors}->[$i];
       chomp $err->{msg};
-
-      # Find index into the %frag hash for the "explanation..." links.
-      $err->{idx} =  $err->{msg};
-      $err->{idx} =~ s/"[^\"]*"/FOO/g;
-      $err->{idx} =~ s/[^A-Za-z ]//g;
-      $err->{idx} =~ s/\s+/ /g;        # Collapse spaces
-      $err->{idx} =~ s/(^\s|\s\Z)//g;  # Remove leading and trailing spaces.
-      $err->{idx} =~ s/(FOO )+/FOO /g; # Collapse FOOs.
-      $err->{idx} =~ s/FOO FOO/FOO/g;  # Collapse FOOs.
 
       my @offsets = (
                      $File->{Offsets}->[$err->{line}    ]->[0],
