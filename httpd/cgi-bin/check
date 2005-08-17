@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.440 2005-08-17 00:43:16 bjoern Exp $
+# $Id: check,v 1.441 2005-08-17 02:09:08 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -195,7 +195,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.440 $;
+  $VERSION =  q$Revision: 1.441 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -671,7 +671,6 @@ if ($File->{Namespace}) {
     &add_warning('W12', {});
   }
 }
-
 
 if ($File->{Opt}->{Output} eq 'xml') {
   &report_xml($File);
@@ -1820,8 +1819,6 @@ X-W3C-Validator-Errors: $errs
     print qq(  <messages>\n);
 
     foreach my $err (@{$File->{Errors}}) {
-      chomp $err->{msg};
-
       my $offset = $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char};
       printf <<".EOF.", &ent($err->{msg});
     <msg line="$err->{line}" col="$err->{char}" offset="$offset">%s</msg>
@@ -1876,8 +1873,6 @@ X-W3C-Validator-Errors: $errs
     my $errnum = 0 ;
     foreach my $err (@{$File->{Errors}}) {
       ++$errnum ;
-      chomp $err->{msg};
-
       my @offsets = (
                      $File->{Offsets}->[$err->{line}    ]->[0],
                      $File->{Offsets}->[$err->{line} - 1]->[1],
@@ -1948,8 +1943,6 @@ X-W3C-Validator-Errors: $errs
   unless ($File->{'Is Valid'}) {
     for (my $i = 0; $i <= scalar @{$File->{Errors}}; $i++) {
       my $err = $File->{Errors}->[$i];
-      chomp $err->{msg};
-
       my @offsets = (
                      $File->{Offsets}->[$err->{line}    ]->[0],
                      $File->{Offsets}->[$err->{line} - 1]->[1],
@@ -2215,7 +2208,7 @@ sub W3C::Validator::ErrorHandler::error
   }
   
   abort_if_error_flagged($File, O_DOCTYPE);
-  $err->{msg} =~ s/^\s*//;
+
   push @{$File->{Errors}}, $err;
   
   if (defined $mess->{aux_message})
