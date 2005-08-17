@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.438 2005-08-16 06:28:06 bjoern Exp $
+# $Id: check,v 1.439 2005-08-17 00:25:01 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -122,7 +122,6 @@ BEGIN {
           Protocols => {Allow => 'http,https'},
           Paths => {
             Base => ($ENV{W3C_VALIDATOR_HOME} || '/usr/local/validator'),
-            SGML => {Parser => '/usr/bin/onsgmls'},
           },
        },
       );
@@ -170,12 +169,6 @@ Directory not readable (permission denied): @_r
     $CFG->{Protocols}->{Allow} = [split(/\s*,\s*/, $allowed)];
   }
 
-  #
-  # Make sure onsgmls exists and is executable.
-  unless (-x $CFG->{Paths}->{SGML}->{Parser}) {
-    die qq(Configured SGML Parser "$CFG->{Paths}->{SGML}->{Parser}" not executable!\n);
-  }
-
   { # Make types config indexed by FPI.
     my $_types = {};
     map { $_types->{$CFG->{Types}->{$_}->{PubID}} = $CFG->{Types}->{$_} }
@@ -202,7 +195,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.438 $;
+  $VERSION =  q$Revision: 1.439 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1547,31 +1540,6 @@ sub prepCGI {
   }
 
   return $q;
-}
-
-#
-# Preprocess SSI files.
-sub prepSSI {
-  my $opt = shift;
-
-  my $fh = new IO::File "< $opt->{File}"
-    or croak "open($opt->{File}) returned: $!\n";
-  my $ssi = join '', <$fh>;
-  close $fh or carp "close($opt->{File}) returned: $!\n";
-
-  $ssi =~ s/<!--\#echo var="title" -->/$opt->{Title}/g
-    if defined $opt->{Title};
-
-  $ssi =~ s/<!--\#echo var="date" -->/$opt->{Date}/g
-    if defined $opt->{Date};
-
-  $ssi =~ s/<!--\#echo\s+var="revision"\s+-->/$opt->{Revision}/g
-    if defined $opt->{Revision};
-
-  # No need to parametrize this one, it's always "./" in this context.
-  $ssi =~ s|<!--\#echo\s+var="relroot"\s+-->|./|g;
-
-  return $ssi;
 }
 
 #
