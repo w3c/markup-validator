@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.443 2005-08-18 03:45:08 bjoern Exp $
+# $Id: check,v 1.444 2005-08-18 18:20:52 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -48,6 +48,7 @@ use HTTP::Headers::Auth       qw(); # Needs to be imported after other HTTP::*.
 use URI                       qw();
 use URI::Escape               qw(uri_escape);
 use Encode                    qw();
+use Encode::Alias             qw();
 use HTML::Encoding       0.52 qw();
 use SGML::Parser::OpenSP 0.99 qw();
   
@@ -189,7 +190,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.443 $;
+  $VERSION =  q$Revision: 1.444 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -448,6 +449,31 @@ unless ($File->{Charset}->{Use}) { # No charset given...
 #
 # Abort if an error was flagged while finding the encoding.
 &abort_if_error_flagged($File, O_CHARSET|O_DOCTYPE);
+
+#
+# Encode alias definitions. This might not be the best
+# place for them, feel free to move them elsewhere.
+
+# implicit bidi, but character encoding is the same
+Encode::Alias::define_alias('iso-8859-6-i', 'iso-8859-6');
+
+# implicit bidi, but character encoding is the same
+Encode::Alias::define_alias('iso-8859-8-i', 'iso-8859-8');
+
+# 0xA0 is U+00A0 in ISO-8859-11 but undefined in tis-620
+# other than that the character encodings are equivalent
+Encode::Alias::define_alias('tis-620', 'iso-8859-11');
+
+# Encode::Byte does not know 'macintosh' but MacRoman
+Encode::Alias::define_alias('macintosh', 'MacRoman');
+
+# x-mac-roman is the non-standard version of 'macintosh'
+Encode::Alias::define_alias('x-mac-roman', 'MacRoman');
+
+# Encode only knows the long hand version of 'ksc_5601'
+Encode::Alias::define_alias('ksc_5601', 'KS_C_5601-1987');
+
+# gb18030 requires Encode::HanExtra but no additional alias
 
 #
 # Always transcode, even if the content claims to be UTF-8
