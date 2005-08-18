@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.442 2005-08-18 02:51:54 bjoern Exp $
+# $Id: check,v 1.443 2005-08-18 03:45:08 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -189,7 +189,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.442 $;
+  $VERSION =  q$Revision: 1.443 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -931,6 +931,10 @@ sub handle_uri {
   $File->{Charset}->{HTTP} = lc $charset;
   $File->{Modified}        = $lastmod;
   $File->{Server}          = scalar $res->server;
+  
+  # TODO: Content-Length is not always set, so either this should
+  # be renamed to 'Content-Length' or it should consider more than
+  # the Content-Length header.
   $File->{Size}            = scalar $res->content_length;
   $File->{URI}             = scalar $res->request->uri->canonical;
   $File->{'Is Upload'}     = FALSE;
@@ -1045,6 +1049,8 @@ sub check_recursion ($$) {
 sub ent {
   local $_ = shift;
   return '' unless defined; # Eliminate warnings
+  
+  # TODO: Err, why have " twice in the character class? ' maybe?
   s(["<&>"]){'&#' . ord($&) . ';'}ge;  # should switch to hex sooner or later
   return $_;
 }
@@ -1320,6 +1326,8 @@ sub preparse_doctype {
 
   my $dtd = sub {
     return if $File->{Root};
+    # TODO: These \s here are probably wrong now that the strings are utf8_on
+    # Same for the \w probably
     ($File->{Root}, $File->{DOCTYPE}) = shift =~ m(<!DOCTYPE\s+(\w+)\s+(?:PUBLIC|SYSTEM)\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
   };
 
@@ -1344,6 +1352,7 @@ sub preparse_doctype {
   $p->handler(start => $start, 'tag,attr');
   $p->parse(join "\n", @{$File->{Content}});
 
+  # TODO: These \s here are probably wrong now that the strings are utf8_on
   $File->{DOCTYPE} = '' unless defined $File->{DOCTYPE};
   $File->{DOCTYPE} =~ s(^\s+){ }g;
   $File->{DOCTYPE} =~ s(\s+$){ }g;
@@ -1517,7 +1526,7 @@ sub transcode {
   my $general_charset = $File->{Charset}->{Use};
   my $exact_charset = $general_charset;
 
-  # eeeeek!
+  # TODO: This should be done before transcode()
   if ($general_charset eq 'utf-16') {
     if ($File->{Charset}->{Auto} =~ m/^utf-16[bl]e$/) {
       $exact_charset = $File->{Charset}->{Auto};
@@ -1964,6 +1973,8 @@ sub W3C::Validator::ErrorHandler::error
   my $mess = $self->{_parser}->split_message($error);
   my $File = $self->{_file};
   
+  # TODO: this does not filter out errors in DTDs.
+  
   my $err;
   
   $err->{src}  = '...'; # do this with show_open_entities()?
@@ -1998,6 +2009,7 @@ sub W3C::Validator::ErrorHandler::error
     return; # Don't report this as a normal error.
   }
   
+  # TODO: calling exit() here is probably a bad idea
   abort_if_error_flagged($File, O_DOCTYPE);
 
   push @{$File->{Errors}}, $err;
