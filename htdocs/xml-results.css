@@ -4,7 +4,7 @@
    Copyright 2002 Terje Bless <link@pobox.com>. All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: xml-results.css,v 1.5 2003-02-24 23:33:18 ville Exp $
+   $Id: xml-results.css,v 1.6 2005-08-18 04:25:17 bjoern Exp $
 */
 
 result, meta, uri, modified, server, size, encoding, doctype, warnings, messages {display: block}
@@ -17,17 +17,17 @@ meta {
   font-weight: bolder;
 }
 
-uri      {text-before: 'URL: '}
-modified {text-before: 'Modified: '}
-server   {text-before: 'Server: '}
-size     {text-before: 'Size: '}
-encoding {text-before: 'Encoding: '}
-doctype  {text-before: 'Doctype: '}
+uri:before      { content: 'URL: ' }
+modified:before { content: 'Modified: ' }
+server:before   { content: 'Server: ' }
+size:before     { content: 'Size: ' }
+encoding:before { content: 'Encoding: ' }
+doctype:before  { content: 'Doctype: ' }
 
 warnings {
   border-top: 1px solid red;
   border-bottom: 1px solid red;
-  background: grey;
+  background: gray;
   margin: 3em;
 }
 
