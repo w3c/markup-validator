@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.441 2005-08-17 02:09:08 bjoern Exp $
+# $Id: check,v 1.442 2005-08-18 02:51:54 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -36,27 +36,21 @@ use warnings;
 # when loading modules to prevent non-OO or poorly written modules from
 # polluting our namespace.
 #
-use CGI             2.81 qw(
-                            -newstyle_urls
-                            -private_tempfiles
-                            redirect
-                           ); # 2.81 for XHTML, and import redirect() function.
 
-use CGI::Carp            qw(carp croak fatalsToBrowser);
-use Config::General 2.19 qw(); # Need 2.19 for -AutoLaunder
-use File::Spec           qw();
-use HTML::Parser    3.25 qw(); # Need 3.25 for $p->ignore_elements.
-use HTML::Template  2.6  qw();
-use HTTP::Request        qw();
-use HTTP::Headers::Auth  qw(); # Needs to be imported after other HTTP::*.
-use IO::File             qw();
-use IPC::Open3           qw(open3);
-use Set::IntSpan         qw();
-use Text::Iconv          qw();
-use Text::Wrap           qw(wrap);
-use URI                  qw();
-use URI::Escape          qw(uri_escape);
-
+use CGI                  2.81 qw(-newstyle_urls -private_tempfiles redirect);
+use CGI::Carp                 qw(carp croak fatalsToBrowser);
+use Config::General      2.19 qw(); # Need 2.19 for -AutoLaunder
+use File::Spec                qw();
+use HTML::Parser         3.25 qw(); # Need 3.25 for $p->ignore_elements.
+use HTML::Template       2.6  qw();
+use HTTP::Request             qw();
+use HTTP::Headers::Auth       qw(); # Needs to be imported after other HTTP::*.
+use URI                       qw();
+use URI::Escape               qw(uri_escape);
+use Encode                    qw();
+use HTML::Encoding       0.52 qw();
+use SGML::Parser::OpenSP 0.99 qw();
+  
 ###############################################################################
 #### Constant definitions. ####################################################
 ###############################################################################
@@ -195,7 +189,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.441 $;
+  $VERSION =  q$Revision: 1.442 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -234,7 +228,10 @@ my $q = new CGI;
 # @@FIXME This can't be my() as $File will sooner or
 # later be undef and add_warning will cause the script
 # to die. our() seems to work but has other problems.
-our $File;
+# @@FIXME Apparently, this must be set to {} also,
+# otherwise the script might pick up an old object
+# after abort_if_error_flagged under mod_perl.
+our $File = {};
 
 ##############################################
 # Populate $File->{Env} -- Session Metadata. #
@@ -262,12 +259,7 @@ $File->{Charset}->{Override} = ''; # From CGI/user override.
 $File->{Mode} = MODE_SGML; # Default parse mode is SGML.
 
 #
-# Array (ref) used to store character offsets for the XML report.
-$File->{Offsets}->[0] = [0, 0]; # The first item isn't used...
-
-#
 # Listrefs.
-$File->{Lines}      = []; # Line numbers for encoding errors.
 $File->{Warnings}   = []; # Warnings...
 $File->{Namespaces} = []; # Other (non-root) Namespaces.
 
@@ -377,9 +369,7 @@ untie *STDIN;
 #### Output validation results. ###############################################
 ###############################################################################
 
-#
-# Find the XML Encoding.
-$File = &find_xml_encoding($File);
+$File = find_encodings($File);
 
 #
 # Decide on a charset to use (first part)
@@ -406,20 +396,13 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
   $File->{Charset}->{Use} = 'utf-8'; # UTF-8 (image/svg+xml etc.)
 }
 
-$File->{Content} = &normalize_newlines($File->{Bytes},
-                       exact_charset($File, $File->{Charset}->{Use}));
-
-#
-# Try to extract META charset
-# (works only if ascii-based and reasonably clean before <meta>)
-$File = &preparse_meta($File); # First call. Repeated later to fetch the FPI.
 unless ($File->{Charset}->{Use}) {
   $File->{Charset}->{Use} = $File->{Charset}->{META};
 }
 
 #
 # Handle any Fallback or Override for the charset.
-if (&conflict($File->{Opt}->{Charset}, '(detect automatically)')) {
+if (charset_not_equal($File->{Opt}->{Charset}, '(detect automatically)')) {
   # charset=foo was given to the CGI and it wasn't "autodetect".
 
   #
@@ -467,18 +450,16 @@ unless ($File->{Charset}->{Use}) { # No charset given...
 &abort_if_error_flagged($File, O_CHARSET|O_DOCTYPE);
 
 #
-# Check the detected Encoding and transcode.
-if (&conflict($File->{Charset}->{Use}, 'utf-8')) {
-  $File = &transcode($File);
-  &abort_if_error_flagged($File, O_CHARSET);
-}
-
-$File = &check_utf8($File); # always check
-$File = &byte_error($File);
+# Always transcode, even if the content claims to be UTF-8
+$File = transcode($File);
+&abort_if_error_flagged($File, O_CHARSET);
 
 #
-# Abort if an error was flagged during transcoding
-&abort_if_error_flagged($File, O_SOURCE|O_CHARSET);
+# Add a warning if doc is UTF-8 and contains a BOM.
+if ($File->{Charset}->{Use} eq 'utf-8' &&
+    $File->{Content}->[0] =~ m(^\x{FEFF})) {
+  &add_warning('W21', {});
+}
 
 #
 # Overall parsing algorithm for documents returned as text/html:
@@ -556,8 +537,6 @@ $File = &parse($File);
 sub parse (\$) {
   my $File = shift;
   
-  use SGML::Parser::OpenSP 0.99 qw();
-  
   my $opensp = SGML::Parser::OpenSP->new();
   
   #
@@ -576,6 +555,10 @@ sub parse (\$) {
   
   #
   # Parser configuration
+  #
+  # This is broken on Win32 with restrict_file_reading since it
+  # would need to allow access to the temp file directory which
+  # it does not. Not sure how to address that yet.
   $opensp->search_dirs($CFG->{Paths}->{SGML}->{Library});
   $opensp->catalogs($catalog);
   $opensp->show_error_numbers(1);
@@ -594,22 +577,6 @@ sub parse (\$) {
   $T->param(opt_debug => $DEBUG);
   $T->param(debug =>
             [
-             # This is obsolete now?
-             { name => 'Command',           value => "SGML::Parser::OpenSP->new" },
-             
-             # These are probably obsolete now, SGML::Parser::OpenSP will
-             # always use <spec encoding="utf-8">... for parse_string. It
-             # might be possible that messing with these variables makes
-             # OpenSP fail to recognize the encoding, I remember something
-             # to this effect but can't reproduce this at the moment. We
-             # rely on SGML::Parser::OpenSP to get this right because it
-             # seems there is no way for Apache2+mod_perl2+OpenSP+SPO to
-             # communicate the correct environment settings to OpenSP.
-             # @@FIXME this note should be removed after some testing.
-             { name => 'SP_CHARSET_FIXED',  value => $ENV{SP_CHARSET_FIXED} },
-             { name => 'SP_ENCODING',       value => $ENV{SP_ENCODING} },
-             { name => 'SP_BCTF',           value => $ENV{SP_BCTF} },
-             
              { name => 'Content-Encoding',  value => $File->{ContentEnc} },
              { name => 'Transfer-Encoding', value => $File->{TransferEnc} },
             ],
@@ -682,7 +649,9 @@ if ($File->{Opt}->{Output} eq 'xml') {
   &prep_template($File, $T);
 
   if (! $File->{Doctype} and ($File->{Version} eq 'unknown' or $File->{Version} eq 'SGML' or (!$File->{Version}))) {
-    # @@TODO@@ we should try falling back on other version info, such as the ones stored in Version_ESIS
+
+    # @@TODO@@ we should try falling back on other version
+    # info, such as the ones stored in Version_ESIS
     $T->param(file_version => '(no Doctype found)');
   }
   else {
@@ -1026,18 +995,12 @@ sub parse_content_type {
   my $charset      = '';
   my $mode         = '';
 
+  # @@FIXME @param now unused
   my ($ct, @param) = split /\s*;\s*/, lc $Content_Type;
 
   $mode = $CFG->{MIME}->{$ct} || $ct;
-
-  foreach my $param (@param) {
-    my ($p, $v) = split /\s*=\s*/, $param;
-    next unless $p =~ m(charset)i;
-    if ($v =~ m/([\'\"]?)(\S+)\1/i) {
-      $charset = lc $2;
-      last;
-    }
-  }
+  
+  $charset = HTML::Encoding::encoding_from_content_type($Content_Type);
 
   if ($mode =~ m(/)) { # a "/" means it's unknown or we'd have a mode here.
     if ($ct =~ m(text/css) and defined $url) {
@@ -1075,43 +1038,6 @@ sub check_recursion ($$) {
 }
 
 #
-# Normalize newline forms (CRLF/CR/LF) to native newline.
-sub normalize_newlines {
-  my $file = shift;
-  local $_ = shift;  #charset
-  my $pattern = '';
-
-  # don't use backreference parentheses!
-  $pattern = '\x00\x0D(?:\x00\x0A)?|\x00\x0A' if /^utf-16be$/;
-  $pattern = '\x0D\x00(?:\x0A\x00)?|\x0A\x00' if /^utf-16le$/;
-  # $pattern = '\x00\x00\x00\x0D(?:\x00\x00\x00\x0A)?|\x00\x00\x00\x0A' if /^UCS-4be$/;
-  # $pattern = '\x0D\x00\x00\x00(?:\x0A\x00\x00\x00)?|\x0A\x00\x00\x00' if /^UCS-4le$/;
-  # insert other special cases here, such as EBCDIC
-  $pattern = '\x0D(?:\x0A)?|\x0A' if !$pattern;    # all other cases
-
-  return [split /$pattern/, $file];
-}
-
-#
-# find exact charset from general one (utf-16)
-#
-# needed for per-line conversion and line splitting
-# (BE is default, but this will apply only to HTML)
-sub exact_charset {
-  my $File = shift;
-  my $general_charset = shift;
-  my $exact_charset = $general_charset;
-
-  if ($general_charset eq 'utf-16') {
-    if ($File->{Charset}->{Auto} =~ m/^utf-16[bl]e$/) {
-      $exact_charset = $File->{Charset}->{Auto};
-    } else { $exact_charset = 'utf-16be'; }
-  }
-  # add same code for ucs-4 here
-  return $exact_charset;
-}
-
-#
 # Return $_[0] encoded for HTML entities (cribbed from merlyn).
 #
 # Note that this is used both for HTML and XML escaping.
@@ -1125,11 +1051,6 @@ sub ent {
 
 #
 # Truncate source lines for report.
-#
-# This *really* wants Perl 5.8.0 and it's improved UNICODE support.
-# Byte semantics are in effect on all length(), substr(), etc. calls,
-# so offsets will be wrong if there are multi-byte sequences prior to
-# the column where the error is detected.
 #
 sub truncate_line {
   my $line  = shift;
@@ -1327,7 +1248,6 @@ sub mark_error (\$\$) {
       $length = $col;
     }
     $left = substr $line, $offset, $length;
-    $left = &ent($left);
   }
 
   #
@@ -1367,11 +1287,10 @@ sub mark_error (\$\$) {
       $length = length($line) - ($col - 1); # Otherwise get the rest of the line.
     }
     $right = substr $line, $offset, $length;
-    $right = &ent($right);
   }
 
   $char = qq(<strong title="Position where error was detected.">$char</strong>);
-  $line = $left . $char . $right;
+  $line = &ent($left) . $char . &ent($right);
 
   return $line;
 }
@@ -1383,7 +1302,7 @@ sub source {
 
   # Remove any BOM since we're not at BOT anymore...
   $File->{Content}->[0] =
-    substr $File->{Content}->[0], ($File->{BOM} ? 3 : 0); # remove BOM
+    substr $File->{Content}->[0], ($File->{BOM} ? 1 : 0); # remove BOM
 
   my @source = map({file_source_line => $_}, @{$File->{Content}});
   return \@source;
@@ -1393,7 +1312,7 @@ sub source {
 # Do an initial parse of the Document Entity to extract FPI.
 sub preparse_doctype {
   my $File = shift;
-
+  
   #
   # Reset DOCTYPE, Root (for second invocation, probably not needed anymore).
   $File->{DOCTYPE}         = '';
@@ -1436,6 +1355,7 @@ sub preparse_doctype {
 #
 # Print out the raw error output for debugging.
 sub show_errors ($) {
+  # @@FIXME This is broken with SGML::Parser::OpenSP
   my $file_raw_errors = "";
   for (@{shift->{DEBUG}->{Errors}}) {
   $file_raw_errors .= ent $_
@@ -1546,47 +1466,6 @@ sub prepCGI {
 sub is_xml {shift->{Mode} == MODE_XML};
 
 #
-# Do an initial parse of the Document Entity to extract charset from HTML <meta>.
-# (still also extracts FPI, at least to some extent)
-sub preparse_meta {
-  my $File = shift;
-
-  my $dtd = sub {
-    return if $File->{Root};
-    ($File->{Root}, $File->{DOCTYPE}) = shift =~ m(<!DOCTYPE\s+(\w+)\s+PUBLIC\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
-  };
-
-  my $start = sub {
-    my $tag  = shift;
-    my $attr = shift;
-    my %attr = map {lc($_) => $attr->{$_}} keys %{$attr};
-
-    if ($File->{Root}) {
-      if (lc $tag eq 'meta') {
-        if (lc $attr{'http-equiv'} eq 'content-type') {
-          if ($attr{content} =~ m(charset\s*=[\s\"\']*([^\s;\"\'>]*))si) {
-            $File->{Charset}->{META} = lc $1;
-          }
-        }
-      }
-      return unless $tag eq $File->{Root};
-    } else {
-      $File->{Root} = $tag;
-    }
-  };
-
-  my $p = HTML::Parser->new(api_version => 3);
-  $p->xml_mode(TRUE);
-  $p->ignore_elements('BODY');
-  $p->ignore_elements('body');
-  $p->handler(declaration => $dtd, 'text');
-  $p->handler(start => $start, 'tag,attr');
-  $p->parse(join "\n", @{$File->{Content}});
-
-  return $File;
-}
-
-#
 # Check charset conflicts and add any warnings necessary.
 sub charset_conflicts {
   my $File = shift;
@@ -1607,19 +1486,19 @@ sub charset_conflicts {
   #
   # Add a warning if there was charset info conflict (HTTP header,
   # XML declaration, or <meta> element).
-  if (&conflict($File->{Charset}->{HTTP}, $File->{Charset}->{XML})) {
+  if (charset_not_equal($File->{Charset}->{HTTP}, $File->{Charset}->{XML})) {
     &add_warning('W18', {
       W18_http => $cs_http,
       W18_xml  => $cs_xml,
       W18_use  => $cs_use,
     });
-  } elsif (&conflict($File->{Charset}->{HTTP}, $File->{Charset}->{META})) {
+  } elsif (charset_not_equal($File->{Charset}->{HTTP}, $File->{Charset}->{META})) {
     &add_warning('W19', {
       W19_http => $cs_http,
       W19_meta => $cs_meta,
       W19_use  => $cs_use,
     });
-  } elsif (&conflict($File->{Charset}->{XML}, $File->{Charset}->{META})) {
+  } elsif (charset_not_equal($File->{Charset}->{XML}, $File->{Charset}->{META})) {
     &add_warning('W20', {
       W20_http => $cs_xml,
       W20_xml  => $cs_meta,
@@ -1634,110 +1513,112 @@ sub charset_conflicts {
 # Transcode to UTF-8
 sub transcode {
   my $File = shift;
+  
+  my $general_charset = $File->{Charset}->{Use};
+  my $exact_charset = $general_charset;
 
-  my $cs = $File->{Charset}->{Use};
-  my ($command, $result_charset) = ('', '');
-  if ($CFG->{Charsets}->{$cs}) {
-    ($command, $result_charset) = split(" ", $CFG->{Charsets}->{$cs}, 2);
+  # eeeeek!
+  if ($general_charset eq 'utf-16') {
+    if ($File->{Charset}->{Auto} =~ m/^utf-16[bl]e$/) {
+      $exact_charset = $File->{Charset}->{Auto};
+    } else { $exact_charset = 'utf-16be'; }
   }
+  
+  my $cs = $exact_charset;
+  
+  if (!$CFG->{Charsets}->{$cs}) {
+    # The encoding is not supported due to policy
+    # and possibly other reasons
 
-  my $c;
-  $result_charset = exact_charset($File, $result_charset);
-
-  if ($command eq 'I') {
-    # test if given charset is available
-    eval { $c = Text::Iconv->new($result_charset, 'utf-8') };
-    $command = '' if $@;
-  } elsif ($command eq 'X') {
-    $@ = "$File->{Charset}->{Use} undefined; replace by $result_charset";
-  }
-
-  if ($command ne 'I') {
     $File->{'Error Flagged'} = TRUE;
     $File->{E}->param(fatal_transcode_error   => TRUE);
     $File->{E}->param(fatal_transcode_charset => $cs);
-    $File->{E}->param(fatal_transcode_errmsg  => ($@ || ''));
+    
+    # @@FIXME might need better text
+    $File->{E}->param(fatal_transcode_errmsg  => "Encoding not supported.");
+    
     return $File;
   }
+  
+  # Does the system support decoding this encoding?
+  eval { Encode::decode($cs, ''); };
+  
+  if ($@) {
+    # This system's Encode installation does not support
+    # the character encoding; might need additional modules
 
-  my $line = 0;
-  for (@{$File->{Content}}) {
-    my $in = $_;
-    $line++;
-    $_ = $c->convert($_); # $_ is local!!
-    if ($in ne "" and (!defined($_) || $_ eq "")) {
-      push @{$File->{Lines}}, $line;
-      
-      # try to decoded as much as possible of the line
-      my $short = 0;                # longest okay
-      my $long  = (length $in) - 1; # longest unknown
-      
-      while ($long > $short) {
-        # binary search
-        my $try = int (($long+$short+1) / 2);
-        my $converted = $c->convert(substr($in, 0, $try));
-        if (!defined($converted) || $converted eq "") {
-          $long  = $try-1;
-        } else {
-          $short = $try;
-        }
-      }
-      my $remain = (length $in) - $short;
-      $_ = $c->convert(substr($in,0,$short))
-           . "#### $remain byte(s) unconvertible ####";
-    }
-  }
-  return $File;
-}
-
-#
-# Check correctness of UTF-8 both for UTF-8 input and for conversion results
-sub check_utf8 {
-  my $File = shift;
-
-  for (my $i = 0; $i < $#{$File->{Content}}; $i++) {
-    # substitution needed for very long lines (>32K), to avoid backtrack
-    # stack overflow. Handily, this also happens to count characters.
-    local $_ = $File->{Content}->[$i];
-    my $count =
-    s/  [\x00-\x7F]                           # ASCII
-      | [\xC2-\xDF]        [\x80-\xBF]        # non-overlong 2-byte sequences
-      |  \xE0[\xA0-\xBF]   [\x80-\xBF]        # excluding overlongs
-      | [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}     # straight 3-byte sequences
-      |  \xED[\x80-\x9F]   [\x80-\xBF]        # excluding surrogates
-      |  \xF0[\x90-\xBF]   [\x80-\xBF]{2}     # planes 1-3
-      | [\xF1-\xF3]        [\x80-\xBF]{3}     # planes 4-15
-      |  \xF4[\x80-\x8F][\x80-\xBF]{2}        # plane 16
-     //xg;
-    if (length) {
-      push @{$File->{Lines}}, ($i+1);
-      $File->{Content}->[$i] = "#### encoding problem on this line, not shown ####";
-      $count = 50; # length of above text
-    }
-    $count += 0; # Force numeric.
-    $File->{Offsets}->[$i + 1] = [$count, $File->{Offsets}->[$i]->[1] + $count];
-  }
-
-  # Add a warning if doc is UTF-8 and contains a BOM.
-  if ($File->{Charset}->{Use} eq 'utf-8' &&
-        $File->{Content}->[0] =~ m(^\xEF\xBB\xBF)) {
-    &add_warning('W21', {});
-  }
-  return $File;
-}
-
-#
-# byte error analysis
-sub byte_error {
-  my $File = shift;
-  my @lines = @{$File->{Lines}};
-  if (scalar @lines) {
     $File->{'Error Flagged'} = TRUE;
-    my $lines = join ', ', split ',', Set::IntSpan->new(\@lines)->run_list;
-    $File->{E}->param(fatal_byte_error   => TRUE);
-    $File->{E}->param(fatal_byte_lines   => $lines);
-    $File->{E}->param(fatal_byte_charset => $File->{Charset}->{Use});
+    $File->{E}->param(fatal_transcode_error   => TRUE);
+    $File->{E}->param(fatal_transcode_charset => $cs);
+    
+    # @@FIXME might need better text
+    $File->{E}->param(fatal_transcode_errmsg  => "Encoding not supported.");
+
+    return $File;
   }
+  
+  my $output;
+  my $input = $File->{Bytes};
+  
+  # Try to transcode
+  eval {
+    $output = Encode::decode($cs, $input, Encode::FB_CROAK);
+  };
+  
+  # Transcoding failed  
+  if ($@) {
+    $File->{'Error Flagged'} = TRUE;
+
+    # @@FIXME might need better text, in particular, this does not tell
+    # where the error occured; it might be possible to emulate that
+    # using a Encode CHECK parameter that modifies the input, then split
+    # the decodable string to give line / column information, or don't
+    # split and report the offset calculated from the result.
+    $File->{E}->param(fatal_byte_error   => TRUE);
+    $File->{E}->param(fatal_byte_lines   => 0);
+    $File->{E}->param(fatal_byte_charset => $cs);
+
+    return $File;
+  }
+  
+  # @@FIXME is this what we want?
+  $output =~ s/\015?\012/\n/g;
+  $File->{Content} = [split/\n/, $output];
+  
+  return $File;
+}
+
+sub find_encodings
+{
+  my $File = shift;
+  my $bom = HTML::Encoding::encoding_from_byte_order_mark($File->{Bytes});
+  my @first = HTML::Encoding::encoding_from_first_chars($File->{Bytes});
+  
+  if (defined $bom)
+  {
+    # @@FIXME this BOM entry should not be needed at all!
+    $File->{BOM} = length(Encode::encode($bom, "\x{FEFF}"));
+    $File->{Charset}->{Auto} = lc $bom;
+  }
+  else
+  {
+    $File->{Charset}->{Auto} = lc($first[0]) if @first;
+  }
+  
+  my $xml = HTML::Encoding::encoding_from_xml_document($File->{Bytes});
+  $File->{Charset}->{XML} = lc $xml if defined $xml;
+
+  my %metah;
+  foreach my $try (@first)
+  {
+    # @@FIXME I think the old code used HTML::Parser xml mode, check this is ok
+    my $meta = lc HTML::Encoding::encoding_from_meta_element($File->{Bytes}, $try);
+    $metah{$meta}++ if defined $meta and length $meta;
+  }
+  
+  my @meta = sort { $metah{$b} <=> $metah{$a} } keys %metah;
+  $File->{Charset}->{META} = lc $meta[0] if @meta;
+  
   return $File;
 }
 
@@ -1819,9 +1700,8 @@ X-W3C-Validator-Errors: $errs
     print qq(  <messages>\n);
 
     foreach my $err (@{$File->{Errors}}) {
-      my $offset = $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char};
       printf <<".EOF.", &ent($err->{msg});
-    <msg line="$err->{line}" col="$err->{char}" offset="$offset">%s</msg>
+    <msg line="$err->{line}" col="$err->{char}">%s</msg>
 .EOF.
     }
     print qq(  </messages>\n);
@@ -1873,11 +1753,6 @@ X-W3C-Validator-Errors: $errs
     my $errnum = 0 ;
     foreach my $err (@{$File->{Errors}}) {
       ++$errnum ;
-      my @offsets = (
-                     $File->{Offsets}->[$err->{line}    ]->[0],
-                     $File->{Offsets}->[$err->{line} - 1]->[1],
-                     $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char}
-                    );
       printf <<".EOF.", &ent($File->{URI}), &ent($err->{msg});
     <asserts>
       <Assertion rdf:ID="err$errnum">
@@ -1885,7 +1760,6 @@ X-W3C-Validator-Errors: $errs
           <reprOf rdf:resource="%s"/>
           <val:line>$err->{line}</val:line>
           <val:column>$err->{char}</val:column>
-          <val:offset>@offsets</val:offset>
         </subject>
         <result rdf:resource="http://www.w3.org/2003/03/earl/1.00#fails" />
         <testCase rdf:resource="http://www.w3.org/Markup/" />
@@ -1943,11 +1817,6 @@ X-W3C-Validator-Errors: $errs
   unless ($File->{'Is Valid'}) {
     for (my $i = 0; $i <= scalar @{$File->{Errors}}; $i++) {
       my $err = $File->{Errors}->[$i];
-      my @offsets = (
-                     $File->{Offsets}->[$err->{line}    ]->[0],
-                     $File->{Offsets}->[$err->{line} - 1]->[1],
-                     $File->{Offsets}->[$err->{line} - 1]->[1] + $err->{char}
-                    );
       print <<".EOF.";
     [
       earl:testMode earl:Auto;
@@ -1955,7 +1824,6 @@ X-W3C-Validator-Errors: $errs
       rdf:subject [
                     val:column "$err->{char}";
                     val:line   "$err->{line}";
-                    val:offset "@offsets";
                     earl:testSubject <$File->{URI}>
                   ];
       rdf:object [
@@ -1987,88 +1855,11 @@ X-W3C-Validator-Errors: $errs
 }
 
 #
-# Autodetection as in Appendix F of the XML 1.0 Recommendation.
-# <http://www.w3.org/TR/2000/REC-xml-20001006#sec-guessing>
-#
-# return values are: (base_encoding, BOMSize, Size, Pattern)
-sub find_base_encoding {
-  local $_ = shift;
-
-  # With a Byte Order Mark:
-  return ('ucs-4be',  4, 4, '\0\0\0(.)')
-    if /^\x00\x00\xFE\xFF/; # UCS-4, big-endian machine (1234)
-  return ('ucs-4le',  4, 4, '(.)\0\0\0')
-    if /^\xFF\xFE\x00\x00/; # UCS-4, little-endian machine (4321)
-  return ('utf-16be', 2, 2, '\0(.)')
-    if /^\xFE\xFF/;         # UTF-16, big-endian.
-  return ('utf-16le', 2, 2, '(.)\0')
-    if /^\xFF\xFE/;         # UTF-16, little-endian.
-  return ('utf-8',    3, 1, '')
-    if /^\xEF\xBB\xBF/; # UTF-8.
-
-  # Without a Byte Order Mark:
-  return ('ucs-4be',  0, 4, '\0\0\0(.)')
-    if /^\x00\x00\x00\x3C/; # UCS-4 or 32bit; big-endian machine (1234 order).
-  return ('ucs-4le',  0, 4, '(.)\0\0\0')
-    if /^\x3C\x00\x00\x00/; # UCS-4 or 32bit; little-endian machine (4321 order).
-  return ('utf-16be', 0, 2, '\0(.)')
-    if /^\x00\x3C\x00\x3F/; # UCS-2, UTF-16, or 16bit; big-endian.
-  return ('utf-16le', 0, 2, '(.)\0')
-    if /^\x3C\x00\x3F\x00/; # UCS-2, UTF-16, or 16bit; little-endian.
-  return ('utf-8',    0, 1, '')
-    if /^\x3C\x3F\x78\x6D/; # UTF-8, ISO-646, ASCII, ISO-8859-*, Shift-JIS, EUC, etc.
-  return ('ebcdic',   0, 1, '')
-    if /^\x4C\x6F\xA7\x94/; # EBCDIC
-  return ('',         0, 1, '');
-                            # nothing in particular
-}
-
-#
-# Find encoding in document according to XML rules
-# Only meaningful if file contains a BOM, or for well-formed XML!
-sub find_xml_encoding {
-  my $File = shift;
-  my ($CodeUnitSize, $Pattern);
-
-  ($File->{Charset}->{Auto}, $File->{BOM}, $CodeUnitSize, $Pattern)
-    = &find_base_encoding($File->{Bytes});
-
-  # 100 arbitrary, but enough in any case
-  my $someBytes = substr $File->{Bytes}, $File->{BOM}, ($CodeUnitSize * 100);
-  my $someText  = '';
-
-  # translate from guessed encoding to ascii-compatible
-  if ($File->{Charset}->{Auto} eq 'ebcdic') {
-
-    # special treatment for EBCDIC, maybe use tr///
-    # work on this later
-  }
-  elsif (!$Pattern) {
-    $someText = $someBytes; # efficiency shortcut
-  }
-  else {
-    # generic code for UTF-16/UCS-4
-    $someBytes =~ /^(($Pattern)*)/s;
-    $someText = $1;                   # get initial piece without chars >255
-    $someText =~ s/$Pattern/$1/sg;    # select the relevant bytes
-  }
-
-  # try to find encoding pseudo-attribute
-  my $s = '[\ \t\n\r]';
-  $someText =~ m(^<\?xml $s+ version $s* = $s* ([\'\"]) [-._:a-zA-Z0-9]+ \1 $s+
-                  encoding $s* = $s* ([\'\"]) ([A-Za-z][-._A-Za-z0-9]*) \2
-                )xso;
-
-  $File->{Charset}->{XML} = lc $3;
-  return $File;
-}
-
-#
 # Abort with a message if an error was flagged at point.
 sub abort_if_error_flagged {
   my $File  = shift;
   my $Flags = shift;
-
+  
   return unless $File->{'Error Flagged'};
   return if     $File->{'Error Handled'}; # Previous error, keep going.
 
@@ -2093,7 +1884,7 @@ sub abort_if_error_flagged {
 
 #
 # conflicting encodings
-sub conflict {
+sub charset_not_equal {
   my $encodingA = shift;
   my $encodingB = shift;
   return $encodingA && $encodingB && ($encodingA ne $encodingB);
