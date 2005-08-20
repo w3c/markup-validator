@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.432.2.1 2005-08-15 22:47:51 link Exp $
+# $Id: check,v 1.432.2.2 2005-08-20 10:58:32 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -202,7 +202,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.432.2.1 $;
+  $VERSION =  q$Revision: 1.432.2.2 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -273,21 +273,32 @@ $File->{Namespaces} = []; # Other (non-root) Namespaces.
 
 my $lang = 'en_US'; # @@TODO: conneg;
 
+my %cache_opts = ();
+if (eval { require Storable }) {
+  %cache_opts = (
+    file_cache     => TRUE,
+    file_cache_dir => File::Spec->catdir(File::Spec->tmpdir(), 'validator'),
+  );
+}
+
 my $T = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                            $lang, 'result.tmpl'),
   die_on_bad_params => FALSE,
   loop_context_vars => TRUE,
+  %cache_opts,
 );
 my $E = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                            $lang, 'fatal-error.tmpl'),
   die_on_bad_params => FALSE,
+  %cache_opts,
 );
 my $H = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                            $lang, 'http_401_authrequired.tmpl'),
   die_on_bad_params => FALSE,
+  %cache_opts,
 );
 
 $File->{T} = $T;
@@ -303,6 +314,7 @@ $RSRC = \%rsrc;
 $T->param(cfg_home_page => $CFG->{'Home Page'});
 
 undef $lang;
+undef %cache_opts;
 
 #########################################
 # Populate $File->{Opt} -- CGI Options. #
