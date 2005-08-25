@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install_win.html,v 1.3 2005-08-08 01:12:33 ot Exp $" -->
-<!--#set var="date" value="\$Date: 2005-08-08 01:12:33 $" -->
+<!--#set var="revision" value="\$Id: install_win.html,v 1.4 2005-08-25 08:15:12 ot Exp $" -->
+<!--#set var="date" value="\$Date: 2005-08-25 08:15:12 $" -->
 <!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service (Windows, Apache)" -->
 <!--#set var="relroot" value="../" -->
 <!--#include virtual="../header.html" -->
@@ -94,8 +94,8 @@ installed to. Just clicking &quot;Next&quot; in all installation routines is not
 
 <p>One suggested method is to  have a directory <code>C:\www</code> in which all programs concerning the 
 Web server are located (in subfolders, obviously). For instance, Apache is installed in 
-<code>C:\www\Apache2</code>, Perl in <code>C:\www\perl</code>, the perl modules unzipped in <code>C:\www\pmm</code>, OpenSP in <code>C:\www\opensp</code>, the DTD-Collection in <code>C:\www\sgml-lib</code> and finally the validator itself
-in <code>C:\www\validator</code>.</p>
+<code>C:\www\Apache2</code>, Perl in <code>C:\www\perl</code>, the perl modules unzipped in <code>C:\www\pmm</code>, OpenSP in <code>C:\www\opensp</code>, the validator itself
+in <code>C:\www\validator</code> and finally  the DTD-Collection in <code>C:\www\validator\htdocs\sgml-lib</code></p>
 
 <p>The rest of this guide will assume that these paths are being used. If you want to use another 
 directory structure, you will have to adapt the instructions and sample configuration to your
@@ -303,7 +303,7 @@ NameVirtualHost 127.0.0.2:80
 </pre>
 <p>and changing it to</p>
 <pre>
-Base = D:/www/validator
+Base = C:/www/validator
 </pre>
 <p>For the SGML <code>Library</code>, <code>c:/www/sgml-lib</code>
   is declared. Notice that slashes are used here instead of 
@@ -316,7 +316,7 @@ Parser = /usr/bin/onsgmls
 </pre>
 <p>to</p>
 <pre>
-Parser = D:/www/opensp/onsgmls.exe  
+Parser = C:/www/opensp/onsgmls.exe  
 </pre>
 <p>The option <code>Home Page</code> has to be changed to the URL of 
   the validator, http://validator.example.org/ in our case.</p>
@@ -330,7 +330,7 @@ Parser = D:/www/opensp/onsgmls.exe
 #
 # Main Configuration File for the W3C Markup Validation Service.
 #
-# $Id: install_win.html,v 1.3 2005-08-08 01:12:33 ot Exp $
+# $Id: install_win.html,v 1.4 2005-08-25 08:15:12 ot Exp $
 #
 # See 'perldoc Config::General' for the syntax, and be aware that the
 # 'SplitPolicy' is 'equalsign', ie. keys and values are separated by '\s*=\s*',
