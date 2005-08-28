@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.444 2005-08-18 18:20:52 bjoern Exp $
+# $Id: check,v 1.445 2005-08-28 20:53:09 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -51,7 +51,7 @@ use Encode                    qw();
 use Encode::Alias             qw();
 use HTML::Encoding       0.52 qw();
 use SGML::Parser::OpenSP 0.99 qw();
-  
+
 ###############################################################################
 #### Constant definitions. ####################################################
 ###############################################################################
@@ -190,7 +190,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.444 $;
+  $VERSION =  q$Revision: 1.445 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -203,7 +203,7 @@ Directory not readable (permission denied): @_r
   my %config_opts = (-ConfigFile => $error_messages_list);
   my %rsrc = Config::General->new(%config_opts)->getall();
   $RSRC = \%rsrc;
-  
+
 } # end of BEGIN block.
 
 #
@@ -562,23 +562,23 @@ $File = &charset_conflicts($File);
 $File = &parse($File);
 sub parse (\$) {
   my $File = shift;
-  
+
   my $opensp = SGML::Parser::OpenSP->new();
-  
+
   #
   # By default, use SGML catalog file and SGML Declaration.
   my $catalog  = File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'sgml.soc');
-  
+
   #
   my @spopt = qw(valid non-sgml-char-ref no-duplicate);
-  
+
   #
   # Switch to XML semantics if file is XML.
   if (&is_xml($File)) {
     $catalog  = File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc');
     push(@spopt, 'xml');
   }
-  
+
   #
   # Parser configuration
   #
@@ -588,7 +588,7 @@ sub parse (\$) {
   $opensp->search_dirs($CFG->{Paths}->{SGML}->{Library});
   $opensp->catalogs($catalog);
   $opensp->show_error_numbers(1);
-  
+
   #
   # Note: if you feel the urge to remove -R from here, please understand that
   # doing so opens a potential security hole.  Don't do that; instead just
@@ -597,7 +597,7 @@ sub parse (\$) {
 
   # workaround for odd O::S::P behavior...
   $opensp->pass_file_descriptor(1) unless $^O eq 'MSWin32';
-  
+
   #
   # Set debug info for HTML report.
   $T->param(opt_debug => $DEBUG);
@@ -607,12 +607,12 @@ sub parse (\$) {
              { name => 'Transfer-Encoding', value => $File->{TransferEnc} },
             ],
            );
-  
+
   my $h = W3C::Validator::ErrorHandler->new($opensp, $File);
-  
+
   $opensp->handler($h);
   $opensp->parse_string(join"\n",@{$File->{Content}});
-  
+
   # Make sure there are no circular references, otherwise the script
   # would leak memory until mod_perl unloads it which could take some
   # time. @@FIXME It's probably overly careful though.
@@ -621,11 +621,11 @@ sub parse (\$) {
   undef $h->{_file};
   undef $h;
   undef $opensp;
-  
+
   #
   # Set Version to be the FPI initially.
   $File->{Version} = $File->{DOCTYPE};
-  
+
   return $File;
 }
 
@@ -832,7 +832,7 @@ sub report_valid {
 sub add_warning ($$) {
   my $WID    = shift;
   my $params = shift;
-  
+
   $File->{T}->param($WID => TRUE, %{$params});
   $File->{T}->param(have_warnings => TRUE);
 }
@@ -957,7 +957,7 @@ sub handle_uri {
   $File->{Charset}->{HTTP} = lc $charset;
   $File->{Modified}        = $lastmod;
   $File->{Server}          = scalar $res->server;
-  
+
   # TODO: Content-Length is not always set, so either this should
   # be renamed to 'Content-Length' or it should consider more than
   # the Content-Length header.
@@ -1029,7 +1029,7 @@ sub parse_content_type {
   my ($ct, @param) = split /\s*;\s*/, lc $Content_Type;
 
   $mode = $CFG->{MIME}->{$ct} || $ct;
-  
+
   $charset = HTML::Encoding::encoding_from_content_type($Content_Type);
 
   if ($mode =~ m(/)) { # a "/" means it's unknown or we'd have a mode here.
@@ -1075,7 +1075,7 @@ sub check_recursion ($$) {
 sub ent {
   local $_ = shift;
   return '' unless defined; # Eliminate warnings
-  
+
   # TODO: Err, why have " twice in the character class? ' maybe?
   s(["<&>"]){'&#' . ord($&) . ';'}ge;  # should switch to hex sooner or later
   return $_;
@@ -1129,7 +1129,7 @@ sub truncate_line {
 sub override_doctype {
   no strict 'vars';
   my $File = shift;
-  
+
   my ($dt) =
     grep { $_->{Display} eq $File->{Opt}->{DOCTYPE} } values %{$CFG->{Types}};
 
@@ -1140,7 +1140,7 @@ sub override_doctype {
   local $dtd = qq(<!DOCTYPE $name PUBLIC "$pubid");
   $dtd .= qq( "$sysid") if $sysid; # We don't have one for all types.
   $dtd .= '>';
-  
+
   local $org_dtd = '';
   local $HTML    = '';
   local $seen    = FALSE;
@@ -1344,7 +1344,7 @@ sub source {
 # Do an initial parse of the Document Entity to extract FPI.
 sub preparse_doctype {
   my $File = shift;
-  
+
   #
   # Reset DOCTYPE, Root (for second invocation, probably not needed anymore).
   $File->{DOCTYPE}         = '';
@@ -1455,7 +1455,7 @@ sub prepCGI {
       print redirect &self_url_q($q, $File);
       exit;
     } else {
-        
+
       # Redirected from /check/referer to /check?uri=referer because
       # the browser didn't send a Referer header, or the request was
       # for /check?uri=referer but no Referer header was found.
@@ -1548,7 +1548,7 @@ sub charset_conflicts {
 # Transcode to UTF-8
 sub transcode {
   my $File = shift;
-  
+
   my $general_charset = $File->{Charset}->{Use};
   my $exact_charset = $general_charset;
 
@@ -1558,9 +1558,9 @@ sub transcode {
       $exact_charset = $File->{Charset}->{Auto};
     } else { $exact_charset = 'utf-16be'; }
   }
-  
+
   my $cs = $exact_charset;
-  
+
   if (!$CFG->{Charsets}->{$cs}) {
     # The encoding is not supported due to policy
     # and possibly other reasons
@@ -1568,16 +1568,16 @@ sub transcode {
     $File->{'Error Flagged'} = TRUE;
     $File->{E}->param(fatal_transcode_error   => TRUE);
     $File->{E}->param(fatal_transcode_charset => $cs);
-    
+
     # @@FIXME might need better text
     $File->{E}->param(fatal_transcode_errmsg  => "Encoding not supported.");
-    
+
     return $File;
   }
-  
+
   # Does the system support decoding this encoding?
   eval { Encode::decode($cs, ''); };
-  
+
   if ($@) {
     # This system's Encode installation does not support
     # the character encoding; might need additional modules
@@ -1585,22 +1585,22 @@ sub transcode {
     $File->{'Error Flagged'} = TRUE;
     $File->{E}->param(fatal_transcode_error   => TRUE);
     $File->{E}->param(fatal_transcode_charset => $cs);
-    
+
     # @@FIXME might need better text
     $File->{E}->param(fatal_transcode_errmsg  => "Encoding not supported.");
 
     return $File;
   }
-  
+
   my $output;
   my $input = $File->{Bytes};
-  
+
   # Try to transcode
   eval {
     $output = Encode::decode($cs, $input, Encode::FB_CROAK);
   };
-  
-  # Transcoding failed  
+
+  # Transcoding failed
   if ($@) {
     $File->{'Error Flagged'} = TRUE;
 
@@ -1615,11 +1615,11 @@ sub transcode {
 
     return $File;
   }
-  
+
   # @@FIXME is this what we want?
   $output =~ s/\015?\012/\n/g;
   $File->{Content} = [split/\n/, $output];
-  
+
   return $File;
 }
 
@@ -1628,7 +1628,7 @@ sub find_encodings
   my $File = shift;
   my $bom = HTML::Encoding::encoding_from_byte_order_mark($File->{Bytes});
   my @first = HTML::Encoding::encoding_from_first_chars($File->{Bytes});
-  
+
   if (defined $bom)
   {
     # @@FIXME this BOM entry should not be needed at all!
@@ -1639,7 +1639,7 @@ sub find_encodings
   {
     $File->{Charset}->{Auto} = lc($first[0]) if @first;
   }
-  
+
   my $xml = HTML::Encoding::encoding_from_xml_document($File->{Bytes});
   $File->{Charset}->{XML} = lc $xml if defined $xml;
 
@@ -1650,10 +1650,10 @@ sub find_encodings
     my $meta = lc HTML::Encoding::encoding_from_meta_element($File->{Bytes}, $try);
     $metah{$meta}++ if defined $meta and length $meta;
   }
-  
+
   my @meta = sort { $metah{$b} <=> $metah{$a} } keys %metah;
   $File->{Charset}->{META} = lc $meta[0] if @meta;
-  
+
   return $File;
 }
 
@@ -1894,7 +1894,7 @@ X-W3C-Validator-Errors: $errs
 sub abort_if_error_flagged {
   my $File  = shift;
   my $Flags = shift;
-  
+
   return unless $File->{'Error Flagged'};
   return if     $File->{'Error Handled'}; # Previous error, keep going.
 
@@ -1982,13 +1982,13 @@ sub W3C::Validator::ErrorHandler::new
   my $class = shift;
   my $parser = shift;
   my $File = shift;
-  
+
   my $self = { _file => $File, _parser => $parser };
-  
+
   # ...
   $File->{'Is Valid'} = TRUE;
   $File->{Errors} = [];
-  
+
   bless $self, $class;
 }
 
@@ -1998,27 +1998,27 @@ sub W3C::Validator::ErrorHandler::error
   my $error = shift;
   my $mess = $self->{_parser}->split_message($error);
   my $File = $self->{_file};
-  
+
   # TODO: this does not filter out errors in DTDs.
-  
+
   my $err;
-  
+
   $err->{src}  = '...'; # do this with show_open_entities()?
   $err->{line} = $mess->{primary_message}{LineNumber};
   $err->{char} = $mess->{primary_message}{ColumnNumber};
   $err->{num}  = $mess->{primary_message}{Number};
   $err->{type} = $mess->{primary_message}{Severity};
   $err->{msg}  = $mess->{primary_message}{Text};
-  
+
   # ...
   $File->{'Is Valid'} = FALSE if $err->{type} eq 'E';
-  
+
   # Workaround for onsgmls 1.5 sometimes reporting errors beyond EOL.
   # (How true is that? Test cases please.)
   if ((my $l = length($File->{Content}->[$err->{line}-1])) < $err->{char}) {
     $err->{char} = $l;
   }
-  
+
   # No or unknown FPI and a relative SI.
   if ($err->{msg} =~ m(cannot (open|find))) {
     $File->{'Error Flagged'} = TRUE;
@@ -2030,16 +2030,16 @@ sub W3C::Validator::ErrorHandler::error
   if ($err->{msg} =~ m(prolog can\'t be omitted)) {
     my $dtd = ($File->{Mode} == MODE_SGML ?
                'HTML 4.01 Transitional' : 'XHTML 1.0 Transitional');
-  
+
     add_warning('W09', {W09_dtd => $dtd});
     return; # Don't report this as a normal error.
   }
-  
+
   # TODO: calling exit() here is probably a bad idea
   abort_if_error_flagged($File, O_DOCTYPE);
 
   push @{$File->{Errors}}, $err;
-  
+
   if (defined $mess->{aux_message})
   {
     # "duplicate id ... first defined here" style messages
@@ -2049,7 +2049,7 @@ sub W3C::Validator::ErrorHandler::error
                                type => 'I',
                              };
   }
-} 
+}
 
 #####
 
