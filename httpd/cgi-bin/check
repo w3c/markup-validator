@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.445 2005-08-28 20:53:09 ville Exp $
+# $Id: check,v 1.446 2005-09-10 07:06:27 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -190,7 +190,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.445 $;
+  $VERSION =  q$Revision: 1.446 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -581,22 +581,16 @@ sub parse (\$) {
 
   #
   # Parser configuration
-  #
-  # This is broken on Win32 with restrict_file_reading since it
-  # would need to allow access to the temp file directory which
-  # it does not. Not sure how to address that yet.
   $opensp->search_dirs($CFG->{Paths}->{SGML}->{Library});
   $opensp->catalogs($catalog);
   $opensp->show_error_numbers(1);
 
   #
-  # Note: if you feel the urge to remove -R from here, please understand that
-  # doing so opens a potential security hole.  Don't do that; instead just
-  # make sure you're running OpenSP 1.5 or later.
-  $opensp->restrict_file_reading(1);
-
-  # workaround for odd O::S::P behavior...
-  $opensp->pass_file_descriptor(1) unless $^O eq 'MSWin32';
+  # Restricted file reading is disabled on Win32 for the time
+  # beeing since neither SGML::Parser::OpenSP nor check auto-
+  # magically set search_dirs to include the temp directory
+  # so restricted file reading would defunct the Validator.
+  $opensp->restrict_file_reading(1) unless $^O eq 'MSWin32';
 
   #
   # Set debug info for HTML report.
@@ -1352,8 +1346,7 @@ sub preparse_doctype {
 
   my $dtd = sub {
     return if $File->{Root};
-    # TODO: These \s here are probably wrong now that the strings are utf8_on
-    # Same for the \w probably
+    # TODO: The \s and \w are probably wrong now that the strings are utf8_on
     ($File->{Root}, $File->{DOCTYPE}) = shift =~ m(<!DOCTYPE\s+(\w+)\s+(?:PUBLIC|SYSTEM)\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
   };
 
