@@ -1,0 +1,69 @@
+Content-Type: application/xml; charset=UTF-8
+X-W3C-Validator-Status: <TMPL_VAR NAME="valid_status">
+X-W3C-Validator-Errors: <TMPL_VAR NAME="number_of_errors">
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FIXME: text/xsl is not a registered media type
+-->
+<?xml-stylesheet type="text/xsl" href="xml-results.xsl"?>
+
+<!--
+  This interface is highly experimental and the output *will* change
+  (probably even several times) before finished. Do *not* rely on it!
+  See http://validator.w3.org/docs/users.html#api-warning
+-->
+
+<!DOCTYPE result [
+  <!ELEMENT result (meta, warnings?, messages?)>
+  <!ATTLIST result
+    version CDATA #FIXED '0.9.1'
+  >
+
+  <!ELEMENT meta (uri, modified, server, size, encoding, doctype, errors)>
+  <!ELEMENT uri      (#PCDATA)>
+  <!ELEMENT modified (#PCDATA)>
+  <!ELEMENT server   (#PCDATA)>
+  <!ELEMENT size     (#PCDATA)>
+  <!ELEMENT encoding (#PCDATA)>
+  <!ELEMENT doctype  (#PCDATA)>
+  <!ELEMENT errors   (#PCDATA)>
+
+  <!ELEMENT warnings (warning)+>
+  <!ELEMENT warning  (#PCDATA)>
+
+  <!ELEMENT messages (msg)*>
+  <!ELEMENT msg      (#PCDATA)>
+  <!ATTLIST msg
+    line   CDATA #IMPLIED
+    col    CDATA #IMPLIED
+    offset CDATA #IMPLIED
+  >
+]>
+
+<result>
+  <meta>
+    <uri><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></uri>
+    <modified><TMPL_VAR NAME="file_modified" ESCAPE="HTML"></modified>
+    <server><TMPL_VAR NAME="file_server" ESCAPE="HTML"></server>
+    <size><TMPL_VAR NAME="file_size" ESCAPE="HTML"></size>
+    <encoding><TMPL_VAR NAME="file_charset" ESCAPE="HTML"></encoding>
+    <doctype><TMPL_VAR NAME="file_doctype" ESCAPE="HTML"></doctype>
+    <errors><TMPL_VAR NAME="number_of_errors" ESCAPE="HTML"></errors>
+  </meta>
+
+  <warnings>
+<TMPL_LOOP NAME="file_warnings">
+    <warning><TMPL_VAR NAME="Message" ESCAPE="HTML"></warning>
+</TMPL_LOOP>
+  </warnings>
+
+  <messages>
+<TMPL_LOOP NAME="file_errors">
+    <msg line="<TMPL_VAR NAME="line" ESCAPE="HTML">"
+         col="<TMPL_VAR NAME="char" ESCAPE="HTML">"
+    ><TMPL_VAR NAME="msg" ESCAPE="HTML"></msg>
+</TMPL_LOOP>
+  </messages>
+
+</result>

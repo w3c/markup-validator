@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.446 2005-09-10 07:06:27 bjoern Exp $
+# $Id: check,v 1.447 2005-09-10 09:00:28 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -190,7 +190,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.446 $;
+  $VERSION =  q$Revision: 1.447 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -288,6 +288,31 @@ my $H = HTML::Template->new(
                                            $lang, 'http_401_authrequired.tmpl'),
   die_on_bad_params => FALSE,
   cache             => TRUE,
+);
+
+# templates for alternate output formats
+my $XMLT = HTML::Template->new(
+  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
+                                          'en_US', 'xml_output.tmpl'),
+  die_on_bad_params => FALSE,
+  loop_context_vars => TRUE,
+  cache             => TRUE,
+);
+my $EARLT = HTML::Template->new(
+  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
+                                          'en_US', 'earl_xml.tmpl'),
+  die_on_bad_params => FALSE,
+  loop_context_vars => TRUE,
+  cache             => TRUE,
+  global_vars       => TRUE,
+);
+my $N3T = HTML::Template->new(
+  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
+                                          'en_US', 'earl_n3.tmpl'),
+  die_on_bad_params => FALSE,
+  loop_context_vars => TRUE,
+  cache             => TRUE,
+  global_vars       => TRUE,
 );
 
 $File->{T} = $T;
@@ -660,46 +685,21 @@ if ($File->{Namespace}) {
 }
 
 if ($File->{Opt}->{Output} eq 'xml') {
-  &report_xml($File);
+  prep_template($File, $XMLT);
+  fin_template($File, $XMLT);
+  report_xml($File, $XMLT);
 } elsif ($File->{Opt}->{Output} eq 'earl') {
-  &report_earl($File);
+  prep_template($File, $EARLT);
+  fin_template($File, $EARLT);
+  report_earl($File, $EARLT);
 } elsif ($File->{Opt}->{Output} eq 'n3') {
-  &report_n3($File);
+  prep_template($File, $N3T);
+  fin_template($File, $N3T);
+  report_n3($File, $N3T);
 } else {
   &prep_template($File, $T);
-
-  if (! $File->{Doctype} and ($File->{Version} eq 'unknown' or $File->{Version} eq 'SGML' or (!$File->{Version}))) {
-
-    # @@TODO@@ we should try falling back on other version
-    # info, such as the ones stored in Version_ESIS
-    $T->param(file_version => '(no Doctype found)');
-  }
-  else {
-    $T->param(file_version => $File->{Version});
-  }
-  my $num_errors = scalar @{$File->{Errors}};
-  if ($num_errors >0)
-  {
-    $T->param(has_errors => 1);
-  }
-  $T->param(valid_errors_num => $num_errors);
-  my ($number_of_errors, $reported_errors) = &report_errors($File);
-  if ($number_of_errors > 1) {
-    $number_of_errors = "$number_of_errors errors"
-  }
-  else {
-    $number_of_errors = "$number_of_errors error"
-  }
-  $T->param(file_errors => $reported_errors);
-   $T->param(number_of_errors => $number_of_errors);
-  if ($File->{'Is Valid'}) {
-    $T->param(VALID => TRUE);
-    $T->param(valid_status => 'Valid');
-    &report_valid($File, $T);
-  } else {
-    $T->param(VALID => FALSE);
-    $T->param(valid_status => 'Invalid');
-  }
+  
+  fin_template($File, $T);
 
   $T->param(file_warnings  => $File->{Warnings});
   $T->param(file_source    => &source($File))
@@ -750,6 +750,7 @@ sub prep_template ($$) {
   $T->param(file_size        => $File->{Size});
   $T->param(file_contenttype => $File->{ContentType});
   $T->param(file_charset     => $File->{Charset}->{Use});
+  $T->param(file_doctype     => $File->{DOCTYPE});
 
   #
   # Output options...
@@ -788,6 +789,44 @@ sub prep_template ($$) {
   if ($File->{Opt}->{Charset}) {
       my $over_charset_param = "override charset $File->{Opt}->{Charset}";
        $T->param($over_charset_param => TRUE);
+  }
+}
+
+sub fin_template ($$) {
+  my $File = shift;
+  my $T    = shift;
+  
+  if (! $File->{Doctype} and ($File->{Version} eq 'unknown' or $File->{Version} eq 'SGML' or (!$File->{Version}))) {
+
+    # @@TODO@@ we should try falling back on other version
+    # info, such as the ones stored in Version_ESIS
+    $T->param(file_version => '(no Doctype found)');
+  }
+  else {
+    $T->param(file_version => $File->{Version});
+  }
+  my $num_errors = scalar @{$File->{Errors}};
+  if ($num_errors >0)
+  {
+    $T->param(has_errors => 1);
+  }
+  $T->param(valid_errors_num => $num_errors);
+  my ($number_of_errors, $reported_errors) = &report_errors($File);
+  if ($number_of_errors > 1) {
+    $number_of_errors = "$number_of_errors errors"
+  }
+  else {
+    $number_of_errors = "$number_of_errors error"
+  }
+  $T->param(file_errors => $reported_errors);
+   $T->param(number_of_errors => $number_of_errors);
+  if ($File->{'Is Valid'}) {
+    $T->param(VALID => TRUE);
+    $T->param(valid_status => 'Valid');
+    &report_valid($File, $T);
+  } else {
+    $T->param(VALID => FALSE);
+    $T->param(valid_status => 'Invalid');
   }
 }
 
@@ -1654,165 +1693,28 @@ sub find_encodings
 # Return an XML report for the page.
 sub report_xml {
   my $File = shift;
+  my $template = shift;
 
-  my $valid = ($File->{'Is Valid'} ? 'Valid' : 'Invalid');
-  my $errs  = ($File->{'Is Valid'} ? '0'     : scalar @{$File->{Errors}});
-  if ($File->{E}->param('fatal_http_error')) {
-    $valid = 'Could not validate';
-  }
+  # TODO: restore
+  # if ($File->{E}->param('fatal_http_error')) {
+  #   $valid = 'Could not validate';
+  # }
 
-  print <<".EOF.";
-Content-Type: application/xml; charset=UTF-8
-X-W3C-Validator-Status: $valid
-X-W3C-Validator-Errors: $errs
-
-<?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="xml-results.xsl"?>
-<!DOCTYPE result [
-  <!ELEMENT result (meta, warnings?, messages?)>
-  <!ATTLIST result
-    version CDATA #FIXED '0.9.1'
-  >
-
-  <!ELEMENT meta (uri, modified, server, size, encoding, doctype, errors)>
-  <!ELEMENT uri      (#PCDATA)>
-  <!ELEMENT modified (#PCDATA)>
-  <!ELEMENT server   (#PCDATA)>
-  <!ELEMENT size     (#PCDATA)>
-  <!ELEMENT encoding (#PCDATA)>
-  <!ELEMENT doctype  (#PCDATA)>
-  <!ELEMENT errors   (#PCDATA)>
-
-  <!ELEMENT warnings (warning)+>
-  <!ELEMENT warning  (#PCDATA)>
-
-  <!ELEMENT messages (msg)*>
-  <!ELEMENT msg      (#PCDATA)>
-  <!ATTLIST msg
-    line   CDATA #IMPLIED
-    col    CDATA #IMPLIED
-    offset CDATA #IMPLIED
-  >
-]>
-.EOF.
-
-  print qq(
-<result>
-  <meta>
-    <uri>), &ent($File->{URI}), qq(</uri>
-    <modified>), &ent($File->{Modified}), qq(</modified>
-    <server>), &ent($File->{Server}), qq(</server>
-    <size>), &ent($File->{Size}), qq(</size>
-    <encoding>), &ent($File->{Charset}->{Use}), qq(</encoding>
-    <doctype>), &ent($File->{DOCTYPE}), qq(</doctype>
-    <errors>), $errs, qq(</errors>
-  </meta>
-);
-
-  #@@FIXME: This is borked after templatification.
-  # &add_warning($File, 'note', 'Note:', <<".EOF.");
-  #    This interface is highly experimental and the output *will* change
-  #    -- probably even several times -- before finished. Do *not* rely on it!
-  #    See http://validator.w3.org/docs/users.html#api-warning
-  # .EOF.
-  #@@FIXME;
-
-  if (defined $File->{Warnings} and scalar @{$File->{Warnings}}) {
-    print qq(  <warnings>\n);
-    printf qq(    <warning>%s</warning>\n),
-      &ent($_->{Message}) for @{$File->{Warnings}};
-    print qq(  </warnings>\n);
-  }
-
-  if (defined $File->{Errors} and scalar @{$File->{Errors}}) {
-    print qq(  <messages>\n);
-
-    foreach my $err (@{$File->{Errors}}) {
-      printf <<".EOF.", &ent($err->{msg});
-    <msg line="$err->{line}" col="$err->{char}">%s</msg>
-.EOF.
-    }
-    print qq(  </messages>\n);
-  }
-  print qq(</result>\n);
+  print $template->output;
 }
 
 #
 # Return an EARL report for the page.
 sub report_earl {
   my $File = shift;
+  my $template = shift;
 
-  my $valid = ($File->{'Is Valid'} ? 'Valid' : 'Invalid');
-  my $errs  = ($File->{'Is Valid'} ? '0'     : scalar @{$File->{Errors}});
-  if ($File->{E}->param('fatal_http_error')) {
-    $valid = 'Could not validate';
-  }
+  # TODO: restore
+  # if ($File->{E}->param('fatal_http_error')) {
+  #   $valid = 'Could not validate';
+  # }
 
-  print <<".EOF.";
-Content-Type: application/rdf+xml; charset=UTF-8
-X-W3C-Validator-Status: $valid
-X-W3C-Validator-Errors: $errs
-
-<?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF
-  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-  xmlns="http://www.w3.org/2001/03/earl/1.0-test#"
-  xmlns:val="http://validator.w3.org/this_will_change/do_not_rely_on_it!">
-
-  <Assertor rdf:about="http://validator.w3.org/">
-    <name>W3 Validator</name>
-    <contactInfo rdf:resource="http://validator.w3.org/about.html"/>
-    <testMode rdf:resource="http://www.w3.org/2001/03/earl/1.00#Auto" />
-
-.EOF.
-
-  unless ($File->{'Is Valid'}) {
-    printf <<".EOF.", &ent($File->{URI});
-  <asserts>
-   <Assertion rdf:ID="result">
-    <subject rdf:resource="%s" />
-    <result rdf:resource="http://www.w3.org/2001/03/earl/1.00#fails" />
-    <testCase rdf:resource="http://www.w3.org/MarkUp/" />
-    <note>Invalid!</note>
-   </Assertion>
-  </asserts>
-.EOF.
-
-    my $errnum = 0 ;
-    foreach my $err (@{$File->{Errors}}) {
-      ++$errnum ;
-      printf <<".EOF.", &ent($File->{URI}), &ent($err->{msg});
-    <asserts>
-      <Assertion rdf:ID="err$errnum">
-        <subject rdf:parseType="Resource">
-          <reprOf rdf:resource="%s"/>
-          <val:line>$err->{line}</val:line>
-          <val:column>$err->{char}</val:column>
-        </subject>
-        <result rdf:resource="http://www.w3.org/2003/03/earl/1.00#fails" />
-        <testCase rdf:resource="http://www.w3.org/Markup/" />
-        <note>%s</note>
-      </Assertion>
-    </asserts>
-.EOF.
-    }
-  } else {
-    printf <<".EOF.", &ent($File->{URI});
-  <asserts>
-   <Assertion>
-    <subject rdf:resource="%s" />
-    <result rdf:resource="http://www.w3.org/2001/03/earl/1.00#passes" />
-    <testCase rdf:resource="http://www.w3.org/MarkUp/" />
-    <note>Valid!</note>
-   </Assertion>
-  </asserts>
-.EOF.
-  }
-
-  print <<".EOF.";
-  </Assertor>
-</rdf:RDF>
-.EOF.
+  print $template->output;
 }
 
 #
@@ -1821,65 +1723,14 @@ X-W3C-Validator-Errors: $errs
 # @@TODO: escape output;
 sub report_n3 {
   my $File = shift;
+  my $template = shift;
 
-  my $valid = ($File->{'Is Valid'} ? 'Valid' : 'Invalid');
-  my $errs  = ($File->{'Is Valid'} ? '0' : scalar @{$File->{Errors}});
-  if ($File->{E}->param('fatal_http_error')) {
-    $valid = 'Could not validate';
-  }
+  # TODO: restore
+  # if ($File->{E}->param('fatal_http_error')) {
+  #   $valid = 'Could not validate';
+  # }
 
-  print <<".EOF.";
-Content-Type: text/plain; charset=UTF-8
-X-W3C-Validator-Status: $valid
-X-W3C-Validator-Errors: $errs
-
-\@prefix earl: <http://www.w3.org/2001/03/earl/1.0-test#> .
-\@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-\@prefix val: <http://validator.w3.org/this_will_change/do_not_rely_on_it!> .
-
-<http://validator.w3.org/> a earl:Assertor;
-  earl:name "W3 Validator";
-  earl:asserts
-.EOF.
-
-  unless ($File->{'Is Valid'}) {
-    for (my $i = 0; $i <= scalar @{$File->{Errors}}; $i++) {
-      my $err = $File->{Errors}->[$i];
-      print <<".EOF.";
-    [
-      earl:testMode earl:Auto;
-      rdf:predicate earl:fails;
-      rdf:subject [
-                    val:column "$err->{char}";
-                    val:line   "$err->{line}";
-                    earl:testSubject <$File->{URI}>
-                  ];
-      rdf:object [
-                   earl:id <http://www.w3.org/HTML/>;
-                   earl:note """$err->{msg} """
-                 ]
-.EOF.
-
-     if ($i == scalar @{$File->{Errors}}) {
-       print "    ]\n";
-     } else {
-       print "    ],\n";
-     }
-    }
-  } else {
-    print <<".EOF.";
-    [
-      earl:testMode earl:Auto;
-      rdf:predicate earl:passes;
-      rdf:subject   [earl:testSubject <$File->{URI}>];
-      rdf:object    [
-                      earl:id <http://www.w3.org/HTML/>;
-                      earl:note "Valid"
-                    ]
-    ]
-.EOF.
-  }
-  print " .\n";
+  print $template->output;
 }
 
 #
