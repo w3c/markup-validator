@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.447 2005-09-10 09:00:28 bjoern Exp $
+# $Id: check,v 1.448 2005-09-10 09:32:06 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -82,9 +82,6 @@ use constant O_NONE    => 8; # 0000 1000
 use constant MODE_SGML => 1; # 0000 0001
 use constant MODE_XML  => 2; # 0000 0010
 use constant MODE_TBD  => 4; # 0000 0100, needs further info to decide.
-
-#@@FIXME: XML WF checking isn't implemented.
-use constant MODE_WF   => 8; # 0000 1000, only XML well-formed checking.
 
 #
 # Define global variables.
@@ -190,7 +187,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.447 $;
+  $VERSION =  q$Revision: 1.448 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -366,7 +363,7 @@ if ($CFG->{'Allow Debug'}) {
   $DEBUG = FALSE; # The default.
 }
 
-&abort_if_error_flagged($File, O_NONE); # Too early to &print_table.
+&abort_if_error_flagged($File, O_NONE);
 
 #
 # Get the file and metadata.
@@ -1023,9 +1020,7 @@ sub handle_file {
   $File->{Modified}        = $q->http('Last-Modified');
   $File->{Server}          = $q->http('User-Agent'); # Fake a "server". :-)
   $File->{Size}            = $q->http('Content-Length');
-  $File->{URI}             = "$f"; # Need to stringify because we want ref
-                                   # to return false later in add_table.  This
-                                   # is also a file handle... see man CGI.
+  $File->{URI}             = "$f";
   $File->{'Is Upload'}     = TRUE;
 
   return $File;
@@ -1380,8 +1375,8 @@ sub preparse_doctype {
 
   #
   # Reset DOCTYPE, Root (for second invocation, probably not needed anymore).
-  $File->{DOCTYPE}         = '';
-  $File->{Root}            = '';
+  $File->{DOCTYPE} = '';
+  $File->{Root}    = '';
 
   my $dtd = sub {
     return if $File->{Root};
