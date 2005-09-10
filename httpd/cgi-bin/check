@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.449 2005-09-10 09:37:28 bjoern Exp $
+# $Id: check,v 1.450 2005-09-10 10:01:16 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -187,7 +187,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.449 $;
+  $VERSION =  q$Revision: 1.450 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1539,31 +1539,25 @@ sub charset_conflicts {
     $File->{Tentative} |= T_WARN;
   }
 
-  my $cs_use  = $File->{Charset}->{Use}  ? &ent($File->{Charset}->{Use})  : '';
-  my $cs_opt  = $File->{Opt}->{Charset}  ? &ent($File->{Opt}->{Charset})  : '';
-  my $cs_http = $File->{Charset}->{HTTP} ? &ent($File->{Charset}->{HTTP}) : '';
-  my $cs_xml  = $File->{Charset}->{XML}  ? &ent($File->{Charset}->{XML})  : '';
-  my $cs_meta = $File->{Charset}->{META} ? &ent($File->{Charset}->{META}) : '';
-
   #
   # Add a warning if there was charset info conflict (HTTP header,
   # XML declaration, or <meta> element).
   if (charset_not_equal($File->{Charset}->{HTTP}, $File->{Charset}->{XML})) {
     &add_warning('W18', {
-      W18_http => $cs_http,
-      W18_xml  => $cs_xml,
-      W18_use  => $cs_use,
+      W18_http => $File->{Charset}->{HTTP},
+      W18_xml  => $File->{Charset}->{XML},
+      W18_use  => $File->{Charset}->{Use},
     });
   } elsif (charset_not_equal($File->{Charset}->{HTTP}, $File->{Charset}->{META})) {
     &add_warning('W19', {
-      W19_http => $cs_http,
-      W19_meta => $cs_meta,
-      W19_use  => $cs_use,
+      W19_http => $File->{Charset}->{HTTP},
+      W19_meta => $File->{Charset}->{META},
+      W19_use  => $File->{Charset}->{Use},
     });
   } elsif (charset_not_equal($File->{Charset}->{XML}, $File->{Charset}->{META})) {
     &add_warning('W20', {
-      W20_http => $cs_xml,
-      W20_xml  => $cs_meta,
+      W20_http => $File->{Charset}->{XML},
+      W20_xml  => $File->{Charset}->{META},
     });
     $File->{Tentative} |= T_WARN;
   }
