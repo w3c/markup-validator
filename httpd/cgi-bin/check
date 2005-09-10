@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.448 2005-09-10 09:32:06 bjoern Exp $
+# $Id: check,v 1.449 2005-09-10 09:37:28 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -187,7 +187,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.448 $;
+  $VERSION =  q$Revision: 1.449 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -290,14 +290,14 @@ my $H = HTML::Template->new(
 # templates for alternate output formats
 my $XMLT = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
-                                          'en_US', 'xml_output.tmpl'),
+                                          $lang, 'xml_output.tmpl'),
   die_on_bad_params => FALSE,
   loop_context_vars => TRUE,
   cache             => TRUE,
 );
 my $EARLT = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
-                                          'en_US', 'earl_xml.tmpl'),
+                                          $lang, 'earl_xml.tmpl'),
   die_on_bad_params => FALSE,
   loop_context_vars => TRUE,
   cache             => TRUE,
@@ -305,7 +305,7 @@ my $EARLT = HTML::Template->new(
 );
 my $N3T = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
-                                          'en_US', 'earl_n3.tmpl'),
+                                          $lang, 'earl_n3.tmpl'),
   die_on_bad_params => FALSE,
   loop_context_vars => TRUE,
   cache             => TRUE,
