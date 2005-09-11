@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.452 2005-09-11 12:27:25 bjoern Exp $
+# $Id: check,v 1.453 2005-09-11 12:29:46 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -63,12 +63,8 @@ use constant FALSE => 0;
 
 #
 # Tentative Validation Severities.
-use constant T_DEBUG =>  1; # 0000 0001
-use constant T_INFO  =>  2; # 0000 0010
 use constant T_WARN  =>  4; # 0000 0100
 use constant T_ERROR =>  8; # 0000 1000
-use constant T_FATAL => 16; # 0001 0000
-use constant T_FALL  => 32; # 0010 0000, Fallback in effect.
 
 #
 # Output flags for error processing
@@ -179,7 +175,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.452 $;
+  $VERSION =  q$Revision: 1.453 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
