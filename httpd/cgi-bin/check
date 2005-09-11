@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.451 2005-09-11 05:27:25 bjoern Exp $
+# $Id: check,v 1.452 2005-09-11 12:27:25 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -76,12 +76,6 @@ use constant O_SOURCE  => 1; # 0000 0001
 use constant O_CHARSET => 2; # 0000 0010
 use constant O_DOCTYPE => 4; # 0000 0100
 use constant O_NONE    => 8; # 0000 1000
-
-#
-# Parse mode tokens.
-use constant MODE_SGML => 1; # 0000 0001
-use constant MODE_XML  => 2; # 0000 0010
-use constant MODE_TBD  => 4; # 0000 0100, needs further info to decide.
 
 #
 # Define global variables.
@@ -171,10 +165,8 @@ Directory not readable (permission denied): @_r
   #
   # Change strings to internal constants in MIME type mapping.
   for (keys %{$CFG->{MIME}}) {
-    if    ($CFG->{MIME}->{$_} eq 'SGML') { $CFG->{MIME}->{$_} = MODE_SGML }
-    elsif ($CFG->{MIME}->{$_} eq 'XML')  { $CFG->{MIME}->{$_} = MODE_XML }
-    elsif ($CFG->{MIME}->{$_} eq 'TBD')  { $CFG->{MIME}->{$_} = MODE_TBD }
-    else                                 { $CFG->{MIME}->{$_} = MODE_TBD }
+    $CFG->{MIME}->{$_} = 'TBD' unless $CFG->{MIME}->{$_} eq 'SGML'
+                                   or $CFG->{MIME}->{$_} eq 'XML';
   }
 
   #
@@ -187,7 +179,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.451 $;
+  $VERSION =  q$Revision: 1.452 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -254,7 +246,7 @@ $File->{Charset}->{Override} = ''; # From CGI/user override.
 
 #
 # Misc simple types.
-$File->{Mode} = MODE_SGML; # Default parse mode is SGML.
+$File->{Mode} = 'SGML'; # Default parse mode is SGML.
 
 #
 # Listrefs.
@@ -534,46 +526,7 @@ $File = &preparse_doctype($File);
 
 #
 # Set parse mode.
-if ($File->{DOCTYPE}) {
-  my $fpi = $File->{DOCTYPE};
-  if (exists $CFG->{Types}->{$fpi}) {
-    my $cfg  = $CFG->{Types}->{$fpi};
-    my $mode = $cfg->{'Parse Mode'};
-
-    if    ($mode eq 'SGML') { $mode = MODE_SGML }
-    elsif ($mode eq 'XML')  { $mode = MODE_XML }
-    else                    { $mode = MODE_TBD }
-
-    if ($File->{Mode} == MODE_TBD) {
-      if    ($mode == MODE_SGML) { $File->{Mode} = MODE_SGML }
-      elsif ($mode == MODE_XML)  { $File->{Mode} = MODE_XML }
-      else {
-        $File->{Mode} = MODE_SGML;
-        &add_warning('W06', {});
-      }
-    } else {
-      unless ($mode == $File->{Mode}) {
-        my $dtd = $mode;
-        my $ct  = $File->{Mode};
-        for ($dtd, $ct) {
-          if    ($_ == MODE_SGML) { $_ = 'SGML' }
-          elsif ($_ == MODE_XML)  { $_ =  'XML' }
-          else                    { $_ = 'SGML' }
-        }
-        unless ($File->{Mode} == MODE_TBD) {
-          &add_warning('W07', {
-            W07_mime => $File->{ContentType},
-            W07_ct   => $ct,
-            W07_dtd  => $dtd,
-          });
-        }
-      }
-    }
-  } else {
-    &add_warning('W08', {W08_mime => $File->{ContentType}})
-      if $File->{Mode} == MODE_TBD;
-  }
-}
+set_parse_mode($File, $CFG) if $File->{DOCTYPE};
 
 #
 # Sanity check Charset information and add any warnings necessary.
@@ -1028,7 +981,7 @@ sub handle_frag {
   my $File = shift; # The master datastructure.
 
   $File->{Bytes}       = $q->param('fragment');
-  $File->{Mode}        = MODE_TBD;
+  $File->{Mode}        = 'TBD';
   $File->{Modified}    = '';
   $File->{Server}      = '';
   $File->{Size}        = '';
@@ -1046,12 +999,11 @@ sub parse_content_type {
   my $Content_Type = shift;
   my $url          = shift;
   my $charset      = '';
-  my $mode         = '';
 
   # @@FIXME @param now unused
   my ($ct, @param) = split /\s*;\s*/, lc $Content_Type;
 
-  $mode = $CFG->{MIME}->{$ct} || $ct;
+  my $mode = $CFG->{MIME}->{$ct} || $ct;
 
   $charset = HTML::Encoding::encoding_from_content_type($Content_Type);
 
@@ -1519,8 +1471,43 @@ sub prepCGI {
 }
 
 #
+# Set parse mode.
+sub set_parse_mode {
+  my $File = shift;
+  my $CFG = shift;
+  my $fpi = $File->{DOCTYPE};
+  my $mode = $CFG->{Types}->{$fpi}->{'Parse Mode'};
+  
+  if (!exists $CFG->{Types}->{$fpi})
+  {
+    &add_warning('W08', {W08_mime => $File->{ContentType}})
+      if $File->{Mode} eq 'TBD';
+    return;
+  }
+  
+  $mode = 'TBD' unless $mode eq 'SGML' or $mode eq 'XML';
+  
+  if ($File->{Mode} ne 'TBD' and $mode ne $File->{Mode}) {
+    &add_warning('W07', {
+      W07_mime => $File->{ContentType},
+      W07_ct   => $File->{Mode},
+      W07_dtd  => $mode,
+    });
+    return;
+  }
+  
+  # $File->{Mode} eq 'TBD'
+  if ($mode eq 'SGML' or $mode eq 'XML') {
+    $File->{Mode} = $mode
+  } else {
+    $File->{Mode} = 'SGML';
+    &add_warning('W06', {});
+  }
+}
+
+#
 # Utility sub to tell if mode "is" XML.
-sub is_xml {shift->{Mode} == MODE_XML};
+sub is_xml {shift->{Mode} eq 'XML'};
 
 #
 # Check charset conflicts and add any warnings necessary.
@@ -1814,7 +1801,7 @@ sub W3C::Validator::ErrorHandler::error
 
   # No DOCTYPE.
   if ($err->{msg} =~ m(prolog can\'t be omitted)) {
-    my $dtd = ($File->{Mode} == MODE_SGML ?
+    my $dtd = ($File->{Mode} eq 'SGML' ?
                'HTML 4.01 Transitional' : 'XHTML 1.0 Transitional');
 
     add_warning('W09', {W09_dtd => $dtd});
