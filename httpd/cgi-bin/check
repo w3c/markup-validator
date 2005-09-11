@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.450 2005-09-10 10:01:16 bjoern Exp $
+# $Id: check,v 1.451 2005-09-11 05:27:25 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -187,7 +187,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.450 $;
+  $VERSION =  q$Revision: 1.451 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -681,32 +681,32 @@ if ($File->{Namespace}) {
   }
 }
 
+my $template;
+
 if ($File->{Opt}->{Output} eq 'xml') {
-  prep_template($File, $XMLT);
-  fin_template($File, $XMLT);
-  report_xml($File, $XMLT);
+  $template = $XMLT;
 } elsif ($File->{Opt}->{Output} eq 'earl') {
-  prep_template($File, $EARLT);
-  fin_template($File, $EARLT);
-  report_earl($File, $EARLT);
+  $template = $EARLT;
 } elsif ($File->{Opt}->{Output} eq 'n3') {
-  prep_template($File, $N3T);
-  fin_template($File, $N3T);
-  report_n3($File, $N3T);
+  $template = $N3T;
 } else {
-  &prep_template($File, $T);
-  
-  fin_template($File, $T);
-
-  $T->param(file_warnings  => $File->{Warnings});
-  $T->param(file_source    => &source($File))
-    if $T->param('opt_show_source');
-  $T->param('opt_show_esis' => TRUE)   if $File->{Opt}->{'Show ESIS'};
-  $T->param('opt_show_raw_errors' => TRUE) if $File->{Opt}->{'Show Errors'};
-  $T->param('file_raw_errors' =>    &show_errors($File)) if  $T->param('opt_show_raw_errors');
-
-  print $T->output;
+  $template = $T;
 }
+
+&prep_template($File, $template);
+fin_template($File, $template);
+
+$template->param(file_warnings => $File->{Warnings});
+$template->param(file_source => &source($File))
+  if $template->param('opt_show_source');
+$template->param('opt_show_esis' => TRUE)
+  if $File->{Opt}->{'Show ESIS'};
+$template->param('opt_show_raw_errors' => TRUE)
+  if $File->{Opt}->{'Show Errors'};
+$template->param('file_raw_errors' => &show_errors($File))
+  if $template->param('opt_show_raw_errors');
+
+print $template->output;
 
 #
 # Get rid of $File object and exit.
@@ -847,13 +847,8 @@ sub report_valid {
   } elsif (defined $File->{Tentative}) {
     $T->param(is_tentative => TRUE);
   }
-  my $thispage = $File->{Env}->{'Self URI'};
-  my $escaped_uri = uri_escape($File->{URI});
-  $thispage .= qq(?uri=$escaped_uri);
-  $thispage .= ';ss=1'      if $File->{Opt}->{'Show Source'};
-  $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
-  $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
-  $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
+  
+  my $thispage = self_url_file($File);
   $T->param(file_thispage => $thispage);
 }
 
@@ -1679,50 +1674,6 @@ sub find_encodings
 }
 
 #
-# Return an XML report for the page.
-sub report_xml {
-  my $File = shift;
-  my $template = shift;
-
-  # TODO: restore
-  # if ($File->{E}->param('fatal_http_error')) {
-  #   $valid = 'Could not validate';
-  # }
-
-  print $template->output;
-}
-
-#
-# Return an EARL report for the page.
-sub report_earl {
-  my $File = shift;
-  my $template = shift;
-
-  # TODO: restore
-  # if ($File->{E}->param('fatal_http_error')) {
-  #   $valid = 'Could not validate';
-  # }
-
-  print $template->output;
-}
-
-#
-# Return a Notation3 EARL report for the page.
-#
-# @@TODO: escape output;
-sub report_n3 {
-  my $File = shift;
-  my $template = shift;
-
-  # TODO: restore
-  # if ($File->{E}->param('fatal_http_error')) {
-  #   $valid = 'Could not validate';
-  # }
-
-  print $template->output;
-}
-
-#
 # Abort with a message if an error was flagged at point.
 sub abort_if_error_flagged {
   my $File  = shift;
@@ -1802,8 +1753,10 @@ sub self_url_file {
   $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
   $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
   $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
-  $thispage .= ';verbose=1' if $File->{Opt}->{'Verbose'};
-  $thispage .= ';No200=1'   if $File->{Opt}->{'No200'};
+  
+  # These were not added by report_valid; perhaps they should be?
+  # $thispage .= ';verbose=1' if $File->{Opt}->{'Verbose'};
+  # $thispage .= ';No200=1'   if $File->{Opt}->{'No200'};
 
   return $thispage;
 }
