@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.432.2.2 2005-08-20 10:58:32 ville Exp $
+# $Id: check,v 1.432.2.3 2005-09-21 08:47:26 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -202,7 +202,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.432.2.2 $;
+  $VERSION =  q$Revision: 1.432.2.3 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1059,6 +1059,7 @@ sub handle_uri {
   $File->{Size}            = scalar $res->content_length;
   $File->{URI}             = scalar $res->request->uri->canonical;
   $File->{'Is Upload'}     = FALSE;
+  $File->{'Direct Input'}  = FALSE;
 
   return $File;
 }
@@ -1089,6 +1090,7 @@ sub handle_file {
                                    # to return false later in add_table.  This
                                    # is also a file handle... see man CGI.
   $File->{'Is Upload'}     = TRUE;
+  $File->{'Direct Input'}  = FALSE;
 
   return $File;
 }
@@ -1101,12 +1103,15 @@ sub handle_frag {
 
   $File->{Bytes}       = $q->param('fragment');
   $File->{Mode}        = MODE_TBD;
+  $File->{Charset}->{HTTP} = "utf-8";
   $File->{Modified}    = '';
   $File->{Server}      = '';
   $File->{Size}        = '';
   $File->{ContentType} = ''; # @@TODO?
   $File->{URI}         = 'upload://Form Submission';
   $File->{'Is Upload'} = TRUE;
+  $File->{'Direct Input'} = TRUE;
+  $File->{Charset}->{HTTP} = "utf-8"; # by default, the form accepts utf-8 chars
 
   return $File;
 }
@@ -1946,7 +1951,7 @@ sub charset_conflicts {
       W18_xml  => $cs_xml,
       W18_use  => $cs_use,
     });
-  } elsif (&conflict($File->{Charset}->{HTTP}, $File->{Charset}->{META})) {
+  } elsif (&conflict($File->{Charset}->{HTTP}, $File->{Charset}->{META}) and not ($File->{'Direct Input'})) {
     &add_warning('W19', {
       W19_http => $cs_http,
       W19_meta => $cs_meta,
