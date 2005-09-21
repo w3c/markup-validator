@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.432.2.3 2005-09-21 08:47:26 ot Exp $
+# $Id: check,v 1.432.2.4 2005-09-21 08:49:03 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -202,7 +202,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.432.2.3 $;
+  $VERSION =  q$Revision: 1.432.2.4 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1103,7 +1103,6 @@ sub handle_frag {
 
   $File->{Bytes}       = $q->param('fragment');
   $File->{Mode}        = MODE_TBD;
-  $File->{Charset}->{HTTP} = "utf-8";
   $File->{Modified}    = '';
   $File->{Server}      = '';
   $File->{Size}        = '';
