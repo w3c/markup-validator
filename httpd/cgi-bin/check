@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.453 2005-09-11 12:29:46 bjoern Exp $
+# $Id: check,v 1.454 2005-09-21 08:51:34 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -175,7 +175,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.453 $;
+  $VERSION =  q$Revision: 1.454 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -938,6 +938,8 @@ sub handle_uri {
   $File->{Size}            = scalar $res->content_length;
   $File->{URI}             = scalar $res->request->uri->canonical;
   $File->{'Is Upload'}     = FALSE;
+  $File->{'Direct Input'}  = FALSE;
+
 
   return $File;
 }
@@ -966,6 +968,7 @@ sub handle_file {
   $File->{Size}            = $q->http('Content-Length');
   $File->{URI}             = "$f";
   $File->{'Is Upload'}     = TRUE;
+  $File->{'Direct Input'}  = FALSE;
 
   return $File;
 }
@@ -984,7 +987,8 @@ sub handle_frag {
   $File->{ContentType} = ''; # @@TODO?
   $File->{URI}         = 'upload://Form Submission';
   $File->{'Is Upload'} = TRUE;
-
+  $File->{'Direct Input'} = TRUE;
+  $File->{Charset}->{HTTP} = "utf-8"; # by default, the form accepts utf-8 chars
   return $File;
 }
 
@@ -1526,7 +1530,7 @@ sub charset_conflicts {
       W18_xml  => $File->{Charset}->{XML},
       W18_use  => $File->{Charset}->{Use},
     });
-  } elsif (charset_not_equal($File->{Charset}->{HTTP}, $File->{Charset}->{META})) {
+  } elsif (&conflict($File->{Charset}->{HTTP}, $File->{Charset}->{META}) and not ($File->{'Direct Input'})) {
     &add_warning('W19', {
       W19_http => $File->{Charset}->{HTTP},
       W19_meta => $File->{Charset}->{META},
