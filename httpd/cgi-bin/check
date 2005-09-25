@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.454 2005-09-21 08:51:34 ot Exp $
+# $Id: check,v 1.455 2005-09-25 00:13:33 bjoern Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -175,7 +175,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.454 $;
+  $VERSION =  q$Revision: 1.455 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1530,7 +1530,7 @@ sub charset_conflicts {
       W18_xml  => $File->{Charset}->{XML},
       W18_use  => $File->{Charset}->{Use},
     });
-  } elsif (&conflict($File->{Charset}->{HTTP}, $File->{Charset}->{META}) and not ($File->{'Direct Input'})) {
+  } elsif (charset_not_equal($File->{Charset}->{HTTP}, $File->{Charset}->{META}) and not ($File->{'Direct Input'})) {
     &add_warning('W19', {
       W19_http => $File->{Charset}->{HTTP},
       W19_meta => $File->{Charset}->{META},
