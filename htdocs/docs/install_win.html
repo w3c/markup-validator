@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install_win.html,v 1.3.2.1 2005-08-25 08:13:56 ot Exp $" -->
-<!--#set var="date" value="\$Date: 2005-08-25 08:13:56 $" -->
+<!--#set var="revision" value="\$Id: install_win.html,v 1.3.2.2 2005-10-07 02:39:35 ot Exp $" -->
+<!--#set var="date" value="\$Date: 2005-10-07 02:39:35 $" -->
 <!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service (Windows, Apache)" -->
 <!--#set var="relroot" value="../" -->
 <!--#include virtual="../header.html" -->
@@ -330,7 +330,7 @@ Parser = C:/www/opensp/onsgmls.exe
 #
 # Main Configuration File for the W3C Markup Validation Service.
 #
-# $Id: install_win.html,v 1.3.2.1 2005-08-25 08:13:56 ot Exp $
+# $Id: install_win.html,v 1.3.2.2 2005-10-07 02:39:35 ot Exp $
 #
 # See 'perldoc Config::General' for the syntax, and be aware that the
 # 'SplitPolicy' is 'equalsign', ie. keys and values are separated by '\s*=\s*',
@@ -350,7 +350,7 @@ Parser = C:/www/opensp/onsgmls.exe
     #
     # Base path. Defaults to the value of the W3C_VALIDATOR_HOME environment
     # variable or /usr/local/validator if the variable does not exist.
-    Base = D:/www/validator
+    Base = C:/www/validator
     
     #
     # Location of template files
@@ -363,7 +363,7 @@ Parser = C:/www/opensp/onsgmls.exe
         
         #
         # The SGML Parser to use. Defaults to /usr/bin/onsgmls.
-        Parser = D:/www/opensp/onsgmls.exe
+        Parser = C:/www/opensp/onsgmls.exe
     &lt;/SGML&gt;
 &lt;/Paths&gt;
 
@@ -489,7 +489,7 @@ eval {
 # Read Config Files.
 eval {
   my %config_opts = (
-     -ConfigFile =&gt; ('D:/www/validator/htdocs/config/validator.conf'),
+     -ConfigFile =&gt; ('C:/www/validator/htdocs/config/validator.conf'),
 </pre>     
 <p>Later in the script, the command line parameters for OpenSP are
   defined:</p>
