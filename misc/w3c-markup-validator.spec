@@ -1,10 +1,10 @@
 # RPM spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.5.2.1 2005-09-24 08:08:33 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.5.2.2 2005-10-08 09:31:31 ville Exp $
 
 %{expand: %%define tbver %(echo %{version} | tr . _)}
 
 Name:           w3c-markup-validator
-Version:        0.7.0
+Version:        0.7.1
 Release:        1
 Summary:        W3C Markup Validator
 
@@ -116,6 +116,9 @@ done
 
 
 %changelog
+* Sat Oct  8 2005 Ville Skyttä <ville.skytta at iki.fi> - 0.7.1-1
+- 0.7.1.
+
 * Fri Sep 23 2005 Ville Skyttä <ville.skytta at iki.fi> - 0.7.0-1
 - Update to 0.7.0.
 
