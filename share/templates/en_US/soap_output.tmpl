@@ -1,0 +1,54 @@
+Content-Type: application/soap+xml; charset=UTF-8
+X-W3C-Validator-Status: <TMPL_VAR NAME="valid_status">
+X-W3C-Validator-Errors: <TMPL_VAR NAME="number_of_errors">
+
+<?xml version="1.0" encoding="UTF-8"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+<env:Body>
+<m:markupvalidationresponse env:encodingStyle="http://www.w3.org/2003/05/soap-encoding" xmlns:m="http://www.w3.org/2003/10/20-css-validator">
+    <m:uri><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></m:uri>
+    <m:checkedby><TMPL_VAR NAME="file_server" ESCAPE="HTML"></m:checkedby>
+    <m:doctype><TMPL_VAR NAME="file_doctype" ESCAPE="HTML"></m:doctype>
+    <m:validity><TMPL_VAR NAME="valid_status"></m:validity>
+    <m:errors>
+        <m:errorcount></m:errorcount>
+        <m:errorlist>
+        <TMPL_LOOP NAME="file_errors">
+            <m:error>
+                <!-- Line of the current error -->                 
+                <m:line>                                           
+                    <TMPL_VAR NAME="line" ESCAPE="HTML">                 
+                </m:line>                                          
+                <!-- Column of the current error -->               
+                <m:col>                                            
+                    <TMPL_VAR NAME="char" ESCAPE="HTML">                  
+                </m:col>                                           
+                <!-- Offset of the current error -->               
+                <m:offset>                                         
+                    ???               
+                </m:offset>                                        
+                <!-- Textual message of the error -->              
+                <m:message>                                        
+                    <TMPL_VAR NAME="msg" ESCAPE="HTML">                        
+                </m:message>                                       
+            </m:error>                                             
+        </TMPL_LOOP>                                                                 
+        </m:errorlist>
+    </m:errors>                                             
+    <m:warnings>                                                       
+        <!-- Number of warnings -->                                    
+        <m:warningcount>                                               
+            <xsl:value-of select="$warningcount"/>                     
+        </m:warningcount>                                              
+        <!-- List of warnings -->                                      
+        <m:warninglist>                                                
+            <TMPL_LOOP NAME="file_warnings">
+            <m:warning>                                            
+                <TMPL_VAR NAME="Message" ESCAPE="HTML">
+            </m:warning>                                           
+            </TMPL_LOOP>                                         
+        </m:warninglist>                                               
+    </m:warnings>                                                      
+</m:markupvalidationresponse>                                          
+</env:Body>                                                                
+</env:Envelope>                                                                
