@@ -11,7 +11,7 @@ X-W3C-Validator-Errors: <TMPL_VAR NAME="number_of_errors">
     <m:doctype><TMPL_VAR NAME="file_doctype" ESCAPE="HTML"></m:doctype>
     <m:validity><TMPL_VAR NAME="valid_status"></m:validity>
     <m:errors>
-        <m:errorcount></m:errorcount>
+        <m:errorcount><TMPL_VAR NAME="number_of_errors"></m:errorcount>
         <m:errorlist>
         <TMPL_LOOP NAME="file_errors">
             <m:error>
