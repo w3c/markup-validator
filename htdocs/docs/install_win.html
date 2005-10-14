@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install_win.html,v 1.5 2005-10-01 11:25:44 dtibbe Exp $" -->
-<!--#set var="date" value="\$Date: 2005-10-01 11:25:44 $" -->
+<!--#set var="revision" value="\$Id: install_win.html,v 1.6 2005-10-14 10:15:02 dtibbe Exp $" -->
+<!--#set var="date" value="\$Date: 2005-10-14 10:15:02 $" -->
 <!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service (Windows, Apache)" -->
 <!--#set var="relroot" value="../" -->
 <!--#include virtual="../header.html" -->
@@ -17,6 +17,7 @@
       <ul>
         <li><a href="#modules-local">Integration from a local repository</a></li>
         <li><a href="#modules-remote">Integration from a remote repository</a></li>
+        <li><a href="#modules-opensp">Adding the opensp152.dll</a></li>
       </ul></li>
     <li><a href="#config-apache">Configuration of the Apache Web server</a></li>
     <li><a href="#adaption-of-hosts">Adaptation of the hosts-File</a></li>
@@ -28,6 +29,12 @@
 
 <div id="install" class="stb">
 <a name="skip" id="skip"></a>  
+<h3>Important Note</h3>
+<p>This version of the How-To refers to the current Validator-Version out of the
+  CVS (HEAD). Some things may change up to the final release.<br />
+  If you're using the current stable version (0.7), please use the guide at
+  <a href="http://validator.w3.org/docs/install_win.html">http://validator.w3.org/docs/install_win.html</a>.</p>
+
 <h3 id="about">About this guide</h3>
 
 <p>This guide for the installation of the W3C Markup Validator was
@@ -56,15 +63,7 @@ to other platform-specific guides</a>.</p>
   <acronym title="Document Type Definition">DTDs</acronym></a>
   (~400kB).</p> 
   
-<p>At the back-end of the validator is an <acronym title="Structured Generalized Markup Language">SGML</acronym>-parser, named OpenSP. The validator needs version 1.5 or above. 
-Its source are available at SourceForge
-  (<a href="http://www.sourceforge.net/projects/opensp/">http://www.sourceforge.net/projects/opensp/</a>)
-  but compiling them on Windows can be problematic. Some time ago,
-  Bj&ouml;rn H&ouml;hrmann succeeded in compiling them and made the
-  binaries available (<a href="http://bjoern.hoehrmann.de/ports/OpenSP-1.5.1-win32-bin.zip">http://bjoern.hoehrmann.de/ports/OpenSP-1.5.1-win32-bin.zip</a>,
-  ~600KB). You can use them, but it is recommended to have a look at the
-  OpenSP-Project page for newer binaries.</p>
-  
+
 <p>The validator relies on a number of Perl libraries, or "modules". 
 At <a href="http://ppm.activestate.com/">Active State</a>,
   has a list of all available modules for Active Perl. In this list is also mentioned
@@ -72,17 +71,18 @@ At <a href="http://ppm.activestate.com/">Active State</a>,
   is downloadable.<br />
   For the validator, the following modules are required:</p>
 <ul>
+  <li>Class-Accessor</li>
   <li>Config-General</li>
-  <li>File-Spec</li>
+  <li>HTML-Encoding</li>
   <li>HTML-Template</li>
   <li>Net-IP</li>
-  <li>Set-IntSpan</li>
-  <li>Text-Iconv</li>
+  <li>SGML-Parser-OpenSP</li>
 </ul>
 <p>You can get each of them in a single package at ActiveState. They are also 
   packed  ready-to-install <a href="http://www.myhpi.de/~dtibbe/download/ppm.zip">in a single zip-file</a>,
-  (courtesy of the guide's author).
-  </p>
+  (courtesy of the guide's author).<br />
+  As long as version 0.7 is current, you will find the modules for the CVS-version at
+  <a href="http://www.myhpi.de/~dtibbe/download/ppm-08.zip">http://www.myhpi.de/~dtibbe/download/ppm-08.zip</a>.</p>
 
 <p>Finally you will need some calm and patience. A whole installation of
   the validator (including the Apache and Perl) will take about an hour 
@@ -90,12 +90,13 @@ At <a href="http://ppm.activestate.com/">Active State</a>,
   
 <h3 id="directory-structure">Directory Structure</h3>
 <p>It might be a good idea to think about the directories the program should be
-installed to. Just clicking &quot;Next&quot; in all installation routines is not a very good idea.</p>
+  installed to. Just clicking &quot;Next&quot; in all installation routines is not a very good idea.</p>
 
-<p>One suggested method is to  have a directory <code>C:\www</code> in which all programs concerning the 
-Web server are located (in subfolders, obviously). For instance, Apache is installed in 
-<code>C:\www\Apache2</code>, Perl in <code>C:\www\perl</code>, the perl modules unzipped in <code>C:\www\pmm</code>, OpenSP in <code>C:\www\opensp</code>, the validator itself
-in <code>C:\www\validator</code> and finally  the DTD-Collection in <code>C:\www\validator\htdocs\sgml-lib</code></p>
+<p>One suggested method is to  have a directory <code>C:\www</code> in which all programs concerning the
+  Web server are located (in subfolders, obviously). For instance, Apache is installed in
+  <code>C:\www\Apache2</code>, Perl in <code>C:\www\perl</code>, the perl modules unzipped in
+  <code>C:\www\pmm</code>, the validator itself in <code>C:\www\validator</code> and finally
+  the DTD-Collection in <code>C:\www\validator\htdocs\sgml-lib</code></p>
 
 <p>The rest of this guide will assume that these paths are being used. If you want to use another 
 directory structure, you will have to adapt the instructions and sample configuration to your
@@ -117,10 +118,6 @@ own setup.</p>
   also easy. Just make sure that you install ppm3, too. This
   program is needed for adding the Perl-modules.</p>
   
-<p>OpenSP is available in a zip-file, you just need to unzip it in
-  the corresponding folder. It is the same for the Validator and,
-  if downloaded, my Perl-module collection.</p>
-
 <h3 id="modules">Adding the Perl-Modules</h3>
 <p>Now comes a slightly more difficult step: installing the Perl Modules.</p>
 <p>ppm3 (the &quot;Programmer's
@@ -154,8 +151,9 @@ own setup.</p>
 <p>Now, ppm3 is ready for the installation of the modules. When typing <kbd>s *</kbd>,
   local is searched and all five modules will be found. Typing <kbd>install 1</kbd> will
   install the modules identified by the number 1. You have to repeat this for
-  all modules (by typing their numbers instead, of course). The result should be
-  similar to this:</p>
+  all modules (by typing their numbers instead, of course).<br />
+  Notice: You have to install the module Class-Accessor before adding SGML-Parser-OpenSP.<br />
+  The result should be similar to this:</p>
 <p style="text-align: center"><img src="<!--#echo var="relroot" -->images/ppm_3.png" alt="PPM after having installed the modules" /></p>
 <p>If you do not get a &quot;Successfully installed...&quot;-message as the
   last output of such an installation, something has failed and you
@@ -176,6 +174,11 @@ own setup.</p>
   (again by typing <kbd>install 5</kbd> for the 5th
   result of your search). When getting different versions of a module,
   the newest might be the best choice.</p>
+  
+<h4 id="modules-opensp">Adding the opensp152.dll</h4>
+<p>The Perl module SGML-Parser-OpenSP requires the <acronym title="Dynamic Link Library">DLL</acronym>
+  opensp152.dll. It is included in my ppm-collection. Copy it into
+  your system32-dirctory (eg. C:\windows\system32).</p>
   
 <h3 id="config-apache">Configuration of the Apache Web server</h3>
 <p>The first file to edit is the <code>httpd.conf</code> located at 
@@ -309,15 +312,6 @@ Base = C:/www/validator
   is declared. Notice that slashes are used here instead of 
   windows-like back slashes.</p>
 
-<p>The next step to do is to define where to find OpenSP.
-  So we have to change</p>
-<pre>  
-Parser = /usr/bin/onsgmls
-</pre>
-<p>to</p>
-<pre>
-Parser = C:/www/opensp/onsgmls.exe  
-</pre>
 <p>The option <code>Home Page</code> has to be changed to the URL of 
   the validator, http://validator.example.org/ in our case.</p>
 <p>The last option that has to be modified is Allow Private 
@@ -330,7 +324,7 @@ Parser = C:/www/opensp/onsgmls.exe
 #
 # Main Configuration File for the W3C Markup Validation Service.
 #
-# $Id: install_win.html,v 1.5 2005-10-01 11:25:44 dtibbe Exp $
+# $Id: install_win.html,v 1.6 2005-10-14 10:15:02 dtibbe Exp $
 #
 # See 'perldoc Config::General' for the syntax, and be aware that the
 # 'SplitPolicy' is 'equalsign', ie. keys and values are separated by '\s*=\s*',
@@ -347,28 +341,24 @@ Parser = C:/www/opensp/onsgmls.exe
 # Make sure all file paths below do NOT end with a slash
 
 &lt;Paths&gt;
+  #
+  # Base path.  Defaults to the value of the W3C_VALIDATOR_HOME environment
+  # variable or /usr/local/validator if the variable does not exist.
+  Base = C:/www/validator
+
+  #
+  # Location of template files
+  Templates = $Base/share/templates
+
+  &lt;SGMLgt;
     #
-    # Base path. Defaults to the value of the W3C_VALIDATOR_HOME environment
-    # variable or /usr/local/validator if the variable does not exist.
-    Base = C:/www/validator
-    
-    #
-    # Location of template files
-    Templates = $Base/share/templates
-    
-    &lt;SGML&gt;
-        #
-        # The SGML Library Path.
-        Library = $Base/htdocs/sgml-lib
-        
-        #
-        # The SGML Parser to use. Defaults to /usr/bin/onsgmls.
-        Parser = C:/www/opensp/onsgmls.exe
-    &lt;/SGML&gt;
+    # The SGML Library Path.
+    Library = $Base/htdocs/sgml-lib
+  &lt;/SGML&gt;
 &lt;/Paths&gt;
 
 #
-# This controls whether the debugging options are allowed to be enabled.
+# This controls whether the debugging options are allowed to be enabled. 
 Allow Debug = yes
 
 #
@@ -378,9 +368,9 @@ Enable Debug = no
 
 #
 # Whether private RFC1918 addresses are allowed.
-Allow Private IPs = yes
-#
+Allow Private IPs = no
 
+#
 # Whether the (highly experimental!) SOAP support should be enabled.
 Enable SOAP = no
 
@@ -394,20 +384,22 @@ Max Recursion = 0
 # Protocols the validator is allowed to use for retrieving documents.
 # The default is to allow http and https.
 &lt;Protocols&gt;
-    Allow = data,http,https
+  Allow = data,http,https
 &lt;/Protocols&gt;
 
 #
 # Email address of the maintainer of this service.
-Maintainer = mail@validator.example.org
+Maintainer = validator-admin@example.org
 
 #
-# The &quot;Home Page&quot; for the service. Make sure this ends with a slash.
-Home Page = http://validator.example.org/
+# The "Home Page" for the service.  Make sure this ends with a slash.
+Home Page = http://validator.example.org
 
 #
 # Base URI for the Element Reference.
 Element Ref URI = http://www.htmlhelp.com/reference/html40/
+
+
 
 #
 # Mapping tables etc...
@@ -416,40 +408,40 @@ Element Ref URI = http://www.htmlhelp.com/reference/html40/
 #
 # Maps element names to URLs (cf. &quot;Element Ref URI&quot; above).
 &lt;Elements&gt;
-    Include eref.cfg
+  Include eref.cfg
 &lt;/Elements&gt;
 
 #
 # Main document Type Registry; contains all information on the types
 # of documents we support and how they are processed.
 &lt;Types&gt;
-    Include types.conf
+  Include types.conf
 &lt;/Types&gt;
 
 #
 # Mapping of charset names to their IANA names and how iconv(3) knows them.
 &lt;Charsets&gt;
-    Include charset.cfg
+  Include charset.cfg
 &lt;/Charsets&gt;
 
 #
 # Map MIME Media Type to Parse Mode mapping.
 &lt;MIME&gt;
-    text/xml               = XML
-    image/svg              = XML
-    image/svg+xml          = XML
-    application/smil       = XML
-    application/xml        = XML
-    text/html              = TBD
-    text/vnd.wap.wml       = XML
-    application/xhtml+xml  = XML
-    application/mathml+xml = XML
+  text/xml              = XML
+  image/svg             = XML
+  image/svg+xml         = XML
+  application/smil      = XML
+  application/xml       = XML
+  text/html             = TBD
+  text/vnd.wap.wml      = XML
+  application/xhtml+xml = XML
+  application/mathml+xml = XML
 &lt;/MIME&gt;
 
 #
-# Source for the &quot;Tip of The Day&quot; blurbs.
+# Source for the "Tip of The Day" blurbs.
 &lt;Tips&gt;
-    Include tips.cfg
+  Include tips.cfg
 &lt;/Tips&gt;
 </pre>
 <p>Now, the validator has been successfully configured. But it
@@ -491,30 +483,6 @@ eval {
   my %config_opts = (
      -ConfigFile =&gt; ('C:/www/validator/htdocs/config/validator.conf'),
 </pre>     
-<p>Later in the script, the command line parameters for OpenSP are
-  defined:</p>
-<pre>
-# Note: if you feel the urge to remove -R from here, please understand that
-# doing so opens a potential security hole. Don't do that; instead just
-# make sure you're running OpenSP 1.5 or later.
-my @spopt = qw(
-               -R
-               -wvalid
-               -wnon-sgml-char-ref
-               -wno-duplicate
-              );
-</pre>
-<p>The option <code>-R</code> has to be deleted, so that there remains</p>              
-<pre>
-# Note: if you feel the urge to remove -R from here, please understand that
-# doing so opens a potential security hole. Don't do that; instead just
-# make sure you're running OpenSP 1.5 or later.
-my @spopt = qw(
-               -wvalid
-               -wnon-sgml-char-ref
-               -wno-duplicate
-              );
-</pre>
 <p>After saving the script, you can use it at http://validator.example.org/
   as you know it from http://validator.w3.org/.</p>
 <p>That is it, your own validator is working.</p>
