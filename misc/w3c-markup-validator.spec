@@ -1,22 +1,25 @@
 # RPM spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.5 2004-10-14 09:51:20 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.6 2005-10-20 06:48:53 ot Exp $
+
+%{expand: %%define tbver %(echo %{version} | tr . _)}
 
 Name:           w3c-markup-validator
-Version:        0.7.0
-Release:        0.1.cvs
-Epoch:          0
+Version:        0.7.1
+Release:        1
 Summary:        W3C Markup Validator
 
 Group:          Applications/Internet
 License:        W3C Software License
 URL:            http://validator.w3.org/
-Source0:        http://validator.w3.org/validator-0_7_0.tar.gz
-Source1:        http://validator.w3.org/sgml-lib-0_7_0.tar.gz
+Source0:        http://validator.w3.org/validator-%{tbver}.tar.gz
+Source1:        http://validator.w3.org/sgml-lib-%{tbver}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 BuildRequires:  perl
-Requires:       httpd, openjade >= 0:1.3.2, %{name}-libs = %{epoch}:%{version}
+Requires:       httpd
+Requires:       openjade >= 1.3.2
+Requires:       %{name}-libs = %{version}
 Obsoletes:      w3c-validator
 
 %description
@@ -37,61 +40,40 @@ SGML and XML DTDs for the W3C Markup Validator.
 %setup -q -a 1 -n validator-%{version}
 mv validator-%{version}/htdocs/sgml-lib .
 
-# Localize config files
-perl -pi -e \
-  's|^(\s*)#Base\s*=.*|${1}Base = %{_datadir}/%{name}| ;
-   s|^(\s*Library\s*=\s*).*|${1}%{_datadir}/sgml/%{name}| ;
+# Localize configs.
+%{__perl} -pi -e \
+  's|/usr/local/validator\b|%{_datadir}/%{name}|' \
+  htdocs/config/validator.conf httpd/conf/httpd.conf httpd/cgi-bin/*
+%{__perl} -pi -e \
+  's|^(\s*Library\s*=\s*).*|${1}%{_datadir}/sgml/%{name}| ;
    s|\bwww-validator\@w3\.org\b|root\@localhost| ;
    s|/validator\.w3\.org/|/localhost/w3c-validator/|' \
   htdocs/config/validator.conf
-# TODO: conneg config for images
-perl -pi -e \
-  's|^(\s*URI\s*=\s*).*validator\.w3\.org/images/(\S+)
-    |${1}images/${2}.gif|x ;
-   s|^(\s*URI\s*=\s*).*www\.w3\.org/Icons/valid-html(\d+).*
-    |${1}images/vh${2}.gif|x ;
-   s|^(\s*URI\s*=\s*).*www\.w3\.org/Icons/valid-xhtml(\d+).*
-    |${1}images/vxhtml${2}.gif|x' \
-  htdocs/config/types.conf
-perl -pi -e \
-  's|/usr/share/w3c-markup-validator|%{_datadir}/%{name}|g' \
-  httpd/conf/httpd.conf
 
 # Move config out of the way
 mv htdocs/config __config
 
-# Fixup permissions
-find . -type d | xargs chmod 755
-find . -type f | xargs chmod 644
-chmod 755 httpd/cgi-bin/check
-
 
 %build
-# Not
 
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -pm 755 $RPM_BUILD_ROOT%{_datadir}/%{name}/htdocs
-
-# Script
-cp -p httpd/cgi-bin/check $RPM_BUILD_ROOT%{_datadir}/%{name}/htdocs
-# HTML and stuff
-cp -pR htdocs/* $RPM_BUILD_ROOT%{_datadir}/%{name}/htdocs
-# Templates
-cp -pR share $RPM_BUILD_ROOT%{_datadir}/%{name}
 
 # Config files
-mkdir -pm 755 $RPM_BUILD_ROOT%{_sysconfdir}/w3c
-cp -p __config/* $RPM_BUILD_ROOT%{_sysconfdir}/w3c
-mkdir -pm 755 $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d
-cp -p httpd/conf/httpd.conf \
+install -dm 755 $RPM_BUILD_ROOT%{_sysconfdir}/w3c
+install -pm 644 __config/* $RPM_BUILD_ROOT%{_sysconfdir}/w3c
+install -Dpm 644 httpd/conf/httpd.conf \
   $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/%{name}.conf
 
+# Scripts, HTML, etc.
+install -dm 755 $RPM_BUILD_ROOT%{_datadir}/%{name}
+cp -pR httpd/cgi-bin htdocs share $RPM_BUILD_ROOT%{_datadir}/%{name}
+
 # SGML library
-mkdir -pm 755 $RPM_BUILD_ROOT%{_datadir}/sgml
+install -dm 755 $RPM_BUILD_ROOT%{_datadir}/sgml
 cp -pR sgml-lib $RPM_BUILD_ROOT%{_datadir}/sgml/%{name}
-mkdir -pm 755 $RPM_BUILD_ROOT%{_sysconfdir}/sgml
+install -dm 755 $RPM_BUILD_ROOT%{_sysconfdir}/sgml
 touch $RPM_BUILD_ROOT%{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat
 
 
@@ -100,9 +82,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %post
-if [ $1 -eq 1 ] ; then
-  %{_initrddir}/httpd reload &>/dev/null || :
-fi
+[ $1 -eq 1 ] && %{_initrddir}/httpd reload &>/dev/null || :
 
 %postun
 %{_initrddir}/httpd reload &>/dev/null || :
@@ -124,21 +104,24 @@ done
 
 %files
 %defattr(-,root,root,-)
-# Install path has changed in 0.7.0 (htdocs/ added to "base" path) so we don't
-# want (noreplace) here.  Add it back in > 0.7.0.
+# Configs not "noreplace", they're incompatible in 0.6.x and 0.7.x.
 %config %{_sysconfdir}/httpd/conf.d/%{name}.conf
-# Config file format changed in 0.7.0 so we don't want (noreplace) here.
-# Add it back in > 0.7.0.
-%config %{_sysconfdir}/w3c
-%{_datadir}/%{name}
+%config %{_sysconfdir}/w3c/
+%{_datadir}/%{name}/
 
 %files libs
 %defattr(-,root,root,-)
 %ghost %config %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat
-%{_datadir}/sgml/%{name}
+%{_datadir}/sgml/%{name}/
 
 
 %changelog
+* Sat Oct  8 2005 Ville Skyttä <ville.skytta at iki.fi> - 0.7.1-1
+- 0.7.1.
+
+* Fri Sep 23 2005 Ville Skyttä <ville.skytta at iki.fi> - 0.7.0-1
+- Update to 0.7.0.
+
 * Thu Oct 14 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.7.0-0.1.cvs
 - Bring -libs post(un)install scriptlets up to date with sgml-lib/*.soc.
 
