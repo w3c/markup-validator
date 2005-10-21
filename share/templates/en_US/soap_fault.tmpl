@@ -1,0 +1,162 @@
+Content-Type: application/soap+xml; charset=UTF-8
+X-W3C-Validator-Status: <TMPL_VAR NAME="valid_status">
+X-W3C-Validator-Errors: <TMPL_VAR NAME="number_of_errors">
+
+<?xml version='1.0' encoding="utf-8"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope"
+            xmlns:m='http://www.w3.org/2005/10/markup-validator'>
+  <env:Body>
+   <env:Fault>
+     <env:Code>
+       <env:Value>env:Sender</env:Value>
+       <env:Subcode>
+        <env:Value>m:Exception</env:Value>
+       </env:Subcode>
+     </env:Code>
+     <env:Reason>
+      <env:Text xml:lang="en-US">@@ add fatal error text here @@</env:Text>
+     </env:Reason>
+     <env:Detail>
+        <m:errordetail xml:lang="en-US">
+            Target: http://www.websitedev.de/markup/validator/tests/white-space-preceding-xml-decl.html org.xml.sax.SAXParseException: The processing instruction target matching "[xX][mM][lL]" is not allowed.
+        </m:errordetail>
+     </env:Detail>
+
+<TMPL_IF NAME="fatal_transcode_error">
+     <env:Reason>
+	<env:Text xml:lang="en-US">Transcode Error</env:Text>
+     </env:Reason>
+     <env:Detail>
+	<m:errordetail xml:lang="en-US">
+        A fatal error occurred when attempting to transcode the character
+        encoding of the document. Either we do not support this character
+        encoding ("<TMPL_VAR NAME="fatal_transcode_charset" ESCAPE="HTML">")
+        yet, or you have specified a non-existent character encoding (often
+        a misspelling).
+        The error was: "<TMPL_VAR NAME="fatal_transcode_errmsg">".
+        </m:errordetail>
+    </env:Detail>
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_byte_error">
+     <env:Reason>
+	<env:Text xml:lang="en-US">Incorrect Bytes detected</env:Text>
+     </env:Reason>
+     <env:Detail>
+	<m:errordetail xml:lang="en-US">
+        Sorry, I am unable to validate this document because on line
+        <TMPL_VAR NAME="fatal_byte_lines">.
+        it contained one or more bytes that I cannot interpret as
+        <TMPL_VAR NAME="fatal_byte_charset" ESCAPE="HTML">
+        (in other words, the bytes found are not valid values in the specified
+        Character Encoding). Please check both the content of the file and the
+        character encoding indication.
+	</m:errordetail>
+     </env:Detail>
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_uri_error">
+     <env:Reason>
+        <env:Text xml:lang="en-US">URL scheme not supported</env:Text>
+     </env:Reason>
+     <env:Detail>
+        <m:errordetail xml:lang="en-US">
+        Sorry, this type of URL scheme
+        (<TMPL_VAR NAME="fatal_uri_scheme" ESCAPE="HTML">) is not
+        supported by this service. Please check that you entered the URL correctly.
+        </m:errordetail>
+     </env:Detail>
+</TMPL_IF>
+<TMPL_IF NAME="fatal_no_content">
+     <env:Reason>
+        <env:Text xml:lang="en-US">No Content to validate</env:Text>
+     </env:Reason>
+     <env:Detail>
+        <m:errordetail xml:lang="en-US">
+        Sorry, I could not find any content to validate. It is probable that you
+        clicked on the "check" button without choosing a URL, a file or entering
+        the content of the document you would like to validate.
+        </m:errordetail>
+     </env:Detail>
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_ip_error">
+     <env:Reason>
+        <env:Text xml:lang="en-US">IP not public</env:Text>
+     </env:Reason>
+     <env:Detail>
+        <m:errordetail xml:lang="en-US">
+        Sorry, the IP address <TMPL_IF NAME="fatal_ip_hostname">of</TMPL_IF>
+        <TMPL_VAR NAME="fatal_ip_host"> is not public.
+        For security reasons, validating resources located at non-public IP
+        addresses has been disabled in this service.
+	</m:errordetail>
+     </env:Detail>
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_http_error">
+     <env:Reason>
+        <env:Text xml:lang="en-US">HTTP Error</env:Text>
+     </env:Reason>
+     <env:Detail>
+        <m:errordetail xml:lang="en-US">
+    Unexpected HTTP response 
+    <TMPL_VAR NAME="fatal_http_code" ESCAPE="HTML"> <TMPL_VAR NAME="fatal_http_msg" ESCAPE="HTML">
+    while trying to retrieve <TMPL_VAR NAME="fatal_http_uri" ESCAPE="HTML">.
+  <TMPL_IF NAME="fatal_http_dns">
+    If you made recent changes to your domain name (DNS) configuration, you may
+    also want to <a href="http://www.squish.net/dnscheck/">check that your
+    domain records are correct</a>, or ask your hosting company to do so.
+  </TMPL_IF>
+       </m:errordetail>
+     </env:Detail>
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_mime_error">
+     <env:Reason>
+        <env:Text xml:lang="en-US">unsupported or unrecognized Content Type</env:Text>
+     </env:Reason>
+     <env:Detail>
+        <m:errordetail xml:lang="en-US">
+        Sorry, I am unable to validate this document because its content type
+        is <TMPL_VAR NAME="fatal_mime_ct" ESCAPE="HTML">, which is
+        not currently supported by this service.
+       </m:errordetail>
+     </env:Detail>
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_parse_extid_error">
+     <env:Reason>
+        <env:Text xml:lang="en-US">
+      Fatal Error: <TMPL_VAR NAME="fatal_parse_extid_msg" ESCAPE="HTML"></env:Text>
+     </env:Reason>
+     <env:Detail>
+        <m:errordetail xml:lang="en-US">
+        I could not parse this document, because it makes reference to a
+        system-specific file instead of using a well-known public identifier
+        to specify the type of markup being used.</m:errordetail>
+     </env:Detail>
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_referer_error">
+    <env:Reason>
+        <env:Text xml:lang="en-US">
+        No Referer header found!
+</env:Text>
+     </env:Reason>
+     <env:Detail>
+        <m:errordetail xml:lang="en-US">
+          You have requested we check the referring page, but your browser did
+          not send the HTTP "Referer" header field. This can be for several
+          reasons, but most commonly it is because your browser does not
+          know about this header, has been configured not to send one, or is
+          behind a proxy or firewall that strips it out of the request before
+          it reaches us.
+	</m:errordetail>
+     </env:Detail>
+
+</TMPL_IF>
+
+   </env:Fault>
+ </env:Body>
+</env:Envelope>
