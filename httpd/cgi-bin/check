@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.455 2005-09-25 00:13:33 bjoern Exp $
+# $Id: check,v 1.456 2005-10-21 06:01:13 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -175,7 +175,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.455 $;
+  $VERSION =  q$Revision: 1.456 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -279,6 +279,20 @@ my $H = HTML::Template->new(
 my $XMLT = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                           $lang, 'xml_output.tmpl'),
+  die_on_bad_params => FALSE,
+  loop_context_vars => TRUE,
+  cache             => TRUE,
+);
+my $SOAPT = HTML::Template->new(
+  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
+                                          $lang, 'soap_output.tmpl'),
+  die_on_bad_params => FALSE,
+  loop_context_vars => TRUE,
+  cache             => TRUE,
+);
+my $SOAPFT = HTML::Template->new(
+  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
+                                          $lang, 'soap_fault.tmpl'),
   die_on_bad_params => FALSE,
   loop_context_vars => TRUE,
   cache             => TRUE,
@@ -638,6 +652,12 @@ if ($File->{Opt}->{Output} eq 'xml') {
   $template = $EARLT;
 } elsif ($File->{Opt}->{Output} eq 'n3') {
   $template = $N3T;
+} elsif ($File->{Opt}->{Output} eq 'soap12') {
+  if ($File->{'Error Flagged'}) {
+    $template = $SOAPFT;
+  } else {
+    $template = $SOAPT;
+  }
 } else {
   $template = $T;
 }
