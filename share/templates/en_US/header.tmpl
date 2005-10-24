@@ -3,6 +3,7 @@ Content-Type: text/html; charset=utf-8
 X-W3C-Validator-Recursion: <TMPL_VAR NAME="depth" DEFAULT="1"><TMPL_IF NAME="valid_status">
 X-W3C-Validator-Status: <TMPL_VAR NAME="valid_status"></TMPL_IF><TMPL_IF NAME="valid_errors_num">
 X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num"></TMPL_IF>
+Cache-Control: <TMPL_IF NAME="cache_control_value"><TMPL_VAR NAME="cache_control_value"><TMPL_ELSE>no-cache</TMPL_IF>
 
 <?xml version="1.0"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
