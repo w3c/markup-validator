@@ -1,0 +1,77 @@
+<TMPL_IF NAME="W01">
+  <m:warning><m:message>Missing "charset" attribute for
+    "<TMPL_VAR NAME="W01_ct" ESCAPE="HTML">" document.</m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W02">
+  <m:warning><m:message>No Character Encoding Found!</m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W03">
+  <m:warning><m:message>Character Encoding Override in effect!</m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W04">
+  <m:warning><m:message>No Character Encoding Found!
+    <TMPL_IF NAME="W04_override">
+      Using
+    <TMPL_ELSE>
+      Falling back to 
+    </TMPL_IF>
+    <TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF>.
+  </m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W05">
+  <m:warning><m:message>DOCTYPE Override in effect!</m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W06">
+  <m:warning><m:message>Unable to Determine Parse Mode!</m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W07">
+  <m:warning><m:message>Contradictory Parse Modes Detected!</m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W08">
+  <m:warning><m:message>Unknown Parse Mode!</m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W09">
+  <m:warning><m:message>No DOCTYPE found! Attempting validation with <TMPL_VAR NAME="W09_dtd" ESCAPE="HTML">.</m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W10">
+  <m:warning><m:message>Unknown Namespace Found</m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W11">
+  <m:warning><m:message>Namespace Found in non-XML Document</m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W12">
+  <m:warning><m:message>No Namespace Found</m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W13">
+  <m:warning><m:message>DOCTYPE Override in effect!</m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W14">
+  <m:warning><m:message>No DOCTYPE Found!</m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W15">
+  <m:warning><m:message>DOCTYPE Override in effect!</m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W16">
+  <m:warning><m:message>No DOCTYPE Found! Falling Back to
+    <TMPL_VAR NAME="W16_dtd" ESCAPE="HTML">.</m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W17">
+  <m:warning><m:message>No Character Encoding detected!</m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W18">
+  <m:warning><m:message>Character Encoding mismatch!</m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W19">
+  <m:warning><m:message>Character Encoding mismatch!</m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W20">
+  <m:warning><m:message>Character Encoding mismatch!</m:message></m:warning>
+</TMPL_IF>
+<TMPL_IF NAME="W21">
+  <m:warning><m:message>Byte-Order Mark found in UTF-8 File.</m:message></m:warning>
+</TMPL_IF>
+
+<TMPL_IF NAME="W@@">
+  <m:warning><m:message></m:message></m:warning>
+</TMPL_IF>
+

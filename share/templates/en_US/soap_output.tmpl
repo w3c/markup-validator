@@ -7,48 +7,34 @@ X-W3C-Validator-Errors: <TMPL_VAR NAME="number_of_errors">
 <env:Body>
 <m:markupvalidationresponse env:encodingStyle="http://www.w3.org/2003/05/soap-encoding" xmlns:m="http://www.w3.org/2005/10/markup-validator">
     <m:uri><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></m:uri>
-    <m:checkedby><TMPL_VAR NAME="file_server" ESCAPE="HTML"></m:checkedby>
+    <m:checkedby><TMPL_VAR NAME="cfg_home_page" ESCAPE="HTML"></m:checkedby>
     <m:doctype><TMPL_VAR NAME="file_doctype" ESCAPE="HTML"></m:doctype>
     <m:validity><TMPL_VAR NAME="valid_status"></m:validity>
     <m:errors>
-        <m:errorcount><TMPL_VAR NAME="number_of_errors"></m:errorcount>
+        <m:errorcount><TMPL_VAR NAME="valid_errors_num"></m:errorcount>
         <m:errorlist>
-        <TMPL_LOOP NAME="file_errors">
+          <TMPL_LOOP NAME="file_errors"><TMPL_IF NAME="err_type_err">
             <m:error>
-                <!-- Line of the current error -->                 
-                <m:line>                                           
-                    <TMPL_VAR NAME="line" ESCAPE="HTML">                 
-                </m:line>                                          
-                <!-- Column of the current error -->               
-                <m:col>                                            
-                    <TMPL_VAR NAME="char" ESCAPE="HTML">                  
-                </m:col>                                           
-                <!-- Offset of the current error -->               
-                <m:offset>                                         
-                    ???               
-                </m:offset>                                        
-                <!-- Textual message of the error -->              
-                <m:message>                                        
-                    <TMPL_VAR NAME="msg" ESCAPE="HTML">                        
-                </m:message>                                       
-            </m:error>                                             
-        </TMPL_LOOP>                                                                 
+                <m:line><TMPL_VAR NAME="line"></m:line>
+                <m:col><TMPL_VAR NAME="char"></m:col>                                           
+                <m:message><TMPL_VAR NAME="msg" ESCAPE="HTML"></m:message>
+            </m:error>
+           </TMPL_IF></TMPL_LOOP>
         </m:errorlist>
-    </m:errors>                                             
-    <m:warnings>                                                       
-        <!-- Number of warnings -->                                    
-        <m:warningcount>                                               
-            <xsl:value-of select="$warningcount"/>                     
-        </m:warningcount>                                              
-        <!-- List of warnings -->                                      
-        <m:warninglist>                                                
-            <TMPL_LOOP NAME="file_warnings">
-            <m:warning>                                            
-                <TMPL_VAR NAME="Message" ESCAPE="HTML">
-            </m:warning>                                           
-            </TMPL_LOOP>                                         
-        </m:warninglist>                                               
-    </m:warnings>                                                      
-</m:markupvalidationresponse>                                          
-</env:Body>                                                                
-</env:Envelope>                                                                
+    </m:errors>
+    <m:warnings>
+        <m:warningcount><TMPL_VAR NAME="valid_warnings_num"></m:warningcount>
+        <m:warninglist>
+        <TMPL_IF NAME="have_warnings"><TMPL_INCLUDE NAME="soap_warnings.tmpl"></TMPL_IF>
+        <TMPL_LOOP NAME="file_errors"><TMPL_IF NAME="err_type_warn">
+            <m:warning>
+                <m:line><TMPL_VAR NAME="line"></m:line>
+                <m:col><TMPL_VAR NAME="char"></m:col>                                           
+                <m:message><TMPL_VAR NAME="msg" ESCAPE="HTML"></m:message>
+            </m:warning>
+          </TMPL_IF></TMPL_LOOP>
+        </m:warninglist>
+    </m:warnings>
+</m:markupvalidationresponse>
+</env:Body>
+</env:Envelope>
