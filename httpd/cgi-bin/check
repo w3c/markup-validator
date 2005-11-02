@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.456 2005-10-21 06:01:13 ot Exp $
+# $Id: check,v 1.457 2005-11-02 08:12:01 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -175,7 +175,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.456 $;
+  $VERSION =  q$Revision: 1.457 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -315,10 +315,12 @@ my $N3T = HTML::Template->new(
 );
 
 $File->{T} = $T;
+$File->{S} = $SOAPT;
 $File->{E} = $E;
 $File->{H} = $H;
 
 $T->param(cfg_home_page => $CFG->{'Home Page'});
+$SOAPT->param(cfg_home_page => $CFG->{'Home Page'});
 
 undef $lang;
 
@@ -771,18 +773,20 @@ sub fin_template ($$) {
   else {
     $T->param(file_version => $File->{Version});
   }
-  my $num_errors = scalar @{$File->{Errors}};
-  if ($num_errors >0)
+  my ($num_errors,$num_warnings, $num_info, $reported_errors) = &report_errors($File);
+  if ($num_errors+$num_warnings > 0)
   {
     $T->param(has_errors => 1);
   }
   $T->param(valid_errors_num => $num_errors);
-  my ($number_of_errors, $reported_errors) = &report_errors($File);
-  if ($number_of_errors > 1) {
-    $number_of_errors = "$number_of_errors errors"
+  $num_warnings += scalar @{$File->{Warnings}};
+  $T->param(valid_warnings_num => $num_warnings);
+  my $number_of_errors = ""; # textual form of $num_errors
+  if ($num_errors > 1) {
+    $number_of_errors = "$num_errors errors"
   }
   else {
-    $number_of_errors = "$number_of_errors error"
+    $number_of_errors = "$num_errors error"
   }
   $T->param(file_errors => $reported_errors);
    $T->param(number_of_errors => $number_of_errors);
@@ -827,8 +831,11 @@ sub add_warning ($$) {
   my $WID    = shift;
   my $params = shift;
 
+  push @{$File->{Warnings}}, $WID;
   $File->{T}->param($WID => TRUE, %{$params});
   $File->{T}->param(have_warnings => TRUE);
+  $File->{S}->param($WID => TRUE, %{$params});
+  $File->{S}->param(have_warnings => TRUE);
 }
 
 #
@@ -1188,6 +1195,8 @@ sub report_errors ($) {
   my $File = shift;
   my $Errors = [];
   my $number_of_errors = 0;
+  my $number_of_warnings = 0;
+  my $number_of_info = 0;
 
   # Hash to keep track of how many of each error is reported.
   my %Msgs; # Used to generate a UID for explanations.
@@ -1231,25 +1240,33 @@ sub report_errors ($) {
       if ($err->{type} eq 'I')
       {
         $err->{class} = 'msg_info';
+        $err->{err_type_err} = 0;
+        $err->{err_type_warn} = 0;
         $err->{err_type_info} = 1;
+        $number_of_info += 1;
       }
       elsif ($err->{type} eq 'E')
       {
         $err->{class} = 'msg_err';
         $err->{err_type_err} = 1;
+        $err->{err_type_warn} = 0;
+        $err->{err_type_info} = 0;
         $number_of_errors += 1;
       }
       elsif (($err->{type} eq 'W') or ($err->{type} eq 'X') )
       {
         $err->{class} = 'msg_warn';
+        $err->{err_type_err} = 0;
         $err->{err_type_warn} = 1;
+        $err->{err_type_info} = 0;
+        $number_of_warnings += 1;
       }
       # TODO other classes for "X" etc? FIXME find all types of message.
 
       push @{$Errors}, $err;
     }
   }
-  return $number_of_errors, $Errors;
+  return $number_of_errors, $number_of_warnings, $number_of_info, $Errors;
 }
 
 #
