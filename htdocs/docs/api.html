@@ -1,0 +1,242 @@
+<!--#set var="revision" value="\$Id: api.html,v 1.1 2005-11-09 08:16:34 ot Exp $"
+--><!--#set var="date" value="\$Date: 2005-11-09 08:16:34 $"
+--><!--#set var="title" value="Documentation of the Programmatic Interface (API) to The W3C Markup Validation Service"
+--><!--#set var="relroot" value="../"
+--><!--#include virtual="../header.html" -->
+
+<div class="doc">
+<h2>API (programmatic interface)<br />
+and SOAP 1.2 validation interface </h2>
+
+<h3 id="TableOfContents">Table of Contents</h3>
+
+    <div id="toc">
+      <ul>
+        <li><a href="#requestformat">Validation Request Format</a></li>
+        <li><a href="#soap12format">SOAP format description</a>
+         <ul>
+          <li><a href="#soap12_sample">sample SOAP 1.2 validation response</a></li>
+          <li><a href="#soap12response">SOAP1.2 response format reference</a></li>
+          <li><a href="#soap12message">SOAP1.2 atomic message (error or warning) format reference</a></li>
+         </ul>
+        </li>
+      </ul>
+    </div>
+    
+    <p id="skip"></p>
+
+<h3 id="requestformat">Validation Request Format</h3>
+
+<p>Below is a table of the parameter you can use to send a query to the W3C Markup Validator.</p>
+<p>If you want to use W3c's public validation server, use the parameters below
+ in conjunction with the following base URI:<br />
+<kbd>http://validator.w3.org/check</kbd> <br />
+(replace with the address of your own server if you want to call a private instance of the validator.</p>
+
+<p><strong>Note</strong>: If you wish to call the validator programmatically for a batch of documents,
+please make sure that your script will <code>sleep</code> for <strong>at least 1 second</strong> 
+between requests. The Markup Validation service is a free, public service for all, your respect
+is appreciated. thanks.</p>
+
+<table>
+<tr>
+<th>Parameter</th><th>Description</th><th>Default value</th>
+</tr>
+<tr>
+  <th>uri</th>
+  <td>The <acronym title="Universal Resource Locator">URL</acronym> of the document to validate</td>
+  <td>None, but either this parameter, or <code>uploaded_file</code>, 
+  or <code>fragment</code> must be given.</td>
+</tr>
+<tr>
+  <th>uploaded_file</th>
+  <td>The document to validate, POSTed as multipart/form-data</td>
+  <td>None, but either this parameter, or <code>uri</code>,   
+  or <code>fragment</code> must be given.</td>
+</tr>
+<tr>
+  <th>fragment</th>
+  <td>The source of the document to validate. Full documents only. 
+  At the moment, will only work if data is sent with the UTF-8 encoding.</td>
+  <td>None, but either this parameter, or <code>uri</code>,
+  or <code>uploaded_file</code> must be given.</td>
+</tr>
+<tr>
+  <th>output</th>
+  <td>triggers the various outputs formats of the validator. If unset, the usual
+  Web format will be sent. If set to <code>soap12</code>, the SOAP1.2 interface will 
+  be triggered. See <a href="soap12format">below for the SOAP 1.2 response format description</a>.</td>
+  <td>unset</td>
+</tr>
+<tr>
+  <th>charset</th>
+  <td>Character encoding override: 
+  Specify the character encoding to use when parsing the document. When used with
+  the auxiliary parameter <code>fbc</code> set to 1, the given encoding will only be used as 
+  a fallback value, in case the charset is absent or unrecognized. Note that this parameter
+  is ignored if validating a <code>fragment</code> with the direct input interface.</td>
+  <td>None, by default the validator detects the charset of the document automatically.</td>
+</tr>
+<tr>
+  <th>doctype</th>
+  <td>Document Type override:
+  Specify the Document Type (DOCTYPE) to use when parsing the document. When used 
+  with  the auxiliary parameter <code>fbd</code> set to 1, the given document type will only be used
+  as a fallback value, in case the document's DOCTYPE declaration is missing or unrecognized.</td>
+  <td>None, by default the validator detects the document type of the document automatically.</td>
+</tr>
+<tr>
+  <th>verbose</th>
+  <td>In the web interface, when set to 1, will make error messages, explanations 
+  and other diagnostics more verbose. In SOAP output, does not have any impact.</td>
+  <td>0 (unset)</td>
+</tr>
+<tr>
+  <th>ss</th>
+  <td> as <em>show source</em>. In the web interface, triggers the display of the source
+  after the validation results. In SOAP output, does not have any impact.</td>
+  <td>0 (unset)</td>
+</tr>
+<tr>
+  <th>outline</th>
+  <td>In the web interface, when set to 1, triggers the display of the document outline 
+  after the validation results. In SOAP output, does not have any impact.</td>  
+  <td>0 (unset)</td>
+</tr>
+<tr>
+  <th>sp</th>
+  <td>In the web interface, when set to 1, triggers the display of the parsing tree
+  after the validation results. When used with the auxiliary parameter <code>noatt</code>
+  set to 1, the parse tree will not display attributes. In SOAP output, does not have any impact.</td>
+  <td>0 (unset)</td>
+</tr>
+</table>
+<h3 id="soap12format">SOAP format description</h3>
+
+<p>When called with parameter <code>output=soap12</code>, the validator will switch
+to its SOAP 1.2 interface (experimental for now). Below is a sample response, as well as
+a description of the most important elements of the response.</p>
+
+<h4 id="soap12_sample">sample SOAP 1.2 validation response</h4>
+<p>A SOAP response for the validation of a document (invalid) will look like this:</p>
+<pre style="font-size: smaller"> 
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;env:Envelope xmlns:env=&quot;http://www.w3.org/2003/05/soap-envelope&quot;&gt;
+&lt;env:Body&gt;
+&lt;<a href="#soap12_markupvalidationresponse">m:markupvalidationresponse</a>
+env:encodingStyle=&quot;http://www.w3.org/2003/05/soap-encoding&quot; 
+xmlns:m=&quot;http://www.w3.org/2005/10/markup-validator&quot;&gt;
+    &lt;<a href="#soap12_uri">m:uri</a>&gt;http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-bogus-element.html&lt;/m:uri&gt;
+    &lt;<a href="#soap12eckedby">m:checkedby</a>&gt;http://validator.w3.org/&lt;/m:checkedby&gt;
+    &lt;<a href="#soap12_doctype">m:doctype</a>&gt;-//W3C//DTD XHTML 1.0 Transitional//EN&lt;/m:doctype&gt;
+    &lt;<a href="#soap12_charset">m:charset</a>&gt;utf-8&lt;/m:charset&gt;
+    &lt;<a href="#soap12_validity">m:validity</a>&gt;Invalid&lt;/m:validity&gt;
+    &lt;<a href="#soap12_errors">m:errors</a>&gt;
+        &lt;<a href="#soap12_errorcount">m:errorcount</a>&gt;1&lt;/m:errorcount&gt;
+        &lt;<a href="#soap12_errorlist">m:errorlist</a>&gt;
+          
+            &lt;<a href="#soap12_error">m:error</a>&gt;
+                &lt;<a href="#soap12_line">m:line</a>&gt;13&lt;/m:line&gt;
+                &lt;<a href="#soap12_col">m:col</a>&gt;6&lt;/m:col&gt;                                           
+                &lt;<a href="#soap12_message">m:message</a>&gt;element &quot;foo&quot; undefined&lt;/m:message&gt;
+            &lt;/m:error&gt;
+           
+        &lt;/m:errorlist&gt;
+    &lt;/m:errors&gt;
+    &lt;m:warnings&gt;
+        &lt;m:warningcount&gt;0&lt;/m:warningcount&gt;
+        &lt;m:warninglist&gt;
+        
+        
+        &lt;/m:warninglist&gt;
+    &lt;/m:warnings&gt;
+&lt;/m:markupvalidationresponse&gt;
+&lt;/env:Body&gt;
+&lt;/env:Envelope&gt;
+</pre>
+<h4 id="soap12response">SOAP1.2 response format reference</h4>
+
+<table>
+<tr><th>element</th><th>description</th></tr>
+<tr>
+  <th id="soap12_markupvalidationresponse">markupvalidationresponse</th>
+  <td>The main element of the validation response. Encloses all other information about the validation results.</td>
+</tr>
+<tr>
+  <th id="soap12_uri">uri</th>
+  <td>the address of the document validated. Will (likely?) be <kbd>upload://Form Submission</kbd>
+  if an uploaded document or fragment was validated.
+  In <a href="http://www.w3.org/WAI/ER/">EARL</a> terms, this is the <kbd>TestSubject</kbd>.
+  </td>
+</tr>
+<tr>
+  <th id="soap12_checkedby">checkedby</th>
+  <td>Location of the service which provided the validation result. 
+  In <a href="http://www.w3.org/WAI/ER/">EARL</a> terms, this is the <kbd>Assertor</kbd>.
+  </td>
+</tr>
+<tr>
+  <th id="soap12_doctype">doctype</th>
+  <td>Detected (or forced) Document Type for the validated document</td>
+</tr>
+<tr>
+  <th id="soap12_charset">charset</th>
+  <td>Detected (or forced) Character Encoding for the validated document</td>
+</tr>
+<tr>
+  <th id="soap12_validity">validity</th>
+  <td>Whether or not the document validated passed or not formal validation</td>
+</tr>
+<tr>
+  <th id="soap12_errors">errors</th>
+  <td>Encapsulates all data about errors encountered through the validation process</td>
+</tr>
+<tr>
+  <th id="soap12_errorcount">errorcount</th>
+  <td>a child of <a href="#soap12_errors">errors</a>, counts the number of errors listed</td>
+</tr>
+<tr>
+  <th id="soap12_errorlist">errorlist</th>
+  <td>a child of <a href="#soap12_errors">errors</a>, contains the list of errors (surprise!)</td>
+</tr>
+<tr>
+  <th id="soap12_error">error</th>
+  <td>a child of <a href="#soap12_errorlist">errorlist</a>, contains the information on a single 
+  validation error. </td>
+</tr>
+</table>
+<p><strong>Note</strong>: <code>warnings</code>, <code>warningcount</code>, 
+<code>warninglist</code> and <code>warning</code> are similar to, respectively,
+<code><a href="#soap12_errors">errors</a></code>, 
+<code><a href="soap12_errorcount">errorcount</a></code>, 
+<code><a href="soap12_errorlist">errorlist</a></code> and 
+<code><a href="soap12_error">error</a></code>.
+</p>
+<h4 id="soap12message">SOAP1.2 atomic message (error or warning) format reference</h4>
+<p>As seen as the example above, the children of the <code><a href="soap12_error">error</a></code>
+element, but also the <code>warning</code> element are <code>line</code>, <code>col</code> and
+<code>message</code>, defined below:</p>
+<table>
+<tr><th>element</th><th>description</th></tr>
+<tr>
+  <th id="soap12_line">line</th>
+  <td>Within the source code of the validated document, refers to the line where the error was detected.</td>
+</tr>
+<tr>
+  <th id="soap12_col">col</th>
+  <td>Within the source code of the validated document, refers to the line where the column was detected.</td>
+</tr>
+<tr>
+  <th id="soap12_message">message</th>
+  <td>The actual error message</td>
+</tr>
+<tr>
+  <th id="soap12_messageid">messageid</th>
+  <td>@@ not implemented yet@@ - should be the number of the error, as addressed internally by the validator</td>
+</tr>
+</table>
+
+</div>
+<!--#include virtual="../footer.html" -->
+  </body>
+</html>
