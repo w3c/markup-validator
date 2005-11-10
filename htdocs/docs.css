@@ -4,7 +4,7 @@
    Copyright 2003 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See <http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright>
  
-   $Id: docs.css,v 1.7 2005-10-20 06:46:50 ot Exp $
+   $Id: docs.css,v 1.8 2005-11-10 06:59:13 ot Exp $
 */
 
 /*
@@ -89,3 +89,9 @@ dl#expl dt {
   color: black;
   font-style: italic;
 }
+
+
+table.refdoc {border: 1px solid #888;  }
+table.refdoc tr {}
+table.refdoc th { border: 1px solid #ccc; background-color: #eee; padding: .4em; text-align: left}
+table.refdoc td {border: 1px solid #ccc; text-align: left; padding: .4em;}

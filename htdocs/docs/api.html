@@ -1,12 +1,12 @@
-<!--#set var="revision" value="\$Id: api.html,v 1.1 2005-11-09 08:16:34 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-11-09 08:16:34 $"
+<!--#set var="revision" value="\$Id: api.html,v 1.2 2005-11-10 06:59:13 ot Exp $"
+--><!--#set var="date" value="\$Date: 2005-11-10 06:59:13 $"
 --><!--#set var="title" value="Documentation of the Programmatic Interface (API) to The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
 
 <div class="doc">
-<h2>API (programmatic interface)<br />
-and SOAP 1.2 validation interface </h2>
+<h2>Markup Validator Web Service API<br />
+SOAP 1.2 validation interface documentation</h2>
 
 <h3 id="TableOfContents">Table of Contents</h3>
 
@@ -38,7 +38,7 @@ please make sure that your script will <code>sleep</code> for <strong>at least 1
 between requests. The Markup Validation service is a free, public service for all, your respect
 is appreciated. thanks.</p>
 
-<table>
+<table class="refdoc">
 <tr>
 <th>Parameter</th><th>Description</th><th>Default value</th>
 </tr>
@@ -156,7 +156,7 @@ xmlns:m=&quot;http://www.w3.org/2005/10/markup-validator&quot;&gt;
 </pre>
 <h4 id="soap12response">SOAP1.2 response format reference</h4>
 
-<table>
+<table class="refdoc">
 <tr><th>element</th><th>description</th></tr>
 <tr>
   <th id="soap12_markupvalidationresponse">markupvalidationresponse</th>
@@ -216,7 +216,7 @@ xmlns:m=&quot;http://www.w3.org/2005/10/markup-validator&quot;&gt;
 <p>As seen as the example above, the children of the <code><a href="soap12_error">error</a></code>
 element, but also the <code>warning</code> element are <code>line</code>, <code>col</code> and
 <code>message</code>, defined below:</p>
-<table>
+<table class="refdoc">
 <tr><th>element</th><th>description</th></tr>
 <tr>
   <th id="soap12_line">line</th>
