@@ -2,3 +2,8 @@
 RemoveCharset .html
 # note - this only works in apache 2.0.24 and later
 </Files>
+<Files nocharset_notutf8.html>
+RemoveCharset .html
+# note - this only works in apache 2.0.24 and later
+</Files>
+
