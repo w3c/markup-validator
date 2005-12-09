@@ -1,0 +1,4 @@
+<Files nocharset.html>
+RemoveCharset .html
+# note - this only works in apache 2.0.24 and later
+</Files>
