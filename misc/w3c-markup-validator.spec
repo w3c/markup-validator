@@ -1,5 +1,5 @@
 # RPM spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.5.2.2 2005-10-08 09:31:31 ville Exp $
+# $Id: w3c-markup-validator.spec,v 1.5.2.3 2006-01-25 22:27:42 ville Exp $
 
 %{expand: %%define tbver %(echo %{version} | tr . _)}
 
@@ -11,8 +11,8 @@ Summary:        W3C Markup Validator
 Group:          Applications/Internet
 License:        W3C Software License
 URL:            http://validator.w3.org/
-Source0:        http://validator.w3.org/validator-%{tbver}.tar.gz
-Source1:        http://validator.w3.org/sgml-lib-%{tbver}.tar.gz
+Source0:        http://validator.w3.org/dist/validator-%{tbver}.tar.gz
+Source1:        http://validator.w3.org/dist/sgml-lib-%{tbver}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
