@@ -3,13 +3,13 @@
 # W3C Markup Validation Service
 # A CGI script to retrieve and validate a markup file
 #
-# Copyright 1995-2005 Gerald Oskoboiny <gerald@w3.org>
+# Copyright 1995-2006 Gerald Oskoboiny <gerald@w3.org>
 # for additional contributors, see http://dev.w3.org/cvsweb/validator/
 #
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.432.2.6 2006-01-26 20:21:41 ville Exp $
+# $Id: check,v 1.432.2.7 2006-01-26 20:35:24 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -202,7 +202,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.432.2.6 $;
+  $VERSION =  q$Revision: 1.432.2.7 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
