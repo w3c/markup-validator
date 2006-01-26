@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.432.2.5 2005-10-13 05:35:17 ot Exp $
+# $Id: check,v 1.432.2.6 2006-01-26 20:21:41 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -202,7 +202,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.432.2.5 $;
+  $VERSION =  q$Revision: 1.432.2.6 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -306,9 +306,17 @@ $File->{E} = $E;
 $File->{H} = $H;
 
 # Read friendly error message file
-my $error_messages_list =  File::Spec->catfile($CFG->{Paths}->{Templates}, $lang, 'error_messages.cfg');
-my %config_opts = (-ConfigFile => $error_messages_list);
-my %rsrc = Config::General->new(%config_opts)->getall();
+my %rsrc = Config::General->new(
+  -MergeDuplicateBlocks => 1,
+  -ConfigFile           => File::Spec->catfile($CFG->{Paths}->{Templates},
+                                               $lang, 'error_messages.cfg'),
+  )->getall();
+# Config::General workarounds for <msg 0> issues:
+$rsrc{msg}{0} ||=
+  delete($rsrc{'msg 0'}) ||                   # < 2.31
+  { original => delete($rsrc{msg}{original}), #   2.31
+    verbose  => delete($rsrc{msg}{verbose}),
+  };
 $RSRC = \%rsrc;
 
 $T->param(cfg_home_page => $CFG->{'Home Page'});
