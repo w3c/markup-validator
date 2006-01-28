@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.37.2.3 2005-10-08 09:31:31 ville Exp $"
---><!--#set var="date" value="\$Date: 2005-10-08 09:31:31 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.37.2.4 2006-01-28 17:26:30 ville Exp $"
+--><!--#set var="date" value="\$Date: 2006-01-28 17:26:30 $"
 --><!--#set var="title" value="Source Code Availability for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -13,8 +13,9 @@
        <ul>	
 	<li><a href="#browse">Browsing the code</a></li>
 	<li><a href="#tarball">Download tarballs</a></li>
-	<li><a href="#rpm">RPM package</a></li>
-	<li><a href="#deb">Debian package</a></li>
+	<li><a href="#rpm">Fedora/Red Hat RPM package</a></li>
+	<li><a href="#suse">SuSE Linux (OSS) RPM package</a></li>
+	<li><a href="#deb">Debian GNU/Linux package</a></li>
 	<li><a href="#CVS">CVS repository</a></li>
        </ul>
       </li>
@@ -62,9 +63,9 @@
 	    (~300kB) and <a href="http://validator.w3.org/sgml-lib.tar.gz">the <acronym
               title="Document Type Definitions">DTDs</acronym></a> (~500kB).
           </p>
-        <h4><a id="rpm" name="rpm"></a>RPM package</h4>
+        <h4><a id="rpm" name="rpm"></a>Fedora/Red Hat RPM package</h4>
           <p>
-            RPM packages are available, courtesy of Ville Skytt&auml;, at
+            Fedora/Red Hat RPM packages are available, courtesy of Ville Skytt&auml;, at
             Fedora Extras,
             &lt;<a href="http://fedoraproject.org/wiki/Extras">http://fedoraproject.org/wiki/Extras</a>&gt;.
           </p>
@@ -77,7 +78,7 @@
             have to get at least the following RPMs from Fedora Extras (other
             dependencies are included in the Fedora Core distribution):
           </p>
-          <ul>
+          <ul id="rpmdeps">
             <li>w3c-markup-validator</li>
             <li>w3c-markup-validator-libs</li>
             <li>perl-Config-General</li>
@@ -97,7 +98,34 @@
             <a href="http://fedoraproject.org/wiki/Extras/UsingExtras">documentation</a>
             for information about configuring these tools.
           </p>
-        <h4><a name="deb" id="deb"></a>Debian package</h4>
+        <h4><a id="suse" name="suse"></a>SuSE Linux (OSS) RPM package</h4>
+          <p>
+            RPM packages for SuSE Linux (OSS) are available, courtesy of Sierk
+            Bornemann, at sierkbornemann.de,
+            &lt;<a href="http://sierkbornemann.de/pub/tools/w3c-markup-validator/">http://sierkbornemann.de/pub/tools/w3c-markup-validator/</a>&gt;.
+          </p>
+          <p>
+            The RPM packages from sierkbornemann.de are optimized for use in
+            a local network (recommended running in a VirtualHost) for home
+            office or web agency use.
+          </p>
+          <p>
+            Note that the Validator RPMs have several dependencies, you'll
+            have to satisfy at least the same <a href="#rpmdeps">RPM
+            dependencies</a> as listed above for Fedora/Red Hat.
+            You can get these RPMs from SuSE (other dependencies are included
+            in the SuSE Linux (OSS) distribution) or partly from
+            sierkbornemann.de.
+          </p>
+          <p>
+            In addition, each of these may have further dependencies that must
+            be satisfied. All the necessary RPMs are either included in
+            the SuSE Linux distribution(s) or are available from
+            <a href="http://sierkbornemann.de/pub/tools/w3c-markup-validator/perl-modules/">sierkbornemann.de</a>.
+            Use of an automated package management tool to install the
+            packages, such as YaST, yum or up2date is recommended.
+          </p>
+        <h4><a name="deb" id="deb"></a>Debian GNU/Linux package</h4>
           <p>
             A Debian package is available, courtesy of Fr&eacute;d&eacute;ric
             Sch&uuml;tz. 
