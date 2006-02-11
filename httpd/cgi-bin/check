@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.432.2.7 2006-01-26 20:35:24 ville Exp $
+# $Id: check,v 1.432.2.8 2006-02-11 12:25:09 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -202,7 +202,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.432.2.7 $;
+  $VERSION =  q$Revision: 1.432.2.8 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1666,6 +1666,7 @@ sub parsetree {
       next;
     } elsif ($prevdata) {
       $prevdata =~ s/\s+/ /g;
+      local($Text::Wrap::huge) = 'overflow'; # bug 2623
       $tree .= &ent(wrap(' ' x $indent, ' ' x $indent, $prevdata)) . "\n";
       undef $prevdata;
     }
