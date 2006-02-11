@@ -12,7 +12,7 @@
       </TMPL_IF>
     <TMPL_ELSE>
     <td colspan="2" class="invalid">
-      Failed validation, <TMPL_VAR NAME="number_of_errors" ESCAPE="HTML">
+      Failed validation<TMPL_IF NAME="number_of_errors">, <TMPL_VAR NAME="number_of_errors" ESCAPE="HTML"></TMPL_IF>
     </TMPL_IF>
     </td>
     </tr>
