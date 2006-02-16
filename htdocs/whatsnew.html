@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.51.2.5 2006-02-07 07:13:35 ot Exp $"
---><!--#set var="date" value="\$Date: 2006-02-07 07:13:35 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.51.2.6 2006-02-16 07:10:44 ot Exp $"
+--><!--#set var="date" value="\$Date: 2006-02-16 07:10:44 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -22,10 +22,17 @@
       <dd>
         <p>
           Releasing version 0.7.2 of the Markup Validator, a maintenance release 
-          updating the codebase for compatibility issues with recent versions of the 
-          Config::General perl module, as well as including minor fixes in 
-          document types support and documentation.
+          including minor fixes as described below:
         </p>
+<ul>
+<li> update for compatibility with new version of Config::General module</li>
+<li> fixed the recognized root element for XHTML 1.1 plus MathML 2.0 (plus SVG)</li>
+<li> avoid Text::Wrap error with deeply nested documents</li>
+<li> documentation fixes (typos, broken link)</li>
+<li> avoid trailing comma in failed validation results if number of errors is unknown</li>
+<li> consistency fixes for character encoding selection</li>
+</ul>
+
       </dd>
        <dt id="t2005-10-18">2005-10-18 &mdash; 0.7.1 Release:</dt>
       <dd>
