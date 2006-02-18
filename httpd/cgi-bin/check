@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.432.2.8 2006-02-11 12:25:09 ville Exp $
+# $Id: check,v 1.432.2.9 2006-02-18 20:05:28 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -202,7 +202,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.432.2.8 $;
+  $VERSION =  q$Revision: 1.432.2.9 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -595,7 +595,7 @@ sub parse (\$) {
     $catalog  = File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc');
     push(@spopt, '-wxml');
   }
-  
+
   #
   # Defaults for SP; turn off fixed charset mode and set encoding to UTF-8.
   $ENV{SP_CHARSET_FIXED} = 'NO';
@@ -1292,7 +1292,7 @@ sub override_doctype {
   local $dtd = qq(<!DOCTYPE $name PUBLIC "$pubid");
   $dtd .= qq( "$sysid") if $sysid; # We don't have one for all types.
   $dtd .= '>';
-  
+
   local $org_dtd = '';
   local $HTML    = '';
   local $seen    = FALSE;
@@ -1369,7 +1369,7 @@ sub parse_errors ($$) {
     $err->{src}  = $errors[1];
     $err->{line} = $errors[2];
     $err->{char} = $errors[3];
-    
+
     # Workaround for onsgmls 1.5 sometimes reporting errors beyond EOL.
     if ((my $l = length($File->{Content}->[$err->{line}-1])) < $err->{char}) {
       $err->{char} = $l;
@@ -1822,7 +1822,7 @@ sub prepCGI {
       print redirect &self_url_q($q, $File);
       exit;
     } else {
-        
+
       # Redirected from /check/referer to /check?uri=referer because
       # the browser didn't send a Referer header, or the request was
       # for /check?uri=referer but no Referer header was found.
@@ -2013,11 +2013,11 @@ sub transcode {
     $_ = $c->convert($_); # $_ is local!!
     if ($in ne "" and (!defined($_) || $_ eq "")) {
       push @{$File->{Lines}}, $line;
-      
+
       # try to decoded as much as possible of the line
       my $short = 0;                # longest okay
       my $long  = (length $in) - 1; # longest unknown
-      
+
       while ($long > $short) {
         # binary search
         my $try = int (($long+$short+1) / 2);
