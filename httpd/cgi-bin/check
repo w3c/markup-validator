@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.432.2.9 2006-02-18 20:05:28 ville Exp $
+# $Id: check,v 1.432.2.10 2006-02-18 20:06:41 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -202,7 +202,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.432.2.9 $;
+  $VERSION =  q$Revision: 1.432.2.10 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2029,7 +2029,8 @@ sub transcode {
         }
       }
       my $remain = (length $in) - $short;
-      $_ = $c->convert(substr($in,0,$short))
+      my $converted = $c->convert(substr($in, 0, $short));
+      $_ = defined($converted) ? $converted : ''
            . "#### $remain byte(s) unconvertible ####";
     }
   }
