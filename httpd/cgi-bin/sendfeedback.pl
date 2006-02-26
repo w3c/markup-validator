@@ -1,7 +1,7 @@
 #!/usr/bin/perl -T
 ##
 ## feedback generator for W3C Markup Validation Service
-# # $Id: sendfeedback.pl,v 1.4.2.1 2006-02-24 20:51:20 ville Exp $
+# # $Id: sendfeedback.pl,v 1.4.2.2 2006-02-26 11:35:30 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -76,6 +76,9 @@ our %rsrc = Config::General->new(
                                                $lang, 'error_messages.cfg'),
   )->getall();
 # Config::General workarounds for <msg 0> issues:
+# http://lists.w3.org/Archives/Public/public-qa-dev/2006Feb/0022.html
+# http://lists.w3.org/Archives/Public/public-qa-dev/2006Feb/0025.html
+# https://rt.cpan.org/Public/Bug/Display.html?id=17852
 $rsrc{msg}{0} ||=
   delete($rsrc{'msg 0'}) ||                   # < 2.31
   { original => delete($rsrc{msg}{original}), #   2.31
