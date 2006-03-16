@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>test for text/html Document lacking DOCTYPE - W09</title>
+
+</head>
+
+<body lang="en">
+<p>This test document corresponds to validator warning W09:
+<code>
+No DOCTYPE found! Attempting validation with HTML 4.01 Transitional.
+</code>
+(and parsing error 344)
+</p>
+
+</body>
+</html>
+

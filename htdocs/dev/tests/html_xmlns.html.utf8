@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.example.org">
+<head>
+<title>test for html resource using namespaces - W10</title>
+  </head>
+<body>
+<p>This test document corresponds to validator warning W10:
+<code>
+</code>
+</p>
+</body>
+
+</html>
+
