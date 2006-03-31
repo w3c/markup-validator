@@ -14,7 +14,7 @@
         yet, or you have specified a non-existent character encoding (often
         a misspelling).
       </p>
-      <p>The error was: "<TMPL_VAR NAME="fatal_transcode_errmsg">".</p>
+      <p>The error was: <TMPL_IF NAME="fatal_transcode_errmsg"><TMPL_VAR NAME="fatal_transcode_errmsg"><TMPL_ELSE>(no error message given)</TMPL_IF></p>
       <p>
         If you believe the character encoding to be valid you can submit a
         request for that character encoding (see the

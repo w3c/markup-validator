@@ -1,38 +1,41 @@
 <select name="charset" id="charset">
   <option value="(detect automatically)">(detect automatically)</option>
-  <option value="utf-8 (Unicode, worldwide)" <TMPL_IF NAME="override charset utf-8 (Unicode, worldwide)">selected="selected"</TMPL_IF>>utf-8 (Unicode, worldwide)</option>
-  <option value="utf-16 (Unicode, worldwide)" <TMPL_IF NAME="override charset utf-16 (Unicode, worldwide)">selected="selected"</TMPL_IF>>utf-16 (Unicode, worldwide)</option>
-  <option value="iso-8859-1 (Western Europe)" <TMPL_IF NAME="override charset iso-8859-1 (Western Europe)">selected="selected"</TMPL_IF>>iso-8859-1 (Western Europe)</option>
-  <option value="iso-8859-2 (Central Europe)" <TMPL_IF NAME="override charset iso-8859-2 (Central Europe)">selected="selected"</TMPL_IF>>iso-8859-2 (Central Europe)</option>
-  <option value="iso-8859-3 (Southern Europe)" <TMPL_IF NAME="override charset iso-8859-3 (Southern Europe)">selected="selected"</TMPL_IF>>iso-8859-3 (Southern Europe)</option>
-  <option value="iso-8859-4 (Baltic Rim)" <TMPL_IF NAME="override charset iso-8859-4 (Baltic Rim)">selected="selected"</TMPL_IF>>iso-8859-4 (Baltic Rim)</option>
-  <option value="iso-8859-5 (Cyrillic)" <TMPL_IF NAME="override charset iso-8859-5 (Cyrillic)">selected="selected"</TMPL_IF>>iso-8859-5 (Cyrillic)</option>
-  <option value="iso-8859-6-i (Arabic)" <TMPL_IF NAME="override charset iso-8859-6-i (Arabic)">selected="selected"</TMPL_IF>>iso-8859-6-i (Arabic)</option>
-  <option value="iso-8859-7 (Greek)" <TMPL_IF NAME="override charset iso-8859-7 (Greek)">selected="selected"</TMPL_IF>>iso-8859-7 (Greek)</option>
-  <option value="iso-8859-8-i (Hebrew)" <TMPL_IF NAME="override charset iso-8859-8-i (Hebrew)">selected="selected"</TMPL_IF>>iso-8859-8-i (Hebrew)</option>
-  <option value="iso-8859-9 (Turkish)" <TMPL_IF NAME="override charset iso-8859-9 (Turkish)">selected="selected"</TMPL_IF>>iso-8859-9 (Turkish)</option>
-  <option value="iso-8859-10 (Latin 6)" <TMPL_IF NAME="override charset iso-8859-10 (Latin 6)">selected="selected"</TMPL_IF>>iso-8859-10 (Latin 6)</option>
-  <option value="iso-8859-13 (Latin 7)" <TMPL_IF NAME="override charset iso-8859-13 (Latin 7)">selected="selected"</TMPL_IF>>iso-8859-13 (Latin 7)</option>
-  <option value="iso-8859-14 (Celtic)" <TMPL_IF NAME="override charset iso-8859-14 (Celtic)">selected="selected"</TMPL_IF>>iso-8859-14 (Celtic)</option>
-  <option value="iso-8859-15 (Latin 9)" <TMPL_IF NAME="override charset iso-8859-15 (Latin 9)">selected="selected"</TMPL_IF>>iso-8859-15 (Latin 9)</option>
-  <option value="us-ascii (basic English)" <TMPL_IF NAME="override charset us-ascii (basic English)">selected="selected"</TMPL_IF>>us-ascii (basic English)</option>
-  <option value="euc-jp (Japanese, Unix)" <TMPL_IF NAME="override charset euc-jp (Japanese, Unix)">selected="selected"</TMPL_IF>>euc-jp (Japanese, Unix)</option>
-  <option value="shift_jis (Japanese, Win/Mac)" <TMPL_IF NAME="override charset shift_jis (Japanese, Win/Mac)">selected="selected"</TMPL_IF>>shift_jis (Japanese, Win/Mac)</option>
-  <option value="iso-2022-jp (Japanese, email)" <TMPL_IF NAME="override charset iso-2022-jp (Japanese, email)">selected="selected"</TMPL_IF>>iso-2022-jp (Japanese, email)</option>
-  <option value="euc-kr (Korean)" <TMPL_IF NAME="override charset euc-kr (Korean)">selected="selected"</TMPL_IF>>euc-kr (Korean)</option>
-  <option value="gb2312 (Chinese, simplified)" <TMPL_IF NAME="override charset gb2312 (Chinese, simplified)">selected="selected"</TMPL_IF>>gb2312 (Chinese, simplified)</option>
-  <option value="gb18030 (Chinese, simplified)" <TMPL_IF NAME="override charset gb18030 (Chinese, simplified)">selected="selected"</TMPL_IF>>gb18030 (Chinese, simplified)</option>
-  <option value="big5 (Chinese, traditional)" <TMPL_IF NAME="override charset big5 (Chinese, traditional)">selected="selected"</TMPL_IF>>big5 (Chinese, traditional)</option>
-  <option value="tis-620 (Thai)" <TMPL_IF NAME="override charset tis-620 (Thai)">selected="selected"</TMPL_IF>>tis-620 (Thai)</option>
-  <option value="koi8-r (Russian)" <TMPL_IF NAME="override charset koi8-r (Russian)">selected="selected"</TMPL_IF>>koi8-r (Russian)</option>
-  <option value="koi8-u (Ukrainian)" <TMPL_IF NAME="override charset koi8-u (Ukrainian)">selected="selected"</TMPL_IF>>koi8-u (Ukrainian)</option>
-  <option value="macintosh (MacRoman)" <TMPL_IF NAME="override charset macintosh (MacRoman)">selected="selected"</TMPL_IF>>macintosh (MacRoman)</option>
-  <option value="windows-1250 (Central Europe)" <TMPL_IF NAME="override charset windows-1250 (Central Europe)">selected="selected"</TMPL_IF>>windows-1250 (Central Europe)</option>
-  <option value="windows-1251 (Cyrillic)" <TMPL_IF NAME="override charset windows-1251 (Cyrillic)">selected="selected"</TMPL_IF>>windows-1251 (Cyrillic)</option>
-  <option value="windows-1252 (Western Europe)" <TMPL_IF NAME="override charset windows-1252 (Western Europe)">selected="selected"</TMPL_IF>>windows-1252 (Western Europe)</option>
-  <option value="windows-1253 (Greek)" <TMPL_IF NAME="override charset windows-1253 (Greek)">selected="selected"</TMPL_IF>>windows-1253 (Greek)</option>
-  <option value="windows-1254 (Turkish)" <TMPL_IF NAME="override charset windows-1254 (Turkish)">selected="selected"</TMPL_IF>>windows-1254 (Turkish)</option>
-  <option value="windows-1255 (Hebrew)" <TMPL_IF NAME="override charset windows-1255 (Hebrew)">selected="selected"</TMPL_IF>>windows-1255 (Hebrew)</option>
-  <option value="windows-1256 (Arabic)" <TMPL_IF NAME="override charset windows-1256 (Arabic)">selected="selected"</TMPL_IF>>windows-1256 (Arabic)</option>
-  <option value="windows-1257 (Baltic Rim)" <TMPL_IF NAME="override charset windows-1257 (Baltic Rim)">selected="selected"</TMPL_IF>>windows-1257 (Baltic Rim)</option>
+  <option value="utf-8" <TMPL_IF NAME="override charset utf-8">selected="selected"</TMPL_IF>>utf-8 (Unicode, worldwide)</option>
+  <option value="utf-16" <TMPL_IF NAME="override charset utf-16">selected="selected"</TMPL_IF>>utf-16 (Unicode, worldwide)</option>
+  <option value="iso-8859-1" <TMPL_IF NAME="override charset iso-8859-1">selected="selected"</TMPL_IF>>iso-8859-1 (Western Europe)</option>
+  <option value="iso-8859-2" <TMPL_IF NAME="override charset iso-8859-2">selected="selected"</TMPL_IF>>iso-8859-2 (Central Europe)</option>
+  <option value="iso-8859-3" <TMPL_IF NAME="override charset iso-8859-3">selected="selected"</TMPL_IF>>iso-8859-3 (Southern Europe)</option>
+  <option value="iso-8859-4" <TMPL_IF NAME="override charset iso-8859-4">selected="selected"</TMPL_IF>>iso-8859-4 (North European)</option>
+  <option value="iso-8859-5" <TMPL_IF NAME="override charset iso-8859-5">selected="selected"</TMPL_IF>>iso-8859-5 (Cyrillic)</option>
+  <option value="iso-8859-6-i" <TMPL_IF NAME="override charset iso-8859-6-i">selected="selected"</TMPL_IF>>iso-8859-6-i (Arabic)</option>
+  <option value="iso-8859-7" <TMPL_IF NAME="override charset iso-8859-7">selected="selected"</TMPL_IF>>iso-8859-7 (Greek)</option>
+  <option value="iso-8859-8" <TMPL_IF NAME="override charset iso-8859-8">selected="selected"</TMPL_IF>>iso-8859-8 (Hebrew, visual)</option>
+  <option value="iso-8859-8-i" <TMPL_IF NAME="override charset iso-8859-8-i">selected="selected"</TMPL_IF>>iso-8859-8-i (Hebrew, logical)</option>
+  <option value="iso-8859-9" <TMPL_IF NAME="override charset iso-8859-9">selected="selected"</TMPL_IF>>iso-8859-9 (Turkish)</option>
+  <option value="iso-8859-10" <TMPL_IF NAME="override charset iso-8859-10">selected="selected"</TMPL_IF>>iso-8859-10 (Latin 6)</option>
+  <option value="iso-8859-13" <TMPL_IF NAME="override charset iso-8859-13">selected="selected"</TMPL_IF>>iso-8859-13 (Latin 7, Baltic Rim)</option>
+  <option value="iso-8859-14" <TMPL_IF NAME="override charset iso-8859-14">selected="selected"</TMPL_IF>>iso-8859-14 (Latin 8, Celtic)</option>
+  <option value="iso-8859-15" <TMPL_IF NAME="override charset iso-8859-15">selected="selected"</TMPL_IF>>iso-8859-15 (Latin 9)</option>
+  <option value="iso-8859-16" <TMPL_IF NAME="override charset iso-8859-16">selected="selected"</TMPL_IF>>iso-8859-16 (Latin 10)</option>
+  <option value="us-ascii" <TMPL_IF NAME="override charset us-ascii">selected="selected"</TMPL_IF>>us-ascii (basic English)</option>
+  <option value="euc-jp" <TMPL_IF NAME="override charset euc-jp">selected="selected"</TMPL_IF>>euc-jp (Japanese, Unix)</option>
+  <option value="shift_jis" <TMPL_IF NAME="override charset shift_jis">selected="selected"</TMPL_IF>>shift_jis (Japanese, Win/Mac)</option>
+  <option value="iso-2022-jp" <TMPL_IF NAME="override charset iso-2022-jp">selected="selected"</TMPL_IF>>iso-2022-jp (Japanese, email)</option>
+  <option value="euc-kr" <TMPL_IF NAME="override charset euc-kr">selected="selected"</TMPL_IF>>euc-kr (Korean)</option>
+  <option value="gb2312" <TMPL_IF NAME="override charset gb2312">selected="selected"</TMPL_IF>>gb2312 (Chinese, simplified)</option>
+  <option value="gb18030" <TMPL_IF NAME="override charset gb18030">selected="selected"</TMPL_IF>>gb18030 (Chinese, simplified)</option>
+  <option value="big5" <TMPL_IF NAME="override charset big5">selected="selected"</TMPL_IF>>big5 (Chinese, traditional)</option>
+  <option value="tis-620" <TMPL_IF NAME="override charset tis-620">selected="selected"</TMPL_IF>>tis-620 (Thai)</option>
+  <option value="koi8-r" <TMPL_IF NAME="override charset koi8-r">selected="selected"</TMPL_IF>>koi8-r (Russian)</option>
+  <option value="koi8-u" <TMPL_IF NAME="override charset koi8-u">selected="selected"</TMPL_IF>>koi8-u (Ukrainian)</option>
+  <option value="iso-ir-111" <TMPL_IF NAME="override charset iso-ir-111">selected="selected"</TMPL_IF>>iso-ir-111 (Cyrillic KOI-8)</option>  
+  <option value="macintosh" <TMPL_IF NAME="override charset macintosh">selected="selected"</TMPL_IF>>macintosh (MacRoman)</option>
+  <option value="windows-1250" <TMPL_IF NAME="override charset windows-1250">selected="selected"</TMPL_IF>>windows-1250 (Central Europe)</option>
+  <option value="windows-1251" <TMPL_IF NAME="override charset windows-1251">selected="selected"</TMPL_IF>>windows-1251 (Cyrillic)</option>
+  <option value="windows-1252" <TMPL_IF NAME="override charset windows-1252">selected="selected"</TMPL_IF>>windows-1252 (Western Europe)</option>
+  <option value="windows-1253" <TMPL_IF NAME="override charset windows-1253">selected="selected"</TMPL_IF>>windows-1253 (Greek)</option>
+  <option value="windows-1254" <TMPL_IF NAME="override charset windows-1254">selected="selected"</TMPL_IF>>windows-1254 (Turkish)</option>
+  <option value="windows-1255" <TMPL_IF NAME="override charset windows-1255">selected="selected"</TMPL_IF>>windows-1255 (Hebrew)</option>
+  <option value="windows-1256" <TMPL_IF NAME="override charset windows-1256">selected="selected"</TMPL_IF>>windows-1256 (Arabic)</option>
+  <option value="windows-1257" <TMPL_IF NAME="override charset windows-1257">selected="selected"</TMPL_IF>>windows-1257 (Baltic Rim)</option>
 </select>
