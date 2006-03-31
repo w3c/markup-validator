@@ -3,13 +3,18 @@
 # W3C Markup Validation Service
 # A CGI script to retrieve and validate a markup file
 #
-# Copyright 1995-2005 Gerald Oskoboiny <gerald@w3.org>
+# Copyright 1995-2006 World Wide Web Consortium, (Massachusetts                                        
+# Institute of Technology, European Research Consortium for Informatics                                  
+# and Mathematics, Keio University). All Rights Reserved.
+#
+# Originally written by Gerald Oskoboiny <gerald@w3.org>
 # for additional contributors, see http://dev.w3.org/cvsweb/validator/
+# and http://validator.w3.org/about.html#credits
 #
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.457 2005-11-02 08:12:01 ot Exp $
+# $Id: check,v 1.458 2006-03-31 06:55:03 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -175,19 +180,29 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.457 $;
+  $VERSION =  q$Revision: 1.458 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
   # Use passive FTP by default.
   $ENV{FTP_PASSIVE} = 1 unless exists($ENV{FTP_PASSIVE});
 
-  #
-  # Read friendly error message file
-  my $error_messages_list =  File::Spec->catfile($CFG->{Paths}->{Templates}, 'en_US', 'error_messages.cfg');
-  my %config_opts = (-ConfigFile => $error_messages_list);
-  my %rsrc = Config::General->new(%config_opts)->getall();
-  $RSRC = \%rsrc;
+# Read friendly error message file
+my %rsrc = Config::General->new(
+  -MergeDuplicateBlocks => 1,
+  -ConfigFile           => File::Spec->catfile($CFG->{Paths}->{Templates},
+                                               'en_US', 'error_messages.cfg'),
+  )->getall();
+# 'en_US' should be replaced by $lang for lang-neg
+# Config::General workarounds for <msg 0> issues:
+$rsrc{msg}{0} ||=
+  delete($rsrc{'msg 0'}) ||                   # < 2.31
+  { original => delete($rsrc{msg}{original}), #   2.31
+    verbose  => delete($rsrc{msg}{verbose}),
+  };
+$RSRC = \%rsrc;
+
+
 
 } # end of BEGIN block.
 
