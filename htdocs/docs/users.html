@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: users.html,v 1.22 2005-07-29 06:23:06 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-07-29 06:23:06 $"
+<!--#set var="revision" value="\$Id: users.html,v 1.23 2006-03-31 05:48:02 ot Exp $"
+--><!--#set var="date" value="\$Date: 2006-03-31 05:48:02 $"
 --><!--#set var="title" value="User Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -102,7 +102,7 @@
 	  <p>This allows you to <strong>override</strong> the DOCTYPE declaration for you
 	  document. You may use this option for test 
           purposes, but you will eventually have to serve your document with the
-          correct character encoding, or the validator will <a href="help#faq-doctype">complain</a>
+          correct DOCTYPE declaration, or the validator will <a href="help#faq-doctype">complain</a>
           about it and you document will not be valid.</p>
 	</dd>
 	<dt><a id="option-fbd" name="option-fbd"></a>Use Fallback instead of Override (Type) (<code>fbd</code>)</dt>
@@ -201,7 +201,7 @@
         In spite of our efforts,  interpreting the Markup Validator's error messages 
 	isn't quite what you'd call easy. The error messages are generated in the 
 	context of a full SGML environment which demands a somewhat higher level 
-	of technical detail then your average HTML document. We have set up a page 
+	of technical detail than your average HTML document. We have set up a page 
 	listing <a href="errors.html">errors and their explanation</a>, which should
 	help you find out what meaning lies behind the cryptic messages, and fix
 	your markup.

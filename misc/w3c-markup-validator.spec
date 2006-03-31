@@ -1,18 +1,18 @@
 # RPM spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.6 2005-10-20 06:48:53 ot Exp $
+# $Id: w3c-markup-validator.spec,v 1.7 2006-03-31 05:51:50 ot Exp $
 
 %{expand: %%define tbver %(echo %{version} | tr . _)}
 
 Name:           w3c-markup-validator
-Version:        0.7.1
+Version:        0.7.2
 Release:        1
 Summary:        W3C Markup Validator
 
 Group:          Applications/Internet
 License:        W3C Software License
 URL:            http://validator.w3.org/
-Source0:        http://validator.w3.org/validator-%{tbver}.tar.gz
-Source1:        http://validator.w3.org/sgml-lib-%{tbver}.tar.gz
+Source0:        http://validator.w3.org/dist/validator-%{tbver}.tar.gz
+Source1:        http://validator.w3.org/dist/sgml-lib-%{tbver}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -116,6 +116,10 @@ done
 
 
 %changelog
+
+* Thu Feb  9 2006 Ville Skyttä <ville.skytta at iki.fi> - 0.72-1
+- 0.7.2.
+
 * Sat Oct  8 2005 Ville Skyttä <ville.skytta at iki.fi> - 0.7.1-1
 - 0.7.1.
 

@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.54 2005-11-15 05:17:25 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-11-15 05:17:25 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.55 2006-03-31 05:48:02 ot Exp $"
+--><!--#set var="date" value="\$Date: 2006-03-31 05:48:02 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#set var="feeds" value="1"
@@ -19,7 +19,24 @@
       </p>
     </div>
     <dl id="news">
-      <dt id="t2005-10-18">2005-10-18 &mdash; 0.7.1 Release:</dt>
+      <dt id="t2006-02-20">2006-02-20 &mdash; 0.7.2 Release:</dt>
+      <dd>
+        <p>
+          Releasing version 0.7.2 of the Markup Validator, a maintenance release 
+          including minor fixes as described below:
+        </p>
+<ul>
+<li> update for compatibility with new version of Config::General module</li>
+<li> fixed the recognized root element for XHTML 1.1 plus MathML 2.0 (plus SVG)</li>
+<li> avoid Text::Wrap error with deeply nested documents</li>
+<li> documentation fixes (typos, broken link)</li>
+<li> avoid trailing comma in failed validation results if number of errors is unknown</li>
+<li> consistency fixes for character encoding selection</li>
+<li>fixed support for iso-8859-3 and iso-8859-4 encodings, added support for iso-ir-111</li>
+</ul>
+
+      </dd>
+       <dt id="t2005-10-18">2005-10-18 &mdash; 0.7.1 Release:</dt>
       <dd>
         <p>
           Releasing version 0.7.1 of the Markup Validator, a maintenance release 
