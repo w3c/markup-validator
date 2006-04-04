@@ -4,7 +4,7 @@
    Copyright 2003 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See <http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright>
  
-   $Id: docs.css,v 1.6.2.1 2005-09-25 09:31:51 ville Exp $
+   $Id: docs.css,v 1.6.2.2 2006-04-04 00:26:19 ot Exp $
 */
 
 /*
@@ -42,6 +42,10 @@ margin-right: 1em;
 .doc div#toc ol li ol {
    list-style-type: lower-alpha;
 }
+.doc div#toc ol li ol li ol{
+   list-style-type: lower-roman;
+}
+
 
 /* documentation - error explanations */
 dl#expl dt code { /* headings for an error */
