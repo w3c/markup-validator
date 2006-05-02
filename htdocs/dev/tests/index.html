@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.57 2006-03-16 01:16:09 ot Exp $"
---><!--#set var="date" value="\$Date: 2006-03-16 01:16:09 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.58 2006-05-02 04:12:04 ot Exp $"
+--><!--#set var="date" value="\$Date: 2006-05-02 04:12:04 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -10,6 +10,7 @@
 <div id="toc">
 <ol>
     <li><a href="#doctypes">Document types support</a></li>
+    <li><a href="#doctype_FPI_SI">DOCTYPEs detection, FPIs, SIs</a></li>
     <li><a href="#invalid">Docs that are probably invalid</a></li>
     <li><a href="#well-formed">Docs that should be Well Formed</a></li>
     <li><a href="#encodings">Various Encodings</a></li>
@@ -99,7 +100,13 @@
       <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml11-minimal.html;ss">validate</a> - 
       <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml11-minimal.html;ss">with v.w.o</a> - 
       <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml11-minimal.html">view</a>:
-      XHTML 1.1
+      XHTML 1.1 served as text/html (validates but should send a warning, <a href="http://www.w3.org/TR/xhtml-media-types/#summary">per</a>)
+    </li>
+    <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/application-xhtml_xml.xhtml">validate</a> - 
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/application-xhtml_xml.xhtml">with v.w.o</a> - 
+      <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/application-xhtml_xml.xhtml">view</a>:
+      XHTML 1.1 served as application/xhtml+xml
     </li>
     <li>
       <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-mathml2-fpi.html;ss">validate</a> - 
@@ -115,12 +122,7 @@
       MathML 2.0
        (minimal test document)
     </li>
-    <li>
-      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/application-xhtml_xml.xhtml">validate</a> - 
-      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/application-xhtml_xml.xhtml">with v.w.o</a> - 
-      <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/application-xhtml_xml.xhtml">view</a>:
-      XHTML 1.1 served as application/xhtml+xml
-    </li>
+
     <li>
       <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/smil10-minimal.smi">validate</a> - 
       <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/smil10-minimal.smi">with v.w.o</a> - 
@@ -174,9 +176,57 @@ All these documents should validate, without "pretty print" for the document typ
     </li>
 </ul>
 
-
-
-
+<h3 id="doctype_FPI_SI">DOCTYPEs detection, FPIs, SIs</h3>
+<ul>
+	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.html;ss">validate</a> - 
+	<a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.html;ss">with v.w.o</a> -
+	<a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.html">view</a>: 
+	XHTML, no DOCTYPE, no xmlns</a> (invalid)</li>
+	
+	<li>
+	<a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi.html;ss">validate</a>
+	<a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi.html;ss">with v.w.o</a>
+	<a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi.html">view</a>: bogus FPI #1: lowercase "doctype"
+	</li>
+	<li>
+	<a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi2.html;ss">validate</a>
+	<a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi2.html;ss">with v.w.o</a>
+	<a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi2.html">view</a>:
+	bogus FPI #2: HTML 4.01 "Strict"
+	</li>
+	<li>
+	<a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi3.xhtml;ss">validate</a>
+	<a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi3.xhtml;ss">with v.w.o</a>
+	<a href="uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi3.xhtml">view</a>: bogus FPI #3: XHTML 1.1 "Strict"
+	</li>	<li>
+	<a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi4.html;ss">validate</a>
+	<a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi4.html;ss">with v.w.o</a>
+	<a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi4.html">view</a>:
+	bogus FPI #4: HTML 4.01 "Strict" (with correct System Identifier) (validates - should send warning)
+	</li>
+	<li>
+	<a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi5.xhtml;ss">validate</a>
+	<a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi5.xhtml;ss">with v.w.o</a>
+	<a href="uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi5.xhtml">view</a>: bogus FPI #5: XHTML 1.1 "Strict"
+	(with correct System Identifier) (validates - should send warning about )
+	</li>
+		<li>
+	<a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/fpi_mismatch1.xhtml;ss">validate</a>
+	<a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/fpi_mismatch1.xhtml;ss">with v.w.o</a>
+	<a href="uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/fpi_mismatch1.xhtml">view</a>: FPI/SI mismatch 1: HTML 4.01 Strict - XHTML 1.0 Strict
+	</li>
+	<li>
+	<a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/fpi_mismatch2.xhtml;ss">validate</a>
+	<a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/fpi_mismatch2.xhtml;ss">with v.w.o</a>
+	<a href="uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/fpi_mismatch2.xhtml">view</a>: FPI/SI mismatch 2: HTML 4.01 Strict - HTML 4.01 Transitional
+	</li>
+	<li>
+	<a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.html;ss">bogus XML Decl (missing final "?")</a>
+	<a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.html;ss">bogus XML Decl (missing final "?")</a>
+	<a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.html">view</a>:
+	bogus XML Decl (missing final "?")
+	</li>
+</ul>
 
   <h3 id="invalid">Docs that are probably invalid</h3>
 
@@ -226,11 +276,7 @@ All these documents should validate, without "pretty print" for the document typ
       
       <ul>
 
-	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.html;ss">XHTML, no DOCTYPE, no xmlns</a> (invalid)</li>
-	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi.html;ss">bogus FPI #1: lowercase "doctype".</a></li>
-	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi2.html;ss">bogus FPI #2: HTML 4.01 "Strict"</a></li>
-	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi3.html;ss">bogus FPI #3: XHTML 1.1 "Strict"</a></li>
-	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.html;ss">bogus XML Decl (missing final "?")</a></li>
+
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-blank-1st-line.html;ss">XHTML1, blank first line</a>
 	  (<a href="http://lists.w3.org/Archives/Public/www-validator/2000JanMar/0144.html">should be marked as invalid</a>)</li>
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-bogus-element.html;ss">XHTML1, bogus element</a></li>
