@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.37.2.5 2006-02-25 09:45:51 ville Exp $"
---><!--#set var="date" value="\$Date: 2006-02-25 09:45:51 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.37.2.6 2006-05-17 06:01:44 ot Exp $"
+--><!--#set var="date" value="\$Date: 2006-05-17 06:01:44 $"
 --><!--#set var="title" value="Source Code Availability for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -130,23 +130,18 @@
             A Debian package is available, courtesy of Fr&eacute;d&eacute;ric
             Sch&uuml;tz. 
           </p>
-          <ul>
-            <li>
-            If you are using the Debian Testing or Unstable distribution, the
-            package is already included in the offical archive and you can
-            directly use the <kbd>apt-get</kbd> command if your
-            /etc/apt/sources.list file is correctly configured.
-            </li>
-            <li>
-            If you are using the stable (woody) Debian distribution, add the 
-            following line in the /etc/apt/sources.list file.
-            <pre><kbd>deb http://www.mathgen.ch/debian/woody ./</kbd></pre>
-            </li>
-          </ul>
           <p>
-            Running the command <kbd>apt-get install w3c-markup-validator</kbd> 
-            as root will then install all the packages needed.
+            Starting with Debian 3.1 ("Sarge"), the package and all its
+            dependencies are included in the official Debian distribution, and
+            can be installed by running the command <kbd>apt-get install
+            w3c-markup-validator</kbd> as root.
           </p>
+          <p>
+            Debian Sarge includes version 0.6.7 of the validator; the Debian
+            Testing and Unstable distributions usually include the latest
+            version.
+          </p>
+
 
         <h4><a id="CVS" name="CVS"></a>CVS repository</h4>
           <p>
