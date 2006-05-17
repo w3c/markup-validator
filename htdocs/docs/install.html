@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.15 2005-10-20 06:46:50 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-10-20 06:46:50 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.16 2006-05-17 06:36:15 ot Exp $"
+--><!--#set var="date" value="\$Date: 2006-05-17 06:36:15 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -74,9 +74,9 @@
         SGML parser -- that does all the hard work --, Perl (version 5.6.0
         or newer) and several Perl modules used by the "check" CGI script.
       </p>
-     <h5>SGML Parser: OpenSP</h5>
+     <h5 id="install-prereq-sp">OpenSP, the SGML (and XML) parser</h5>
       <p>
-        The SGML parser we're currently using is <code>OpenSP 1.5</code>,
+        The SGML parser we're currently using is <code>OpenSP 1.5.2</code>,
         which can be found on the
         <a href="http://openjade.sourceforge.net/">OpenJade home page</a>.
         Do <em>not</em> try to run the Validator with an earlier than 1.5
@@ -85,7 +85,7 @@
         Just use OpenSP 1.5 or later.
       </p>
 
-      <h5>Perl Modules</h5>
+      <h5  id="install-prereq-perl">Perl Modules</h5>
       <p>
         The canonical list of Perl modules we use can be found in the source
         for the "check" CGI script. There is a bunch of lines that of the form
@@ -94,7 +94,7 @@
             title="Comprehensive Perl Archive Network">CPAN</acronym></a>
         (minimum versions in parenthesis after the name). The following
         list was complete when CVS spit out:
-        <code>$Date: 2005-10-20 06:46:50 $</code>. <tt>:-)</tt>
+        <code>$Date: 2006-05-17 06:36:15 $</code>. <tt>:-)</tt>
       </p>
      <p>
        One easy - and strongly recommended - way to take care of all these
@@ -103,10 +103,33 @@
        from CPAN.  See the <a href="http://search.cpan.org/dist/Bundle-W3C-Validator/lib/Bundle/W3C/Validator.pm">documentation included with it</a>
        for more details.
      </p>
-
+     
+     <p>The only current exception is SGML::Parser::OpenSP, for which at this point in time the development version
+     of the validator requires a not-yet-released version, which can be downloaded and installed 
+     from <a href="http://sourceforge.net/projects/spo">SourceForge</a>. First make sure to have 
+     <a href="#install-prereq-sp">OpenSP</a> installed, then get 
+     <a href="http://sourceforge.net/cvs/?group_id=106431">the latest revision of the source code for SGML::Parser::OpenSP</a> from CVS, 
+     and follow these installation steps, as root:</p>
+     <ul>
+       <li>perl Makefile.PL</li>
+       <li>make</li>
+       <li>make test</li>
+       <li>make install</li>
+     </ul>
+     
+     <p>This should give you a working SGML::Parser::OpenSP. Just then proceed to install the other required perl modules through CPAN.</p>
+            
      <h5>List of required Perl module distributions</h5>
-
+     
+	 <p>Below are the perl modules required to run the Markup Validator. This list is informative, 
+	 you do not need to install them individually if you follow the <a href="#install-prereq-perl">CPAN instructions</a>
+	 above.</p>
+	 
       <dl>
+        <dt><a href="http://search.cpan.org/dist/SGML-Parser-OpenSP/">SGML::Parser::OpenSP</a></dt>
+        <dd>
+          Interface to the <a href="#install-prereq-sp">OpenSP parser</a>.
+        </dd>
         <dt><a href="http://search.cpan.org/dist/CGI.pm/">CGI.pm</a> &gt;= 2.81</dt>
         <dd>
           The all-singing, all-dancing,
@@ -156,6 +179,7 @@
         <dd>
           Library to handle URIs and escaping special characters in them.
         </dd>
+
       </dl>
 
     <h4><a id="install-components" name="install-components"></a>Install the various necessary components:</h4>
