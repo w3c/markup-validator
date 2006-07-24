@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: help.html,v 1.30 2005-07-26 23:15:04 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-07-26 23:15:04 $"
+<!--#set var="revision" value="\$Id: help.html,v 1.31 2006-07-24 07:06:49 ot Exp $"
+--><!--#set var="date" value="\$Date: 2006-07-24 07:06:49 $"
 --><!--#set var="title" value="Help for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -421,32 +421,24 @@ mailing-list.</p>
 
       <p>An HTML document should be served along with its character encoding.</p>
 
-      <p> Specifying a character encoding is normally done in the web server
-      configuration file or administration program. The <a
-        href="http://www.w3.org/"><abbr
-          title="World Wide Web Consortium">W3C</abbr></a> <a
-        href="http://www.w3.org/International/"><abbr
-          title="Internationalization">I18N</abbr> Activity</a> has collected
-        <a href="http://www.w3.org/International/O-HTTP-charset"
-           title="A Few Tips On How To Specify The Character Encoding">a few
-          tips on how to do this</a> in popular web server implementations.
-</p>
-    <p>
-      <a href="http://www.iana.org/"><abbr
-      title="Internet Assigned Numbers Authority">IANA</abbr></a>
-      maintains the list of <a
-      href="http://www.iana.org/assignments/character-sets">official
-      names for character sets</a> and the <abbr
-        title="Web Design Group">WDG</abbr> has some <a
-        href="http://www.htmlhelp.com/tools/validator/charset.html">information
-        to help you correctly specify the character encoding</a>.
-    </p>
+      <p>Specifying a character encoding is typically done by the web server
+	configuration, by the scripts that put together pages, and inside the
+	document itself. <a href="http://www.iana.org/"><abbr title="Internet Assigned Numbers Authority">IANA</abbr></a> 
+    maintains the list of
+	<a href="http://www.iana.org/assignments/character-sets">official names for character
+	encodings</a> (called charsets in this context). You can choose from a number
+	of encodings, though we recommend UTF-8 as particularly useful.</p>
+
+	<p>The W3C <abbr title="Internationalization">I18N</abbr> Activity has collected a 
+		<a href="http://www.w3.org/International/O-charset">few tips on
+	how to do this</a>.</p>
+	
     <p>
       To quickly check whether the document would validate after addressing
       the missing character encoding information, you can use the "Encoding"
       form control (accesskey "2") earlier in the page to force an encoding
       override to take effect. "iso-8859-1" (Western Europe and North America)
-      and "utf-8" (Universal, but not commonly used in legacy documents) are
+      and "utf-8" (Universal, and more commonly used in recent documents) are
       common encodings if you are not sure what encoding to choose.
     </p>
 
