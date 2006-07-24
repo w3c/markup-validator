@@ -90,19 +90,18 @@
       able to reliably validate this document. Sorry. Please make sure you
       specify the character encoding in use.
     </p>
-    <p class="note">
-      Specifying a character encoding is normally done in the web server
-      configuration file or administration program. The <a
-        href="http://www.w3.org/"><abbr
-          title="World Wide Web Consortium">W3C</abbr></a> <a
-        href="http://www.w3.org/International/"><abbr
-          title="Internationalization">I18N</abbr> Activity</a> has collected
-        <a href="http://www.w3.org/International/O-HTTP-charset"
-           title="A Few Tips On How To Specify The Character Encoding">a few
-          tips on how to do this</a> in popular web server implementations.
-    </p>
-    <TMPL_INCLUDE NAME="iana_charset_blurb.tmpl">
-    <p>
+      <p>Specifying a character encoding is typically done by the web server
+	configuration, by the scripts that put together pages, and inside the
+	document itself. <a href="http://www.iana.org/"><abbr title="Internet Assigned Numbers Authority">IANA</abbr></a> 
+    maintains the list of
+	<a href="http://www.iana.org/assignments/character-sets">official names for character
+	encodings</a> (called charsets in this context). You can choose from a number
+	of encodings, though we recommend UTF-8 as particularly useful.</p>
+
+	<p>The W3C <abbr title="Internationalization">I18N</abbr> Activity has collected a 
+		<a href="http://www.w3.org/International/O-charset">few tips on
+	how to do this</a>.</p>
+	<p>
       To quickly check whether the document would validate after addressing
       the missing character encoding information, you can use the "Encoding"
       form control earlier in the page to force an encoding
