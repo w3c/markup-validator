@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.458 2006-03-31 06:55:03 ot Exp $
+# $Id: check,v 1.459 2006-08-01 06:10:52 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.458 $;
+  $VERSION =  q$Revision: 1.459 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -301,6 +301,13 @@ my $XMLT = HTML::Template->new(
 my $SOAPT = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                           $lang, 'soap_output.tmpl'),
+  die_on_bad_params => FALSE,
+  loop_context_vars => TRUE,
+  cache             => TRUE,
+);
+my $UCNT = HTML::Template->new(
+  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
+                                          $lang, 'ucn_output.tmpl'),
   die_on_bad_params => FALSE,
   loop_context_vars => TRUE,
   cache             => TRUE,
@@ -669,6 +676,8 @@ if ($File->{Opt}->{Output} eq 'xml') {
   $template = $EARLT;
 } elsif ($File->{Opt}->{Output} eq 'n3') {
   $template = $N3T;
+} elsif ($File->{Opt}->{Output} eq 'ucn') {
+  $template = $UCNT;
 } elsif ($File->{Opt}->{Output} eq 'soap12') {
   if ($File->{'Error Flagged'}) {
     $template = $SOAPFT;

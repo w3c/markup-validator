@@ -1,0 +1,117 @@
+Content-Type: application/xml; charset=UTF-8
+X-W3C-Validator-Status: <TMPL_VAR NAME="valid_status">
+X-W3C-Validator-Errors: <TMPL_VAR NAME="number_of_errors">
+
+<?xml version="1.0" encoding="UTF-8"?>
+<observationresponse xmlns="http://www.w3.org/unicorn/observationresponse"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.w3.org/unicorn/observationresponse file:/home/jean/observer-response.xsd">
+    <uri><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></uri>
+    <checkedby><TMPL_VAR NAME="cfg_home_page" ESCAPE="HTML"></checkedby>
+    <passed><TMPL_IF NAME="VALID">true<TMPL_ELSE>false</TMPL_IF></passed>
+    <result>
+      <errors>
+	<errorcount><TMPL_VAR NAME="valid_errors_num"></errorcount>
+	<errorlist>
+	  <uri><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></uri>
+	  <TMPL_LOOP NAME="file_errors"><TMPL_IF NAME="err_type_err">
+	    <error>
+	      <line><TMPL_VAR NAME="line"></line>
+	      <column><TMPL_VAR NAME="char"></column>
+	      <message><TMPL_VAR NAME="msg" ESCAPE="HTML"></message>
+	      <longmessage><TMPL_IF NAME="expl"><TMPL_VAR NAME="expl"></TMPL_IF></longmessage>
+	    </error>
+	  </TMPL_IF></TMPL_LOOP>
+	</errorlist>
+      </errors>
+    <warnings>
+      <warningcount><TMPL_VAR NAME="valid_warnings_num"></warningcount>
+      <warninglist>
+	<uri><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></uri>
+        <TMPL_IF NAME="have_warnings"><TMPL_INCLUDE NAME="soap_warnings.tmpl"></TMPL_IF>
+	<TMPL_LOOP NAME="file_errors"><TMPL_IF NAME="err_type_warn">
+	  <warning>
+	    <line><TMPL_VAR NAME="line"></line>
+	    <column><TMPL_VAR NAME="char"></column>
+	    <message><TMPL_VAR NAME="msg" ESCAPE="HTML"></message>
+	    <longmessage><TMPL_IF NAME="expl">""<TMPL_VAR NAME="expl"></TMPL_IF></longmessage>
+	  </warning>
+	</TMPL_IF></TMPL_LOOP>
+      </warninglist>
+    </warnings>
+  <TMPL_IF NAME="VALID">
+    <informations>
+      <infocount>1</infocount>
+      <infolist>
+	<uri><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></uri>
+	<info>
+	  <message>This Page Is Valid <TMPL_VAR NAME="file_version" ESCAPE="HTML">!</message>
+	  <longmessage>
+	    <TMPL_IF NAME="have_badge">
+		<img src="<TMPL_VAR NAME="badge_uri" ESCAPE="HTML">" alt="Valid <TMPL_VAR NAME="file_version" ESCAPE="HTML">"/>
+	    </TMPL_IF>
+	  </longmessage>
+	  <longmessage>
+	    <TMPL_IF NAME="is_upload">
+	      The uploaded document &quot;<TMPL_VAR NAME="file_uri" ESCAPE="HTML">&quot;
+	      <TMPL_ELSE>
+		The document located at
+		<a href="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">"><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></a>
+	      </TMPL_IF>
+	      <TMPL_IF NAME="is_tentative">
+		was checked and found to be &lt;em&gt;tentatively&lt;/em&gt; valid <TMPL_VAR NAME="file_version" ESCAPE="HTML">.
+		This means that with the use of some fallback or override mechanism, 
+		we successfully performed a formal validation using an SGML or XML 
+		Parser. In other words, the document would validate as 
+		<TMPL_VAR NAME="file_version" ESCAPE="HTML"> if you changed the markup
+		to match the changes we have performed automatically, but 
+		<strong>it will not be valid until you make these changes</strong>.
+		<TMPL_ELSE>
+		  was checked and found to be valid
+		  <TMPL_VAR NAME="file_version" ESCAPE="HTML">.  This means that the
+		  resource in question identified itself as
+		  &quot;<TMPL_VAR NAME="file_version" ESCAPE="HTML">&quot; and that we successfully
+		  performed a formal validation using an SGML or XML Parser (depending on
+		  the markup language used).
+		</TMPL_IF>
+	  </longmessage>
+	  <longmessage>
+		To show your readers that you have taken the care to create an
+		interoperable Web page, you may display this icon on any page
+		that validates. Here is the HTML you could use to add this icon
+		to your Web page:
+	    </longmessage>
+	    <longmessage>
+	    <TMPL_IF NAME="have_badge">
+	      <code>
+&lt;p&gt;
+  &lt;a href="<TMPL_VAR NAME="cfg_home_page" ESCAPE="HTML">check?uri=referer"&gt;
+    &lt;img src=&quot;<TMPL_VAR NAME="badge_uri" ESCAPE="HTML">&quot;
+            <TMPL_IF NAME="badge_alt">alt=&quot;<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">&quot;</TMPL_IF> <TMPL_IF NAME="badge_h">height=&quot;<TMPL_VAR NAME="badge_h">&quot;</TMPL_IF> <TMPL_IF NAME="badge_w">width=&quot;<TMPL_VAR NAME="badge_w">&quot;</TMPL_IF><TMPL_VAR NAME="badge_tagc">&gt;
+ &lt;/a&gt;
+&lt;/p&gt;
+  	        </code>
+	      </TMPL_IF>
+	      </longmessage>
+	      <longmessage>
+	      <TMPL_IF NAME="have_badge">
+		If you like, you can download a copy of this image (in
+		<a href="<TMPL_VAR NAME="badge_uri" ESCAPE="HTML">.png">PNG</a> or
+		<a href="<TMPL_VAR NAME="badge_uri" ESCAPE="HTML">.gif">GIF</a>
+		format) to keep in your local web directory, and change the HTML fragment
+		above to reference your local image rather than the one on this server.
+	    </TMPL_IF>
+	    <TMPL_UNLESS NAME="is_upload">		
+		If you would like to create a link to this page (i.e., this
+		validation result) to make it easier to revalidate this page in the
+		future or to allow others to validate your page, the URI is
+		<a href="<TMPL_VAR NAME="file_thispage" ESCAPE="HTML">"><TMPL_VAR NAME="file_thispage" ESCAPE="HTML"></a>
+		(or you can just add the current page to your bookmarks or hotlist).		
+	    </TMPL_UNLESS>
+	  </longmessage>
+	</info>
+      </infolist>
+    </informations>
+  </TMPL_IF>
+  </result>
+</observationresponse>
