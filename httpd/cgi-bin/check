@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.459 2006-08-01 06:10:52 ot Exp $
+# $Id: check,v 1.460 2006-08-05 09:42:21 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.459 $;
+  $VERSION =  q$Revision: 1.460 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1051,8 +1051,7 @@ sub parse_content_type {
   my $url          = shift;
   my $charset      = '';
 
-  # @@FIXME @param now unused
-  my ($ct, @param) = split /\s*;\s*/, lc $Content_Type;
+  my ($ct) = lc($Content_Type) =~ /^\s*([^\s;]*)/g;
 
   my $mode = $CFG->{MIME}->{$ct} || $ct;
 
