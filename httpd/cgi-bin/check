@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.432.2.11 2006-02-26 11:35:30 ville Exp $
+# $Id: check,v 1.432.2.12 2006-08-05 09:43:15 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -202,7 +202,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.432.2.11 $;
+  $VERSION =  q$Revision: 1.432.2.12 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1136,6 +1136,7 @@ sub parse_content_type {
   my $mode         = '';
 
   my ($ct, @param) = split /\s*;\s*/, lc $Content_Type;
+  $ct =~ s/^\s+//; $ct =~ s/\s+$//;
 
   $mode = $CFG->{MIME}->{$ct} || $ct;
 
