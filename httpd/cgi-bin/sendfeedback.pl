@@ -1,7 +1,7 @@
 #!/usr/bin/perl -T
 ##
 ## feedback generator for W3C Markup Validation Service
-# # $Id: sendfeedback.pl,v 1.4 2005-02-25 00:18:51 ot Exp $
+# # $Id: sendfeedback.pl,v 1.5 2006-08-15 21:49:29 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -70,11 +70,21 @@ our $q = new CGI;
 our $lang = 'en_US'; # @@@ TODO: conneg
 
 # Read error message + explanations file
-our $error_messages_list =  File::Spec->catfile($CFG->{Paths}->{Templates}, $lang, 'error_messages.cfg');
-our %config_opts = (-ConfigFile => $error_messages_list);
-our %rsrc = Config::General->new(%config_opts)->getall();
+our %rsrc = Config::General->new(
+  -MergeDuplicateBlocks => 1,
+  -ConfigFile           => File::Spec->catfile($CFG->{Paths}->{Templates},
+                                               $lang, 'error_messages.cfg'),
+  )->getall();
+# Config::General workarounds for <msg 0> issues:
+# http://lists.w3.org/Archives/Public/public-qa-dev/2006Feb/0022.html
+# http://lists.w3.org/Archives/Public/public-qa-dev/2006Feb/0025.html
+# https://rt.cpan.org/Public/Bug/Display.html?id=17852
+$rsrc{msg}{0} ||=
+  delete($rsrc{'msg 0'}) ||                   # < 2.31
+  { original => delete($rsrc{msg}{original}), #   2.31
+    verbose  => delete($rsrc{msg}{verbose}),
+  };
 $RSRC = \%rsrc;
-
 
 our $T = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates}, $lang, 'feedback.tmpl'),
