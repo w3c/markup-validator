@@ -3,8 +3,8 @@
 # W3C Markup Validation Service
 # A CGI script to retrieve and validate a markup file
 #
-# Copyright 1995-2006 World Wide Web Consortium, (Massachusetts                                        
-# Institute of Technology, European Research Consortium for Informatics                                  
+# Copyright 1995-2006 World Wide Web Consortium, (Massachusetts
+# Institute of Technology, European Research Consortium for Informatics
 # and Mathematics, Keio University). All Rights Reserved.
 #
 # Originally written by Gerald Oskoboiny <gerald@w3.org>
@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.461 2006-08-15 21:49:29 ville Exp $
+# $Id: check,v 1.462 2006-08-15 21:51:08 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.461 $;
+  $VERSION =  q$Revision: 1.462 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -790,7 +790,7 @@ sub prep_template ($$) {
 sub fin_template ($$) {
   my $File = shift;
   my $T    = shift;
-  
+
   if (! $File->{Doctype} and ($File->{Version} eq 'unknown' or $File->{Version} eq 'SGML' or (!$File->{Version}))) {
 
     # @@TODO@@ we should try falling back on other version
@@ -847,7 +847,7 @@ sub report_valid {
   } elsif (defined $File->{Tentative}) {
     $T->param(is_tentative => TRUE);
   }
-  
+
   my $thispage = self_url_file($File);
   $T->param(file_thispage => $thispage);
 }
@@ -1540,16 +1540,16 @@ sub set_parse_mode {
   my $CFG = shift;
   my $fpi = $File->{DOCTYPE};
   my $mode = $CFG->{Types}->{$fpi}->{'Parse Mode'};
-  
+
   if (!exists $CFG->{Types}->{$fpi})
   {
     &add_warning('W08', {W08_mime => $File->{ContentType}})
       if $File->{Mode} eq 'TBD';
     return;
   }
-  
+
   $mode = 'TBD' unless $mode eq 'SGML' or $mode eq 'XML';
-  
+
   if ($File->{Mode} ne 'TBD' and $mode ne $File->{Mode}) {
     &add_warning('W07', {
       W07_mime => $File->{ContentType},
@@ -1558,7 +1558,7 @@ sub set_parse_mode {
     });
     return;
   }
-  
+
   # $File->{Mode} eq 'TBD'
   if ($mode eq 'SGML' or $mode eq 'XML') {
     $File->{Mode} = $mode
@@ -1803,7 +1803,7 @@ sub self_url_file {
   $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
   $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
   $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
-  
+
   # These were not added by report_valid; perhaps they should be?
   # $thispage .= ';verbose=1' if $File->{Opt}->{'Verbose'};
   # $thispage .= ';No200=1'   if $File->{Opt}->{'No200'};

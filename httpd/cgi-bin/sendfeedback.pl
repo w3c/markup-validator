@@ -1,7 +1,7 @@
 #!/usr/bin/perl -T
 ##
 ## feedback generator for W3C Markup Validation Service
-# # $Id: sendfeedback.pl,v 1.5 2006-08-15 21:49:29 ville Exp $
+# # $Id: sendfeedback.pl,v 1.6 2006-08-15 21:51:08 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -138,7 +138,7 @@ sub error_choices {
 sub de_template_explanation {
 # takes the error message template, and replace "template keywords" with real life keywords
     my $explanation = shift;
-    if ($explanation){ 
+    if ($explanation){
         $explanation =~ s/\%1/X/;
         $explanation =~ s/\%2/Y/;
         $explanation =~ s/\%3/Z/;
