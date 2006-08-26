@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.462 2006-08-15 21:51:08 ville Exp $
+# $Id: check,v 1.463 2006-08-26 13:09:11 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.462 $;
+  $VERSION =  q$Revision: 1.463 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -609,6 +609,8 @@ sub parse (\$) {
   $T->param(opt_debug => $DEBUG);
   $T->param(debug =>
             [
+             map({name => $_, value => $ENV{$_}},
+               qw(no_proxy http_proxy https_proxy ftp_proxy FTP_PASSIVE)),
              { name => 'Content-Encoding',  value => $File->{ContentEnc} },
              { name => 'Transfer-Encoding', value => $File->{TransferEnc} },
             ],
