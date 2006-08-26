@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.432.2.13 2006-08-26 13:05:25 ville Exp $
+# $Id: check,v 1.432.2.14 2006-08-26 13:07:58 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -202,7 +202,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.432.2.13 $;
+  $VERSION =  q$Revision: 1.432.2.14 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -621,7 +621,7 @@ sub parse (\$) {
              {name => 'Command',           value => "@cmd"},
              map({name => $_, value => $ENV{$_}},
                qw(SP_CHARSET_FIXED SP_ENCODING SP_BCTF SGML_SEARCH_PATH
-                  http_proxy https_proxy ftp_proxy FTP_PASSIVE)),
+                  no_proxy http_proxy https_proxy ftp_proxy FTP_PASSIVE)),
              {name => 'Content-Encoding',  value => $File->{ContentEnc}},
              {name => 'Transfer-Encoding', value => $File->{TransferEnc}},
             ],
