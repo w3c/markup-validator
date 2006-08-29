@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<testsuite>
+  <type title="doctypes support">
+	<test>
+		<url>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html20.html</url>
+		<description>Testing validation of sample document with doctype: HTML 2.0</description>
+		<result valid="true">
+		    <errors>0</errors>
+		    <warnings>0</warnings>
+		</result>
+	</test>
+	<test>
+		<url>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html20-strict.html</url>
+		<description>Testing validation of sample document with doctype: HTML 2.0 Strict</description>
+		<result valid="true">
+		    <errors>0</errors>
+		    <warnings>0</warnings>
+		</result>
+	</test>
+	<test>
+		<url>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html40-strict.html</url>
+		<description>Testing validation of sample document with doctype: HTML 4.0 Strict</description>
+		<result valid="true">
+		    <errors>0</errors>
+		    <warnings>0</warnings>
+		</result>
+	</test>
+	<test>
+		<url>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html40-transitional.html</url>
+		<description>Testing validation of sample document with doctype: HTML 4.0 Transitional</description>
+		<result valid="true">
+		    <errors>0</errors>
+		    <warnings>0</warnings>
+		</result>
+	</test>
+	<test>
+		<url>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html40-frameset.html</url>
+		<description>Testing validation of sample document with doctype: HTML 4.0 Frameset</description>
+		<result valid="true">
+		    <errors>0</errors>
+		    <warnings>0</warnings>
+		</result>
+	</test>
+	<test>
+		<url>http://www.w3.org/TR/1999/PR-html40-19990824/</url>
+		<description>Testing validation of sample document with doctype: HTML 4.01 Transitional - (from the HTML 4.01 PR)</description>
+		<result valid="true">
+		    <errors>0</errors>
+		    <warnings>0</warnings>
+		</result>
+	</test>
+	<test>
+		<url>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/iso-html.html</url>
+		<description>Testing validation of sample document with doctype:  ISO-HTML (aka ISO/IEC 15445:2000)</description>
+		<result valid="true">
+		    <errors>0</errors>
+		    <warnings>0</warnings>
+		</result>
+	</test>
+	<test>
+		<url>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict-minimal.html</url>
+		<description>Testing validation of sample document with doctype: XHTML 1.0 Strict (from XHTML Spec)</description>
+		<result valid="true">
+		    <errors>0</errors>
+		    <warnings>0</warnings>
+		</result>
+	</test>
+	<test>
+		<url>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict.html</url>
+		<description>Testing validation of sample document with doctype: XHTML 1.0 Strict</description>
+		<result valid="true">
+		    <errors>0</errors>
+		    <warnings>0</warnings>
+		</result>
+	</test>
+	<test>
+		<url>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-basic10.html</url>
+		<description>Testing validation of sample document with doctype: XHTML Basic 1.0</description>
+		<result valid="true">
+		    <errors>0</errors>
+		    <warnings>0</warnings>
+		</result>
+	</test>
+	<test>
+		<url>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml11-minimal.html</url>
+		<description>Testing validation of sample document with doctype: XHTML 1.1 served as text/html (validates but should send a warning, see &lt;a href=&quot;http://www.w3.org/TR/xhtml-media-types/#summary&quot;&gt; http://www.w3.org/TR/xhtml-media-types/#summary&lt;/a&gt;)</description>
+		<result valid="true">
+		    <errors>0</errors>
+		    <warnings>1</warnings>
+		</result>
+	</test>
+	<test>
+		<url>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/application-xhtml_xml.xhtml</url>
+		<description>Testing validation of sample document with doctype: XHTML 1.1 served as application/xhtml+xml</description>
+		<result valid="true">
+		    <errors>0</errors>
+		    <warnings>0</warnings>
+		</result>
+	</test>
+	<test>
+		<url>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-mathml2-fpi.html</url>
+		<description>Testing validation of sample document with doctype: XHTML/MathML2 (with FPI)</description>
+		<result valid="true">
+		    <errors>0</errors>
+		    <warnings>0</warnings>
+		</result>
+	</test>
+	<test>
+		<url>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/mathml2.html</url>
+		<description>Testing validation of sample document with doctype: MathML 2.0 (minimal test document)</description>
+		<result valid="true">
+		    <errors>0</errors>
+		    <warnings>0</warnings>
+		</result>
+	</test>
+	<test>
+		<url>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/smil10-minimal.smi</url>
+		<description>Testing validation of sample document with doctype: SMIL 1.0 </description>
+		<result valid="true">
+		    <errors>0</errors>
+		    <warnings>0</warnings>
+		</result>
+	</test>
+	<test>
+		<url>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/smil20-profile-doctype.smi</url>
+		<description>Testing validation of sample document with doctype: SMIL 2.0</description>
+		<result valid="true">
+		    <errors>0</errors>
+		    <warnings>0</warnings>
+		</result>
+	</test>
+	<test>
+		<url>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/http://www.w3.org/TR/XHTMLplusMathMLplusSVG/sample.xhtml</url>
+		<description>Testing validation of sample document with doctype: XHTML + MathML + SVG (from the 9 August 2002 WD)</description>
+		<result valid="true">
+		    <errors>0</errors>
+		    <warnings>0</warnings>
+		</result>
+	</test>
+
+  </type>
+</testsuite>
