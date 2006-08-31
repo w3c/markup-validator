@@ -1,36 +1,34 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.40 2006-03-31 05:48:02 ot Exp $"
---><!--#set var="date" value="\$Date: 2006-03-31 05:48:02 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.41 2006-08-31 07:30:29 ot Exp $"
+--><!--#set var="date" value="\$Date: 2006-08-31 07:30:29 $"
 --><!--#set var="title" value="Source Code Availability for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
 <div class="doc">
-<h2>Source code availability<br />for the W3C Markup Validator</h2>
-<h3 id="TableOfContents">Table of Contents</h3>
+  <h2>Source code availability<br />for the W3C Markup Validator</h2>
+  <h3 id="TableOfContents">Table of Contents</h3>
 
-    <div id="toc">
-      <ul>
+  <div id="toc">
+    <ul>
       <li><a href="#getting">Retrieving and browsing the Code</a>
        <ul>	
 	<li><a href="#browse">Browsing the code</a></li>
 	<li><a href="#tarball">Download tarballs</a></li>
 	<li><a href="#rpm">Fedora/Red Hat RPM package</a></li>
-	<li><a href="#suse">SuSE Linux (OSS) RPM package</a></li>
+          <li><a href="#suse">openSUSE/SUSE Linux RPM package</a></li>
 	<li><a href="#deb">Debian GNU/Linux package</a></li>
 	<li><a href="#CVS">CVS repository</a></li>
        </ul>
       </li>
       <li><a href="#using">Using the code</a></li>
-      </ul>
-    </div>
+    </ul>
+  </div>
 
-
+  <h3><a name="getting" id="getting"></a>Retrieving and browsing the Code</h3>
       <h3><a name="getting" id="getting"></a>Retrieving and browsing the Code</h3>
 
     <p><a id="skip" name="skip"></a>
-      The source code for the <a
-        href="../"><acronym title="World Wide Web Consortium">W3C</acronym>
-	Markup Validation Service</a> is available under the
-      terms of the <a
+    The source code for the <a href="../"><acronym title="World Wide Web Consortium">W3C</acronym>
+    Markup Validation Service</a> is available under the terms of the <a
         href="http://www.w3.org/Consortium/Legal/copyright-software"><acronym
           title="World Wide Web Consortium">W3C</acronym>
 	Software License</a>. Source tarball of the latest production
@@ -40,6 +38,20 @@
     </p>
 
           <h4><a id="browse" name="browse"></a>Browsing the code</h4>
+    If you just want to glance at the code, or see its revision
+    history, you can
+    <a href="http://dev.w3.org/cvsweb/validator/">browse it on
+    the web</a>.
+  </p>
+  <p>
+    The most interesting files are currently
+    <a href="http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/check">a
+    CGI script called "check"</a> that does pretty much everything,
+    and possibly also <a
+    href="http://dev.w3.org/cvsweb/validator/httpd/conf/httpd.conf">the
+    httpd.conf configuration file snippet for Apache</a>.
+    Select the topmost revision numbers on these
+    pages to see the most recent revision of each file.
 	  <p>
             If you just want to glance at the code, or see its revision
             history, you can
@@ -98,55 +110,60 @@
             <a href="http://fedoraproject.org/wiki/Extras/UsingExtras">documentation</a>
             for information about configuring these tools.
           </p>
-        <h4><a id="suse" name="suse"></a>SuSE Linux (OSS) RPM package</h4>
+  <h4><a id="suse" name="suse"></a>openSUSE/SUSE Linux RPM package</h4>
           <p>
-            RPM packages for SuSE Linux (OSS) are available, courtesy of Sierk
+    openSUSE/SUSE Linux RPM packages are available, courtesy of Sierk
             Bornemann, at sierkbornemann.de,
-            &lt;<a href="http://sierkbornemann.de/pub/tools/w3c-markup-validator/">http://sierkbornemann.de/pub/tools/w3c-markup-validator/</a>&gt;.
+    &lt;<a href="http://sierkbornemann.de/pub/tools/w3c-markup-validator/">http://sierkbornemann.de/pub/tools/w3c-markup-validator/</a>&gt;.
+    Additionally, you can also get these packages from the new
+    <a href="http://software.opensuse.org/">software repository of the openSUSE build service</a> at
+    &lt;<a href="http://software.opensuse.org/download/validators/">http://software.opensuse.org/download/validators/</a>&gt;
+    or one of its mirrors.
           </p>
           <p>
-            The RPM packages from sierkbornemann.de are optimized for use in
-            a local network (recommended running in a VirtualHost) for home
+    The RPM packages, maintained by Sierk Bornemann, are optimized for use in
+    a local network (running in a VirtualHost is recommended) for home
             office or web agency use.
           </p>
           <p>
             Note that the Validator RPMs have several dependencies, you'll
             have to satisfy at least the same <a href="#rpmdeps">RPM
             dependencies</a> as listed above for Fedora/Red Hat.
-            You can get these RPMs from SuSE (other dependencies are included
-            in the SuSE Linux (OSS) distribution) or partly from
+    You can get these RPMs from openSUSE (other dependencies are included
+    in the openSUSE distribution) or partly from
             sierkbornemann.de.
           </p>
           <p>
             In addition, each of these may have further dependencies that must
             be satisfied. All the necessary RPMs are either included in
-            the SuSE Linux distribution(s) or are available from
-            <a href="http://sierkbornemann.de/pub/tools/w3c-markup-validator/perl-modules/">sierkbornemann.de</a>.
+    the openSUSE distribution or are additionally available at
+    <a href="http://sierkbornemann.de/pub/tools/w3c-markup-validator/perl-modules/">sierkbornemann.de</a> or at
+    &lt;<a href="http://software.opensuse.org/download/validators/">http://software.opensuse.org/download/validators/</a>&gt;
+    or one of its mirrors.
             Use of an automated package management tool to install the
-            packages, such as YaST, yum or up2date is recommended.
+    packages, such as <em>YaST</em>, <em>rug</em>, <em>y2pmsh</em>, <em>smart</em>,
+    <em>apt4rpm</em> or <em>yum</em> is recommended.
+    See the openSUSE
+    <a href="http://en.opensuse.org/Category:Package_Management">documentation</a>
+    for information about configuring these tools.
           </p>
         <h4><a name="deb" id="deb"></a>Debian GNU/Linux package</h4>
           <p>
             A Debian package is available, courtesy of Fr&eacute;d&eacute;ric
             Sch&uuml;tz. 
           </p>
-          <ul>
-            <li>
-            If you are using the Debian Testing or Unstable distribution, the
-            package is already included in the offical archive and you can
-            directly use the <kbd>apt-get</kbd> command if your
-            /etc/apt/sources.list file is correctly configured.
-            </li>
-            <li>
-            If you are using the stable (woody) Debian distribution, add the 
-            following line in the /etc/apt/sources.list file.
-            <pre><kbd>deb http://www.mathgen.ch/debian/woody ./</kbd></pre>
-            </li>
-          </ul>
           <p>
-            Running the command <kbd>apt-get install w3c-markup-validator</kbd> 
-            as root will then install all the packages needed.
+            Starting with Debian 3.1 ("Sarge"), the package and all its
+            dependencies are included in the official Debian distribution, and
+            can be installed by running the command <kbd>apt-get install
+            w3c-markup-validator</kbd> as root.
           </p>
+          <p>
+            Debian Sarge includes version 0.6.7 of the validator; the Debian
+            Testing and Unstable distributions usually include the latest
+            version.
+          </p>
+
 
         <h4><a id="CVS" name="CVS"></a>CVS repository</h4>
           <p>
@@ -166,23 +183,14 @@
     bash$ <kbd>cvs login</kbd>
     (Logging in to anonymous@dev.w3.org)
     CVS password: <kbd>anonymous</kbd>
-    bash$ <kbd>cvs get -r validator-0_7_1-release validator</kbd>
+    bash$ <kbd>cvs get -r validator-0_8_0-release validator</kbd>
     cvs server: Updating validator
     cvs server: Updating validator/htdocs
     U validator/htdocs/about.html
     ...
           </pre>
-          <p>
-            This will get you the last release version. use <kbd>cvs get validator</kbd>
-            to retrieve the <code>HEAD</code>. Be aware that constant development is made
-            on this latest version, and
-            the trunk is more or less guaranteed to be in a state of greater
-            or lesser breakage at any given point in time. <em>Approach with
-            caution!</em>
-          </p>
 
   <h3><a id="using" name="using"></a>Using the code</h3>
-
      <p>
       The purpose of making the source code available is partly to allow
       others to set up mirrors of the service (either publicly or within
@@ -190,8 +198,7 @@
       on making the service better! If you are interested in helping with 
       the development, we suggest you  first <a href="../docs/install.html">install</a>
       the code and <a href="../docs/devel.html">read our instructions for developers</a>.
-    </p>
-
+  </p>
 
 </div>
 <!--#include virtual="../footer.html" -->
