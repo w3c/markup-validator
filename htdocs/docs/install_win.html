@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install_win.html,v 1.3.2.2 2005-10-07 02:39:35 ot Exp $" -->
-<!--#set var="date" value="\$Date: 2005-10-07 02:39:35 $" -->
+<!--#set var="revision" value="\$Id: install_win.html,v 1.3.2.3 2006-09-25 16:58:39 dtibbe Exp $" -->
+<!--#set var="date" value="\$Date: 2006-09-25 16:58:39 $" -->
 <!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service (Windows, Apache)" -->
 <!--#set var="relroot" value="../" -->
 <!--#include virtual="../header.html" -->
@@ -13,11 +13,7 @@
     <li><a href="#needed-programs">Needed programs and other prerequisites</a></li>
     <li><a href="#directory-structure">Directory Structure</a></li>
     <li><a href="#install-programs">Installation of the Programs</a></li>
-    <li><a href="#modules">Integration of the Perl-Modules</a>
-      <ul>
-        <li><a href="#modules-local">Integration from a local repository</a></li>
-        <li><a href="#modules-remote">Integration from a remote repository</a></li>
-      </ul></li>
+    <li><a href="#modules">Integration of the Perl-Modules</a></li>
     <li><a href="#config-apache">Configuration of the Apache Web server</a></li>
     <li><a href="#adaption-of-hosts">Adaptation of the hosts-File</a></li>
     <li><a href="#config-validator">Configuration of the Validator</a></li>
@@ -73,7 +69,6 @@ At <a href="http://ppm.activestate.com/">Active State</a>,
   For the validator, the following modules are required:</p>
 <ul>
   <li>Config-General</li>
-  <li>File-Spec</li>
   <li>HTML-Template</li>
   <li>Net-IP</li>
   <li>Set-IntSpan</li>
@@ -122,60 +117,20 @@ own setup.</p>
   if downloaded, my Perl-module collection.</p>
 
 <h3 id="modules">Adding the Perl-Modules</h3>
-<p>Now comes a slightly more difficult step: installing the Perl Modules.</p>
-<p>ppm3 (the &quot;Programmer's
-  Package Manager&quot;), which you downloaded and installed with ActivePerl, should be used.</p>
-<p> 
-  You can start ppm3 by clicking the
-  <kbd>Start</kbd>-Button, selecting <kbd>Run...</kbd>, typing <kbd>ppm3</kbd> and pressing return.
-  The program will look like this:</p>
-<p style="text-align: center"><img src="<!--#echo var="relroot" -->images/ppm_1.png" alt="PPM after the startup" /></p>
-<p>When typing <kbd>rep</kbd>, you will get a list of all (in)active repositories. These are
-  locations for modules out of which you can download and install the needed
-  ones.</p>
-<p>You can add the modules in two ways: In the first case, the modules can be
-  found local (e.g. extracted from the zip-archive) or in the second case they will
-  be downloaded from a server (e.g. the ActiveState-Server). In the following,
-  the first way will be discussed, but is is quite similar to the second one.
-  So it is recommended in any case to read this section.</p>
-  
-<h4 id="modules-local">Integration from a local repository</h4>
-<p>When ppm3 is started, it has to be told that such a repository can be found
-  on the local hard disk, precise at <code>C:\www\ppm</code>. Therefore,
-  <kbd>rep add local C:\www\ppm</kbd> is typed. Afterwards, a repository
-  called local exists.<br />
-  Since you want ppm to search packages only in local, all the others have
-  to be disabled. When having a look at the output of the <kbd>rep</kbd>-command, you
-  will find numbers in front of each repository. Typing <kbd>rep off 1</kbd> will
-  disable the repository identified by the number 1. Do this for
-  all repositories except the local one. When having finished, you might
-  see a screen like this:</p>
-<p style="text-align: center"><img src="<!--#echo var="relroot" -->images/ppm_2.png" alt="PPM displaying the available repositories" /></p>
-<p>Now, ppm3 is ready for the installation of the modules. When typing <kbd>s *</kbd>,
-  local is searched and all five modules will be found. Typing <kbd>install 1</kbd> will
-  install the modules identified by the number 1. You have to repeat this for
-  all modules (by typing their numbers instead, of course). The result should be
-  similar to this:</p>
-<p style="text-align: center"><img src="<!--#echo var="relroot" -->images/ppm_3.png" alt="PPM after having installed the modules" /></p>
-<p>If you do not get a &quot;Successfully installed...&quot;-message as the
-  last output of such an installation, something has failed and you
-  should try again.<br />
-  After having done that, you can leave ppm3 by typing <kbd>quit</kbd>. The
-  modules are ready to use now. All programs are installed right now,
-  but they do not work together yet. You have to do some configuration
-  changes.</p>
-
-<h4 id="modules-remote">Integration from a remote repository</h4>
-<p>The installation from a remote repository is quite the same as from a local one.
-  First, you have to check which repositories are active, but you might not need
-  to change anything. After that, the procedure is the same: By typing <kbd>s *</kbd>
-  you will get a list of all available modules again. But it is much longer,
-  so restrict your search. Instead of typing <kbd>s *</kbd>, type e.g 
-  <kbd>s Conf</kbd> for retrieving a list of all modules beginning 
-  with Conf. Download and install all needed modules in this way
-  (again by typing <kbd>install 5</kbd> for the 5th
-  result of your search). When getting different versions of a module,
-  the newest might be the best choice.</p>
+<p>Since Perl 5.8.8 build 817.91 PPM has a <acronym title="Graphical User Interface">GUI</acronym>.
+  It is quite easy to use, if you do have any problems have a look at its documentation.</p>
+<p>You can add the modules from the downloaded package or directly from the web. If you want
+   to install them from a local repository, you have to add it first (if you don't want to do so,
+   just skip this step).</p>
+<p>That can be done within in the preferences dialogue (Edit -&gt; Preferences -&gt;
+  Repositories). Click the Folder-Icon, select C:\www\ppm and name the repository
+  &quot;Local&quot;, for example. Click &quot;Add&quot; and then &quot;OK&quot;.</p>
+<p>When you type the first letters of the desired package, the long list is getting
+  shorter and only matching packages are shown. Select the one you want to install,
+  select &quot;Install...&quot; from the context menu. When you have done that for
+  all packages, click the little green arrow in the to of the window.</p>
+<p>In the little status window on the bottom you will see the progress and success
+  of each installation. Exit PPM when all packages have been installed.</p>
   
 <h3 id="config-apache">Configuration of the Apache Web server</h3>
 <p>The first file to edit is the <code>httpd.conf</code> located at 
@@ -228,6 +183,15 @@ NameVirtualHost 127.0.0.2:80
     &lt;/Directory&gt;
     
 &lt;/VirtualHost&gt;
+</pre>
+<p>It may be that the <code>httpd.conf</code> is splitted into more than one
+  file. The other files will be located in the <code>C:\www\Apache2\conf\extra</code>
+  folder. If there is a file named <code>httpd-vhosts.conf</code> edit this one and
+  make sure that it will be included in the <code>httpd.con</code> (there must be
+  a line</p>
+<pre>
+# Local access to the Apache HTTP Server Manual
+Include conf/extra/httpd-manual.conf
 </pre>
 <p>The meaning of all these lines will not be discussed here. Who is
   interested in their sense can have a look to the manual or in one
@@ -330,7 +294,7 @@ Parser = C:/www/opensp/onsgmls.exe
 #
 # Main Configuration File for the W3C Markup Validation Service.
 #
-# $Id: install_win.html,v 1.3.2.2 2005-10-07 02:39:35 ot Exp $
+# $Id: install_win.html,v 1.3.2.3 2006-09-25 16:58:39 dtibbe Exp $
 #
 # See 'perldoc Config::General' for the syntax, and be aware that the
 # 'SplitPolicy' is 'equalsign', ie. keys and values are separated by '\s*=\s*',
@@ -359,7 +323,7 @@ Parser = C:/www/opensp/onsgmls.exe
     &lt;SGML&gt;
         #
         # The SGML Library Path.
-        Library = $Base/htdocs/sgml-lib
+        Library = C:/www/sgml-lib
         
         #
         # The SGML Parser to use. Defaults to /usr/bin/onsgmls.
@@ -491,30 +455,6 @@ eval {
   my %config_opts = (
      -ConfigFile =&gt; ('C:/www/validator/htdocs/config/validator.conf'),
 </pre>     
-<p>Later in the script, the command line parameters for OpenSP are
-  defined:</p>
-<pre>
-# Note: if you feel the urge to remove -R from here, please understand that
-# doing so opens a potential security hole. Don't do that; instead just
-# make sure you're running OpenSP 1.5 or later.
-my @spopt = qw(
-               -R
-               -wvalid
-               -wnon-sgml-char-ref
-               -wno-duplicate
-              );
-</pre>
-<p>The option <code>-R</code> has to be deleted, so that there remains</p>              
-<pre>
-# Note: if you feel the urge to remove -R from here, please understand that
-# doing so opens a potential security hole. Don't do that; instead just
-# make sure you're running OpenSP 1.5 or later.
-my @spopt = qw(
-               -wvalid
-               -wnon-sgml-char-ref
-               -wno-duplicate
-              );
-</pre>
 <p>After saving the script, you can use it at http://validator.example.org/
   as you know it from http://validator.w3.org/.</p>
 <p>That is it, your own validator is working.</p>
@@ -534,7 +474,29 @@ BEGIN failed--compilation aborted at C:/www/validator/httpd/cgi-bin/check line 4
 <p>Windows XP with Service Pack 2 installed might have problems with the
   loop back address 127.0.0.2. The Problem and its solution are 
   described at <a href="http://support.microsoft.com/default.aspx?kbid=884020">http://support.microsoft.com/default.aspx?kbid=884020</a>.</p>
-<p>If you do have any further questions or suggestions to improve this guide,
+<p>In some cases temporary files are needed by the check-skript. To locate the path for temporary
+  files, File::Spec->tmpdir() is called. That function returns, depending on the OS,
+  paths that could be used for such files. The script appends an <code>validator</code>,
+  so that a so called subdirectory in the proposed directory will be created.
+  Normally, your root directory will be proposed to use, so that all temporary
+  files will be created in <code>C:\validator</code>.<br /> If you get an error like</p>
+<pre>
+Thu Sep 21 15:30:00 2006] [error] [client 127.0.0.2] [Sat Sep 23 17:21:00 2006] check: HTML::Template->new() : can't mkdir \\\\validator (file_cache => 1): Invalid argument at C:/www/validator/httpd/cgi-bin/check line 280,
+referer: http://validator.example.org/
+</pre>
+<p>the script is not able to create that directory or to write to it. So
+  you have to verify that the user with whose permissons the apache is running is
+  allowed to do that (in most cases that will be &quot;System&quot;).<br />
+  If you want to relocate that folder, change the line</p>
+<pre>
+    file_cache_dir => File::Spec->catdir(File::Spec->tmpdir(), 'validator'),
+</pre>
+<p>to</p>
+<pre>
+    file_cache_dir => File::Spec->catdir('C:/temp', 'validator'),
+</pre>
+<p>for example. In that case, <code>C:/temp/validator</code> will be used instead.</p>
+  <p>If you do have any further questions or suggestions to improve this guide,
  you can use our <a href="../feedback.html">feedback</a> channels.</p>
 </div>
 </div>
