@@ -87,8 +87,8 @@
 
   <p>Once you have checked that your suggestion has not been given yet, you can send your message. To write an efficient message:</p>
   <ul>
-    <li><strong>Add a meaningful subject</strong>: summarize your feedback in a handful of words;</li>
-    <li>If our system added [VE][XX] at the beginning of the mail subject, keep it. 
+    <li><strong>Add a meaningful subject line</strong>: summarize your feedback in a handful of words;</li>
+    <li>If our system added <TMPL_IF NAME="errmsg_id">[VE][<TMPL_VAR NAME="errmsg_id">]<TMPL_ELSE>[VE][XX]</TMPL_IF> at the beginning of the mail subject, keep it. 
     Otherwise, please precise which error message you are sending feedback about;</li>
     <li><strong>Give a URL</strong> whenever possible: If your feedback comes from your experience validating a page, knowing what page it was will help us diagnose issues much quicker. 
      <TMPL_IF NAME="uri">In your case, that URL should be: <em><TMPL_VAR NAME="uri" ESCAPE="HTML"></em></TMPL_IF></li>
@@ -96,7 +96,7 @@
   </ul>
     
   <p>Once you have checked all the criteria above, 
-    <a href="mailto:www-validator@w3.org?Subject=<TMPL_IF NAME="errmsg_id">[VE][<TMPL_VAR NAME="errmsg_id">]</TMPL_IF>%20Error%20Message%20Feedback&amp;body=Validating%20<TMPL_IF NAME="uri"><TMPL_VAR NAME="uri" ESCAPE="HTML">%0D%0A</TMPL_IF><TMPL_IF NAME="errmsg_id">Error%20[<TMPL_VAR NAME="errmsg_id" ESCAPE="HTML">]:%20%22<TMPL_VAR NAME="explanation" ESCAPE="HTML">%22</TMPL_IF>%0D%0A%0D%0A[%20Add%20your%20message/question%20here.%0D%0A%20%20Follow%20the%20instructions%20at%0D%0Ahttp%3A%2F%2Fvalidator.w3.org%2Ffeedback.html%23errormsg%20]">send your message to the www-validator public mailing-list</a>.
+    <a href="mailto:www-validator@w3.org?Subject=<TMPL_IF NAME="errmsg_id">[VE][<TMPL_VAR NAME="errmsg_id">]</TMPL_IF>%20Add%20Subject%20Here&amp;body=%0D%0A<TMPL_IF NAME="uri">Validating%20<TMPL_VAR NAME="uri" ESCAPE="HTML">%0D%0A</TMPL_IF><TMPL_IF NAME="errmsg_id">Error%20[<TMPL_VAR NAME="errmsg_id" ESCAPE="HTML">]:%20%22<TMPL_VAR NAME="explanation" ESCAPE="HTML">%22</TMPL_IF>%0D%0AFeedback%20Instructions:%0D%0A%20%20Follow%20the%20instructions%20at%0D%0Ahttp%3A%2F%2Fvalidator.w3.org%2Ffeedback.html%23errormsg%20%0D%0A%0D%0A<TMPL_UNLESS NAME="uri">NOTE:%20Whenever%20possible%2C%20give%20the%20address%20of%20the%20document%20you%20were%20checking.</TMPL_UNLESS>">send your message to the www-validator public mailing-list</a>.
    </p>
    
 <h3 id="mailinglist">Discuss and participate</h3>
