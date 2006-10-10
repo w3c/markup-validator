@@ -60,6 +60,10 @@
       <p>If you think the error messages in the Markup Validator's result pages could be improved, or are not comprehensible, 
       you can send questions and suggestions to our mailing-list.</p>
 
+    <p>If you do not understand an error while validating a page, or if you need help on validation, <strong>read the FAQ</strong> and help 
+	(see the section <a href="needhelp">Finding help on validation</a>) and <strong>search the list archives</strong> for existing mail threads on the topic
+	<strong>before sending any message to the mailing-list</strong>.</p>
+
   <TMPL_IF NAME="errmsg_id">
     <p>Judging from the link you followed, you probably want to send feedback on error message [<TMPL_VAR NAME="errmsg_id" ESCAPE="HTML">]: "<TMPL_VAR NAME="explanation" ESCAPE="HTML">".</p> 
   </TMPL_IF>    
@@ -90,13 +94,14 @@
     <li><strong>Add a meaningful subject line</strong>: summarize your feedback in a handful of words;</li>
     <li>If our system added <TMPL_IF NAME="errmsg_id">[VE][<TMPL_VAR NAME="errmsg_id">]<TMPL_ELSE>[VE][XX]</TMPL_IF> at the beginning of the mail subject, keep it. 
     Otherwise, please precise which error message you are sending feedback about;</li>
-    <li><strong>Give a URL</strong> whenever possible: If your feedback comes from your experience validating a page, knowing what page it was will help us diagnose issues much quicker. 
-     <TMPL_IF NAME="uri">In your case, that URL should be: <em><TMPL_VAR NAME="uri" ESCAPE="HTML"></em></TMPL_IF></li>
-    <li>Explain your suggestion, or question, in a clear and informative manner.</li>
+    <li><strong>Give some context</strong>. Generally speaking, this means <strong>give the URL</strong> of the page you were trying to validate.
+    The more context you give, the easier it will be for others to understand your problem, question or feedback.
+     <TMPL_IF NAME="uri">In your case, you should probably mention the URL: <em><TMPL_VAR NAME="uri" ESCAPE="HTML"></em></TMPL_IF></li>
+    <li><strong>What is your feedback?</strong>. Explain your suggestion, or question, in a clear and informative manner. Be precise and thorough.</li>
   </ul>
     
   <p>Once you have checked all the criteria above, 
-    <a href="mailto:www-validator@w3.org?Subject=<TMPL_IF NAME="errmsg_id">[VE][<TMPL_VAR NAME="errmsg_id">]</TMPL_IF>%20Add%20Subject%20Here&amp;body=%0D%0A<TMPL_IF NAME="uri">Validating%20<TMPL_VAR NAME="uri" ESCAPE="HTML">%0D%0A</TMPL_IF><TMPL_IF NAME="errmsg_id">Error%20[<TMPL_VAR NAME="errmsg_id" ESCAPE="HTML">]:%20%22<TMPL_VAR NAME="explanation" ESCAPE="HTML">%22</TMPL_IF>%0D%0AFeedback%20Instructions:%0D%0A%20%20Follow%20the%20instructions%20at%0D%0Ahttp%3A%2F%2Fvalidator.w3.org%2Ffeedback.html%23errormsg%20%0D%0A%0D%0A<TMPL_UNLESS NAME="uri">NOTE:%20Whenever%20possible%2C%20give%20the%20address%20of%20the%20document%20you%20were%20checking.</TMPL_UNLESS>">send your message to the www-validator public mailing-list</a>.
+    <a href="mailto:www-validator@w3.org?Subject=<TMPL_IF NAME="errmsg_id">[VE][<TMPL_VAR NAME="errmsg_id">]</TMPL_IF>%20Add%20Subject%20Here&amp;body=%0D%0A<TMPL_IF NAME="uri">Validating%20<TMPL_VAR NAME="uri" ESCAPE="HTML">%0D%0A</TMPL_IF><TMPL_IF NAME="errmsg_id">Error%20[<TMPL_VAR NAME="errmsg_id" ESCAPE="HTML">]:%20%22<TMPL_VAR NAME="explanation" ESCAPE="HTML">%22</TMPL_IF>%0D%0A<TMPL_UNLESS NAME="uri">NOTE:%20Whenever%20possible%2C%20give%20the%20address%20of%20the%20document%20you%20were%20checking.</TMPL_UNLESS>">send your message to the www-validator public mailing-list</a>.
    </p>
    
 <h3 id="mailinglist">Discuss and participate</h3>
