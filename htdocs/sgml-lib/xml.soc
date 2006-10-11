@@ -53,6 +53,11 @@ PUBLIC "-//W3C//DTD XHTML Basic 1.0//EN"
 PUBLIC "-//W3C//ENTITIES XHTML Basic 1.0 Document Model 1.0//EN"
        "REC-xhtml-basic-20001219/xhtml-basic10-model-1.mod"
 
+PUBLIC "-//W3C//DTD XHTML-Print 1.0//EN"
+       "REC-xhtml-print-20060920/xhtml-print10.dtd"
+PUBLIC "-//W3C//ENTITIES XHTML-Print 1.0 Document Model 1.0//EN"
+       "REC-xhtml-print-20060920/xhtml-print10-model-1.mod"
+
 
 -- XHTML + MathML + SVG --
 
@@ -67,7 +72,7 @@ PUBLIC "-//W3C//DTD SMIL 1.0//EN"       "REC-smil-19980615/smil10.dtd"
 PUBLIC "-//W3C//DTD SMIL 2.0//EN"       "REC-smil20-20050107/SMIL20.dtd"
 PUBLIC "-//W3C//DTD SMIL 2.0 Basic//EN" "REC-smil20-20050107/SMIL20Basic.dtd"
 
--- Framework utilities ---
+-- Framework utilities --
 PUBLIC "-//W3C//ENTITIES SMIL 2.0 Modular Framework 1.0//EN"
        "REC-smil20-20050107/smil-framework-1.mod"
 PUBLIC "-//W3C//ENTITIES SMIL 2.0 Datatypes 1.0//EN"
@@ -79,7 +84,7 @@ PUBLIC "-//W3C//ENTITIES SMIL 2.0 Common Attributes 1.0//EN"
 PUBLIC "-//W3C//ENTITIES SMIL 2.0 Document Model 1.0//EN"
        "REC-smil20-20050107/smil-model-1.mod"
 
--- SMIL 2.0 elements from section modules ---
+-- SMIL 2.0 elements from section modules --
 PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Document Structure//EN"
        "REC-smil20-20050107/SMIL-struct.mod"
 PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Animation//EN"
