@@ -1,0 +1,54 @@
+Content-Type: application/rdf+xml; charset=UTF-8
+X-W3C-Validator-Status: <TMPL_VAR NAME="valid_status">
+X-W3C-Validator-Errors: <TMPL_VAR NAME="number_of_errors">
+
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns="http://www.w3.org/2001/03/earl/1.0-test#"
+  xmlns:val="http://validator.w3.org/this_will_change/do_not_rely_on_it!">
+
+  <Assertor rdf:about="http://validator.w3.org/">
+    <name>W3 Validator</name>
+    <contactInfo rdf:resource="http://validator.w3.org/about.html"/>
+    <testMode rdf:resource="http://www.w3.org/2001/03/earl/1.00#Auto" />
+
+<TMPL_IF NAME="VALID">
+  <asserts>
+   <Assertion>
+    <subject rdf:resource="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">" />
+    <result rdf:resource="http://www.w3.org/2001/03/earl/1.00#passes" />
+    <testCase rdf:resource="http://www.w3.org/MarkUp/" />
+    <note>Valid!</note>
+   </Assertion>
+  </asserts>
+<TMPL_ELSE>
+
+  <asserts>
+   <Assertion rdf:ID="result">
+    <subject rdf:resource="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">" />
+    <result rdf:resource="http://www.w3.org/2001/03/earl/1.00#fails" />
+    <testCase rdf:resource="http://www.w3.org/MarkUp/" />
+    <note>Invalid!</note>
+   </Assertion>
+  </asserts>
+
+<TMPL_LOOP NAME="file_errors">
+    <asserts>
+      <Assertion rdf:ID="err<TMPL_VAR NAME="__counter__" ESCAPE="HTML">">
+        <subject rdf:parseType="Resource">
+          <reprOf rdf:resource="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">"/>
+          <val:line><TMPL_VAR NAME="line" ESCAPE="HTML"></val:line>
+          <val:column><TMPL_VAR NAME="char" ESCAPE="HTML"></val:column>
+        </subject>
+        <result rdf:resource="http://www.w3.org/2003/03/earl/1.00#fails" />
+        <testCase rdf:resource="http://www.w3.org/Markup/" />
+        <note><TMPL_VAR NAME="msg" ESCAPE="HTML"></note>
+      </Assertion>
+    </asserts>
+</TMPL_LOOP>
+</TMPL_IF>
+
+  </Assertor>
+</rdf:RDF>
+
