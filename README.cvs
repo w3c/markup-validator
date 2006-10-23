@@ -33,7 +33,7 @@ Alternatively, you can get the latest released version, v0.7.2, via CVS:</p>
     bash$ <kbd>cvs login</kbd>
     (Logging in to anonymous@dev.w3.org)
     CVS password: <kbd>anonymous</kbd>
-    bash$ <kbd>cvs get -r validator-0_7_2-release validator</kbd>
+    bash$ <kbd>cvs get -r validator-0_7_3-release validator</kbd>
     cvs server: Updating validator
     cvs server: Updating validator/htdocs
     U validator/htdocs/about.html
