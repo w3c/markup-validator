@@ -9,7 +9,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.432.2.17 2006-10-18 06:22:31 ot Exp $
+# $Id: check,v 1.432.2.18 2006-10-23 05:14:46 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -202,7 +202,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.432.2.17 $;
+  $VERSION =  q$Revision: 1.432.2.18 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1450,6 +1450,12 @@ sub parse_errors ($$) {
       $err->{char} = $l;
     }
     $err->{num}  = $errors[4] || '';
+    
+    # the following is necessary for openSP 1.5.2+, 
+    # which seems to have introduced a change in error messagenumbering
+    # syntax appears to be session_id.error_id - We keep only the latter part
+    $err->{num}  =~ s/(.*)\.//;
+    
     $err->{type} = $errors[5] || '';
     if ($err->{type} eq 'E' or $err->{type} eq 'X' or $err->{type} eq 'Q') {
       $err->{msg}  = join ':', @errors[6 .. $#errors];
