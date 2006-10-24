@@ -1,8 +1,7 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.55 2006-03-31 05:48:02 ot Exp $"
---><!--#set var="date" value="\$Date: 2006-03-31 05:48:02 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.56 2006-10-24 06:43:23 ot Exp $"
+--><!--#set var="date" value="\$Date: 2006-10-24 06:43:23 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
---><!--#set var="feeds" value="1"
 --><!--#include virtual="header.html" -->
   <div class="doc"><a name="skip" id="skip"></a>
     <h2>News for the W3C Markup Validator</h2>
@@ -19,6 +18,27 @@
       </p>
     </div>
     <dl id="news">
+      <dt id="t2006-10-23">2006-10-23 &mdash; 0.7.3 Release:</dt>
+      <dd>
+        <p>Releasing version 0.7.3 of the W3C Markup Validator,
+            a maintenance release including fixes, updates, and includes an 
+            experimental API to interface the validator with other programs and services.</p>
+        <p>Changes include:</p>
+        <ul>
+            <li>A new (experimental) <a href="docs/api.html">Web Services API</a> </li>
+            <li>The proprietary (and experimental) XML output format is deprecated</li>
+            <li>New Document type supported: XHTML-Print</li>
+            <li>New Character Encoding supported ISO-8859-11 (Thai)</li>
+            <li>Usability fix: better error messages for documents with no character encoding
+                declared, and for which the encoding fallback fails</li>
+            <li>HTTP Fix: Be more lenient about whitespace and linefeeds in Content-Type</li>
+            <li>Usability Fix: Adding the possibility of Doctype Override for SVG Document Types</li>
+            <li>Compatibility Fix for OpenSP 1.5.2</li>
+            <li>documentation updates and improvements</li>
+            <li>Improved Feedback mechanisms</li>
+        </ul>
+      </dd>
+      
       <dt id="t2006-02-20">2006-02-20 &mdash; 0.7.2 Release:</dt>
       <dd>
         <p>

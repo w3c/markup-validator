@@ -4,7 +4,7 @@
    Copyright 2003 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See <http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright>
  
-   $Id: docs.css,v 1.8 2005-11-10 06:59:13 ot Exp $
+   $Id: docs.css,v 1.9 2006-10-24 06:43:23 ot Exp $
 */
 
 /*
@@ -42,6 +42,10 @@ margin-right: 1em;
 .doc div#toc ol li ol {
    list-style-type: lower-alpha;
 }
+.doc div#toc ol li ol li ol{
+   list-style-type: lower-roman;
+}
+
 
 /* documentation - error explanations */
 dl#expl dt code { /* headings for an error */
@@ -90,8 +94,21 @@ dl#expl dt {
   font-style: italic;
 }
 
+/* reference tables */
 
-table.refdoc {border: 1px solid #888;  }
-table.refdoc tr {}
-table.refdoc th { border: 1px solid #ccc; background-color: #eee; padding: .4em; text-align: left}
-table.refdoc td {border: 1px solid #ccc; text-align: left; padding: .4em;}
+.doc table {
+	border-collapse: collapse;
+	border-right: 1px solid #ccc;
+}
+.doc table td, .doc table th{
+	border-top: 0px solid #ddd;
+	border-bottom: 1px solid #ccc;
+	border-left: 1px solid #eee;
+	padding: 6px;
+	border-collapse: collapse;
+}
+.doc table th {
+	background-color: #eee;
+	color: #11111A;
+	border-right: 1px solid #ccc;
+}

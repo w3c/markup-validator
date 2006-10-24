@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: api.html,v 1.3 2006-02-23 15:45:05 ot Exp $"
---><!--#set var="date" value="\$Date: 2006-02-23 15:45:05 $"
+<!--#set var="revision" value="\$Id: api.html,v 1.4 2006-10-24 06:43:24 ot Exp $"
+--><!--#set var="date" value="\$Date: 2006-10-24 06:43:24 $"
 --><!--#set var="title" value="Documentation of the Programmatic Interface (API) to The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -7,6 +7,13 @@
 <div class="doc">
 <h2>Markup Validator Web Service API<br />
 SOAP 1.2 validation interface documentation</h2>
+
+<p>Interface applications with the Markup Validator through its <strong>experimental</strong> API. </p>
+<p><strong>Note</strong>: Please be considerate in using this shared, free resource. 
+	Consider <a href="install.html">Installing your own instance of the validator</a>
+	for smooth and fast operation. Excessive use of the W3C Validation Service
+	will be blocked.</p>
+
 
 <h3 id="TableOfContents">Table of Contents</h3>
 
@@ -31,7 +38,7 @@ SOAP 1.2 validation interface documentation</h2>
 <p>If you want to use W3c's public validation server, use the parameters below
  in conjunction with the following base URI:<br />
 <kbd>http://validator.w3.org/check</kbd> <br />
-(replace with the address of your own server if you want to call a private instance of the validator.</p>
+(replace with the address of your own server if you want to call a private instance of the validator)</p>
 
 <p><strong>Note</strong>: If you wish to call the validator programmatically for a batch of documents,
 please make sure that your script will <code>sleep</code> for <strong>at least 1 second</strong> 
@@ -208,9 +215,9 @@ xmlns:m=&quot;http://www.w3.org/2005/10/markup-validator&quot;&gt;
 <p><strong>Note</strong>: <code>warnings</code>, <code>warningcount</code>, 
 <code>warninglist</code> and <code>warning</code> are similar to, respectively,
 <code><a href="#soap12_errors">errors</a></code>, 
-<code><a href="soap12_errorcount">errorcount</a></code>, 
-<code><a href="soap12_errorlist">errorlist</a></code> and 
-<code><a href="soap12_error">error</a></code>.
+<code><a href="#soap12_errorcount">errorcount</a></code>, 
+<code><a href="#soap12_errorlist">errorlist</a></code> and 
+<code><a href="#soap12_error">error</a></code>.
 </p>
 <h4 id="soap12message">SOAP1.2 atomic message (error or warning) format reference</h4>
 <p>As seen as the example above, the children of the <code><a href="soap12_error">error</a></code>

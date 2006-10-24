@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: users.html,v 1.23 2006-03-31 05:48:02 ot Exp $"
---><!--#set var="date" value="\$Date: 2006-03-31 05:48:02 $"
+<!--#set var="revision" value="\$Id: users.html,v 1.24 2006-10-24 06:43:24 ot Exp $"
+--><!--#set var="date" value="\$Date: 2006-10-24 06:43:24 $"
 --><!--#set var="title" value="User Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -230,117 +230,22 @@
         </p>
         <p class="shout" id="api-warning">
 	  <strong>These options are experimental!</strong>
-	  The API and output format is subject to change without notice and
-	  may well be removed or disabled at any time. They are provided now
-	  to garner public feedback to determine how best to support this
-	  functionality in the future. One particularly likely option being
-	  considered is removing these features altogether in favor of a
-	  full-blown SOAP interface. <em>You have been warned!</em>
+	  The API and output formats are still subject to change without notice and
+	  may well be removed or disabled at any time. <em>You have been warned!</em>
 	</p>
         <dl>
-          <dt id="output-earl">EARL/RDF (<code>earl</code>)</dt>
-          <dd>Produces output in the EARL RDF syntax.</dd>
-	  <dt id="output-n3">Notation3 (<code>n3</code>)</dt>
-	  <dd>Produces output in the Notation3 RDF syntax</dd>
+      <dt id="output-soap12">Web Service API (<em>NEW</em> in version 0.7.3)</dt>
+      <dd>Using the SOAP1.2 language over HTTP, this defines a web service with an output similar to the API for
+	  the W3C CSS validator and Feed Validator. The <a href="api">Full documentation</a> for this API is available.
+	  Can be called by using parameter <code>output=soap12</code></dd>
+      <dt id="output-earl">EARL/RDF</dt>
+      <dd>Produces output in the EARL RDF syntax.
+	  		Can be called by using parameter <code>output=earl</code>.</dd>
+	  <dt id="output-n3">Notation3 </dt>
+	  <dd>Produces output in the Notation3 RDF syntax. 
+		Can be called by using parameter <code>output=n3</code>.</dd>
 	  <dt id="output-xml">XML (<code>xml</code>)</dt>
-	  <dd>
-            <p>Produces output in a homegrown XML format (yes, we know...).</p>
-            <p>The DTD for this format is as follows:</p>
-	    <pre>
-	      <code>
-&lt;!DOCTYPE result [
-  &lt;!ELEMENT result (meta, warnings?, messages?)&gt;
-  &lt;!ATTLIST result
-    version CDATA #FIXED '0.9'
-  &gt;
-
-  &lt;!ELEMENT meta (uri, modified, server, size, encoding, doctype)&gt;
-  &lt;!ELEMENT uri      (#PCDATA)&gt;
-  &lt;!ELEMENT modified (#PCDATA)&gt;
-  &lt;!ELEMENT server   (#PCDATA)&gt;
-  &lt;!ELEMENT size     (#PCDATA)&gt;
-  &lt;!ELEMENT encoding (#PCDATA)&gt;
-  &lt;!ELEMENT doctype  (#PCDATA)&gt;
-
-  &lt;!ELEMENT warnings (warning)+&gt;
-  &lt;!ELEMENT warning  (#PCDATA)&gt;
-
-  &lt;!ELEMENT messages (msg)*&gt;
-  &lt;!ELEMENT msg      (#PCDATA)&gt;
-  &lt;!ATTLIST msg
-    line   CDATA #IMPLIED
-    col    CDATA #IMPLIED
-    offset CDATA #IMPLIED
-  &gt;
-]&gt;
-              </code>
-            </pre>
-            <p>
-	      Each element except the containers (<code>result</code>,
-              <code>meta</code>, <code>warnings</code>, <code>messages</code>)
-              and the free-form text fields (<code>warning</code>,
-              <code>msg</code>) will take a single value of a specific type.
-            </p>
-            <p>
-              The base document element is <code>result</code>. The only
-              elements allowed to be directly contained at the first level are
-              <code>meta</code>, <code>warnings</code>, and
-              <code>messages</code>. <code>warnings</code>, and
-              <code>messages</code> may be omitted if empty, and no first-level
-              elements may appear more then once.
-            </p>
-            <div id="dtd-meta">
-	      <h5>The <code>meta</code> element</h5>
-	      <p>
-                The <code>meta</code> element contains various metadata about
-	        about the Validated document. It contains further elements
-	        describing each value.
-	      </p>
-	      <dl>
-	        <dt><code>uri</code></dt>
-	        <dd>The URL of the document validated.</dd>
-	        <dt><code>modified</code></dt>
-	        <dd>The Last-Modified header field of the document as free-form text.</dd>
-	        <dt><code>server</code></dt>
-	        <dd>The Server header field of the document as free-form text.</dd>
-	        <dt><code>size</code></dt>
-	        <dd>The size in bytes of the document.</dd>
-	        <dt><code>encoding</code></dt>
-	        <dd>The Character Encoding used for Validation.</dd>
-	        <dt><code>doctype</code></dt>
-	        <dd>A text string describing the DOCTYPE used for Validation.</dd>
-	      </dl>
-	      <p>
-	        Currently, the type of these fields is free-form text, but it
-                is intended that a future revision will switch to less opaque
-                data types so these values can be reliably machine-parsed.
-              </p>
-            </div>
-	    <div id="dtd-warnings">
-	      <h5>The <code>warnings</code> element</h5>
-	      <p>
-	        The <code>warnings</code> element can contain only one sub-element;
-	        the <code>warning</code> element. Multiple <code>warning</code>
-	        elements may appear and each one contains free-form text
-                corresponding to a warning of the type found in the "Warnings"
-	        section of the HTML output (e.g. "DOCTYPE override in effect!").
-	      </p>
-	    </div>
-	    <div id="dtd-messages">
-	      <h5>The <code>messages</code> element.</h5>
-	      <p>
-	        The <code>messages</code> element can contain only one sub-element;
-	        the <code>msg</code> element. Multiple <code>msg</code> elements
-	        may appear and each contains free-form text representing one
-	        detected error. The <code>msg</code> element has three attributes;
-	        <code>line</code>, <code>col</code>, <code>offset</code>.
-	        These contain a number representing the line and column on which
-	        the error was detected, and the offset in characters from the
-	        beginning of the document (as opposed to <code>col</code> which
-	        can be said to be the offset from the beginning of the line).
-	      </p>
-	    </div>
-	  </dd>
+	  <dd>This output option has been deprecated, and will be removed from subsequent versions of the validator. </dd>
 	</dl>
       </div>
 
