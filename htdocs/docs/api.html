@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: api.html,v 1.3.2.3 2006-10-18 09:47:02 ot Exp $"
---><!--#set var="date" value="\$Date: 2006-10-18 09:47:02 $"
+<!--#set var="revision" value="\$Id: api.html,v 1.3.2.4 2006-11-01 14:46:02 ot Exp $"
+--><!--#set var="date" value="\$Date: 2006-11-01 14:46:02 $"
 --><!--#set var="title" value="Documentation of the Programmatic Interface (API) to The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -27,6 +27,8 @@ SOAP 1.2 validation interface documentation</h2>
           <li><a href="#soap12message">SOAP1.2 atomic message (error or warning) format reference</a></li>
          </ul>
         </li>
+        <li><a href="#libs">Libraries</a></li>
+        <li><a href="#http_headers">Using HTTP headers to know validation results</a></li>
       </ul>
     </div>
     
@@ -243,6 +245,56 @@ element, but also the <code>warning</code> element are <code>line</code>, <code>
 </tr>
 </table>
 
+<h3 id="libs">Libraries</h3>
+<p>Building of libraries used to interact with the validator's API is <a href="http://www.w3.org/QA/2006/10/validator_api.html">encouraged</a>. If you are the 
+    maintainer of such a library, <a href="../feedback.html">contact us</a> and we will list it here.</p>
+<h4>Known libraries for the W3C Markup Validator API</h4>
+
+<ul>
+   <li><a href="http://search.cpan.org/dist/WebService-Validator-HTML-W3C/">WebService::Validator::HTML::W3C</a> in perl, 
+       by Struan Donald.</li>
+</ul>
+
+<h3 id="http_headers">Using HTTP headers to know validation results</h3>
+
+<p>Every validation result is served via the HTTP protocol, with custom headers giving a simple, quick way
+    to get validation results without having to parse the results body. This is a simple (but poorer) alternative to using 
+    the full API described above.</p>
+    
+<p>The HTTP headers for a validation results page will generally look like:</p>
+<pre>
+    HEAD 'http://validator.localhost/check?uri=http%3A%2F%2Fwww.w3.org'
+    
+    200 OK
+    [...]
+    Content-Language: en
+    Content-Type: text/html; charset=utf-8
+    X-W3C-Validator-Errors: 0
+    X-W3C-Validator-Recursion: 1
+    X-W3C-Validator-Status: Valid
+</pre>
+
+<p>The headers and their values are as follows:</p>
+<table>
+    <tr><th>Header</th><th>Value</th><th>Notes</th></tr>
+    <tr>
+        <td>X-W3C-Validator-Status</td>
+        <td><code>Valid</code> or <code>Invalid</code></td>
+        <td>May not be present if validation could not be performed (404 Not found, etc)</td>
+    </tr>
+    <tr>
+        <td>X-W3C-Validator-Errors</td>
+        <td>Number of Errors found during validation. <code>0</code> if no errors found.</td>
+        <td>0 does not necessarily mean "valid" (it may mean that validation could not be performed)</td>
+    </tr>
+    <tr>
+        <td>X-W3C-Validator-Recursion</td>
+        <td>Integer. Generally, <code>1</code>. More if recursively validating validation results. 
+           </td>
+        <td>    The validator will use this in conjunction with its <code>Max Recursion</code> setup to avoid
+               abusive recursion (Denial of Service attack).</td>
+    </tr>
+</table>
 </div>
 <!--#include virtual="../footer.html" -->
   </body>
