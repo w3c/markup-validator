@@ -1,6 +1,7 @@
 Content-Type: application/rdf+xml; charset=UTF-8
-X-W3C-Validator-Status: <TMPL_VAR NAME="valid_status">
-X-W3C-Validator-Errors: <TMPL_VAR NAME="number_of_errors">
+X-W3C-Validator-Recursion: <TMPL_VAR NAME="depth" DEFAULT="1"><TMPL_IF NAME="valid_status">
+X-W3C-Validator-Status: <TMPL_VAR NAME="valid_status"></TMPL_IF>
+X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num">
 
 <?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF
