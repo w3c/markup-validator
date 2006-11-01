@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.464 2006-10-12 04:30:49 ot Exp $
+# $Id: check,v 1.465 2006-11-01 02:03:05 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.464 $;
+  $VERSION =  q$Revision: 1.465 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -589,6 +589,10 @@ sub parse (\$) {
   if (&is_xml($File)) {
     $catalog  = File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc');
     push(@spopt, 'xml');
+    # workaround for a bug in s:p:o 0.99
+    # see http://www.w3.org/Bugs/Public/show_bug.cgi?id=798#c5
+    push(@spopt, 'xml');
+    # FIXME when fixed s:p:o gets released
   }
 
   #
