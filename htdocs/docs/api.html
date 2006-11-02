@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: api.html,v 1.3.2.4 2006-11-01 14:46:02 ot Exp $"
---><!--#set var="date" value="\$Date: 2006-11-01 14:46:02 $"
+<!--#set var="revision" value="\$Id: api.html,v 1.3.2.5 2006-11-02 06:07:15 ot Exp $"
+--><!--#set var="date" value="\$Date: 2006-11-02 06:07:15 $"
 --><!--#set var="title" value="Documentation of the Programmatic Interface (API) to The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -74,7 +74,7 @@ is appreciated. thanks.</p>
   <th>output</th>
   <td>triggers the various outputs formats of the validator. If unset, the usual
   Web format will be sent. If set to <code>soap12</code>, the SOAP1.2 interface will 
-  be triggered. See <a href="soap12format">below for the SOAP 1.2 response format description</a>.</td>
+  be triggered. See <a href="#soap12format">below for the SOAP 1.2 response format description</a>.</td>
   <td>unset</td>
 </tr>
 <tr>
@@ -136,7 +136,7 @@ a description of the most important elements of the response.</p>
 env:encodingStyle=&quot;http://www.w3.org/2003/05/soap-encoding&quot; 
 xmlns:m=&quot;http://www.w3.org/2005/10/markup-validator&quot;&gt;
     &lt;<a href="#soap12_uri">m:uri</a>&gt;http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-bogus-element.html&lt;/m:uri&gt;
-    &lt;<a href="#soap12eckedby">m:checkedby</a>&gt;http://validator.w3.org/&lt;/m:checkedby&gt;
+    &lt;<a href="#soap12_checkedby">m:checkedby</a>&gt;http://validator.w3.org/&lt;/m:checkedby&gt;
     &lt;<a href="#soap12_doctype">m:doctype</a>&gt;-//W3C//DTD XHTML 1.0 Transitional//EN&lt;/m:doctype&gt;
     &lt;<a href="#soap12_charset">m:charset</a>&gt;utf-8&lt;/m:charset&gt;
     &lt;<a href="#soap12_validity">m:validity</a>&gt;false&lt;/m:validity&gt;
@@ -222,7 +222,7 @@ xmlns:m=&quot;http://www.w3.org/2005/10/markup-validator&quot;&gt;
 <code><a href="#soap12_error">error</a></code>.
 </p>
 <h4 id="soap12message">SOAP1.2 atomic message (error or warning) format reference</h4>
-<p>As seen as the example above, the children of the <code><a href="soap12_error">error</a></code>
+<p>As seen as the example above, the children of the <code><a href="#soap12_error">error</a></code>
 element, but also the <code>warning</code> element are <code>line</code>, <code>col</code> and
 <code>message</code>, defined below:</p>
 <table class="refdoc">
