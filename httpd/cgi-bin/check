@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.465 2006-11-01 02:03:05 ot Exp $
+# $Id: check,v 1.466 2006-11-08 01:18:49 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -55,7 +55,7 @@ use URI::Escape               qw(uri_escape);
 use Encode                    qw();
 use Encode::Alias             qw();
 use HTML::Encoding       0.52 qw();
-use SGML::Parser::OpenSP 0.99 qw();
+use SGML::Parser::OpenSP      qw();
 
 ###############################################################################
 #### Constant definitions. ####################################################
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.465 $;
+  $VERSION =  q$Revision: 1.466 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -600,6 +600,7 @@ sub parse (\$) {
   $opensp->search_dirs($CFG->{Paths}->{SGML}->{Library});
   $opensp->catalogs($catalog);
   $opensp->show_error_numbers(1);
+  $opensp->warnings(@spopt);
 
   #
   # Restricted file reading is disabled on Win32 for the time
