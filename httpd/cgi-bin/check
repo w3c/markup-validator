@@ -11,7 +11,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.432.2.19 2006-10-23 05:54:09 ot Exp $
+# $Id: check,v 1.432.2.20 2006-11-09 01:56:04 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -204,7 +204,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.432.2.19 $;
+  $VERSION =  q$Revision: 1.432.2.20 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -853,7 +853,7 @@ $template->param('opt_show_raw_errors' => TRUE)
   if $File->{Opt}->{'Show Errors'};
 $template->param('file_raw_errors' => &show_errors($File))
   if $template->param('opt_show_raw_errors');
-
+  $T->param(file_outline   => &outline($File)) if $T->param('opt_show_outline');
 print $template->output;
 
 #
