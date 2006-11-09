@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: users.html,v 1.22.2.2 2006-10-13 07:16:19 ot Exp $"
---><!--#set var="date" value="\$Date: 2006-10-13 07:16:19 $"
+<!--#set var="revision" value="\$Id: users.html,v 1.22.2.3 2006-11-09 01:58:29 ot Exp $"
+--><!--#set var="date" value="\$Date: 2006-11-09 01:58:29 $"
 --><!--#set var="title" value="User Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -125,18 +125,12 @@
           For a properly formed document, this will be a nicely nested tree
           structure. The visualization of your document's structure makes it
           easier to see where you've skipped a heading.</p>
+          <p>If you want to examine the semantic structure of your documents, beyond the outline, try the
+            <a href="http://www.w3.org/2003/12/semantic-extractor.html">Semantic data extractor</a>.
+          </p>
+          
         </dd>
-        <dt><a id="option-sp" name="option-sp"></a>Show parse tree (<code>sp</code>)</dt>
-        <dd>
-          <p>Shows you exactly how the SGML Parser read your document. Probably
-          best used only by advanced users as it deals with low-level SGML
-          constructs.</p>
-        </dd>
-        <dt><a id="option-noatt" name="option-noatt"></a>exclude attributes from the parse tree (<code>noatt</code>)</dt>
-        <dd>
-	  <p>Suppress attributes from the <a href="#option-sp">parse tree</a> to make it 
-	  more readable.</p>
-	</dd>
+
 	<dt><a id="option-no200" name="option-no200"></a>Validate error pages</dt>
 	<dd>
 	  <p>The Markup Validator will usually tell you if the page you tried to validate
@@ -152,9 +146,14 @@
           as much help as possible; if you prefer more concise reports, leave this option
           unset.</p>
 	</dd>
-
-
       </dl>
+    <h4>Deprecated options</h4>
+    <p>A number of options once available  have been deprecated and are not available any more.
+        This includes the <em>Show parse tree</em>  
+          and <em>exclude attributes from the parse tree</em>, as well as <em>Show Esis</em> 
+          and <em>Show Raw Errors</em>.
+        </p>
+         
     </div>
 
     <div id="Calling" class="stb">
