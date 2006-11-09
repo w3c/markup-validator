@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.37.2.8 2006-10-23 07:11:58 ot Exp $"
---><!--#set var="date" value="\$Date: 2006-10-23 07:11:58 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.37.2.9 2006-11-09 07:09:34 ot Exp $"
+--><!--#set var="date" value="\$Date: 2006-11-09 07:09:34 $"
 --><!--#set var="title" value="Source Code Availability for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -175,21 +175,10 @@
             a good thing to <a href="http://ximbiot.com/cvs/manual/">get to
             know</a>.
           </p>
-          <p>
-            Our CVS base is available read-only, using CVS pserver
-            authentication a la:
+          <p>For instructions on how to retrieve the code using CVS, 
+              see our <a href="http://dev.w3.org/cvsweb/validator/">web-based interface to the repository.</a>
           </p>
-          <pre>
-    bash$ <kbd>export CVSROOT=":pserver:anonymous@dev.w3.org:/sources/public"</kbd>
-    bash$ <kbd>cvs login</kbd>
-    (Logging in to anonymous@dev.w3.org)
-    CVS password: <kbd>anonymous</kbd>
-    bash$ <kbd>cvs get -r validator-0_7_3-release validator</kbd>
-    cvs server: Updating validator
-    cvs server: Updating validator/htdocs
-    U validator/htdocs/about.html
-    ...
-          </pre>
+            
 
   <h3><a id="using" name="using"></a>Using the code</h3>
      <p>
