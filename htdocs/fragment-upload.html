@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: fragment-upload.html,v 1.10 2005-04-14 06:41:57 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-04-14 06:41:57 $"
+<!--#set var="revision" value="\$Id: fragment-upload.html,v 1.10.2.1 2006-11-09 02:41:18 ot Exp $"
+--><!--#set var="date" value="\$Date: 2006-11-09 02:41:18 $"
 --><!--#set var="title" value="W3C Markup Validation Service: Validate by Direct Input"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -22,22 +22,14 @@
             </label>
           </td>
         </tr>
-        <tr>
-          <td>
-            <label for="ss"><input id="ss" name="ss" type="checkbox" value="1" /> Show Source</label>
-          </td>
-          <td>
-            <label for="sp"><input id="sp" name="sp" type="checkbox" value="1" /> Show Parse Tree</label>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <label for="outline"><input id="outline" name="outline" type="checkbox" value="1" /> Show Outline</label>
-          </td>
-          <td>
-            <label for="noatt"><input id="noatt" name="noatt" type="checkbox" value="1" /> ...exclude attributes</label>
-          </td>
-        </tr>
+          <tr>
+            <td><label title="Show Page Source" for="ss"><input id="ss" name="ss" type="checkbox" value="1" /> Show Source</label></td>
+            <td><label title="Show an Outline of the document" for="outline"><input id="outline" name="outline" type="checkbox" value="1" /> Show Outline</label></td>
+          </tr>
+          <tr>
+            <td><label title="Validate also pages for which the HTTP status code indicates an error" for="No200"><input id="No200" name="No200" type="checkbox" value="1" /> Validate error pages</label></td>
+	    <td><label title="Show Verbose Output" for="verbose"><input id="verbose" name="verbose" type="checkbox" value="1" checked="checked" /> Verbose Output</label></td>
+          </tr>
         <tr>
           <td colspan="2"><textarea cols="60" rows="24" name="fragment"></textarea></td>
         </tr>
