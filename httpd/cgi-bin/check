@@ -11,7 +11,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.432.2.21 2006-11-10 01:01:28 ot Exp $
+# $Id: check,v 1.432.2.22 2006-11-10 02:51:50 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -208,7 +208,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.432.2.21 $;
+  $VERSION =  q$Revision: 1.432.2.22 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -332,6 +332,13 @@ my $UCNT = HTML::Template->new(
 my $SOAPFT = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                           $lang, 'soap_fault.tmpl'),
+  die_on_bad_params => FALSE,
+  loop_context_vars => TRUE,
+  cache             => TRUE,
+);
+my $SOAPDIS = HTML::Template->new(
+  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
+                                          $lang, 'soap_disabled.tmpl'),
   die_on_bad_params => FALSE,
   loop_context_vars => TRUE,
   cache             => TRUE,
@@ -836,7 +843,12 @@ if ($File->{Opt}->{Output} eq 'xml') {
 } elsif ($File->{Opt}->{Output} eq 'ucn') {
   $template = $UCNT;
 } elsif ($File->{Opt}->{Output} eq 'soap12') {
-  if ($File->{'Error Flagged'}) {
+  if ($CFG->{'Enable SOAP'} != 1) { # API disabled - ideally this should have been sent before performing validation...
+    print CGI::header(-status => 503, -content_language => "en",
+          -type => "text/html", -charset => "utf-8"
+    );
+    $template = $SOAPDIS;
+  } elsif ($File->{'Error Flagged'}) {
     $template = $SOAPFT;
   } else {
     $template = $SOAPT;
