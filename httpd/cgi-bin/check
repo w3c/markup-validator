@@ -11,7 +11,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.432.2.20 2006-11-09 01:56:04 ot Exp $
+# $Id: check,v 1.432.2.21 2006-11-10 01:01:28 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -107,6 +107,7 @@ BEGIN {
     $ENV{W3C_VALIDATOR_HOME} = $1;
   }
 
+  my $base_path = $ENV{W3C_VALIDATOR_HOME} || '/usr/local/validator';
   #
   # Read Config Files.
   eval {
@@ -123,8 +124,10 @@ BEGIN {
        -DefaultConfig    => {
           Protocols => {Allow => 'http,https'},
           Paths => {
-            Base => ($ENV{W3C_VALIDATOR_HOME} || '/usr/local/validator'),
-            SGML => {Parser => '/usr/bin/onsgmls'},
+            Base => $base_path,
+            Templates => "$base_path/share/templates",
+            SGML => {Parser => '/usr/bin/onsgmls', 
+                     Library => "$base_path/htdocs/sgml-lib"},
           },
        },
       );
@@ -134,8 +137,9 @@ BEGIN {
   if ($@) {
     die <<".EOF.";
 Could not read configuration.  Set the W3C_VALIDATOR_CFG environment variable
-or copy conf/* to /etc/w3c/. Make sure that the configuration file and all
-included files are readable by the web server user. The error was:\n'$@'
+to point to the validator.conf file or copy htdocs/conf/* to /etc/w3c/. Make sure
+that the configuration file and all included files are readable by the web
+server user. The error was:\n'$@'
 .EOF.
   }
 
@@ -204,7 +208,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.432.2.20 $;
+  $VERSION =  q$Revision: 1.432.2.21 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
