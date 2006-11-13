@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.466 2006-11-08 01:18:49 ot Exp $
+# $Id: check,v 1.467 2006-11-13 04:26:29 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -55,7 +55,7 @@ use URI::Escape               qw(uri_escape);
 use Encode                    qw();
 use Encode::Alias             qw();
 use HTML::Encoding       0.52 qw();
-use SGML::Parser::OpenSP      qw();
+use SGML::Parser::OpenSP 0.99 qw();
 
 ###############################################################################
 #### Constant definitions. ####################################################
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.466 $;
+  $VERSION =  q$Revision: 1.467 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -318,6 +318,13 @@ my $UCNT = HTML::Template->new(
 my $SOAPFT = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                           $lang, 'soap_fault.tmpl'),
+  die_on_bad_params => FALSE,
+  loop_context_vars => TRUE,
+  cache             => TRUE,
+);
+my $SOAPDIS = HTML::Template->new(
+  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
+                                          $lang, 'soap_disabled.tmpl'),
   die_on_bad_params => FALSE,
   loop_context_vars => TRUE,
   cache             => TRUE,
@@ -689,7 +696,12 @@ if ($File->{Opt}->{Output} eq 'xml') {
 } elsif ($File->{Opt}->{Output} eq 'ucn') {
   $template = $UCNT;
 } elsif ($File->{Opt}->{Output} eq 'soap12') {
-  if ($File->{'Error Flagged'}) {
+  if ($CFG->{'Enable SOAP'} != 1) { # API disabled - ideally this should have been sent before performing validation...
+    print CGI::header(-status => 503, -content_language => "en",
+    -type => "text/html", -charset => "utf-8"
+    );
+    $template = $SOAPDIS;
+  } elsif ($File->{'Error Flagged'}) { # should send SOAP fault message
     $template = $SOAPFT;
   } else {
     $template = $SOAPT;
@@ -704,12 +716,13 @@ fin_template($File, $template);
 $template->param(file_warnings => $File->{Warnings});
 $template->param(file_source => &source($File))
   if $template->param('opt_show_source');
-$template->param('opt_show_esis' => TRUE)
-  if $File->{Opt}->{'Show ESIS'};
-$template->param('opt_show_raw_errors' => TRUE)
-  if $File->{Opt}->{'Show Errors'};
-$template->param('file_raw_errors' => &show_errors($File))
-  if $template->param('opt_show_raw_errors');
+#$template->param('opt_show_esis' => TRUE)
+#  if $File->{Opt}->{'Show ESIS'};
+#$template->param('opt_show_raw_errors' => TRUE)
+#  if $File->{Opt}->{'Show Errors'};
+#$template->param('file_raw_errors' => &show_errors($File))
+#  if $template->param('opt_show_raw_errors');
+  $T->param(file_outline   => &outline($File)) if $T->param('opt_show_outline');
 
 print $template->output;
 
