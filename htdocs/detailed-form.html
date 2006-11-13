@@ -55,20 +55,11 @@
             <td><label for="fbd"><input id="fbd" name="fbd" type="checkbox" value="1" /> Use Fallback instead of Override</label></td>
           </tr>
           <tr>
-            <th rowspan="4">Options (<a title="Explanation for these options" href="docs/users.html#Options">Help</a>):</th>
-            <td><label for="ss"><input id="ss" name="ss" type="checkbox" value="1" /> Show Source</label></td>
-            <td><label for="outline"><input id="outline" name="outline" type="checkbox" value="1" /> Show Outline</label></td>
+            <th rowspan="2">Options (<a title="Explanation for these options" href="docs/users.html#Options">Help</a>):</th>
+            <td><label title="Show Page Source" for="ss"><input id="ss" name="ss" type="checkbox" value="1" /> Show Source</label></td>
+            <td><label title="Show an Outline of the document" for="outline"><input id="outline" name="outline" type="checkbox" value="1" /> Show Outline</label></td>
           </tr>
           <tr>
-           <td><label for="sp"><input id="sp" name="sp" type="checkbox" value="1" /> Show Parse Tree</label></td> 
-            <td><label for="noatt"><input id="noatt" name="noatt" type="checkbox" value="1" /> ...exclude attributes</label></td>
+            <td><label title="Validate also pages for which the HTTP status code indicates an error" for="No200"><input id="No200" name="No200" type="checkbox" value="1" /> Validate error pages</label></td>
+	    <td><label title="Show Verbose Output" for="verbose"><input id="verbose" name="verbose" type="checkbox" value="1" checked="checked" /> Verbose Output</label></td>
           </tr>
-          <tr>
-            <td><label for="No200"><input id="No200" name="No200" type="checkbox" value="1" /> Validate error pages</label></td>
-	    <td><label for="verbose"><input id="verbose" name="verbose" type="checkbox" value="1" checked="checked" /> Verbose Output</label></td>
-          </tr>
-<!--
-          <tr>
-            <td colspan="2"><label for="fussy"><input id="fussy" name="fussy" type="checkbox" value="0"  /> Fussy Parsing</label></td>
-          </tr>
--->

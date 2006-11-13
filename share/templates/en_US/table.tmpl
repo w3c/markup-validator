@@ -78,11 +78,8 @@
     <legend>Revalidate With Options</legend>
     <table class="header">
       <tr>
-        <th><input type="submit" value="Revalidate" title="Revalidate file" />: </th>
-        <td colspan="2">
-          <table class="options">
-            <tr>
-              <td><label title="Show Page Source" for="ss"><input type="checkbox" value="1" id="ss" name="ss" 
+        <th rowspan="2"><input type="submit" value="Revalidate" title="Revalidate file" />: </th>
+        <td><label title="Show Page Source" for="ss"><input type="checkbox" value="1" id="ss" name="ss" 
 <TMPL_IF NAME="opt_show_source">
 	checked="checked"
 </TMPL_IF>
@@ -92,18 +89,6 @@
 	checked="checked"
 </TMPL_IF>
 		/>Show&nbsp;Outline</label></td>
-            </tr>
-            <tr>
-              <td><label title="Show Parse Tree" for="sp"><input type="checkbox" value="1" id="sp" name="sp" 
-<TMPL_IF NAME="opt_show_parsetree">
-	checked="checked"
-</TMPL_IF>
-		/>Show&nbsp;Parse&nbsp;Tree</label></td>
-              <td><label title="Exclude Attributes from Parse Tree" for="noatt"><input type="checkbox" value="1" id="noatt" name="noatt" 
-<TMPL_IF NAME="opt_show_noatt">
-	checked="checked"
-</TMPL_IF>
-		/>...no&nbsp;attributes</label></td>
             </tr>
             <tr>
               <td><label title="Validate also pages for which the HTTP status code indicates an error" for="No200"><input type="checkbox" value="1" id="No200" name="No200"
@@ -117,9 +102,7 @@
 </TMPL_IF>
 		/>Verbose&nbsp;Output</label></td>
             </tr>
-          </table>
-        </td>
-      </tr>
+
     </table>
       <div class="moreinfo">
         <p>
