@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.13.2.2 2005-08-18 19:21:41 ville Exp $"
---><!--#set var="date" value="\$Date: 2005-08-18 19:21:41 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.13.2.3 2006-11-13 03:14:07 ot Exp $"
+--><!--#set var="date" value="\$Date: 2006-11-13 03:14:07 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -94,7 +94,7 @@
             title="Comprehensive Perl Archive Network">CPAN</acronym></a>
         (minimum versions in parenthesis after the name). The following
         list was complete when CVS spit out:
-        <code>$Date: 2005-08-18 19:21:41 $</code>. <tt>:-)</tt>
+        <code>$Date: 2006-11-13 03:14:07 $</code>. <tt>:-)</tt>
       </p>
      <p>
        One easy - and strongly recommended - way to take care of all these
@@ -208,6 +208,13 @@
         here is a short description to get you started.
       </p>
       <dl>
+        <dt>validator.conf</dt>
+        <dd>
+          The validator's <strong>main configuration file</strong>. This will
+          generally be the only file you need to edit. It sets various parameters, such as:
+          the address of the maintainer, the URL for the "Home Page", various file paths and locations,
+          whether the <a href="api.html">API</a> is enabled, etc.
+        </dd> 
         <dt>charset.cfg</dt>
         <dd>
           Maps character sets to conversion parameters for validator's
@@ -224,12 +231,7 @@
           Maps MIME/HTTP Content-Types to an internal "document type" which
           is used for treating HTML, XML, and XHTML in different ways.
         </dd>
-        <dt>validator.conf</dt>
-        <dd>
-          Main configuration file. Gives various parameters (such as the
-          address of the maintainer and the URL for the "Home Page") and
-          the locations of the other configuration files and mapping tables.
-        </dd>
+
        </dl>
 
 
