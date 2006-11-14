@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: help.html,v 1.30.2.2 2006-07-24 07:11:55 ot Exp $"
---><!--#set var="date" value="\$Date: 2006-07-24 07:11:55 $"
+<!--#set var="revision" value="\$Id: help.html,v 1.30.2.3 2006-11-14 06:30:57 ot Exp $"
+--><!--#set var="date" value="\$Date: 2006-11-14 06:30:57 $"
 --><!--#set var="title" value="Help for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -68,6 +68,8 @@ mailing-list.</p>
 	<li><a href="#icon">"valid" icons</a>
 	  <ol>
 	    <li><a href="#icon-usage">My document is valid, can I use your "valid" icon?</a></li>
+	    <li><a href="#icon-list">Is there a list of all available icons somewhere?</a></li>
+	    <li><a href="#icon-license">License and Guidelines for usage of the "valid" icons</a></li>
 	    <li><a href="#icon-invalidpage">I saw the "valid" icon displayed on a site but the page is invalid. What should I do?</a></li>
           </ol>
 	</li>
@@ -80,6 +82,9 @@ mailing-list.</p>
 	</li>
 	<li>
 		<a href="#faq-charset"><q>No Character Encoding Found!</q></a> 
+	</li>
+	<li>
+	    <a href="#faq-flash">How can I include flash in valid (X)HTML Web pages?</a>
 	</li>
 	<li>
 		<a href="#faq-ampersand">The validator complains about "&amp;" in my URLs!</a>
@@ -346,8 +351,10 @@ mailing-list.</p>
           alt="Valid XHTML 1.0!" height="31" width="88" /&gt;&lt;/a&gt;
     &lt;/p&gt;
   </pre>
+  <h5 id="icon-list">Is there a list of all available icons somewhere?</h5>
+  <p>The <a href="http://www.w3.org/QA/Tools/Icons">full list of "valid" icons</a> is available on the W3C website.</p>
 
-  <h5>License and Guidelines for usage of the "valid" icons</h5>
+  <h5 id="icon-license">License and Guidelines for usage of the "valid" icons</h5>
   <p>Web content providers are granted the right to use the "W3C valid" logo
   on pages that pass validation (through the use of the 
   <a href="http://validator.w3.org/">W3C Markup Validator</a>) 
@@ -442,7 +449,12 @@ mailing-list.</p>
       common encodings if you are not sure what encoding to choose.
     </p>
 
-
+    <h4 id="faq-flash">How can I include flash in valid (X)HTML Web pages?</h4>
+    <p>Many Flash authoring tools recommend, or enforce, the usage of the &lt;embed&gt; element to include
+        flash animations or applications in Web pages. &lt;embed&gt;, however, was never part of any 
+        standardized version of HTML, and this practice produces invalid markup.</p>
+    <p>There are many techniques to incorporate flash in valid web pages. One of the most famous is the
+        <a href="http://alistapart.com/articles/flashsatay">Flash Satay</a> technique.</p>
 
     <h4 id="faq-ampersand">The validator complains about "&amp;" in my URLs!</h4>
 <p>Most probably, you should read the <a 
