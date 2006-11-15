@@ -2,7 +2,7 @@
 ##
 ## Generates HTML documentation of error messages and explanations
 ## for W3C Markup Validation Service
-## $Id: docs_errors.pl,v 1.3 2005-03-18 06:44:14 ot Exp $
+## $Id: docs_errors.pl,v 1.4 2006-11-15 08:02:46 ot Exp $
 
 ## Pragmas.
 use strict;
@@ -67,8 +67,18 @@ our $lang = 'en_US'; # @@@ TODO: conneg
 
 # Read error message + explanations file
 our $error_messages_file =  File::Spec->catfile($CFG->{Paths}->{Templates}, $lang, 'error_messages.cfg');
-our %config_errs = (-ConfigFile => $error_messages_file);
+our %config_errs = ( -MergeDuplicateBlocks => 1,
+        -ConfigFile => $error_messages_file);
 our %rsrc = Config::General->new(%config_errs)->getall();
+# Config::General workarounds for <msg 0> issues:
+# http://lists.w3.org/Archives/Public/public-qa-dev/2006Feb/0022.html
+# http://lists.w3.org/Archives/Public/public-qa-dev/2006Feb/0025.html
+# https://rt.cpan.org/Public/Bug/Display.html?id=17852
+$rsrc{msg}{0} ||=
+  delete($rsrc{'msg 0'}) ||                   # < 2.31
+  { original => delete($rsrc{msg}{original}), #   2.31
+    verbose  => delete($rsrc{msg}{verbose}),
+  };
 $RSRC = \%rsrc;
 
 

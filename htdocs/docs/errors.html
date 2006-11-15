@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: errors.html,v 1.36 2005-10-20 06:46:50 ot Exp $"
---><!--#set var="date" value="\$Date: 2005-10-20 06:46:50 $"
+<!--#set var="revision" value="\$Id: errors.html,v 1.37 2006-11-15 08:02:46 ot Exp $"
+--><!--#set var="date" value="\$Date: 2006-11-15 08:02:46 $"
 --><!--#set var="title" value="Error Explanations for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -335,7 +335,9 @@
       How to fix: check the spelling and case of the element and attribute, 
       (Remember XHTML is all lower-case) and/or 
       check that they are both allowed in the chosen document type, and/or
-      use CSS instead of this attribute.
+      use CSS instead of this attribute. If you received this error when using the 
+      &lt;embed&gt; element to incorporate flash media in a Web page, see the 
+      <a href="docs/help.html#faq-flash">FAQ item on valid flash</a>.
     </p>
   </div>
 	<p>
@@ -806,6 +808,12 @@
     <a href="../feedback.html#errormsg">feedback channels</a> to send your suggestions.</p>
     <ul>
 	
+        <li id="ve-0"><p>0: length of name must not exceed NAMELEN (X)
+	  <a href="../feedback.html?errmsg_id=0#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</li>
+      
         <li id="ve-1"><p>1: length of parameter entity name must not exceed NAMELEN less the length of the PERO delimiter (X)
 	  <a href="../feedback.html?errmsg_id=1#errormsg"
 	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
