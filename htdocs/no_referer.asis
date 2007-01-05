@@ -1,0 +1,100 @@
+Status: 412 Precondition Failed
+Content-type: text/html
+Retry-After: 86400
+
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>Validation Results - W3C Markup Validator</title>
+    <link rev="made" href="mailto:www-validator@w3.org" />
+    <link rev="start" href="/" title="Home Page" />
+    <style type="text/css" media="all">@import "/base.css";</style>
+    <meta name="keywords" content="HTML, HyperText Markup Language, Validation,
+      W3C Markup Validation Service" />
+
+    <meta name="description" content="W3C's easy-to-use
+      HTML validation service, based on an SGML parser." />
+  </head>
+
+  <body>
+    <div id="banner">
+      <h1 id="title">
+	<a href="http://www.w3.org/"><img height="48" alt="W3C" id="logo" src="http://www.w3.org/Icons/WWW/w3c_home_nb" /></a>
+        <a href="http://www.w3.org/QA/"><img src="http://www.w3.org/QA/2002/12/qa-small.png" alt="QA" /></a>
+        Markup Validation Service</h1>
+	<span id="versioninfo"><abbr title="version">v</abbr>0.7.4</span>
+    </div>
+    <ul class="navbar" id="menu">
+        <li><span class="hideme"><a href="#skip" accesskey="2" title="Skip past navigation to main part of page">Skip Navigation</a> |</span>
+        <a href="/" accesskey="1" title="Go to the Home Page for The W3C Markup Validation Service"><strong>Home</strong></a></li>
+        <li><a href="/about.html" title="Information About this Service">About...</a></li>
+        <li><a href="/whatsnew.html" title="The changes made to this service recently">News</a></li>
+        <li><a href="/docs/" accesskey="3" title="Documentation for this Service">Docs</a></li>
+	<li><a href="/docs/help.html" title="Help and answers to frequently asked questions">Help&nbsp;&amp;&nbsp;<acronym title="Frequently Asked Questions">FAQ</acronym></a></li>
+        <li><a href="/feedback.html" accesskey="4" title="How to provide feedback on this service">Feedback</a></li>
+    </ul>
+
+
+
+    <div id="main">
+      <div id="head">
+        
+
+      </div><!-- end of "head" -->
+      
+
+	  <div id="result">
+	    <h2 id="results" class="invalid">Sorry! This document can not be checked.</h2>
+
+      <a id="skip" name="skip"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <h2><strong>No Referer header found!</strong></h2>
+        <p>
+          You have requested we check the referring page, but your browser did
+          not send the HTTP "Referer" header field. This can be for several
+          reasons, but most commonly it is because your browser does not
+          know about this header, has been configured not to send one, or is
+          behind a proxy or firewall that strips it out of the request before
+          it reaches us.
+        </p>
+        <p>This is <em>not</em> an error in the referring page!</p>
+        <p>
+          Please use the form interface on the
+          <a href="/">Validator Home Page</a> (or the
+          <a href="detailed.html">Extended Interface</a>) to check the
+          page by URL.
+        </p>
+
+</div><!-- results -->
+    </div><!-- end of "main" -->
+
+    <address>
+      <a href="http://validator.w3.org/check?uri=referer"><img
+        src="http://www.w3.org/Icons/valid-xhtml10" height="31" width="88"
+        alt="Valid XHTML 1.0!" /></a>
+      <a title="Send Feedback for the W3C Markup Validation Service"
+        href="/feedback.html">The W3C Validator Team</a><br />
+    </address>
+  </body>
+</html>
+
