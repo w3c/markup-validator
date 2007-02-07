@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.467 2006-11-13 04:26:29 ot Exp $
+# $Id: check,v 1.468 2007-02-07 15:24:29 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -55,7 +55,8 @@ use URI::Escape               qw(uri_escape);
 use Encode                    qw();
 use Encode::Alias             qw();
 use HTML::Encoding       0.52 qw();
-use SGML::Parser::OpenSP 0.99 qw();
+use SGML::Parser::OpenSP      qw();
+use HTML::Tidy                qw();
 
 ###############################################################################
 #### Constant definitions. ####################################################
@@ -180,7 +181,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.467 $;
+  $VERSION =  q$Revision: 1.468 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -368,6 +369,7 @@ $q = &prepCGI($File, $q);
 # Set session switches.
 $File->{Opt}->{'Outline'}        = $q->param('outline') ? TRUE                   :  FALSE;
 $File->{Opt}->{'Show Source'}    = $q->param('ss')      ? TRUE                   :  FALSE;
+$File->{Opt}->{'Show Tidy'}      = $q->param('st')      ? TRUE                   :  FALSE;
 $File->{Opt}->{'Show Parsetree'} = $q->param('sp')      ? TRUE                   :  FALSE;
 $File->{Opt}->{'No Attributes'}  = $q->param('noatt')   ? TRUE                   :  FALSE;
 $File->{Opt}->{'Show ESIS'}      = $q->param('esis')    ? TRUE                   :  FALSE;
@@ -649,6 +651,7 @@ sub parse (\$) {
   return $File;
 }
 
+
 #
 # Force "XML" if type is an XML type and an FPI was not found.
 # Otherwise set the type to be the FPI.
@@ -685,6 +688,13 @@ if ($File->{Namespace}) {
   }
 }
 
+
+## if invalid content, pass through tidy
+if (! $File->{'Is Valid'}) {
+  my $tidy = HTML::Tidy->new();
+  $File->{'Tidy'} = $tidy->clean(join"\n",@{$File->{Content}});
+}
+
 my $template;
 
 if ($File->{Opt}->{Output} eq 'xml') {
@@ -714,6 +724,7 @@ if ($File->{Opt}->{Output} eq 'xml') {
 fin_template($File, $template);
 
 $template->param(file_warnings => $File->{Warnings});
+$template->param(tidy_output => $File->{'Tidy'});
 $template->param(file_source => &source($File))
   if $template->param('opt_show_source');
 #$template->param('opt_show_esis' => TRUE)
@@ -770,6 +781,7 @@ sub prep_template ($$) {
   #
   # Output options...
   $T->param(opt_show_source    => $File->{Opt}->{'Show Source'});
+  $T->param(opt_show_tidy    => $File->{Opt}->{'Show Tidy'});  
   $T->param(opt_show_outline   => $File->{Opt}->{'Outline'});
   $T->param(opt_show_parsetree => $File->{Opt}->{'Show Parsetree'});
   $T->param(opt_show_noatt     => $File->{Opt}->{'No Attributes'});
@@ -1822,6 +1834,7 @@ sub self_url_file {
   my $escaped_uri = uri_escape($File->{URI});
   $thispage .= qq(?uri=$escaped_uri);
   $thispage .= ';ss=1'      if $File->{Opt}->{'Show Source'};
+  $thispage .= ';st=1'      if $File->{Opt}->{'Show Tidy'};
   $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
   $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
   $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
