@@ -1,12 +1,19 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <title><!--#echo var="title" --></title>
+          <title><!--#echo var="title" --></title>
     <link rev="made" href="mailto:www-validator@w3.org" />
-    <link rev="start" href="<!--#echo var="relroot" -->" title="Home Page" />
-    <style type="text/css" media="all">@import "<!--#echo var="relroot" -->base.css";</style>
+    <link rev="start" href="./" title="Home Page" />
+    <style type="text/css" media="all">@import "<!--#echo var="relroot" -->style/base.css";
+</style>
+    <script type="text/javascript" src="<!--#echo var="relroot" -->scripts/tabtastic/addclasskillclass.js"></script>
+    <script type="text/javascript" src="<!--#echo var="relroot" -->scripts/tabtastic/attachevent.js"></script>
+    <script type="text/javascript" src="<!--#echo var="relroot" -->scripts/tabtastic/addcss.js"></script>
+    <script type="text/javascript" src="<!--#echo var="relroot" -->scripts/tabtastic/tabtastic.js"></script>
+    <script src="<!--#echo var="relroot" -->scripts/toggle.js" type="text/javascript"></script>
+    <meta name="revision" content="$Id: header.html,v 1.44 2007-02-20 01:56:44 ot Exp $" />
     <meta name="keywords" content="HTML, HyperText Markup Language, Validation,
       W3C Markup Validation Service" />
     <meta name="description" content="W3C's easy-to-use
@@ -15,25 +22,14 @@
     <!--#if expr="$feeds = 1" -->
     <link rel="alternate" type="application/atom+xml" href="whatsnew.atom" />
     <!--#endif -->
-    <!-- SSI Template Version: $Id: header.html,v 1.43 2006-11-15 08:02:45 ot Exp $ -->
+    <!-- SSI Template Version: $Id: header.html,v 1.44 2007-02-20 01:56:44 ot Exp $ -->
+
   </head>
 
   <body>
-    <div id="banner">
-      <h1 id="title">
-	<a href="http://www.w3.org/"><img height="48" alt="W3C" id="logo" src="http://www.w3.org/Icons/WWW/w3c_home_nb" /></a>
-        <a href="http://www.w3.org/QA/"><img src="http://www.w3.org/QA/2002/12/qa-small.png" alt="QA" /></a>
-        Markup Validation Service</h1>
-	<span id="versioninfo"><abbr title="version">v</abbr> 0.8-<abbr title="development">dev</abbr> </span>
-    </div>
-    <ul class="navbar" id="menu">
-        <li><span class="hideme"><a href="#skip" accesskey="2" title="Skip past navigation to main part of page">Skip Navigation</a> |</span>
-        <a href="<!--#echo var="relroot" -->" accesskey="1" title="Go to the Home Page for The W3C Markup Validation Service"><strong>Home</strong></a></li>
-        <li><a href="<!--#echo var="relroot" -->about.html" title="Information About this Service">About...</a></li>
-        <li><a href="<!--#echo var="relroot" -->whatsnew.html" title="The changes made to this service recently">News</a></li>
-        <li><a href="<!--#echo var="relroot" -->docs/" accesskey="3" title="Documentation for this Service">Docs</a></li>
-	<li><a href="<!--#echo var="relroot" -->docs/help.html" title="Help and answers to frequently asked questions">Help&nbsp;&amp;&nbsp;<acronym title="Frequently Asked Questions">FAQ</acronym></a></li>
-        <li><a href="<!--#echo var="relroot" -->feedback.html" accesskey="4" title="How to provide feedback on this service">Feedback</a></li>
-    </ul>
+   <div id="banner">
+    <h1 id="title"><a href="http://www.w3.org/"><img height="48" alt="W3C" id="logo" src="http://www.w3.org/Icons/WWW/w3c_home_nb" /></a>
+    <a href="<!--#echo var="relroot" -->"><img src="<!--#echo var="relroot" -->images/markup_validation_service.png" alt="Markup Validation Service" /></a></h1>
+   </div>
 
-    <div id="main"><!-- This DIV encapsulates everything in this page - necessary for the positioning -->
+

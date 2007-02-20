@@ -1,65 +1,39 @@
-          <tr>
-            <th><label for="charset">Encoding:</label></th>
-            <td>
-              <select id="charset" name="charset">
-                <option value="(detect automatically)" selected="selected">(detect automatically)</option>
-                <option value="utf-8">utf-8 (Unicode, worldwide)</option>
-                <option value="utf-16">utf-16 (Unicode, worldwide)</option>
-                <option value="iso-8859-1">iso-8859-1 (Western Europe)</option>
-                <option value="iso-8859-2">iso-8859-2 (Central Europe)</option>
-                <option value="iso-8859-3">iso-8859-3 (Southern Europe)</option>
-                <option value="iso-8859-4">iso-8859-4 (North European)</option>
-                <option value="iso-8859-5">iso-8859-5 (Cyrillic)</option>
-                <option value="iso-8859-6-i">iso-8859-6-i (Arabic)</option>
-                <option value="iso-8859-7">iso-8859-7 (Greek)</option>
-                <option value="iso-8859-8">iso-8859-8 (Hebrew, visual)</option>
-                <option value="iso-8859-8-i">iso-8859-8-i (Hebrew, logical)</option>
-                <option value="iso-8859-9">iso-8859-9 (Turkish)</option>
-                <option value="iso-8859-10">iso-8859-10 (Latin 6)</option>
-                <option value="iso-8859-11">iso-8859-11 (Latin/Thai)</option>
-                <option value="iso-8859-13">iso-8859-13 (Latin 7, Baltic Rim)</option>
-                <option value="iso-8859-14">iso-8859-14 (Latin 8, Celtic)</option>
-                <option value="iso-8859-15">iso-8859-15 (Latin 9)</option>
-                <option value="iso-8859-16">iso-8859-16 (Latin 10)</option>
-                <option value="us-ascii">us-ascii (basic English)</option>
-                <option value="euc-jp">euc-jp (Japanese, Unix)</option>
-                <option value="shift_jis">shift_jis (Japanese, Win/Mac)</option>
-                <option value="iso-2022-jp">iso-2022-jp (Japanese, email)</option>
-                <option value="euc-kr">euc-kr (Korean)</option>
-                <option value="ksc_5601">ksc_5601 (Korean)</option>
-                <option value="gb2312">gb2312 (Chinese, simplified)</option>
-                <option value="gb18030">gb18030 (Chinese, simplified)</option>
-                <option value="big5">big5 (Chinese, traditional)</option>
-                <option value="tis-620">tis-620 (Thai)</option>
-                <option value="koi8-r">koi8-r (Russian)</option>
-                <option value="koi8-u">koi8-u (Ukrainian)</option>
-                <option value="iso-ir-111">iso-ir-111 (Cyrillic KOI-8)</option>
-                <option value="macintosh">macintosh (MacRoman)</option>
-                <option value="windows-1250">windows-1250 (Central Europe)</option>
-                <option value="windows-1251">windows-1251 (Cyrillic)</option>
-                <option value="windows-1252">windows-1252 (Western Europe)</option>
-                <option value="windows-1253">windows-1253 (Greek)</option>
-                <option value="windows-1254">windows-1254 (Turkish)</option>
-                <option value="windows-1255">windows-1255 (Hebrew)</option>
-                <option value="windows-1256">windows-1256 (Arabic)</option>
-                <option value="windows-1257">windows-1257 (Baltic Rim)</option>
-              </select>
-            </td>
-            <td><label for="fbc"><input id="fbc" name="fbc" type="checkbox" value="1" /> Use Fallback instead of Override</label></td>
+<table>
+  <tr>
+    <th>
+      <label for="<!--#echo var="fieldset_id" -->-charset">Character Encoding</label>
+    </th>
+    <td>
+      <!--#include virtual="charset-select.html" -->
+    </td>
+    <td><input id="<!--#echo var="fieldset_id" -->-fbc" name="fbc" type="checkbox" value="1" /><label for="<!--#echo var="fieldset_id" -->-fbc" title="Use selected Character encoding only if missing in the document">Only if missing</label></td>
+  </tr>
+  <tr>
+    <th>
+        <label for="<!--#echo var="fieldset_id" -->-doctype">Document Type</label>
+    </th>
+    <td>
+        <!--#include virtual="doctype-select.html" -->
+    </td>
+    <td><label for="<!--#echo var="fieldset_id" -->-fbd"><input id="<!--#echo var="fieldset_id" -->-fbd" name="fbd" type="checkbox" value="1" title="Use selected Document Type only if missing in the document" />Only if missing</label></td>
+  </tr>
+  <tr>
+          <td colspan="3"><input type="radio" name="group" id="<!--#echo var="fieldset_id" -->group_no" value="0" checked="checked" /><label for="<!--#echo var="fieldset_id" -->group_no">List Messages Sequentially</label> <input type="radio" name="group" id="<!--#echo var="fieldset_id" -->group_yes" value="1" /><label for="<!--#echo var="fieldset_id" -->group_yes">Group Error Messages by type</label></td>
+
+</tr>
+<tr>
+        <td><label title="Show Page Source" for="<!--#echo var="fieldset_id" -->-ss"><input id="<!--#echo var="fieldset_id" -->-ss" name="ss" type="checkbox" value="1" />Show Source</label></td>
+        <td colspan="2"><input id="<!--#echo var="fieldset_id" -->-st" name="st" type="checkbox" value="1" /><label for="<!--#echo var="fieldset_id" -->-st">Clean up Markup with HTML Tidy</label>
+        </td>
+        
+
+
           </tr>
           <tr>
-            <th><label for="doctype">Doctype:</label></th>
-            <td>
-<!--#include virtual="doctype-select.html" -->
-            </td>
-            <td><label for="fbd"><input id="fbd" name="fbd" type="checkbox" value="1" /> Use Fallback instead of Override</label></td>
-          </tr>
-          <tr>
-            <th rowspan="2">Options (<a title="Explanation for these options" href="docs/users.html#Options">Help</a>):</th>
-            <td><label title="Show Page Source" for="ss"><input id="ss" name="ss" type="checkbox" value="1" /> Show Source</label></td>
-            <td><label title="Show an Outline of the document" for="outline"><input id="outline" name="outline" type="checkbox" value="1" /> Show Outline</label></td>
-          </tr>
-          <tr>
-            <td><label title="Validate also pages for which the HTTP status code indicates an error" for="No200"><input id="No200" name="No200" type="checkbox" value="1" /> Validate error pages</label></td>
-	    <td><label title="Show Verbose Output" for="verbose"><input id="verbose" name="verbose" type="checkbox" value="1" checked="checked" /> Verbose Output</label></td>
-          </tr>
+                  <td><input id="<!--#echo var="fieldset_id" -->-outline" name="outline" type="checkbox" value="1" /><label title="Show an Outline of the document" for="<!--#echo var="fieldset_id" -->-outline">Show Outline</label>
+                  </td>
+                  <td><label title="Validate also pages for which the HTTP status code indicates an error" for="<!--#echo var="fieldset_id" -->-No200"><input id="<!--#echo var="fieldset_id" -->-No200" name="No200" type="checkbox" value="1" /> Validate error pages</label></td>
+
+                  <td><label title="Verbose Output" for="<!--#echo var="fieldset_id" -->-verbose"><input id="<!--#echo var="fieldset_id" -->-verbose" name="verbose" type="checkbox" value="0" />Verbose Output</label></td>
+        </tr>
+</table>

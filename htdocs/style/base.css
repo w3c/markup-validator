@@ -1,0 +1,499 @@
+/*
+   Base Style Sheet for the W3C CSS validation service
+	based on the one for Markup Validation Service.
+
+   Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
+   See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
+
+   $Id: base.css,v 1.1 2007-02-20 01:56:44 ot Exp $
+*/
+
+/*                 
+   General styling 
+                   */
+html {
+    background-color: white;
+    color: #11111A;
+}
+
+body {  
+    margin: auto auto;
+    padding-left: 6%;
+    padding-right: 6%;
+    background-color: white;
+    color: #11111A;
+    font-family: Helvetica, "Trebuchet MS", Arial, sans-serif;
+    font-size: 1em; /* setting base font to user's prefered size */
+    min-width: 50em;
+}
+p, pre, dt {     
+    line-height: 130%; 
+    padding-left: 20px;
+}
+
+/*                                                   
+   Main blocks - see also ul.navbar 
+                                                     */
+
+#banner {
+    background-color: white;
+    color: #11111A;
+    background-image: url(../images/header.jpg);
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: top right;
+    padding: 4px 0 0 0;
+    height: 55px; 
+    margin-bottom: 0;
+    margin-top: 22px;
+    border: 0;
+
+}
+
+#banner h1 { 
+    vertical-align: middle;
+    font-size: 1.5em;
+    display: inline;
+}
+
+p#tagline {
+    font-size: x-small;
+    padding: 0; 
+    line-height: 100%;
+    margin: 0 0 4em .8em;
+    background-color: white;
+    color: #11111A;
+    clear: both;
+}
+
+#main { 
+    padding: 15px 0;
+    background-color: white;
+    margin: 0;
+    color: #11111A;
+}
+
+.intro {
+  font-style: italic;
+  font-size: smaller;
+  text-align: justify;
+}
+
+/* 
+   Headers
+            */
+
+h1 { 
+    font-family: "Gill Sans", Helvetica, sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    text-decoration: none;
+}
+
+h2 { 
+    color: #777742;
+    background: white;
+    padding: 5px 15px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    font-size: 1.3em;
+    text-align: center;
+    text-decoration: none;
+    font-family: "Gill Sans", sans-serif;
+}
+
+h3 {
+    background-color: #fff;
+    color: #777742;
+    font-size: 1.1em;
+    padding: 2px 10px;
+    border-bottom: 1px dotted #aaaa77;
+    text-decoration: none;
+    font-family: "Gill Sans", sans-serif;
+} 
+
+h4 {
+    color: #777742;
+    background-color: white;
+    font-weight: 600;
+    font-style: italic;
+    text-decoration: none;
+    font-size: 1.0em;
+    padding-left: 15px;
+    font-family: "Gill Sans", sans-serif;
+}
+
+h5,h6 {
+    background-color: white;
+    color: #11111A;
+    font-family: "Gill Sans", sans-serif;
+    font-weight: normal;
+    padding-left: 15px;
+    }
+/* 
+   General link styling
+                         */
+
+a:link, a:visited {
+    color: #005A9C;
+    background-color: transparent;
+    text-decoration: none;
+
+}
+
+a:hover, a:active {
+    color: #005A9C;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+
+/* 
+   Other basic styles 
+                      */
+
+/* TODO - add ol, li, td here ? */
+p, dt {
+    margin-left: 15px;
+    margin-right: 25px;
+}
+
+dd {
+    margin-left: 35px;
+    margin-right: 25px;
+}
+
+#news dt {
+    font-weight: bold;
+     margin-top: 1em;
+   }
+
+img { 
+    margin:0;
+    padding: 0;
+    vertical-align: middle;
+    border: 0;
+}
+
+acronym:hover, abbr:hover {
+    cursor: help;
+}
+
+abbr[title], acronym[title], span[title], strong[title] {
+    border-bottom: thin dotted;
+    cursor: help;
+}
+
+pre, code, tt {
+    font-family: "Bitstream Vera Sans Mono", Monaco, "Andale Mono", monospace;
+    line-height: 100%;
+    white-space: pre;
+}
+
+a:link img, a:visited img {
+    border-style: none;
+}
+
+ul.toc {
+    list-style: none;
+}
+
+/*
+   Stuff we don't actually want too visible - or not at all
+                                                            */
+.hideme { display: none; }
+
+
+/*
+   Forms on front page, with tabtastic and toggable extra options
+         */
+#frontforms {
+	margin-left: 12%;
+	margin-right: 12%;
+	
+}
+
+
+
+/* Fieldsets */
+
+/* generic style for form fields */
+fieldset {
+    border: 1px solid #005A9C;
+    background-color: transparent;
+    color: #11111A;
+    margin-bottom: 3em;
+    margin-left: 0;
+}
+fieldset legend {
+    font-weight: bold;
+    padding: .5em;
+}
+fieldset.moreoptions legend {
+    font-weight: normal;
+}
+fieldset p { 
+    margin: 0 0  0.8em 0; 
+    padding: 0; 
+}
+
+fieldset div {
+    padding-top: 1em;
+}
+
+fieldset p.instructions {
+    padding-top: 1em;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+fieldset p.submit_button {
+    text-align: right;
+    padding-top: .5em;
+}
+fieldset p.submit_button input {
+    font-weight: bold;
+    color: #005A9C;
+    background: #fff;
+    padding: 0.2em 2em;
+    border: 2px outset #005A9C;
+}
+
+/* home page fieldsets */
+
+.tabset_tabs	{ 
+    margin:0; 
+    padding:0; 
+    list-style-type:none; 
+    position:relative; 
+    z-index:2; 
+    white-space:nowrap; 
+}
+
+.tabset_tabs li	{ 
+    margin:0; 
+    padding:0; 
+    display:inline;
+}
+
+.tabset_tabs a	{  
+    border: 0;
+    border-left: 1px solid #ADDBFE; 
+    text-decoration:none; 
+    padding: 0.8em 0.6em 0 0.6em;
+    background: white;
+    font-weight: bold;
+}
+
+.tabset_tabs a:hover	{ 
+    color:#424242 ! important; 
+    background: #E1F0FD url(../images/sm_gradient_hover.gif) 0 0 repeat-x;
+    text-decoration:none;  
+}
+
+.tabset_tabs a.active, .tabset_tabs a.active:hover { 
+    color:#424242 ! important; 
+    background-color: #8FCFFD !important;
+    background: #8FCFFD url(../images/sm_gradient_active.gif) 0 0 repeat-x;
+    border-color: #ADDBFE; 
+    border-left-width:1px; 
+    cursor:default; 
+    border-bottom: white; 
+    padding-top:0.8em; 
+    padding-bottom:1px; 
+    color: #fffff0 !important; 
+ }
+
+.tabset_tabs li.firstchild a, .tabset_tabs li:first-child a { 
+    border-left: 1px solid white; 
+}
+div#fields {
+    background: #8FCFFD url(../images/lg_gradient.gif) bottom left repeat-x;
+    margin: 0;
+    padding: 0;
+}
+.tabset_content	{ 
+    border: none;
+    position:relative; 
+    z-index:1; 
+    padding:0.5em 1em; 
+    border-left: 1px solid white;
+    padding-bottom: 2em;
+}
+
+input {
+    vertical-align: middle;
+}
+input.reset {
+    text-align: center;
+}
+input.default {
+    text-align: center;
+    font-weight: bold;
+}
+
+
+/* the following from http://www.mindsack.com/toggle/ (c) Kent Brewster */
+
+p.toggle
+{
+        background: transparent url('../images/arrow-down.gif')  0 0 no-repeat;
+        text-indent: 20px;
+        cursor:pointer;
+    color: #005A9C;
+    background-color: transparent;
+    margin-bottom: 0;
+}
+
+p.closed
+{
+        background: transparent url('../images/arrow-right.gif') 0 0 no-repeat !important;
+}
+
+
+.hidden
+{
+        display:none;
+}
+fieldset.moreoptions {
+border-color: white;
+border-style: dotted;
+margin-bottom: 0;
+padding-left: .3em;
+}
+fieldset.moreoptions div, fieldset.moreoptions table {
+margin-top: 0;
+margin-left: .5em;
+font-size: smaller;
+}
+
+fieldset.moreoptions td, fieldset.moreoptions th, fieldset.moreoptions table {
+        border: 0 !important;
+}
+fieldset.moreoptions th {
+	background-color: transparent !important;
+	text-align: left;   
+}
+
+
+fieldset.closed {
+border: 0;
+}
+
+
+
+/* IE6 hack, avoid "leaking" of fiedset background into legend 
+(more hacking in tabtastic.css to make the "ghost" of the legend disappear) */
+* html legend { position:absolute; top: -25em !important; left: -25em !important; }
+* html fieldset{ position: relative; margin-top:0 !important; padding-top:0 !important; }
+
+
+
+/* tables in the documentation */
+
+table {
+	border-collapse: collapse;
+	border-right: 1px solid #ccc;
+}
+td, th{
+	border-top: 0px solid #ddd;
+	border-bottom: 1px solid #ccc;
+	border-left: 1px solid #eee;
+	padding: 6px;
+	border-collapse: collapse;
+}
+th {
+	background-color: #eee;
+	color: #11111A;
+	border-right: 1px solid #ccc;
+}
+
+
+/* 
+	Menu Bar
+			*/
+
+ul.navbar {
+        color: #005A9C;
+	border-top: 1px solid #005A9C;
+	border-bottom: 1px solid #005A9C;
+        background-color: white;
+        margin: 3em 0 0 0;
+        padding: 3px 0 3px 0;
+        line-height: 140%;
+        vertical-align: bottom;
+        font-size: 0.9em;
+        list-style-type: none;
+	text-align: center;
+	font-weight: bold;
+}
+
+ul.navbar { padding-left: 1em; padding-right: 1em}
+ul.navbar li {
+  display: inline;
+}
+
+ul.navbar li a {
+  padding-right: 1.2em;
+  padding-left: 1.2em;
+}
+
+/* 
+	legalese and logos beneath the menu bar
+							*/
+
+p#activity_logos {
+float:left; 
+width: 144px; 
+padding: 8px 0 40px 0; 
+}
+
+p#support_logo {
+float: right; width: 180px; padding: 0; margin-top: 12px; font-size: x-small; text-align:center;
+}
+
+                                                            
+p.copyright {
+  margin-top:     20px;
+  margin-left:    210px;
+  margin-right: 240px;
+  font-size:      x-small;
+  text-align:     justify;
+  text-transform: uppercase;
+  font-family: "Bitstream Vera Sans Mono", monospace;
+  color: #888;
+  background-color: white;
+  line-height:    120%;
+}
+
+p.copyright a {
+  color: #88f;
+   background-color: white;
+  text-decoration: none;
+}
+
+
+
+/* 
+		Jump Bar  - results page - based on navbar styling
+(from markup validator - note used in this design yet)
+								*/
+#jumpbar {
+    margin-top:    -1.5em; 
+    margin-bottom: 1em;
+}
+#jumpbar li {
+        color: #11111A !important;   
+}
+/* language selection bar */
+#lang_choice {
+        position: absolute;
+        display: block;
+        width: 50em; 
+        top: 0px; 
+        text-align: right; 
+        right: 75px; 
+	margin-top: 6px;
+        font-size: x-small;
+	list-style: none;
+}
+#lang_choice li { display: inline; padding-left: .5em;}
