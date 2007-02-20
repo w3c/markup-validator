@@ -12,7 +12,7 @@
 
 <TMPL_IF NAME="file_uri">
 <form id="form" method="get" action="check">
-  <table class="header" width="100%">
+  <table class="header">
     <tr>
     <th>Result:</th>
     <TMPL_IF NAME="VALID">
@@ -85,44 +85,47 @@
     </tr>
 </TMPL_IF>
   </table>
+
 <TMPL_UNLESS NAME="is_upload">
-  <fieldset>
-    <legend>Revalidate With Options</legend>
+        <div id="revalidate_button"><input type="submit" value="Revalidate" title="Validate this document again" /></div>
+        <fieldset id="revalidate_opts" class="alttoggle closed">
+                 <legend class="toggletext">More Options</legend>
+
     <table class="header">
       <tr>
-        <th rowspan="2"><input type="submit" value="Revalidate" title="Revalidate file" />: </th>
-        <td><label title="Show Page Source" for="ss"><input type="checkbox" value="1" id="ss" name="ss" 
+                  <td><input type="radio" name="group" id="group_no" value="0" checked="checked" /><label for="group_no">List Messages Sequentially</label> <input type="radio" name="group" id="group_yes" value="1" /><label for="group_yes">Group Error Messages by type</label></td>
+        <td><input type="checkbox" value="1" id="ss" name="ss" 
 <TMPL_IF NAME="opt_show_source">
 	checked="checked"
 </TMPL_IF>
-		/>Show&nbsp;Source</label></td>
-              <td><label title="Show an Outline of the document" for="outline"><input type="checkbox" value="1" id="outline" name="outline" 
+		/><label title="Show Page Source" for="ss">Show&nbsp;Source</label></td>
+              <td><input type="checkbox" value="1" id="outline" name="outline" 
 <TMPL_IF NAME="opt_show_outline">
 	checked="checked"
 </TMPL_IF>
-		/>Show&nbsp;Outline</label></td>
+		/><label title="Show an Outline of the document" for="outline">Show&nbsp;Outline</label></td>
             </tr>
             <tr>
-              <td><label title="Validate also pages for which the HTTP status code indicates an error" for="No200"><input type="checkbox" value="1" id="No200" name="No200"
+    		<td><input id="st" name="st" type="checkbox" value="1" /><label for="st">Clean up Markup with HTML Tidy</label></td>
+              <td><input type="checkbox" value="1" id="No200" name="No200"
 <TMPL_IF NAME="opt_no200">
 	checked="checked"
 </TMPL_IF>
-		/>Validate&nbsp;error&nbsp;pages</label></td>
-              <td><label title="Show Verbose Output" for="verbose"><input type="checkbox" value="1" id="verbose" name="verbose"
+		/><label title="Validate also pages for which the HTTP status code indicates an error" for="No200">Validate&nbsp;error&nbsp;pages</label></td>
+              <td><input type="checkbox" value="1" id="verbose" name="verbose"
 <TMPL_IF NAME="opt_verbose">
 	checked="checked"
 </TMPL_IF>
-		/>Verbose&nbsp;Output</label></td>
+		/><label title="Show Verbose Output" for="verbose">Verbose&nbsp;Output</label></td>
             </tr>
 
     </table>
-      <div class="moreinfo">
-        <p>
+        <p class="moreinfo">
           <a href="docs/users.html#Options">Help</a> on the options is available.
         </p>
-      </div>
-      <div class="cheat"><!-- *sigh* --></div>
   </fieldset>
+  
+  
 </TMPL_UNLESS>
 </form>
 </TMPL_IF>
