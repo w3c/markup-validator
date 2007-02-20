@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.468 2007-02-07 15:24:29 ot Exp $
+# $Id: check,v 1.469 2007-02-20 02:02:36 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -56,7 +56,6 @@ use Encode                    qw();
 use Encode::Alias             qw();
 use HTML::Encoding       0.52 qw();
 use SGML::Parser::OpenSP      qw();
-use HTML::Tidy                qw();
 
 ###############################################################################
 #### Constant definitions. ####################################################
@@ -181,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.468 $;
+  $VERSION =  q$Revision: 1.469 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -375,6 +374,7 @@ $File->{Opt}->{'No Attributes'}  = $q->param('noatt')   ? TRUE                  
 $File->{Opt}->{'Show ESIS'}      = $q->param('esis')    ? TRUE                   :  FALSE;
 $File->{Opt}->{'Show Errors'}    = $q->param('errors')  ? TRUE                   :  FALSE;
 $File->{Opt}->{'Verbose'}        = $q->param('verbose') ? TRUE                   :  FALSE;
+$File->{Opt}->{'Group Errors'}   = $q->param('group') ? TRUE                   :  FALSE;
 $File->{Opt}->{'Debug'}          = $q->param('debug')   ? TRUE                   :  FALSE;
 $File->{Opt}->{'No200'}          = $q->param('No200')   ? TRUE                   :  FALSE;
 $File->{Opt}->{'Charset'}        = $q->param('charset') ? lc $q->param('charset'):     '';
@@ -691,8 +691,17 @@ if ($File->{Namespace}) {
 
 ## if invalid content, pass through tidy
 if (! $File->{'Is Valid'}) {
-  my $tidy = HTML::Tidy->new();
-  $File->{'Tidy'} = $tidy->clean(join"\n",@{$File->{Content}});
+  eval {
+    local $SIG{__DIE__};
+    require HTML::Tidy;
+    my $tidy = HTML::Tidy->new();
+    $File->{'Tidy'} = $tidy->clean(join"\n",@{$File->{Content}});
+    $File->{'Tidy_OK'} = TRUE;
+  };
+  if ($@) {
+    $File->{'Tidy_OK'} = FALSE;
+  }
+
 }
 
 my $template;
@@ -786,6 +795,7 @@ sub prep_template ($$) {
   $T->param(opt_show_parsetree => $File->{Opt}->{'Show Parsetree'});
   $T->param(opt_show_noatt     => $File->{Opt}->{'No Attributes'});
   $T->param(opt_verbose        => $File->{Opt}->{'Verbose'});
+  $T->param(opt_group_errors        => $File->{Opt}->{'Group Errors'});
   $T->param(opt_no200          => $File->{Opt}->{'No200'});
 
   #
@@ -841,14 +851,24 @@ sub fin_template ($$) {
   $num_warnings += scalar @{$File->{Warnings}};
   $T->param(valid_warnings_num => $num_warnings);
   my $number_of_errors = ""; # textual form of $num_errors
+  my $number_of_warnings = ""; # textual form of $num_errors
+
   if ($num_errors > 1) {
     $number_of_errors = "$num_errors errors"
   }
   else {
     $number_of_errors = "$num_errors error"
   }
+  if ($num_warnings > 1) {
+    $number_of_warnings = "$num_warnings warnings"
+  }
+  else {
+    $number_of_warnings = "$num_warnings warning"
+  }
+  
   $T->param(file_errors => $reported_errors);
    $T->param(number_of_errors => $number_of_errors);
+   $T->param(number_of_warnings => $number_of_warnings);
   if ($File->{'Is Valid'}) {
     $T->param(VALID => TRUE);
     $T->param(valid_status => 'Valid');
@@ -1254,6 +1274,7 @@ sub override_doctype {
 sub report_errors ($) {
   my $File = shift;
   my $Errors = [];
+  my %Errors_bytype;
   my $number_of_errors = 0;
   my $number_of_warnings = 0;
   my $number_of_info = 0;
@@ -1270,16 +1291,24 @@ sub report_errors ($) {
       my $explanation;
       if ($err->{num}) {
         my $num = $err->{num};
-        if (exists $Msgs{$num}) { # We've already seen this message...
-          if ($File->{Opt}->{Verbose}) { # ...so only repeat it in Verbose mode.
-            $explanation = qq(\n    <div class="hidden mid-$num"></div>\n);
-          }
-        } else {
-          $Msgs{$num} = 1;
+        <         if (exists $Msgs{$num}) { # We've already seen this message...
+        <           
+        <             $explanation = qq(\n    <div class="hidden mid-$num"></div>\n);
+        <           }
+        <         } else {
+        <           $Msgs{$num} = 1;
+        
+        
+#        if (exists $Msgs{$num}) { # We've already seen this message...
+#          if ($File->{Opt}->{Verbose}) { # ...so only repeat it in Verbose mode.
+#            $explanation = qq(\n    <div class="hidden mid-$num"></div>\n);
+#          }
+#        } else {
+#          $Msgs{$num} = 1;
           $explanation .= "\n    $RSRC->{msg}->{$num}->{verbose}\n"
             if exists $RSRC->{msg}->{$num}
             && exists $RSRC->{msg}->{$num}->{verbose};
-        }
+#        }
         my $_msg = $RSRC->{msg}->{nomsg}->{verbose};
         $_msg =~ s/<!--MID-->/$num/g;
         if ($File->{'Is Upload'})
@@ -1291,7 +1320,7 @@ sub report_errors ($) {
           my $escaped_uri = uri_escape($File->{URI});
           $_msg =~ s/<!--URI-->/$escaped_uri/g;
         }
-        $explanation .= "    $_msg\n"; # The send feedback plea.
+        $explanation = "    $_msg\n".$explanation; # The send feedback plea.
       }
 
       $err->{src} = $line;
@@ -1322,9 +1351,35 @@ sub report_errors ($) {
         $number_of_warnings += 1;
       }
       # TODO other classes for "X" etc? FIXME find all types of message.
-
+      
       push @{$Errors}, $err;
-    }
+      
+      if (($File->{Opt}->{'Group Errors'}) and (($err->{type} eq 'E') or ($err->{type} eq 'W')or ($err->{type} eq 'X'))) { 
+              # index by num for errors and warnings only - info usually give context of error or warning
+        if (! exists $Errors_bytype{$err->{num}}) {
+                $Errors_bytype{$err->{num}}->{instances} = [];
+                my $msg_text = $RSRC->{msg}->{$err->{num}}->{original};
+                $msg_text =~ s/%1/X/;
+                $msg_text =~ s/%2/Y/;
+                $Errors_bytype{$err->{num}}->{msg} = $msg_text;
+                $Errors_bytype{$err->{num}}->{expl} = $err->{expl};
+                $Errors_bytype{$err->{num}}->{type} = $err->{type};
+                $Errors_bytype{$err->{num}}->{class} = $err->{class};
+                $Errors_bytype{$err->{num}}->{err_type_err} = $err->{err_type_err};
+                $Errors_bytype{$err->{num}}->{err_type_warn} = $err->{err_type_warn};
+                $Errors_bytype{$err->{num}}->{err_type_info} = $err->{err_type_info};
+                
+                
+                } 
+        push @ { $Errors_bytype{$err->{num}}->{instances} }, $err;
+      }
+    } 
+  }
+  if ($File->{Opt}->{'Group Errors'})   {
+          $Errors = [];
+          for my $err_num (keys %Errors_bytype){
+            push @{$Errors}, $Errors_bytype{$err_num};
+          }
   }
   return $number_of_errors, $number_of_warnings, $number_of_info, $Errors;
 }
@@ -1805,6 +1860,8 @@ sub self_url_q {
   $thispage .= ';outline=1' if $q->param('outline');
   $thispage .= ';No200=1'   if $q->param('No200');
   $thispage .= ';verbose=1' if $q->param('verbose');
+  $thispage .= ';group=1' if $q->param('group');
+  
   if ($q->param('doctype')
       and not $q->param('doctype') =~ /(Inline|detect)/i) {
     $thispage .= ';doctype=' . uri_escape($q->param('doctype'));
@@ -1841,6 +1898,7 @@ sub self_url_file {
 
   # These were not added by report_valid; perhaps they should be?
   # $thispage .= ';verbose=1' if $File->{Opt}->{'Verbose'};
+  # $thispage .= ';group=1' if $File->{Opt}->{'Group Errors'};
   # $thispage .= ';No200=1'   if $File->{Opt}->{'No200'};
 
   return $thispage;
