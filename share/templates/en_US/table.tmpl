@@ -93,7 +93,16 @@
 
     <table class="header">
       <tr>
-                  <td><input type="radio" name="group" id="group_no" value="0" checked="checked" /><label for="group_no">List Messages Sequentially</label> <input type="radio" name="group" id="group_yes" value="1" /><label for="group_yes">Group Error Messages by type</label></td>
+                  <td><input type="radio" name="group" id="group_no" value="0" 
+                          <TMPL_UNLESS NAME="opt_group_errors">
+                          	checked="checked"
+                          </TMPL_UNLESS>
+                          /><label for="group_no">List Messages Sequentially</label> 
+                          <input type="radio" name="group" id="group_yes" value="1"
+                                  <TMPL_IF NAME="opt_group_errors">
+                                  	checked="checked"
+                                  </TMPL_IF>
+                                   /><label for="group_yes">Group Error Messages by type</label></td>
         <td><input type="checkbox" value="1" id="ss" name="ss" 
 <TMPL_IF NAME="opt_show_source">
 	checked="checked"
@@ -106,7 +115,11 @@
 		/><label title="Show an Outline of the document" for="outline">Show&nbsp;Outline</label></td>
             </tr>
             <tr>
-    		<td><input id="st" name="st" type="checkbox" value="1" /><label for="st">Clean up Markup with HTML Tidy</label></td>
+    		<td><input id="st" name="st" type="checkbox" value="1"
+                        <TMPL_IF NAME="opt_show_tidy">
+                        	checked="checked"
+                        </TMPL_IF>
+    		         /><label for="st">Clean up Markup with HTML Tidy</label></td>
               <td><input type="checkbox" value="1" id="No200" name="No200"
 <TMPL_IF NAME="opt_no200">
 	checked="checked"
