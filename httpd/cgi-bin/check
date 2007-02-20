@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.469 2007-02-20 02:02:36 ot Exp $
+# $Id: check,v 1.470 2007-02-20 02:19:27 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.469 $;
+  $VERSION =  q$Revision: 1.470 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1290,14 +1290,7 @@ sub report_errors ($) {
 
       my $explanation;
       if ($err->{num}) {
-        my $num = $err->{num};
-        <         if (exists $Msgs{$num}) { # We've already seen this message...
-        <           
-        <             $explanation = qq(\n    <div class="hidden mid-$num"></div>\n);
-        <           }
-        <         } else {
-        <           $Msgs{$num} = 1;
-        
+        my $num = $err->{num};        
         
 #        if (exists $Msgs{$num}) { # We've already seen this message...
 #          if ($File->{Opt}->{Verbose}) { # ...so only repeat it in Verbose mode.
