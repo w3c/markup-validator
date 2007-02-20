@@ -1,19 +1,22 @@
 <div id="result">
-<TMPL_IF NAME="is_tentative">
-  <h2 class="tentative_valid">This Page Is <em>Tentatively</em> Valid <TMPL_VAR NAME="file_version" ESCAPE="HTML"></h2>
-<TMPL_ELSE>
-  <h2 class="valid">This Page Is Valid <TMPL_VAR NAME="file_version" ESCAPE="HTML">!</h2>
-</TMPL_IF>
-  <dl class="tip">
-    <dt><a href="http://www.w3.org/2001/06tips/">Tip Of The Day</a>:</dt>
-    <dd><a href="<TMPL_VAR NAME="tip_uri" ESCAPE="HTML">"><TMPL_VAR NAME="tip_slug"></a></dd>
-  </dl>
+
+        <TMPL_IF NAME="have_warnings">
+          <TMPL_INCLUDE NAME="warnings.tmpl">
+        </TMPL_IF>
+
 <TMPL_IF NAME="has_errors">
+<h3 id="warning_loop">Validation Output<TMPL_IF NAME="number_of_warnings">: <TMPL_VAR NAME="number_of_warnings" ESCAPE="HTML"></TMPL_IF></h3>
     <p>
       Below is a list of the warning message(s) produced when validating your document.
     </p>
-<TMPL_INCLUDE NAME="error_loop.tmpl">
+    <TMPL_IF NAME="opt_group_errors">
+        <TMPL_INCLUDE NAME="error_loop_grouped.tmpl">
+    <TMPL_ELSE>
+        <TMPL_INCLUDE NAME="error_loop.tmpl">
+    </TMPL_IF>
 </TMPL_IF>
+
+<h3 id="congrats">Congratulations</h3>
   <p>
 <TMPL_IF NAME="is_upload">
     The uploaded document "<TMPL_VAR NAME="file_uri" ESCAPE="HTML">"

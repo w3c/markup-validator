@@ -1,0 +1,301 @@
+/* style sheet for the validator's results page          */
+/* $Id: results.css,v 1.1 2007-02-20 02:14:47 ot Exp $ */
+
+.input {
+  color: black;
+  background-color: #eee;
+  font-family: "Bitstream Vera Sans Mono", monospace;
+  font-size: small;
+}
+
+/* Various Bits of the Table Header */
+/*
+*/
+fieldset div.moreinfo {
+  float: right;
+  width: 30%;
+}
+
+fieldset div.moreinfo p {
+  background: #FFF;
+  border: 1px solid #CCC;
+  padding: 10px;
+  text-align: justify;
+  font-size: smaller;
+}
+
+fieldset div.cheat {
+  clear: both;
+}
+
+
+table.header {
+  clear: left;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+fieldset table.header {
+  float: left;
+  margin: 1ex;
+}
+
+/* Error Messages Display */
+/*
+*/
+
+ol li.msg_info, ol li.msg_warn, ol li.msg_err {
+  border: 1px solid #eee;
+  border-top: 0;
+}
+
+ol li.msg_info, ol li.msg_warn, ol li.msg_err {
+  list-style-position: inside;
+  padding: .5em;
+}
+
+ol#error_loop {
+        padding:0;
+        border-top: 1px solid #eee;
+}
+
+ul#warnings {
+        list-style-type: none;       
+}
+
+li.msg_info span.err_type{
+  background-color: #888;
+  padding: .1em .5em;
+  color: white;
+  font-size: smaller;
+}
+
+li.msg_warn span.err_type{
+  padding: .1em .5em;
+  background-color: #FA9084;
+  color: #333;
+  font-size: smaller;
+}
+
+li.msg_err span.err_type{
+  padding: .1em .5em;
+  background-color: #D23D24;
+  color:white;
+  font-size: smaller;
+}
+
+.msg {
+  font-weight: bold;
+}
+
+li.msg_info span.msg { /* these messages are not errors */
+  font-weight: normal !important;  
+}
+
+.ve {
+  font-size: smaller;
+  padding: 0;
+  width: 100%;
+}
+
+.ve p {
+  line-height: 110%;
+  margin: 1ex 5em 1ex 1em;
+  text-align: justify;
+}
+
+/* no Helpwanted, hence giving it a bit of space instead */
+li.msg_info {
+  padding-bottom: 2em;
+}
+
+p.helpwanted {
+  padding: 0;
+  margin: 0;
+  margin-top: .5em;
+  color:        #888;
+  text-align:       left;
+  float: right;
+  width: 20px;
+  font-weight: bold;
+}
+
+p.helpwanted a {
+  color: #88f;
+  text-decoration: none;
+}
+
+code.input {
+  margin-bottom: 2ex;
+}
+
+code.input strong {
+  color: red;
+  padding-left: .5ex;
+  padding-right: .5ex;
+  font-weight: bolder;
+}
+
+
+/* Source Code Display */
+/*
+*/
+#source ol {
+
+  font-family: "Bitstream Vera Sans Mono", monospace;
+  font-size: smaller;
+  background: #eee;
+  border: 1px solid black;
+  margin: 1em;
+}
+#source ol li {
+  margin: 1em;
+}
+
+#source ol li a {
+  color: inherit;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+pre.source {
+  font-family: "Bitstream Vera Sans Mono", monospace;      
+  border: 1px solid black;
+  background: #eee;
+  margin: 1em;
+  padding: 1em;
+  overflow: scroll;
+  font-size: smaller;
+}
+
+/* Style for non-parser warnings. */
+/*
+*/
+
+ul#warnings {
+  padding: 0;
+}
+
+/* "Fatal" warnings... */
+ul#warnings li {
+  margin: 0;
+  padding: 0;
+}
+
+ul#warnings li span.msg {
+  /* font-weight: bold; */
+  background-color: #FA9084 !important; /* based on color for .invalid, but washed out */
+  font-weight: normal;
+  padding: .2em;
+  margin-left: 20px;
+}
+
+
+th {
+  padding-right: .5em;
+  text-align: right;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+td {
+  text-align: left;
+  padding-left: .5em;
+}
+
+.info {
+  color: black;
+  background: white;
+  border-color: gray;
+}
+
+.warning {
+  color: black;
+  background: silver;
+  border-color: gray;
+}
+
+.error {
+  color: black;
+  background: yellow;
+  border-color: black;
+}
+
+.fatal h2 {
+  color: black;
+  background: red;
+  border: solid black 1px;
+}
+
+div#result {
+  clear: left;
+  padding-top: 1em;
+}
+
+h2.valid, h2.invalid, h2.tentative_valid {
+    text-align: center;
+    margin: 0;
+  font-family: "Bitstream Vera Sans", sans-serif;
+  font-size-adjust:	.53;
+  font-size:		1.3em;
+  font-weight:		500;
+  font-style:		normal;
+  text-decoration:	none;
+  word-spacing:		normal;
+  letter-spacing:	normal;
+  text-transform:	none;
+  border-color:		black;
+  padding-top:		.2em;
+  padding-bottom: 	.2em;
+}
+
+.valid {
+  background-color:	#55B05A;
+  color:		white;
+}
+
+.tentative_valid {
+/* we could use a different color than for "valid" */
+/*  background-color:	#888; */
+/* ... or simply use the same */
+  background:           #55B05A;
+  color:		white;
+}
+
+.invalid {
+  background-color:	#D23D24;
+  color:		white;
+}
+
+td.valid {
+  background-color:		white;
+  color:           #55B05A;
+}
+
+td.invalid 
+{
+  color:	#D23D24;
+  background-color:	white;
+}
+
+img.inline-badge {
+  float: left;
+}
+
+
+p.backtop {
+        color: #bbc;
+        font-size: x-small;
+        padding-right: 0 !important;
+        margin: 1em !important;
+        text-transform: uppercase;
+        font-weight: bold;
+        padding-top: .3em;
+        text-align: right;
+        border-top: 1px solid #eef;
+}
+
+p.backtop a:link, p.backtop a:hover, p.backtop a:visited {
+        color: #bbc;
+        text-deciration: none;
+}

@@ -1,6 +1,18 @@
+<TMPL_IF NAME="VALID">
+  <TMPL_IF NAME="is_tentative">
+    <h2 class="tentative_valid">This Page Is <em>Tentatively</em> Valid 
+    <TMPL_VAR NAME="file_version" ESCAPE="HTML"></h2>
+  <TMPL_ELSE>
+    <h2 class="valid">This Page Is Valid <TMPL_VAR NAME="file_version" ESCAPE="HTML">!</h2>
+  </TMPL_IF>
+<TMPL_ELSE>
+  <h2 id="results" class="invalid">This page is <strong>not</strong> Valid <TMPL_VAR NAME="file_version" ESCAPE="HTML">!</h2>
+</TMPL_IF>  
+
+
 <TMPL_IF NAME="file_uri">
 <form id="form" method="get" action="check">
-  <table class="header">
+  <table class="header" width="100%">
     <tr>
     <th>Result:</th>
     <TMPL_IF NAME="VALID">

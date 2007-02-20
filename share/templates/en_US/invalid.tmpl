@@ -1,18 +1,21 @@
-  <div id="result">
-    <h2 id="results" class="invalid">This page is <strong>not</strong> Valid <TMPL_VAR NAME="file_version" ESCAPE="HTML">!</h2>
-<TMPL_IF NAME="is_xml">
-    <p>
-      Below are the results of checking this document for <a
-      href="http://www.w3.org/TR/REC-xml#sec-conformance">XML
-      well-formedness</a> and validity.
-    </p>
-<TMPL_ELSE>
-    <p>
-      Below are the results of attempting to parse this document with
-      an SGML parser.
-    </p>
+
+<TMPL_IF NAME="have_warnings">
+  <TMPL_INCLUDE NAME="warnings.tmpl">
 </TMPL_IF>
 
-<TMPL_INCLUDE NAME="error_loop.tmpl">
+<TMPL_INCLUDE NAME="backtop.tmpl">
+
+
+<div id="result">
+
+<h3>Validation Output<TMPL_IF NAME="number_of_errors">: <TMPL_VAR NAME="number_of_errors" ESCAPE="HTML"></TMPL_IF></h3>
+
+<TMPL_IF NAME="opt_group_errors">
+    <TMPL_INCLUDE NAME="error_loop_grouped.tmpl">
+<TMPL_ELSE>
+    <TMPL_INCLUDE NAME="error_loop.tmpl">
+</TMPL_IF>
+
+<TMPL_INCLUDE NAME="backtop.tmpl">
 
   </div>

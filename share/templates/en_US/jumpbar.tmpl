@@ -1,7 +1,17 @@
-      <div id="jumpbar">
-        Jump To:
-        <ul>
-          <li><a title="Result of Validation" href="#result">Results</a></li>
+
+
+        <ul class="navbar" id="jumpbar">
+                <li><strong>Jump To:</strong></li>
+                <TMPL_IF NAME="have_warnings">
+                        <li><a href="#preparse_warnings">Important Warnings</a></li>
+                </TMPL_IF>
+                <TMPL_IF NAME="has_errors">
+          <li><a title="Result of Validation" href="#result">Validation Output</a></li>
+          </TMPL_IF>
+          <TMPL_IF NAME="VALID">
+                  <li><a title="Information on validation, Icons" href="#congrats">Congratulations &middot; Icons</a></li>
+</TMPL_IF>                  
+          
   <TMPL_IF NAME="opt_show_source">
           <li><a title="Listing of Source Input" href="#source">Source Listing</a></li>
   </TMPL_IF>
@@ -22,4 +32,3 @@
           <li><a title="Raw Errors" href="#raw_errors">Raw Errors</a></li>
   </TMPL_IF>
         </ul>
-      </div>

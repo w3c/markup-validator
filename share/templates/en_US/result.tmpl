@@ -1,28 +1,23 @@
 <TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE name="jumpbar.tmpl">
+<!-- valid/invalid header and revalidation table -->
+<TMPL_INCLUDE NAME="table.tmpl">
 
-    <div id="main">
-      <div id="head">
-        <TMPL_INCLUDE name="jumpbar.tmpl">
-        <TMPL_INCLUDE NAME="table.tmpl">
-      </div><!-- end of "head" -->
-      <TMPL_IF NAME="have_warnings">
-        <TMPL_INCLUDE NAME="warnings.tmpl">
-      </TMPL_IF>
+                <TMPL_IF NAME="is_xml">
+                  <p><strong>Note</strong>:
+                  The Validator XML support has
+                  <a href="http://openjade.sourceforge.net/doc/xml.htm"
+                  title="Limitations in Validator XML support">some limitations</a>.
+                  </p>
+                </TMPL_IF>
 
-      <TMPL_IF NAME="is_xml">
-        <p><strong>Note</strong>:
-        The Validator XML support has
-        <a href="http://openjade.sourceforge.net/doc/xml.htm"
-        title="Limitations in Validator XML support">some limitations</a>.
-        </p>
-      </TMPL_IF>
 
-      <a id="skip" name="skip"></a>
-      <TMPL_IF NAME="VALID">
-        <TMPL_INCLUDE NAME="valid.tmpl">
-      <TMPL_ELSE>
-        <TMPL_INCLUDE NAME="invalid.tmpl">
-      </TMPL_IF>
+                <TMPL_IF NAME="VALID">
+                  <TMPL_INCLUDE NAME="valid.tmpl">
+                <TMPL_ELSE>
+                  <TMPL_INCLUDE NAME="invalid.tmpl">
+                </TMPL_IF>
+
 
       <TMPL_IF NAME="opt_show_source">
         <TMPL_INCLUDE NAME="opt_show_source.tmpl">
@@ -47,6 +42,8 @@
       <TMPL_IF NAME="opt_show_raw_errors">
         <TMPL_INCLUDE NAME="opt_show_raw_errors.tmpl">
       </TMPL_IF>
+
+
 
     </div><!-- end of "main" -->
 
