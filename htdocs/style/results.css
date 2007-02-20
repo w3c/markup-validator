@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.2 2007-02-20 03:17:01 ot Exp $ */
+/* $Id: results.css,v 1.3 2007-02-20 08:22:20 ot Exp $ */
 
 .input {
   color: black;
@@ -295,6 +295,7 @@ p.backtop {
         padding-top: .3em;
         text-align: right;
         border-top: 1px solid #eef;
+        clear: both;
 }
 
 p.backtop a:link, p.backtop a:hover, p.backtop a:visited {
