@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.59 2006-10-18 06:13:59 ot Exp $"
---><!--#set var="date" value="\$Date: 2006-10-18 06:13:59 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.60 2007-02-20 08:21:33 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-02-20 08:21:33 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -9,8 +9,8 @@
 <h3 id="TableOfContents">Table of contents</h3>
 <div id="toc">
 <ol>
-    <li><a href="#doctypes">Document types support</a></li>
-    <li><a href="#invalid">Docs that are probably invalid</a></li>
+    <li><a href="#doctypes">Document types support</a> (all should pass validation)</li>
+    <li><a href="#invalid">Invalid documents</a></li>
     <li><a href="#well-formed">Docs that should be Well Formed</a></li>
     <li><a href="#encodings">Various Encodings</a></li>
     <li><a href="#errors">Error conditions &amp; strange cases</a></li>
@@ -146,6 +146,12 @@
       <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-print_1_0.xhtml">view</a>:
       XHTML-Print
     </li>
+    <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/REC-SVG-1_0-minimal.svg">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/REC-SVG-1_0-minimal.svg">validate</a> -
+      <a href="REC-SVG-1_0-minimal.svg">SVG 1.0 Rec. minimal document</a></li>
+    
+    
   </ul>
 
 <h4>Document types outside the main catalogue</h4>
@@ -177,10 +183,39 @@ All these documents should validate, without "pretty print" for the document typ
 
 
 
-  <h3 id="invalid">Docs that are probably invalid</h3>
-      <p><strong>we must FIX THIS!</strong> It's not reliable any more...</p>
-      
-      
+  <h3 id="invalid">Invalid Documents</h3>
+
+  <ul>
+          <li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.html;ss">XHTML, no DOCTYPE, no xmlns</a> (thus invalid)</li>
+  	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-bogus-element.html;ss">validate</a> -
+  	        <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-bogus-element.html;ss">with v.w.o</a> -
+  	        <a href="xhtml1-bogus-element.html">XHTML1, bogus element</a> (foo element not in DTD)</li>
+  	<li><a href="../../check?uri=http://www.w3.org/2001/01/xml-latin1.html;ss;sp;noatt">validate</a> -
+  	        <a href="http://validator.w3.org/check?uri=http://www.w3.org/2001/01/xml-latin1.html;ss;sp;noatt">with v.w.o</a> -
+  	        <a href="http://www.w3.org/2001/01/xml-latin1.html">us-ascii xhtml document with a latin1 character</a> </li>
+  	      <li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/error_pls_warning.html;ss">validate</a> - 
+        <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/error_pls_warning.html;ss">with v.w.o</a> - 
+        <a href="error_pls_warning.html">view</a>: Invalid document (img without alt, invalid <a href="http://www.w3.org/TR/html401/struct/objects.html#adef-alt">per</a>). 
+        <br />
+        Also has non-sgml character (testing for warning output)
+        </li>
+        <li>
+                <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/no-newlines.html;ss;sp;noatt">validate</a> -
+                <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/no-newlines.html;ss;sp;noatt">with v.w.o</a> -
+                invalid frames document (noframes in forbidden location). Also test for absence of newlines</a></li>
+	
+  </ul>
+
+<h4>Documents that are invalid, which the validator passes as OK</h4>
+    <ul>
+	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-blank-1st-line.html;ss">validate</a> -
+	        <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-blank-1st-line.html;ss">with v.w.o</a> -
+	        <a href="xhtml1-blank-1st-line.html;ss">XHTML1, blank first line</a>
+	  (<a href="http://lists.w3.org/Archives/Public/www-validator/2000JanMar/0144.html">should be marked as invalid</a>)</li>
+</ul>
+
+<h4>Various often-invalid site</h4>
+      <p>The following sites/pages are often invalid, but do <strong>not</strong> rely on the results.</p> 
       <ul>
 
     	<li><a href="../../check?uri=http://www.yahoo.com/">Yahoo!</a></li>
@@ -188,6 +223,11 @@ All these documents should validate, without "pretty print" for the document typ
 	<li><a href="../../check?uri=http://www.netscape.com/">Netscape</a></li>
         <li><a href="../../check?uri=http://www.w3.org/TR/1998/REC-xml-19980210.xml">XML 1.0</a></li>
       </ul>
+
+  <h3>Valid Documents, with Warnings</h3>
+<ul>
+  	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/nonSGML-chars.html">Non-SGML Chars.</a></li>
+</ul>
 
   <h3 id="well-formed">Docs that should be Well Formed</h3>
       <ul>
@@ -212,24 +252,18 @@ All these documents should validate, without "pretty print" for the document typ
 
       <h3 id="errors">Error conditions &amp; strange cases</h3>
       <p>This should be split in UI testing and regression tests</p>
-      
-      <ul>
 
-	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.html;ss">XHTML, no DOCTYPE, no xmlns</a> (invalid)</li>
-	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi.html;ss">bogus FPI #1: lowercase "doctype".</a></li>
-	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi2.html;ss">bogus FPI #2: HTML 4.01 "Strict"</a></li>
-	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi3.html;ss">bogus FPI #3: XHTML 1.1 "Strict"</a></li>
-	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.html;ss">bogus XML Decl (missing final "?")</a></li>
-	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-blank-1st-line.html;ss">XHTML1, blank first line</a>
-	  (<a href="http://lists.w3.org/Archives/Public/www-validator/2000JanMar/0144.html">should be marked as invalid</a>)</li>
-	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-bogus-element.html;ss">XHTML1, bogus element</a></li>
-	<li><a href="../../check?uri=http://www.w3.org/2001/01/xml-latin1.html;ss;sp;noatt">us-ascii xml document with a latin1 character</a> (should be invalid)</li>
-	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/no-newlines.html;ss;sp;noatt">no newlines</a></li>
+<p>The following documents trip up the parser pretty badly - finds errors way beyond the last line</p>      
+      <ul>
+        	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi.html;ss">bogus FPI #1: lowercase "doctype".</a></li>
+        	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi2.html;ss">bogus FPI #2: HTML 4.01 "Strict"</a></li>
+        	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi3.html;ss">bogus FPI #3: XHTML 1.1 "Strict"</a></li>
+        	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.html;ss">bogus XML Decl (missing final "?")</a></li>
+</ul>
+<ul>
 	<li><a href="../../check?uri=file%3A///etc/passwd">a file: URL</a></li>
-	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/nonSGML-chars.html">Non-SGML Chars.</a></li>
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/shorttags.html">SHORTTAGS and -wunclosed..</a></li>
-        <li><a href="../../check?uri=http://www.w3.org/1999/09/SVG-access/computer.svg">image/svg</a></li>
-        <li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/REC-SVG-1_0-minimal.svg">SVG 1.0 Rec. minimal document</a></li>
+        <li><a href="../../check?uri=http://www.w3.org/1999/09/SVG-access/computer.svg">image/svg</a> (is this a bug? I think this media type is not allowed any more)</li>
 	<li><a href="../../check?uri=http://www.oasis-open.org/committees/xmltest/xmlconf-19990712.xml;ss">xmlconf-19990712.xml</a></li>
       </ul>
  
