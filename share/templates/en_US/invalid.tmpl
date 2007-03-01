@@ -8,7 +8,12 @@
 
 <div id="result">
 
-<h3>Validation Output<TMPL_IF NAME="number_of_errors">: <TMPL_VAR NAME="number_of_errors" ESCAPE="HTML"></TMPL_IF></h3>
+<h3>Validation Output:
+        <!-- this case where validation fails but no error is listed should never happen -->
+        <TMPL_IF NAME="number_of_errors_is_0">Invalid </TMPL_IF>
+        <TMPL_IF NAME="number_of_errors_is_1">1 Error</TMPL_IF>
+        <TMPL_IF NAME="number_of_errors_is_plural"><TMPL_VAR NAME="valid_errors_num" ESCAPE="HTML"> Errors</TMPL_IF>
+        </h3>
 
 <TMPL_IF NAME="opt_group_errors">
     <TMPL_INCLUDE NAME="error_loop_grouped.tmpl">

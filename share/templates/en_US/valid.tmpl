@@ -5,7 +5,8 @@
         </TMPL_IF>
 
 <TMPL_IF NAME="has_errors">
-<h3 id="warning_loop">Validation Output<TMPL_IF NAME="number_of_warnings">: <TMPL_VAR NAME="number_of_warnings" ESCAPE="HTML"></TMPL_IF></h3>
+<h3 id="warning_loop">Validation Output<TMPL_IF NAME="number_of_warnings_is_1">: 1 Warning</TMPL_IF><TMPL_IF NAME="number_of_warnings_is_plural">: <TMPL_VAR NAME="valid_warnings_num" ESCAPE="HTML"> Warnings</TMPL_IF>
+        </h3>
     <p>
       Below is a list of the warning message(s) produced when validating your document.
     </p>

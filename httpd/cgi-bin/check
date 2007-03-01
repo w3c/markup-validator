@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.470 2007-02-20 02:19:27 ot Exp $
+# $Id: check,v 1.471 2007-03-01 02:52:56 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.470 $;
+  $VERSION =  q$Revision: 1.471 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -694,7 +694,8 @@ if (! $File->{'Is Valid'}) {
   eval {
     local $SIG{__DIE__};
     require HTML::Tidy;
-    my $tidy = HTML::Tidy->new();
+    my $tidy = HTML::Tidy->new({config_file => "/Users/ot/Sites/cvs/public/validator/HEAD/htdocs/config/tidy.conf"});
+
     $File->{'Tidy'} = $tidy->clean(join"\n",@{$File->{Content}});
     $File->{'Tidy_OK'} = TRUE;
   };
@@ -853,22 +854,56 @@ sub fin_template ($$) {
   my $number_of_errors = ""; # textual form of $num_errors
   my $number_of_warnings = ""; # textual form of $num_errors
 
+# The following is a bit hack-ish, but will enable us to have some logic 
+# for a human-readable display of the number, with cases for 0, 1, 2 and above
+# (the case of 2 appears to be useful for localization in some languages where the plural is different for 2, and above)
+
   if ($num_errors > 1) {
-    $number_of_errors = "$num_errors errors"
+      $T->param(number_of_errors_is_0 => FALSE );
+      $T->param(number_of_errors_is_1 =>  FALSE);
+      if ($num_errors eq 2) {
+           $T->param(number_of_errors_is_2 =>  TRUE);   
+      }
+      else { $T->param(number_of_errors_is_2 => FALSE ); }
+      $T->param(number_of_errors_is_plural => TRUE );
   }
-  else {
-    $number_of_errors = "$num_errors error"
+  elsif ($num_errors eq 1) {
+      $T->param(number_of_errors_is_0 => FALSE );
+      $T->param(number_of_errors_is_1 => TRUE );
+      $T->param(number_of_errors_is_2 => FALSE );
+      $T->param(number_of_errors_is_plural => FALSE );
   }
+  else { # 0
+      $T->param(number_of_errors_is_0 => TRUE );
+      $T->param(number_of_errors_is_1 => FALSE );
+      $T->param(number_of_errors_is_2 => FALSE );
+      $T->param(number_of_errors_is_plural => FALSE );
+  }
+
   if ($num_warnings > 1) {
-    $number_of_warnings = "$num_warnings warnings"
+      $T->param(number_of_warnings_is_0 => FALSE );
+      $T->param(number_of_warnings_is_1 =>  FALSE);
+      if ($num_warnings eq 2) {
+           $T->param(number_of_warnings_is_2 =>  TRUE);   
+      }
+      else { $T->param(number_of_warnings_is_2 => FALSE ); }
+      $T->param(number_of_warnings_is_plural => TRUE );
   }
-  else {
-    $number_of_warnings = "$num_warnings warning"
+  elsif ($num_warnings eq 1) {
+      $T->param(number_of_warnings_is_0 => FALSE );
+      $T->param(number_of_warnings_is_1 => TRUE );
+      $T->param(number_of_warnings_is_2 => FALSE );
+      $T->param(number_of_warnings_is_plural => FALSE );
   }
+  else { # 0
+      $T->param(number_of_warnings_is_0 => TRUE );
+      $T->param(number_of_warnings_is_1 => FALSE );
+      $T->param(number_of_warnings_is_2 => FALSE );
+      $T->param(number_of_warnings_is_plural => FALSE );
+  }
+
   
   $T->param(file_errors => $reported_errors);
-   $T->param(number_of_errors => $number_of_errors);
-   $T->param(number_of_warnings => $number_of_warnings);
   if ($File->{'Is Valid'}) {
     $T->param(VALID => TRUE);
     $T->param(valid_status => 'Valid');
