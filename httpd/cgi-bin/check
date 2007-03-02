@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.471 2007-03-01 02:52:56 ot Exp $
+# $Id: check,v 1.472 2007-03-02 07:08:16 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.471 $;
+  $VERSION =  q$Revision: 1.472 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -694,7 +694,7 @@ if (! $File->{'Is Valid'}) {
   eval {
     local $SIG{__DIE__};
     require HTML::Tidy;
-    my $tidy = HTML::Tidy->new({config_file => "/Users/ot/Sites/cvs/public/validator/HEAD/htdocs/config/tidy.conf"});
+    my $tidy = HTML::Tidy->new({config_file => $CFG->{Paths}->{TidyConf}});
 
     $File->{'Tidy'} = $tidy->clean(join"\n",@{$File->{Content}});
     $File->{'Tidy_OK'} = TRUE;
@@ -702,8 +702,8 @@ if (! $File->{'Is Valid'}) {
   if ($@) {
     $File->{'Tidy_OK'} = FALSE;
   }
-
 }
+
 
 my $template;
 
