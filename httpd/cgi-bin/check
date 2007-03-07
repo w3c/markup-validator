@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.472 2007-03-02 07:08:16 ot Exp $
+# $Id: check,v 1.473 2007-03-07 08:07:11 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.472 $;
+  $VERSION =  q$Revision: 1.473 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -665,6 +665,21 @@ if (&is_xml($File) and not $File->{DOCTYPE}) {
 # Get the pretty text version of the FPI if a mapping exists.
 if (my $prettyver = $CFG->{Types}->{$File->{Version}}->{Display}) {
   $File->{Version} = $prettyver;
+}
+
+#
+# check the received mime type against Allowed mime types
+if ($File->{ContentType}){
+  my @allowedMediaType = split(" ", $CFG->{Types}->{$File->{DOCTYPE}}->{Types}->{Allowed});
+  my $usedCTisAllowed = FALSE;
+  foreach (@allowedMediaType) { $usedCTisAllowed = TRUE if ($_ eq $File->{ContentType}); }
+  if(! $usedCTisAllowed ){
+    &add_warning('W23', {
+        W23_type => $File->{ContentType},
+        W23_type_pref => $CFG->{Types}->{$File->{DOCTYPE}}->{Types}->{Preferred},
+        w23_doctype => $File->{Version}
+    });
+  }
 }
 
 #

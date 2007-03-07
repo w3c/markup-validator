@@ -370,6 +370,28 @@
   </li>
 </TMPL_IF>
 
+<TMPL_IF NAME="W23">
+  <li class="msg_warn" id="W23"><span class="msg">Conflict between Mime Type and Document Type</span>
+  
+    <p>The document is being served with the  <code><TMPL_VAR NAME="W23_type" ESCAPE="HTML"></code> Mime Type
+      which is not a registered media type for the 
+      <code><TMPL_VAR NAME="W23_doctype" ESCAPE="HTML"></code> Document Type. The recommended media type 
+      for this document is: <code><TMPL_VAR NAME="W23_type_pref" ESCAPE="HTML"></code></p>
+           
+   <p>Using a wrong media type for a certain document type may
+      confuse the validator and other user agents with respect to the 
+      nature of the document, and you may get some erroneous validation
+      errors. How to fix this problem? One of the following techniques should help:</p>
+   <ul>     
+      <li>If you are serving a static file on a Web server, changing its extension should help. 
+        Use e.g <code>.xhtml</code> for XHTML or <code>.mathml</code> for MathML.              
+     </li>
+     <li>You may need to reconfigure your Web server. This <a  href="http://www.developershome.com/wap/wapServerSetup/tutorial.asp?page=settingUpMIME">Setting up MIME Types tutorial</a> has instructions for Apache, Tomcat and IIS.
+</li>
+     <li>If the document is generated dynamically, the scripting language should allow you to set up the mime type: 
+             this <a href="http://juicystudio.com/article/content-negotiation.php">article on MIME Types and Content Negotiation</a> has examples in PHP, Perl, and ASP.</li>
+</TMPL_IF>
+
 
 <TMPL_IF NAME="W@@">
   <li class="msg_warn" id="W@@">
