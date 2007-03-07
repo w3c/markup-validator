@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML-Print 1.0//EN"
+      "http://www.w3.org/MarkUp/DTD/xhtml-print10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>sample XHTML print document</title>
+</head>
+<body>
+<div class="TestPurpose">If a printer encounters an image in a format it does not support, it SHALL
+render any alternate content provided, </div>
+<div>
+<img src="example.unknown" alt="This image alt text must be printed." width="100" height="100" />
+<object type="example/unknown" width="100" height="100" data="unknown:example.unknown">
+  This content of the object element must be printed</object>
+
+</div>
+</body>
+</html>
