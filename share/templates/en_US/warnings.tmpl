@@ -1,10 +1,10 @@
 <h3 id="preparse_warnings">Important Warnings</h3>
 <p>The validator has found the following problem(s) prior to validation, 
         which should be addressed in priority:</p>
-<ul id="warnings">
+<ol id="warnings">
 
 <TMPL_IF NAME="W01">
-  <li class="msg_warn" id="W01"><span class="msg">Missing "<code>charset</code>" attribute for
+  <li class="msg_warn" id="W01"><span class="err_type">Warning</span> <span class="msg">Missing "<code>charset</code>" attribute for
     "<code><TMPL_VAR NAME="W01_ct" ESCAPE="HTML"></code>" document.</span>
     <p>
       The HTTP <code>Content-Type</code> header
@@ -28,7 +28,7 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W02">
-  <li class="msg_warn" id="W02"><span class="msg">No Character Encoding Found!</span>
+  <li class="msg_warn" id="W02"><span class="err_type">Warning</span> <span class="msg">No Character Encoding Found!</span>
   
     <p>
       Falling back to
@@ -38,7 +38,7 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W03">
-  <li class="msg_warn" id="W03"><span class="msg">Character Encoding Override in effect!</span>
+  <li class="msg_warn" id="W03"><span class="err_type">Warning</span> <span class="msg">Character Encoding Override in effect!</span>
   
     <p>
       The detected character encoding
@@ -49,7 +49,7 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W04">
-  <li class="msg_warn" id="W04"><span class="msg">No Character Encoding Found!</span>
+  <li class="msg_warn" id="W04"><span class="err_type">Warning</span> <span class="msg">No Character Encoding Found!</span>
     <TMPL_IF NAME="W04_override">
       Using
     <TMPL_ELSE>
@@ -118,7 +118,7 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W05">
-  <li class="msg_warn" id="W05"><span class="msg"><code>DOCTYPE</code> Override in effect!</span>
+  <li class="msg_warn" id="W05"><span class="err_type">Warning</span> <span class="msg"><code>DOCTYPE</code> Override in effect!</span>
   
     <p>
       Any DOCTYPE Declaration in the document has been suppressed and the
@@ -129,11 +129,11 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W06">
-  <li class="msg_warn" id="W06"><span class="msg">Unable to Determine Parse Mode!</span>
+  <li class="msg_warn" id="W06"><span class="err_type">Warning</span> <span class="msg">Unable to Determine Parse Mode!</span>
   <p>Falling back to SGML mode.</p></li>
 </TMPL_IF>
 <TMPL_IF NAME="W07">
-  <li class="msg_warn" id="W07"><span class="msg">Contradictory Parse Modes Detected!</span>
+  <li class="msg_warn" id="W07"><span class="err_type">Warning</span> <span class="msg">Contradictory Parse Modes Detected!</span>
   
     <p>
       The MIME Media Type
@@ -147,7 +147,7 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W08">
-  <li class="msg_warn" id="W08"><span class="msg">Unknown Parse Mode!</span>
+  <li class="msg_warn" id="W08"><span class="err_type">Warning</span> <span class="msg">Unknown Parse Mode!</span>
   
     <p>
       The MIME Media Type
@@ -160,7 +160,7 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W09">
-  <li class="msg_warn" id="W09"><span class="msg">No <code>DOCTYPE</code> found! Attempting validation with <TMPL_VAR NAME="W09_dtd" ESCAPE="HTML">.</span>
+  <li class="msg_warn" id="W09"><span class="err_type">Warning</span> <span class="msg">No <code>DOCTYPE</code> found! Attempting validation with <TMPL_VAR NAME="W09_dtd" ESCAPE="HTML">.</span>
   
     <p>
       The DOCTYPE Declaration was not recognized or is missing. This
@@ -212,7 +212,7 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W10">
-  <li class="msg_warn" id="W10"><span class="msg">Unknown Namespace Found</span>
+  <li class="msg_warn" id="W10"><span class="err_type">Warning</span> <span class="msg">Unknown Namespace Found</span>
   
     <p>
       Unknown namespace "<code><TMPL_VAR NAME="W10_ns" ESCAPE="HTML"></code>"
@@ -221,7 +221,7 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W11">
-  <li class="msg_warn" id="W11"><span class="msg">Namespace Found in non-XML Document</span>
+  <li class="msg_warn" id="W11"><span class="err_type">Warning</span> <span class="msg">Namespace Found in non-XML Document</span>
   
     <p>
       Namespace "<code><TMPL_VAR NAME="W11_rns" ESCAPE="HTML"></code>" found,
@@ -230,7 +230,7 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W12">
-  <li class="msg_warn" id="W12"><span class="msg">No Namespace Found</span>
+  <li class="msg_warn" id="W12"><span class="err_type">Warning</span> <span class="msg">No Namespace Found</span>
   
     <p>
       No Namespace was found, but document type requires one to be present!
@@ -238,7 +238,7 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W13">
-  <li class="msg_warn" id="W13"><span class="msg"><code>DOCTYPE</code> Override in effect!</span>
+  <li class="msg_warn" id="W13"><span class="err_type">Warning</span> <span class="msg"><code>DOCTYPE</code> Override in effect!</span>
   
     <p>
       The detected DOCTYPE Declaration
@@ -251,7 +251,7 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W14">
-  <li class="msg_warn" id="W14"><span class="msg">No <code>DOCTYPE</code> Found!</span>
+  <li class="msg_warn" id="W14"><span class="err_type">Warning</span> <span class="msg">No <code>DOCTYPE</code> Found!</span>
   
     <p>
       Falling back to HTML 4.01 Transitional.
@@ -260,7 +260,7 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W15">
-  <li class="msg_warn" id="W15"><span class="msg"><code>DOCTYPE</code> Override in effect!</span>
+  <li class="msg_warn" id="W15"><span class="err_type">Warning</span> <span class="msg"><code>DOCTYPE</code> Override in effect!</span>
   
     <p>
       The DOCTYPE Declaration for "<TMPL_VAR NAME="W15_dtd" ESCAPE="HTML">"
@@ -271,7 +271,7 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W16">
-  <li class="msg_warn" id="W16"><span class="msg">No DOCTYPE Found! Falling Back to
+  <li class="msg_warn" id="W16"><span class="err_type">Warning</span> <span class="msg">No DOCTYPE Found! Falling Back to
     <TMPL_VAR NAME="W16_dtd" ESCAPE="HTML">.</span>
   
     <p>
@@ -300,7 +300,7 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W17">
-  <li class="msg_warn" id="W17"><span class="msg">No Character Encoding detected!</span>
+  <li class="msg_warn" id="W17"><span class="err_type">Warning</span> <span class="msg">No Character Encoding detected!</span>
   
     <p>
       To ensure correct validation, processing, and display, it is important
@@ -311,7 +311,7 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W18">
-  <li class="msg_warn" id="W18"><span class="msg">Character Encoding mismatch!</span>
+  <li class="msg_warn" id="W18"><span class="err_type">Warning</span> <span class="msg">Character Encoding mismatch!</span>
   
     <p>
       The character encoding specified in the HTTP header
@@ -324,7 +324,7 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W19">
-  <li class="msg_warn" id="W19"><span class="msg">Character Encoding mismatch!</span>
+  <li class="msg_warn" id="W19"><span class="err_type">Warning</span> <span class="msg">Character Encoding mismatch!</span>
   
     <p>
       The character encoding specified in the HTTP header
@@ -338,7 +338,7 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W20">
-  <li class="msg_warn" id="W20"><span class="msg">Character Encoding mismatch!</span>
+  <li class="msg_warn" id="W20"><span class="err_type">Warning</span> <span class="msg">Character Encoding mismatch!</span>
   
     <p>
       The character encoding specified in the XML declaration
@@ -352,7 +352,7 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W21">
-  <li class="msg_warn" id="W21"><span class="msg">Byte-Order Mark found in UTF-8 File.</span>
+  <li class="msg_warn" id="W21"><span class="err_type">Warning</span> <span class="msg">Byte-Order Mark found in UTF-8 File.</span>
   
     <p>
       The Unicode Byte-Order Mark (BOM) in UTF-8 encoded files is known to
@@ -363,7 +363,7 @@
 </TMPL_IF>
 
 <TMPL_IF NAME="W22">
-  <li class="msg_warn" id="W22"><span class="msg">XML not well-formed</span>
+  <li class="msg_warn" id="W22"><span class="err_type">Warning</span> <span class="msg">XML not well-formed</span>
   
     <p><TMPL_VAR NAME="W22_Messages" ESCAPE="HTML">
     </p>
@@ -371,7 +371,7 @@
 </TMPL_IF>
 
 <TMPL_IF NAME="W23">
-  <li class="msg_warn" id="W23"><span class="msg">Conflict between Mime Type and Document Type</span>
+  <li class="msg_warn" id="W23"><span class="err_type">Warning</span> <span class="msg">Conflict between Mime Type and Document Type</span>
   
     <p>The document is being served with the  <code><TMPL_VAR NAME="W23_type" ESCAPE="HTML"></code> Mime Type
       which is not a registered media type for the 
@@ -390,6 +390,7 @@
 </li>
      <li>If the document is generated dynamically, the scripting language should allow you to set up the mime type: 
              this <a href="http://juicystudio.com/article/content-negotiation.php">article on MIME Types and Content Negotiation</a> has examples in PHP, Perl, and ASP.</li>
+    </ul>
 </TMPL_IF>
 
 
@@ -401,4 +402,4 @@
   </li>
 </TMPL_IF>
 
-</ul><!-- End of "warnings". -->
+</ol><!-- End of "warnings". -->
