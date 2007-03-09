@@ -5,7 +5,7 @@
    Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.1 2007-02-20 01:56:44 ot Exp $
+   $Id: base.css,v 1.2 2007-03-09 07:16:46 ot Exp $
 */
 
 /*                 
@@ -28,7 +28,7 @@ body {
 }
 p, pre, dt {     
     line-height: 130%; 
-    padding-left: 20px;
+    padding-left: 1.5em;
 }
 
 /*                                                   
@@ -153,10 +153,11 @@ a:hover, a:active {
                       */
 
 /* TODO - add ol, li, td here ? */
-p, dt {
-    margin-left: 15px;
-    margin-right: 25px;
+p, dt, ul, ol {
+    margin-left: 1.5em;
+    margin-right: 1.5em;
 }
+
 
 dd {
     margin-left: 35px;

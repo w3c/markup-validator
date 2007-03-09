@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.4 2007-03-09 06:55:25 ot Exp $ */
+/* $Id: results.css,v 1.5 2007-03-09 07:16:46 ot Exp $ */
 
 .input {
   color: black;
@@ -65,6 +65,12 @@ ol#warnings, ol#error_loop {
         border-top: 1px solid #eee;
 }
 
+ol#warnings li ul li, ol#error_loop ul li, ol#error_loop p, ol#warnings p {
+        line-height: 135%;
+        margin-bottom: .65em;
+        /*margin-right: 2em;*/
+} 
+
 li.msg_info span.err_type{
   background-color: #888;
   padding: .1em .5em;
@@ -88,6 +94,7 @@ li.msg_err span.err_type{
 
 .msg {
   font-weight: bold;
+  line-height: 130%;
 }
 
 li.msg_info span.msg { /* these messages are not errors */
