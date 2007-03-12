@@ -1,7 +1,7 @@
 #!/usr/bin/perl -T
 ##
 ## feedback generator for W3C Markup Validation Service
-# # $Id: sendfeedback.pl,v 1.6 2006-08-15 21:51:08 ville Exp $
+# # $Id: sendfeedback.pl,v 1.7 2007-03-12 20:29:56 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -91,7 +91,6 @@ our $T = HTML::Template->new(
   die_on_bad_params => FALSE,
 );
 
-our $errnum;
 our $errlist = "";
 our $errmsg_text;
 our $validated_uri;
@@ -122,7 +121,7 @@ sub error_choices {
     @msgnumbers = sort { $a <=> $b } @msgnumbers;
     my $errlabel;
 
-    for $errnum ( @msgnumbers ) {
+    for my $errnum ( @msgnumbers ) {
         $errlabel = $RSRC->{msg}->{$errnum}->{original};
         $errlabel = de_template_explanation($errlabel);
 	if (length($errlabel) > 70) { $errlabel = substr($errlabel, 0, 67)."..." }

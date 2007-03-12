@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.474 2007-03-12 20:25:39 ville Exp $
+# $Id: check,v 1.475 2007-03-12 20:29:55 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.474 $;
+  $VERSION =  q$Revision: 1.475 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -818,9 +818,8 @@ sub prep_template ($$) {
   my %seen_ns = ();
   my @bulk_ns =  @{$File->{Namespaces}};
   $File->{Namespaces} = []; # reinitialize the list of non-root namespaces
-  my  $single_namespace;
   # ... and then get a uniq version of it
-  foreach $single_namespace (@bulk_ns) {
+  foreach my $single_namespace (@bulk_ns) {
      push(@{$File->{Namespaces}}, $single_namespace) unless $seen_ns{$single_namespace}++;
   }
   my @nss                   =  map({uri => $_}, @{$File->{Namespaces}});
@@ -1554,8 +1553,8 @@ sub show_errors ($) {
   # @@FIXME This is broken with SGML::Parser::OpenSP
   my $file_raw_errors = "";
   for (@{shift->{DEBUG}->{Errors}}) {
-  $file_raw_errors .= ent $_
-  };
+    $file_raw_errors .= ent $_;
+  }
   return $file_raw_errors;
 }
 
