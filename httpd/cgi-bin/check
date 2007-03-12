@@ -11,7 +11,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.432.2.22 2006-11-10 02:51:50 ot Exp $
+# $Id: check,v 1.432.2.23 2007-03-12 21:18:38 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -208,7 +208,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.432.2.22 $;
+  $VERSION =  q$Revision: 1.432.2.23 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -237,14 +237,6 @@ my $q = new CGI;
 #
 # The data structure that will hold all session data.
 my $File;
-
-##############################################
-# Populate $File->{Env} -- Session Metadata. #
-##############################################
-
-#
-# The URL to this CGI Script.
-$File->{Env}->{'Self URI'} = $q->url(-query => 0);
 
 #################################
 # Initialize the datastructure. #
@@ -1881,6 +1873,23 @@ sub prepCGI {
   my $File = shift;
   my $q    = shift;
 
+  my $path_info;
+  {
+    # @@@HACK:
+    # CGI.pm's _name_and_path_from_env has query string related issues;
+    # just trump the query string for the duration of calling methods we
+    # know we don't need it for and which have been affected in the past.
+    # More info: http://www.w3.org/Bugs/Public/show_bug.cgi?id=4365
+
+    local $ENV{REQUEST_URI} = URI->new($ENV{REQUEST_URI})->path()
+      if $ENV{REQUEST_URI};
+
+    # The URL to this CGI script.
+    $File->{Env}->{'Self URI'} = $q->url();
+
+    $path_info                 = $q->path_info();
+  }
+
   # Avoid CGI.pm's "exists but undef" behaviour.
   if (scalar $q->param) {
     foreach my $param ($q->param) {
@@ -1900,14 +1909,14 @@ sub prepCGI {
   }
 
   # Futz the URL so "/referer" works.
-  if ($q->path_info) {
-    if ($q->path_info eq '/referer' or $q->path_info eq '/referrer') {
+  if ($path_info) {
+    if ($path_info eq '/referer' or $path_info eq '/referrer') {
       if ($q->referer) {
         $q->param('uri', $q->referer);
         print redirect &self_url_q($q, $File);
         exit;
       } else {
-        print redirect $q->url() . '?uri=' . 'referer';
+        print redirect $File->{Env}->{'Self URI'} . '?uri=referer';
         exit;
       }
     } else {
