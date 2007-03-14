@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install_win.html,v 1.3.2.3 2006-09-25 16:58:39 dtibbe Exp $" -->
-<!--#set var="date" value="\$Date: 2006-09-25 16:58:39 $" -->
+<!--#set var="revision" value="\$Id: install_win.html,v 1.3.2.4 2007-03-14 07:12:31 dtibbe Exp $" -->
+<!--#set var="date" value="\$Date: 2007-03-14 07:12:31 $" -->
 <!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service (Windows, Apache)" -->
 <!--#set var="relroot" value="../" -->
 <!--#include virtual="../header.html" -->
@@ -54,12 +54,8 @@ to other platform-specific guides</a>.</p>
   
 <p>At the back-end of the validator is an <acronym title="Structured Generalized Markup Language">SGML</acronym>-parser, named OpenSP. The validator needs version 1.5 or above. 
 Its source are available at SourceForge
-  (<a href="http://www.sourceforge.net/projects/opensp/">http://www.sourceforge.net/projects/opensp/</a>)
-  but compiling them on Windows can be problematic. Some time ago,
-  Bj&ouml;rn H&ouml;hrmann succeeded in compiling them and made the
-  binaries available (<a href="http://bjoern.hoehrmann.de/ports/OpenSP-1.5.1-win32-bin.zip">http://bjoern.hoehrmann.de/ports/OpenSP-1.5.1-win32-bin.zip</a>,
-  ~600KB). You can use them, but it is recommended to have a look at the
-  OpenSP-Project page for newer binaries.</p>
+  (<a href="http://www.sourceforge.net/projects/openjade/">http://www.sourceforge.net/projects/openjade/</a>),
+  a binary version of OpenSP 1.5.2 is available, too.</p>
   
 <p>The validator relies on a number of Perl libraries, or "modules". 
 At <a href="http://ppm.activestate.com/">Active State</a>,
@@ -90,7 +86,7 @@ installed to. Just clicking &quot;Next&quot; in all installation routines is not
 <p>One suggested method is to  have a directory <code>C:\www</code> in which all programs concerning the 
 Web server are located (in subfolders, obviously). For instance, Apache is installed in 
 <code>C:\www\Apache2</code>, Perl in <code>C:\www\perl</code>, the perl modules unzipped in <code>C:\www\pmm</code>, OpenSP in <code>C:\www\opensp</code>, the validator itself
-in <code>C:\www\validator</code> and finally  the DTD-Collection in <code>C:\www\validator\htdocs\sgml-lib</code></p>
+in <code>C:\www\validator</code> and finally the DTD-Collection in <code>C:\www\sgml-lib</code></p>
 
 <p>The rest of this guide will assume that these paths are being used. If you want to use another 
 directory structure, you will have to adapt the instructions and sample configuration to your
@@ -294,7 +290,7 @@ Parser = C:/www/opensp/onsgmls.exe
 #
 # Main Configuration File for the W3C Markup Validation Service.
 #
-# $Id: install_win.html,v 1.3.2.3 2006-09-25 16:58:39 dtibbe Exp $
+# $Id: install_win.html,v 1.3.2.4 2007-03-14 07:12:31 dtibbe Exp $
 #
 # See 'perldoc Config::General' for the syntax, and be aware that the
 # 'SplitPolicy' is 'equalsign', ie. keys and values are separated by '\s*=\s*',
@@ -437,7 +433,14 @@ Element Ref URI = http://www.htmlhelp.com/reference/html40/
 <p>This is the path to the Perl interpreter, up to now in
   Unix-style. So it has to be changed to Windows-style. The
   parameter <code>-T</code> is replaced by that, too.</p>
-<p>In a next step, the script is told where to find the 
+<p>For some configurations, the check-skript needs to know where
+  its root directory is. It tries to read it from the environment
+  variable W3C_VALIDATOR_HOME and uses a default directory if it is
+  not set. That is done within the line:</p>
+<pre>  my $base_path = $ENV{W3C_VALIDATOR_HOME} || '/usr/local/validator';</pre>
+<p>So we change that line fixed to our path:</p>
+<pre>>  my $base_path = 'C:/www/validator'</pre>.
+<p>In the following lines the script is told where to find the 
   configuration file. That is done after the comment in these lines</p>
 <pre>
 #
