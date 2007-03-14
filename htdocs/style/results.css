@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.5 2007-03-09 07:16:46 ot Exp $ */
+/* $Id: results.css,v 1.6 2007-03-14 07:43:50 ot Exp $ */
 
 .input {
   color: black;
@@ -279,8 +279,17 @@ td.invalid
 
 img.inline-badge {
   float: left;
+  padding: 10px;
+  margin-left: 3em;
 }
 
+pre.badgeSnippet {
+  margin-left: 108px !important; /* give room to the image */
+  padding-left: 3em;
+  font-size: x-small;
+  color: #777;
+  margin-bottom: 2em;
+}
 
 p.backtop {
         color: #bbc;

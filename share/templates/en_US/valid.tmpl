@@ -43,34 +43,46 @@
 </TMPL_IF>
   </p>
 <TMPL_IF NAME="have_badge">
+<h4>"valid" Icon(s) on your Web page</h4>
   <p>
-    <img
-      class="inline-badge" src="<TMPL_VAR NAME="badge_uri" ESCAPE="HTML">"
-      alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"
-      <TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF>
-      <TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF>
-       />
     To show your readers that you have taken the care to create an
     interoperable Web page, you may display this icon on any page
     that validates. Here is the HTML you could use to add this icon
     to your Web page:
   </p>
-  <pre>
+  <img
+    class="inline-badge" src="<TMPL_VAR NAME="badge_uri" ESCAPE="HTML">"
+    alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"
+    <TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF>
+    <TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF>
+     /> <pre class="badgeSnippet">
   &lt;p&gt;
     &lt;a href="<TMPL_VAR NAME="cfg_home_page" ESCAPE="HTML">check?uri=referer"&gt;&lt;img
         src="<TMPL_VAR NAME="badge_uri" ESCAPE="HTML">"
         <TMPL_IF NAME="badge_alt">alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"</TMPL_IF> <TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF> <TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF><TMPL_VAR NAME="badge_tagc">&gt;&lt;/a&gt;
   &lt;/p&gt;
   </pre>
-  <p>
-    If you like, you can download a copy of this image (in
-    <a href="<TMPL_VAR NAME="badge_uri" ESCAPE="HTML">.png">PNG</a> or
-    <a href="<TMPL_VAR NAME="badge_uri" ESCAPE="HTML">.gif">GIF</a>
-    format) to keep in your local web directory, and change the HTML fragment
+  <TMPL_IF NAME="have_alt_badge">
+  <img
+    class="inline-badge" src="<TMPL_VAR NAME="badge_alt_uri" ESCAPE="HTML">"
+    alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"
+    <TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF>
+    <TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF>
+     /> <pre class="badgeSnippet">
+  &lt;p&gt;
+    &lt;a href="<TMPL_VAR NAME="cfg_home_page" ESCAPE="HTML">check?uri=referer"&gt;&lt;img
+        src="<TMPL_VAR NAME="badge_alt_uri" ESCAPE="HTML">"
+        <TMPL_IF NAME="badge_alt">alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"</TMPL_IF> <TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF> <TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF><TMPL_VAR NAME="badge_tagc">&gt;&lt;/a&gt;
+  &lt;/p&gt;
+  </pre>
+  </TMPL_IF>
+  <p>A <a href="http://www.w3.org/QA/Tools/Icons">full list</a> of icons, with links to alternate formats and colors, is available: 
+    If you like, you can download a copy of the icons
+    to keep in your local web directory, and change the HTML fragment
     above to reference your local image rather than the one on this server.
   </p>
-  <p>A <a href="http://www.w3.org/QA/Tools/Icons">full list</a> of icons, with links to alternate formats and colors, is also available.</p>
 </TMPL_IF>
+<h4>Validating CSS, linking to this result</h4>
   <p>
     If you use <a href="http://www.w3.org/Style/CSS/">CSS</a> in your document,
     you should also
