@@ -1,11 +1,11 @@
 /*
    Base Style Sheet for the W3C CSS validation service
-	based on the one for Markup Validation Service.
+	And Markup Validation Service.
 
-   Copyright 2000 W3C (MIT, INRIA, Keio). All Rights Reserved.
+   Copyright 2000~2007 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.2 2007-03-09 07:16:46 ot Exp $
+   $Id: base.css,v 1.3 2007-03-14 07:42:37 ot Exp $
 */
 
 /*                 
@@ -498,3 +498,97 @@ p.copyright a {
 	list-style: none;
 }
 #lang_choice li { display: inline; padding-left: .5em;}
+
+
+/* 
+                Documentation pages 
+                                                                */
+                                                                
+        /* Set line height to 1.4x (from 1.3x on general site) to allow for various inline decoration. */
+        div.doc {
+          line-height: 140%; 
+        }
+
+        /* documentation - table of contents */
+        #toc { /* making the toc a bit more compact and standing out */
+            font-size: .85em;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+
+        div.doc div#toc ol {
+           list-style-type: decimal;
+        }
+        div.doc div#toc ol li ol {
+           list-style-type: lower-alpha;
+        }
+        div.doc div#toc ol li ol li ol{
+           list-style-type: lower-roman;
+        }
+
+
+        /* documentation - error explanations */
+        dl#expl dt code { /* headings for an error */
+          white-space: normal;
+          font-weight: bold;
+        }
+
+        dl#expl dt {
+          border-top: 1px dashed black;
+          margin-top: 2em;
+          margin-bottom: 1em;
+        }
+
+        div.doc dd {
+          margin-right: 0; /* no need for the extra margin if we nicely put the text of the dd in a paragraph */
+        }
+        div.doc var { /* headings for an error */
+          color: #006;
+        }
+
+        /* A snippet of code used inline. */
+        div.doc code {
+          white-space: normal;
+          font-weight: bold;
+          display: inline;
+          padding-left: .2em;
+          padding-right: .2em;
+          background: #eef;
+          color:      #337;
+          font-family: "Bitstream Vera Sans Mono", monospace;
+          border: 1px dotted #ccf;
+        }
+
+        div.doc code.block {
+          display: block;
+          padding: 1em;
+          white-space: pre;
+          margin-top: 1em;
+          margin-bottom: 1em;
+          margin-right:  3em;
+        }
+
+        div.doc code samp {
+          font-weight: normal;
+          color: black;
+          font-style: italic;
+        }
+
+        /* reference tables */
+
+        div.doc table {
+        	border-collapse: collapse;
+        	border-right: 1px solid #ccc;
+        }
+        div.doc table td, .doc table th{
+        	border-top: 0px solid #ddd;
+        	border-bottom: 1px solid #ccc;
+        	border-left: 1px solid #eee;
+        	padding: 6px;
+        	border-collapse: collapse;
+        }
+        div.doc table th {
+        	background-color: #eee;
+        	color: #11111A;
+        	border-right: 1px solid #ccc;
+        }
