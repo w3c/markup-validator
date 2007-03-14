@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.476 2007-03-12 20:38:42 ville Exp $
+# $Id: check,v 1.477 2007-03-14 06:33:35 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.476 $;
+  $VERSION =  q$Revision: 1.477 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -259,11 +259,44 @@ $File->{Mode} = 'SGML'; # Default parse mode is SGML.
 $File->{Warnings}   = []; # Warnings...
 $File->{Namespaces} = []; # Other (non-root) Namespaces.
 
+#########################################
+# Populate $File->{Opt} -- CGI Options. #
+#########################################
+
+#
+# Preprocess the CGI parameters.
+$q = &prepCGI($File, $q);
+
+
+
 ###############################################################################
 #### Generate Template for Result. ############################################
 ###############################################################################
 
-my $lang = 'en_US'; # @@TODO: conneg;
+# first we determine the chosen language based on
+# 1) lang argument given as parameter (if this language is available)
+# 2) HTTP language negotiation between variants available and user-agent choices
+# 3) English by default
+my $lang         = $q->param('lang')  ? $q->param('lang')    : '';
+my @localizations;
+my $lang_ok = FALSE;
+foreach my $lang_available ( split(" ", $CFG->{Languages}) ) {
+        if ($lang eq $lang_available){ $lang_ok = TRUE; next }
+}
+
+if (($lang eq '') or (!$lang_ok)) { # use HTTP-based negotiation
+    $lang = '';
+    use HTTP::Negotiate qw(choose);
+    foreach my $lang_available ( split(" ", $CFG->{Languages}) ) {
+            push @localizations, [$lang_available, 1.000, 'text/html',   undef,   'utf-8',  $lang_available , undef]
+    }   
+    $lang  = choose(\@localizations);
+}
+
+
+if ($lang eq "en") {
+ $lang = 'en_US'; # legacy
+}
 
 my $T = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
@@ -348,13 +381,9 @@ $SOAPT->param(cfg_home_page => $CFG->{'Home Page'});
 
 undef $lang;
 
-#########################################
-# Populate $File->{Opt} -- CGI Options. #
-#########################################
-
-#
-# Preprocess the CGI parameters.
-$q = &prepCGI($File, $q);
+#####################################################
+# Populate $File->{Opt} -- CGI Options. (continued) #
+#####################################################
 
 #
 # Set session switches.
