@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.6 2007-03-14 07:43:50 ot Exp $ */
+/* $Id: results.css,v 1.7 2007-03-15 06:54:48 ot Exp $ */
 
 .input {
   color: black;
@@ -14,18 +14,23 @@
 fieldset#revalidate_opts {
         width: 100%;
         margin; 0; padding:0;
+        border: 1px dotted #ccc;
+        background-color: #fcfcfc;
+        padding-bottom: 1em;
 }
 
 fieldset#revalidate_opts p.moreinfo {
   padding: 10px;
   margin-top: .3em;
-  text-align: right;
+  float: left;
+  width: 20em;
   font-size: x-small;
   margin-bottom: 0;
 }
 
 div#revalidate_button {
-        float: right; width: 6em; text-align: right; padding: .5em; margin: .5em
+        float: right; width: 6em;
+        padding-right: 3.5em !important;
 }
 
 table.header {
@@ -52,12 +57,14 @@ fieldset#revalidate_opts table.header, fieldset#revalidate_opts table.header td,
 ol li.msg_info, ol li.msg_warn, ol li.msg_err {
   border: 1px solid #eee;
   border-top: 0;
-}
-
-ol li.msg_info, ol li.msg_warn, ol li.msg_err {
   list-style-position: inside;
   padding: .5em;
   clear: both;
+}
+
+ol li.msg_info:hover, ol li.msg_warn:hover, ol li.msg_err:hover {
+  background-color: #fcfcfc;
+  
 }
 
 ol#warnings, ol#error_loop {
