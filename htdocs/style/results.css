@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.7 2007-03-15 06:54:48 ot Exp $ */
+/* $Id: results.css,v 1.8 2007-03-15 07:02:34 ot Exp $ */
 
 .input {
   color: black;
@@ -137,6 +137,10 @@ p.helpwanted {
   position: relative;
   left: 0; 
   top: -3em;
+}
+
+li.grouped p.helpwanted {
+  top: -1em;       
 }
 
 p.helpwanted a {
