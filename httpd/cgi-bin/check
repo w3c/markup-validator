@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.478 2007-03-14 07:43:50 ot Exp $
+# $Id: check,v 1.479 2007-03-15 06:30:14 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.478 $;
+  $VERSION =  q$Revision: 1.479 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -484,8 +484,12 @@ unless ($File->{Charset}->{Use}) {
 
 #
 # Handle any Fallback or Override for the charset.
-if (charset_not_equal($File->{Opt}->{Charset}, '(detect automatically)')) {
-  # charset=foo was given to the CGI and it wasn't "autodetect".
+if (
+        charset_not_equal($File->{Opt}->{Charset}, '(detect automatically)')
+   and 
+        charset_not_equal($File->{Opt}->{Charset}, '')
+   ) {
+  # charset=foo was given to the CGI and it wasn't "autodetect" or empty.
 
   #
   # Extract the user-requested charset from CGI param.
@@ -581,9 +585,10 @@ if ($File->{Charset}->{Use} eq 'utf-8' &&
 #
 
 #
-# Override DOCTYPE if user asked for it.
+# Override DOCTYPE if user asked for it. 
 if ($File->{Opt}->{DOCTYPE}
-    and not $File->{Opt}->{DOCTYPE} =~ /(Inline|detect)/i) {
+    and not $File->{Opt}->{DOCTYPE} =~ /(Inline|detect)/i
+    and $File->{Opt}->{DOCTYPE} ne '1' ) { 
   $File = &override_doctype($File);
 }
 
