@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.479 2007-03-15 06:30:14 ot Exp $
+# $Id: check,v 1.480 2007-03-16 00:34:17 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.479 $;
+  $VERSION =  q$Revision: 1.480 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1862,6 +1862,11 @@ sub transcode {
 
   # @@FIXME is this what we want?
   $output =~ s/\015?\012/\n/g;
+  
+  # make sure we deal only with unix newlines 
+  # tentative fix for http://www.w3.org/Bugs/Public/show_bug.cgi?id=3992
+  $output =~ s/(\r\n|\n|\r)/\n/g;
+  
   $File->{Content} = [split/\n/, $output];
 
   return $File;
