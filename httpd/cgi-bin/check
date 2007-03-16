@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.480 2007-03-16 00:34:17 ot Exp $
+# $Id: check,v 1.481 2007-03-16 03:20:16 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.480 $;
+  $VERSION =  q$Revision: 1.481 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -610,13 +610,14 @@ $File = &parse($File);
 sub parse (\$) {
   my $File = shift;
 
+  # TODO switch parser on the fly
   my $opensp = SGML::Parser::OpenSP->new();
-
+  my $parser_name = "SGML::Parser::OpenSP";
   #
   # By default, use SGML catalog file and SGML Declaration.
   my $catalog  = File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'sgml.soc');
 
-  #
+  # default parsing options
   my @spopt = qw(valid non-sgml-char-ref no-duplicate);
 
   #
@@ -652,7 +653,12 @@ sub parse (\$) {
              map({name => $_, value => $ENV{$_}},
                qw(no_proxy http_proxy https_proxy ftp_proxy FTP_PASSIVE)),
              { name => 'Content-Encoding',  value => $File->{ContentEnc} },
+             { name => 'Content-Language', value => $File->{ContentLang} },
              { name => 'Transfer-Encoding', value => $File->{TransferEnc} },
+             { name => 'Parse Mode', value => $File->{Mode} },
+             { name => 'Parser', value => $parser_name },
+             { name => 'Parser Options', value => join " ", @spopt },
+             
             ],
            );
 
@@ -1114,6 +1120,7 @@ sub handle_uri {
   $File->{Mode}            = $mode;
   $File->{ContentType}     = $ct;
   $File->{ContentEnc}      = $res->content_encoding;
+  $File->{ContentLang}      = $res->content_language;
   $File->{TransferEnc}     = $res->header('Client-Transfer-Encoding');
   $File->{Charset}->{HTTP} = lc $charset;
   $File->{Modified}        = $lastmod;
@@ -1176,6 +1183,8 @@ sub handle_frag {
   $File->{'Is Upload'} = TRUE;
   $File->{'Direct Input'} = TRUE;
   $File->{Charset}->{HTTP} = "utf-8"; # by default, the form accepts utf-8 chars
+  
+  
   return $File;
 }
 
