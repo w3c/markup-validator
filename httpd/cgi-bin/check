@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.482 2007-03-16 06:56:09 ot Exp $
+# $Id: check,v 1.483 2007-03-16 12:42:36 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.482 $;
+  $VERSION =  q$Revision: 1.483 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1735,47 +1735,57 @@ sub set_parse_mode {
   my $File = shift;
   my $CFG = shift;
   my $fpi = $File->{DOCTYPE};
-  my $mode = $CFG->{Types}->{$fpi}->{'Parse Mode'};
+  my $parseModeFromDoctype = $CFG->{Types}->{$fpi}->{'Parse Mode'};
 
-  if (!exists $CFG->{Types}->{$fpi})
-  {
-    &add_warning('W08', {W08_mime => $File->{ContentType}})
-      if $File->{Mode} eq 'TBD';
+  my $parseModeFromMimeType = $File->{Mode};
+  
+  
+  if (($parseModeFromMimeType eq 'TBD') and (!exists $CFG->{Types}->{$fpi})) {
+    # the mime type is text/html (ambiguous, hence TBD mode) 
+    # and the doctype isn't in the catalogue... we scream
+    &add_warning('W08', {W08_mime => $File->{ContentType}});
     return;
   }
+  
+  $parseModeFromDoctype = 'TBD' unless $parseModeFromDoctype eq 'SGML' or $parseModeFromDoctype eq 'XML';
 
-  $mode = 'TBD' unless $mode eq 'SGML' or $mode eq 'XML';
-
-  # if the document type is not known ($mode = TBD) 
-  # but the content-type clearly shows we should used SGML or XML ($File->{Mode} ne 'TBD')
-  # then we're happy - we use that
-  if (($mode eq 'TBD') and ($File->{Mode} ne 'TBD')) {
-    $mode = $File->{Mode};
-  }
-
-  #  if document-type recommended mode and content-type recommended mode clash
-  if (($mode ne 'TBD') and ($mode ne $File->{Mode}) ) {
-    &add_warning('W07', {
-      W07_mime => $File->{ContentType},
-      W07_ct   => $File->{Mode},
-      W07_dtd  => $mode,
-    });
-    return;
-  }
-
-  if ($mode eq 'SGML' or $mode eq 'XML') {
-    $File->{Mode} = $mode
-  } else {
-    # if by now we still don't know, use SGML as default.
-    # but warn that we are not pleased
-    
+  if (($parseModeFromDoctype eq 'TBD') and ($parseModeFromMimeType eq 'TBD')) {
+    # if both doctype and mime type are useless to give us a parse mode
+    # => we use SGML as a default
     $File->{Mode} = 'SGML';
+    
     &add_warning('W06', {
       W06_mime => $File->{ContentType},
       w06_doctype => $File->{Version}
     });
+    return;
+  }
+  elsif ($parseModeFromDoctype eq 'TBD') {
+    # doctype does not give us anything clear (e.g custom DTD)
+    # but mime type gives clear indication 
+    # => we just use what the content type tells us - move along
+    return;
+  }
+  elsif ($parseModeFromMimeType eq 'TBD') {
+    # the mime type is text/html (ambiguous, hence TBD mode) 
+    # but by now we're sure that the document type is a good indication
+    # so we use that.
+    $File->{Mode} = $parseModeFromDoctype;
+    return;
+  }
+  elsif ($parseModeFromMimeType ne $parseModeFromDoctype) {
+    #  if document-type recommended mode and content-type recommended mode clash
+    # shoot a warning
+    &add_warning('W07', {
+      W07_mime => $File->{ContentType},
+      W07_ct   => $parseModeFromMimeType,
+      W07_dtd  => $parseModeFromDoctype,
+    });
+    return;
+    
   }
 }
+
 
 #
 # Utility sub to tell if mode "is" XML.
