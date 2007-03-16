@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.481 2007-03-16 03:20:16 ot Exp $
+# $Id: check,v 1.482 2007-03-16 06:56:09 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.481 $;
+  $VERSION =  q$Revision: 1.482 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -654,6 +654,7 @@ sub parse (\$) {
                qw(no_proxy http_proxy https_proxy ftp_proxy FTP_PASSIVE)),
              { name => 'Content-Encoding',  value => $File->{ContentEnc} },
              { name => 'Content-Language', value => $File->{ContentLang} },
+             { name => 'Content-Location', value => $File->{ContentLoc} },
              { name => 'Transfer-Encoding', value => $File->{TransferEnc} },
              { name => 'Parse Mode', value => $File->{Mode} },
              { name => 'Parser', value => $parser_name },
@@ -703,8 +704,15 @@ if (my $prettyver = $CFG->{Types}->{$File->{Version}}->{Display}) {
 # check the received mime type against Allowed mime types
 if ($File->{ContentType}){
   my @allowedMediaType = split(" ", $CFG->{Types}->{$File->{DOCTYPE}}->{Types}->{Allowed});
-  my $usedCTisAllowed = FALSE;
-  foreach (@allowedMediaType) { $usedCTisAllowed = TRUE if ($_ eq $File->{ContentType}); }
+  my $usedCTisAllowed;
+  if (scalar @allowedMediaType)  {  
+    $usedCTisAllowed = FALSE;
+    foreach (@allowedMediaType) { $usedCTisAllowed = TRUE if ($_ eq $File->{ContentType}); }
+  }
+  else {
+    # wedon't know what media type is recommended, so better shut up 
+    $usedCTisAllowed = TRUE;
+  }
   if(! $usedCTisAllowed ){
     &add_warning('W23', {
         W23_type => $File->{ContentType},
@@ -1121,6 +1129,7 @@ sub handle_uri {
   $File->{ContentType}     = $ct;
   $File->{ContentEnc}      = $res->content_encoding;
   $File->{ContentLang}      = $res->content_language;
+  $File->{ContentLoc}      = $res->header('Content-Location');
   $File->{TransferEnc}     = $res->header('Client-Transfer-Encoding');
   $File->{Charset}->{HTTP} = lc $charset;
   $File->{Modified}        = $lastmod;
@@ -1737,7 +1746,15 @@ sub set_parse_mode {
 
   $mode = 'TBD' unless $mode eq 'SGML' or $mode eq 'XML';
 
-  if ($File->{Mode} ne 'TBD' and $mode ne $File->{Mode}) {
+  # if the document type is not known ($mode = TBD) 
+  # but the content-type clearly shows we should used SGML or XML ($File->{Mode} ne 'TBD')
+  # then we're happy - we use that
+  if (($mode eq 'TBD') and ($File->{Mode} ne 'TBD')) {
+    $mode = $File->{Mode};
+  }
+
+  #  if document-type recommended mode and content-type recommended mode clash
+  if (($mode ne 'TBD') and ($mode ne $File->{Mode}) ) {
     &add_warning('W07', {
       W07_mime => $File->{ContentType},
       W07_ct   => $File->{Mode},
@@ -1746,12 +1763,17 @@ sub set_parse_mode {
     return;
   }
 
-  # $File->{Mode} eq 'TBD'
   if ($mode eq 'SGML' or $mode eq 'XML') {
     $File->{Mode} = $mode
   } else {
+    # if by now we still don't know, use SGML as default.
+    # but warn that we are not pleased
+    
     $File->{Mode} = 'SGML';
-    &add_warning('W06', {});
+    &add_warning('W06', {
+      W06_mime => $File->{ContentType},
+      w06_doctype => $File->{Version}
+    });
   }
 }
 
