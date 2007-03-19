@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.483 2007-03-16 12:42:36 ot Exp $
+# $Id: check,v 1.484 2007-03-19 00:58:44 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.483 $;
+  $VERSION =  q$Revision: 1.484 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -604,6 +604,79 @@ set_parse_mode($File, $CFG) if $File->{DOCTYPE};
 # Sanity check Charset information and add any warnings necessary.
 $File = &charset_conflicts($File);
 
+
+
+# before we start the parsing, clean slate
+$File->{'Is Valid'} = TRUE;
+$File->{Errors} = [];
+
+# preparse with XML parser if necessary
+# we should really be using a SAX ErrorHandler, but I can't find 
+# a way to make it work with XML::LibXML::SAX::Parser... ** FIXME **
+# ditto, we should try using W3C::Validator::ErrorHandler,
+# but it's badly linked to opensp at the moment
+if (&is_xml($File)) {
+  
+       use XML::LibXML;
+       my $xmlparser = XML::LibXML->new();
+       $xmlparser->line_numbers(1);
+       eval {
+         $xmlparser->parse_string(join"\n",@{$File->{Content}});
+       };
+       my $xml_parse_errors_line = undef;
+       my @xmlwf_error_list;
+       if ($@) {
+         
+         my $xmlwf_errors = $@;
+         my $xmlwf_error_line = undef;
+         my $xmlwf_error_col = undef;
+         my $xmlwf_error_msg = undef;
+         my $num_xmlwf_error = 0;
+         my $last_err_msg = undef;
+         my $err;
+         foreach my $msg_line (split "\n", $xmlwf_errors){
+          $msg_line =~ s{[^\x0d\x0a](:\d+:)}{\n$1}g;
+          $msg_line =~ s{[^\x0d\x0a]+[\x0d\x0a]$}{};
+          if ($msg_line =~ /(:\d+:)(.*)/ ){
+            $xmlwf_error_line = $1;
+            $xmlwf_error_msg = $2;
+            $xmlwf_error_line =~ s/:(\d+):/$1/;
+            $xmlwf_error_msg =~ s/ parser error :/XML Parsing Error: /;
+          }
+          if ($msg_line =~ /(.+)\^/){
+            $xmlwf_error_col = length($1);
+          }
+          
+          if ((defined $xmlwf_error_line) and (defined $xmlwf_error_col) and (defined $xmlwf_error_msg)){
+            $err->{src}  = '...'; # do this with show_open_entities()?
+            $err->{line} = $xmlwf_error_line;
+            $err->{char} = $xmlwf_error_col;
+            $err->{num}  = 0;
+            $err->{type} = "E";
+            $err->{msg}  = $xmlwf_error_msg;
+
+            # ...
+            $last_err_msg = $err;
+            push (@xmlwf_error_list, $err);
+            $err = undef;
+            $xmlwf_error_line = undef;
+            $xmlwf_error_col = undef;
+            $xmlwf_error_msg = undef;
+            $num_xmlwf_error++;
+            
+          }                  
+         }
+         foreach my $errmsg (@xmlwf_error_list){
+           $File->{'Is Valid'} = FALSE;
+           push @{$File->{Errors}}, $errmsg;
+         }
+
+       }
+}
+
+
+
+
 #
 # Abandon all hope ye who enter here...
 $File = &parse($File);
@@ -630,6 +703,7 @@ sub parse (\$) {
     push(@spopt, 'xml');
     # FIXME when fixed s:p:o gets released
   }
+
 
   #
   # Parser configuration
@@ -680,9 +754,10 @@ sub parse (\$) {
   #
   # Set Version to be the FPI initially.
   $File->{Version} = $File->{DOCTYPE};
-
   return $File;
 }
+
+
 
 
 #
@@ -2051,10 +2126,6 @@ sub W3C::Validator::ErrorHandler::new
   my $File = shift;
 
   my $self = { _file => $File, _parser => $parser };
-
-  # ...
-  $File->{'Is Valid'} = TRUE;
-  $File->{Errors} = [];
 
   bless $self, $class;
 }
