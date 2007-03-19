@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.484 2007-03-19 00:58:44 ot Exp $
+# $Id: check,v 1.485 2007-03-19 01:51:21 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.484 $;
+  $VERSION =  q$Revision: 1.485 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -651,7 +651,7 @@ if (&is_xml($File)) {
             $err->{src}  = '...'; # do this with show_open_entities()?
             $err->{line} = $xmlwf_error_line;
             $err->{char} = $xmlwf_error_col;
-            $err->{num}  = 0;
+            $err->{num}  = 'xmlwf';
             $err->{type} = "E";
             $err->{msg}  = $xmlwf_error_msg;
 
@@ -1523,11 +1523,17 @@ sub report_errors ($) {
               # index by num for errors and warnings only - info usually give context of error or warning
         if (! exists $Errors_bytype{$err->{num}}) {
                 $Errors_bytype{$err->{num}}->{instances} = [];
-                my $msg_text = $RSRC->{msg}->{$err->{num}}->{original};
-                $msg_text =~ s/%1/X/;
-                $msg_text =~ s/%2/Y/;
-                $Errors_bytype{$err->{num}}->{msg} = $msg_text;
+                my $msg_text;
+                if ($err->{num} ne 'xmlwf') {
+                  $msg_text = $RSRC->{msg}->{$err->{num}}->{original};
+                  $msg_text =~ s/%1/X/;
+                  $msg_text =~ s/%2/Y/;
+                }
+                else { ## FIXME ## we need a catalog of errors from our XML parser 
+                  $msg_text = "XML Parsing Error";  
+                }
                 $Errors_bytype{$err->{num}}->{expl} = $err->{expl};
+                $Errors_bytype{$err->{num}}->{msg} = $msg_text;
                 $Errors_bytype{$err->{num}}->{type} = $err->{type};
                 $Errors_bytype{$err->{num}}->{class} = $err->{class};
                 $Errors_bytype{$err->{num}}->{err_type_err} = $err->{err_type_err};
