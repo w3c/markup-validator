@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.485 2007-03-19 01:51:21 ot Exp $
+# $Id: check,v 1.486 2007-03-22 14:17:12 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.485 $;
+  $VERSION =  q$Revision: 1.486 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1667,8 +1667,12 @@ sub preparse_doctype {
     if ($attr->{xmlns}) {$File->{Namespace} = $attr->{xmlns}};
   };
 
+  # we use HTML::Parser as pre-parser. May use html5lib or other in the future
   my $p = HTML::Parser->new(api_version => 3);
-  $p->xml_mode(TRUE);
+
+  # if content-type has shown we should pre-parse with XML mode, use that
+  # otherwise (mostly text/html cases) use default mode
+  $p->xml_mode(TRUE) if ($File->{Mode} eq 'XML');
   $p->ignore_elements('BODY');
   $p->ignore_elements('body');
   $p->handler(declaration => $dtd, 'text');
