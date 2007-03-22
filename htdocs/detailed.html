@@ -1,33 +1,83 @@
-<!--#set var="revision" value="\$Id: detailed.html,v 1.18 2004-07-21 15:06:55 link Exp $"
---><!--#set var="date" value="\$Date: 2004-07-21 15:06:55 $"
+<!--#set var="revision" value="\$Id: detailed.html,v 1.19 2007-03-22 05:03:07 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-03-22 05:03:07 $"
 --><!--#set var="title" value="The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
 
-  <p><a id="skip" name="skip"></a>
-    This form allows you to enter a <acronym
-    title="Universal Resource Locator">URL</acronym> 
-    and have it validated. If you want to validate a file on
-    your computer, you can use the <a href="file-upload.html">File
-    Upload Interface</a>.
-  </p>
-    <div>
-      <fieldset><legend>Validate by URL</legend>
-      <form method="get" action="check">
-        <table>
-          <tr><th><label title="Address of page to Validate"
-             for="uri">Address:</label></th><td colspan="2"><input id="uri"
-             name="uri" size="50" /></td></tr>
-        <!--#include virtual="detailed-form.html" -->  
-	<tr>
-            <td></td>
-            <td><input type="submit" value="Validate this page" /></td>
-	    <td></td>
-          </tr>
-        </table>
-      </form>
-      </fieldset>
-    </div>
+<p id="tagline">
+Check the markup (HTML, XHTML) of Web documents
+</p>
+
+<div id="frontforms">
+<ul class="tabset_tabs"><li><a href="#validate-by-uri" class="active">by URI</a></li><li><a href="#validate-by-upload">by File Upload</a></li><li><a href="#validate-by-input">by direct Input</a></li></ul>
+<div id="fields">
+
+<fieldset id="validate-by-uri" class="tabset_content front"><legend class="tabset_label">Validate by URI</legend>
+  <form method="get" action="check">
+    <p class="instructions">
+	Validate a document online:     
+   </p>
+   <p>
+	<label title="Address of page to Validate" for="uri">Address:</label>
+        <input type="text" name="uri" id="uri" size="45" />
+   </p>
+  <fieldset id="extra_opt_uri" class="moreoptions">
+          <legend><a href="./#validate-by-uri" title="hide the options - see the simple interface"><img alt="*" src="../images/arrow-down.gif" /> Options</a> - ( <a title="Explanation for these options" href="docs/users.html#Options">Need Help?</a> ) </legend>
+                <!--#set var="fieldset_id" value="uri"-->
+                <!--#include virtual="detailed-form.html" -->  
+  </fieldset>
+
+        	<p class="submit_button"><label title="Submit file for validation"><input type="submit" value="Check" /></label></p>
+  </form>
+</fieldset>
+
+<fieldset id="validate-by-upload"  class="tabset_content front"><legend class="tabset_label">Validate by File Upload</legend>
+<form method="post" enctype="multipart/form-data" action="check">
+  <p class="instructions">Upload a document for validation:</p>
+  <p><label title="Choose a Local File to Upload and Validate" for="uploaded_file">File:</label>
+    <input type="file" id="uploaded_file" name="uploaded_file" size="30" /></p>        
+    <fieldset id="extra_opt_upload" class="moreoptions">
+            <legend><a href="./#validate-by-upload" title="hide the options - see the simple interface"><img alt="*" src="../images/arrow-down.gif" /> Options</a> - ( <a title="Explanation for these options" href="docs/users.html#Options">Need Help?</a> ) </legend>
+         <!--#set var="fieldset_id" value="upload"-->
+         <!--#include virtual="detailed-form.html" -->  
+    </fieldset><!-- invisible -->
+   <p class="submit_button"><label title="Submit file for validation"><input type="submit" value="Check" /></label></p>
+</form>
+                <p><strong>Note</strong>: file upload may not work with Internet
+                Explorer on some versions of Windows XP Service Pack 2, see our
+                <a href="http://www.w3.org/QA/2005/01/Validator-IE_WinXP_SP2">information page</a>
+                on the W3C QA Website.</p>
+
+</fieldset>
+      <fieldset id="validate-by-input"  class="tabset_content front"><legend class="tabset_label">Validate by direct input</legend>
+                  <form method="post" enctype="multipart/form-data" action="check">
+                          <p class="instructions"><label title="Paste a complete (HTML) Document here" for="fragment">Enter the Markup (Full Document) to validate</label>:<br />
+                                  
+                      	<textarea id="fragment" name="fragment" rows="12" cols="70"></textarea>
+                        <br /><label for="parsemodel">Treat as:</label>
+                                <select id="parsemodel" name="parsemodel">
+                                        <option value="sgml">HTML</option>
+                                        <option value="xml">XML (and XHTML)</option>
+                                </select>
+                        </p>
+                          <fieldset id="extra_opt_direct" class="moreoptions">
+                                  <legend><a href="./#validate-by-input" title="hide the options - see the simple interface"><img alt="*" src="../images/arrow-down.gif" /> Options</a> - ( <a title="Explanation for these options" href="docs/users.html#Options">Need Help?</a> ) </legend>
+                                        <table>
+                                        <!--#set var="fieldset_id" value="direct"-->
+                                        <!--#include virtual="detailed-form_directinput.html" -->  
+                                        </table>
+                                </fieldset>
+                                <p> </p>
+
+                    <p class="submit_button">
+                      <input type="submit" value="Validate this document" />
+                      <input type="reset" value="Reset this form" />
+                    </p>
+
+                  </form>
+                </fieldset>
+  </div><!-- fields -->
+  </div> <!-- frontforms -->
+<!--#include virtual="intro.html" -->
 <!--#include virtual="footer.html" -->
-  </body>
-</html>
+

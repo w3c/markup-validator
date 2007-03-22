@@ -3,12 +3,22 @@
 <td>            <!--#include virtual="doctype-select.html" --></td>
 <td>            <label for="<!--#echo var="fieldset_id" -->-fbd"><input id="<!--#echo var="fieldset_id" -->-fbd" name="fbd" type="checkbox" value="1" />Only if Doctype is missing</label></td>
 </tr>
-          <tr>
-            <th rowspan="2">Options (<a title="Explanation for these options" href="docs/users.html#Options">Help</a>):</th>
-            <td><label title="Show Page Source" for="<!--#echo var="fieldset_id" -->-ss"><input id="<!--#echo var="fieldset_id" -->-ss" name="ss" type="checkbox" value="1" /> Show Source</label></td>
-            <td><label title="Show an Outline of the document" for="<!--#echo var="fieldset_id" -->-outline"><input id="<!--#echo var="fieldset_id" -->-outline" name="outline" type="checkbox" value="1" /> Show Outline</label></td>
+  <tr>
+          <td colspan="3"><input type="radio" name="group" id="<!--#echo var="fieldset_id" -->group_no" value="0" checked="checked" /><label for="<!--#echo var="fieldset_id" -->group_no">List Messages Sequentially</label> <input type="radio" name="group" id="<!--#echo var="fieldset_id" -->group_yes" value="1" /><label for="<!--#echo var="fieldset_id" -->group_yes">Group Error Messages by type</label></td>
+
+</tr>
+<tr>
+        <td><label title="Show Page Source" for="<!--#echo var="fieldset_id" -->-ss"><input id="<!--#echo var="fieldset_id" -->-ss" name="ss" type="checkbox" value="1" />Show Source</label></td>
+        <td colspan="2"><input id="<!--#echo var="fieldset_id" -->-st" name="st" type="checkbox" value="1" /><label for="<!--#echo var="fieldset_id" -->-st">Clean up Markup with HTML Tidy</label>
+        </td>
+        
+
+
           </tr>
           <tr>
-            <td><label title="Validate also pages for which the HTTP status code indicates an error" for="<!--#echo var="fieldset_id" -->-No200"><input id="<!--#echo var="fieldset_id" -->-No200" name="No200" type="checkbox" value="1" /> Validate error pages</label></td>
-	    <td><label title="Show Verbose Output" for="<!--#echo var="fieldset_id" -->-verbose"><input id="<!--#echo var="fieldset_id" -->-verbose" name="verbose" type="checkbox" value="1" checked="checked" /> Verbose Output</label></td>
-          </tr>
+                  <td><input id="<!--#echo var="fieldset_id" -->-outline" name="outline" type="checkbox" value="1" /><label title="Show an Outline of the document" for="<!--#echo var="fieldset_id" -->-outline">Show Outline</label>
+                  </td>
+                  <td><label title="Validate also pages for which the HTTP status code indicates an error" for="<!--#echo var="fieldset_id" -->-No200"><input id="<!--#echo var="fieldset_id" -->-No200" name="No200" type="checkbox" value="1" /> Validate error pages</label></td>
+
+                  <td><label title="Verbose Output" for="<!--#echo var="fieldset_id" -->-verbose"><input id="<!--#echo var="fieldset_id" -->-verbose" name="verbose" type="checkbox" value="0" />Verbose Output</label></td>
+        </tr>
