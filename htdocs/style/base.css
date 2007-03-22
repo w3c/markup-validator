@@ -5,7 +5,7 @@
    Copyright 2000~2007 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.4 2007-03-15 06:54:48 ot Exp $
+   $Id: base.css,v 1.5 2007-03-22 05:00:53 ot Exp $
 */
 
 /*                 
@@ -301,7 +301,7 @@ fieldset p.submit_button input, fieldset div.submit_button input {
     border-bottom: white; 
     padding-top:0.8em; 
     padding-bottom:1px; 
-    color: #fffff0 !important; 
+   /* color: #fffff0 !important; */
  }
 
 .tabset_tabs li.firstchild a, .tabset_tabs li:first-child a { 
@@ -375,6 +375,12 @@ fieldset.moreoptions th {
 	text-align: left;   
 }
 
+#frontforms fieldset a:link, #frontforms fieldset a:hover, #frontforms fieldset a:visited, #frontforms fieldset a:active {
+    color: white !important;
+}
+fieldset a:link, fieldset a:visited, fieldset legend a:link, fieldset legend a:visited {
+font-weight: bolder;
+}
 
 fieldset.closed {
 border: 0;
