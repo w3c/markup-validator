@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.8 2007-03-15 07:02:34 ot Exp $ */
+/* $Id: results.css,v 1.9 2007-03-23 03:52:21 ot Exp $ */
 
 .input {
   color: black;
@@ -318,4 +318,10 @@ p.backtop {
 p.backtop a:link, p.backtop a:hover, p.backtop a:visited {
         color: #bbc;
         text-deciration: none;
+}
+
+/* document outline */
+pre.outline {
+    line-height: 160%;
+    padding-left: 1.5em;
 }
