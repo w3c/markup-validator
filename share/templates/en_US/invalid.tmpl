@@ -8,7 +8,8 @@
 
 <div id="result">
 
-<h3>Validation Output:
+<h3 <TMPL_UNLESS NAME="VALID">class="invalid"</TMPL_UNLESS>
+>Validation Output:
         <!-- this case where validation fails but no error is listed should never happen -->
         <TMPL_IF NAME="number_of_errors_is_0">Invalid </TMPL_IF>
         <TMPL_IF NAME="number_of_errors_is_1">1 Error</TMPL_IF>

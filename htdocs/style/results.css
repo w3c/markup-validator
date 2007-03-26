@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.9 2007-03-23 03:52:21 ot Exp $ */
+/* $Id: results.css,v 1.10 2007-03-26 01:46:29 ot Exp $ */
 
 .input {
   color: black;
@@ -259,6 +259,18 @@ h2.valid, h2.invalid, h2.tentative_valid {
   padding-bottom: 	.2em;
 }
 
+/* the default color of the headings is green now, 
+but we want to use it only for "congratulations"
+and stick to a neutral color for other headings */
+
+h3, h4 {
+    color: #777 !important; 
+}
+
+h3#congrats {
+    color: #690 !important;
+}
+
 .valid {
   background-color:	#55B05A;
   color:		white;
@@ -273,8 +285,8 @@ h2.valid, h2.invalid, h2.tentative_valid {
 }
 
 .invalid {
-  background-color:	#D23D24;
-  color:		white;
+  background-color:	#D23D24 !important;
+  color:		white !important;
 }
 
 td.valid {
@@ -282,10 +294,10 @@ td.valid {
   color:           #55B05A;
 }
 
-td.invalid 
+td.invalid, h3.invalid 
 {
-  color:	#D23D24;
-  background-color:	white;
+  color:	#D23D24 !important;
+  background-color:	white !important;
 }
 
 img.inline-badge {
