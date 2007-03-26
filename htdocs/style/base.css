@@ -5,7 +5,7 @@
    Copyright 2000~2007 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.5 2007-03-22 05:00:53 ot Exp $
+   $Id: base.css,v 1.6 2007-03-26 01:13:20 ot Exp $
 */
 
 /*                 
@@ -278,7 +278,7 @@ fieldset p.submit_button input, fieldset div.submit_button input {
 
 .tabset_tabs a	{  
     border: 0;
-    border-left: 1px solid #ADDBFE; 
+    border-left: 1px solid #f2f7fa; 
     text-decoration:none; 
     padding: 0.8em 0.6em 0 0.6em;
     background: white;
@@ -287,16 +287,16 @@ fieldset p.submit_button input, fieldset div.submit_button input {
 
 .tabset_tabs a:hover	{ 
     color:#424242 ! important; 
-    background: #E1F0FD url(../images/sm_gradient_hover.gif) 0 0 repeat-x;
+    background: #D1DAE9 url(../images/sm_gradient_hover.gif) 0 0 repeat-x;
     text-decoration:none;  
 }
 
 .tabset_tabs a.active, .tabset_tabs a.active:hover { 
     color:#424242 ! important; 
-    background-color: #8FCFFD !important;
-    background: #8FCFFD url(../images/sm_gradient_active.gif) 0 0 repeat-x;
-    border-color: #ADDBFE; 
-    border-left-width:1px; 
+    background-color: #f2f7fa !important;
+    background: #f2f7fa url(../images/sm_gradient_active.gif) 0 0 repeat-x;
+    /*border-color: #D1DAE9; 
+    border-left-width:1px; */
     cursor:default; 
     border-bottom: white; 
     padding-top:0.8em; 
@@ -308,7 +308,7 @@ fieldset p.submit_button input, fieldset div.submit_button input {
     border-left: 1px solid white; 
 }
 div#fields {
-    background: #8FCFFD url(../images/lg_gradient.gif) bottom left repeat-x;
+    background: #f2f7fa url(../images/lg_gradient.gif) bottom left repeat-x;
     margin: 0;
     padding: 0;
 }
@@ -335,28 +335,12 @@ input.default {
 
 /* the following from http://www.mindsack.com/toggle/ (c) Kent Brewster */
 
-p.toggle
-{
-        background: transparent url('../images/arrow-down.gif')  0 0 no-repeat;
-        text-indent: 20px;
-        cursor:pointer;
-    color: #005A9C;
-    background-color: transparent;
-    margin-bottom: 0;
-}
-
-p.closed
-{
-        background: transparent url('../images/arrow-right.gif') 0 0 no-repeat !important;
-}
-
-
 .hidden
 {
         display:none;
 }
 fieldset.moreoptions {
-border-color: white;
+border-color: #ADDBFE;
 border-style: dotted;
 margin-bottom: 0;
 padding-left: .3em;
@@ -376,10 +360,10 @@ fieldset.moreoptions th {
 }
 
 #frontforms fieldset a:link, #frontforms fieldset a:hover, #frontforms fieldset a:visited, #frontforms fieldset a:active {
-    color: white !important;
+    color: #005A9C !important;
 }
 fieldset a:link, fieldset a:visited, fieldset legend a:link, fieldset legend a:visited {
-font-weight: bolder;
+/*font-weight: bold;*/
 }
 
 fieldset.closed {
