@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.488 2007-03-28 02:34:04 ot Exp $
+# $Id: check,v 1.489 2007-03-28 05:51:14 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.488 $;
+  $VERSION =  q$Revision: 1.489 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2177,6 +2177,63 @@ sub W3C::Validator::SAXHandler::start_element
     $self->{am_in_heading} = 1;
   }
   
+  if (($element->{Name} eq 'html') and ($self->{_file}->{Mode} eq 'XML')){
+    # we check if xmlns has been properly given
+    my $has_xmlns = FALSE;
+    my $xmlns_value = undef;
+    foreach my $attr (keys %{$element->{Attributes}}) {
+      if ($element->{Attributes}->{$attr}->{Name} eq "xmlns") {
+        # Try with SAX method
+        if($element->{Attributes}->{$attr}->{Value} ){
+          $has_xmlns = TRUE;
+          $xmlns_value = $element->{Attributes}->{$attr}->{Value}; 
+        }
+        #next if ($has_xmlns);
+        
+        # the following is not SAX, but OPENSP specific
+
+        if ( $element->{Attributes}->{$attr}->{Defaulted}){
+          
+          if ($element->{Attributes}->{$attr}->{Defaulted} eq "specified") {
+            $has_xmlns = TRUE;
+            foreach my $datachunk (@{$element->{Attributes}->{$attr}->{CdataChunks}}) {
+              $xmlns_value = $xmlns_value.$datachunk->{Data};
+            }
+          }
+        }
+        
+      }
+    }
+    if ($has_xmlns == FALSE){
+      my $err;
+      my $location = $self->{_parser}->get_location();
+      $err->{src}  = '...'; # do this with show_open_entities()?
+      $err->{line} = $location->{LineNumber};
+      $err->{char} = $location->{ColumnNumber};
+      $err->{num}  = "no-xmlns";
+      $err->{type} = "E";
+      $err->{msg}  = "Missing xmlns attribute for element ".$element->{Name};
+
+      # ...
+      $self->{_file}->{'Is Valid'} = FALSE;
+      push @{$self->{_file}->{Errors}}, $err;
+    }
+    elsif (($has_xmlns == TRUE) and ($xmlns_value ne $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace}) ) {
+      my $err;
+
+      $err->{src}  = '...'; # do this with show_open_entities()?
+      $err->{line} = $element->{Location};
+      $err->{char} = $element->{Location};
+      $err->{num}  = "wrong-xmlns";
+      $err->{type} = "E";
+      $err->{msg}  = "Wrong xmlns attribute for element ".$element->{Name}.". Value should be". $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace};
+
+      # ...
+      $self->{_file}->{'Is Valid'} = FALSE;
+      push @{$self->{_file}->{Errors}}, $err;
+
+    }
+  }
 }
 
 
