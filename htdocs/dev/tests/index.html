@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.66 2007-03-28 02:08:04 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-03-28 02:08:04 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.67 2007-03-28 12:13:34 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-03-28 12:13:34 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -18,7 +18,13 @@
                  
             </ul>
     </li>
-    <li><a href="#invalid">Invalid documents</a></li>
+    <li><a href="#invalid">Invalid documents</a>
+        <ul>
+                <li><a href="#invalid_misc">Miscellaneous invalid docs</a></li>
+                <li><a href="#nonconform">DTD-Valid but not conformant</a></li>
+                <li><a href="#invalid_bug">Documents that are invalid, which the validator passes as OK</a></li>
+        </ul>  
+    </li>
     <li><a href="#well-formed">Docs that should be Well Formed</a></li>
     <li><a href="#encodings">Various Encodings</a></li>
     <li><a href="#errors">Error conditions &amp; strange cases</a></li>
@@ -178,8 +184,9 @@
     </li>
     <li>
       <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/REC-SVG-1_0-minimal.svg">validate</a> -
-      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/REC-SVG-1_0-minimal.svg">validate</a> -
-      <a href="REC-SVG-1_0-minimal.svg">SVG 1.0 Rec. minimal document</a></li>
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/REC-SVG-1_0-minimal.svg">with v.w.o</a> -
+      <a href="REC-SVG-1_0-minimal.svg">view</a>:
+      SVG 1.0 Rec. minimal document</li>
     
     
   </ul>
@@ -213,11 +220,12 @@ All these documents should validate, without "pretty print" for the document typ
 <ul>
   	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/2342-opensp_type_X.html">validate</a> -
   	        <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/2342-opensp_type_X.html">with v.w.o</a> -
-  	        <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/2342-opensp_type_X.html">Reference to a non-existing ID</a> 
+  	        <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/2342-opensp_type_X.html">view</a>:
+  	        Reference to a non-existing ID
   	        (opensp message type X, See <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=2342">bug 2342</a>).</li>
   	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/nonSGML-chars.html">validate</a> -
   	        <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/nonSGML-chars.html">with v.w.o</a> -
-  	        <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/nonSGML-chars.html">Non-SGML Chars.</a></li>
+  	        <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/nonSGML-chars.html">view</a>: Non-SGML Chars</li>
 </ul>
 
 <h4 id="wrong_mime">Valid Documents served with a wrong media type</h4>
@@ -230,7 +238,7 @@ All these documents should validate, without "pretty print" for the document typ
         </li>
 <li>
   <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/REC-SVG-1_0-minimal.html">validate</a> -
-  <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/REC-SVG-1_0-minimal.html">validate</a> -
+  <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/REC-SVG-1_0-minimal.html">with v.w.o</a> -
   <a href="REC-SVG-1_0-minimal.html">View</a> SVG 1.0 Rec. minimal document served as text/html</li>
   <li>
     <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-print_1_0.html">validate</a> -
@@ -247,24 +255,32 @@ All these documents should validate, without "pretty print" for the document typ
 </ul>
 
   <h3 id="invalid">Invalid Documents</h3>
-
+<h4 id="invalid_misc">Miscellaneous invalid docs</h4>
   <ul>
-          <li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.html;ss">XHTML, no DOCTYPE, no xmlns</a> (thus invalid)</li>
+          <li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.html;ss">validate</a> -
+                  <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.html;ss">with v.w.o</a> -
+                  <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.html;ss">view</a>: 
+                  XHTML, no DOCTYPE, no xmlns (thus invalid)
+                  </li>
   	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-bogus-element.html;ss">validate</a> -
   	        <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-bogus-element.html;ss">with v.w.o</a> -
-  	        <a href="xhtml1-bogus-element.html">XHTML1, bogus element</a> (foo element not in DTD)</li>
+  	        <a href="xhtml1-bogus-element.html">view</a>:
+  	        XHTML1, bogus element (foo element not in DTD)</li>
   	<li><a href="../../check?uri=http://www.w3.org/2001/01/xml-latin1.html;ss;sp;noatt">validate</a> -
   	        <a href="http://validator.w3.org/check?uri=http://www.w3.org/2001/01/xml-latin1.html;ss;sp;noatt">with v.w.o</a> -
-  	        <a href="http://www.w3.org/2001/01/xml-latin1.html">us-ascii xhtml document with a latin1 character</a> </li>
+  	        <a href="http://www.w3.org/2001/01/xml-latin1.html">view</a>:
+  	        us-ascii xhtml document with a latin1 character </li>
   	      <li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/error_pls_warning.html;ss">validate</a> - 
         <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/error_pls_warning.html;ss">with v.w.o</a> - 
-        <a href="error_pls_warning.html">view</a>: Invalid document (img without alt, invalid <a href="http://www.w3.org/TR/html401/struct/objects.html#adef-alt">per</a>). 
+        <a href="error_pls_warning.html">view</a>: 
+        Invalid document (img without alt, invalid <a href="http://www.w3.org/TR/html401/struct/objects.html#adef-alt">per</a>). 
         <br />
         Also has non-sgml character (testing for warning output)
         </li>
         <li>
                 <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/no-newlines.html;ss;sp;noatt">validate</a> -
                 <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/no-newlines.html;ss;sp;noatt">with v.w.o</a> -
+                <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/no-newlines.html">view</a>:
                 invalid frames document (noframes in forbidden location). Also test for absence of newlines</li>
                 <li>
                   <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/2329-html401-strict_iframe.html;ss">validate</a> - 
@@ -272,26 +288,41 @@ All these documents should validate, without "pretty print" for the document typ
                   <a href="2329-html401-strict_iframe.html">view</a>:
                   HTML 4.01 Strict -  with iframe element (test for <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=2329">Bug 2329</a>)
                 </li>    
+                <li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-blank-1st-line.html;ss">validate</a> -
+                    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-blank-1st-line.html;ss">with v.w.o</a> -
+                    <a href="xhtml1-blank-1st-line.html;ss">view</a>:
+                    XHTML1, blank first line (<a href="http://lists.w3.org/Archives/Public/www-validator/2000JanMar/0144.html">should be marked as invalid</a>)</li>
+                <li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/ampersand-as-data.html;ss">validate</a> - 
+                  <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/ampersand-as-data.html;ss">with v.w.o</a> - 
+                  <a href="ampersand-as-data.html">view</a>:
+                  Bug <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=798">798: Ampersand as data in XHTML</a> (also good as a test for warnings in otherwise valid result)
+                  </li>
 	
   </ul>
+  <h5>Various often-invalid site</h5>
+        <p>The following sites/pages are often invalid, but do <strong>not</strong> rely on the results.</p> 
+        <ul>
 
-<h4>Documents that are invalid, which the validator passes as OK</h4>
-    <ul>
-	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-blank-1st-line.html;ss">validate</a> -
-	        <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-blank-1st-line.html;ss">with v.w.o</a> -
-	        <a href="xhtml1-blank-1st-line.html;ss">XHTML1, blank first line</a>
-	  (<a href="http://lists.w3.org/Archives/Public/www-validator/2000JanMar/0144.html">should be marked as invalid</a>)</li>
+      	<li><a href="../../check?uri=http://www.yahoo.com/">Yahoo!</a></li>
+  	<li><a href="../../check?uri=http://www.microsoft.com/">Microsoft</a></li>
+  	<li><a href="../../check?uri=http://www.netscape.com/">Netscape</a></li>
+          <li><a href="../../check?uri=http://www.w3.org/TR/1998/REC-xml-19980210.xml">XML 1.0</a></li>
+        </ul>
+  
+<h4 id="nonconform">DTD-Valid but not conformant</h4>
+<p>For those, we will need to change the message, or hordes of SGML zombies will come down upon us ;)...</p>
+<ul>
+    <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict-missing-xmlns.html;ss">validate</a> - 
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict-missing-xmlns.html;ss">with v.w.o</a> -
+      <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict-missing-xmlns.html">view</a>:
+      XHTML 1.0 Strict missing xmlns attribute (valid)
+    </li>
+
 </ul>
 
-<h4>Various often-invalid site</h4>
-      <p>The following sites/pages are often invalid, but do <strong>not</strong> rely on the results.</p> 
-      <ul>
-
-    	<li><a href="../../check?uri=http://www.yahoo.com/">Yahoo!</a></li>
-	<li><a href="../../check?uri=http://www.microsoft.com/">Microsoft</a></li>
-	<li><a href="../../check?uri=http://www.netscape.com/">Netscape</a></li>
-        <li><a href="../../check?uri=http://www.w3.org/TR/1998/REC-xml-19980210.xml">XML 1.0</a></li>
-      </ul>
+<h4 id="invalid_bug">Documents that are invalid, which the validator passes as OK</h4>
+<p>TBA</p>
 
 
   <h3 id="well-formed">Docs that should be Well Formed</h3>
@@ -423,29 +454,12 @@ All these documents should validate, without "pretty print" for the document typ
       <p>These should be tied to a bug report on either mailing-list and/or bugzilla whenever possible.</p>
       
       <ul>
-            <li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/ampersand-as-data.html;ss">validate</a> - 
-      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/ampersand-as-data.html;ss">with v.w.o</a> - 
-      <a href="ampersand-as-data.html">view</a>:
-      Bug <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=798">798: Ampersand as data in XHTML</a> (also good as a test for warnings in otherwise valid result)
-      </li>
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/long-lines.html">Long Lines</a> (cause a core)</li>
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/trailing-nul.html">A trailing ASCII NUL character</a> (trips up HTML::Parser (not really))</li>
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/colons.html">Undeclared namespace prefixes</a> (colons ":" in element names (trips up parsing of onsgmls output))</li>
       </ul>
 
 
-<h3>Mixed bag</h3>
-<p>Don't know where to put these yet</p>
-
-<ul>
-    <li>
-      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict-missing-xmlns.html;ss">validate</a> - 
-      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict-missing-xmlns.html;ss">with v.w.o</a> -
-      <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict-missing-xmlns.html">view</a>:
-      XHTML 1.0 Strict missing xmlns attribute (valid)
-    </li>
-
-</ul>
 
     <div id="suites">
       <h2>Other Test Suites</h2>
