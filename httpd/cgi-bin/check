@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.487 2007-03-23 03:52:21 ot Exp $
+# $Id: check,v 1.488 2007-03-28 02:34:04 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.487 $;
+  $VERSION =  q$Revision: 1.488 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1316,7 +1316,7 @@ sub check_recursion ($$) {
   return unless defined $res->header('X-W3C-Validator-Recursion');
 
   my $lvl = $res->header('X-W3C-Validator-Recursion');
-  return unless $lvl =~ m(^\d+$); # Non-digit, i.e. garbage, ignore.
+  return unless $lvl =~ m/^\d+$/; # Non-digit, i.e. garbage, ignore.
 
   if ($lvl >= $CFG->{'Max Recursion'}) {
     print redirect $CFG->{'Home Page'};
