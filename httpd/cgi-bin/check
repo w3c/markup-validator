@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.491 2007-03-29 06:07:39 ot Exp $
+# $Id: check,v 1.492 2007-03-29 12:42:33 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.491 $;
+  $VERSION =  q$Revision: 1.492 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1378,14 +1378,14 @@ sub truncate_line {
 
   #
   # Add elipsis at end if necessary.
-  unless ($end   == length $line) {substr $line, -3, 3, '...'};
+  unless ($end   == length $line) {substr $line, -3, 3, '…'};
 
   $col = $col - $start; # New offset is diff from $col to $start.
   $line = substr $line, $start, $end - $start; # Truncate.
 
   #
   # Add elipsis at start if necessary.
-  unless ($start == 0)            {substr $line,  0, 3, '...'};
+  unless ($start == 0)            {substr $line,  0, 3, '…'};
 
   return $line, $col;
 }
@@ -1475,10 +1475,10 @@ sub report_errors ($) {
         $line = &mark_error($line, $col);
       }
       else {
-        $col = int($File->{Content}->[$err->{line}-1]);
-        $col = 150 if ($col > 150);
+        $col = length($File->{Content}->[$err->{line}-1]);
+        $col = 80 if ($col > 80);
         ($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $col);
-        $line = &ent($line);
+        $line = &ent($line) . "&hellip;";
         $col = "";
       }
       my $explanation;
