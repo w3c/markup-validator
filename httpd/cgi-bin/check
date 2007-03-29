@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.489 2007-03-28 05:51:14 ot Exp $
+# $Id: check,v 1.490 2007-03-29 04:46:55 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.489 $;
+  $VERSION =  q$Revision: 1.490 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1537,7 +1537,8 @@ sub report_errors ($) {
                   $msg_text = "XML Parsing Error";  
                 }
                 $Errors_bytype{$err->{num}}->{expl} = $err->{expl};
-                $Errors_bytype{$err->{num}}->{msg} = $msg_text;
+                $Errors_bytype{$err->{num}}->{generic_msg} = $msg_text;
+                $Errors_bytype{$err->{num}}->{msg} = $err->{msg};
                 $Errors_bytype{$err->{num}}->{type} = $err->{type};
                 $Errors_bytype{$err->{num}}->{class} = $err->{class};
                 $Errors_bytype{$err->{num}}->{err_type_err} = $err->{err_type_err};
