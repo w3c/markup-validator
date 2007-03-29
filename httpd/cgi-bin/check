@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.490 2007-03-29 04:46:55 ot Exp $
+# $Id: check,v 1.491 2007-03-29 06:07:39 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.490 $;
+  $VERSION =  q$Revision: 1.491 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -645,6 +645,14 @@ if (&is_xml($File)) {
           }
           if ($msg_line =~ /(.+)\^/){
             $xmlwf_error_col = length($1);
+          }
+          if ($xmlwf_error_col == 79){
+            # working around an apparent odd limitation of libxml
+            # which only gives context for lines up to 80 chars
+            # http://www.w3.org/Bugs/Public/show_bug.cgi?id=4420
+            # http://bugzilla.gnome.org/show_bug.cgi?id=424017
+            $xmlwf_error_col = "> 80";
+            # non-int line number will trigger the proper behavior in report_error
           }
           
           if ((defined $xmlwf_error_line) and (defined $xmlwf_error_col) and (defined $xmlwf_error_msg)){
@@ -1460,10 +1468,19 @@ sub report_errors ($) {
 
   if (scalar @{$File->{Errors}}) {
     foreach my $err (@{$File->{Errors}}) {
-      my ($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $err->{char});
-
-      $line = &mark_error($line, $col);
-
+      my $line;
+      my $col;
+      if ($err->{char} =~ /^[0-9]+$/ ){
+        ($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $err->{char});
+        $line = &mark_error($line, $col);
+      }
+      else {
+        $col = int($File->{Content}->[$err->{line}-1]);
+        $col = 150 if ($col > 150);
+        ($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $col);
+        $line = &ent($line);
+        $col = "";
+      }
       my $explanation;
       if ($err->{num}) {
         my $num = $err->{num};        
