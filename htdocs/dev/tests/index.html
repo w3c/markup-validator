@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.67 2007-03-28 12:13:34 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-03-28 12:13:34 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.68 2007-03-29 07:35:19 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-03-29 07:35:19 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -226,6 +226,13 @@ All these documents should validate, without "pretty print" for the document typ
   	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/nonSGML-chars.html">validate</a> -
   	        <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/nonSGML-chars.html">with v.w.o</a> -
   	        <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/nonSGML-chars.html">view</a>: Non-SGML Chars</li>
+            <li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/ampersand-as-data_html401.html;ss">validate</a> - 
+              <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/ampersand-as-data_html401.html;ss">with v.w.o</a> - 
+              <a href="ampersand-as-data_html401.html">view</a>:
+              HTML 4.01 Document with Ampersand as data <br />
+                (OK in SGML, not XML :see <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=798">Bug798: Ampersand as data in XHTML</a>)
+              </li>
+
 </ul>
 
 <h4 id="wrong_mime">Valid Documents served with a wrong media type</h4>
@@ -295,8 +302,22 @@ All these documents should validate, without "pretty print" for the document typ
                 <li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/ampersand-as-data.html;ss">validate</a> - 
                   <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/ampersand-as-data.html;ss">with v.w.o</a> - 
                   <a href="ampersand-as-data.html">view</a>:
-                  Bug <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=798">798: Ampersand as data in XHTML</a> (also good as a test for warnings in otherwise valid result)
+                  Bug <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=798">798: Ampersand as data in XHTML</a> (OK in SGML, not XML)
                   </li>
+              	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.xhtml;ss">validate</a> -
+              	    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.xhtml;ss">with v.w.o</a> -
+              	    <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.xhtml">view</a>
+              	    XHTML with bogus XML Decl, served as application/xhtml+xml (missing final "?")</li>
+                  	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.html;ss">validate</a> -
+                  	    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.html;ss">with v.w.o</a> -
+                  	    <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.html">view</a>
+                  	XHTML with bogus XML Decl, served as text/html (missing final "?")</a></li>
+
+                <li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi.html;ss">validate</a> -
+                    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi.html;ss">with v.w.o</a> -
+                    <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi.html">view</a>
+                    bogus FPI #1: lowercase "doctype".</a></li>
+              	
 	
   </ul>
   <h5>Various often-invalid site</h5>
@@ -322,14 +343,16 @@ All these documents should validate, without "pretty print" for the document typ
 </ul>
 
 <h4 id="invalid_bug">Documents that are invalid, which the validator passes as OK</h4>
-<p>TBA</p>
+<p>Wrong diagnosis</p>
+      <ul>
+        	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi2.html;ss">bogus FPI #2: HTML 4.01 "Strict"</a></li>
+        	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi3.html;ss">bogus FPI #3: XHTML 1.1 "Strict"</a></li>
+</ul>
 
 
   <h3 id="well-formed">Docs that should be Well Formed</h3>
+<p>well formed but no doctype. The validator could mark them as well formed, but not mention validity?</p>
       <ul>
-        <li><a href="../../check?uri=http://www.w3.org/Protocols/rfc2616/rfc2616.html">XHTML sans DOCTYPE</a> (DanC's HTMLized RFC 2616;well-formed, but not valid!)</li>
-        <li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-mathml2.html;ss">XHTML/MathML2</a>
-          (from the <a href="http://www.w3.org/TR/2000/CR-MathML2-20001113/chapter2.html#N1783">MathML 2.0 spec</a>)</li>
             <li><a href="../../check?uri=http://impressive.net/people/gerald/2000/10/18/test-staroffice-doc.xml;ss">XML output from OpenOffice 5.2</a>
               ("Build/Tag number OpenOffice605"), many namespaces</li>
       </ul>
@@ -350,28 +373,22 @@ All these documents should validate, without "pretty print" for the document typ
       <p>This should be split in UI testing and regression tests</p>
 
 <p>The following documents trip up the parser pretty badly - finds errors way beyond the last line</p>      
-      <ul>
-        	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi.html;ss">bogus FPI #1: lowercase "doctype".</a></li>
-        	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi2.html;ss">bogus FPI #2: HTML 4.01 "Strict"</a></li>
-        	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi3.html;ss">bogus FPI #3: XHTML 1.1 "Strict"</a></li>
-        	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.xhtml;ss">validate</a> -
-        	    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.xhtml;ss">with v.w.o</a> -
-        	    <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.xhtml">bogus XML Decl (missing final "?")</a></li>
-            	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.html;ss">validate</a> -
-            	    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.html;ss">with v.w.o</a> -
-            	    <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.html">bogus XML Decl, served as text/html (missing final "?")</a></li>
-</ul>
 <ul>
-	<li><a href="../../check?uri=file%3A///etc/passwd">a file: URL</a></li>
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/shorttags.html">SHORTTAGS and -wunclosed..</a></li>
         <li><a href="../../check?uri=http://www.w3.org/1999/09/SVG-access/computer.svg">image/svg</a> (is this a bug? I think this media type is not allowed any more)</li>
-	<li><a href="../../check?uri=http://www.oasis-open.org/committees/xmltest/xmlconf-19990712.xml;ss">xmlconf-19990712.xml</a></li>
+	<li><a href="../../check?uri=http://www.oasis-open.org/committees/xmltest/xmlconf-19990712.xml;ss">validate</a> -
+	    <a href="http://validator.w3.org/check?uri=http://www.oasis-open.org/committees/xmltest/xmlconf-19990712.xml;ss">with v.w.o</a> -
+	    <a href="http://www.oasis-open.org/committees/xmltest/xmlconf-19990712.xml;ss">view</a>:
+	    dereference relative URIs for DTDs </li>
       </ul>
  
       <h3 id="ui">User Interface tests</h3>
       <p>The following tests do not test the binary "validity" results, but the proper handling of options, errors, various outputs, etc. 
       "validate" links use this instance, with validator.w3.org links added for reference comparison</p>
 <ul>
+	<li><a href="../../check?uri=file%3A///etc/passwd">validate</a> -
+	    <a href="http://validator.w3.org/check?uri=file%3A///etc/passwd">with v.w.o</a> - 
+	    a file: URL </li>
 	<li>
 	  <a href="../../check/referer">validate</a> - 
 	  <a href="http://validator.w3.org/check/referer">with v.w.o</a> - 
