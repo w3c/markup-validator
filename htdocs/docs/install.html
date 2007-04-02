@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.17 2006-11-13 04:13:52 ot Exp $"
---><!--#set var="date" value="\$Date: 2006-11-13 04:13:52 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.18 2007-04-02 08:35:39 ville Exp $"
+--><!--#set var="date" value="\$Date: 2007-04-02 08:35:39 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -94,7 +94,7 @@
             title="Comprehensive Perl Archive Network">CPAN</acronym></a>
         (minimum versions in parenthesis after the name). The following
         list was complete when CVS spit out:
-        <code>$Date: 2006-11-13 04:13:52 $</code>. <tt>:-)</tt>
+        <code>$Date: 2007-04-02 08:35:39 $</code>. <tt>:-)</tt>
       </p>
      <p>
        One easy - and strongly recommended - way to take care of all these
@@ -126,7 +126,7 @@
 	 above.</p>
 	 
       <dl>
-        <dt><a href="http://search.cpan.org/dist/SGML-Parser-OpenSP/">SGML::Parser::OpenSP</a></dt>
+        <dt><a href="http://search.cpan.org/dist/SGML-Parser-OpenSP/">SGML-Parser-OpenSP</a></dt>
         <dd>
           Interface to the <a href="#install-prereq-sp">OpenSP parser</a>.
         </dd>
@@ -184,6 +184,21 @@
           Library to handle URIs and escaping special characters in them.
         </dd>
 
+      </dl>
+
+     <h5>List of optional Perl module distributions</h5>
+
+      <p>
+        The perl modules listed below are optional; the validator will use
+        them to provide some extra functionality if they're available.
+      </p>
+
+      <dl>
+        <dt><a href="http://search.cpan.org/dist/HTML-Tidy/">HTML-Tidy</a></dt>
+        <dd>
+          HTML-Tidy is used for generating a cleaned up version of the
+          submitted markup.
+        </dd>
       </dl>
 
     <h4><a id="install-components" name="install-components"></a>Install the various necessary components:</h4>
