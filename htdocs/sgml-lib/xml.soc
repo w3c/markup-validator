@@ -77,8 +77,11 @@ PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
 PUBLIC "-//W3C//DTD SMIL 1.0//EN"       "REC-smil-19980615/smil10.dtd"
 PUBLIC "-//W3C//DTD SMIL 2.0//EN"       "REC-smil20-20050107/SMIL20.dtd"
 PUBLIC "-//W3C//DTD SMIL 2.0 Basic//EN" "REC-smil20-20050107/SMIL20Basic.dtd"
+PUBLIC "-//W3C//DTD SMIL 2.1//EN" "REC-SMIL2-20051213/SMIL21.dtd"
+PUBLIC "-//W3C//DTD SMIL 2.1 Extended Mobile//EN" "REC-SMIL2-20051213/SMIL21ExtendedMobile.dtd"
+PUBLIC "-//W3C//DTD SMIL 2.1 Mobile//EN" "REC-SMIL2-20051213/SMIL21Mobile.dtd"
 
--- Framework utilities --
+-- SMIL 2.0 Framework utilities --
 PUBLIC "-//W3C//ENTITIES SMIL 2.0 Modular Framework 1.0//EN"
        "REC-smil20-20050107/smil-framework-1.mod"
 PUBLIC "-//W3C//ENTITIES SMIL 2.0 Datatypes 1.0//EN"
@@ -111,6 +114,47 @@ PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Transition//EN"
        "REC-smil20-20050107/SMIL-transition.mod"
 PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Integration//EN"
        "REC-smil20-20050107/SMIL-integrate.mod"
+
+
+-- SMIL 2.1 Document model files for the predefined profiles -- 
+PUBLIC "-//W3C//EN"TITIES SMIL 2.1 Language Profile Document Model 1.0//EN"
+       "REC-SMIL2-20051213/smil-language-profile-model-1.mod"
+PUBLIC "-//W3C//EN"TITIES SMIL 2.1 Extended Mobile Profile Document Model 1.0//EN"
+       "REC-SMIL2-20051213/smil-extended-mobile-profile-model-1.mod"
+PUBLIC "-//W3C//EN"TITIES SMIL 2.1 Mobile Profile Document Model 1.0//EN"
+       "REC-SMIL2-20051213/smil-mobile-profile-model-1.mod"
+
+-- SMIL 2.1 module files --
+PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Animation//EN"
+       "REC-SMIL2-20051213/SMIL-anim.mod"
+PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Content Control//EN"
+       "REC-SMIL2-20051213/SMIL-control.mod"
+PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Layout//EN"
+       "REC-SMIL2-20051213/SMIL-layout.mod"
+PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Linking//EN"
+       "REC-SMIL2-20051213/SMIL-link.mod"
+PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Media Objects//EN"
+       "REC-SMIL2-20051213/SMIL-media.mod"
+PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Document Metainformation//EN"
+       "REC-SMIL2-20051213/SMIL-metainformation.mod"
+PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Document Structure//EN"
+       "REC-SMIL2-20051213/SMIL-struct.mod"
+PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Timing//EN"
+       "REC-SMIL2-20051213/SMIL-timing.mod"
+PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Transition//EN"
+       "REC-SMIL2-20051213/SMIL-transition.mod"
+
+-- SMIL 2.1 Other utilities: data types, common attributes, qname and frame work files --
+PUBLIC "-//W3C//EN"TITIES SMIL 2.1 Datatypes 1.0//EN"
+       "REC-SMIL2-20051213/smil-datatypes-1.mod"
+PUBLIC "-//W3C//EN"TITIES SMIL 2.1 Common Attributes 1.0//EN"
+       "REC-SMIL2-20051213/smil-attribs-1.mod"
+PUBLIC "-//W3C//EN"TITIES SMIL 2.1 Qualified Names 1.0//EN"
+       "REC-SMIL2-20051213/smil-qname-1.mod"
+PUBLIC "-//W3C//EN"TITIES SMIL 2.1 Modular Framework 1.0//EN"
+       "REC-SMIL2-20051213/smil-framework-1.mod"
+
+
 
 -- Do not prefer document type name over a SYSTEM Identifier. --
 OVERRIDE NO
