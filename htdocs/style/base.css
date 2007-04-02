@@ -5,7 +5,7 @@
    Copyright 2000~2007 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.7 2007-03-26 01:46:29 ot Exp $
+   $Id: base.css,v 1.8 2007-04-02 11:19:55 ot Exp $
 */
 
 /*                 
@@ -291,6 +291,11 @@ fieldset p.submit_button input, fieldset div.submit_button input {
     text-decoration:none;  
 }
 
+.tabset_tabs li.firstchild a, .tabset_tabs li:first-child a { 
+    border-left: 1px solid white; 
+}
+
+
 .tabset_tabs a.active, .tabset_tabs a.active:hover { 
     color:#424242 ! important; 
     background-color: #f2f7fa !important;
@@ -298,16 +303,18 @@ fieldset p.submit_button input, fieldset div.submit_button input {
     /*border-color: #D1DAE9; 
     border-left-width:1px; */
     cursor:default; 
-    border-bottom: white; 
+    border: 1px solid #D1DAE9 !important; 
+    border-bottom: transparent !important; 
+    
     padding-top:0.8em; 
     padding-bottom:1px; 
    /* color: #fffff0 !important; */
  }
 
-.tabset_tabs li.firstchild a, .tabset_tabs li:first-child a { 
-    border-left: 1px solid white; 
-}
 div#fields {
+    border: 1px solid #D1DAE9; 
+    
+/*    background-color: #f2f7fa;*/
     background: #f2f7fa url(../images/lg_gradient.gif) bottom left repeat-x;
     margin: 0;
     padding: 0;
@@ -318,7 +325,8 @@ div#fields {
     z-index:1; 
     padding:0.5em 1em; 
     border-left: 1px solid white;
-    padding-bottom: 2em;
+    padding-bottom: .5em;
+    margin-bottom: 0;
 }
 
 input {
