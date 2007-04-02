@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: errors.html,v 1.35.2.3 2006-11-14 23:35:11 ot Exp $"
---><!--#set var="date" value="\$Date: 2006-11-14 23:35:11 $"
+<!--#set var="revision" value="\$Id: errors.html,v 1.35.2.4 2007-04-02 10:25:49 ville Exp $"
+--><!--#set var="date" value="\$Date: 2007-04-02 10:25:49 $"
 --><!--#set var="title" value="Error Explanations for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -77,12 +77,17 @@
         <dd><div class="ve mid-63">
     <p>
       You have used character data somewhere it is not permitted to appear.
-      Mistakes that can cause this error include putting text directly in the
-      body of the document without wrapping it in a container element (such as
-      a &lt;p&gt;aragraph&lt;/p&gt;) or forgetting to quote an attribute value
-      (where characters such as "%" and "/" are common, but cannot appear
-      without surrounding quotes).
+      Mistakes that can cause this error include:
     </p>
+    <ul>
+      <li>putting text directly in the body of the document without wrapping 
+      it in a container element (such as a &lt;p&gt;aragraph&lt;/p&gt;), or</li>
+      <li>forgetting to quote an attribute value
+      (where characters such as "%" and "/" are common, but cannot appear
+      without surrounding quotes), or</li>
+      <li>using XHTML-style closing tags (such as &lt;meta ... /&gt;) in HTML 4.01 or 
+      earlier. (Fix: remove the extra / character)</li>
+    </ul> 
   </div>
 	<p>
 	  <a href="../feedback.html?errmsg_id=63#errormsg"
@@ -231,7 +236,7 @@
       or "&lt;marquee&gt;" (this is usually fixed by using CSS to achieve
       the desired effect instead).</li>
       <li>by using upper-case tags in XHTML (in XHTML attributes and elements
-      must be all lower-case.</li>
+      must be all lower-case).</li>
     </ul>
   </div>
 	<p>
@@ -252,7 +257,7 @@
     </p>
     <p>
       If this error occured in a script section of your document, you should probably
-      read this <a href="http://validator.w3.org/docs/help.html#faq-javascript">FAQ entry</a>.
+      read this <a href="help.html#faq-javascript">FAQ entry</a>.
     </p>
   </div>
 	<p>
@@ -337,7 +342,7 @@
       check that they are both allowed in the chosen document type, and/or
       use CSS instead of this attribute. If you received this error when using the 
       &lt;embed&gt; element to incorporate flash media in a Web page, see the 
-      <a href="docs/help.html#faq-flash">FAQ item on valid flash</a>.
+      <a href="help.html#faq-flash">FAQ item on valid flash</a>.
     </p>
   </div>
 	<p>
@@ -545,11 +550,14 @@
             Your best bet is to replace the character with the nearest equivalent
             ASCII character, or to use an appropriate <a
               href="http://www.w3.org/MarkUp/html3/latin1.html">character
-            entity</a>. For more information on Character Encoding on the web, see <a
-              href="http://ppewww.ph.gla.ac.uk/%7Eflavell/aflavell.html">Alan
+            entity</a>.
+            <!-- http://groups.google.com/group/uk.net.web.authoring/browse_frm/thread/54c97b9c6fb89751
+            For more information on Character Encoding on the web, see <a
+              href="http://ppewww.physics.gla.ac.uk/%7Eflavell/aflavell.html">Alan
             Flavell</a>'s excellent <a
-            href="http://ppewww.ph.gla.ac.uk/%7Eflavell/charset/">HTML Character Set Issues</a>
-            reference.
+              href="http://ppewww.physics.gla.ac.uk/%7Eflavell/charset/">HTML Character
+            Set Issues</a> reference.
+            -->
           </p>
           <p>
             This error can also be triggered by formatting characters embedded in
