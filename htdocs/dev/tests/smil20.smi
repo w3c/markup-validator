@@ -1,0 +1,8 @@
+<!DOCTYPE smil PUBLIC "-//W3C//DTD SMIL 2.0//EN"
+  "http://www.w3.org/2001/SMIL20/WD/SMIL20.dtd">  
+<smil xmlns="http://www.w3.org/2001/SMIL20/Language">
+  <body>
+    <img id="smile" end="activateEvent" src="../images/smile.jpg"/>
+  </body>
+</smil> 
+
