@@ -2,7 +2,7 @@
 ##
 ## Generates HTML documentation of error messages and explanations
 ## for W3C Markup Validation Service
-## $Id: docs_errors.pl,v 1.4 2006-11-15 08:02:46 ot Exp $
+## $Id: docs_errors.pl,v 1.5 2007-04-02 10:18:37 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -110,6 +110,9 @@ sub list_errors_hasverbose{
 		$single_error{id} = $error_id;
 		$single_error{verbose} = $RSRC->{msg}->{$error_id}->{verbose};
 		push @{$errors}, \%single_error;
+                # Fix up relative paths (/check vs /docs/errors.html)
+                s/href="docs\//href="/
+                    for $single_error{original}, $single_error{verbose};
 	    }
 
 	}
