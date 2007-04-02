@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE smil PUBLIC "-//W3C//DTD SMIL 2.1 Mobile//EN"
+                      "http://www.w3.org/2005/SMIL21/SMIL21Mobile.dtd">
+<!--
+Copyright: Copyright 1998-2005 W3C (MIT, ERCIM, Keio), All Rights Reserved.
+           See http://www.w3.org/Consortium/Legal/.
+Author:    Jack Jansen (CWI)
+Version:   April 20, 2005
+Module:    BackgroundTilingLayout Module
+Feature:   background image functionality
+File Name: bkL-background-04.smil
+Media Components: 1 image, 1 text description
+Expected Behavior: This file is used to verify background image behavior 
+                   when an image is set on the region.
+                   In this example, both a background color and a small background image are defined.
+                   The small background image should be shown tiled, with text caption.
+Required Modules: BackgroundTilingLayout
+                  BasicInlineTiming
+                  BasicLayout
+                  BasicMedia
+                  BasicTimeContainers
+                  Structure
+-->
+<smil xmlns="http://www.w3.org/2005/SMIL21/Mobile">
+  <head>
+    <layout>
+      <root-layout id="Player-Window" width="200" height="200"/>
+      <region id="media" width="200" height="200" backgroundColor="#C0C0ff" backgroundRepeat="repeat" backgroundImage="bgimagesmall.jpg"/>
+
+    </layout>
+  </head>
+  <body>
+    <seq>
+      <text region="media" src="bkL-background-04.txt" dur="5s" />
+    </seq>
+  </body>
+</smil>
+
+
