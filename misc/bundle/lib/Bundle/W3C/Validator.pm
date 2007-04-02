@@ -1,10 +1,10 @@
 package Bundle::W3C::Validator;
 
-use 5.6.0;
+use 5.8.0;
 use strict;
 
 use vars qw($VERSION);
-$VERSION = '0.7.0';
+$VERSION = '0.8.0';
 
 1;
 
@@ -22,12 +22,12 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
 
  CGI 2.81
  Config::General 2.19
+ HTML::Encoding 0.52
  HTML::Parser 3.25
  HTML::Template 2.6
  LWP::UserAgent 1.90
  Net::IP
- Set::IntSpan
- Text::Iconv
+ SGML::Parser::OpenSP
  URI
 
 =head1 DESCRIPTION
@@ -46,7 +46,7 @@ The W3C Markup Validator Team, E<lt>www-validator@w3.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 1994-2006 World Wide Web Consortium, (Massachusetts
+Copyright (C) 1994-2007 World Wide Web Consortium, (Massachusetts
 Institute of Technology, European Research Consortium for Informatics
 and Mathematics, Keio University). All Rights Reserved. This work is
 distributed under the W3C(R) Software License [1] in the hope that it
