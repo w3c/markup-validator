@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.492 2007-03-29 12:42:33 ot Exp $
+# $Id: check,v 1.493 2007-04-02 06:46:32 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.492 $;
+  $VERSION =  q$Revision: 1.493 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2195,7 +2195,7 @@ sub W3C::Validator::SAXHandler::start_element
     $self->{am_in_heading} = 1;
   }
   
-  if (($element->{Name} eq 'html') and ($self->{_file}->{Mode} eq 'XML')){
+  if (($element->{Name} eq $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Name}) and ($self->{_file}->{Mode} eq 'XML')){
     # we check if xmlns has been properly given
     my $has_xmlns = FALSE;
     my $xmlns_value = undef;
@@ -2236,15 +2236,17 @@ sub W3C::Validator::SAXHandler::start_element
       $self->{_file}->{'Is Valid'} = FALSE;
       push @{$self->{_file}->{Errors}}, $err;
     }
-    elsif (($has_xmlns == TRUE) and ($xmlns_value ne $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace}) ) {
+    elsif (($has_xmlns == TRUE) 
+     and (defined $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace}) 
+     and ($xmlns_value ne $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace}) ) {
       my $err;
-
+      my $location = $self->{_parser}->get_location();
       $err->{src}  = '...'; # do this with show_open_entities()?
-      $err->{line} = $element->{Location};
-      $err->{char} = $element->{Location};
+      $err->{line} = $location->{LineNumber};
+      $err->{char} = $location->{ColumnNumber};
       $err->{num}  = "wrong-xmlns";
       $err->{type} = "E";
-      $err->{msg}  = "Wrong xmlns attribute for element ".$element->{Name}.". Value should be". $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace};
+      $err->{msg}  = "Wrong xmlns attribute for element ".$element->{Name}.". The value should be: ". $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace};
 
       # ...
       $self->{_file}->{'Is Valid'} = FALSE;
