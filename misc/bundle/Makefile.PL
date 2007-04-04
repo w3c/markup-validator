@@ -16,6 +16,7 @@ WriteMakefile(
                       Net::IP              => 0,
                       SGML::Parser::OpenSP => 0
                       URI                  => 0,
+                      XML::LibXML          => 0,
                      },
   dist            => { TARFLAGS => '--owner=0 --group=0 -cvf' },
   clean           => { FILES => 'ChangeLog.bak' },

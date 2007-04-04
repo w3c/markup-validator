@@ -29,6 +29,7 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
  Net::IP
  SGML::Parser::OpenSP
  URI
+ XML::LibXML
 
 =head1 DESCRIPTION
 
