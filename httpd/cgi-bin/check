@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.496 2007-04-04 09:53:16 ville Exp $
+# $Id: check,v 1.497 2007-04-04 10:26:01 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.496 $;
+  $VERSION =  q$Revision: 1.497 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2233,7 +2233,8 @@ sub W3C::Validator::SAXHandler::start_element
 
       }
     }
-    if ($has_xmlns == FALSE){
+    if (($has_xmlns == FALSE)  and ($CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{"Namespace Required"} eq TRUE )){
+      # whine if the root xmlns attribute is noted as required by spec, but not present
       my $err;
       my $location = $self->{_parser}->get_location();
       $err->{src}  = '...'; # do this with show_open_entities()?
