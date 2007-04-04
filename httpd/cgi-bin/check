@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.493 2007-04-02 06:46:32 ot Exp $
+# $Id: check,v 1.494 2007-04-04 04:04:36 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.493 $;
+  $VERSION =  q$Revision: 1.494 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -841,7 +841,15 @@ if (! $File->{'Is Valid'}) {
     $File->{'Tidy_OK'} = FALSE;
   }
 }
+else {
+  # if document is valid, we don't really need tidy, do we?
+  $File->{'Tidy_OK'} = FALSE;
+}
 
+if ($File->{'Tidy_OK'} eq FALSE) {
+  # if tidy not available, disable
+  $File->{Opt}->{'Show Tidy'} = FALSE;
+}
 
 my $template;
 
