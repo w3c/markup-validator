@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.495 2007-04-04 09:35:56 ville Exp $
+# $Id: check,v 1.496 2007-04-04 09:53:16 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.495 $;
+  $VERSION =  q$Revision: 1.496 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -280,22 +280,26 @@ $q = &prepCGI($File, $q);
 my $lang         = $q->param('lang')  ? $q->param('lang')    : '';
 my @localizations;
 my $lang_ok = FALSE;
-foreach my $lang_available ( split(" ", $CFG->{Languages}) ) {
-        if ($lang eq $lang_available){ $lang_ok = TRUE; next }
+foreach my $lang_available (split(" ", $CFG->{Languages})) {
+  if ($lang eq $lang_available) {
+    $lang_ok = TRUE;
+    next;
+  }
 }
 
 if (($lang eq '') or (!$lang_ok)) { # use HTTP-based negotiation
-    $lang = '';
-    foreach my $lang_available ( split(" ", $CFG->{Languages}) ) {
-            push @localizations, [$lang_available, 1.000, 'text/html',   undef,   'utf-8',  $lang_available , undef]
-    }   
-    require HTTP::Negotiate;
-    $lang = HTTP::Negotiate::choose(\@localizations);
+  $lang = '';
+  foreach my $lang_available (split(" ", $CFG->{Languages})) {
+    push @localizations, [$lang_available, 1.000, 'text/html', undef,
+                          'utf-8', $lang_available, undef];
+  }
+  require HTTP::Negotiate;
+  $lang = HTTP::Negotiate::choose(\@localizations);
 }
 
 
 if ($lang eq "en") {
- $lang = 'en_US'; # legacy
+  $lang = 'en_US'; # legacy
 }
 
 my $T = HTML::Template->new(
@@ -484,11 +488,8 @@ unless ($File->{Charset}->{Use}) {
 
 #
 # Handle any Fallback or Override for the charset.
-if (
-        charset_not_equal($File->{Opt}->{Charset}, '(detect automatically)')
-   and 
-        charset_not_equal($File->{Opt}->{Charset}, '')
-   ) {
+if (charset_not_equal($File->{Opt}->{Charset}, '(detect automatically)')
+    and charset_not_equal($File->{Opt}->{Charset}, '')) {
   # charset=foo was given to the CGI and it wasn't "autodetect" or empty.
 
   #
@@ -585,10 +586,10 @@ if ($File->{Charset}->{Use} eq 'utf-8' &&
 #
 
 #
-# Override DOCTYPE if user asked for it. 
+# Override DOCTYPE if user asked for it.
 if ($File->{Opt}->{DOCTYPE}
     and not $File->{Opt}->{DOCTYPE} =~ /(Inline|detect)/i
-    and $File->{Opt}->{DOCTYPE} ne '1' ) { 
+    and $File->{Opt}->{DOCTYPE} ne '1' ) {
   $File = &override_doctype($File);
 }
 
@@ -611,75 +612,75 @@ $File->{'Is Valid'} = TRUE;
 $File->{Errors} = [];
 
 # preparse with XML parser if necessary
-# we should really be using a SAX ErrorHandler, but I can't find 
+# we should really be using a SAX ErrorHandler, but I can't find
 # a way to make it work with XML::LibXML::SAX::Parser... ** FIXME **
 # ditto, we should try using W3C::Validator::SAXHandler,
 # but it's badly linked to opensp at the moment
 if (&is_xml($File)) {
-  
-       require XML::LibXML;
-       my $xmlparser = XML::LibXML->new();
-       $xmlparser->line_numbers(1);
-       eval {
-         $xmlparser->parse_string(join"\n",@{$File->{Content}});
-       };
-       my $xml_parse_errors_line = undef;
-       my @xmlwf_error_list;
-       if ($@) {
-         
-         my $xmlwf_errors = $@;
-         my $xmlwf_error_line = undef;
-         my $xmlwf_error_col = undef;
-         my $xmlwf_error_msg = undef;
-         my $num_xmlwf_error = 0;
-         my $last_err_msg = undef;
-         my $err;
-         foreach my $msg_line (split "\n", $xmlwf_errors){
-          $msg_line =~ s{[^\x0d\x0a](:\d+:)}{\n$1}g;
-          $msg_line =~ s{[^\x0d\x0a]+[\x0d\x0a]$}{};
-          if ($msg_line =~ /(:\d+:)(.*)/ ){
-            $xmlwf_error_line = $1;
-            $xmlwf_error_msg = $2;
-            $xmlwf_error_line =~ s/:(\d+):/$1/;
-            $xmlwf_error_msg =~ s/ parser error :/XML Parsing Error: /;
-          }
-          if ($msg_line =~ /(.+)\^/){
-            $xmlwf_error_col = length($1);
-          }
-          if ($xmlwf_error_col == 79){
-            # working around an apparent odd limitation of libxml
-            # which only gives context for lines up to 80 chars
-            # http://www.w3.org/Bugs/Public/show_bug.cgi?id=4420
-            # http://bugzilla.gnome.org/show_bug.cgi?id=424017
-            $xmlwf_error_col = "> 80";
-            # non-int line number will trigger the proper behavior in report_error
-          }
-          
-          if ((defined $xmlwf_error_line) and (defined $xmlwf_error_col) and (defined $xmlwf_error_msg)){
-            $err->{src}  = '...'; # do this with show_open_entities()?
-            $err->{line} = $xmlwf_error_line;
-            $err->{char} = $xmlwf_error_col;
-            $err->{num}  = 'xmlwf';
-            $err->{type} = "E";
-            $err->{msg}  = $xmlwf_error_msg;
 
-            # ...
-            $last_err_msg = $err;
-            push (@xmlwf_error_list, $err);
-            $err = undef;
-            $xmlwf_error_line = undef;
-            $xmlwf_error_col = undef;
-            $xmlwf_error_msg = undef;
-            $num_xmlwf_error++;
-            
-          }                  
-         }
-         foreach my $errmsg (@xmlwf_error_list){
-           $File->{'Is Valid'} = FALSE;
-           push @{$File->{Errors}}, $errmsg;
-         }
+  require XML::LibXML;
+  my $xmlparser = XML::LibXML->new();
+  $xmlparser->line_numbers(1);
+  eval {
+    $xmlparser->parse_string(join"\n",@{$File->{Content}});
+  };
+  my $xml_parse_errors_line = undef;
+  my @xmlwf_error_list;
+  if ($@) {
 
-       }
+    my $xmlwf_errors = $@;
+    my $xmlwf_error_line = undef;
+    my $xmlwf_error_col = undef;
+    my $xmlwf_error_msg = undef;
+    my $num_xmlwf_error = 0;
+    my $last_err_msg = undef;
+    my $err;
+    foreach my $msg_line (split "\n", $xmlwf_errors){
+      $msg_line =~ s{[^\x0d\x0a](:\d+:)}{\n$1}g;
+      $msg_line =~ s{[^\x0d\x0a]+[\x0d\x0a]$}{};
+      if ($msg_line =~ /(:\d+:)(.*)/ ) {
+        $xmlwf_error_line = $1;
+        $xmlwf_error_msg = $2;
+        $xmlwf_error_line =~ s/:(\d+):/$1/;
+        $xmlwf_error_msg =~ s/ parser error :/XML Parsing Error: /;
+      }
+      if ($msg_line =~ /(.+)\^/){
+        $xmlwf_error_col = length($1);
+      }
+      if ($xmlwf_error_col == 79){
+        # working around an apparent odd limitation of libxml
+        # which only gives context for lines up to 80 chars
+        # http://www.w3.org/Bugs/Public/show_bug.cgi?id=4420
+        # http://bugzilla.gnome.org/show_bug.cgi?id=424017
+        $xmlwf_error_col = "> 80";
+        # non-int line number will trigger the proper behavior in report_error
+      }
+
+      if ((defined $xmlwf_error_line) and (defined $xmlwf_error_col) and (defined $xmlwf_error_msg)){
+        $err->{src}  = '...'; # do this with show_open_entities()?
+        $err->{line} = $xmlwf_error_line;
+        $err->{char} = $xmlwf_error_col;
+        $err->{num}  = 'xmlwf';
+        $err->{type} = "E";
+        $err->{msg}  = $xmlwf_error_msg;
+
+        # ...
+        $last_err_msg = $err;
+        push (@xmlwf_error_list, $err);
+        $err = undef;
+        $xmlwf_error_line = undef;
+        $xmlwf_error_col = undef;
+        $xmlwf_error_msg = undef;
+        $num_xmlwf_error++;
+
+      }
+    }
+    foreach my $errmsg (@xmlwf_error_list){
+      $File->{'Is Valid'} = FALSE;
+      push @{$File->{Errors}}, $errmsg;
+    }
+
+  }
 }
 
 
@@ -741,7 +742,7 @@ sub parse (\$) {
              { name => 'Parse Mode', value => $File->{Mode} },
              { name => 'Parser', value => $parser_name },
              { name => 'Parser Options', value => join " ", @spopt },
-             
+
             ],
            );
 
@@ -788,12 +789,12 @@ if (my $prettyver = $CFG->{Types}->{$File->{Version}}->{Display}) {
 if ($File->{ContentType}){
   my @allowedMediaType = split(" ", $CFG->{Types}->{$File->{DOCTYPE}}->{Types}->{Allowed});
   my $usedCTisAllowed;
-  if (scalar @allowedMediaType)  {  
+  if (scalar @allowedMediaType)  {
     $usedCTisAllowed = FALSE;
     foreach (@allowedMediaType) { $usedCTisAllowed = TRUE if ($_ eq $File->{ContentType}); }
   }
   else {
-    # wedon't know what media type is recommended, so better shut up 
+    # wedon't know what media type is recommended, so better shut up
     $usedCTisAllowed = TRUE;
   }
   if(! $usedCTisAllowed ){
@@ -937,7 +938,7 @@ sub prep_template ($$) {
   #
   # Output options...
   $T->param(opt_show_source    => $File->{Opt}->{'Show Source'});
-  $T->param(opt_show_tidy    => $File->{Opt}->{'Show Tidy'});  
+  $T->param(opt_show_tidy    => $File->{Opt}->{'Show Tidy'});
   $T->param(opt_show_outline   => $File->{Opt}->{'Outline'});
   $T->param(opt_show_parsetree => $File->{Opt}->{'Show Parsetree'});
   $T->param(opt_show_noatt     => $File->{Opt}->{'No Attributes'});
@@ -965,13 +966,13 @@ sub prep_template ($$) {
   $T->param(file_namespaces => \@nss) if @nss;
 
   if ($File->{Opt}->{DOCTYPE}) {
-      my $over_doctype_param = "override doctype $File->{Opt}->{DOCTYPE}";
-       $T->param($over_doctype_param => TRUE);
+    my $over_doctype_param = "override doctype $File->{Opt}->{DOCTYPE}";
+    $T->param($over_doctype_param => TRUE);
   }
 
   if ($File->{Opt}->{Charset}) {
-      my $over_charset_param = "override charset $File->{Opt}->{Charset}";
-       $T->param($over_charset_param => TRUE);
+    my $over_charset_param = "override charset $File->{Opt}->{Charset}";
+    $T->param($over_charset_param => TRUE);
   }
 }
 
@@ -999,55 +1000,59 @@ sub fin_template ($$) {
   my $number_of_errors = ""; # textual form of $num_errors
   my $number_of_warnings = ""; # textual form of $num_errors
 
-# The following is a bit hack-ish, but will enable us to have some logic 
+# The following is a bit hack-ish, but will enable us to have some logic
 # for a human-readable display of the number, with cases for 0, 1, 2 and above
 # (the case of 2 appears to be useful for localization in some languages where the plural is different for 2, and above)
 
   if ($num_errors > 1) {
-      $T->param(number_of_errors_is_0 => FALSE );
-      $T->param(number_of_errors_is_1 =>  FALSE);
-      if ($num_errors eq 2) {
-           $T->param(number_of_errors_is_2 =>  TRUE);   
-      }
-      else { $T->param(number_of_errors_is_2 => FALSE ); }
-      $T->param(number_of_errors_is_plural => TRUE );
+    $T->param(number_of_errors_is_0 => FALSE );
+    $T->param(number_of_errors_is_1 =>  FALSE);
+    if ($num_errors eq 2) {
+      $T->param(number_of_errors_is_2 =>  TRUE);
+    }
+    else {
+      $T->param(number_of_errors_is_2 => FALSE );
+    }
+    $T->param(number_of_errors_is_plural => TRUE );
   }
   elsif ($num_errors eq 1) {
-      $T->param(number_of_errors_is_0 => FALSE );
-      $T->param(number_of_errors_is_1 => TRUE );
-      $T->param(number_of_errors_is_2 => FALSE );
-      $T->param(number_of_errors_is_plural => FALSE );
+    $T->param(number_of_errors_is_0 => FALSE );
+    $T->param(number_of_errors_is_1 => TRUE );
+    $T->param(number_of_errors_is_2 => FALSE );
+    $T->param(number_of_errors_is_plural => FALSE );
   }
   else { # 0
-      $T->param(number_of_errors_is_0 => TRUE );
-      $T->param(number_of_errors_is_1 => FALSE );
-      $T->param(number_of_errors_is_2 => FALSE );
-      $T->param(number_of_errors_is_plural => FALSE );
+    $T->param(number_of_errors_is_0 => TRUE );
+    $T->param(number_of_errors_is_1 => FALSE );
+    $T->param(number_of_errors_is_2 => FALSE );
+    $T->param(number_of_errors_is_plural => FALSE );
   }
 
   if ($num_warnings > 1) {
-      $T->param(number_of_warnings_is_0 => FALSE );
-      $T->param(number_of_warnings_is_1 =>  FALSE);
-      if ($num_warnings eq 2) {
-           $T->param(number_of_warnings_is_2 =>  TRUE);   
-      }
-      else { $T->param(number_of_warnings_is_2 => FALSE ); }
-      $T->param(number_of_warnings_is_plural => TRUE );
+    $T->param(number_of_warnings_is_0 => FALSE );
+    $T->param(number_of_warnings_is_1 =>  FALSE);
+    if ($num_warnings eq 2) {
+      $T->param(number_of_warnings_is_2 =>  TRUE);
+    }
+    else {
+      $T->param(number_of_warnings_is_2 => FALSE);
+    }
+    $T->param(number_of_warnings_is_plural => TRUE );
   }
   elsif ($num_warnings eq 1) {
-      $T->param(number_of_warnings_is_0 => FALSE );
-      $T->param(number_of_warnings_is_1 => TRUE );
-      $T->param(number_of_warnings_is_2 => FALSE );
-      $T->param(number_of_warnings_is_plural => FALSE );
+    $T->param(number_of_warnings_is_0 => FALSE );
+    $T->param(number_of_warnings_is_1 => TRUE );
+    $T->param(number_of_warnings_is_2 => FALSE );
+    $T->param(number_of_warnings_is_plural => FALSE );
   }
   else { # 0
-      $T->param(number_of_warnings_is_0 => TRUE );
-      $T->param(number_of_warnings_is_1 => FALSE );
-      $T->param(number_of_warnings_is_2 => FALSE );
-      $T->param(number_of_warnings_is_plural => FALSE );
+    $T->param(number_of_warnings_is_0 => TRUE );
+    $T->param(number_of_warnings_is_1 => FALSE );
+    $T->param(number_of_warnings_is_2 => FALSE );
+    $T->param(number_of_warnings_is_plural => FALSE );
   }
 
-  
+
   $T->param(file_errors => $reported_errors);
   if ($File->{'Is Valid'}) {
     $T->param(VALID => TRUE);
@@ -1083,7 +1088,7 @@ sub report_valid {
   } elsif (defined $File->{Tentative}) {
     $T->param(is_tentative => TRUE);
   }
-  
+
   if ($File->{Opt}->{'Outline'}) {
     $T->param(file_outline => $File->{heading_outline});
   }
@@ -1287,8 +1292,8 @@ sub handle_frag {
   $File->{'Is Upload'} = TRUE;
   $File->{'Direct Input'} = TRUE;
   $File->{Charset}->{HTTP} = "utf-8"; # by default, the form accepts utf-8 chars
-  
-  
+
+
   return $File;
 }
 
@@ -1491,8 +1496,8 @@ sub report_errors ($) {
       }
       my $explanation;
       if ($err->{num}) {
-        my $num = $err->{num};        
-        
+        my $num = $err->{num};
+
 #        if (exists $Msgs{$num}) { # We've already seen this message...
 #          if ($File->{Opt}->{Verbose}) { # ...so only repeat it in Verbose mode.
 #            $explanation = qq(\n    <div class="hidden mid-$num"></div>\n);
@@ -1545,42 +1550,40 @@ sub report_errors ($) {
         $number_of_warnings += 1;
       }
       # TODO other classes for "X" etc? FIXME find all types of message.
-      
+
       push @{$Errors}, $err;
-      
-      if (($File->{Opt}->{'Group Errors'}) and (($err->{type} eq 'E') or ($err->{type} eq 'W')or ($err->{type} eq 'X'))) { 
+
+      if (($File->{Opt}->{'Group Errors'}) and (($err->{type} eq 'E') or ($err->{type} eq 'W')or ($err->{type} eq 'X'))) {
               # index by num for errors and warnings only - info usually give context of error or warning
         if (! exists $Errors_bytype{$err->{num}}) {
-                $Errors_bytype{$err->{num}}->{instances} = [];
-                my $msg_text;
-                if ($err->{num} ne 'xmlwf') {
-                  $msg_text = $RSRC->{msg}->{$err->{num}}->{original};
-                  $msg_text =~ s/%1/X/;
-                  $msg_text =~ s/%2/Y/;
-                }
-                else { ## FIXME ## we need a catalog of errors from our XML parser 
-                  $msg_text = "XML Parsing Error";  
-                }
-                $Errors_bytype{$err->{num}}->{expl} = $err->{expl};
-                $Errors_bytype{$err->{num}}->{generic_msg} = $msg_text;
-                $Errors_bytype{$err->{num}}->{msg} = $err->{msg};
-                $Errors_bytype{$err->{num}}->{type} = $err->{type};
-                $Errors_bytype{$err->{num}}->{class} = $err->{class};
-                $Errors_bytype{$err->{num}}->{err_type_err} = $err->{err_type_err};
-                $Errors_bytype{$err->{num}}->{err_type_warn} = $err->{err_type_warn};
-                $Errors_bytype{$err->{num}}->{err_type_info} = $err->{err_type_info};
-                
-                
-                } 
+          $Errors_bytype{$err->{num}}->{instances} = [];
+          my $msg_text;
+          if ($err->{num} ne 'xmlwf') {
+            $msg_text = $RSRC->{msg}->{$err->{num}}->{original};
+            $msg_text =~ s/%1/X/;
+            $msg_text =~ s/%2/Y/;
+          }
+          else { ## FIXME ## we need a catalog of errors from our XML parser
+            $msg_text = "XML Parsing Error";
+          }
+          $Errors_bytype{$err->{num}}->{expl} = $err->{expl};
+          $Errors_bytype{$err->{num}}->{generic_msg} = $msg_text;
+          $Errors_bytype{$err->{num}}->{msg} = $err->{msg};
+          $Errors_bytype{$err->{num}}->{type} = $err->{type};
+          $Errors_bytype{$err->{num}}->{class} = $err->{class};
+          $Errors_bytype{$err->{num}}->{err_type_err} = $err->{err_type_err};
+          $Errors_bytype{$err->{num}}->{err_type_warn} = $err->{err_type_warn};
+          $Errors_bytype{$err->{num}}->{err_type_info} = $err->{err_type_info};
+        }
         push @ { $Errors_bytype{$err->{num}}->{instances} }, $err;
       }
-    } 
+    }
   }
   if ($File->{Opt}->{'Group Errors'})   {
-          $Errors = [];
-          for my $err_num (keys %Errors_bytype){
-            push @{$Errors}, $Errors_bytype{$err_num};
-          }
+    $Errors = [];
+    for my $err_num (keys %Errors_bytype){
+      push @{$Errors}, $Errors_bytype{$err_num};
+    }
   }
   return $number_of_errors, $number_of_warnings, $number_of_info, $Errors;
 }
@@ -1853,22 +1856,22 @@ sub set_parse_mode {
   my $parseModeFromDoctype = $CFG->{Types}->{$fpi}->{'Parse Mode'};
 
   my $parseModeFromMimeType = $File->{Mode};
-  
-  
+
+
   if (($parseModeFromMimeType eq 'TBD') and (!exists $CFG->{Types}->{$fpi})) {
-    # the mime type is text/html (ambiguous, hence TBD mode) 
+    # the mime type is text/html (ambiguous, hence TBD mode)
     # and the doctype isn't in the catalogue... we scream
     &add_warning('W08', {W08_mime => $File->{ContentType}});
     return;
   }
-  
+
   $parseModeFromDoctype = 'TBD' unless $parseModeFromDoctype eq 'SGML' or $parseModeFromDoctype eq 'XML';
 
   if (($parseModeFromDoctype eq 'TBD') and ($parseModeFromMimeType eq 'TBD')) {
     # if both doctype and mime type are useless to give us a parse mode
     # => we use SGML as a default
     $File->{Mode} = 'SGML';
-    
+
     &add_warning('W06', {
       W06_mime => $File->{ContentType},
       w06_doctype => $File->{Version}
@@ -1877,12 +1880,12 @@ sub set_parse_mode {
   }
   elsif ($parseModeFromDoctype eq 'TBD') {
     # doctype does not give us anything clear (e.g custom DTD)
-    # but mime type gives clear indication 
+    # but mime type gives clear indication
     # => we just use what the content type tells us - move along
     return;
   }
   elsif ($parseModeFromMimeType eq 'TBD') {
-    # the mime type is text/html (ambiguous, hence TBD mode) 
+    # the mime type is text/html (ambiguous, hence TBD mode)
     # but by now we're sure that the document type is a good indication
     # so we use that.
     $File->{Mode} = $parseModeFromDoctype;
@@ -1897,7 +1900,7 @@ sub set_parse_mode {
       W07_dtd  => $parseModeFromDoctype,
     });
     return;
-    
+
   }
 }
 
@@ -2018,11 +2021,11 @@ sub transcode {
 
   # @@FIXME is this what we want?
   $output =~ s/\015?\012/\n/g;
-  
-  # make sure we deal only with unix newlines 
+
+  # make sure we deal only with unix newlines
   # tentative fix for http://www.w3.org/Bugs/Public/show_bug.cgi?id=3992
   $output =~ s/(\r\n|\n|\r)/\n/g;
-  
+
   $File->{Content} = [split/\n/, $output];
 
   return $File;
@@ -2112,7 +2115,7 @@ sub self_url_q {
   $thispage .= 'No200=1;'   if $q->param('No200');
   $thispage .= 'verbose=1;' if $q->param('verbose');
   $thispage .= 'group=1;'   if $q->param('group');
-  
+
   if ($q->param('doctype')
       and not $q->param('doctype') =~ /(Inline|detect)/i) {
     $thispage .= 'doctype=' . uri_escape($q->param('doctype')) . ';';
@@ -2177,20 +2180,20 @@ sub W3C::Validator::SAXHandler::characters
   if ($self->{am_in_heading} == 1) {
     my $data = $chars->{Data};
     $data =~  s/[\r|\n]/ /g;
- 	 $self->{_file}->{heading_outline} = $self->{_file}->{heading_outline} . $data;
+    $self->{_file}->{heading_outline} =
+      $self->{_file}->{heading_outline} . $data;
   }
-  
 }
 
 sub W3C::Validator::SAXHandler::data
 {
   my ($self, $chars) = @_;
   if ($self->{am_in_heading} == 1) {
-   my $data = $chars->{Data};
-   $data =~  s/[\r|\n]/ /g;
-	 $self->{_file}->{heading_outline} = $self->{_file}->{heading_outline} . $data;
+    my $data = $chars->{Data};
+    $data =~  s/[\r|\n]/ /g;
+    $self->{_file}->{heading_outline} =
+      $self->{_file}->{heading_outline} . $data;
   }
-  
 }
 
 
@@ -2198,11 +2201,11 @@ sub W3C::Validator::SAXHandler::start_element
 {
   my ($self, $element) = @_;
   if ($element->{Name} =~ /^h([1-6])$/) {
-     
-     $self->{_file}->{heading_outline} = $self->{_file}->{heading_outline} . "    " x int($1) . "[". $element->{Name}."] ";
+
+    $self->{_file}->{heading_outline} = $self->{_file}->{heading_outline} . "    " x int($1) . "[". $element->{Name}."] ";
     $self->{am_in_heading} = 1;
   }
-  
+
   if (($element->{Name} eq $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Name}) and ($self->{_file}->{Mode} eq 'XML')){
     # we check if xmlns has been properly given
     my $has_xmlns = FALSE;
@@ -2212,14 +2215,14 @@ sub W3C::Validator::SAXHandler::start_element
         # Try with SAX method
         if($element->{Attributes}->{$attr}->{Value} ){
           $has_xmlns = TRUE;
-          $xmlns_value = $element->{Attributes}->{$attr}->{Value}; 
+          $xmlns_value = $element->{Attributes}->{$attr}->{Value};
         }
         #next if ($has_xmlns);
-        
+
         # the following is not SAX, but OPENSP specific
 
         if ( $element->{Attributes}->{$attr}->{Defaulted}){
-          
+
           if ($element->{Attributes}->{$attr}->{Defaulted} eq "specified") {
             $has_xmlns = TRUE;
             foreach my $datachunk (@{$element->{Attributes}->{$attr}->{CdataChunks}}) {
@@ -2227,7 +2230,7 @@ sub W3C::Validator::SAXHandler::start_element
             }
           }
         }
-        
+
       }
     }
     if ($has_xmlns == FALSE){
@@ -2244,9 +2247,9 @@ sub W3C::Validator::SAXHandler::start_element
       $self->{_file}->{'Is Valid'} = FALSE;
       push @{$self->{_file}->{Errors}}, $err;
     }
-    elsif (($has_xmlns == TRUE) 
-     and (defined $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace}) 
-     and ($xmlns_value ne $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace}) ) {
+    elsif (($has_xmlns == TRUE)
+           and (defined $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace})
+           and ($xmlns_value ne $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace}) ) {
       my $err;
       my $location = $self->{_parser}->get_location();
       $err->{src}  = '...'; # do this with show_open_entities()?
@@ -2272,7 +2275,7 @@ sub W3C::Validator::SAXHandler::end_element
     $self->{_file}->{heading_outline} = $self->{_file}->{heading_outline} . "\n";
     $self->{am_in_heading} = 0;
   }
-  
+
 }
 
 sub W3C::Validator::SAXHandler::error
@@ -2389,3 +2392,4 @@ sub uri_ok {
 # tab-width: 2
 # perl-indent-level: 2
 # End:
+# ex: ts=2 sw=2 et
