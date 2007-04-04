@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.494 2007-04-04 04:04:36 ot Exp $
+# $Id: check,v 1.495 2007-04-04 09:35:56 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.494 $;
+  $VERSION =  q$Revision: 1.495 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -286,11 +286,11 @@ foreach my $lang_available ( split(" ", $CFG->{Languages}) ) {
 
 if (($lang eq '') or (!$lang_ok)) { # use HTTP-based negotiation
     $lang = '';
-    use HTTP::Negotiate qw(choose);
     foreach my $lang_available ( split(" ", $CFG->{Languages}) ) {
             push @localizations, [$lang_available, 1.000, 'text/html',   undef,   'utf-8',  $lang_available , undef]
     }   
-    $lang  = choose(\@localizations);
+    require HTTP::Negotiate;
+    $lang = HTTP::Negotiate::choose(\@localizations);
 }
 
 
@@ -617,7 +617,7 @@ $File->{Errors} = [];
 # but it's badly linked to opensp at the moment
 if (&is_xml($File)) {
   
-       use XML::LibXML;
+       require XML::LibXML;
        my $xmlparser = XML::LibXML->new();
        $xmlparser->line_numbers(1);
        eval {
