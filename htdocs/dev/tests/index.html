@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.72 2007-04-02 08:48:17 ville Exp $"
---><!--#set var="date" value="\$Date: 2007-04-02 08:48:17 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.73 2007-04-05 23:31:15 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-04-05 23:31:15 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -219,6 +219,7 @@ All these documents should validate, without "pretty print" for the document typ
       <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/rddl_fpi.xhtml">view</a>:
       RDDL (with FPI)
     </li>
+    
     <li>
       <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/rddl_si.xhtml">validate</a> -
       <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/rddl_si.xhtml">with v.w.o</a> - 
@@ -401,6 +402,13 @@ All these documents should validate, without "pretty print" for the document typ
 
 <p>The following documents trip up the parser pretty badly - finds errors way beyond the last line</p>      
 <ul>
+  <li>
+    <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/rddl_fpi.html">validate</a> -
+    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/rddl_fpi.html">with v.w.o</a> - 
+    <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/rddl_fpi.html">view</a>:
+    RDDL (with FPI, served as text/html - example of a custom XML language wrongly served as text/html)
+  </li>
+  
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/shorttags.html">SHORTTAGS and -wunclosed..</a></li>
         <li><a href="../../check?uri=http://www.w3.org/1999/09/SVG-access/computer.svg">image/svg</a> (is this a bug? I think this media type is not allowed any more)</li>
 	<li><a href="../../check?uri=http://www.oasis-open.org/committees/xmltest/xmlconf-19990712.xml;ss">validate</a> -
