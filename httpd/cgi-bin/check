@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.497 2007-04-04 10:26:01 ot Exp $
+# $Id: check,v 1.498 2007-04-09 07:51:30 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.497 $;
+  $VERSION =  q$Revision: 1.498 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2315,8 +2315,8 @@ sub W3C::Validator::SAXHandler::error
 
   # No DOCTYPE.
   if ($err->{msg} =~ m(prolog can\'t be omitted)) {
-    my $dtd = ($File->{Mode} eq 'SGML' ?
-               'HTML 4.01 Transitional' : 'XHTML 1.0 Transitional');
+    my $dtd = ($File->{Mode} eq 'XML' ?
+               'XHTML 1.0 Transitional' : 'HTML 4.01 Transitional' );
 
     add_warning('W09', {W09_dtd => $dtd});
     return; # Don't report this as a normal error.
