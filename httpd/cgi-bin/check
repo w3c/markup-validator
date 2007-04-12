@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.498 2007-04-09 07:51:30 ot Exp $
+# $Id: check,v 1.499 2007-04-12 07:18:15 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.498 $;
+  $VERSION =  q$Revision: 1.499 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -375,6 +375,25 @@ my $N3T = HTML::Template->new(
   global_vars       => TRUE,
 );
 
+my $PREFILL_HTML_T = HTML::Template->new(
+  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
+                                          $lang, 'prefill_html401.tmpl'),
+  die_on_bad_params => FALSE,
+  loop_context_vars => TRUE,
+  cache             => TRUE,
+  global_vars       => TRUE,
+);
+
+my $PREFILL_XHTML_T = HTML::Template->new(
+  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
+                                          $lang, 'prefill_xhtml10.tmpl'),
+  die_on_bad_params => FALSE,
+  loop_context_vars => TRUE,
+  cache             => TRUE,
+  global_vars       => TRUE,
+);
+
+
 $File->{T} = $T;
 $File->{S} = $SOAPT;
 $File->{E} = $E;
@@ -406,6 +425,8 @@ $File->{Opt}->{'Charset'}        = $q->param('charset') ? lc $q->param('charset'
 $File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') ? $q->param('doctype')   :     '';
 $File->{Opt}->{'Output'}         = $q->param('output')  ? $q->param('output')    : 'html';
 $File->{Opt}->{'Max Errors'}     = $q->param('me')      ? $q->param('me')        :     '';
+$File->{Opt}->{'Prefill'}        = $q->param('prefill') ? TRUE                   :  FALSE;
+$File->{Opt}->{'Prefill Doctype'}        = $q->param('prefill_doctype') ? $q->param('prefill_doctype')   :     'html401';
 
 #
 # "Fallback" info for Character Encoding (fbc), Content-Type (fbt),
@@ -1292,6 +1313,22 @@ sub handle_frag {
   $File->{'Is Upload'} = TRUE;
   $File->{'Direct Input'} = TRUE;
   $File->{Charset}->{HTTP} = "utf-8"; # by default, the form accepts utf-8 chars
+
+  if ($File->{Opt}->{'Prefill'} eq TRUE ) {
+    # we surround the HTML fragment with some basic document structure
+    my $prefill_Template = undef;
+    if ($File->{Opt}->{'Prefill Doctype'} eq 'html401') {
+      $prefill_Template = $PREFILL_HTML_T;
+    }
+    else {
+      $prefill_Template = $PREFILL_XHTML_T;
+    }
+    $prefill_Template->param(fragment => $File->{Bytes});
+    $File->{Bytes} = $prefill_Template->output();
+    # let's force the view source so that the user knows what we've put around their code
+    $File->{Opt}->{'Show Source'} = TRUE;
+  }
+  
 
 
   return $File;
