@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.499 2007-04-12 07:18:15 ot Exp $
+# $Id: check,v 1.500 2007-04-18 06:27:20 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.499 $;
+  $VERSION =  q$Revision: 1.500 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -981,7 +981,7 @@ sub prep_template ($$) {
   $File->{Namespaces} = []; # reinitialize the list of non-root namespaces
   # ... and then get a uniq version of it
   foreach my $single_namespace (@bulk_ns) {
-     push(@{$File->{Namespaces}}, $single_namespace) unless $seen_ns{$single_namespace}++;
+     push(@{$File->{Namespaces}}, $single_namespace) unless (($single_namespace eq $File->{Namespace}) or  $seen_ns{$single_namespace}++);
   }
   my @nss                   =  map({uri => $_}, @{$File->{Namespaces}});
   $T->param(file_namespaces => \@nss) if @nss;
@@ -2243,10 +2243,11 @@ sub W3C::Validator::SAXHandler::start_element
     $self->{am_in_heading} = 1;
   }
 
-  if (($element->{Name} eq $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Name}) and ($self->{_file}->{Mode} eq 'XML')){
-    # we check if xmlns has been properly given
-    my $has_xmlns = FALSE;
-    my $xmlns_value = undef;
+  my $has_xmlns = FALSE;
+  my $xmlns_value = undef;
+  
+  if ( ($self->{_file}->{Mode} eq 'XML')){
+    # if in XML mode, find namespace used for each element
     foreach my $attr (keys %{$element->{Attributes}}) {
       if ($element->{Attributes}->{$attr}->{Name} eq "xmlns") {
         # Try with SAX method
@@ -2267,42 +2268,50 @@ sub W3C::Validator::SAXHandler::start_element
             }
           }
         }
-
       }
     }
-    if (($has_xmlns == FALSE)  and ($CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{"Namespace Required"} eq TRUE )){
-      # whine if the root xmlns attribute is noted as required by spec, but not present
-      my $err;
-      my $location = $self->{_parser}->get_location();
-      $err->{src}  = '...'; # do this with show_open_entities()?
-      $err->{line} = $location->{LineNumber};
-      $err->{char} = $location->{ColumnNumber};
-      $err->{num}  = "no-xmlns";
-      $err->{type} = "E";
-      $err->{msg}  = "Missing xmlns attribute for element ".$element->{Name};
-
-      # ...
-      $self->{_file}->{'Is Valid'} = FALSE;
-      push @{$self->{_file}->{Errors}}, $err;
-    }
-    elsif (($has_xmlns == TRUE)
-           and (defined $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace})
-           and ($xmlns_value ne $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace}) ) {
-      my $err;
-      my $location = $self->{_parser}->get_location();
-      $err->{src}  = '...'; # do this with show_open_entities()?
-      $err->{line} = $location->{LineNumber};
-      $err->{char} = $location->{ColumnNumber};
-      $err->{num}  = "wrong-xmlns";
-      $err->{type} = "E";
-      $err->{msg}  = "Wrong xmlns attribute for element ".$element->{Name}.". The value should be: ". $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace};
-
-      # ...
-      $self->{_file}->{'Is Valid'} = FALSE;
-      push @{$self->{_file}->{Errors}}, $err;
-
-    }
   }
+    
+  if (($element->{Name} eq $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Name}) 
+  and ($has_xmlns == FALSE)  
+  and ($CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{"Namespace Required"} eq TRUE )){
+    # whine if the root xmlns attribute is noted as required by spec, but not present
+    my $err;
+    my $location = $self->{_parser}->get_location();
+    $err->{src}  = '...'; # do this with show_open_entities()?
+    $err->{line} = $location->{LineNumber};
+    $err->{char} = $location->{ColumnNumber};
+    $err->{num}  = "no-xmlns";
+    $err->{type} = "E";
+    $err->{msg}  = "Missing xmlns attribute for element ".$element->{Name};
+
+    # ...
+    $self->{_file}->{'Is Valid'} = FALSE;
+    push @{$self->{_file}->{Errors}}, $err;
+  }
+  elsif (($element->{Name} eq $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Name}) 
+  and ($has_xmlns == TRUE) and (defined $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace}) 
+  and ($xmlns_value ne $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace}) ) {
+    # whine if root xmlns element is not the one specificed by the spec
+    my $err;
+    my $location = $self->{_parser}->get_location();
+    $err->{src}  = '...'; # do this with show_open_entities()?
+    $err->{line} = $location->{LineNumber};
+    $err->{char} = $location->{ColumnNumber};
+    $err->{num}  = "wrong-xmlns";
+    $err->{type} = "E";
+    $err->{msg}  = "Wrong xmlns attribute for element ".$element->{Name}.". The value should be: ". $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace};
+
+    # ...
+    $self->{_file}->{'Is Valid'} = FALSE;
+    push @{$self->{_file}->{Errors}}, $err;
+  }
+  elsif (($element->{Name} ne $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Name}) 
+  and ($has_xmlns == TRUE)) { 
+    # add to list of non-root namespace
+    push(@{$self->{_file}->{Namespaces}}, $xmlns_value);
+  }
+  
 }
 
 
