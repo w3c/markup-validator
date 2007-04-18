@@ -5,7 +5,7 @@
    Copyright 2000~2007 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.9 2007-04-12 07:18:15 ot Exp $
+   $Id: base.css,v 1.10 2007-04-18 07:23:00 ot Exp $
 */
 
 /*                 
@@ -447,6 +447,15 @@ ul.navbar li a {
 /* 
 	legalese and logos beneath the menu bar
 							*/
+p#version_info {
+    font-size:      x-small;
+    text-align: center;
+    color: #888;
+    background-color: white;
+    margin-top:     20px;
+    margin-left:    210px;
+    margin-right: 240px;
+}
 
 p#activity_logos {
 float:left; 
@@ -460,7 +469,6 @@ float: right; width: 180px; padding: 0; margin-top: 12px; font-size: x-small; te
 
                                                             
 p.copyright {
-  margin-top:     20px;
   margin-left:    210px;
   margin-right: 240px;
   font-size:      x-small;
