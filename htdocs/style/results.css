@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.14 2007-03-29 12:16:55 ot Exp $ */
+/* $Id: results.css,v 1.15 2007-04-18 08:20:49 ot Exp $ */
 
 .input {
   color: black;
@@ -13,7 +13,8 @@
 */
 fieldset#revalidate_opts {
         width: 100%;
-        margin; 0; padding:0;
+        margin: 0;
+        padding:0;
         border: 1px dotted #ccc;
         background-color: #fcfcfc;
         padding-bottom: 1em;
@@ -260,7 +261,6 @@ h2.valid, h2.invalid, h2.tentative_valid {
     text-align: center;
     margin: 0;
   font-family: "Bitstream Vera Sans", sans-serif;
-  font-size-adjust:	.53;
   font-size:		1.3em;
   font-weight:		500;
   font-style:		normal;
@@ -342,7 +342,7 @@ p.backtop {
 
 p.backtop a:link, p.backtop a:hover, p.backtop a:visited {
         color: #bbc;
-        text-deciration: none;
+        text-decoration: none;
 }
 
 /* document outline */
