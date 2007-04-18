@@ -5,7 +5,7 @@
    Copyright 2000~2007 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 
-   $Id: base.css,v 1.10 2007-04-18 07:23:00 ot Exp $
+   $Id: base.css,v 1.11 2007-04-18 23:03:50 ot Exp $
 */
 
 /*                 
@@ -606,3 +606,23 @@ p.copyright a {
         	color: #11111A;
         	border-right: 1px solid #ccc;
         }
+
+ /* warning on the home page for test instances */
+ #test_warning {
+     border-left: 1px solid #ccc;
+     border-right: 1px solid #ccc;
+     line-height: 160%;
+     text-align: center;
+     margin-top: 2em;
+ 	margin-left: 12%;
+ 	margin-right: 12%;
+ 	padding-left: 1.5em;
+    padding-right: 1.5em;
+ 	color: black;
+ 	background-color: white;
+ }
+ 
+ #test_warning img {
+     width: 1.3em;
+     padding-bottom: .3em;
+ }
