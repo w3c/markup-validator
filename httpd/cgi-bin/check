@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.500 2007-04-18 06:27:20 ot Exp $
+# $Id: check,v 1.501 2007-04-18 06:32:52 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.500 $;
+  $VERSION =  q$Revision: 1.501 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1621,6 +1621,10 @@ sub report_errors ($) {
     for my $err_num (keys %Errors_bytype){
       push @{$Errors}, $Errors_bytype{$err_num};
     }
+  }
+  else {
+    # sort error by lines
+    @{$Errors} = sort {$a->{line} <=> $b->{line} } @{$Errors};
   }
   return $number_of_errors, $number_of_warnings, $number_of_info, $Errors;
 }
