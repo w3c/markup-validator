@@ -68,7 +68,7 @@ PUBLIC "-//W3C//ENTITIES XHTML-Print 1.0 Document Model 1.0//EN"
 -- XHTML + MathML + SVG --
 
 PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
-       "xhtml-math-svg-flat-20020809.dtd"
+       "WD-XHTMLplusMathMLplusSVG-20020809/xhtml-math-svg-flat.dtd"
 
 
 -- SMIL --

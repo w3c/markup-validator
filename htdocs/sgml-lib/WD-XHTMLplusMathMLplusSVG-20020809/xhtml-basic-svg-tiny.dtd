@@ -1,0 +1,18 @@
+<!-- ....................................................................... -->
+<!-- XHTML Basic plus SVG Tiny DTD  ........................................ -->
+<!-- URI: http://www.w3.org/2002/04/xhtml-math-svg/xhtml-basic-svg-tiny.dtd
+-->
+
+<!ENTITY % XHTML.version
+         "-//W3C//DTD XHTML Basic plus SVG Tiny//EN" >
+
+<!ENTITY % XHTML.Basic.module "INCLUDE" >
+<!ENTITY % MATHML.module      "IGNORE" >
+<!ENTITY % SVG.Tiny.module    "INCLUDE" >
+
+<!ENTITY % XHTML-MATH-SVG.dtd
+    PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN" 
+           "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd" >
+%XHTML-MATH-SVG.dtd;
+
+<!-- end of xhtml-basic-svg-tiny.dtd -->
