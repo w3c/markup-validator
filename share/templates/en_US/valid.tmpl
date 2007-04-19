@@ -82,10 +82,20 @@
     above to reference your local image rather than the one on this server.
   </p>
 </TMPL_IF>
-<h4>Validating CSS, linking to this result</h4>
+<h4>Linking to this result</h4>
+<TMPL_UNLESS NAME="is_upload">
+  <p>
+    If you would like to create a link to <em>this</em> page (i.e., this
+    validation result) to make it easier to revalidate this page in the
+    future or to allow others to validate your page, the URI is
+    &lt;<a href="<TMPL_VAR NAME="file_thispage" ESCAPE="HTML">"><TMPL_VAR NAME="file_thispage" ESCAPE="HTML"></a>&gt;
+    (or you can just add the current page to your bookmarks or hotlist).
+  </p>
+</TMPL_UNLESS>
+<h4>Validating CSS Style Sheets</h4>
   <p>
     If you use <a href="http://www.w3.org/Style/CSS/">CSS</a> in your document,
-    you should also
+    you can 
 <TMPL_IF NAME="is_upload">
     check it for validity
 <TMPL_ELSE>
@@ -96,15 +106,7 @@
     using the W3C
     <a href="http://jigsaw.w3.org/css-validator/">CSS Validation Service</a>.
   </p>
-<TMPL_UNLESS NAME="is_upload">
-  <p>
-    If you would like to create a link to <em>this</em> page (i.e., this
-    validation result) to make it easier to revalidate this page in the
-    future or to allow others to validate your page, the URI is
-    &lt;<a href="<TMPL_VAR NAME="file_thispage" ESCAPE="HTML">"><TMPL_VAR NAME="file_thispage" ESCAPE="HTML"></a>&gt;
-    (or you can just add the current page to your bookmarks or hotlist).
-  </p>
-</TMPL_UNLESS>
+
 
 <TMPL_INCLUDE NAME="backtop.tmpl">
 
