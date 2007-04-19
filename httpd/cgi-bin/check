@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.501 2007-04-18 06:32:52 ot Exp $
+# $Id: check,v 1.502 2007-04-19 07:28:43 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.501 $;
+  $VERSION =  q$Revision: 1.502 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2241,7 +2241,7 @@ sub W3C::Validator::SAXHandler::data
 sub W3C::Validator::SAXHandler::start_element
 {
   my ($self, $element) = @_;
-  if ($element->{Name} =~ /^h([1-6])$/) {
+  if ($element->{Name} =~ /^h([1-6])$/i) {
 
     $self->{_file}->{heading_outline} = $self->{_file}->{heading_outline} . "    " x int($1) . "[". $element->{Name}."] ";
     $self->{am_in_heading} = 1;
@@ -2322,7 +2322,7 @@ sub W3C::Validator::SAXHandler::start_element
 sub W3C::Validator::SAXHandler::end_element
 {
   my ($self, $element) = @_;
-  if ($element->{Name} =~ /^h[1-6]$/) {
+  if ($element->{Name} =~ /^h[1-6]$/i) {
     $self->{_file}->{heading_outline} = $self->{_file}->{heading_outline} . "\n";
     $self->{am_in_heading} = 0;
   }
