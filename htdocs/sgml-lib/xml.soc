@@ -155,6 +155,10 @@ PUBLIC "-//W3C//EN"TITIES SMIL 2.1 Modular Framework 1.0//EN"
        "REC-SMIL2-20051213/smil-framework-1.mod"
 
 
+-- XHTML + RDFa --
+PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" 
+       "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"
+
 
 -- Do not prefer document type name over a SYSTEM Identifier. --
 OVERRIDE NO
