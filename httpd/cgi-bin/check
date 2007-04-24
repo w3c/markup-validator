@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.502 2007-04-19 07:28:43 ot Exp $
+# $Id: check,v 1.503 2007-04-24 06:48:04 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.502 $;
+  $VERSION =  q$Revision: 1.503 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2041,7 +2041,7 @@ sub transcode {
 
   # Try to transcode
   eval {
-    $output = Encode::decode($cs, $input, Encode::FB_CROAK);
+    $output = Encode::encode("utf8", Encode::decode($cs, $input, Encode::FB_CROAK));
   };
 
   # Transcoding failed
