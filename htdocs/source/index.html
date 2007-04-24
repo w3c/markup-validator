@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.46 2007-04-17 22:33:30 ville Exp $"
---><!--#set var="date" value="\$Date: 2007-04-17 22:33:30 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.47 2007-04-24 19:59:13 ville Exp $"
+--><!--#set var="date" value="\$Date: 2007-04-24 19:59:13 $"
 --><!--#set var="title" value="Source Code Availability for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -78,35 +78,17 @@
           </p>
         <h4><a id="rpm" name="rpm"></a>Fedora/Red Hat RPM package</h4>
           <p>
-            Fedora/Red Hat RPM packages are available, courtesy of Ville Skytt&auml;, at
-            Fedora Extras,
-            &lt;<a href="http://fedoraproject.org/wiki/Extras">http://fedoraproject.org/wiki/Extras</a>&gt;.
+            Fedora/Red Hat RPM packages of the validator are available,
+            courtesy of Ville Skytt&auml;, at Fedora Project,
+            &lt;<a href="http://fedoraproject.org/">http://fedoraproject.org/</a>&gt;.
+            The name of the validator package is <tt>w3c-markup-validator</tt>,
+            use the standard automated package management tools of the
+            distribution (such as yum) to install it along with its
+            dependencies.
           </p>
           <p>
-            In addition to different Fedora Core versions, the RPMs
+            In addition to different Fedora versions, the RPMs
             should be adaptable to other RPM based systems.
-          </p>
-          <p>
-            Note that the Validator RPMs have several dependencies, you'll
-            have to get at least the following RPMs from Fedora Extras (other
-            dependencies are included in the Fedora Core distribution):
-          </p>
-          <ul id="rpmdeps">
-            <li>w3c-markup-validator</li>
-            <li>w3c-markup-validator-libs</li>
-            <li>perl-Config-General</li>
-            <li>perl-HTML-Template</li>
-          </ul>
-          <p>
-            In addition, each of these may have further dependencies that must
-            be satisfied. All the necessary RPMs are either included in
-            the Fedora Core distribution(s) or are available from
-            <a href="http://fedoraproject.org/wiki/Extras">Fedora Extras</a>.
-            Use of an automated package management tool to install the
-            packages, such as yum or up2date is <em>strongly</em>
-            recommended.  See the Fedora Extras
-            <a href="http://fedoraproject.org/wiki/Extras/UsingExtras">documentation</a>
-            for information about configuring these tools.
           </p>
   <h4><a id="suse" name="suse"></a>openSUSE/SUSE Linux RPM package</h4>
           <p>
@@ -125,8 +107,7 @@
           </p>
           <p>
             Note that the Validator RPMs have several dependencies, you'll
-            have to satisfy at least the same <a href="#rpmdeps">RPM
-            dependencies</a> as listed above for Fedora/Red Hat.
+            have to satisfy them.
     You can get these RPMs from openSUSE (other dependencies are included
     in the openSUSE distribution) or partly from
             sierkbornemann.de.
