@@ -1,11 +1,11 @@
 # RPM spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.7 2006-03-31 05:51:50 ot Exp $
+# $Id: w3c-markup-validator.spec,v 1.8 2007-04-24 19:45:18 ville Exp $
 
 %{expand: %%define tbver %(echo %{version} | tr . _)}
 
 Name:           w3c-markup-validator
-Version:        0.7.2
-Release:        1
+Version:        0.8.0
+Release:        0
 Summary:        W3C Markup Validator
 
 Group:          Applications/Internet
@@ -18,9 +18,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl
 Requires:       httpd
-Requires:       openjade >= 1.3.2
 Requires:       %{name}-libs = %{version}
-Obsoletes:      w3c-validator
 
 %description
 The W3C Markup Validator checks documents like HTML and XHTML for
@@ -30,7 +28,6 @@ conformance to W3C Recommendations and other standards.
 Summary:        SGML and XML DTDs for the W3C Markup Validator
 Group:          Applications/Text
 Requires:       sgml-common
-Obsoletes:      w3c-validator-libs
 
 %description    libs
 SGML and XML DTDs for the W3C Markup Validator.
@@ -46,6 +43,7 @@ mv validator-%{version}/htdocs/sgml-lib .
   htdocs/config/validator.conf httpd/conf/httpd.conf httpd/cgi-bin/*
 %{__perl} -pi -e \
   's|^(\s*Library\s*=\s*).*|${1}%{_datadir}/sgml/%{name}| ;
+   s|^(\s*TidyConf\s*=\s*).*|${1}%{_sysconfdir}/w3c/tidy.conf| ;
    s|\bwww-validator\@w3\.org\b|root\@localhost| ;
    s|/validator\.w3\.org/|/localhost/w3c-validator/|' \
   htdocs/config/validator.conf
@@ -104,7 +102,7 @@ done
 
 %files
 %defattr(-,root,root,-)
-# Configs not "noreplace", they're incompatible in 0.6.x and 0.7.x.
+# Configs not "noreplace", they're incompatible to some extent between releases
 %config %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config %{_sysconfdir}/w3c/
 %{_datadir}/%{name}/
@@ -116,8 +114,7 @@ done
 
 
 %changelog
-
-* Thu Feb  9 2006 Ville Skyttä <ville.skytta at iki.fi> - 0.72-1
+* Thu Feb  9 2006 Ville Skyttä <ville.skytta at iki.fi> - 0.7.2-1
 - 0.7.2.
 
 * Sat Oct  8 2005 Ville Skyttä <ville.skytta at iki.fi> - 0.7.1-1
