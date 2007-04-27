@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.504 2007-04-27 20:17:48 ville Exp $
+# $Id: check,v 1.505 2007-04-27 20:20:33 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.504 $;
+  $VERSION =  q$Revision: 1.505 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -258,16 +258,6 @@ $File->{Mode} = 'SGML'; # Default parse mode is SGML.
 # Listrefs.
 $File->{Warnings}   = []; # Warnings...
 $File->{Namespaces} = []; # Other (non-root) Namespaces.
-
-#########################################
-# Populate $File->{Opt} -- CGI Options. #
-#########################################
-
-#
-# Preprocess the CGI parameters.
-$q = &prepCGI($File, $q);
-
-
 
 ###############################################################################
 #### Generate Template for Result. ############################################
@@ -404,9 +394,13 @@ $SOAPT->param(cfg_home_page => $CFG->{'Home Page'});
 
 undef $lang;
 
-#####################################################
-# Populate $File->{Opt} -- CGI Options. (continued) #
-#####################################################
+#########################################
+# Populate $File->{Opt} -- CGI Options. #
+#########################################
+
+#
+# Preprocess the CGI parameters.
+$q = &prepCGI($File, $q);
 
 #
 # Set session switches.
