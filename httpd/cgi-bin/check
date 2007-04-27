@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.505 2007-04-27 20:20:33 ville Exp $
+# $Id: check,v 1.506 2007-04-27 20:26:27 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.505 $;
+  $VERSION =  q$Revision: 1.506 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -662,7 +662,7 @@ if (&is_xml($File)) {
       if ($msg_line =~ /(.+)\^/){
         $xmlwf_error_col = length($1);
       }
-      if ($xmlwf_error_col == 79){
+      if (defined($xmlwf_error_col) && $xmlwf_error_col == 79){
         # working around an apparent odd limitation of libxml
         # which only gives context for lines up to 80 chars
         # http://www.w3.org/Bugs/Public/show_bug.cgi?id=4420
@@ -862,7 +862,7 @@ else {
   $File->{'Tidy_OK'} = FALSE;
 }
 
-if ($File->{'Tidy_OK'} eq FALSE) {
+if (!$File->{'Tidy_OK'}) {
   # if tidy not available, disable
   $File->{Opt}->{'Show Tidy'} = FALSE;
 }
@@ -893,7 +893,7 @@ if ($File->{Opt}->{Output} eq 'xml') {
 }
 
 &prep_template($File, $template);
-fin_template($File, $template);
+&fin_template($File, $template);
 
 $template->param(file_warnings => $File->{Warnings});
 $template->param(tidy_output => $File->{'Tidy'});
@@ -1308,7 +1308,7 @@ sub handle_frag {
   $File->{'Direct Input'} = TRUE;
   $File->{Charset}->{HTTP} = "utf-8"; # by default, the form accepts utf-8 chars
 
-  if ($File->{Opt}->{'Prefill'} eq TRUE ) {
+  if ($File->{Opt}->{'Prefill'}) {
     # we surround the HTML fragment with some basic document structure
     my $prefill_Template = undef;
     if ($File->{Opt}->{'Prefill Doctype'} eq 'html401') {
@@ -1521,9 +1521,9 @@ sub report_errors ($) {
         $col = 80 if ($col > 80);
         ($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $col);
         $line = &ent($line) . "&hellip;";
-        $col = "";
+        $col = 0;
       }
-      my $explanation;
+      my $explanation = "";
       if ($err->{num}) {
         my $num = $err->{num};
 
@@ -2232,7 +2232,7 @@ sub W3C::Validator::SAXHandler::start_element
 {
   my ($self, $element) = @_;
   if ($element->{Name} =~ /^h([1-6])$/i) {
-
+    $self->{_file}->{heading_outline} ||= "";
     $self->{_file}->{heading_outline} .=
       "    " x int($1) . "[$element->{Name}] ";
     $self->{am_in_heading} = 1;
@@ -2270,8 +2270,7 @@ sub W3C::Validator::SAXHandler::start_element
   my $doctype = $self->{_file}->{DOCTYPE};
 
   if (($element->{Name} eq $CFG->{Types}->{$doctype}->{Name})
-  and !$has_xmlns
-  and ($CFG->{Types}->{$doctype}->{"Namespace Required"} eq TRUE)) {
+  and !$has_xmlns and ($CFG->{Types}->{$doctype}->{"Namespace Required"})) {
     # whine if the root xmlns attribute is noted as required by spec, but not present
     my $err;
     my $location = $self->{_parser}->get_location();
