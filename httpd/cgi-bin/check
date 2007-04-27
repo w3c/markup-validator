@@ -3,7 +3,7 @@
 # W3C Markup Validation Service
 # A CGI script to retrieve and validate a markup file
 #
-# Copyright 1995-2006 World Wide Web Consortium, (Massachusetts
+# Copyright 1995-2007 World Wide Web Consortium, (Massachusetts
 # Institute of Technology, European Research Consortium for Informatics
 # and Mathematics, Keio University). All Rights Reserved.
 #
@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.506 2007-04-27 20:26:27 ville Exp $
+# $Id: check,v 1.507 2007-04-27 20:36:31 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.506 $;
+  $VERSION =  q$Revision: 1.507 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
