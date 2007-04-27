@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.503 2007-04-24 06:48:04 ot Exp $
+# $Id: check,v 1.504 2007-04-27 20:17:48 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -172,7 +172,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Set debug flag.
-  if ($CFG->{'Allow Debug'} == TRUE) {
+  if ($CFG->{'Allow Debug'}) {
     $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{'Enable Debug'};
   } else {
     $DEBUG = FALSE;
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.503 $;
+  $VERSION =  q$Revision: 1.504 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1328,8 +1328,6 @@ sub handle_frag {
     # let's force the view source so that the user knows what we've put around their code
     $File->{Opt}->{'Show Source'} = TRUE;
   }
-  
-
 
   return $File;
 }
@@ -1556,7 +1554,7 @@ sub report_errors ($) {
           my $escaped_uri = uri_escape($File->{URI});
           $_msg =~ s/<!--URI-->/$escaped_uri/g;
         }
-        $explanation = "    $_msg\n".$explanation; # The send feedback plea.
+        $explanation = "    $_msg\n$explanation"; # The send feedback plea.
       }
 
       $err->{src} = $line;
@@ -2221,8 +2219,7 @@ sub W3C::Validator::SAXHandler::characters
   if ($self->{am_in_heading} == 1) {
     my $data = $chars->{Data};
     $data =~  s/[\r|\n]/ /g;
-    $self->{_file}->{heading_outline} =
-      $self->{_file}->{heading_outline} . $data;
+    $self->{_file}->{heading_outline} .= $data;
   }
 }
 
@@ -2232,8 +2229,7 @@ sub W3C::Validator::SAXHandler::data
   if ($self->{am_in_heading} == 1) {
     my $data = $chars->{Data};
     $data =~  s/[\r|\n]/ /g;
-    $self->{_file}->{heading_outline} =
-      $self->{_file}->{heading_outline} . $data;
+    $self->{_file}->{heading_outline} .= $data;
   }
 }
 
@@ -2243,13 +2239,14 @@ sub W3C::Validator::SAXHandler::start_element
   my ($self, $element) = @_;
   if ($element->{Name} =~ /^h([1-6])$/i) {
 
-    $self->{_file}->{heading_outline} = $self->{_file}->{heading_outline} . "    " x int($1) . "[". $element->{Name}."] ";
+    $self->{_file}->{heading_outline} .=
+      "    " x int($1) . "[$element->{Name}] ";
     $self->{am_in_heading} = 1;
   }
 
   my $has_xmlns = FALSE;
   my $xmlns_value = undef;
-  
+
   if ( ($self->{_file}->{Mode} eq 'XML')){
     # if in XML mode, find namespace used for each element
     foreach my $attr (keys %{$element->{Attributes}}) {
@@ -2275,10 +2272,12 @@ sub W3C::Validator::SAXHandler::start_element
       }
     }
   }
-    
-  if (($element->{Name} eq $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Name}) 
-  and ($has_xmlns == FALSE)  
-  and ($CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{"Namespace Required"} eq TRUE )){
+
+  my $doctype = $self->{_file}->{DOCTYPE};
+
+  if (($element->{Name} eq $CFG->{Types}->{$doctype}->{Name})
+  and !$has_xmlns
+  and ($CFG->{Types}->{$doctype}->{"Namespace Required"} eq TRUE)) {
     # whine if the root xmlns attribute is noted as required by spec, but not present
     my $err;
     my $location = $self->{_parser}->get_location();
@@ -2293,9 +2292,9 @@ sub W3C::Validator::SAXHandler::start_element
     $self->{_file}->{'Is Valid'} = FALSE;
     push @{$self->{_file}->{Errors}}, $err;
   }
-  elsif (($element->{Name} eq $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Name}) 
-  and ($has_xmlns == TRUE) and (defined $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace}) 
-  and ($xmlns_value ne $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace}) ) {
+  elsif (($element->{Name} eq $CFG->{Types}->{$doctype}->{Name})
+  and $has_xmlns and (defined $CFG->{Types}->{$doctype}->{Namespace})
+  and ($xmlns_value ne $CFG->{Types}->{$doctype}->{Namespace}) ) {
     # whine if root xmlns element is not the one specificed by the spec
     my $err;
     my $location = $self->{_parser}->get_location();
@@ -2304,18 +2303,19 @@ sub W3C::Validator::SAXHandler::start_element
     $err->{char} = $location->{ColumnNumber};
     $err->{num}  = "wrong-xmlns";
     $err->{type} = "E";
-    $err->{msg}  = "Wrong xmlns attribute for element ".$element->{Name}.". The value should be: ". $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Namespace};
+    $err->{msg}  = "Wrong xmlns attribute for element $element->{Name}. " .
+      "The value should be: $CFG->{Types}->{$doctype}->{Namespace}";
 
     # ...
     $self->{_file}->{'Is Valid'} = FALSE;
     push @{$self->{_file}->{Errors}}, $err;
   }
-  elsif (($element->{Name} ne $CFG->{Types}->{$self->{_file}->{DOCTYPE}}->{Name}) 
-  and ($has_xmlns == TRUE)) { 
+  elsif (($element->{Name} ne $CFG->{Types}->{$doctype}->{Name})
+  and $has_xmlns) {
     # add to list of non-root namespace
     push(@{$self->{_file}->{Namespaces}}, $xmlns_value);
   }
-  
+
 }
 
 
@@ -2323,7 +2323,7 @@ sub W3C::Validator::SAXHandler::end_element
 {
   my ($self, $element) = @_;
   if ($element->{Name} =~ /^h[1-6]$/i) {
-    $self->{_file}->{heading_outline} = $self->{_file}->{heading_outline} . "\n";
+    $self->{_file}->{heading_outline} .= "\n";
     $self->{am_in_heading} = 0;
   }
 
