@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install_win.html,v 1.11 2007-04-18 08:16:21 ot Exp $" 
---><!--#set var="date" value="\$Date: 2007-04-18 08:16:21 $" 
+<!--#set var="revision" value="\$Id: install_win.html,v 1.12 2007-04-27 07:30:55 dtibbe Exp $" 
+--><!--#set var="date" value="\$Date: 2007-04-27 07:30:55 $" 
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service (Windows, Apache)" 
 --><!--#set var="relroot" value="../" 
 --><!--#include virtual="../header.html" -->
@@ -23,13 +23,6 @@
 </div>
 
 <div id="install" class="stb">
-<a name="skip" id="skip"></a>  
-<h3>Important Note</h3>
-<p>This version of the How-To refers to the current Validator-Version out of the
-  CVS (HEAD). Some things may change up to the final release.<br />
-  If you're using the current stable version (0.7), please use the guide at
-  <a href="http://validator.w3.org/docs/install_win.html">http://validator.w3.org/docs/install_win.html</a>.</p>
-
 <h3 id="about">About this guide</h3>
 
 <p>This guide for the installation of the W3C Markup Validator was
@@ -70,14 +63,17 @@ At <a href="http://ppm.activestate.com/">Active State</a>,
   <li>Config-General</li>
   <li>HTML-Encoding</li>
   <li>HTML-Template</li>
+  <li>HTML-Tidy</li>
   <li>Net-IP</li>
   <li>SGML-Parser-OpenSP</li>
+  <li>XML-LibXML</li>
+  <li>XML-NamespaceSupport</li>
+  <li>XML-SAX</li>
+  <li>XML-LibXML-Common</li>
 </ul>
 <p>You can get each of them in a single package at ActiveState. They are also 
   packed  ready-to-install <a href="http://www.myhpi.de/~dtibbe/download/ppm.zip">in a single zip-file</a>,
-  (courtesy of the guide's author).<br />
-  As long as version 0.7 is current, you will find the modules for the CVS-version at
-  <a href="http://www.myhpi.de/~dtibbe/download/ppm-08.zip">http://www.myhpi.de/~dtibbe/download/ppm-08.zip</a>.</p>
+  (courtesy of the guide's author).</p>
 
 <p>Finally you will need some calm and patience. A whole installation of
   the validator (including the Apache and Perl) will take about an hour 
@@ -278,11 +274,10 @@ Base = C:/www/validator
   from the local PC and you will get just an access fault
   because of security reasons.</p>
 <p>After that, the configuration file will look like this:</p>
-<pre>
-#
+<pre>#
 # Main Configuration File for the W3C Markup Validation Service.
 #
-# $Id: install_win.html,v 1.11 2007-04-18 08:16:21 ot Exp $
+# $Id: install_win.html,v 1.12 2007-04-27 07:30:55 dtibbe Exp $
 #
 # See 'perldoc Config::General' for the syntax, and be aware that the
 # 'SplitPolicy' is 'equalsign', ie. keys and values are separated by '\s*=\s*',
@@ -308,16 +303,19 @@ Base = C:/www/validator
   # Location of template files
   Templates = $Base/share/templates
 
+  # configuration file for HTML Tidy Module, if available
+  TidyConf = $Base/htdocs/config/tidy.conf
+
   &lt;SGML&gt;
     #
     # The SGML Library Path.
-    Library = c:/www/sgml-lib
+    Library = C:/www/sgml-lib
   &lt;/SGML&gt;
 &lt;/Paths&gt;
 
 #
 # This controls whether the debugging options are allowed to be enabled. 
-Allow Debug = no
+Allow Debug = yes
 
 #
 # This lets you permanently enable the debugging options. Can be overridden
@@ -329,8 +327,10 @@ Enable Debug = no
 Allow Private IPs = yes
 
 #
-# Whether the (highly experimental!) SOAP support should be enabled.
-Enable SOAP = no
+# Enable (or not) the web service API for this validator
+# see http://validator.w3.org/docs/api.html
+Enable SOAP = yes
+
 
 #
 # Whether the validator will check its own output.
@@ -347,15 +347,19 @@ Max Recursion = 0
 
 #
 # Email address of the maintainer of this service.
-Maintainer = validator-admin@example.org
+Maintainer = www-validator@w3.org
 
 #
-# The "Home Page" for the service.  Make sure this ends with a slash.
-Home Page = http://validator.example.org
+# The &quot;Home Page&quot; for the service.  Make sure this ends with a slash.
+Home Page = http://validator.example.org/
 
 #
 # Base URI for the Element Reference.
 Element Ref URI = http://www.htmlhelp.com/reference/html40/
+
+# Localization
+# only English available for now
+Languages = en
 
 
 
@@ -397,7 +401,7 @@ Element Ref URI = http://www.htmlhelp.com/reference/html40/
 &lt;/MIME&gt;
 
 #
-# Source for the "Tip of The Day" blurbs.
+# Source for the &quot;Tip of The Day&quot; blurbs.
 &lt;Tips&gt;
   Include tips.cfg
 &lt;/Tips&gt;
@@ -423,13 +427,6 @@ Element Ref URI = http://www.htmlhelp.com/reference/html40/
 <p>This is the path to the Perl interpreter, up to now in
   Unix-style. So it has to be changed to Windows-style. The
   parameter <code>-T</code> is replaced by that, too.</p>
-<p>For some configurations, the check-skript needs to know where
-  its root directory is. It tries to read it from the environment
-  variable W3C_VALIDATOR_HOME and uses a default directory if it is
-  not set. That is done within the line:</p>
-<pre>  my $base_path = $ENV{W3C_VALIDATOR_HOME} || '/usr/local/validator';</pre>
-<p>So we change that line fixed to our path:</p>
-<pre>>  my $base_path = 'C:/www/validator'</pre>.
 <p>In the following lines the script is told where to find the 
   configuration file. That is done after the comment in these lines</p>
 <pre>
@@ -446,8 +443,24 @@ eval {
 # Read Config Files.
 eval {
   my %config_opts = (
-     -ConfigFile =&gt; ('C:/www/validator/htdocs/config/validator.conf'),
+     -ConfigFile =&gt; 'C:/www/validator/htdocs/config/validator.conf',
 </pre>     
+<p>For some configurations, the check-skript needs to know where
+  its root directory is. It tries to read it from the environment
+  variable W3C_VALIDATOR_HOME and uses a default directory if it is
+  not set. That is done within the line:</p>
+<pre>
+          Paths => {
+            Base => ($ENV{W3C_VALIDATOR_HOME} || '/usr/local/validator'),
+          },
+</pre>
+<p>So we change that line fixed to our path:</p>
+<pre>
+          Paths => {
+            Base => 'C:/www/validator',
+          },
+</pre>.
+
 <p>After saving the script, you can use it at http://validator.example.org/
   as you know it from http://validator.w3.org/.</p>
 <p>That is it, your own validator is working.</p>
@@ -483,7 +496,7 @@ referer: http://validator.example.org/
 </pre>
 <p>to</p>
 <pre>
-    file_cache_dir => File::Spec->catdir('C:/temp', 'validator'),
+    file_cache_dir => 'C:/temp/validator',
 </pre>
 <p>for example. In that case, <code>C:/temp/validator</code> will be used instead.</p>
 <p>Windows XP with Service Pack 2 installed might have problems with the
