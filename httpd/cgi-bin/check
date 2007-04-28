@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.509 2007-04-28 09:33:54 ville Exp $
+# $Id: check,v 1.510 2007-04-28 18:56:55 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.509 $;
+  $VERSION =  q$Revision: 1.510 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -646,7 +646,7 @@ if (&is_xml($File)) {
         $xmlwf_error_line =~ s/:(\d+):/$1/;
         $xmlwf_error_msg =~ s/ parser error :/XML Parsing Error: /;
       }
-      if ($msg_line =~ /(.+)\^/){
+      elsif ($msg_line =~ /(\s+)\^/) {
         $xmlwf_error_col = length($1);
       }
       if (defined($xmlwf_error_col) && $xmlwf_error_col == 79){
