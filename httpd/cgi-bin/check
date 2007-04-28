@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.511 2007-04-28 19:21:35 ville Exp $
+# $Id: check,v 1.512 2007-04-28 19:50:15 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.511 $;
+  $VERSION =  q$Revision: 1.512 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -649,13 +649,22 @@ if (&is_xml($File)) {
       elsif ($msg_line =~ /(\s+)\^/) {
         $xmlwf_error_col = length($1);
       }
-      if (defined($xmlwf_error_col) && $xmlwf_error_col == 79){
-        # working around an apparent odd limitation of libxml
-        # which only gives context for lines up to 80 chars
-        # http://www.w3.org/Bugs/Public/show_bug.cgi?id=4420
-        # http://bugzilla.gnome.org/show_bug.cgi?id=424017
-        $xmlwf_error_col = "> 80";
-        # non-int line number will trigger the proper behavior in report_error
+      if (defined($xmlwf_error_col)) {
+        if ((my $l = length($File->{Content}->[$xmlwf_error_line-1])) < $xmlwf_error_col) {
+          # http://bugzilla.gnome.org/show_bug.cgi?id=434196
+          warn("Warning: reported error column larger than line length " .
+               "($xmlwf_error_col > $l) in $File->{URI} line " .
+               "$xmlwf_error_line, libxml2 bug? Resetting to line length.");
+          $xmlwf_error_col = $l;
+        }
+        elsif ($xmlwf_error_col == 79) {
+          # working around an apparent odd limitation of libxml
+          # which only gives context for lines up to 80 chars
+          # http://www.w3.org/Bugs/Public/show_bug.cgi?id=4420
+          # http://bugzilla.gnome.org/show_bug.cgi?id=424017
+          $xmlwf_error_col = "> 80";
+          # non-int line number will trigger the proper behavior in report_error
+        }
       }
 
       if ((defined $xmlwf_error_line) and (defined $xmlwf_error_col) and (defined $xmlwf_error_msg)){
