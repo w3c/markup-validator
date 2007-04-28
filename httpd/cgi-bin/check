@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.507 2007-04-27 20:36:31 ville Exp $
+# $Id: check,v 1.508 2007-04-28 07:06:35 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.507 $;
+  $VERSION =  q$Revision: 1.508 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -802,7 +802,8 @@ if (my $prettyver = $CFG->{Types}->{$File->{Version}}->{Display}) {
 #
 # check the received mime type against Allowed mime types
 if ($File->{ContentType}){
-  my @allowedMediaType = split(" ", $CFG->{Types}->{$File->{DOCTYPE}}->{Types}->{Allowed});
+  my @allowedMediaType =
+    split(/\s+/, $CFG->{Types}->{$File->{DOCTYPE}}->{Types}->{Allowed} || '');
   my $usedCTisAllowed;
   if (scalar @allowedMediaType)  {
     $usedCTisAllowed = FALSE;
@@ -1886,7 +1887,7 @@ sub set_parse_mode {
   my $File = shift;
   my $CFG = shift;
   my $fpi = $File->{DOCTYPE};
-  my $parseModeFromDoctype = $CFG->{Types}->{$fpi}->{'Parse Mode'};
+  my $parseModeFromDoctype = $CFG->{Types}->{$fpi}->{'Parse Mode'} || 'TBD';
 
   my $parseModeFromMimeType = $File->{Mode};
 
@@ -2269,9 +2270,14 @@ sub W3C::Validator::SAXHandler::start_element
 
   my $doctype = $self->{_file}->{DOCTYPE};
 
-  if (($element->{Name} eq $CFG->{Types}->{$doctype}->{Name})
-  and !$has_xmlns and ($CFG->{Types}->{$doctype}->{"Namespace Required"})) {
-    # whine if the root xmlns attribute is noted as required by spec, but not present
+  if (!defined($CFG->{Types}->{$doctype}->{Name}) ||
+      $element->{Name} ne $CFG->{Types}->{$doctype}->{Name}) {
+    # add to list of non-root namespaces
+    push(@{$self->{_file}->{Namespaces}}, $xmlns_value) if $has_xmlns;
+  }
+  elsif (!$has_xmlns and $CFG->{Types}->{$doctype}->{"Namespace Required"}) {
+    # whine if the root xmlns attribute is noted as required by spec,
+    # but not present
     my $err;
     my $location = $self->{_parser}->get_location();
     $err->{src}  = '...'; # do this with show_open_entities()?
@@ -2285,8 +2291,7 @@ sub W3C::Validator::SAXHandler::start_element
     $self->{_file}->{'Is Valid'} = FALSE;
     push @{$self->{_file}->{Errors}}, $err;
   }
-  elsif (($element->{Name} eq $CFG->{Types}->{$doctype}->{Name})
-  and $has_xmlns and (defined $CFG->{Types}->{$doctype}->{Namespace})
+  elsif ($has_xmlns and (defined $CFG->{Types}->{$doctype}->{Namespace})
   and ($xmlns_value ne $CFG->{Types}->{$doctype}->{Namespace}) ) {
     # whine if root xmlns element is not the one specificed by the spec
     my $err;
@@ -2303,12 +2308,6 @@ sub W3C::Validator::SAXHandler::start_element
     $self->{_file}->{'Is Valid'} = FALSE;
     push @{$self->{_file}->{Errors}}, $err;
   }
-  elsif (($element->{Name} ne $CFG->{Types}->{$doctype}->{Name})
-  and $has_xmlns) {
-    # add to list of non-root namespace
-    push(@{$self->{_file}->{Namespaces}}, $xmlns_value);
-  }
-
 }
 
 
