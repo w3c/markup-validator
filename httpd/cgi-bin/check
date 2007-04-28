@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.510 2007-04-28 18:56:55 ville Exp $
+# $Id: check,v 1.511 2007-04-28 19:21:35 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.510 $;
+  $VERSION =  q$Revision: 1.511 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2333,9 +2333,13 @@ sub W3C::Validator::SAXHandler::error
   # ...
   $File->{'Is Valid'} = FALSE if $err->{type} eq 'E';
 
-  # Workaround for onsgmls 1.5 sometimes reporting errors beyond EOL.
-  # (How true is that? Test cases please.)
+  # Workaround for onsgmls as of 1.5 sometimes allegedly reporting errors
+  # beyond EOL.  If you see this warning in your web server logs, please
+  # let the validator developers know, see http://validator.w3.org/feedback.html
   if ((my $l = length($File->{Content}->[$err->{line}-1])) < $err->{char}) {
+    warn("Warning: reported error column larger than line length " .
+         "($err->{char} > $l) in $File->{URI} line $err->{line}, " .
+         "OpenSP bug? Resetting to line length.");
     $err->{char} = $l;
   }
 
