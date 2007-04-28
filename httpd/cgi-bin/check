@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.508 2007-04-28 07:06:35 ville Exp $
+# $Id: check,v 1.509 2007-04-28 09:33:54 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.508 $;
+  $VERSION =  q$Revision: 1.509 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -292,107 +292,94 @@ if ($lang eq "en") {
   $lang = 'en_US'; # legacy
 }
 
-my $T = HTML::Template->new(
+my %template_defaults = (
+  die_on_bad_params => FALSE,
+  cache             => TRUE,
+);
+
+$File->{Templates}->{Result} = HTML::Template->new(
+  %template_defaults,
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                            $lang, 'result.tmpl'),
-  die_on_bad_params => FALSE,
   loop_context_vars => TRUE,
-  cache             => TRUE,
 );
-my $E = HTML::Template->new(
+$File->{Templates}->{Error} = HTML::Template->new(
+  %template_defaults,
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                            $lang, 'fatal-error.tmpl'),
-  die_on_bad_params => FALSE,
-  cache             => TRUE,
 );
-my $H = HTML::Template->new(
+$File->{Templates}->{AuthzReq} = HTML::Template->new(
+  %template_defaults,
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                            $lang, 'http_401_authrequired.tmpl'),
-  die_on_bad_params => FALSE,
-  cache             => TRUE,
 );
 
 # templates for alternate output formats
-my $XMLT = HTML::Template->new(
+$File->{Templates}->{XML} = HTML::Template->new(
+  %template_defaults,
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                           $lang, 'xml_output.tmpl'),
-  die_on_bad_params => FALSE,
   loop_context_vars => TRUE,
-  cache             => TRUE,
 );
-my $SOAPT = HTML::Template->new(
+$File->{Templates}->{SOAP} = HTML::Template->new(
+  %template_defaults,
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                           $lang, 'soap_output.tmpl'),
-  die_on_bad_params => FALSE,
   loop_context_vars => TRUE,
-  cache             => TRUE,
 );
-my $UCNT = HTML::Template->new(
+$File->{Templates}->{UCN} = HTML::Template->new(
+  %template_defaults,
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                           $lang, 'ucn_output.tmpl'),
-  die_on_bad_params => FALSE,
   loop_context_vars => TRUE,
-  cache             => TRUE,
 );
-my $SOAPFT = HTML::Template->new(
+$File->{Templates}->{SOAPFault} = HTML::Template->new(
+  %template_defaults,
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                           $lang, 'soap_fault.tmpl'),
-  die_on_bad_params => FALSE,
   loop_context_vars => TRUE,
-  cache             => TRUE,
 );
-my $SOAPDIS = HTML::Template->new(
+$File->{Templates}->{SOAPDisabled} = HTML::Template->new(
+  %template_defaults,
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                           $lang, 'soap_disabled.tmpl'),
-  die_on_bad_params => FALSE,
   loop_context_vars => TRUE,
-  cache             => TRUE,
 );
-my $EARLT = HTML::Template->new(
+$File->{Templates}->{EARLXML} = HTML::Template->new(
+  %template_defaults,
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                           $lang, 'earl_xml.tmpl'),
-  die_on_bad_params => FALSE,
   loop_context_vars => TRUE,
-  cache             => TRUE,
   global_vars       => TRUE,
 );
-my $N3T = HTML::Template->new(
+$File->{Templates}->{EARLN3} = HTML::Template->new(
+  %template_defaults,
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                           $lang, 'earl_n3.tmpl'),
-  die_on_bad_params => FALSE,
   loop_context_vars => TRUE,
-  cache             => TRUE,
   global_vars       => TRUE,
 );
 
-my $PREFILL_HTML_T = HTML::Template->new(
+$File->{Templates}->{PrefillHTML} = HTML::Template->new(
+  %template_defaults,
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                           $lang, 'prefill_html401.tmpl'),
-  die_on_bad_params => FALSE,
   loop_context_vars => TRUE,
-  cache             => TRUE,
   global_vars       => TRUE,
 );
-
-my $PREFILL_XHTML_T = HTML::Template->new(
+$File->{Templates}->{PrefillXHTML} = HTML::Template->new(
+  %template_defaults,
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                           $lang, 'prefill_xhtml10.tmpl'),
-  die_on_bad_params => FALSE,
   loop_context_vars => TRUE,
-  cache             => TRUE,
   global_vars       => TRUE,
 );
 
-
-$File->{T} = $T;
-$File->{S} = $SOAPT;
-$File->{E} = $E;
-$File->{H} = $H;
-
-$T->param(cfg_home_page => $CFG->{'Home Page'});
-$SOAPT->param(cfg_home_page => $CFG->{'Home Page'});
+$File->{Templates}->{Result}->param(cfg_home_page => $CFG->{'Home Page'});
+$File->{Templates}->{SOAP}->param(cfg_home_page => $CFG->{'Home Page'});
 
 undef $lang;
+undef %template_defaults;
 
 #########################################
 # Populate $File->{Opt} -- CGI Options. #
@@ -745,8 +732,8 @@ sub parse (\$) {
 
   #
   # Set debug info for HTML report.
-  $T->param(opt_debug => $DEBUG);
-  $T->param(debug =>
+  $File->{Templates}->{Result}->param(opt_debug => $DEBUG);
+  $File->{Templates}->{Result}->param(debug =>
             [
              map({name => $_, value => $ENV{$_}},
                qw(no_proxy http_proxy https_proxy ftp_proxy FTP_PASSIVE)),
@@ -871,26 +858,26 @@ if (!$File->{'Tidy_OK'}) {
 my $template;
 
 if ($File->{Opt}->{Output} eq 'xml') {
-  $template = $XMLT;
+  $template = $File->{Templates}->{XML};
 } elsif ($File->{Opt}->{Output} eq 'earl') {
-  $template = $EARLT;
+  $template = $File->{Templates}->{EARLXML};
 } elsif ($File->{Opt}->{Output} eq 'n3') {
-  $template = $N3T;
+  $template = $File->{Templates}->{EARLN3};
 } elsif ($File->{Opt}->{Output} eq 'ucn') {
-  $template = $UCNT;
+  $template = $File->{Templates}->{UCN};
 } elsif ($File->{Opt}->{Output} eq 'soap12') {
   if ($CFG->{'Enable SOAP'} != 1) { # API disabled - ideally this should have been sent before performing validation...
     print CGI::header(-status => 503, -content_language => "en",
     -type => "text/html", -charset => "utf-8"
     );
-    $template = $SOAPDIS;
+    $template = $File->{Templates}->{SOAPDisabled};
   } elsif ($File->{'Error Flagged'}) { # should send SOAP fault message
-    $template = $SOAPFT;
+    $template = $File->{Templates}->{SOAPFault};
   } else {
-    $template = $SOAPT;
+    $template = $File->{SOAPT};
   }
 } else {
-  $template = $T;
+  $template = $File->{Templates}->{Result};
 }
 
 &prep_template($File, $template);
@@ -1120,12 +1107,12 @@ sub add_warning ($$) {
   my $params = shift;
 
   push @{$File->{Warnings}}, $WID;
-  $File->{T}->param($WID => TRUE, %{$params});
-  $File->{T}->param(have_warnings => TRUE);
-  $File->{E}->param($WID => TRUE, %{$params});
-  $File->{E}->param(have_warnings => TRUE);
-  $File->{S}->param($WID => TRUE, %{$params});
-  $File->{S}->param(have_warnings => TRUE);
+  $File->{Templates}->{Result}->param($WID => TRUE, %{$params});
+  $File->{Templates}->{Result}->param(have_warnings => TRUE);
+  $File->{Templates}->{Error}->param($WID => TRUE, %{$params});
+  $File->{Templates}->{Error}->param(have_warnings => TRUE);
+  $File->{Templates}->{SOAP}->param($WID => TRUE, %{$params});
+  $File->{Templates}->{SOAP}->param(have_warnings => TRUE);
 }
 
 #
@@ -1153,10 +1140,10 @@ sub authenticate {
   $headers = $headers->as_string();
   chomp($headers);
 
-  $File->{H}->param(http_401_headers => $headers);
-  $File->{H}->param(http_401_url     => $resource);
+  $File->{Templates}->{AuthzReq}->param(http_401_headers => $headers);
+  $File->{Templates}->{AuthzReq}->param(http_401_url     => $resource);
 
-  print $File->{H}->output;
+  print $File->{Templates}->{AuthzReq}->output;
 
   exit; # Further interaction will be a new HTTP request.
 }
@@ -1182,11 +1169,11 @@ sub handle_uri {
     if (($uri->canonical() eq "1") )
     #if uri param is empty (also for empty direct or upload), it's been set to TRUE in sub prepCGI()
     {
-      $File->{E}->param(fatal_no_content  => TRUE);
+      $File->{Templates}->{Error}->param(fatal_no_content  => TRUE);
     }
     else {
-      $File->{E}->param(fatal_uri_error  => TRUE);
-      $File->{E}->param(fatal_uri_scheme => $uri->scheme());
+      $File->{Templates}->{Error}->param(fatal_uri_error  => TRUE);
+      $File->{Templates}->{Error}->param(fatal_uri_scheme => $uri->scheme());
     }
     return $File;
   }
@@ -1212,11 +1199,12 @@ sub handle_uri {
     } else {
       $File->{'Error Flagged'} = TRUE;
 
-      $File->{E}->param(fatal_http_error => TRUE);
-      $File->{E}->param(fatal_http_uri   => $uri->as_string);
-      $File->{E}->param(fatal_http_code  => $res->code);
-      $File->{E}->param(fatal_http_msg   => $res->message);
-      $File->{E}->param(fatal_http_dns   => TRUE) if $res->code == 500;
+      $File->{Templates}->{Error}->param(fatal_http_error => TRUE);
+      $File->{Templates}->{Error}->param(fatal_http_uri   => $uri->as_string);
+      $File->{Templates}->{Error}->param(fatal_http_code  => $res->code);
+      $File->{Templates}->{Error}->param(fatal_http_msg   => $res->message);
+      $File->{Templates}->{Error}->param(fatal_http_dns   => TRUE)
+        if $res->code == 500;
     }
     return $File;
   }
@@ -1313,10 +1301,10 @@ sub handle_frag {
     # we surround the HTML fragment with some basic document structure
     my $prefill_Template = undef;
     if ($File->{Opt}->{'Prefill Doctype'} eq 'html401') {
-      $prefill_Template = $PREFILL_HTML_T;
+      $prefill_Template = $File->{Templates}->{PrefillHTML};
     }
     else {
-      $prefill_Template = $PREFILL_XHTML_T;
+      $prefill_Template = $File->{Templates}->{PrefillXHTML};
     }
     $prefill_Template->param(fragment => $File->{Bytes});
     $File->{Bytes} = $prefill_Template->output();
@@ -1349,8 +1337,8 @@ sub parse_content_type {
       exit;
     } else {
       $File->{'Error Flagged'} = TRUE;
-      $File->{E}->param(fatal_mime_error => TRUE);
-      $File->{E}->param(fatal_mime_ct    => $ct);
+      $File->{Templates}->{Error}->param(fatal_mime_error => TRUE);
+      $File->{Templates}->{Error}->param(fatal_mime_ct    => $ct);
     }
   }
 
@@ -1372,7 +1360,8 @@ sub check_recursion ($$) {
   if ($lvl >= $CFG->{'Max Recursion'}) {
     print redirect $CFG->{'Home Page'};
   } else {
-    $T->param(depth => $lvl++); # Increase recursion level in output.
+    # Increase recursion level in output.
+    $File->{Templates}->{Result}->param(depth => $lvl++);
   }
 }
 
@@ -1846,7 +1835,7 @@ sub prepCGI {
       # for /check?uri=referer but no Referer header was found.
       $File->{'Error Flagged'} = TRUE;
 
-      $File->{E}->param(fatal_referer_error => TRUE);
+      $File->{Templates}->{Error}->param(fatal_referer_error => TRUE);
     }
   }
 
@@ -1874,8 +1863,8 @@ sub prepCGI {
   # Flag an error if we didn't get a file to validate.
   unless ($q->param('uri')) {
     $File->{'Error Flagged'} = TRUE;
-    $File->{E}->param(fatal_uri_error  => TRUE);
-    $File->{E}->param(fatal_uri_scheme => 'undefined');
+    $File->{Templates}->{Error}->param(fatal_uri_error  => TRUE);
+    $File->{Templates}->{Error}->param(fatal_uri_scheme => 'undefined');
   }
 
   return $q;
@@ -2003,11 +1992,12 @@ sub transcode {
     # and possibly other reasons
 
     $File->{'Error Flagged'} = TRUE;
-    $File->{E}->param(fatal_transcode_error   => TRUE);
-    $File->{E}->param(fatal_transcode_charset => $cs);
+    $File->{Templates}->{Error}->param(fatal_transcode_error   => TRUE);
+    $File->{Templates}->{Error}->param(fatal_transcode_charset => $cs);
 
     # @@FIXME might need better text
-    $File->{E}->param(fatal_transcode_errmsg  => "Encoding not supported.");
+    $File->{Templates}->{Error}->param(fatal_transcode_errmsg  =>
+                                       "Encoding not supported.");
 
     return $File;
   }
@@ -2020,11 +2010,12 @@ sub transcode {
     # the character encoding; might need additional modules
 
     $File->{'Error Flagged'} = TRUE;
-    $File->{E}->param(fatal_transcode_error   => TRUE);
-    $File->{E}->param(fatal_transcode_charset => $cs);
+    $File->{Templates}->{Error}->param(fatal_transcode_error   => TRUE);
+    $File->{Templates}->{Error}->param(fatal_transcode_charset => $cs);
 
     # @@FIXME might need better text
-    $File->{E}->param(fatal_transcode_errmsg  => "Encoding not supported.");
+    $File->{Templates}->{Error}->param(fatal_transcode_errmsg  =>
+                                       "Encoding not supported.");
 
     return $File;
   }
@@ -2046,9 +2037,9 @@ sub transcode {
     # using a Encode CHECK parameter that modifies the input, then split
     # the decodable string to give line / column information, or don't
     # split and report the offset calculated from the result.
-    $File->{E}->param(fatal_byte_error   => TRUE);
-    $File->{E}->param(fatal_byte_lines   => 0);
-    $File->{E}->param(fatal_byte_charset => $cs);
+    $File->{Templates}->{Error}->param(fatal_byte_error   => TRUE);
+    $File->{Templates}->{Error}->param(fatal_byte_lines   => 0);
+    $File->{Templates}->{Error}->param(fatal_byte_charset => $cs);
 
     return $File;
   }
@@ -2109,8 +2100,8 @@ sub abort_if_error_flagged {
   return if     $File->{'Error Handled'}; # Previous error, keep going.
 
   if ($File->{Opt}->{Output} eq 'html') {
-    &prep_template($File, $E);
-    print $E->output;
+    &prep_template($File, $File->{Templates}->{Error});
+    print $File->{Templates}->{Error}->output;
     exit;
   } else {
 
@@ -2351,8 +2342,8 @@ sub W3C::Validator::SAXHandler::error
   # No or unknown FPI and a relative SI.
   if ($err->{msg} =~ m(cannot (open|find))) {
     $File->{'Error Flagged'} = TRUE;
-    $File->{E}->param(fatal_parse_extid_error => TRUE);
-    $File->{E}->param(fatal_parse_extid_msg   => $err->{msg});
+    $File->{Templates}->{Error}->param(fatal_parse_extid_error => TRUE);
+    $File->{Templates}->{Error}->param(fatal_parse_extid_msg   => $err->{msg});
   }
 
   # No DOCTYPE.
@@ -2420,10 +2411,11 @@ sub uri_ok {
   if ($iptype && $iptype ne 'PUBLIC') {
     my $File = $self->{'W3C::Validator::File'};
     $File->{'Error Flagged'} = 1;
-    $File->{E}->param(fatal_ip_error    => 1);
-    $File->{E}->param(fatal_ip_hostname => 1)
+    $File->{Templates}->{Error}->param(fatal_ip_error    => 1);
+    $File->{Templates}->{Error}->param(fatal_ip_hostname => 1)
       if $addr and $uri->host() ne $addr;
-    $File->{E}->param(fatal_ip_host => ($uri->host() || 'undefined'));
+    $File->{Templates}->{Error}->param(fatal_ip_host =>
+                                       ($uri->host() || 'undefined'));
     return 0;
   }
   return 1;
