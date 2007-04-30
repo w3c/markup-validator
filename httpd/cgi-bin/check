@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.513 2007-04-30 13:36:34 ot Exp $
+# $Id: check,v 1.514 2007-04-30 16:09:09 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.513 $;
+  $VERSION =  q$Revision: 1.514 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2338,6 +2338,17 @@ sub W3C::Validator::SAXHandler::error
   $err->{num}  = $mess->{primary_message}{Number};
   $err->{type} = $mess->{primary_message}{Severity};
   $err->{msg}  = $mess->{primary_message}{Text};
+
+  # our parser OpenSP is not quite XML-aware, or XML Namespaces Aware, 
+  # so we filter out a few errors for now
+
+  if ($File->{Mode} eq 'XML') {
+    if ($err->{num} eq '108' and $err->{msg} =~ m{ "xmlns:\S+"}) {
+      # the error is about a missing xmlns: attribute definition"
+      return ;  # this is not an error, 'cause we said so
+    }
+  }
+
 
   # ...
   $File->{'Is Valid'} = FALSE if $err->{type} eq 'E';
