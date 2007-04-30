@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.512 2007-04-28 19:50:15 ville Exp $
+# $Id: check,v 1.513 2007-04-30 13:36:34 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.512 $;
+  $VERSION =  q$Revision: 1.513 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -883,7 +883,7 @@ if ($File->{Opt}->{Output} eq 'xml') {
   } elsif ($File->{'Error Flagged'}) { # should send SOAP fault message
     $template = $File->{Templates}->{SOAPFault};
   } else {
-    $template = $File->{SOAPT};
+    $template = $File->{Templates}->{SOAP};
   }
 } else {
   $template = $File->{Templates}->{Result};
