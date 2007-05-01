@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.514 2007-04-30 16:09:09 ot Exp $
+# $Id: check,v 1.515 2007-05-01 15:04:29 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.514 $;
+  $VERSION =  q$Revision: 1.515 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2325,7 +2325,14 @@ sub W3C::Validator::SAXHandler::error
 {
   my $self = shift;
   my $error = shift;
-  my $mess = $self->{_parser}->split_message($error);
+  my $mess;
+  eval {
+    $mess = $self->{_parser}->split_message($error);
+  };
+  if ($@) {
+    # this is a message that S:P:O could not handle, we skip its croaking
+    return;
+  }
   my $File = $self->{_file};
 
   # TODO: this does not filter out errors in DTDs.
