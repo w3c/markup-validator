@@ -22,8 +22,8 @@
                 13        1      13
                 14       18  UNUSED
                 32       95      32
-               127        1  UNUSED
-               128       32  UNUSED
+               127        1     127 -- DEL, legal in XML 1.0 --
+               128       32     128 -- C1 controls, legal in XML 1.0 --
                160    55136     160
              55296     2048  UNUSED -- surrogates --
              57344     8190   57344
