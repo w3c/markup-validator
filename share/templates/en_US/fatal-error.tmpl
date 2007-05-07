@@ -1,9 +1,10 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 
     <div id="main">
+      <TMPL_INCLUDE NAME="table.tmpl">
       
 	  <div id="result">
-	    <h2 id="results" class="invalid">Sorry! This document can not be checked.</h2>
+	    <h3 id="results" class="invalid">Sorry! This document can not be checked.</h3>
 
       <a id="skip" name="skip"></a>
 <TMPL_IF NAME="fatal_transcode_error">
@@ -154,6 +155,11 @@
           page by URL.
         </p>
 </TMPL_IF>
+
+<TMPL_IF NAME="have_warnings">
+  <TMPL_INCLUDE NAME="warnings.tmpl">
+</TMPL_IF>
+
 </div><!-- results -->
     </div><!-- end of "main" -->
 

@@ -6,7 +6,11 @@
     <h2 class="valid">This Page Is Valid <TMPL_VAR NAME="file_version" ESCAPE="HTML">!</h2>
   </TMPL_IF>
 <TMPL_ELSE>
+  <TMPL_IF NAME="fatal_error">
+  <h2 id="results" class="invalid">Sorry! This document can not be checked.</h2>
+  <TMPL_ELSE>  
   <h2 id="results" class="invalid">This page is <strong>not</strong> Valid <TMPL_VAR NAME="file_version" ESCAPE="HTML">!</h2>
+  </TMPL_IF>  
 </TMPL_IF>  
 
 
