@@ -10,8 +10,10 @@
           </TMPL_IF>
           <TMPL_IF NAME="VALID">
                   <li><a title="Information on validation, Icons" href="#congrats">Congratulations &middot; Icons</a></li>
-</TMPL_IF>                  
-          
+</TMPL_IF>
+<TMPL_IF NAME="fatal_error">
+                  <li><a href="#fatal-errors">Error(s) blocking validation</a></li>
+</TMPL_IF>
   <TMPL_IF NAME="opt_show_source">
           <li><a title="Listing of Source Input" href="#source">Source Listing</a></li>
   </TMPL_IF>
