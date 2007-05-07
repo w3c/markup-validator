@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.515 2007-05-01 15:04:29 ot Exp $
+# $Id: check,v 1.516 2007-05-07 14:42:31 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.515 $;
+  $VERSION =  q$Revision: 1.516 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2285,7 +2285,9 @@ sub W3C::Validator::SAXHandler::start_element
     $err->{char} = $location->{ColumnNumber};
     $err->{num}  = "no-xmlns";
     $err->{type} = "E";
-    $err->{msg}  = "Missing xmlns attribute for element ".$element->{Name};
+    $err->{msg}  = "Missing xmlns attribute for element ".$element->{Name} . ". 
+    The value should be: $CFG->{Types}->{$doctype}->{Namespace}";
+    
 
     # ...
     $self->{_file}->{'Is Valid'} = FALSE;
@@ -2301,7 +2303,7 @@ sub W3C::Validator::SAXHandler::start_element
     $err->{char} = $location->{ColumnNumber};
     $err->{num}  = "wrong-xmlns";
     $err->{type} = "E";
-    $err->{msg}  = "Wrong xmlns attribute for element $element->{Name}. " .
+    $err->{msg}  = "Wrong xmlns attribute for element $element->{Name}. ".
       "The value should be: $CFG->{Types}->{$doctype}->{Namespace}";
 
     # ...
