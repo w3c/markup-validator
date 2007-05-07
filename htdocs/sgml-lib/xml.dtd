@@ -16,13 +16,11 @@
    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
    SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
 
-   $Revision: 1.1 $
-   $Date: 2005-02-04 13:20:31 $
+   $Revision: 1.2 $
+   $Date: 2007-05-07 18:44:54 $
 
 -->
-<!ENTITY % HTML.Version "-//W3C//DTD XML Fallback//EN"
-  -- Tags this DTD as being a fallback. --
->
+<!ENTITY % HTML.Version "-//W3C//DTD XML Fallback//EN">
 
 <!--================ Character mnemonic entities =========================-->
 
