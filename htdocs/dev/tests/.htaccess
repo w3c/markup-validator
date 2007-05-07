@@ -9,9 +9,13 @@ RemoveCharset .html
 <Files ~ "textxml_nocharset(\.xml)?">
 ForceType text/xml
 </Files>
-<FilesMatch 4520-iso88591.*>
+<Files 4520-iso88591-meta.html>
 RemoveCharset .html
 # use charset in meta
+</Files>
+<Files 4520-iso88591-no_meta.html>
+RemoveCharset .html
+#detect charset - use override
 </Files>
 <Files 1574-charset_iso_8859_7_greek.html>
 RemoveCharset .html
