@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.517 2007-05-07 16:14:15 ot Exp $
+# $Id: check,v 1.518 2007-05-07 19:17:58 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.517 $;
+  $VERSION =  q$Revision: 1.518 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -254,6 +254,8 @@ $File->{Charset}->{Override} = ''; # From CGI/user override.
 # Misc simple types.
 $File->{Mode} = 'SGML'; # Default parse mode is SGML.
 
+# By default, perform validation (we may perform only xml-wf in some cases)
+$File->{XMLWF_ONLY} = FALSE;
 #
 # Listrefs.
 $File->{Warnings}   = []; # Warnings...
@@ -588,8 +590,7 @@ if ($File->{Charset}->{Use} eq 'utf-8' &&
 #
 # Override DOCTYPE if user asked for it.
 if ($File->{Opt}->{DOCTYPE}
-    and not $File->{Opt}->{DOCTYPE} =~ /(Inline|detect)/i
-    and $File->{Opt}->{DOCTYPE} ne '1' ) {
+    and not $File->{Opt}->{DOCTYPE} =~ /(Inline|detect)/i) {
   $File = &override_doctype($File);
 }
 
@@ -781,7 +782,7 @@ sub parse (\$) {
 #
 # Force "XML" if type is an XML type and an FPI was not found.
 # Otherwise set the type to be the FPI.
-if (&is_xml($File) and not $File->{DOCTYPE}) {
+if (&is_xml($File) and not $File->{DOCTYPE} and  lc($File->{Root}) ne 'html') {
   $File->{Version} = 'XML';
 } else {
   $File->{Version} = $File->{DOCTYPE} unless $File->{Version};
@@ -962,7 +963,9 @@ sub prep_template ($$) {
   $T->param(tip_uri  => $tip->[0]);
   $T->param(tip_slug => $tip->[1]);
 
-  #
+  # Root Element
+  $T->param(root_element  => $File->{Root});
+  
   # Namespaces...
   $T->param(file_namespace  => $File->{Namespace});
   my %seen_ns = ();
@@ -1102,7 +1105,9 @@ sub report_valid {
   if ($File->{Opt}->{'Outline'}) {
     $T->param(file_outline => $File->{heading_outline});
   }
-
+  if ($File->{XMLWF_ONLY}){
+    $T->param(xmlwf_only => TRUE);
+  }
   my $thispage = self_url_file($File);
   $T->param(file_thispage => $thispage);
 }
@@ -2358,9 +2363,17 @@ sub W3C::Validator::SAXHandler::error
     }
   }
 
+  if ($err->{num} eq '187')
+  # filtering out no "document type declaration; will parse without validation"
+  # if root element is not html and mode is xml...
+  {
+    # since parsing was done without validation, result can only be "well-formed"
+    if ($File->{Mode} eq 'XML' and lc($File->{Root}) ne 'html') {
+      $File->{XMLWF_ONLY} = TRUE;
+    }
+    return;
+  }
 
-  # ...
-  $File->{'Is Valid'} = FALSE if $err->{type} eq 'E';
 
   # Workaround for onsgmls as of 1.5 sometimes allegedly reporting errors
   # beyond EOL.  If you see this warning in your web server logs, please
@@ -2379,12 +2392,14 @@ sub W3C::Validator::SAXHandler::error
     $File->{Templates}->{Error}->param(fatal_parse_extid_msg   => $err->{msg});
   }
 
-  # No DOCTYPE.
+  # No DOCTYPE found! We are falling back to vanilla DTD
   if ($err->{msg} =~ m(prolog can\'t be omitted)) {
-    my $dtd = ($File->{Mode} eq 'XML' ?
-               'XHTML 1.0 Transitional' : 'HTML 4.01 Transitional' );
-
-    add_warning('W09', {W09_dtd => $dtd});
+    if (lc($File->{Root}) eq 'html') { 
+      my $dtd = ($File->{Mode} eq 'XML' ?
+                 'XHTML 1.0 Transitional' : 'HTML 4.01 Transitional' );      
+      add_warning('W09', {W09_dtd => $dtd});
+    }
+    
     return; # Don't report this as a normal error.
   }
 
@@ -2392,6 +2407,8 @@ sub W3C::Validator::SAXHandler::error
   abort_if_error_flagged($File, O_DOCTYPE);
 
   push @{$File->{Errors}}, $err;
+  # ...
+  $File->{'Is Valid'} = FALSE if $err->{type} eq 'E';
 
   if (defined $mess->{aux_message})
   {

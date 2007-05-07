@@ -34,7 +34,8 @@
     to match the changes we have performed automatically, but 
     <strong>it will not be valid until you make these changes</strong>.
 <TMPL_ELSE>
-    was checked and found to be valid
+    was checked and found to be 
+    <TMPL_IF NAME="xmlwf_only">well-formed<TMPL_ELSE>valid</TMPL_IF>
     <TMPL_VAR NAME="file_version" ESCAPE="HTML">.  This means that the
     resource in question identified itself as
     "<TMPL_VAR NAME="file_version" ESCAPE="HTML">" and that we successfully
