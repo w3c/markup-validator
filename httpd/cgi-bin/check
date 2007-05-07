@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.516 2007-05-07 14:42:31 ot Exp $
+# $Id: check,v 1.517 2007-05-07 16:14:15 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.516 $;
+  $VERSION =  q$Revision: 1.517 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -490,10 +490,8 @@ unless ($File->{Charset}->{Use}) {
 
 #
 # Handle any Fallback or Override for the charset.
-if (charset_not_equal($File->{Opt}->{Charset}, '(detect automatically)')
-    and charset_not_equal($File->{Opt}->{Charset}, '')) {
+if (charset_not_equal($File->{Opt}->{Charset}, '(detect automatically)')) {
   # charset=foo was given to the CGI and it wasn't "autodetect" or empty.
-
   #
   # Extract the user-requested charset from CGI param.
   my ($override, undef) = split(/\s/, $File->{Opt}->{Charset}, 2);
@@ -2107,6 +2105,8 @@ sub abort_if_error_flagged {
 
   return unless $File->{'Error Flagged'};
   return if     $File->{'Error Handled'}; # Previous error, keep going.
+
+  $File->{Templates}->{Error}->param(fatal_error => TRUE);
 
   if ($File->{Opt}->{Output} eq 'html') {
     &prep_template($File, $File->{Templates}->{Error});

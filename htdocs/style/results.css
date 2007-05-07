@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.15 2007-04-18 08:20:49 ot Exp $ */
+/* $Id: results.css,v 1.16 2007-05-07 16:14:15 ot Exp $ */
 
 .input {
   color: black;
@@ -54,7 +54,7 @@ fieldset#revalidate_opts table.header, fieldset#revalidate_opts table.header td,
 
 /* "Fatal" warnings... */
 
-ol#warnings, ol#error_loop {
+ol#warnings, ol#error_loop, ol#fatal-errors {
     margin-left: 0 !important;
     margin-right: 0 !important;
 }
@@ -73,7 +73,7 @@ ol li.msg_info:hover, ol li.msg_warn:hover, ol li.msg_err:hover {
   
 }
 
-ol#warnings, ol#error_loop {
+ol#warnings, ol#error_loop, ol#fatal-errors  {
         padding:0;
         border-top: 1px solid #eee;
 }

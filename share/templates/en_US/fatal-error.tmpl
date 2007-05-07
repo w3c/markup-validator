@@ -1,13 +1,16 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 
-    <div id="main">
       <TMPL_INCLUDE NAME="table.tmpl">
       
-	  <div id="result">
-	    <h3 id="results" class="invalid">Sorry! This document can not be checked.</h3>
+      <TMPL_IF NAME="have_warnings">
+        <TMPL_INCLUDE NAME="warnings.tmpl">
+      </TMPL_IF>
 
+	    <h3 id="results" class="invalid">Sorry! This document can not be checked.</h3>
+<ol id="fatal-errors">
       <a id="skip" name="skip"></a>
 <TMPL_IF NAME="fatal_transcode_error">
+  <li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
       <p>
         A fatal error occurred when attempting to transcode the character
         encoding of the document. Either we do not support this character
@@ -23,9 +26,11 @@
         look into supporting it in the future.
       </p>
   <TMPL_INCLUDE NAME="iana_charset_blurb.tmpl">
+  </li>
 </TMPL_IF>
 
 <TMPL_IF NAME="fatal_byte_error">
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
       <p>
         Sorry, I am unable to validate this document because on line
         <strong><TMPL_VAR NAME="fatal_byte_lines"></strong>
@@ -35,9 +40,11 @@
         Character Encoding). Please check both the content of the file and the
         character encoding indication.
       </p>
+      </li>
 </TMPL_IF>
 
 <TMPL_IF NAME="fatal_uri_error">
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
       <p>
         Sorry, this type of
         <a href="http://www.w3.org/Addressing/">URL</a>
@@ -58,8 +65,10 @@
         Remember that you can always save the page to disk and Validate it
         using the File Upload interface.
       </p>
+</li>
 </TMPL_IF>
 <TMPL_IF NAME="fatal_no_content">
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
       <p>
         Sorry, I could not find any content to validate. It is probable that you
         clicked on the "check" button without choosing a URL, a file or entering
@@ -69,11 +78,13 @@
         Read the <a href="docs/users.html">User's guide</a> for quick instructions
         on using this validator.
       </p>
+</li>
 </TMPL_IF>
 
 
 
 <TMPL_IF NAME="fatal_ip_error">
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
       <p>
         Sorry, the IP address <TMPL_IF NAME="fatal_ip_hostname">of</TMPL_IF>
         <TMPL_VAR NAME="fatal_ip_host"> is
@@ -81,10 +92,12 @@
         For security reasons, validating resources located at non-public IP
         addresses has been disabled in this service.
       </p>
+</li>
 </TMPL_IF>
 
 
 <TMPL_IF NAME="fatal_http_error">
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
   <p>
     I got the following unexpected response when trying to
     retrieve &lt;<a href="<TMPL_VAR NAME="fatal_http_uri" ESCAPE="HTML">"><TMPL_VAR NAME="fatal_http_uri" ESCAPE="HTML"></a>&gt;:
@@ -99,9 +112,11 @@
     domain records are correct</a>, or ask your hosting company to do so.
   </p>
   </TMPL_IF>
+</li>
 </TMPL_IF>
 
 <TMPL_IF NAME="fatal_mime_error">
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
       <p>
         Sorry, I am unable to validate this document because its content type
         is <code><TMPL_VAR NAME="fatal_mime_ct" ESCAPE="HTML"></code>, which is
@@ -125,9 +140,11 @@
         defining the content type) using the instructions on the
         <a href="feedback.html">Feedback Page</a>.
       </p>
+  </li>
 </TMPL_IF>
 
 <TMPL_IF NAME="fatal_parse_extid_error">
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
       <h2>Fatal Error: <TMPL_VAR NAME="fatal_parse_extid_msg" ESCAPE="HTML"></h2>
       <p>
         I could not parse this document, because it makes reference to a
@@ -135,9 +152,11 @@
         to specify the type of markup being used.
       </p>
       <TMPL_INCLUDE NAME="doctype_spiel.tmpl">
+      </li>
 </TMPL_IF>
 
 <TMPL_IF NAME="fatal_referer_error">
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
         <h2><strong>No Referer header found!</strong></h2>
         <p>
           You have requested we check the referring page, but your browser did
@@ -154,13 +173,8 @@
           <a href="detailed.html">Extended Interface</a>) to check the
           page by URL.
         </p>
+</li>
 </TMPL_IF>
-
-<TMPL_IF NAME="have_warnings">
-  <TMPL_INCLUDE NAME="warnings.tmpl">
-</TMPL_IF>
-
-</div><!-- results -->
-    </div><!-- end of "main" -->
+</ol>
 
 <TMPL_INCLUDE NAME="footer.tmpl">
