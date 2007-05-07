@@ -1,23 +1,19 @@
 <Files nocharset.html>
-RemoveCharset .html
+ForceType text/html
 # note - this only works in apache 2.0.24 and later
 </Files>
 <Files nocharset_notutf8.html>
-RemoveCharset .html
+ForceType text/html
 # note - this only works in apache 2.0.24 and later
 </Files>
 <Files ~ "textxml_nocharset(\.xml)?">
 ForceType text/xml
 </Files>
 <Files 4520-iso88591-meta.html>
-RemoveCharset .html
+ForceType text/html
 # use charset in meta
 </Files>
-<Files 4520-iso88591-no_meta.html>
-RemoveCharset .html
-#detect charset - use override
-</Files>
 <Files 1574-charset_iso_8859_7_greek.html>
-RemoveCharset .html
+ForceType text/html
 # use charset in meta
 </Files>
