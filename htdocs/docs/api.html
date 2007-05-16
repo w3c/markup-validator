@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: api.html,v 1.7 2006-11-15 08:02:46 ot Exp $"
---><!--#set var="date" value="\$Date: 2006-11-15 08:02:46 $"
+<!--#set var="revision" value="\$Id: api.html,v 1.8 2007-05-16 08:35:15 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-05-16 08:35:15 $"
 --><!--#set var="title" value="Documentation of the Programmatic Interface (API) to The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -8,7 +8,7 @@
 <h2>Markup Validator Web Service API<br />
 SOAP 1.2 validation interface documentation</h2>
 
-<p>Interface applications with the Markup Validator through its <strong>experimental</strong> API. </p>
+<p>Interface applications with the Markup Validator through its <strong>experimental</strong> API. This is version 0.2, dated May 2007. For a history of the format, see <a href="#changelog">Change Log</a>.</p>
 <p><strong>Note</strong>: Please be considerate in using this shared, free resource. 
 	Consider <a href="install.html">Installing your own instance of the validator</a>
 	for smooth and fast operation. Excessive use of the W3C Validation Service
@@ -25,6 +25,7 @@ SOAP 1.2 validation interface documentation</h2>
           <li><a href="#soap12_sample">sample SOAP 1.2 validation response</a></li>
           <li><a href="#soap12response">SOAP1.2 response format reference</a></li>
           <li><a href="#soap12message">SOAP1.2 atomic message (error or warning) format reference</a></li>
+          <li><a href="#changelog">Change Log</a></li>
          </ul>
         </li>
         <li><a href="#libs">Libraries</a></li>
@@ -119,6 +120,8 @@ is appreciated. thanks.</p>
 to its SOAP 1.2 interface (experimental for now). Below is a sample response, as well as
 a description of the most important elements of the response.</p>
 
+
+
 <h4 id="soap12_sample">sample SOAP 1.2 validation response</h4>
 <p>A SOAP response for the validation of a document (invalid) will look like this:</p>
 <pre style="font-size: smaller"> 
@@ -140,6 +143,17 @@ xmlns:m=&quot;http://www.w3.org/2005/10/markup-validator&quot;&gt;
             &lt;<a href="#soap12_error">m:error</a>&gt;
                 &lt;<a href="#soap12_line">m:line</a>&gt;13&lt;/m:line&gt;
                 &lt;<a href="#soap12_col">m:col</a>&gt;6&lt;/m:col&gt;                                           
+                &lt;<a href="#soap12_source">m:source</a>&gt;  
+                &lt;![CDATA[
+                  &amp;#60;foo&lt;strong title=&quot;Position where error was detected.&quot;&gt;&amp;#62;&lt;/strong&gt;This phrase is enclosed in a bogus FOO element.&amp;#60;/foo&amp;#62;
+                  ]]&gt;
+                &lt;/m:source&gt;                                           
+                &lt;<a href="#soap12_explanation">m:explanation</a>&gt;
+                  &lt;![CDATA[
+                    &lt;p&gt; ... &lt;/p&lt;p&gt;
+                  ]]&gt;
+                &lt;/m:explanation&gt;                                           
+                &lt;<a href="#soap12_messageid">m:messageid</a>&gt;76&lt;/m:messageid&gt;                                           
                 &lt;<a href="#soap12_message">m:message</a>&gt;element &quot;foo&quot; undefined&lt;/m:message&gt;
             &lt;/m:error&gt;
            
@@ -234,9 +248,30 @@ element, but also the <code>warning</code> element are <code>line</code>, <code>
 </tr>
 <tr>
   <th id="soap12_messageid">messageid</th>
-  <td>@@ not implemented yet@@ - should be the number of the error, as addressed internally by the validator</td>
+  <td>The number/identifier of the error, as addressed internally by the validator</td>
+</tr>
+<tr>
+  <th id="soap12_explanation">explanation</th>
+  <td>Explanation for the error. Given as HTML fragment within CDATA block.</td>
+</tr>
+<tr>
+  <th id="soap12_source">source</th>
+  <td>Snippet of the source where the error was found. Given as HTML fragment within CDATA block.</td>
 </tr>
 </table>
+
+<h4 id="changelog">Change Log</h4>
+<p>Up to version 0.2, all changes are backward-compatible.</p>
+<dl>
+  <dt>v 0.2 (May 2007)</dt>
+  <dd><ul>
+    <li><code>messageid</code> is now implemented</li>
+    <li>added <code>source</code> and <code>explanation</code> elements.</li>
+    </ul>
+  </dd>
+  <dt>v 0.1</dt>
+  <dd><p>Initial revision</p>
+</dl>
 
 <h3 id="libs">Libraries</h3>
 <p>Building of libraries used to interact with the validator's API is <a href="http://www.w3.org/QA/2006/10/validator_api.html">encouraged</a>. If you are the 

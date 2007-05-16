@@ -1,4 +1,4 @@
-Content-Type: application/soap+xml; charset=UTF-8
+Content-Type: application/xml; charset=UTF-8
 X-W3C-Validator-Recursion: <TMPL_VAR NAME="depth" DEFAULT="1"><TMPL_IF NAME="valid_status">
 X-W3C-Validator-Status: <TMPL_VAR NAME="valid_status"></TMPL_IF>
 X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num">
@@ -20,6 +20,16 @@ X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num">
                 <m:line><TMPL_VAR NAME="line"></m:line>
                 <m:col><TMPL_VAR NAME="char"></m:col>                                           
                 <m:message><TMPL_VAR NAME="msg" ESCAPE="HTML"></m:message>
+                <m:messageid><TMPL_VAR NAME="num" ESCAPE="HTML"></m:messageid>
+                <m:explanation>  <![CDATA[
+                  <TMPL_VAR NAME="expl">
+                  ]]>
+                </m:explanation>
+                <m:source>
+                  <![CDATA[
+                  <TMPL_VAR NAME="src">
+                  ]]>
+                </m:source>
             </m:error>
            </TMPL_IF></TMPL_LOOP>
         </m:errorlist>
@@ -33,6 +43,16 @@ X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num">
                 <m:line><TMPL_VAR NAME="line"></m:line>
                 <m:col><TMPL_VAR NAME="char"></m:col>                                           
                 <m:message><TMPL_VAR NAME="msg" ESCAPE="HTML"></m:message>
+                  <m:messageid><TMPL_VAR NAME="num" ESCAPE="HTML"></m:messageid>
+                  <m:explanation>  <![CDATA[
+                    <TMPL_VAR NAME="expl">
+                    ]]>
+                  </m:explanation>
+                  <m:source>
+                    <![CDATA[
+                    <TMPL_VAR NAME="src">
+                    ]]>
+                  </m:source>
             </m:warning>
           </TMPL_IF></TMPL_LOOP>
         </m:warninglist>
