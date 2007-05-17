@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.519 2007-05-17 02:38:13 ot Exp $
+# $Id: check,v 1.520 2007-05-17 04:30:00 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.519 $;
+  $VERSION =  q$Revision: 1.520 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -881,6 +881,11 @@ if ($File->{Opt}->{Output} eq 'xml') {
     $template = $File->{Templates}->{SOAPDisabled};
   } elsif ($File->{'Error Flagged'}) { # should send SOAP fault message
     $template = $File->{Templates}->{SOAPFault};
+    # we fill the soap fault template 
+    #with the variables that had been passed to the HTML fatal error template
+    foreach my $fault_param ($File->{Templates}->{Error}->param()) {
+      $template->param($fault_param => $File->{Templates}->{Error}->param($fault_param));
+    }
   } else {
     $template = $File->{Templates}->{SOAP};
   }
