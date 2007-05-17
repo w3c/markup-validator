@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.518 2007-05-07 19:17:58 ot Exp $
+# $Id: check,v 1.519 2007-05-17 02:38:13 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -180,7 +180,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.518 $;
+  $VERSION =  q$Revision: 1.519 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1616,10 +1616,13 @@ sub report_errors ($) {
       push @{$Errors}, $Errors_bytype{$err_num};
     }
   }
-  else {
-    # sort error by lines
-    @{$Errors} = sort {$a->{line} <=> $b->{line} } @{$Errors};
-  }
+  # we are not sorting errors by line, as it would break the position
+  # of auxiliary messages such as "start tag was here". We'll have to live with
+  # the fact that XML well-formedness errors are listed first, then validation errors
+  #else {
+  #   sort error by lines 
+  #  @{$Errors} = sort {$a->{line} <=> $b->{line} } @{$Errors};
+  #}
   return $number_of_errors, $number_of_warnings, $number_of_info, $Errors;
 }
 
