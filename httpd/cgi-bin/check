@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.521 2007-05-18 00:54:52 ot Exp $
+# $Id: check,v 1.522 2007-05-18 10:54:37 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -181,7 +181,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.521 $;
+  $VERSION =  q$Revision: 1.522 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -635,8 +635,6 @@ if (&is_xml($File)) {
     my $xmlwf_error_col = undef;
     my $xmlwf_error_msg = undef;
     my $num_xmlwf_error = 0;
-    my $last_err_msg = undef;
-    my $err;
     foreach my $msg_line (split "\n", $xmlwf_errors){
       $msg_line =~ s{[^\x0d\x0a](:\d+:)}{\n$1}g;
       $msg_line =~ s{[^\x0d\x0a]+[\x0d\x0a]$}{};
@@ -668,6 +666,7 @@ if (&is_xml($File)) {
       }
 
       if ((defined $xmlwf_error_line) and (defined $xmlwf_error_col) and (defined $xmlwf_error_msg)){
+        my $err;
         $err->{src}  = '...'; # do this with show_open_entities()?
         $err->{line} = $xmlwf_error_line;
         $err->{char} = $xmlwf_error_col;
@@ -676,9 +675,7 @@ if (&is_xml($File)) {
         $err->{msg}  = $xmlwf_error_msg;
 
         # ...
-        $last_err_msg = $err;
         push (@xmlwf_error_list, $err);
-        $err = undef;
         $xmlwf_error_line = undef;
         $xmlwf_error_col = undef;
         $xmlwf_error_msg = undef;
