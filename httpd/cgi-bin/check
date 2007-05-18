@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.520 2007-05-17 04:30:00 ot Exp $
+# $Id: check,v 1.521 2007-05-18 00:54:52 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -32,6 +32,7 @@ use 5.008;
 # Pragmas.
 use strict;
 use warnings;
+use utf8;
 
 #
 # Modules.  See also the BEGIN block further down below.
@@ -180,7 +181,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.520 $;
+  $VERSION =  q$Revision: 1.521 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -846,7 +847,7 @@ if (! $File->{'Is Valid'}) {
     require HTML::Tidy;
     my $tidy = HTML::Tidy->new({config_file => $CFG->{Paths}->{TidyConf}});
 
-    $File->{'Tidy'} = $tidy->clean(join"\n",@{$File->{Content}});
+    $File->{'Tidy'} = Encode::decode('utf-8', $tidy->clean(join"\n",@{$File->{Content}}));
     $File->{'Tidy_OK'} = TRUE;
   };
   if ($@) {
@@ -908,7 +909,8 @@ $template->param(file_source => &source($File))
 #  if $template->param('opt_show_raw_errors');
 #  $T->param(file_outline   => &outline($File)) if $T->param('opt_show_outline');
 
-print $template->output;
+# transcode output from perl's internal to utf-8 and output
+print Encode::encode('UTF-8', $template->output);
 
 #
 # Get rid of $File object and exit.
@@ -2045,7 +2047,7 @@ sub transcode {
 
   # Try to transcode
   eval {
-    $output = Encode::encode("utf8", Encode::decode($cs, $input, Encode::FB_CROAK));
+    $output = Encode::decode($cs, $input, Encode::FB_CROAK);
   };
 
   # Transcoding failed
@@ -2071,6 +2073,8 @@ sub transcode {
   # tentative fix for http://www.w3.org/Bugs/Public/show_bug.cgi?id=3992
   $output =~ s/(\r\n|\n|\r)/\n/g;
 
+  #debug: we could check if the content has utf8 bit on with 
+  #$output= utf8::is_utf8($output) ? 1 : 0;
   $File->{Content} = [split/\n/, $output];
 
   return $File;
@@ -2123,7 +2127,8 @@ sub abort_if_error_flagged {
 
   if ($File->{Opt}->{Output} eq 'html') {
     &prep_template($File, $File->{Templates}->{Error});
-    print $File->{Templates}->{Error}->output;
+    # transcode output from perl's internal to utf-8 and output
+    print Encode::encode('UTF-8',$File->{Templates}->{Error}->output);
     exit;
   } else {
 
