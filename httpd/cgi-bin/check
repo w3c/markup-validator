@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.522 2007-05-18 10:54:37 ville Exp $
+# $Id: check,v 1.523 2007-05-20 23:17:28 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -181,7 +181,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.522 $;
+  $VERSION =  q$Revision: 1.523 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2049,17 +2049,20 @@ sub transcode {
 
   # Transcoding failed
   if ($@) {
-    $File->{'Error Flagged'} = TRUE;
-
-    # @@FIXME might need better text, in particular, this does not tell
-    # where the error occured; it might be possible to emulate that
-    # using a Encode CHECK parameter that modifies the input, then split
-    # the decodable string to give line / column information, or don't
-    # split and report the offset calculated from the result.
-    $File->{Templates}->{Error}->param(fatal_byte_error   => TRUE);
-    $File->{Templates}->{Error}->param(fatal_byte_lines   => 0);
-    $File->{Templates}->{Error}->param(fatal_byte_charset => $cs);
-
+    my $line_num = 0;
+    foreach my $input_line (split /\r\n|\n|\r/, $input){
+      $line_num++;
+      eval { Encode::decode($cs, $input_line, Encode::FB_CROAK); };
+      if ($@) {
+        $File->{'Error Flagged'} = TRUE;
+        $File->{Templates}->{Error}->param(fatal_byte_error   => TRUE);
+        $File->{Templates}->{Error}->param(fatal_byte_lines   => $line_num);
+        $File->{Templates}->{Error}->param(fatal_byte_charset => $cs);
+        my $croak_message = $@;
+        $croak_message =~ s/ at .*//;
+        $File->{Templates}->{Error}->param(fatal_byte_error_msg => $croak_message);
+      }
+    }
     return $File;
   }
 
