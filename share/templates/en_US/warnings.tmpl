@@ -237,6 +237,24 @@
 
   </li>
 </TMPL_IF>
+<TMPL_IF NAME="W09xml">
+  <li class="msg_warn" id="W09xml"><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">No <code>DOCTYPE</code> found! Checking XML syntax only.</span>
+  
+    <p>
+      The DOCTYPE Declaration was not recognized or is missing. This
+      probably means that the Formal Public Identifier contains a spelling
+      error, or that the Declaration is not using correct syntax, or that 
+      your XML document is not using a DOCTYPE Declaration.
+    </p>
+    <p>
+      Validation of the document has been skipped, and a simple check of the well-formedness
+      of the XML syntax has been performed instead.
+    </p>
+    <p>Learn <a href="docs/help.html#faq-doctype">how to add a doctype to your document</a> 
+    from our <acronym title="Frequently Asked Questions">FAQ</acronym>, or use the validator's
+    option to validate your XML document against a specific Document Type</p>
+  </li>
+</TMPL_IF>
 <TMPL_IF NAME="W10">
   <li class="msg_warn" id="W10"><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Unknown Namespace Found</span>
   

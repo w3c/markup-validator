@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.523 2007-05-20 23:17:28 ot Exp $
+# $Id: check,v 1.524 2007-05-22 06:45:16 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -181,7 +181,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.523 $;
+  $VERSION =  q$Revision: 1.524 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2383,6 +2383,7 @@ sub W3C::Validator::SAXHandler::error
     # since parsing was done without validation, result can only be "well-formed"
     if ($File->{Mode} eq 'XML' and lc($File->{Root}) ne 'html') {
       $File->{XMLWF_ONLY} = TRUE;
+      add_warning('W09xml', {});
     }
     return;
   }

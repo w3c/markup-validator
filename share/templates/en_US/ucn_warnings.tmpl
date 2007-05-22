@@ -33,6 +33,9 @@
 <TMPL_IF NAME="W09">
   <warning><message>No DOCTYPE found! Attempting validation with <TMPL_VAR NAME="W09_dtd" ESCAPE="HTML">.</message></warning>
 </TMPL_IF>
+<TMPL_IF NAME="W09xml">
+  <warning><message>No DOCTYPE found! Checking XML syntax only.</message></warning>
+</TMPL_IF>
 <TMPL_IF NAME="W10">
   <warning><message>Unknown Namespace Found</message></warning>
 </TMPL_IF>

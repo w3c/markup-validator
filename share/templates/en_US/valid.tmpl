@@ -36,11 +36,17 @@
 <TMPL_ELSE>
     was checked and found to be 
     <TMPL_IF NAME="xmlwf_only">well-formed<TMPL_ELSE>valid</TMPL_IF>
-    <TMPL_VAR NAME="file_version" ESCAPE="HTML">.  This means that the
-    resource in question identified itself as
+    <TMPL_VAR NAME="file_version" ESCAPE="HTML">.  
+    <TMPL_IF NAME="xmlwf_only">This means that we were not able to determine 
+    the exact document type, but that the document passed the XML well-formedness
+    syntax check. If you wish to wish to perform formal validation of the document,
+    you can use the "Document Type:" option of the validator.
+    <TMPL_ELSE>
+    This means that the resource in question identified itself as
     "<TMPL_VAR NAME="file_version" ESCAPE="HTML">" and that we successfully
     performed a formal validation using an SGML or XML Parser (depending on
     the markup language used).
+    </TMPL_IF>
 </TMPL_IF>
   </p>
 <TMPL_IF NAME="have_badge">
