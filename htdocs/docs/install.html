@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.21 2007-04-24 19:59:13 ville Exp $"
---><!--#set var="date" value="\$Date: 2007-04-24 19:59:13 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.22 2007-05-24 03:38:24 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-05-24 03:38:24 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -94,7 +94,7 @@
             title="Comprehensive Perl Archive Network">CPAN</acronym></a>
         (minimum versions in parenthesis after the name). The following
         list was complete when CVS spit out:
-        <code>$Date: 2007-04-24 19:59:13 $</code>. <tt>:-)</tt>
+        <code>$Date: 2007-05-24 03:38:24 $</code>. <tt>:-)</tt>
       </p>
      <p>
        One easy - and strongly recommended - way to take care of all these
@@ -104,7 +104,7 @@
        for more details.
      </p>
      
-     <p>The only current exception is SGML::Parser::OpenSP, for which at this point in time the development version
+     <p id="spo_cvs">The only current exception is SGML::Parser::OpenSP, for which at this point in time the development version
      of the validator requires a not-yet-released version, which can be downloaded and installed 
      from <a href="http://sourceforge.net/projects/spo">SourceForge</a>. First make sure to have 
      <a href="#install-prereq-sp">OpenSP</a> installed, then get 
@@ -126,14 +126,6 @@
 	 above.</p>
 	 
       <dl>
-        <dt><a href="http://search.cpan.org/dist/SGML-Parser-OpenSP/">SGML-Parser-OpenSP</a></dt>
-        <dd>
-          Interface to the <a href="#install-prereq-sp">OpenSP parser</a>.
-        </dd>
-        <dt><a href="http://search.cpan.org/dist/XML-LibXML/">XML-LibXML</a></dt>
-        <dd>
-          The perl binding for libxml2, used to check the syntax of XML-based document types.
-        </dd>
         <dt><a href="http://search.cpan.org/dist/CGI.pm/">CGI.pm</a> &gt;= 2.81</dt>
         <dd>
           The all-singing, all-dancing,
@@ -174,11 +166,18 @@
         <dd>
           IP address manipulation.
         </dd>
+        <dt><a href="http://search.cpan.org/dist/SGML-Parser-OpenSP/">SGML-Parser-OpenSP</a></dt>
+        <dd>
+          Interface to the <a href="#install-prereq-sp">OpenSP parser</a>. The Validator currently requires a specific version of this module, see <a href="#spo_cvs">details on getting S::P::O from CVS</a> above.
+        </dd>
         <dt><a href="http://search.cpan.org/dist/URI/">URI</a></dt>
         <dd>
           Library to handle URIs and escaping special characters in them.
         </dd>
-
+        <dt><a href="http://search.cpan.org/dist/XML-LibXML/">XML-LibXML</a></dt>
+        <dd>
+          The perl binding for libxml2, used to check the syntax of XML-based document types.
+        </dd>
       </dl>
 
      <h5>List of optional Perl module distributions</h5>
@@ -367,7 +366,7 @@
 
    <h4>The miracle debug options</h4>
    <p>If the validator is misbehaving, you can try forcing various debug options by appending to
-   the URL the following string: <kbd>&amp;debug=1&amp;errors=1&amp;esis=1&amp;verbose=1</kbd></p>
+   the URL the following string: <kbd>&amp;debug=1</kbd></p>
 
    <p>This can sometimes provide you with error messages that would not have appeared anywhere in
    non-debug mode, and can be helpful to diagnose the problem</p>
