@@ -1,7 +1,7 @@
 #!/usr/bin/perl -T
 ##
 ## feedback generator for W3C Markup Validation Service
-# # $Id: sendfeedback.pl,v 1.7 2007-03-12 20:29:56 ville Exp $
+# # $Id: sendfeedback.pl,v 1.8 2007-05-25 21:34:29 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -43,10 +43,8 @@ BEGIN {
        -AutoLaunder      => TRUE,
        -AutoTrue         => TRUE,
        -DefaultConfig    => {
-          Protocols => {Allow => 'http,https'},
           Paths => {
             Base => ($ENV{W3C_VALIDATOR_HOME} || '/usr/local/validator'),
-            SGML => {Parser => '/usr/bin/onsgmls'},
           },
        },
       );
