@@ -66,7 +66,7 @@ var W3C = {
 		
 		W3C.Tabs.each(function(li, i){
 			var link = li.getFirst();
-			link.href = link.original = link.href.replace(/-/g, '_');
+			link.href = link.original = '#' + link.href.split('#')[1].replace(/-/g, '_');
 			li.addEvent('click', function(){
 				W3C.updateLocation();
 				W3C.displaySection(i);
