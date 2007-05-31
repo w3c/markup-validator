@@ -6,13 +6,12 @@
           <title><!--#echo var="title" --></title>
     <link rev="made" href="mailto:www-validator@w3.org" />
     <link rev="start" href="<!--#echo var="relroot" -->" title="Home Page" />
-    <style type="text/css" media="all">@import "<!--#echo var="relroot" -->style/base.css";
-</style>
-    <script type="text/javascript" src="<!--#echo var="relroot" -->scripts/tabtastic/addclasskillclass.js"></script>
-    <script type="text/javascript" src="<!--#echo var="relroot" -->scripts/tabtastic/attachevent.js"></script>
-    <script type="text/javascript" src="<!--#echo var="relroot" -->scripts/tabtastic/addcss.js"></script>
-    <script type="text/javascript" src="<!--#echo var="relroot" -->scripts/tabtastic/tabtastic.js"></script>
-    <meta name="revision" content="$Id: header.html,v 1.48 2007-04-19 19:41:42 ville Exp $" />
+    <style type="text/css" media="all">
+      @import "<!--#echo var="relroot" -->style/base.css";
+    </style>
+    <script type="text/javascript" src="scripts/mootools.js"></script>
+    <script type="text/javascript" src="scripts/w3c-validator.js"></script>
+    <meta name="revision" content="$Id: header.html,v 1.49 2007-05-31 02:32:14 ot Exp $" />
     <meta name="keywords" content="HTML, HyperText Markup Language, Validation,
       W3C Markup Validation Service" />
     <meta name="description" content="W3C's easy-to-use
@@ -21,14 +20,17 @@
     <!--#if expr="$feeds = 1" -->
     <link rel="alternate" type="application/atom+xml" href="<!--#echo var="relroot" -->whatsnew.atom" />
     <!--#endif -->
-    <!-- SSI Template Version: $Id: header.html,v 1.48 2007-04-19 19:41:42 ville Exp $ -->
+    <!-- SSI Template Version: $Id: header.html,v 1.49 2007-05-31 02:32:14 ot Exp $ -->
 
   </head>
 
   <body>
    <div id="banner">
-    <h1 id="title"><a href="http://www.w3.org/"><img height="48" alt="W3C" id="logo" src="http://www.w3.org/Icons/WWW/w3c_home_nb" /></a>
-    <a href="<!--#echo var="relroot" -->"><img src="<!--#echo var="relroot" -->images/markup_validation_service.png" alt="Markup Validation Service" /></a></h1>
+    <h1 id="title">
+      <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="<!--#echo var="relroot" -->images/w3c.png" /></a>
+			<a href="<!--#echo var="relroot" -->"><span>Markup Validation Service</span></a>
+      </h1>
+      <p id="tagline">Check the markup (HTML, XHTML) of Web documents</p>
    </div>
 
 

@@ -1,9 +1,51 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.16 2007-05-07 16:14:15 ot Exp $ */
+/* $Id: results.css,v 1.17 2007-05-31 02:32:14 ot Exp $ */
+
+div#results_container {
+  margin: 2em;
+}
+div#results_container ul li {
+  list-style-type: disc;
+  margin-left: 1em;
+}
+div#results_container ul {
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+}
+
+
+div#results_container ul.navbar {
+  border-top: 1px solid #DCDDE0;
+  border-bottom: 1px solid #DCDDE0;
+	text-align: center;
+	margin: 0 0 2em 0;
+	padding: .5em;
+}
+div#results_container ul.navbar span {
+	display: none;
+}
+
+div#results_container ul.navbar a:link, div#results_container ul.navbar a:visited {
+	color: #365D95;
+	text-decoration: none;
+	margin-right: 1em;
+	margin-left: 1em;
+}
+
+div#results_container ul.navbar a:hover, div#results_container ul.navbar a:active {
+	color: #1f2126;
+	text-decoration: underline;
+	margin-right: 1em;
+	margin-left: 1em;
+}
+
+div#results_container ul.navbar li {
+	display: inline;
+}
 
 .input {
   color: black;
-  background-color: #eee;
+  background-color: #EAEBEE;
   font-family: "Bitstream Vera Sans Mono", monospace;
   font-size: small;
 }
@@ -37,7 +79,46 @@ div#revalidate_button {
 table.header {
   clear: both;
   width: 100%;
+  margin-top: 0;
+  padding-top: 0;
 }
+
+div#results_container table {
+	border-collapse: collapse;
+	border-right: 1px solid #ccc;
+}
+div#results_container table td, div#results_container table th{
+	border-top: 0px solid #ddd;
+	border-bottom: 1px solid #ccc;
+	border-left: 1px solid #EAEBEE;
+	padding: 6px;
+	border-collapse: collapse;
+}
+div#results_container table th {
+	background-color: #EAEBEE;
+	color: #11111A;
+	border-right: 1px solid #ccc;
+}
+
+div#results_container table {
+  margin-bottom: .5em;
+ 	border-collapse: collapse;
+	border-right: 1px solid #ccc; 
+}
+
+div#results_container td, div#results_container th {
+	border-top: 0px solid #ddd;
+	border-bottom: 1px solid #ccc;
+	border-left: 1px solid #EAEBEE;
+	border-collapse: collapse;
+  
+}
+div#results_container th {
+	background-color: #EAEBEE;
+	color: #11111A;
+	border-right: 1px solid #ccc;
+}
+
 
 fieldset#revalidate_opts table.header {
         margin-top: .5em;
@@ -60,7 +141,7 @@ ol#warnings, ol#error_loop, ol#fatal-errors {
 }
 
 ol li.msg_info, ol li.msg_warn, ol li.msg_err {
-  border: 1px solid #eee;
+  border: 1px solid #EAEBEE;
   border-top: 0;
   list-style-position: inside;
   padding: 1em;
@@ -75,7 +156,7 @@ ol li.msg_info:hover, ol li.msg_warn:hover, ol li.msg_err:hover {
 
 ol#warnings, ol#error_loop, ol#fatal-errors  {
         padding:0;
-        border-top: 1px solid #eee;
+        border-top: 1px solid #EAEBEE;
 }
 
 ol#warnings li ul li, ol#error_loop ul li, ol#error_loop p, ol#warnings p {
@@ -87,7 +168,8 @@ ol#warnings li ul li, ol#error_loop ul li, ol#error_loop p, ol#warnings p {
 li span.err_type img {
     width: 1.2em;
     height: 1.2em;
-    padding-bottom: .1em;
+    padding-bottom: .2em;
+    vertical-align: middle;
 }
 
 /*
@@ -180,9 +262,11 @@ code.input strong {
 
   font-family: "Bitstream Vera Sans Mono", monospace;
   font-size: smaller;
-  background: #eee;
+  background: #EAEBEE;
   border: 1px solid black;
-  margin: 1em;
+  margin-top: 1em;
+  list-style-position: inside;
+  list-style-type: decimal-leading-zero;
 }
 #source ol li {
   margin: 1em;
@@ -197,7 +281,7 @@ code.input strong {
 pre.source {
   font-family: "Bitstream Vera Sans Mono", monospace;      
   border: 1px solid black;
-  background: #eee;
+  background: #EAEBEE;
   margin: 1em;
   padding: 1em;
   overflow: scroll;
@@ -284,12 +368,12 @@ h3#congrats {
     color: #690 !important;
 }
 
-.valid {
+.valid, .valid strong {
   background-color:	#55B05A;
   color:		white;
 }
 
-.tentative_valid {
+.tentative_valid, .tentative_valid strong {
 /* we could use a different color than for "valid" */
 /*  background-color:	#888; */
 /* ... or simply use the same */
@@ -297,7 +381,7 @@ h3#congrats {
   color:		white;
 }
 
-.invalid {
+.invalid, .invalid strong {
   background-color:	#D23D24 !important;
   color:		white !important;
 }
@@ -331,7 +415,7 @@ p.backtop {
         color: #bbc;
         font-size: x-small;
         padding-right: 0 !important;
-        margin: 1em !important;
+        margin: 1em 0 !important;
         text-transform: uppercase;
         font-weight: bold;
         padding-top: .3em;
