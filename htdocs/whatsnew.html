@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.61 2007-04-19 20:03:23 ville Exp $"
---><!--#set var="date" value="\$Date: 2007-04-19 20:03:23 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.62 2007-05-31 06:28:21 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-05-31 06:28:21 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -18,6 +18,28 @@
       </p>
     </div>
     <dl id="news">
+      <dt id="t2007-06-01">2007-06-01 &mdash; 0.8.0 Beta 2:</dt>
+      <dd>
+        <p>
+          Testing the second beta revision of the validator version 0.8.0. This new version
+          builds upon the <a href="#t2007-04-19">0.8.0 Beta 1</a>, and adds bug fixes, documentation
+          updates and a polished UI with improved style and interaction. Changes include:
+        </p>
+          <ul>
+            <li>Revised main UI. Cleaner design. Improved tabbing between validation methods. Adding toggled option visibility</li>
+            <li>Bug Fix: Fixing transcoding issues, encoding of source display</li>
+            <li>Bug Fix: For XML document types, not reporting xmlns:* attributes as an error</li>
+            <li>New Feature: Adding error message id to the SOAP API, error context (source snippet), added error message explanation</li>
+            <li>Bug Fix: Fixed fatal error display in SOAP API</li>
+            <li>Bug Fix: Fixed line number display in case of broken encoding</li>
+            <li>Usability: more usable fatal error displays, removed "reset form" button, rewordings, error message explanations...</li>
+            <li>Bug Fix: Fixed outline for non-xml document types</li>
+            <li>New FEature: Added support for XHTML + RDFa</li>
+            <li>New Feature: For non-xhtml XML documents without document type, 
+              the validator will not try to perform validation and will only check well-formedness</li>
+            <li>code cleanup, other bug fixes</li>
+          </ul>
+      </dd>
         <dt id="t2007-04-19">2007-04-19 &mdash; 0.8.0 Beta 1:</dt>
         <dd>
           <p>Testing version 0.8.0 Beta #1 of the Markup Validator; a new version including
