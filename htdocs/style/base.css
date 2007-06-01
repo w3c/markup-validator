@@ -112,7 +112,7 @@ h5,h6 {
 
 /* @group Inputs */
 
-input#uri, input#file, input#uploaded_file, textarea {
+input#uri, input#file, input#uploaded_file, input#keywords, input#short_desc, textarea {
 	font-family: Monaco, "Courier New", Monospace;
 	font-size: 0.9em;
 	border: 1px solid #bbb;
@@ -133,6 +133,15 @@ input#file, input#uploaded_file {
 	width: 30em;
 }
 
+input#mailsearch, input#bugsearch {
+    background-color: #EAEBEE;
+    color: #365D95;
+    padding: .3em 1em;
+    border: 1px outset #ccc;
+  }
+  input#mailsearch:active, input#bugsearch:active {
+    border-style: inset !important;
+  }
 a.submit {
 	display: block;
 	width: 10em;

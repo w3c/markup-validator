@@ -81,11 +81,11 @@
         <input id="type-index" name="type-index" type="hidden" value="www-validator" />
         <input id="index-type" name="index-type" type="hidden" value="t" />
   <TMPL_IF NAME="errmsg_id">
-        <input name="keywords" type="text" size="33" maxlength="100" value="[VE][<TMPL_VAR NAME="errmsg_id" ESCAPE="URL">]" />
+        <input id="keywords" name="keywords" type="text" size="33" maxlength="100" value="[VE][<TMPL_VAR NAME="errmsg_id" ESCAPE="URL">]" />
   <TMPL_ELSE>
-        <input name="keywords" type="text" size="33" maxlength="100" value="" />
+        <input id="keywords" name="keywords" type="text" size="33" maxlength="100" value="" />
   </TMPL_IF>
-        <input type="submit" name="search" value="Search Mail Archives" />
+        <input type="submit" id="mailsearch" name="search" value="Search Mail Archives" />
       </p>
       </form>
 
@@ -157,8 +157,8 @@
       <p>You may also search the bug database directly:<br />
       <input name="short_desc_type" type="hidden" value="allwordssubstr" />
       <input name="product" type="hidden" value="Validator" />
-      <input name="short_desc" type="text" size="40" maxlength="100" value="" />
-      <input type="submit" name="search" value="Search Bug database" />
+      <input name="short_desc" id="short_desc" type="text" size="40" maxlength="100" value="" />
+      <input type="submit" name="search" id="bugsearch" value="Search Bug database" />
       </p>      
 </form>
 
