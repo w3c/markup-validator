@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.17 2007-05-31 02:32:14 ot Exp $ */
+/* $Id: results.css,v 1.18 2007-06-01 02:39:34 ot Exp $ */
 
 div#results_container {
   margin: 2em;
@@ -127,7 +127,15 @@ fieldset#revalidate_opts table.header {
 fieldset#revalidate_opts table.header, fieldset#revalidate_opts table.header td, fieldset#revalidate_opts table.header tr {
         border: 0;
 }
-
+fieldset#revalidate_opts div#revalidate_button input {
+  background-color: #EAEBEE;
+  color: #365D95;
+  padding: .3em 1em;
+  border: 1px outset #ccc;
+}
+fieldset#revalidate_opts div#revalidate_button input:active {
+  border-style: inset !important;
+}
 
 /* Error Messages Display */
 /*
@@ -266,7 +274,7 @@ code.input strong {
   border: 1px solid black;
   margin-top: 1em;
   list-style-position: inside;
-  list-style-type: decimal-leading-zero;
+  list-style-type: decimal;
 }
 #source ol li {
   margin: 1em;
