@@ -209,12 +209,15 @@ fieldset.moreoptions div table tr.subchoice th {
 
 h1#title {
 	font-family: "Myriad Web", "Myriad Pro", "Gill Sans", Helvetica, Arial, Sans-Serif;
+	background-color: #365D95;
 	color: #fdfdfd;
 	font-size: 1.6em;
 	background: url(../images/head-bl.png) bottom left no-repeat;
 	padding-bottom: 0.430em;
 }
-
+h1#title a, h1#title a img {
+background-color: #365D95;
+}
 
 h1 span {
 	border-bottom: 1px solid #6383b1;
@@ -243,6 +246,7 @@ p#tagline {
 	letter-spacing: 0.1em;
 	line-height: 100% !important;
 	color: #D0DCEE;
+	background-color: #365D95;
 }
 
 ul#lang_choice {
@@ -338,6 +342,10 @@ div#fields {
 	background: #EAEBEE url(../images/round-tr.png) no-repeat top right;
 	padding: 0.5em 1.3em;
 	border-bottom: 1px solid #DCDDE0;
+}
+
+div#fields legend, div#fields p, div#fields fieldset, div#fields form,div#fields form fieldset legend a, div#fields form p label, div#fields tr label   {
+  background-color: #EAEBEE;
 }
 
 fieldset {

@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.18 2007-06-01 02:39:34 ot Exp $ */
+/* $Id: results.css,v 1.19 2007-06-06 19:26:42 ot Exp $ */
 
 div#results_container {
   margin: 2em;
@@ -98,6 +98,15 @@ div#results_container table th {
 	background-color: #EAEBEE;
 	color: #11111A;
 	border-right: 1px solid #ccc;
+	font-weight: bold;
+	font-size: 1em;
+}
+
+div#results_container table th label {
+	background-color: #EAEBEE;
+	color: #11111A;
+	font-weight: bold;
+	font-size: 1em;
 }
 
 div#results_container table {
@@ -267,7 +276,6 @@ code.input strong {
 /*
 */
 #source ol {
-
   font-family: "Bitstream Vera Sans Mono", monospace;
   font-size: smaller;
   background: #EAEBEE;
@@ -277,7 +285,9 @@ code.input strong {
   list-style-type: decimal;
 }
 #source ol li {
-  margin: 1em;
+  margin: .5em 1em;
+  background-color: #EAEBEE;
+  line-height: 150%;  
 }
 
 #source ol li a {
