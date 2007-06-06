@@ -10,7 +10,7 @@ br, input, button, textarea, h1, h2, h3, h4, h5, strong {
 	font-size: 100%;
 	font-family: Helvetica, Arial, Sans-Serif;
 	vertical-align: baseline;
-	background-color: transparent;
+	background-color: white;
 	color: #1f2126;
 	line-height: 1;
 	text-align: left;
