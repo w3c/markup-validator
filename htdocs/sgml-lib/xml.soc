@@ -117,11 +117,11 @@ PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Integration//EN"
 
 
 -- SMIL 2.1 Document model files for the predefined profiles -- 
-PUBLIC "-//W3C//EN"TITIES SMIL 2.1 Language Profile Document Model 1.0//EN"
+PUBLIC "-//W3C//ENTITIES SMIL 2.1 Language Profile Document Model 1.0//EN"
        "REC-SMIL2-20051213/smil-language-profile-model-1.mod"
-PUBLIC "-//W3C//EN"TITIES SMIL 2.1 Extended Mobile Profile Document Model 1.0//EN"
+PUBLIC "-//W3C//ENTITIES SMIL 2.1 Extended Mobile Profile Document Model 1.0//EN"
        "REC-SMIL2-20051213/smil-extended-mobile-profile-model-1.mod"
-PUBLIC "-//W3C//EN"TITIES SMIL 2.1 Mobile Profile Document Model 1.0//EN"
+PUBLIC "-//W3C//ENTITIES SMIL 2.1 Mobile Profile Document Model 1.0//EN"
        "REC-SMIL2-20051213/smil-mobile-profile-model-1.mod"
 
 -- SMIL 2.1 module files --
@@ -145,13 +145,13 @@ PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Transition//EN"
        "REC-SMIL2-20051213/SMIL-transition.mod"
 
 -- SMIL 2.1 Other utilities: data types, common attributes, qname and frame work files --
-PUBLIC "-//W3C//EN"TITIES SMIL 2.1 Datatypes 1.0//EN"
+PUBLIC "-//W3C//ENTITIES SMIL 2.1 Datatypes 1.0//EN"
        "REC-SMIL2-20051213/smil-datatypes-1.mod"
-PUBLIC "-//W3C//EN"TITIES SMIL 2.1 Common Attributes 1.0//EN"
+PUBLIC "-//W3C//ENTITIES SMIL 2.1 Common Attributes 1.0//EN"
        "REC-SMIL2-20051213/smil-attribs-1.mod"
-PUBLIC "-//W3C//EN"TITIES SMIL 2.1 Qualified Names 1.0//EN"
+PUBLIC "-//W3C//ENTITIES SMIL 2.1 Qualified Names 1.0//EN"
        "REC-SMIL2-20051213/smil-qname-1.mod"
-PUBLIC "-//W3C//EN"TITIES SMIL 2.1 Modular Framework 1.0//EN"
+PUBLIC "-//W3C//ENTITIES SMIL 2.1 Modular Framework 1.0//EN"
        "REC-SMIL2-20051213/smil-framework-1.mod"
 
 
