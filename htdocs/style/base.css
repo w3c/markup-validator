@@ -246,7 +246,7 @@ p#tagline {
 	letter-spacing: 0.1em;
 	line-height: 100% !important;
 	color: #D0DCEE;
-	background-color: #365D95;
+	background-color: transparent;
 }
 
 ul#lang_choice {
