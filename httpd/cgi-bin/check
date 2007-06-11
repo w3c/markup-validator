@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.524 2007-05-22 06:45:16 ot Exp $
+# $Id: check,v 1.525 2007-06-11 18:33:57 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -181,7 +181,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.524 $;
+  $VERSION =  q$Revision: 1.525 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1554,6 +1554,7 @@ sub report_errors ($) {
           my $escaped_uri = uri_escape($File->{URI});
           $_msg =~ s/<!--URI-->/$escaped_uri/g;
         }
+        $_msg =~ s/<!--CFG_HOME_PAGE-->/$CFG->{'Home Page'}/g;
         $explanation = "    $_msg\n$explanation"; # The send feedback plea.
       }
 
