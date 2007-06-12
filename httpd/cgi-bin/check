@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.525 2007-06-11 18:33:57 ot Exp $
+# $Id: check,v 1.526 2007-06-12 11:58:58 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -181,7 +181,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.525 $;
+  $VERSION =  q$Revision: 1.526 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -623,6 +623,8 @@ if (&is_xml($File)) {
   require XML::LibXML;
   my $xmlparser = XML::LibXML->new();
   $xmlparser->line_numbers(1);
+  # loading the XML catalog for entities resolution
+  $xmlparser->load_catalog( File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc') );
   eval {
     $xmlparser->parse_string(join"\n",@{$File->{Content}});
   };
