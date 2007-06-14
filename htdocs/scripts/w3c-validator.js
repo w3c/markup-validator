@@ -13,7 +13,6 @@ var W3C = {
 		W3C.TabLinks = W3C.TabSet.getElements('a');
 		
 		W3C.Sections = $$('fieldset.tabset_content');
-		
 		W3C.Submits = $$('input[type=submit]');
 		W3C.Forms = $$('form');
 		

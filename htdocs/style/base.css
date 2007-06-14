@@ -163,12 +163,11 @@ textarea {
 
 p.submit_button input {
 	overflow: visible;
-	width: auto;
 	background: #fff;
-	color: #1f2126;
-	padding: 0.2em 0.4em 0 0.3em;
+	color: #365D95;
+	padding: 0.3em 0.4em 0.1em 0.3em;
 	font-size: 1.2em;
-	width: 20em;
+	width: 12em;
 	text-align: center;
 	border-bottom: 2px solid #444;
 	border-right: 2px solid #444;
@@ -179,6 +178,7 @@ p.submit_button input {
 }
 
 p.submit_button input:active {
+  color: #1f2126;
 	border-bottom: 1px solid #aaa;
 	border-right: 1px solid #aaa;
 	border-top: 2px solid #444;
