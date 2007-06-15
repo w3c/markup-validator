@@ -353,11 +353,11 @@ ul#tabset_tabs li a:link, ul#tabset_tabs li a:visited {
 }
 
 ul#tabset_tabs li a:hover, ul#tabset_tabs li a:active {
-	color: #6887b5;
+	color: #1f2126;
 }
 
 ul#tabset_tabs li a:hover span, ul#tabset_tabs li a:active span {
-	color: #808c9d;
+	color: #3d424f;
 }
 
 ul#tabset_tabs li.selected span {
