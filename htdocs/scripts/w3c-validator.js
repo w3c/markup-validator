@@ -125,7 +125,7 @@ var W3C = {
 			if (j == i){
 				if (block) return;
 				W3C.Sections[j].setStyles({'opacity': sudden ? 1 : 0, 'display': 'block'});
-				if (!sudden) W3C.SectionFx[j].start(0.999999);
+				if (!sudden) W3C.SectionFx[j].start(1);
 				if (W3C.WithOptions) W3C.OptionsFx[j].show().fireEvent('onComplete');
 				else W3C.OptionsFx[j].hide();
 			} else {

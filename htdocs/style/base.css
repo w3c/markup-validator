@@ -108,6 +108,8 @@ h5,h6 {
     td, th{
     	padding: 6px;
     }
+    
+/* @end */
 
 
 /* @group Inputs */
@@ -163,9 +165,10 @@ textarea {
 
 p.submit_button input {
 	overflow: visible;
+	width: auto;
 	background: #fff;
-	color: #365D95;
-	padding: 0.3em 0.4em 0.1em 0.3em;
+  color: #365D95;
+  padding: 0.3em 0.4em 0.1em 0.3em;
 	font-size: 1.2em;
 	width: 12em;
 	text-align: center;
@@ -199,10 +202,43 @@ div.options label {
 	margin-right: 0.3em;
 }
 
-fieldset.moreoptions div table tr.subchoice th {
-    padding-left: 3em;
+
+div.options table, div.options tbody, div.options td, div.options th, div.options tr {
+	margin: 0;
+	padding: 0;
 }
 
+div.options table {
+	border-collapse: collapse;
+}
+
+div.options th, div.options th label {
+	font-weight: bold;
+}
+
+div.options td, div.options th {
+	padding: 0.5em 1.1em 0.5em 0;
+	text-align: left;
+}
+
+div.options td input {
+	margin-right: 0.2em;
+}
+
+div.options select {
+	width: 100%;
+}
+
+div.options table tr.subchoice th {
+    padding-left: 3em;
+}
+tr.subchoice th label {
+  padding-left: 0;
+}
+tr.subchoice th, tr.subchoice th label {
+  font-size: 1em;
+  font-weight: normal;
+}
 /* @end */
 
 /* @group Header */
@@ -379,6 +415,13 @@ p.instructions {
 	padding-top: 0.5em;
 }
 
+p.instructions label {
+	color: #4D525E;
+	padding: 0;
+	margin: 0;
+	font-size: 1em;
+}
+
 div.options {
 	padding: 0.7em 0 0.5em 1em;
 }
@@ -389,13 +432,11 @@ div.options, p.submit_button, p.instructions, p#note {
 }
 
 p.submit_button {
-	padding: 0.5em 0 0.3em;
+	padding: 0.6em 0 0;
+	margin: 0;
 	text-align: center;
 }
 
-form {
-	padding-bottom: 1em;
-}
 
 p#note {
 	clear: both;
@@ -487,7 +528,7 @@ p#version_info {
 
 /* @end */
 
-/* @group docs */
+/* @group Docs */
 
 div.doc {
   margin: 1em 2em;
@@ -630,6 +671,8 @@ div.doc th {
 	border-right: 1px solid #ccc;
 }
 
+/* @end */
+
 
 /* @group home page, news text */
 
@@ -669,3 +712,5 @@ div.intro {
     width: 1.3em;
     vertical-align: middle;
 }
+
+/* @end */
