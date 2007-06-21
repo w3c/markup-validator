@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.526 2007-06-12 11:58:58 ot Exp $
+# $Id: check,v 1.527 2007-06-21 19:33:50 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -181,7 +181,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.526 $;
+  $VERSION =  q$Revision: 1.527 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2415,6 +2415,12 @@ sub W3C::Validator::SAXHandler::error
       my $dtd = ($File->{Mode} eq 'XML' ?
                  'XHTML 1.0 Transitional' : 'HTML 4.01 Transitional' );      
       add_warning('W09', {W09_dtd => $dtd});
+    }
+    else { # not html root element, we are not using fallback
+      if ($File->{Mode} ne 'XML') {
+        $File->{'Is Valid'} = FALSE;
+        add_warning('W09nohtml', {});
+      }
     }
     
     return; # Don't report this as a normal error.
