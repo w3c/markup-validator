@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.527 2007-06-21 19:33:50 ot Exp $
+# $Id: check,v 1.528 2007-06-26 09:08:50 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -181,7 +181,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.527 $;
+  $VERSION =  q$Revision: 1.528 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2387,8 +2387,10 @@ sub W3C::Validator::SAXHandler::error
     if ($File->{Mode} eq 'XML' and lc($File->{Root}) ne 'html') {
       $File->{XMLWF_ONLY} = TRUE;
       add_warning('W09xml', {});
+      return; # don't report this as an error, just proceed
     }
-    return;
+    # if mode is not XML, we do report the error. It should not happen in the case of <html> without doctype,
+    # in that case the error message will be #344
   }
 
 
