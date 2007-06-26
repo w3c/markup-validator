@@ -247,11 +247,11 @@
       your document is not using a DOCTYPE Declaration.
     </p>
     <p>
-      Without a DOCTYPE Declaration it is not possible to check the validity of your document. Since the document does not start with the root &lt;html&gt; element, the validator would not attempt validation on a fall back HTML document type, and  aborted the validation process.
+      Without a DOCTYPE Declaration it is not possible to check the validity of your document. Since the document does not start with the root &lt;html&gt; element, automatic fallback to an HTML document type was not performed, and most of the validation process was aborted: only basic markup syntax was checked.
     </p>
     <p>Learn <a href="docs/help.html#faq-doctype">how to add a doctype to your document</a> 
     from our <acronym title="Frequently Asked Questions">FAQ</acronym>, or use the validator's
-    option to validate your XML document against a specific Document Type</p>
+    <code>Document Type</code> option to validate your document against a specific Document Type.</p>
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W09xml">
