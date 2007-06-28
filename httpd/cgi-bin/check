@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.532 2007-06-28 10:03:12 ot Exp $
+# $Id: check,v 1.533 2007-06-28 10:53:26 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -181,7 +181,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.532 $;
+  $VERSION =  q$Revision: 1.533 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1963,8 +1963,8 @@ sub set_parse_mode {
     $File->{ModeChoice} = 'Fallback';
     # and send warning about the fallback
     &add_warning('W06', {
-      W06_mime => $begincontent, #$File->{ContentType},
-      w06_doctype => $File->{Version}
+      W06_mime => $File->{ContentType},
+      w06_doctype => $File->{DOCTYPE}
     });
     return;
   }
