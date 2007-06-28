@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.529 2007-06-28 00:13:26 ot Exp $
+# $Id: check,v 1.530 2007-06-28 06:01:50 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -181,7 +181,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.529 $;
+  $VERSION =  q$Revision: 1.530 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -757,6 +757,22 @@ sub parse (\$) {
 
             ],
            );
+   $File->{Templates}->{SOAP}->param(opt_debug => $DEBUG);
+   $File->{Templates}->{SOAP}->param(debug =>
+             [
+              map({name => $_, value => $ENV{$_}},
+                qw(no_proxy http_proxy https_proxy ftp_proxy FTP_PASSIVE)),
+              { name => 'Content-Encoding',  value => $File->{ContentEnc} },
+              { name => 'Content-Language', value => $File->{ContentLang} },
+              { name => 'Content-Location', value => $File->{ContentLoc} },
+              { name => 'Transfer-Encoding', value => $File->{TransferEnc} },
+              { name => 'Parse Mode', value => $File->{Mode} },
+              { name => 'Parse Mode Factor', value => $File->{ModeChoice} },
+              { name => 'Parser', value => $parser_name },
+              { name => 'Parser Options', value => join " ", @spopt },
+
+             ],
+            );
 
   my $h = W3C::Validator::SAXHandler->new($opensp, $File);
 
