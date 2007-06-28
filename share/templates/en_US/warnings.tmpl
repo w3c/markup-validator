@@ -155,9 +155,14 @@
 
 <TMPL_IF NAME="W06">
   <li class="msg_warn" id="W06"><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Unable to Determine Parse Mode!</span>
-  <p>Neither the MIME Media Type (<code><TMPL_VAR NAME="W06_mime" ESCAPE="HTML"></code>)
-     nor the document type for this document are sufficient to reliably choose 
-     a parsing mode. Falling back to SGML mode.</p></li>
+  <p>It was not possible  to reliably choose  a parsing mode for this document, because:</p>
+  <ul>
+    <TMPL_IF NAME="W06_mime"><li>
+    the MIME Media Type (<code><TMPL_VAR NAME="W06_mime" ESCAPE="HTML"></code>)  can be used for XML or SGML document types</li><TMPL_ELSE><li>in <em>Direct Input</em> mode, no MIME Media Type is served to the validator</li></TMPL_IF>
+    <TMPL_IF NAME="w06_doctype"><li>the Document Type (<code><TMPL_VAR NAME="w06_doctype" ESCAPE="HTML"></code>) is not in the validator's catalog</li><TMPL_ELSE><li>No known Document Type could be detected</li></TMPL_IF>
+    <li>No XML declaration (<abbr>e.g</abbr> <code>&lt;?xml version="1.0"?&gt;</code>) could be found at the beginning of the document.</li>
+    </ul>
+    <p>The validator is falling back to SGML mode.</p></li>
 </TMPL_IF>
 <TMPL_IF NAME="W07">
   <li class="msg_warn" id="W07"><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Contradictory Parse Modes Detected!</span>
