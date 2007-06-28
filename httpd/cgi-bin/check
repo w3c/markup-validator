@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.531 2007-06-28 09:55:48 ot Exp $
+# $Id: check,v 1.532 2007-06-28 10:03:12 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -181,7 +181,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.531 $;
+  $VERSION =  q$Revision: 1.532 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1923,7 +1923,7 @@ sub set_parse_mode {
   my $parseModeFromDoctype = $CFG->{Types}->{$fpi}->{'Parse Mode'} || 'TBD';
 
   my $parseModeFromMimeType = $File->{Mode};
-  my $begincontent = join "",@{$File->{Content}}[0,9]; # for the sake of xml decl detection, 
+  my $begincontent = join "\x20",@{$File->{Content}}; # for the sake of xml decl detection, 
                                                        # the 10 first lines should be safe
   my $parseModeFromXMLDecl = (
     $begincontent
@@ -1963,7 +1963,7 @@ sub set_parse_mode {
     $File->{ModeChoice} = 'Fallback';
     # and send warning about the fallback
     &add_warning('W06', {
-      W06_mime => $File->{ContentType},
+      W06_mime => $begincontent, #$File->{ContentType},
       w06_doctype => $File->{Version}
     });
     return;
