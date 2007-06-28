@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.528 2007-06-26 09:08:50 ot Exp $
+# $Id: check,v 1.529 2007-06-28 00:13:26 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -181,7 +181,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.528 $;
+  $VERSION =  q$Revision: 1.529 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -583,9 +583,9 @@ if ($File->{Charset}->{Use} eq 'utf-8' &&
 #
 #  1. check if there's a doctype
 #  2. if there is a doctype, parse/validate against that DTD
-#  3. if no doctype, check for an xmlns= attribute on the first element
-#  4. if there is an xmlns= attribute, check for XML well-formedness
-#  5. if there is no xmlns= attribute, and no DOCTYPE, punt.
+#  3. if no doctype, check for an xmlns= attribute on the first element, or XML declaration
+#  4.   if no doctype and XML mode, check for XML well-formedness
+#  5.   otherwise , punt.
 #
 
 #
@@ -600,8 +600,9 @@ if ($File->{Opt}->{DOCTYPE}
 $File = &preparse_doctype($File);
 
 #
-# Set parse mode.
-set_parse_mode($File, $CFG) if $File->{DOCTYPE};
+# Determine the parse mode (XML or SGML).
+##set_parse_mode($File, $CFG) if $File->{DOCTYPE};
+set_parse_mode($File, $CFG);
 
 #
 # Sanity check Charset information and add any warnings necessary.
@@ -750,6 +751,7 @@ sub parse (\$) {
              { name => 'Content-Location', value => $File->{ContentLoc} },
              { name => 'Transfer-Encoding', value => $File->{TransferEnc} },
              { name => 'Parse Mode', value => $File->{Mode} },
+             { name => 'Parse Mode Factor', value => $File->{ModeChoice} },
              { name => 'Parser', value => $parser_name },
              { name => 'Parser Options', value => join " ", @spopt },
 
@@ -1893,18 +1895,44 @@ sub prepCGI {
 }
 
 #
-# Set parse mode.
+# Set parse mode (SGML or XML) based on a number of preparsed factors:
+# * HTTP Content-Type
+# * Doctype Declaration
+# * XML Declaration
 sub set_parse_mode {
   my $File = shift;
   my $CFG = shift;
   my $fpi = $File->{DOCTYPE};
+  $File->{ModeChoice} = '';
   my $parseModeFromDoctype = $CFG->{Types}->{$fpi}->{'Parse Mode'} || 'TBD';
 
   my $parseModeFromMimeType = $File->{Mode};
+  my $begincontent = join "",@{$File->{Content}}[0,9]; # for the sake of xml decl detection, 
+                                                       # the 10 first lines should be safe
+  my $parseModeFromXMLDecl = (
+    $begincontent
+    =~  /^ [\x20|\x9|\xD|\xA]*                        # whitespace before the decl should not be happening
+                                                      # but we are greedy for the sake of detection, not validation
+      <\?xml                                          # start matching an XML Declaration            
+      [\x20|\x9|\xD|\xA]+                             # x20, x9, xD and xA are the allowed "xml white space"
+      version [\x20|\x9|\xD|\xA]* =                   # for documents, version info is mandatory
+      [\x20|\x9|\xD|\xA]* ("1.0"|"1.1"|'1.0'|'1.1')   # hardcoding the existing XML versions. 
+                                                      # Maybe we should use \d\.\d
+      ([\x20|\x9|\xD|\xA]+ encoding                         
+       [\x20|\x9|\xD|\xA]* = [\x20|\x9|\xD|\xA]*
+       ("[A-Za-z][a-zA-Z0-9-_]+"|'[A-Za-z][a-zA-Z0-9_]+')
+      )?                                              # encoding info is optional
+      ([\x20|\x9|\xD|\xA]+ standalone 
+       [\x20|\x9|\xD|\xA]* = [\x20|\x9|\xD|\xA]*
+       ("yes"|"no"|'yes'|'no')
+      )?                                              # ditto standalone info, optional
+      [\x20|\x9|\xD|\xA]* \?>                         # end of XML Declaration
+    /x
+  ? 'XML' : 'TBD' );  
 
-
-  if (($parseModeFromMimeType eq 'TBD') and (!exists $CFG->{Types}->{$fpi})) {
-    # the mime type is text/html (ambiguous, hence TBD mode)
+  if (($parseModeFromMimeType eq 'TBD') and ($parseModeFromXMLDecl eq 'TBD') and (!exists $CFG->{Types}->{$fpi})) {
+    # if the mime type is text/html (ambiguous, hence TBD mode)
+    # and XML prolog detection was unsuccessful
     # and the doctype isn't in the catalogue... we scream
     &add_warning('W08', {W08_mime => $File->{ContentType}});
     return;
@@ -1912,41 +1940,47 @@ sub set_parse_mode {
 
   $parseModeFromDoctype = 'TBD' unless $parseModeFromDoctype eq 'SGML' or $parseModeFromDoctype eq 'XML';
 
-  if (($parseModeFromDoctype eq 'TBD') and ($parseModeFromMimeType eq 'TBD')) {
-    # if both doctype and mime type are useless to give us a parse mode
+  if (($parseModeFromDoctype eq 'TBD')  and ($parseModeFromXMLDecl eq 'TBD') and ($parseModeFromMimeType eq 'TBD')) {
+    # if all three factors are useless to give us a parse mode
     # => we use SGML as a default
     $File->{Mode} = 'SGML';
-
+    $File->{ModeChoice} = 'Fallback';
+    # and send warning about the fallback
     &add_warning('W06', {
       W06_mime => $File->{ContentType},
       w06_doctype => $File->{Version}
     });
     return;
   }
-  elsif ($parseModeFromDoctype eq 'TBD') {
-    # doctype does not give us anything clear (e.g custom DTD)
-    # but mime type gives clear indication
-    # => we just use what the content type tells us - move along
+  elsif ($parseModeFromMimeType ne 'TBD') {
+    # if The mime type gives clear indication of the parse mode
+    if (($parseModeFromDoctype ne 'TBD') and ($parseModeFromMimeType ne $parseModeFromDoctype)) {
+      #  if document-type recommended mode and content-type recommended mode clash
+      # shoot a warning
+      &add_warning('W07', {
+        W07_mime => $File->{ContentType},
+        W07_ct   => $parseModeFromMimeType,
+        W07_dtd  => $parseModeFromDoctype,
+      });
+    }
+    # mime type has precedence, we stick to it 
+    $File->{ModeChoice} = 'Mime';
     return;
   }
-  elsif ($parseModeFromMimeType eq 'TBD') {
-    # the mime type is text/html (ambiguous, hence TBD mode)
+  elsif ($parseModeFromDoctype ne 'TBD') {
+    # the mime type is ambiguous (hence we didn't stop at the previous test)
     # but by now we're sure that the document type is a good indication
     # so we use that.
     $File->{Mode} = $parseModeFromDoctype;
+    $File->{ModeChoice} = 'Doctype';
     return;
   }
-  elsif ($parseModeFromMimeType ne $parseModeFromDoctype) {
-    #  if document-type recommended mode and content-type recommended mode clash
-    # shoot a warning
-    &add_warning('W07', {
-      W07_mime => $File->{ContentType},
-      W07_ct   => $parseModeFromMimeType,
-      W07_dtd  => $parseModeFromDoctype,
-    });
-    return;
-
-  }
+  else { 
+    # this is the last case. We know that all three modes are not TBD, 
+    # yet both mime type and doctype tests have failed => we are saved by the XML declaration 
+    $File->{Mode} = $parseModeFromXMLDecl;
+    $File->{ModeChoice} = 'XMLDecl';
+  } 
 }
 
 
