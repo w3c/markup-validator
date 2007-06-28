@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.530 2007-06-28 06:01:50 ot Exp $
+# $Id: check,v 1.531 2007-06-28 09:55:48 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -181,7 +181,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.530 $;
+  $VERSION =  q$Revision: 1.531 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1936,7 +1936,7 @@ sub set_parse_mode {
                                                       # Maybe we should use \d\.\d
       ([\x20|\x9|\xD|\xA]+ encoding                         
        [\x20|\x9|\xD|\xA]* = [\x20|\x9|\xD|\xA]*
-       ("[A-Za-z][a-zA-Z0-9-_]+"|'[A-Za-z][a-zA-Z0-9_]+')
+       ("[A-Za-z][a-zA-Z0-9|-|_]+"|'[A-Za-z][a-zA-Z0-9|_|-]+')
       )?                                              # encoding info is optional
       ([\x20|\x9|\xD|\xA]+ standalone 
        [\x20|\x9|\xD|\xA]* = [\x20|\x9|\xD|\xA]*
