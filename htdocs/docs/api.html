@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: api.html,v 1.8 2007-05-16 08:35:15 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-05-16 08:35:15 $"
+<!--#set var="revision" value="\$Id: api.html,v 1.9 2007-06-28 06:05:43 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-06-28 06:05:43 $"
 --><!--#set var="title" value="Documentation of the Programmatic Interface (API) to The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -99,6 +99,11 @@ is appreciated. thanks.</p>
   <th>verbose</th>
   <td>In the web interface, when set to 1, will make error messages, explanations 
   and other diagnostics more verbose. In SOAP output, does not have any impact.</td>
+  <td>0 (unset)</td>
+</tr>
+<tr>
+  <th>debug</th>
+  <td>When set to 1, will output some extra debugging information on the validated resource (such as HTTP headers) and validation process (such as parser used, parse mode etc.). In the SOAP output, this information will be given in &lt;m:debug&gt; elements.</td>
   <td>0 (unset)</td>
 </tr>
 <tr>
@@ -263,8 +268,9 @@ element, but also the <code>warning</code> element are <code>line</code>, <code>
 <h4 id="changelog">Change Log</h4>
 <p>Up to version 0.2, all changes are backward-compatible.</p>
 <dl>
-  <dt>v 0.2 (May 2007)</dt>
+  <dt>v 0.2 (June 2007)</dt>
   <dd><ul>
+    <li><code>debug</code> parameter now has an effect on both HTML and SOAP outputs</li>
     <li><code>messageid</code> is now implemented</li>
     <li>added <code>source</code> and <code>explanation</code> elements.</li>
     </ul>
