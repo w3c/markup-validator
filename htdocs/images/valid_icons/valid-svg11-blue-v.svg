@@ -1,0 +1,370 @@
+<?xml version='1.0' encoding='iso-8859-1'?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns='http://www.w3.org/2000/svg' xml:space='preserve' version='1.1' overflow='visible' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 88 31'>
+  <g shape-rendering='geometricPrecision' text-rendering='geometricPrecision' image-rendering='optimizeQuality'>
+    <g shape-rendering='geometricPrecision' text-rendering='geometricPrecision' image-rendering='optimizeQuality'>
+      <g id='Background'>
+      </g>
+      <g id='Guides'>
+      </g>
+      <g id='Foreground'>
+        <g>
+          <polygon points='0,0 88,0 88,31 0,31 0,0   ' fill='none'/>
+          <path d='M44,15.5' fill='none'/>
+        </g>
+        <g>
+          <polygon points='0,0 83,0 83,31 0,31 0,0   ' fill='#B3CEE1'/>
+          <path d='M41.5,15.5' fill='#B3CEE1'/>
+        </g>
+        <g>
+          <polygon points='0.365,0 36.809,0 36.809,31 0.365,31 0.365,0   ' fill='#FFFFFF'/>
+          <path d='M18.587,15.5' fill='#FFFFFF'/>
+        </g>
+        <g>
+          <polygon points='4.692,2.291 44.697,2.291 44.697,26.897 4.692,26.897 4.692,2.291   ' fill='none'/>
+          <path d='M24.695,14.594' fill='none'/>
+        </g>
+        <g>
+          <g>
+            <defs>
+              <polygon points='0,30 83,30 83,31 0,31 0,30     ' id='XMLID_328_'/>
+            </defs>
+            <use xlink:href='#XMLID_328_' fill='#504D4C'/>
+            <clipPath id='XMLID_354_'>
+              <use xlink:href='#XMLID_328_'/>
+            </clipPath>
+            <g clip-path='url(#XMLID_354_)'>
+              <g>
+                <polygon points='0,0 88,0 88,31 0,31 0,0      ' fill='none'/>
+                <path d='M44,15.5' fill='none'/>
+              </g>
+              <g>
+                <polygon points='0,0 83,0 83,31 0,31 0,0      ' fill='#48494B'/>
+                <path d='M41.5,15.5' fill='#48494B'/>
+              </g>
+              <g>
+                <polygon points='0.365,0 36.809,0 36.809,31 0.365,31 0.365,0      ' fill='#4F4F4F'/>
+                <path d='M18.587,15.5' fill='#4F4F4F'/>
+              </g>
+            </g>
+          </g>
+        </g>
+        <g>
+          <g>
+            <defs>
+              <polygon points='82,0 83,0 83,31 82,31 82,0     ' id='XMLID_330_'/>
+            </defs>
+            <use xlink:href='#XMLID_330_' fill='#504D4C'/>
+            <clipPath id='XMLID_355_'>
+              <use xlink:href='#XMLID_330_'/>
+            </clipPath>
+            <g clip-path='url(#XMLID_355_)'>
+              <g>
+                <polygon points='0,0 88,0 88,31 0,31 0,0      ' fill='none'/>
+                <path d='M44,15.5' fill='none'/>
+              </g>
+              <g>
+                <polygon points='0,0 83,0 83,31 0,31 0,0      ' fill='#48494B'/>
+                <path d='M41.5,15.5' fill='#48494B'/>
+              </g>
+              <g>
+                <g>
+                  <defs>
+                    <polygon points='0,30 83,30 83,31 0,31 0,30        ' id='XMLID_332_'/>
+                  </defs>
+                  <use xlink:href='#XMLID_332_' fill='#191919'/>
+                  <clipPath id='XMLID_356_'>
+                    <use xlink:href='#XMLID_332_'/>
+                  </clipPath>
+                  <g clip-path='url(#XMLID_356_)'>
+                    <g>
+                      <polygon points='0,0 88,0 88,31 0,31 0,0         ' fill='none'/>
+                      <path d='M44,15.5' fill='none'/>
+                    </g>
+                    <g>
+                      <polygon points='0,0 83,0 83,31 0,31 0,0         ' fill='#181818'/>
+                      <path d='M41.5,15.5' fill='#181818'/>
+                    </g>
+                    <g>
+                      <polygon points='0.365,0 36.809,0 36.809,31 0.365,31 0.365,0         ' fill='#191919'/>
+                      <path d='M18.587,15.5' fill='#191919'/>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+        <g>
+          <polygon points='0,0 1,0 1,31 0,31 0,0   ' fill='#CCCCCC'/>
+          <path d='M0.5,15.5' fill='#CCCCCC'/>
+        </g>
+        <g>
+          <g>
+            <defs>
+              <polygon points='2.16,29.005 82.16,29.005 82.16,30.005 2.16,30.005 2.16,29.005     ' id='XMLID_334_'/>
+            </defs>
+            <use xlink:href='#XMLID_334_' fill='#9E9C9C'/>
+            <clipPath id='XMLID_357_'>
+              <use xlink:href='#XMLID_334_'/>
+            </clipPath>
+            <g clip-path='url(#XMLID_357_)'>
+              <g>
+                <polygon points='0,0 88,0 88,31 0,31 0,0      ' fill='none'/>
+                <path d='M44,15.5' fill='none'/>
+              </g>
+              <g>
+                <polygon points='0,0 83,0 83,31 0,31 0,0      ' fill='#9097A0'/>
+                <path d='M41.5,15.5' fill='#9097A0'/>
+              </g>
+              <g>
+                <polygon points='0.365,0 36.809,0 36.809,31 0.365,31 0.365,0      ' fill='#B5B5B5'/>
+                <path d='M18.587,15.5' fill='#B5B5B5'/>
+              </g>
+              <g>
+                <g>
+                  <defs>
+                    <polygon points='0,30 83,30 83,31 0,31 0,30        ' id='XMLID_336_'/>
+                  </defs>
+                  <use xlink:href='#XMLID_336_' fill='#383838'/>
+                  <clipPath id='XMLID_358_'>
+                    <use xlink:href='#XMLID_336_'/>
+                  </clipPath>
+                  <g clip-path='url(#XMLID_358_)'>
+                    <g>
+                      <polygon points='0,0 88,0 88,31 0,31 0,0         ' fill='none'/>
+                      <path d='M44,15.5' fill='none'/>
+                    </g>
+                    <g>
+                      <polygon points='0,0 83,0 83,31 0,31 0,0         ' fill='#343536'/>
+                      <path d='M41.5,15.5' fill='#343536'/>
+                    </g>
+                    <g>
+                      <polygon points='0.365,0 36.809,0 36.809,31 0.365,31 0.365,0         ' fill='#383838'/>
+                      <path d='M18.587,15.5' fill='#383838'/>
+                    </g>
+                  </g>
+                </g>
+              </g>
+              <g>
+                <g>
+                  <defs>
+                    <polygon points='82,0 83,0 83,31 82,31 82,0        ' id='XMLID_338_'/>
+                  </defs>
+                  <use xlink:href='#XMLID_338_' fill='#383838'/>
+                  <clipPath id='XMLID_359_'>
+                    <use xlink:href='#XMLID_338_'/>
+                  </clipPath>
+                  <g clip-path='url(#XMLID_359_)'>
+                    <g>
+                      <polygon points='0,0 88,0 88,31 0,31 0,0         ' fill='none'/>
+                      <path d='M44,15.5' fill='none'/>
+                    </g>
+                    <g>
+                      <polygon points='0,0 83,0 83,31 0,31 0,0         ' fill='#343536'/>
+                      <path d='M41.5,15.5' fill='#343536'/>
+                    </g>
+                    <g>
+                      <g>
+                        <defs>
+                          <polygon points='0,30 83,30 83,31 0,31 0,30           ' id='XMLID_340_'/>
+                        </defs>
+                        <use xlink:href='#XMLID_340_' fill='#131313'/>
+                        <clipPath id='XMLID_360_'>
+                          <use xlink:href='#XMLID_340_'/>
+                        </clipPath>
+                        <g clip-path='url(#XMLID_360_)'>
+                          <g>
+                            <polygon points='0,0 88,0 88,31 0,31 0,0            ' fill='none'/>
+                            <path d='M44,15.5' fill='none'/>
+                          </g>
+                          <g>
+                            <polygon points='0,0 83,0 83,31 0,31 0,0            ' fill='#131313'/>
+                            <path d='M41.5,15.5' fill='#131313'/>
+                          </g>
+                          <g>
+                            <polygon points='0.365,0 36.809,0 36.809,31 0.365,31 0.365,0            ' fill='#131313'/>
+                            <path d='M18.587,15.5' fill='#131313'/>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+        <g>
+          <g>
+            <defs>
+              <polygon points='80.806,1 81.806,1 81.806,31 80.806,31 80.806,1     ' id='XMLID_342_'/>
+            </defs>
+            <use xlink:href='#XMLID_342_' fill='#9E9C9C'/>
+            <clipPath id='XMLID_361_'>
+              <use xlink:href='#XMLID_342_'/>
+            </clipPath>
+            <g clip-path='url(#XMLID_361_)'>
+              <g>
+                <polygon points='0,0 88,0 88,31 0,31 0,0      ' fill='none'/>
+                <path d='M44,15.5' fill='none'/>
+              </g>
+              <g>
+                <polygon points='0,0 83,0 83,31 0,31 0,0      ' fill='#9097A0'/>
+                <path d='M41.5,15.5' fill='#9097A0'/>
+              </g>
+              <g>
+                <g>
+                  <defs>
+                    <polygon points='0,30 83,30 83,31 0,31 0,30        ' id='XMLID_344_'/>
+                  </defs>
+                  <use xlink:href='#XMLID_344_' fill='#383838'/>
+                  <clipPath id='XMLID_362_'>
+                    <use xlink:href='#XMLID_344_'/>
+                  </clipPath>
+                  <g clip-path='url(#XMLID_362_)'>
+                    <g>
+                      <polygon points='0,0 88,0 88,31 0,31 0,0         ' fill='none'/>
+                      <path d='M44,15.5' fill='none'/>
+                    </g>
+                    <g>
+                      <polygon points='0,0 83,0 83,31 0,31 0,0         ' fill='#343536'/>
+                      <path d='M41.5,15.5' fill='#343536'/>
+                    </g>
+                    <g>
+                      <polygon points='0.365,0 36.809,0 36.809,31 0.365,31 0.365,0         ' fill='#383838'/>
+                      <path d='M18.587,15.5' fill='#383838'/>
+                    </g>
+                  </g>
+                </g>
+              </g>
+              <g>
+                <g>
+                  <defs>
+                    <polygon points='2.16,29.005 82.16,29.005 82.16,30.005 2.16,30.005 2.16,29.005        ' id='XMLID_346_'/>
+                  </defs>
+                  <use xlink:href='#XMLID_346_' fill='#818181'/>
+                  <clipPath id='XMLID_363_'>
+                    <use xlink:href='#XMLID_346_'/>
+                  </clipPath>
+                  <g clip-path='url(#XMLID_363_)'>
+                    <g>
+                      <polygon points='0,0 88,0 88,31 0,31 0,0         ' fill='none'/>
+                      <path d='M44,15.5' fill='none'/>
+                    </g>
+                    <g>
+                      <polygon points='0,0 83,0 83,31 0,31 0,0         ' fill='#6E7176'/>
+                      <path d='M41.5,15.5' fill='#6E7176'/>
+                    </g>
+                    <g>
+                      <polygon points='0.365,0 36.809,0 36.809,31 0.365,31 0.365,0         ' fill='#818181'/>
+                      <path d='M18.587,15.5' fill='#818181'/>
+                    </g>
+                    <g>
+                      <g>
+                        <defs>
+                          <polygon points='0,30 83,30 83,31 0,31 0,30           ' id='XMLID_348_'/>
+                        </defs>
+                        <use xlink:href='#XMLID_348_' fill='#272727'/>
+                        <clipPath id='XMLID_364_'>
+                          <use xlink:href='#XMLID_348_'/>
+                        </clipPath>
+                        <g clip-path='url(#XMLID_364_)'>
+                          <g>
+                            <polygon points='0,0 88,0 88,31 0,31 0,0            ' fill='none'/>
+                            <path d='M44,15.5' fill='none'/>
+                          </g>
+                          <g>
+                            <polygon points='0,0 83,0 83,31 0,31 0,0            ' fill='#252626'/>
+                            <path d='M41.5,15.5' fill='#252626'/>
+                          </g>
+                          <g>
+                            <polygon points='0.365,0 36.809,0 36.809,31 0.365,31 0.365,0            ' fill='#272727'/>
+                            <path d='M18.587,15.5' fill='#272727'/>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                    <g>
+                      <g>
+                        <defs>
+                          <polygon points='82,0 83,0 83,31 82,31 82,0           ' id='XMLID_350_'/>
+                        </defs>
+                        <use xlink:href='#XMLID_350_' fill='#272727'/>
+                        <clipPath id='XMLID_365_'>
+                          <use xlink:href='#XMLID_350_'/>
+                        </clipPath>
+                        <g clip-path='url(#XMLID_365_)'>
+                          <g>
+                            <polygon points='0,0 88,0 88,31 0,31 0,0            ' fill='none'/>
+                            <path d='M44,15.5' fill='none'/>
+                          </g>
+                          <g>
+                            <polygon points='0,0 83,0 83,31 0,31 0,0            ' fill='#252626'/>
+                            <path d='M41.5,15.5' fill='#252626'/>
+                          </g>
+                          <g>
+                            <g>
+                              <defs>
+                                <polygon points='0,30 83,30 83,31 0,31 0,30              ' id='XMLID_352_'/>
+                              </defs>
+                              <use xlink:href='#XMLID_352_' fill='#101010'/>
+                              <clipPath id='XMLID_366_'>
+                                <use xlink:href='#XMLID_352_'/>
+                              </clipPath>
+                              <g clip-path='url(#XMLID_366_)'>
+                                <g>
+                                  <polygon points='0,0 88,0 88,31 0,31 0,0               ' fill='none'/>
+                                  <path d='M44,15.5' fill='none'/>
+                                </g>
+                                <g>
+                                  <polygon points='0,0 83,0 83,31 0,31 0,0               ' fill='#101010'/>
+                                  <path d='M41.5,15.5' fill='#101010'/>
+                                </g>
+                                <g>
+                                  <polygon points='0.365,0 36.809,0 36.809,31 0.365,31 0.365,0               ' fill='#101010'/>
+                                  <path d='M18.587,15.5' fill='#101010'/>
+                                </g>
+                              </g>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+        <g>
+          <polygon points='0,0 83,0 83,1 0,1 0,0   ' fill='#CCCCCC'/>
+          <path d='M41.5,0.5' fill='#CCCCCC'/>
+        </g>
+        <g>
+          <polyline fill-rule='evenodd' stroke='#005A9C' points='    68.273,18.844 74.291,24.348 86.001,12.637   ' clip-rule='evenodd' stroke-miterlimit='3.8637' stroke-width='4.8117' fill='none'/>
+        </g>
+        <g>
+          <g>
+            <path d='M33.077,7.037l0.334,2.034l-1.185,2.266c0,0-0.455-0.961-1.21-1.493c-0.636-0.448-1.051-0.546-1.699-0.412     c-0.833,0.172-1.777,1.167-2.189,2.395c-0.493,1.469-0.498,2.18-0.515,2.833c-0.027,1.047,0.137,1.665,0.137,1.665     s-0.719-1.33-0.712-3.279c0.005-1.391,0.223-2.652,0.867-3.896c0.566-1.094,1.408-1.751,2.154-1.828     c0.772-0.08,1.382,0.292,1.854,0.695c0.495,0.423,0.996,1.347,0.996,1.347L33.077,7.037z'/>
+            <path d='M33.222,18.547c0,0-0.523,0.936-0.85,1.296s-0.91,0.996-1.631,1.313c-0.721,0.317-1.099,0.377-1.811,0.309     c-0.712-0.069-1.374-0.48-1.605-0.652c-0.232-0.171-0.824-0.678-1.159-1.15c-0.335-0.472-0.858-1.417-0.858-1.417     s0.292,0.946,0.474,1.348c0.105,0.231,0.428,0.938,0.886,1.553c0.427,0.574,1.257,1.563,2.519,1.786s2.128-0.343,2.343-0.481     c0.214-0.137,0.667-0.516,0.953-0.822c0.299-0.319,0.582-0.727,0.738-0.972c0.114-0.179,0.301-0.541,0.301-0.541L33.222,18.547z'/>
+          </g>
+          <g>
+            <path d='M11.437,7.127l2.852,9.698l2.852-9.698h2.065l-4.721,15.934h-0.197l-2.951-9.875l-2.951,9.875H8.191     L3.47,7.127h2.065l2.852,9.698l1.928-6.531L9.372,7.127H11.437z' fill='#005A9C'/>
+            <path d='M25.072,17.946c0,1.443-0.384,2.656-1.151,3.64c-0.767,0.983-1.76,1.475-2.98,1.475     c-0.918,0-1.718-0.292-2.4-0.875c-0.682-0.583-1.187-1.374-1.515-2.37l1.613-0.669c0.236,0.604,0.548,1.079,0.935,1.426     c0.387,0.348,0.843,0.521,1.367,0.521c0.551,0,1.016-0.308,1.397-0.924c0.38-0.616,0.571-1.357,0.571-2.223     c0-0.957-0.204-1.698-0.61-2.223c-0.472-0.616-1.214-0.924-2.223-0.924h-0.787v-0.944l2.754-4.76h-3.325l-0.925,1.573h-0.59     V7.127h7.672v0.964l-2.912,5.016c1.023,0.328,1.797,0.925,2.321,1.791C24.809,15.763,25.072,16.779,25.072,17.946z' fill='#005A9C'/>
+          </g>
+        </g>
+        <g>
+          <path clip-rule='evenodd' d='M45.064,6.051v1.543c-0.4-0.179-0.791-0.314-1.172-0.405    c-0.381-0.091-0.741-0.136-1.079-0.137c-0.449,0-0.781,0.062-0.996,0.186c-0.215,0.124-0.322,0.316-0.322,0.576    c0,0.195,0.071,0.349,0.215,0.459c0.146,0.107,0.41,0.2,0.791,0.278l0.801,0.161c0.811,0.163,1.387,0.41,1.729,0.742    s0.513,0.804,0.513,1.416c0,0.804-0.239,1.403-0.718,1.797c-0.476,0.391-1.203,0.586-2.183,0.586    c-0.462,0-0.926-0.044-1.392-0.132c-0.466-0.088-0.931-0.218-1.396-0.391v-1.587c0.465,0.248,0.915,0.435,1.348,0.562    c0.436,0.124,0.856,0.186,1.26,0.186c0.41,0,0.724-0.068,0.942-0.205c0.218-0.137,0.327-0.332,0.327-0.586    c0-0.228-0.075-0.403-0.225-0.527c-0.146-0.124-0.441-0.234-0.884-0.332l-0.728-0.161c-0.729-0.156-1.263-0.405-1.602-0.747    c-0.335-0.342-0.503-0.802-0.503-1.382c0-0.726,0.234-1.284,0.703-1.675c0.469-0.391,1.143-0.586,2.021-0.586    c0.4,0,0.812,0.031,1.235,0.093C44.173,5.841,44.611,5.931,45.064,6.051z' fill-rule='evenodd'/>
+          <polygon points='46.423,5.822 48.313,5.822 50.247,11.203 52.175,5.822 54.065,5.822     51.365,13.112 49.124,13.112   ' clip-rule='evenodd' fill-rule='evenodd'/>
+          <path clip-rule='evenodd' d='M61.685,12.57c-0.469,0.228-0.956,0.399-1.46,0.513s-1.025,0.171-1.563,0.171    c-1.214,0-2.176-0.338-2.886-1.016c-0.709-0.68-1.064-1.601-1.064-2.764c0-1.175,0.361-2.099,1.084-2.773    c0.723-0.674,1.712-1.011,2.969-1.011c0.485,0,0.949,0.046,1.392,0.137c0.446,0.091,0.866,0.227,1.26,0.405v1.509    C61.009,7.51,60.604,7.337,60.2,7.223c-0.4-0.114-0.802-0.17-1.206-0.171c-0.749,0-1.327,0.21-1.733,0.63    c-0.404,0.417-0.605,1.014-0.605,1.792c0,0.771,0.195,1.367,0.586,1.787s0.946,0.63,1.665,0.63c0.195,0,0.376-0.011,0.542-0.034    c0.169-0.026,0.321-0.065,0.454-0.117v-1.416h-1.147v-1.26h2.93V12.57z' fill-rule='evenodd'/>
+        </g>
+        <g>
+          <polygon points='40.028,22.997 41.688,22.997 41.688,18.284 39.984,18.636     39.984,17.357 41.679,17.005 43.466,17.005 43.466,22.997 45.126,22.997 45.126,24.295 40.028,24.295   ' clip-rule='evenodd' fill-rule='evenodd'/>
+          <rect fill-rule='evenodd' height='1.89' width='1.758' clip-rule='evenodd' y='22.405' x='46.435'/>
+          <polygon points='50.785,22.997 52.446,22.997 52.446,18.284 50.742,18.636     50.742,17.357 52.436,17.005 54.223,17.005 54.223,22.997 55.883,22.997 55.883,24.295 50.785,24.295   ' clip-rule='evenodd' fill-rule='evenodd'/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
