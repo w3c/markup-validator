@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.534 2007-06-29 00:37:37 ot Exp $
+# $Id: check,v 1.535 2007-07-05 07:10:01 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -181,7 +181,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.534 $;
+  $VERSION =  q$Revision: 1.535 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1113,10 +1113,18 @@ sub report_valid {
       my $cfg = $CFG->{Types}->{$File->{DOCTYPE}};
       $T->param(have_badge => TRUE);
       $T->param(badge_uri  => $cfg->{Badge}->{URI});
+      if (exists $CFG->{Types}->{$File->{DOCTYPE}}->{Badge}->{'Local URI'}) {
+              $T->param(local_badge_uri  => $cfg->{Badge}->{'Local URI'});
+              $T->param(have_local_badge => TRUE);
+      }
       if (exists $CFG->{Types}->{$File->{DOCTYPE}}->{Badge}->{'ALT URI'}) {
       $T->param(badge_alt_uri  => $cfg->{Badge}->{'ALT URI'});
+        if (exists $CFG->{Types}->{$File->{DOCTYPE}}->{Badge}->{'Local ALT URI'}) {
+          $T->param(local_alt_badge_uri  => $cfg->{Badge}->{'Local ALT URI'});
+        }
       $T->param(have_alt_badge => TRUE);
       }
+      
       $T->param(badge_alt  => $cfg->{Badge}->{Alt});
       $T->param(badge_h    => $cfg->{Badge}->{Height});
       $T->param(badge_w    => $cfg->{Badge}->{Width});

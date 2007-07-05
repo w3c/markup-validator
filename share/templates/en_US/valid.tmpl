@@ -58,7 +58,7 @@
     to your Web page:
   </p>
   <img
-    class="inline-badge" src="<TMPL_VAR NAME="badge_uri" ESCAPE="HTML">"
+    class="inline-badge" src="<TMPL_IF NAME="have_local_badge"><TMPL_VAR NAME="local_badge_uri" ESCAPE="HTML"><TMPL_ELSE><TMPL_VAR NAME="badge_uri" ESCAPE="HTML"></TMPL_IF>"
     alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"
     <TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF>
     <TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF>
@@ -71,7 +71,7 @@
   </pre>
   <TMPL_IF NAME="have_alt_badge">
   <img
-    class="inline-badge" src="<TMPL_VAR NAME="badge_alt_uri" ESCAPE="HTML">"
+    class="inline-badge" src="<TMPL_IF NAME="have_local_badge"><TMPL_VAR NAME="local_alt_badge_uri" ESCAPE="HTML"><TMPL_ELSE><TMPL_VAR NAME="badge_alt_uri" ESCAPE="HTML"></TMPL_IF>"
     alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"
     <TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF>
     <TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF>
