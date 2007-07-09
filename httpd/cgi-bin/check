@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.535 2007-07-05 07:10:01 ot Exp $
+# $Id: check,v 1.536 2007-07-09 04:56:27 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -181,7 +181,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.535 $;
+  $VERSION =  q$Revision: 1.536 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1010,6 +1010,10 @@ sub prep_template ($$) {
   if ($File->{Opt}->{Charset}) {
     my $over_charset_param = "override charset $File->{Opt}->{Charset}";
     $T->param($over_charset_param => TRUE);
+  }
+  
+  if ($File->{'Error Flagged'}) {
+    $T->param(fatal_error => TRUE);
   }
 }
 

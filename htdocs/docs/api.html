@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: api.html,v 1.10 2007-07-05 01:58:54 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-07-05 01:58:54 $"
+<!--#set var="revision" value="\$Id: api.html,v 1.11 2007-07-09 04:56:26 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-07-09 04:56:26 $"
 --><!--#set var="title" value="Documentation of the Programmatic Interface (API) to The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -313,8 +313,10 @@ element, but also the <code>warning</code> element are <code>line</code>, <code>
     <tr><th>Header</th><th>Value</th><th>Notes</th></tr>
     <tr>
         <td>X-W3C-Validator-Status</td>
-        <td><code>Valid</code> or <code>Invalid</code></td>
-        <td>May not be present if validation could not be performed (404 Not found, etc)</td>
+        <td><code>Valid</code> or <code>Invalid</code> if validation was performed.<br />
+          value will be <code>Abort</code> if a fatal error (decoding, 404 not found, etc) 
+          was encountered and validation could not be performed</td>
+        <td>Note: <code>Abort</code> value was added in version 0.8.0</td>
     </tr>
     <tr>
         <td>X-W3C-Validator-Errors</td>

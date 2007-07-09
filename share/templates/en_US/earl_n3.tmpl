@@ -1,7 +1,8 @@
 Content-Type: text/plain; charset=UTF-8
-X-W3C-Validator-Recursion: <TMPL_VAR NAME="depth" DEFAULT="1"><TMPL_IF NAME="valid_status">
+X-W3C-Validator-Recursion: <TMPL_VAR NAME="depth" DEFAULT="1"><TMPL_IF NAME="fatal_error">
+X-W3C-Validator-Status: Abort<TMPL_ELSE><TMPL_IF NAME="valid_status">
 X-W3C-Validator-Status: <TMPL_VAR NAME="valid_status"></TMPL_IF>
-X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num">
+X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num"></TMPL_IF>
 
 @prefix earl: <http://www.w3.org/2001/03/earl/1.0-test#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .

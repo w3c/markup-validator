@@ -1,7 +1,8 @@
 Content-Type: application/soap+xml; charset=UTF-8
-X-W3C-Validator-Recursion: <TMPL_VAR NAME="depth" DEFAULT="1"><TMPL_IF NAME="valid_status">
+X-W3C-Validator-Recursion: <TMPL_VAR NAME="depth" DEFAULT="1"><TMPL_IF NAME="fatal_error">
+X-W3C-Validator-Status: Abort<TMPL_ELSE><TMPL_IF NAME="valid_status">
 X-W3C-Validator-Status: <TMPL_VAR NAME="valid_status"></TMPL_IF>
-X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num">
+X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num"></TMPL_IF>
 
 <?xml version='1.0' encoding="utf-8"?>
 <env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope"
