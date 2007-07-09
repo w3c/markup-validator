@@ -54,9 +54,7 @@ X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num">
   </meta>
 
   <warnings>
-<TMPL_LOOP NAME="file_warnings">
-    <warning><TMPL_VAR NAME="Message" ESCAPE="HTML"></warning>
-</TMPL_LOOP>
+    <TMPL_IF NAME="have_warnings"><TMPL_INCLUDE NAME="ucn_warnings.tmpl"></TMPL_IF>
   </warnings>
 
   <messages>
