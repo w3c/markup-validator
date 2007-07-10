@@ -14,6 +14,9 @@ requires:
     Set::IntSpan:                  0
     Text::Iconv:                   0
     URI:                           0
-
+    Encode:                        0
+    Encode::HanExtra:              0
+    Encode::JIS2K:                 0
+    File::Spec:                    0
 distribution_type: module
 generated_by: ExtUtils::MakeMaker version 6.17

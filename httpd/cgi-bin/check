@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.536 2007-07-09 04:56:27 ot Exp $
+# $Id: check,v 1.537 2007-07-10 03:30:13 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -55,6 +55,8 @@ use URI                       qw();
 use URI::Escape               qw(uri_escape);
 use Encode                    qw();
 use Encode::Alias             qw();
+use Encode::HanExtra          qw(); #for some chinese character encodings, e.g gb18030
+use Encode::JIS2K             qw(); # ditto extra japanese encodings
 use HTML::Encoding       0.52 qw();
 use SGML::Parser::OpenSP      qw();
 
@@ -181,7 +183,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.536 $;
+  $VERSION =  q$Revision: 1.537 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #

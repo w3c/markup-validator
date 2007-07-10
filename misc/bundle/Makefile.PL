@@ -17,6 +17,10 @@ WriteMakefile(
                       SGML::Parser::OpenSP => 0
                       URI                  => 0,
                       XML::LibXML          => 0,
+                      Encode               => 0,
+                      Encode::HanExtra     => 0,
+                      Encode::JIS2K        => 0,
+                      File::Spec           => 0
                      },
   dist            => { TARFLAGS => '--owner=0 --group=0 -cvf' },
   clean           => { FILES => 'ChangeLog.bak' },
