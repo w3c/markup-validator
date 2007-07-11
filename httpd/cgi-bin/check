@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.537 2007-07-10 03:30:13 ot Exp $
+# $Id: check,v 1.538 2007-07-11 12:57:32 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -183,7 +183,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.537 $;
+  $VERSION =  q$Revision: 1.538 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1941,22 +1941,22 @@ sub set_parse_mode {
                                                        # the 10 first lines should be safe
   my $parseModeFromXMLDecl = (
     $begincontent
-    =~  /^ [\x20|\x9|\xD|\xA]*                        # whitespace before the decl should not be happening
+    =~  /^ [\x20|\x09|\x0D|\x0A]*                        # whitespace before the decl should not be happening
                                                       # but we are greedy for the sake of detection, not validation
       <\?xml                                          # start matching an XML Declaration            
-      [\x20|\x9|\xD|\xA]+                             # x20, x9, xD and xA are the allowed "xml white space"
-      version [\x20|\x9|\xD|\xA]* =                   # for documents, version info is mandatory
-      [\x20|\x9|\xD|\xA]* ("1.0"|"1.1"|'1.0'|'1.1')   # hardcoding the existing XML versions. 
+      [\x20|\x09|\x0D|\x0A]+                             # x20, x09, xD and xA are the allowed "xml white space"
+      version [\x20|\x09|\x0D|\x0A]* =                   # for documents, version info is mandatory
+      [\x20|\x09|\x0D|\x0A]* ("1.0"|"1.1"|'1.0'|'1.1')   # hardcoding the existing XML versions. 
                                                       # Maybe we should use \d\.\d
-      ([\x20|\x9|\xD|\xA]+ encoding                         
-       [\x20|\x9|\xD|\xA]* = [\x20|\x9|\xD|\xA]*
+      ([\x20|\x09|\x0D|\x0A]+ encoding                         
+       [\x20|\x09|\x0D|\x0A]* = [\x20|\x09|\x0D|\x0A]*
        ("[A-Za-z][a-zA-Z0-9_-]+"|'[A-Za-z][a-zA-Z0-9_-]+')
       )?                                              # encoding info is optional
-      ([\x20|\x9|\xD|\xA]+ standalone 
-       [\x20|\x9|\xD|\xA]* = [\x20|\x9|\xD|\xA]*
+      ([\x20|\x09|\x0D|\x0A]+ standalone 
+       [\x20|\x09|\x0D|\x0A]* = [\x20|\x09|\x0D|\x0A]*
        ("yes"|"no"|'yes'|'no')
       )?                                              # ditto standalone info, optional
-      [\x20|\x9|\xD|\xA]* \?>                         # end of XML Declaration
+      [\x20|\x09|\x0D|\x0A]* \?>                         # end of XML Declaration
     /x
   ? 'XML' : 'TBD' );  
 
