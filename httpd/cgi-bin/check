@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.538 2007-07-11 12:57:32 ot Exp $
+# $Id: check,v 1.539 2007-07-12 15:46:52 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -183,7 +183,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.538 $;
+  $VERSION =  q$Revision: 1.539 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1467,7 +1467,10 @@ sub truncate_line {
 
   #
   # Add elipsis at start if necessary.
-  unless ($start == 0)            {substr $line,  0, 3, '…'};
+  unless ($start == 0)  {
+      substr $line,  0, 3, '…';
+      $col = $col - 2;
+    };
 
   return $line, $col;
 }
