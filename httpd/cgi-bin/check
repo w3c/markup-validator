@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.539 2007-07-12 15:46:52 ot Exp $
+# $Id: check,v 1.540 2007-07-17 02:32:36 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -183,7 +183,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.539 $;
+  $VERSION =  q$Revision: 1.540 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -690,7 +690,7 @@ if (&is_xml($File)) {
     }
     foreach my $errmsg (@xmlwf_error_list){
       $File->{'Is Valid'} = FALSE;
-      push @{$File->{Errors}}, $errmsg;
+      push @{$File->{WF_Errors}}, $errmsg;
     }
 
   }
@@ -1550,6 +1550,13 @@ sub report_errors ($) {
 
   # Hash to keep track of how many of each error is reported.
   my %Msgs; # Used to generate a UID for explanations.
+
+  # for the sake of readability, at least until the xmlwf errors have explanations,
+  # we push the errors from the XML parser at the END of the error list. 
+  foreach my $errmsg (@{$File->{WF_Errors}}){
+    push @{$File->{Errors}}, $errmsg;
+  }
+  
 
   if (scalar @{$File->{Errors}}) {
     foreach my $err (@{$File->{Errors}}) {
