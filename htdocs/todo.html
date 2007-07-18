@@ -1,244 +1,48 @@
-<!--#set var="revision" value="\$Id: todo.html,v 1.62 2007-04-02 08:48:17 ville Exp $"
---><!--#set var="date" value="\$Date: 2007-04-02 08:48:17 $"
+<!--#set var="revision" value="\$Id: todo.html,v 1.63 2007-07-18 03:40:15 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-07-18 03:40:15 $"
 --><!--#set var="title" value="TODO List for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
-    <p id="skip" class="intro">
-      This page has the to-do list for the <a href="./"><acronym
-        title="World Wide Web Consortium">W3C</acronym> Markup
-        Validation Service</a>, including bugs that need fixing and general
-        wish list items. See also the
-      <a href="http://lists.w3.org/Archives/Public/www-validator/">www-validator
-        mailing list archives</a> for recent discussion that may not be
-      reflected on this page, as well as open bugs and RFE's in
-      <a href="http://www.w3.org/Bugs/Public/">Bugzilla</a>.
-    </p>
-    <p>
-      Recently, we're trying something new. <code>:-)</code> We're going to
-      start splitting development into "releases"; that is milestones with a
-      version number. We've done a few already, arbitrarily named 0.5.0 and
-      0.5.1, that mainly existed as CVS tags to make bug fixing easier. Right
-      now I'm trying to stretch this concept a little further by planning
-      features for future versions in advance.
-    </p>
-    <p>
-      As a result, you will find several lists on this page now; one for each
-      planned version and one for general "some time when I get a round tuit"
-      stuff. As releases are made, the TODO items for that release are removed
-      (see <a href="whatsnew.html">What's New</a> and CVS for details) or moved
-      to the next release if delayed.
-    </p>
-    <div id="validator-0_7_0">
-      <h2>Validator v0.7.0</h2>
-      <div id="validator-0_7_0-core">
-        <h3>Core Changes</h3>
-        <ul>
-          <li>Bring back the Root Namespace in results.</li>
-          <li>
-            Investigate how, if, and when, to use Nick Kew's most excellent
-            <code>XMLMessageReporter</code> patch to OpenSP.
-          </li>
-          <li>Figure out <em>some</em> way to avoid inlining so much static
-          <acronym title="HyperText Markup Language">HTML</acronym>!</li>
-          <li>Finish up the textarea for testing short
-            <acronym title="HyperText Markup Language">HTML</acronym> fragments.</li>
-        <li>
-          Add an <acronym title="HyperText Markup Language">HTML</acronym>
-          pretty-printer feature, using
-          <a href="http://www.w3.org/People/Raggett/tidy/">tidy</a> and/or Enscript?
-        </li>
-        <li>Add support for https:// (<acronym
-          title="Transport Layer Security">TLS</acronym>/<acronym
-          title="Secure Sockets Layer">SSL</acronym>) using Ville's patches.</li>
-        <li>
-          Pay attention to Accept-Charset (cf. <a href="http://lists.w3.org/Archives/Public/www-validator/2001JanMar/0255.html">this</a>
-          message from "brewhaha").
-        </li>
-        <li>
-          Double check that all output is valid! In particular, use style rules
-          to specify height/width on suggested links.
-        </li>
-        <li>
-          Do a great big update of the various badges; the details of size,
-          transparency, naming, and how they are linked to (v.w3.org vs. w3.org).
-        </li>
-        <li>Make sure we output sane "text/html; charset=foo".</li>
-        </ul>
-      </div>
-      <div id="validator-0_7_0-docs">
-        <h3>Documentation Changes</h3>
-        <ul>
-        <li>
-          Clarify the wording regarding valid characters in
-          <a href="docs/errors.html#ve-139">errors.html</a> (cf.
-          <a href="http://lists.w3.org/Archives/Public/www-validator/2001AprJun/0049.html">this</a>
-          message from <a href="mailto:clemens.radl@uni-tuebingen.de">Clemens Radl</a>.
-          Thanks Clemens!)
-        </li>
-        <li>
-          Write documentation for the <acronym
-          title="Standard Generalized Markup Language">SGML</acronym> catalog,
-          point out good DOCTYPEs to use, and make it easy to find if your editor
-          won't insert them for you.
-        </li>
-        <li>
-          Add system requirements for
-          <abbr title="Microsoft Windows NT">NT</abbr>/<acronym
-            title="Microsoft Windows 2000">W2K</acronym>.
-            Bug Bjoern about his "Installing the Validator on
-            <abbr title="Microsoft Windows NT">NT</abbr>" doc.
-            Link to ActiveState <code>Text::Iconv</code> and friends.
-        </li>
-        <li>Add docs on editing
-          <acronym title="Document Type Definitions">DTDs</acronym>.</li>
-        <li>Document how to add new <code>DOCTYPEs</code> to the Validator.</li>
-        <li>Write documentation for Content Negotiation of Badges</li>
-        </ul>
-      </div>
-      <div id="validator-0_7_0-site">
-        <h3>Website Changes</h3>
-        <ul>
-          <li>
-            Link to Jukka's pages; both in general and to specific pages.
-            Ask him about mirroring some of the stuff on validator.w3.org.
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div id="validator-1_0_0">
-      <h2>Validator v1.0.0 (tentative)</h2>
-      <div id="validator-1_0_0-core">
-        <h3>Core Changes</h3>
-        <ul>
-        <li>
-          Add a "fix my <acronym title="HyperText Markup Language">HTML</acronym>
-          for me" option using <a href="http://www.w3.org/People/Raggett/tidy/">Tidy</a>.
-        </li>
-        <li>
-          Finish adding support for <acronym
-            title="eXtensible Markup Language">XML</acronym>
-          validation (see also:
-          <a href="dev/tests/">test cases</a>, or
-          <a href="http://www.hcrc.ed.ac.uk/~richard/xml-check.html">an
-          existing service</a>).
-        </li>
-        <li>
-          Add a section to the report on
-          <a href="http://www.mnot.net/cacheability/">document cacheability</a>?
-          (or just link to it?)
-        </li>
-        <li>
-          Put the explanations in a database (flat files are probably OK),
-          and offer an option to display them inline with the errors.
-        </li>
-        <li>
-          Incorporate <acronym title="Cascading Style Sheets">CSS</acronym>
-          validation directly into this service; either
-          directly or by some form of linking to the existing service on
-          Jigsaw.
-        </li>
-        <li>
-          Make e.g. <code>http://validator.w3.org/check/referer;imgonly</code>
-          return only an image showing the validation status of the referring
-          page.
-        </li>
-        <li>
-          Add link validation using the
-          <a href="http://dev.w3.org/cvsweb/perl/modules/W3C/LinkChecker/">link
-          checker code</a> (or other code with similar functionality).
-        </li>
-        <li>
-          Add a "document meta-information" section to the report, to encourage
-          people to use <code>META</code> tags appropriately?
-        </li>
-        <li>
-          Figure out what's going on with <a href="http://lists.w3.org/Archives/Public/www-validator/2001JanMar/0150.html">this</a>.
-          (Thanks to <a href="mailto:marie@voyager.atc.fhda.edu">Marie
-          Taylor-Harper</a> for catching this!).
-        </li>
-        <li>
-          Investigate validation of <a
-            href="http://www.openhealth.org/RDDL/"><acronym
-              title="Resource Directory Description Language">RDDL</acronym></a>.
-        </li>
-        <li>
-          Fix directories differing only in name case in
-          <code>sgml-lib/pro/usr/local/lib/sgml/</code>.
-          We have both "ietf" and "IETF" in there.
-        </li>
-        </ul>
-      </div>
-      <div id="validator-1_0_0-docs">
-        <h3>Documentation Changes</h3>
-        <ul>
-        <li>
-          Write documentation, describing each feature and option of the
-          validator and answering questions like "What's the difference between
-          an <acronym title="Standard Generalized Markup Language">SGML</acronym>
-          parser and Weblint?", "Which <code>DOCTYPE</code> should I use?",
-          content negotiation, ...
-        </li>
-        </ul>
-      </div>
-      <div id="validator-1_0_0-site">
-        <h3>Website Changes</h3>
-        <ul>
-        <li>
-          Update <code>sgml-lib.tar.gz</code>; automate the updates.
-        </li>
-        </ul>
-      </div>
-    </div>
-
-    <div id="future">
-      <h2>Various Unclassified Stuff</h2>
-      <p>
-        These items are roughly in prioritized order; i.e. the items near the
-        top are those which I consider most important.
-      </p>
+<div class="doc">
+  <h2>W3C Markup Validator Roadmap</h2>
   
-      <ol>
-        <li>
-          Make lists of "most frequently validated invalid pages"
-          and "most frequently validated (non-<acronym
-            title="World Wide Web Consortium">W3C</acronym>?) valid pages"
-          (need to start logging stuff first, including <acronym
-            title="Internet Protocol Addresses">IPs</acronym> to compare
-          uniqueness).
-        </li>
-        <li>
-          Install and play with <code>HTML::Validator</code>, link to it from somewhere:
-          <a href="http://www.hut.fi/~samzait/HTML-Validator/"><code>HTML::Validator</code>
-            Home Page</a>
-          <a href="http://www.cpan.org/modules/by-authors/id/S/SA/SAIT/">Sami Itkonen's
-          <acronym title="Comprehensive Perl Archive Network">CPAN</acronym> directory</a>
-        </li>
-        <li>
-          Give errors/warnings related to markup that is technically valid
-          <acronym title="Standard Generalized Markup Language">SGML</acronym>,
-          but error prone, such as things found in
-          <a href="http://www.w3.org/TR/REC-html40/appendix/notes.html#h-B.3">"B.3
-          <acronym title="Standard Generalized Markup Language">SGML</acronym>
-          implementation notes"</a> in the
-          <a href="http://www.w3.org/TR/REC-html40/"><acronym
-            title="HyperText Markup Language">HTML</acronym> 4.0 spec</a>.
-          (these things really belong in something like
-          <a href="http://tidy.sourceforge.net/">Tidy</a>).
-        </li>
-        <li>
-          Make an "elements found" section a la Webtechs, with links from each
-          element to the appropriate place in either the <acronym
-            title="Document Type Definition">DTD</acronym> tree listing
-          produced with dtd2html (after running dtd2html with all <acronym
-          title="Document Type Definitions">DTDs</acronym> in the
-          catalog), or the <acronym title="HyperText Markup Language">HTML</acronym>
-          3.2/4.0 specs, or htmlhelp.com stuff, ...
-        </li>
-        <li>
-          Add a "recommend a <acronym title="Document Type Definition">DTD</acronym>
-          for me" feature (check a document against all
-          available DTDs, report which one has the fewest errors)
-        </li>
+  
+    <p id="skip" class="intro">
+      This page holds the development reoadmap for the <a href="./"><acronym
+        title="World Wide Web Consortium">W3C</acronym> Markup
+        Validation Service</a>.
+    </p>
+    <ul>
+      <li>For a list open bugs and detailed feature, we now use
+      <a href="http://www.w3.org/Bugs/Public/">Bugzilla</a>, which can be searched 
+      by specific milestone version numbers.</li>
+      <li>This roadmap only gives a high-level overview of what each generation of the
+        validator changed from the others. 
+        For a detailed list of features and changes in past releases, see the
+        <a href="whatsnew.html">News</a> page.</li>
+      <li>If you would like to discuss this roadmap, or request new features, please join the
+      <a href="http://lists.w3.org/Archives/Public/www-validator/">www-validator
+        mailing list</a>.</li>
+    </ul>
+
+    <h3>Past Releases Roadmap</h3>
+    <dl>
+      <dt>Versions Prior to 0.6.0</dt>
+      <dd>Versioning up to version 0.5.x was only done as a development mechanism, and 
+        the validator was not following a strict release cycle.</dd>
+      <dt>0.6.x</dt>
+      <dd>The 0.6.0 release, in 2002, kicked in a new phase of open source development for the validator, 
+        including a number of bug fixes. 0.6.0 through 0.6.7 included mostly bug fixes and documentation updates.</dd>
+      <dt>0.7.x</dt>
+      <dd>The 0.7.0 release reorganized the validator to use templates, making it easier to produce different outputs (hence the development of an API). 0.7.0 through 0.7.4 included mostly bug fixes and documentation updates.</dd>
+      <dt>0.8.x</dt>
+      <dd>The 0.8.0 release sees the validator code reorganized around a more modular architecture, adding better XML checking capabilities.</dd>
+    </dl>
+    <h3>Future Roadmap</h3>
+    <dl>
+      <dt>0.9.x</dt>
+      <dd>The next big version of the validator should be about localization. Provide at least all the error messages to users in their languages, and if possible, UI and documentation as well. Other things that could make it to 0.9.x:
+      <ul>
         <li>
           Start caching validation results locally and doing an
           <code>If-Modified-Since</code>
@@ -255,55 +59,50 @@
         <li>
           <acronym title="Uniform Resource Locator">URL</acronym>-minder service:
           "remind me if this page or set of pages ever ceases to validate".
-          <ul>
-            <li>
-              "registered user" feature is also necessary for this (to prevent
-              unwanted e-mail)
-            </li>
-            <li>
-              "registered users" could have a list of <acronym
-                title="Uniform Resource Locators">URLs</acronym> they're interested in,
-              and whenever they return to the service they can modify this list,
-              and e-mail can be sent whenever any of them cease to validate
-            </li>
-            <li>
-              Right now someone could probably use the existing <acronym
-                title="Uniform Resource Locator">URL</acronym>-minder
-              service instead of writing a new one (tell it to "mind" the
-              <acronym title="Uniform Resource Locator">URL</acronym>
-              that points to the validation result for a page?) But I'm not sure
-              how regularly
-              <acronym title="Uniform Resource Locator">URL</acronym>-minder
-              checks for changes; it seemed to be
-              weekly or something, which isn't frequent enough, <acronym
-              title="In My Opinion">IMO</acronym>. Doing an
-              <code>If-Modified-Since</code> <code>GET</code> every day doesn't
-              cost much if pages don't change. Some of these features should only
-              be enabled if the page consistently returns a <code>Last-Modified</code>
-              header, maybe.
-            </li>
-          </ul>
         </li>
-        <li>Provide messages in different languages?</li>
+       </ul>
+      </dd>
+      <dt>1.0</dt>
+      <dd>This is often seen as "blue sky". This version should build upon a modular structure, and
+        be able to use different parsers as alternates or in sequence: support relaxNG, schematron, etc. 
+        Also, investigate checking of <a
+          href="http://www.openhealth.org/RDDL/"><acronym
+            title="Resource Directory Description Language">RDDL</acronym></a>, microformats and other rich markup.
+        </dd>
+    
+    </dl>
+    
+    <h3>Miscellaneous things that should get into this roadmap</h3>
+     
+      <ul>
         <li>
-          Add a graphical representation of the document's structure,
-          using images mixed with text, or just an image?
-        </li>
-        <li>Add a section with
-          <acronym title="Platform For Internet Content Selection">PICS</acronym>
-          info?</li>
-        <li>
-          Issue <acronym title="Platform For Internet Content Selection">PICS</acronym>
-          labels for documents that do/don't conform? Or for editing tools that don't
-          conform?
+          Add a section to the report on
+          <a href="http://www.mnot.net/cacheability/">document cacheability</a>?
+          (or just link to it?)
         </li>
         <li>
-          Investigate possibility of modifying OpenSP's messages for e.g.
-          invalid attributes to include name of current element and version
-          and type of markup in use.
+          Make e.g. <code>http://validator.w3.org/check/referer;imgonly</code>
+          return only an image showing the validation status of the referring
+          page, or something similar with a landing page for referer validation,
+          showcasing what validation/web conformance/standards are, with most 
+          of the gritty stuff hidden from view.
         </li>
-      </ol>
-    </div>
+        <li>
+          Make an "elements found" section a la Webtechs, with links from each
+          element to the appropriate place in either the <acronym
+            title="Document Type Definition">DTD</acronym> tree listing
+          produced with dtd2html (after running dtd2html with all <acronym
+          title="Document Type Definitions">DTDs</acronym> in the
+          catalog), or the <acronym title="HyperText Markup Language">HTML</acronym>
+          3.2/4.0 specs, or htmlhelp.com stuff, ...
+        </li>
+        <li>
+          Add a "recommend a <acronym title="Document Type Definition">DTD</acronym>
+          for me" feature (check a document against all
+          available DTDs, report which one has the fewest errors)
+        </li>
+</ul>
+  </div><!-- doc -->
 <!--#include virtual="footer.html" -->
   </body>
 </html>
