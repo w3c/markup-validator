@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.541 2007-07-19 03:59:24 ot Exp $
+# $Id: check,v 1.542 2007-07-19 06:21:03 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -183,7 +183,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.541 $;
+  $VERSION =  q$Revision: 1.542 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -628,8 +628,14 @@ if (&is_xml($File)) {
   $xmlparser->line_numbers(1);
   # loading the XML catalog for entities resolution
   $xmlparser->load_catalog( File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc') );
+  my $xml_string = join"\n",@{$File->{Content}};
+  # the XML parser will check the value of encoding attribute in XML declaration
+  # so we have to amend it to reflect transcoding. see Bug 4867
+  $xml_string =~ s/(<\?xml.*)
+(encoding[\x20|\x09|\x0D|\x0A]*=[\x20|\x09|\x0D|\x0A]*(?:"[A-Za-z][a-zA-Z0-9_-]+"|'[A-Za-z][a-zA-Z0-9_-]+'))
+(.*\?>)/\1encoding="utf-8"\3/sx;
   eval {
-    $xmlparser->parse_string(join"\n",@{$File->{Content}});
+    $xmlparser->parse_string($xml_string);
   };
   my $xml_parse_errors_line = undef;
   my @xmlwf_error_list;
