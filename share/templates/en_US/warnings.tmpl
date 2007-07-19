@@ -428,6 +428,21 @@
     </p>
   </li>
 </TMPL_IF>
+<TMPL_IF NAME="W22">
+  <li class="msg_warn" id="W22"><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Character Encoding suggestion: use 
+  <code><TMPL_VAR NAME="W22_suggested" ESCAPE="HTML"></code> instead of <code><TMPL_VAR NAME="W22_declared" ESCAPE="HTML"></code></span>
+  
+    <p>
+      The character encoding declared for this document 
+      (<code><TMPL_VAR NAME="W22_declared" ESCAPE="HTML"></code>) may not be widely supported.
+      This encoding is equivalent to <code><TMPL_VAR NAME="W22_suggested" ESCAPE="HTML"></code>
+      which may be better supported across platforms.
+    </p> 
+    <p>
+      More information on <a href="http://www.w3.org/International/O-charset.html">declaring a character encoding on your Web server or in your document</a> can be found on the W3C Internationalization site.
+    </p>
+  </li>
+</TMPL_IF>
 
 
 

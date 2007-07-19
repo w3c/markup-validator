@@ -73,6 +73,10 @@
 <TMPL_IF NAME="W21">
   <warning><message>Byte-Order Mark found in UTF-8 File.</message></warning>
 </TMPL_IF>
+<TMPL_IF NAME="W22">
+<warning><message>Character Encoding suggestion: use 
+<TMPL_VAR NAME="W22_suggested" ESCAPE="HTML"> instead of <TMPL_VAR NAME="W22_declared" ESCAPE="HTML"></warning></message>
+</TMPL_IF>
 
 <TMPL_IF NAME="W@@">
   <warning><message></message></warning>

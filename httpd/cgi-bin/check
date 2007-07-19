@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.540 2007-07-17 02:32:36 ot Exp $
+# $Id: check,v 1.541 2007-07-19 03:59:24 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -183,7 +183,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.540 $;
+  $VERSION =  q$Revision: 1.541 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2083,19 +2083,25 @@ sub transcode {
 
   my $cs = $exact_charset;
 
-  if (!$CFG->{Charsets}->{$cs}) {
-    # The encoding is not supported due to policy
-    # and possibly other reasons
+  if ($CFG->{Charsets}->{$cs}) {
+    if ($CFG->{Charsets}->{$cs} =~ /Encoding Forbidden/) {
+      # The encoding is not supported due to policy
+      
+      $File->{'Error Flagged'} = TRUE;
+      $File->{Templates}->{Error}->param(fatal_transcode_error   => TRUE);
+      $File->{Templates}->{Error}->param(fatal_transcode_charset => $cs);
 
-    $File->{'Error Flagged'} = TRUE;
-    $File->{Templates}->{Error}->param(fatal_transcode_error   => TRUE);
-    $File->{Templates}->{Error}->param(fatal_transcode_charset => $cs);
-
-    # @@FIXME might need better text
-    $File->{Templates}->{Error}->param(fatal_transcode_errmsg  =>
-                                       "Encoding not supported.");
-
-    return $File;
+      # @@FIXME might need better text
+      $File->{Templates}->{Error}->param(fatal_transcode_errmsg  =>
+                                         "This encoding is not supported by the validator.");
+      return $File;
+    }
+    else {
+      &add_warning('W22', {
+        W22_declared => $cs,
+        W22_suggested => $CFG->{Charsets}->{$cs},
+      });      
+    }
   }
 
   # Does the system support decoding this encoding?
