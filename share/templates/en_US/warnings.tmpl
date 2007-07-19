@@ -443,6 +443,23 @@
     </p>
   </li>
 </TMPL_IF>
+<TMPL_IF NAME="W23">
+  <li class="msg_warn" id="W23"><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Rare or unregistered character encoding detected</span>
+  
+    <p>
+      The character encoding declared for this document 
+      (<code><TMPL_VAR NAME="W23_declared" ESCAPE="HTML"></code>) 
+      is supported by the validator, but may not be widely supported across platforms.
+      For the sake of interoperability, it is best to use a unicode character encoding 
+      such as <code>UTF-8</code>, or one of the 
+      <a href="http://www.iana.org/assignments/character-sets">registered character
+  	encodings</a>.
+    </p> 
+    <p>
+      More information on <a href="http://www.w3.org/International/O-charset.html">declaring a character encoding on your Web server or in your document</a> can be found on the W3C Internationalization site.
+    </p>
+  </li>
+</TMPL_IF>
 
 
 

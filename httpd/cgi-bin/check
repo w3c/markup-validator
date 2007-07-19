@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.542 2007-07-19 06:21:03 ot Exp $
+# $Id: check,v 1.543 2007-07-19 08:18:30 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -183,7 +183,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.542 $;
+  $VERSION =  q$Revision: 1.543 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2090,7 +2090,7 @@ sub transcode {
   my $cs = $exact_charset;
 
   if ($CFG->{Charsets}->{$cs}) {
-    if ($CFG->{Charsets}->{$cs} =~ /Encoding Forbidden/) {
+    if ($CFG->{Charsets}->{$cs} =~ /ERR /) {
       # The encoding is not supported due to policy
       
       $File->{'Error Flagged'} = TRUE;
@@ -2102,10 +2102,13 @@ sub transcode {
                                          "This encoding is not supported by the validator.");
       return $File;
     }
-    else {
+    elsif ($CFG->{Charsets}->{$cs} =~ /X /) {
+      # possibly problematic, we recommend another alias
+      my $recommended_charset = $CFG->{Charsets}->{$cs};
+      $recommended_charset =~ s/X //;
       &add_warning('W22', {
         W22_declared => $cs,
-        W22_suggested => $CFG->{Charsets}->{$cs},
+        W22_suggested => $recommended_charset,
       });      
     }
   }
@@ -2126,6 +2129,13 @@ sub transcode {
                                        "Encoding not supported.");
 
     return $File;
+  }
+  elsif (!$CFG->{Charsets}->{$cs}) {
+    # not in the list, but technically OK -> we warn
+    &add_warning('W23', {
+      W23_declared => $cs,
+    });      
+    
   }
 
   my $output;

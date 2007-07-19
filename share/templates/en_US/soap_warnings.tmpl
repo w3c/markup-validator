@@ -77,6 +77,9 @@
 <m:warning><m:message>Character Encoding suggestion: use 
 <TMPL_VAR NAME="W22_suggested" ESCAPE="HTML"> instead of <TMPL_VAR NAME="W22_declared" ESCAPE="HTML"></m:warning></m:message>
 </TMPL_IF>
+<TMPL_IF NAME="W23">
+  <m:warning><m:message>Rare or unregistered Character Encoding detected</m:message></m:warning>
+</TMPL_IF>
 
 <TMPL_IF NAME="W@@">
   <m:warning><m:message></m:message></m:warning>
