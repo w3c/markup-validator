@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.543 2007-07-19 08:18:30 ot Exp $
+# $Id: check,v 1.544 2007-07-20 02:56:07 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -183,7 +183,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.543 $;
+  $VERSION =  q$Revision: 1.544 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2132,8 +2132,8 @@ sub transcode {
   }
   elsif (!$CFG->{Charsets}->{$cs}) {
     # not in the list, but technically OK -> we warn
-    &add_warning('W23', {
-      W23_declared => $cs,
+    &add_warning('W24', {
+      W24_declared => $cs,
     });      
     
   }

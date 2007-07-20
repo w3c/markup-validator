@@ -129,30 +129,6 @@
   </li>
 </TMPL_IF>
 
-<TMPL_IF NAME="W23">
-  <li class="msg_warn" id="W23"><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Conflict between Mime Type and Document Type</span>
-  
-    <p>The document is being served with the  <code><TMPL_VAR NAME="W23_type" ESCAPE="HTML"></code> Mime Type
-      which is not a registered media type for the 
-      <code><TMPL_VAR NAME="W23_doctype" ESCAPE="HTML"></code> Document Type. The recommended media type 
-      for this document is: <code><TMPL_VAR NAME="W23_type_pref" ESCAPE="HTML"></code></p>
-           
-   <p>Using a wrong media type for a certain document type may
-      confuse the validator and other user agents with respect to the 
-      nature of the document, and you may get some erroneous validation
-      errors. How to fix this problem? One of the following techniques should help:</p>
-   <ul>     
-      <li>If you are serving a static file on a Web server, changing its extension should help. 
-        Use e.g <code>.xhtml</code> for XHTML or <code>.mathml</code> for MathML.              
-     </li>
-     <li>You may need to reconfigure your Web server. This <a  href="http://www.developershome.com/wap/wapServerSetup/tutorial.asp?page=settingUpMIME">Setting up MIME Types tutorial</a> has instructions for Apache, Tomcat and IIS.
-</li>
-     <li>If the document is generated dynamically, the scripting language should allow you to set up the mime type: 
-             this <a href="http://juicystudio.com/article/content-negotiation.php">article on MIME Types and Content Negotiation</a> has examples in PHP, Perl, and ASP.</li>
-    </ul>
-  </li>
-</TMPL_IF>
-
 <TMPL_IF NAME="W06">
   <li class="msg_warn" id="W06"><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Unable to Determine Parse Mode!</span>
   <p>It was not possible  to reliably choose  a parsing mode for this document, because:</p>
@@ -443,12 +419,39 @@
     </p>
   </li>
 </TMPL_IF>
+
+
 <TMPL_IF NAME="W23">
-  <li class="msg_warn" id="W23"><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Rare or unregistered character encoding detected</span>
+  <li class="msg_warn" id="W23"><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Conflict between Mime Type and Document Type</span>
+  
+    <p>The document is being served with the  <code><TMPL_VAR NAME="W23_type" ESCAPE="HTML"></code> Mime Type
+      which is not a registered media type for the 
+      <code><TMPL_VAR NAME="W23_doctype" ESCAPE="HTML"></code> Document Type. The recommended media type 
+      for this document is: <code><TMPL_VAR NAME="W23_type_pref" ESCAPE="HTML"></code></p>
+           
+   <p>Using a wrong media type for a certain document type may
+      confuse the validator and other user agents with respect to the 
+      nature of the document, and you may get some erroneous validation
+      errors. How to fix this problem? One of the following techniques should help:</p>
+   <ul>     
+      <li>If you are serving a static file on a Web server, changing its extension should help. 
+        Use e.g <code>.xhtml</code> for XHTML or <code>.mathml</code> for MathML.              
+     </li>
+     <li>You may need to reconfigure your Web server. This <a  href="http://www.developershome.com/wap/wapServerSetup/tutorial.asp?page=settingUpMIME">Setting up MIME Types tutorial</a> has instructions for Apache, Tomcat and IIS.
+</li>
+     <li>If the document is generated dynamically, the scripting language should allow you to set up the mime type: 
+             this <a href="http://juicystudio.com/article/content-negotiation.php">article on MIME Types and Content Negotiation</a> has examples in PHP, Perl, and ASP.</li>
+    </ul>
+  </li>
+</TMPL_IF>
+
+
+<TMPL_IF NAME="W24">
+  <li class="msg_warn" id="W24"><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Rare or unregistered character encoding detected</span>
   
     <p>
       The character encoding declared for this document 
-      (<code><TMPL_VAR NAME="W23_declared" ESCAPE="HTML"></code>) 
+      (<code><TMPL_VAR NAME="W24_declared" ESCAPE="HTML"></code>) 
       is supported by the validator, but may not be widely supported across platforms.
       For the sake of interoperability, it is best to use a unicode character encoding 
       such as <code>UTF-8</code>, or one of the 
