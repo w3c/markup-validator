@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.544 2007-07-20 02:56:07 ot Exp $
+# $Id: check,v 1.545 2007-07-23 06:01:39 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -183,7 +183,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.544 $;
+  $VERSION =  q$Revision: 1.545 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2489,6 +2489,12 @@ sub W3C::Validator::SAXHandler::error
     # in that case the error message will be #344
   }
 
+   if (($err->{num} eq '113') and ($err->{msg} =~ /xml:space/)) {
+     # FIXME
+     # this is a problem with some of the "flattened" W3C DTDs, filtering them out to not confuse users.
+     # hoping to get the DTDs fixed, see http://lists.w3.org/Archives/Public/www-html-editor/2007AprJun/0010.html 
+     return; # don't report this, just proceed
+   }
 
   # Workaround for onsgmls as of 1.5 sometimes allegedly reporting errors
   # beyond EOL.  If you see this warning in your web server logs, please
