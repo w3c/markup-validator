@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.23 2007-07-10 03:30:13 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-07-10 03:30:13 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.24 2007-07-24 06:56:45 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-07-24 06:56:45 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -94,7 +94,7 @@
             title="Comprehensive Perl Archive Network">CPAN</acronym></a>
         (minimum versions in parenthesis after the name). The following
         list was complete when CVS spit out:
-        <code>$Date: 2007-07-10 03:30:13 $</code>. <tt>:-)</tt>
+        <code>$Date: 2007-07-24 06:56:45 $</code>. <tt>:-)</tt>
       </p>
      <p>
        One easy - and strongly recommended - way to take care of all these
@@ -280,6 +280,10 @@
 	<p>The following instructions are for the Apache Web server, and should be adapted 
 	if you plan on using another server.</p>
         <ol>
+            <li>
+              <p>If you are using the apache server, we strongly recommend using the validator under mod_perl2.</p> 
+              <p>This should happen automatically if your apache server has mod_perl2 installed and enabled, and it will bring important performance benefits.</p>
+            </li>
             <li>
               <p>
                 Edit the configuration of your Web server to refer to the
