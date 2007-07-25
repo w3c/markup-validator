@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.545 2007-07-23 06:01:39 ot Exp $
+# $Id: check,v 1.546 2007-07-25 04:37:36 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -183,7 +183,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.545 $;
+  $VERSION =  q$Revision: 1.546 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -267,6 +267,11 @@ $File->{Namespaces} = []; # Other (non-root) Namespaces.
 ###############################################################################
 #### Generate Template for Result. ############################################
 ###############################################################################
+
+# in case there is no language set up on the server, we'll use english as default:
+if (!defined $CFG->{Languages}) {
+  $CFG->{Languages} = "en";
+}
 
 # first we determine the chosen language based on
 # 1) lang argument given as parameter (if this language is available)
