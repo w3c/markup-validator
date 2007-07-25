@@ -14,7 +14,7 @@ WriteMakefile(
                       HTML::Template       => 2.6,
                       LWP::UserAgent       => 1.90,
                       Net::IP              => 0,
-                      SGML::Parser::OpenSP => 0
+                      SGML::Parser::OpenSP => 0,
                       URI                  => 0,
                       XML::LibXML          => 0,
                       Encode               => 0,
