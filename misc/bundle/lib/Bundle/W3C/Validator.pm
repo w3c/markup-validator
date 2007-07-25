@@ -22,18 +22,18 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
 
  CGI 2.81
  Config::General 2.19
- HTML::Encoding 0.52
- HTML::Parser 3.25
- HTML::Template 2.6
- LWP::UserAgent 1.90
  Encode
  Encode::HanExtra
  Encode::JIS2K
  File::Spec
+ HTML::Encoding 0.52
+ HTML::Parser 3.25
+ HTML::Template 2.6
+ LWP::UserAgent 1.90
  Net::IP
  SGML::Parser::OpenSP
  URI
- XML::LibXML
+ XML::LibXML 1.53
 
 =head1 DESCRIPTION
 

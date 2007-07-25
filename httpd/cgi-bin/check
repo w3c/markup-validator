@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.547 2007-07-25 17:37:25 ville Exp $
+# $Id: check,v 1.548 2007-07-25 17:41:54 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -61,7 +61,7 @@ use HTTP::Headers::Auth       qw(); # Needs to be imported after other HTTP::*.
 use SGML::Parser::OpenSP      qw();
 use URI                       qw();
 use URI::Escape               qw(uri_escape);
-use XML::LibXML               qw();
+use XML::LibXML          1.53 qw(); # Need 1.53 for $p->load_catalog.
 
 ###############################################################################
 #### Constant definitions. ####################################################
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.547 $;
+  $VERSION =  q$Revision: 1.548 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #

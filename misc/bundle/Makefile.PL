@@ -16,7 +16,7 @@ WriteMakefile(
                       Net::IP              => 0,
                       SGML::Parser::OpenSP => 0,
                       URI                  => 0,
-                      XML::LibXML          => 0,
+                      XML::LibXML          => 1.53,
                       Encode               => 0,
                       Encode::HanExtra     => 0,
                       Encode::JIS2K        => 0,
