@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.546 2007-07-25 04:37:36 ot Exp $
+# $Id: check,v 1.547 2007-07-25 17:37:25 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -46,19 +46,22 @@ use utf8;
 use CGI                  2.81 qw(-newstyle_urls -private_tempfiles redirect);
 use CGI::Carp                 qw(carp croak fatalsToBrowser);
 use Config::General      2.19 qw(); # Need 2.19 for -AutoLaunder
-use File::Spec                qw();
-use HTML::Parser         3.25 qw(); # Need 3.25 for $p->ignore_elements.
-use HTML::Template       2.6  qw();
-use HTTP::Request             qw();
-use HTTP::Headers::Auth       qw(); # Needs to be imported after other HTTP::*.
-use URI                       qw();
-use URI::Escape               qw(uri_escape);
 use Encode                    qw();
 use Encode::Alias             qw();
-use Encode::HanExtra          qw(); #for some chinese character encodings, e.g gb18030
+use Encode::HanExtra          qw(); # for some chinese character encodings,
+                                    # e.g gb18030
 use Encode::JIS2K             qw(); # ditto extra japanese encodings
+use File::Spec                qw();
 use HTML::Encoding       0.52 qw();
+use HTML::Parser         3.25 qw(); # Need 3.25 for $p->ignore_elements.
+use HTML::Template       2.6  qw();
+use HTTP::Negotiate           qw();
+use HTTP::Request             qw();
+use HTTP::Headers::Auth       qw(); # Needs to be imported after other HTTP::*.
 use SGML::Parser::OpenSP      qw();
+use URI                       qw();
+use URI::Escape               qw(uri_escape);
+use XML::LibXML               qw();
 
 ###############################################################################
 #### Constant definitions. ####################################################
@@ -183,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.546 $;
+  $VERSION =  q$Revision: 1.547 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -293,7 +296,6 @@ if (($lang eq '') or (!$lang_ok)) { # use HTTP-based negotiation
     push @localizations, [$lang_available, 1.000, 'text/html', undef,
                           'utf-8', $lang_available, undef];
   }
-  require HTTP::Negotiate;
   $lang = HTTP::Negotiate::choose(\@localizations);
 }
 
@@ -628,7 +630,6 @@ $File->{Errors} = [];
 # but it's badly linked to opensp at the moment
 if (&is_xml($File)) {
 
-  require XML::LibXML;
   my $xmlparser = XML::LibXML->new();
   $xmlparser->line_numbers(1);
   # loading the XML catalog for entities resolution
