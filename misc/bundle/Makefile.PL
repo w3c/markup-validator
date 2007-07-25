@@ -9,6 +9,10 @@ WriteMakefile(
     PREREQ_PM     => {
                       CGI                  => 2.81,
                       Config::General      => 2.19,
+                      Encode               => 0,
+                      Encode::HanExtra     => 0,
+                      Encode::JIS2K        => 0,
+                      File::Spec           => 0,
                       HTML::Encoding       => 0.52,
                       HTML::Parser         => 3.25,
                       HTML::Template       => 2.6,
@@ -17,10 +21,6 @@ WriteMakefile(
                       SGML::Parser::OpenSP => 0,
                       URI                  => 0,
                       XML::LibXML          => 1.53,
-                      Encode               => 0,
-                      Encode::HanExtra     => 0,
-                      Encode::JIS2K        => 0,
-                      File::Spec           => 0
                      },
   dist            => { TARFLAGS => '--owner=0 --group=0 -cvf' },
   clean           => { FILES => 'ChangeLog.bak' },
