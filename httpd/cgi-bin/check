@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.550 2007-07-26 03:49:40 ot Exp $
+# $Id: check,v 1.551 2007-07-26 21:41:51 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -61,7 +61,7 @@ use HTTP::Headers::Auth       qw(); # Needs to be imported after other HTTP::*.
 use SGML::Parser::OpenSP      qw();
 use URI                       qw();
 use URI::Escape               qw(uri_escape);
-use XML::LibXML          1.53 qw(); # Need 1.53 for $p->load_catalog.
+use XML::LibXML               qw();
 
 ###############################################################################
 #### Constant definitions. ####################################################
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.550 $;
+  $VERSION =  q$Revision: 1.551 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -634,7 +634,7 @@ if (&is_xml($File)) {
   $xmlparser->line_numbers(1);
   $xmlparser->validation(0);
   $xmlparser->load_ext_dtd(0);
-  # [NOT] loading the XML catalog for entities resolution as it seems to cause a lot of unnecessary DTD/entities fetching
+  # [NOT] loading the XML catalog for entities resolution as it seems to cause a lot of unnecessary DTD/entities fetching (requires >= 1.53 if enabled)
   #$xmlparser->load_catalog( File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc') );
   my $xml_string = join"\n",@{$File->{Content}};
   # the XML parser will check the value of encoding attribute in XML declaration

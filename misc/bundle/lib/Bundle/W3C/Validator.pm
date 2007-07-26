@@ -33,7 +33,7 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
  Net::IP
  SGML::Parser::OpenSP
  URI
- XML::LibXML 1.53
+ XML::LibXML
 
 =head1 DESCRIPTION
 
