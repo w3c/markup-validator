@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.548 2007-07-25 17:41:54 ville Exp $
+# $Id: check,v 1.549 2007-07-26 02:10:48 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.548 $;
+  $VERSION =  q$Revision: 1.549 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -632,8 +632,10 @@ if (&is_xml($File)) {
 
   my $xmlparser = XML::LibXML->new();
   $xmlparser->line_numbers(1);
-  # loading the XML catalog for entities resolution
-  $xmlparser->load_catalog( File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc') );
+  $xmlparser->validation(0);
+  $xmlparser->load_ext_dtd(0);
+  # [NOT] loading the XML catalog for entities resolution as it seems to cause a lot of unnecessary DTD/entities fetching
+  #$xmlparser->load_catalog( File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc') );
   my $xml_string = join"\n",@{$File->{Content}};
   # the XML parser will check the value of encoding attribute in XML declaration
   # so we have to amend it to reflect transcoding. see Bug 4867
@@ -691,7 +693,9 @@ if (&is_xml($File)) {
         $err->{type} = "E";
         $err->{msg}  = $xmlwf_error_msg;
 
-        # ...
+        # The validator will sometimes fail to dereference entities files
+        # we're filtering the bogus resulting error
+        next if ($err->{msg} =~ /Entity '\w+' not defined/);
         push (@xmlwf_error_list, $err);
         $xmlwf_error_line = undef;
         $xmlwf_error_col = undef;
@@ -768,7 +772,6 @@ sub parse (\$) {
              { name => 'Parse Mode Factor', value => $File->{ModeChoice} },
              { name => 'Parser', value => $parser_name },
              { name => 'Parser Options', value => join " ", @spopt },
-
             ],
            );
    $File->{Templates}->{SOAP}->param(opt_debug => $DEBUG);
