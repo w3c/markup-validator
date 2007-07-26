@@ -7,9 +7,7 @@
         <TMPL_INCLUDE NAME="warnings.tmpl">
       </TMPL_IF>
 
-	    <h3 id="results" class="invalid">Sorry! This document can not be checked.</h3>
 <ol id="fatal-errors">
-      <a id="skip" name="skip"></a>
 <TMPL_IF NAME="fatal_transcode_error">
   <li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
       <p>
@@ -149,7 +147,7 @@
 
 <TMPL_IF NAME="fatal_parse_extid_error">
 <li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
-      <h2>Fatal Error: <TMPL_VAR NAME="fatal_parse_extid_msg" ESCAPE="HTML"></h2>
+      <h3>Fatal Error: <TMPL_VAR NAME="fatal_parse_extid_msg" ESCAPE="HTML"></h3>
       <p>
         I could not parse this document, because it makes reference to a
         system-specific file instead of using a well-known public identifier
@@ -161,7 +159,7 @@
 
 <TMPL_IF NAME="fatal_referer_error">
 <li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
-        <h2><strong>No Referer header found!</strong></h2>
+        <h3><strong>No Referer header found!</strong></h3>
         <p>
           You have requested we check the referring page, but your browser did
           not send the HTTP "Referer" header field. This can be for several
