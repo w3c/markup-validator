@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.551 2007-07-26 21:41:51 ville Exp $
+# $Id: check,v 1.552 2007-07-30 06:23:43 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.551 $;
+  $VERSION =  q$Revision: 1.552 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -653,19 +653,32 @@ if (&is_xml($File)) {
     my $xmlwf_error_line = undef;
     my $xmlwf_error_col = undef;
     my $xmlwf_error_msg = undef;
+    my $got_error_message = 0;
+    my $got_quoted_line = 0;
     my $num_xmlwf_error = 0;
     foreach my $msg_line (split "\n", $xmlwf_errors){
+
       $msg_line =~ s{[^\x0d\x0a](:\d+:)}{\n$1}g;
       $msg_line =~ s{[^\x0d\x0a]+[\x0d\x0a]$}{};
-      if ($msg_line =~ /(:\d+:)(.*)/ ) {
+      
+      # first we get the actual error message
+      if (($got_error_message eq 0) and ($msg_line =~ /^(:\d+:)( parser error : .*)/ )) {
         $xmlwf_error_line = $1;
         $xmlwf_error_msg = $2;
         $xmlwf_error_line =~ s/:(\d+):/$1/;
         $xmlwf_error_msg =~ s/ parser error :/XML Parsing Error: /;
+        $got_error_message = 1;
       }
-      elsif ($msg_line =~ /(\s+)\^/) {
+      # then we skip the second line, which shows the context (we don't use that)
+      elsif (($got_error_message eq 1) and ($got_quoted_line eq 0)) {
+        $got_quoted_line = 1;
+      }
+      # we now take the third line, with the pointer to the error's column
+      elsif (($msg_line =~ /(\s+)\^/) and ($got_error_message eq 1) and ($got_quoted_line eq 1)) {
         $xmlwf_error_col = length($1);
       }
+
+      #  cleanup for a number of bugs for the column number
       if (defined($xmlwf_error_col)) {
         if ((my $l = length($File->{Content}->[$xmlwf_error_line-1])) < $xmlwf_error_col) {
           # http://bugzilla.gnome.org/show_bug.cgi?id=434196
@@ -684,7 +697,13 @@ if (&is_xml($File)) {
         }
       }
 
+      # when we have all the info (one full error message), proceed and move on to the next error
       if ((defined $xmlwf_error_line) and (defined $xmlwf_error_col) and (defined $xmlwf_error_msg)){
+        # Reinitializing for the next batch of 3 lines
+        $got_error_message = 0;
+        $got_quoted_line = 0;
+        
+        # formatting the error message for output
         my $err;
         $err->{src}  = '...'; # do this with show_open_entities()?
         $err->{line} = $xmlwf_error_line;
@@ -695,7 +714,12 @@ if (&is_xml($File)) {
 
         # The validator will sometimes fail to dereference entities files
         # we're filtering the bogus resulting error
-        next if ($err->{msg} =~ /Entity '\w+' not defined/);
+        if ($err->{msg} =~ /Entity '\w+' not defined/) {
+          $xmlwf_error_line = undef;
+          $xmlwf_error_col = undef;
+          $xmlwf_error_msg = undef;
+          next;
+        }
         push (@xmlwf_error_list, $err);
         $xmlwf_error_line = undef;
         $xmlwf_error_col = undef;
@@ -708,8 +732,8 @@ if (&is_xml($File)) {
       $File->{'Is Valid'} = FALSE;
       push @{$File->{WF_Errors}}, $errmsg;
     }
-
   }
+  
 }
 
 
