@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.552 2007-07-30 06:23:43 ot Exp $
+# $Id: check,v 1.553 2007-08-02 04:57:54 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.552 $;
+  $VERSION =  q$Revision: 1.553 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -641,10 +641,11 @@ if (&is_xml($File)) {
   # so we have to amend it to reflect transcoding. see Bug 4867
   $xml_string =~ s/(<\?xml.*)
 (encoding[\x20|\x09|\x0D|\x0A]*=[\x20|\x09|\x0D|\x0A]*(?:"[A-Za-z][a-zA-Z0-9_-]+"|'[A-Za-z][a-zA-Z0-9_-]+'))
-(.*\?>)/\1encoding="utf-8"\3/sx;
+(.*\?>)/$1encoding="utf-8"$3/sx;
   eval {
     $xmlparser->parse_string($xml_string);
   };
+  $xml_string = undef; 
   my $xml_parse_errors_line = undef;
   my @xmlwf_error_list;
   if ($@) {
