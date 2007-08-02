@@ -28,7 +28,7 @@ WriteMakefile(
 
 sub MY::postamble {
   return <<'MAKE_FRAG';
-changelog:
+ChangeLog: README lib/Bundle/W3C/Validator.pm t/00load.t
 	cvs2cl --FSF --utc --prune \
 	  --ignore ChangeLog --ignore cvsignore --ignore SIGNATURE \
 	  --ignore Makefile.PL --ignore META.yml --ignore MANIFEST
