@@ -1,3 +1,39 @@
+2007-07-26  ville
+
+	* lib/Bundle/W3C/Validator.pm: Back down to unversioned
+	XML::LibXML, load_catalog no longer used.
+
+2007-07-25  ville
+
+	* lib/Bundle/W3C/Validator.pm: XML::LibXML >= 1.53 is needed for
+	load_catalog().
+
+2007-07-10  ot
+
+	* lib/Bundle/W3C/Validator.pm: requiring extra perl libs for CJK
+	character encodings, and documenting the new requirements
+
+2007-04-04  ville
+
+	* lib/Bundle/W3C/Validator.pm: +XML::LibXML
+
+2007-04-02  ville
+
+	* README: 2007
+
+2007-04-02  ville
+
+	* lib/Bundle/W3C/Validator.pm: Update dependencies
+
+2006-03-31  ot
+
+	* README, lib/Bundle/W3C/Validator.pm: merging from 0.7 branch into
+	trunk at tag validator-0_7_2-release
+
+2006-01-26  ville
+
+	* README, lib/Bundle/W3C/Validator.pm: Update copyright years.
+
 2005-01-09  ville
 
 	* README, lib/Bundle/W3C/Validator.pm: 2005.
