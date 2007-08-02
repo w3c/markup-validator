@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.47 2007-04-24 19:59:13 ville Exp $"
---><!--#set var="date" value="\$Date: 2007-04-24 19:59:13 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.48 2007-08-02 07:49:16 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-08-02 07:49:16 $"
 --><!--#set var="title" value="Source Code Availability for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -27,9 +27,8 @@
 
     <p><a id="skip" name="skip"></a>
     The source code for the <a href="../"><acronym title="World Wide Web Consortium">W3C</acronym>
-    Markup Validation Service</a> is available under the terms of the <a
-        href="http://www.w3.org/Consortium/Legal/copyright-software"><acronym
-          title="World Wide Web Consortium">W3C</acronym>
+    Markup Validation Service</a> is available under the terms of the
+    <a href="http://www.w3.org/Consortium/Legal/copyright-software"><acronym title="World Wide Web Consortium">W3C</acronym>
 	Software License</a>. Source tarball of the latest production
       version is always available at
       &lt;<a href="http://validator.w3.org/validator.tar.gz">http://validator.w3.org/validator.tar.gz</a>&gt;.
@@ -37,6 +36,7 @@
     </p>
 
           <h4><a id="browse" name="browse"></a>Browsing the code</h4>
+
   <p>
     If you just want to glance at the code, or see its revision
     history, you can
@@ -69,14 +69,18 @@
             Select the topmost revision numbers on these
             pages to see the most recent revision of each file.
           </p>
+  
           <h4><a id="tarball" name="tarball"></a>Download the code in tarballs</h4>
+
 	   <p>
             If you want a copy of all the files that make up the service, you
             can download a tarball of <a href="http://validator.w3.org/validator.tar.gz">the code</a>
 	    (~300kB) and <a href="http://validator.w3.org/sgml-lib.tar.gz">the <acronym
               title="Document Type Definitions">DTDs</acronym></a> (~500kB).
           </p>
+  
         <h4><a id="rpm" name="rpm"></a>Fedora/Red Hat RPM package</h4>
+
           <p>
             Fedora/Red Hat RPM packages of the validator are available,
             courtesy of Ville Skytt&auml;, at Fedora Project,
@@ -90,43 +94,34 @@
             In addition to different Fedora versions, the RPMs
             should be adaptable to other RPM based systems.
           </p>
+  
   <h4><a id="suse" name="suse"></a>openSUSE/SUSE Linux RPM package</h4>
+
           <p>
-    openSUSE/SUSE Linux RPM packages are available, courtesy of Sierk
-            Bornemann, at sierkbornemann.de,
+    openSUSE/SUSE Linux RPM packages of the validator are available,
+    courtesy of Sierk Bornemann, at download.openSUSE.org,
+    &lt;<a href="http://software.opensuse.org/">http://software.opensuse.org/</a>&gt;.
+    Starting with openSUSE 10.3, the latest stable validator package and all its
+    dependencies are included in the official stable openSUSE distribution.
+    The name of the validator package is <tt>w3c-markup-validator</tt>,
+    use the standard automated package management tools of the
+    distribution (such as <em>YaST</em>, <em>zypper</em>, <em>smart</em>,
+    <em>apt4rpm</em> or <em>yum</em>) to install it along with its
+    dependencies.
+          </p>
+          <p>
+    Additionally, you can also get these and other needed packages
+    from the openSUSE Software Repository at
+    &lt;<a href="http://software.opensuse.org/download/validators/">http://software.opensuse.org/download/validators/</a>&gt;
+    or from one of its mirrors, or (except needed perl packages)
+    from sierkbornemann.de,
     &lt;<a href="http://sierkbornemann.de/pub/tools/w3c-markup-validator/">http://sierkbornemann.de/pub/tools/w3c-markup-validator/</a>&gt;.
-    Additionally, you can also get these packages from the new
-    <a href="http://software.opensuse.org/">software repository of the openSUSE build service</a> at
-    &lt;<a href="http://software.opensuse.org/download/validators/">http://software.opensuse.org/download/validators/</a>&gt;
-    or one of its mirrors.
+    Needed perl packages are provided through the openSUSE Software Repository at
+    &lt;<a href="http://download.opensuse.org/repositories/devel:/languages:/perl/">http://download.opensuse.org/repositories/devel:/languages:/perl/</a>&gt;.
           </p>
-          <p>
-    The RPM packages, maintained by Sierk Bornemann, are optimized for use in
-    a local network (running in a VirtualHost is recommended) for home
-            office or web agency use.
-          </p>
-          <p>
-            Note that the Validator RPMs have several dependencies, you'll
-            have to satisfy them.
-    You can get these RPMs from openSUSE (other dependencies are included
-    in the openSUSE distribution) or partly from
-            sierkbornemann.de.
-          </p>
-          <p>
-            In addition, each of these may have further dependencies that must
-            be satisfied. All the necessary RPMs are either included in
-    the openSUSE distribution or are additionally available at
-    <a href="http://sierkbornemann.de/pub/tools/w3c-markup-validator/perl-modules/">sierkbornemann.de</a> or at
-    &lt;<a href="http://software.opensuse.org/download/validators/">http://software.opensuse.org/download/validators/</a>&gt;
-    or one of its mirrors.
-            Use of an automated package management tool to install the
-    packages, such as <em>YaST</em>, <em>rug</em>, <em>y2pmsh</em>, <em>smart</em>,
-    <em>apt4rpm</em> or <em>yum</em> is recommended.
-    See the openSUSE
-    <a href="http://en.opensuse.org/Category:Package_Management">documentation</a>
-    for information about configuring these tools.
-          </p>
+  
         <h4><a name="deb" id="deb"></a>Debian GNU/Linux package</h4>
+
           <p>
             A Debian package is available, courtesy of Fr&eacute;d&eacute;ric
             Sch&uuml;tz. 
@@ -143,8 +138,8 @@
             version.
           </p>
 
-
         <h4><a id="CVS" name="CVS"></a>CVS repository</h4>
+
           <p>
             If you intend to actively mirror the code and/or contribute
             patches to the code, you should install and become familiar
@@ -153,12 +148,13 @@
             a good thing to <a href="http://ximbiot.com/cvs/manual/">get to
             know</a>.
           </p>
-          <p>For instructions on how to retrieve the code using CVS, 
+  <p>
+    For instructions on how to retrieve the code using CVS, 
               see our <a href="http://dev.w3.org/cvsweb/validator/">web-based interface to the repository.</a>
           </p>
             
-
   <h3><a id="using" name="using"></a>Using the code</h3>
+
      <p>
       The purpose of making the source code available is partly to allow
       others to set up mirrors of the service (either publicly or within
