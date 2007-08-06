@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.81 2007-06-26 09:05:40 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-06-26 09:05:40 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.82 2007-08-06 05:40:34 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-08-06 05:40:34 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -15,6 +15,7 @@
                     <li><a href="#valid_notcat">Document types outside the main catalogue</a></li>
                     <li><a href="#valid_warn">Valid Documents, with Warnings</a></li>
                     <li><a href="#wrong_mime">Valid Documents served with a wrong media type</a></li>
+		    <li><a href="#valid_bugfix">Bug Regression Tests: Valid documents</a></li>
                  
             </ul>
     </li>
@@ -295,6 +296,22 @@ All these documents should validate, without "pretty print" for the document typ
     <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/mathml2.html;ss">with v.w.o</a> - 
     <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/mathml2.html">view</a>:
     MathML 2.0 as text/html  </li>
+</ul>
+
+<h4 id="valid_bugfix">Bug Regression Tests: Valid documents</h4>
+<ul>
+    <li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml_mathml_svg_newlines.xhtml">validate</a> - 
+        <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml_mathml_svg_newlines.xhtml">with v.w.o</a> - 
+        <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml_mathml_svg_newlines.xhtml">view</a>:
+        XHTML+Math+SVG document with non-unix newlines,
+   (See <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=3992">Bug 3992: non-unix newlines confuse the parser</a>)
+  </li>
+    <li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4892-entity.html">validate</a> - 
+        <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4892-entity.html">with v.w.o</a> - 
+        <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4892-entity.html">view</a>:
+        XHTML with named entities on a line with colons and numbers, caused bogus error report in validator 0.8.0
+   (See <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=4892" title="Bug 4892 - parsing of XML WF-errors too loose, confuses content with error data">Bug 4892</a>)
+  </li>
 </ul>
 
 <h3 id="invalid">Invalid Documents</h3>
@@ -579,12 +596,6 @@ All these documents should validate, without "pretty print" for the document typ
       
       <ul>
           
-          <li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml_mathml_svg_newlines.xhtml">validate</a> - 
-              <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml_mathml_svg_newlines.xhtml">with v.w.o</a> - 
-              <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml_mathml_svg_newlines.xhtml">view</a>:
-              XHTML+Math+SVG document with non-unix newlines,
-         (See <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=3992">Bug 3992: non-unix newlines confuse the parser</a>)
-        </li>
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/long-lines.html">Long Lines</a> (cause a core)</li>
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/trailing-nul.html">A trailing ASCII NUL character</a> (trips up HTML::Parser (not really))</li>
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/colons.html">Undeclared namespace prefixes</a> (colons ":" in element names (trips up parsing of onsgmls output))</li>
