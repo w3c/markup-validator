@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.65 2007-07-25 06:20:53 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-07-25 06:20:53 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.66 2007-08-07 02:41:40 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-08-07 02:41:40 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#set var="feeds" value="1"
@@ -19,6 +19,24 @@
       </p>
     </div>
     <dl id="news">
+      <dt id="t2007-08-08">2007-08-08 &mdash; 0.8.1 Release:</dt>
+      <dd>
+        <p>The 0.8.1 release of the W3C Markup Validator is a bug fix 
+          release, addressing the following issues:</p>
+        <ul>
+          <li>Bug Fix: changed set up of parser responsible for checking XML 
+            well-formedness, which would retrieve schemas for entities 
+            each time the validator would run.</li>
+          <li>Bug Fix: the validator would incorrectly complain about HTML/XML 
+            named entities (such as &amp;copy;).</li>
+          <li>Bug Fix: fixing <a href="docs/users.html#Calling">referer checking</a> 
+            when running with Apache and mod_perl2.</li>
+          <li>Bug Fix: the validator would crash when called from browsers with rare language preference settings
+          <li>… and small performance and code cleanup fixes</li>
+  
+        </ul>      
+      </dd>
+
       <dt id="t2007-07-25">2007-07-25 &mdash; 0.8.0 Release:</dt>
       <dd>
         <p>
