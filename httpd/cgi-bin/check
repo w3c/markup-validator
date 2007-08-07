@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.554 2007-08-02 05:11:03 ot Exp $
+# $Id: check,v 1.555 2007-08-07 02:32:49 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.554 $;
+  $VERSION =  q$Revision: 1.555 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -299,6 +299,9 @@ if (($lang eq '') or (!$lang_ok)) { # use HTTP-based negotiation
   $lang = HTTP::Negotiate::choose(\@localizations);
 }
 
+# HTTP::Negotiate::choose may return undef 
+# e.g if sent Accept-Language: en;q=0
+$lang = 'en_US' if (!defined($lang));
 
 if ($lang eq "en") {
   $lang = 'en_US'; # legacy
