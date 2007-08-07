@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: errors.html,v 1.41 2007-06-11 11:27:48 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-06-11 11:27:48 $"
+<!--#set var="revision" value="\$Id: errors.html,v 1.42 2007-08-07 23:27:07 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-08-07 23:27:07 $"
 --><!--#set var="title" value="Error Explanations for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -372,8 +372,8 @@
         <dt id="ve-112">112: duplicate specification of attribute X</dt>
         <dd><div class="ve mid-112">
     <p>
-            You have specified an attribute more than once. For instance, you have
-            used the "<code class="inline">height</code>" attribute twice on the same
+            You have specified an attribute more than once. Example: Using 
+            the "<code class="inline">height</code>" attribute twice on the same
             "<code class="inline">img</code>" tag.
     </p>
   </div>
@@ -604,6 +604,19 @@
   </div>
 	<p>
 	  <a href="../feedback.html?errmsg_id=183#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt id="ve-187">187: no document type declaration; will parse without validation</dt>
+        <dd><div class="ve mid-187">
+    <p>The document type could not be determined, because the document had no correct DOCTYPE declaration. The document does not look like HTML, therefore automatic fallback could not be performed, and the document was only checked against basic markup syntax.</p>
+    <p>Learn <a href="help.html#faq-doctype">how to add a doctype to your document</a> 
+    from our <acronym title="Frequently Asked Questions">FAQ</acronym>, or use the validator's
+    <code>Document Type</code> option to validate your document against a specific Document Type.</p>
+  </div>
+	<p>
+	  <a href="../feedback.html?errmsg_id=187#errormsg"
 	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
 	</p>
 	</dd>  
@@ -1729,12 +1742,6 @@
       
         <li id="ve-186"><p>186: cannot continue with subdocument because of previous errors
 	  <a href="../feedback.html?errmsg_id=186#errormsg"
-	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
-	</p>
-	</li>
-      
-        <li id="ve-187"><p>187: no document type declaration; will parse without validation
-	  <a href="../feedback.html?errmsg_id=187#errormsg"
 	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
 	</p>
 	</li>
