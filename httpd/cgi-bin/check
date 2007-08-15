@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.555 2007-08-07 02:32:49 ot Exp $
+# $Id: check,v 1.556 2007-08-15 01:33:30 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.555 $;
+  $VERSION =  q$Revision: 1.556 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2094,7 +2094,8 @@ sub charset_conflicts {
   #
   # Add a warning if there was charset info conflict (HTTP header,
   # XML declaration, or <meta> element).
-  if (charset_not_equal($File->{Charset}->{HTTP}, $File->{Charset}->{XML})) {
+  # filtering out some of the warnings in direct input mode where HTTP encoding is a "fake"
+  if ((charset_not_equal($File->{Charset}->{HTTP}, $File->{Charset}->{XML})) and not ($File->{'Direct Input'})) {
     &add_warning('W18', {
       W18_http => $File->{Charset}->{HTTP},
       W18_xml  => $File->{Charset}->{XML},
