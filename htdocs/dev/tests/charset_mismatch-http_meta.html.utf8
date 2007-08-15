@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>ünti†lø∂</title>
+</head>
+<body>
+  <p>This UTF-8 encoded document (served via HTTP as UTF-8) declares 
+    its charset as being iso-8859-1 (in the head meta elements). HTTP has precedence
+    and the parsing should proceed properly as utf-8, with a warning about 
+    the HTTP/meta charset mismatch.</p>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<title>ünti†lø∂</title>
+	
+</head>
+
+<body>
+<p>This UTF-8 encoded document (served via HTTP as UTF-8) declares 
+  its charset as being iso-8859-1 (in the XML decl). HTTP has precedence
+  and the parsing should proceed properly as utf-8, with a warning about 
+  the HTTP/XMLdecl charset mismatch.</p>
+
+</body>
+</html>

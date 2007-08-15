@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.82 2007-08-06 05:40:34 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-08-06 05:40:34 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.83 2007-08-15 01:31:55 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-08-15 01:31:55 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -484,6 +484,19 @@ All these documents should validate, without "pretty print" for the document typ
 	<li><a href="../../check?uri=http://www.vir.si/">windows-1250 encoded document (Slovenian)</a></li>
 	<li><a href="../../check?uri=http://www.w3.org/TR/ruby/">utf-8 encoded document</a></li>
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/plane20-char.xml">XML file with a "Plane 20" character (bogus).</a></li>
+	
+	<li>
+    <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/charset_mismatch-http_xmldec.xhtml.utf8;ss">validate</a> - 
+    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/charset_mismatch-http_xmldec.xhtml.utf8;ss">with v.w.o</a> - 
+    <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/charset_mismatch-http_xmldec.xhtml.utf8">view</a>:
+    Charset mismatch: HTTP Content-Type and XML Declaration (sends warning, proceed with HTTP and pass)  
+  </li>
+  <li>
+    <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/charset_mismatch-http_meta.html.utf8;ss">validate</a> - 
+    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/charset_mismatch-http_meta.html.utf8;ss">with v.w.o</a> - 
+    <a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/charset_mismatch-http_meta.html.utf8">view</a>:
+    Charset mismatch: HTTP Content-Type and meta http-equiv (sends warning, proceed with HTTP and pass)  
+  </li>
       </ul>
 
       <h3 id="errors">Error conditions &amp; strange cases</h3>
