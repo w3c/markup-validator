@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.557 2007-08-22 06:25:06 ot Exp $
+# $Id: check,v 1.558 2007-08-23 15:31:54 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.557 $;
+  $VERSION =  q$Revision: 1.558 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2545,12 +2545,15 @@ sub W3C::Validator::SAXHandler::error
   # Workaround for onsgmls as of 1.5 sometimes allegedly reporting errors
   # beyond EOL.  If you see this warning in your web server logs, please
   # let the validator developers know, see http://validator.w3.org/feedback.html
-  if ((my $l = length($File->{Content}->[$err->{line}-1])) < $err->{char}) {
-    #warn("Warning: reported error column larger than line length " .
-    #     "($err->{char} > $l) in $File->{URI} line $err->{line}, " .
-    #     "OpenSP bug? Resetting to line length.");
-    $err->{char} = $l;
-  }
+  # As long as $err may be from somewhere else than the document (such as
+  # from a DTD) and we have no way of identifying these cases, this
+  # produces bogus results and error log spewage, so commented out for now.
+#  if ((my $l = length($File->{Content}->[$err->{line}-1])) < $err->{char}) {
+#    warn("Warning: reported error column larger than line length " .
+#         "($err->{char} > $l) in $File->{URI} line $err->{line}, " .
+#         "OpenSP bug? Resetting to line length.");
+#    $err->{char} = $l;
+#  }
 
   # No or unknown FPI and a relative SI.
   if ($err->{msg} =~ m(cannot (open|find))) {
