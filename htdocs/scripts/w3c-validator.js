@@ -41,6 +41,9 @@ var W3C = {
 				if (this.element.getStyle('margin-top').toInt() == 0){
 					this.wrapper.setStyle('height', 'auto');
 				}
+				else {
+				  this.element.setStyle('display','none');  // if a slideOut completed, set display:none
+				}
 			});
 		});
 		
@@ -54,6 +57,7 @@ var W3C = {
 			var option = W3C.Options[i];
 			var link = legend.getFirst();
 			link.addEvent('click', function(event){
+			  option.setStyle('display', 'block'); // before any slide effect, set display:block
 				var block = (option.getStyle('margin-top').toInt() == 0);
 				W3C.setHash((block) ? pid : pid + opt);
 				new Event(event).stop();
