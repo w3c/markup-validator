@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.558 2007-08-23 15:31:54 ville Exp $
+# $Id: check,v 1.559 2007-09-03 06:57:41 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.558 $;
+  $VERSION =  q$Revision: 1.559 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2025,7 +2025,10 @@ sub set_parse_mode {
     # if the mime type is text/html (ambiguous, hence TBD mode)
     # and XML prolog detection was unsuccessful
     # and the doctype isn't in the catalogue... we scream
-    &add_warning('W08', {W08_mime => $File->{ContentType}});
+    &add_warning('W06', {
+      W06_mime => $File->{ContentType},
+      w06_doctype => $File->{DOCTYPE}
+    });
     return;
   }
 

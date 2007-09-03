@@ -8,23 +8,17 @@
 -->
 <html>
 <head>
-<title>test for text/html Document using Custom DTD, unknown parse mode - W08</title>
+<title>test for text/html Document using Custom DTD, unknown parse mode - W06</title>
 
 </head>
 
 <body lang="en">
-<p>This test document corresponds to validator warning W08:
+<p>This test document corresponds to validator warning W06:
 <code>
-Unknown Parse Mode!
+Unable to Determine Parse Mode
 </code>
 </p>
 
-<p>This document is a subset of the <a href="http://www.w3.org/Style/">W3C Style</a>
-homepage, using <a href="http://www.w3.org/Style/customdtd">Custom DTD</a> 
-allowing <blink>The nonstandard blink element</blink>.
-</p>
-
-<p>It is valid against that particular DTD</p>
 
 </body>
 </html>

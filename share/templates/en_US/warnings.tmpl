@@ -155,17 +155,6 @@
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W08">
-  <li class="msg_warn" id="W08"><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Unknown Parse Mode!</span>
-  
-    <p>
-      The MIME Media Type
-      (<code><TMPL_VAR NAME="W08_mime" ESCAPE="HTML"></code>) for this
-      document is used to serve both SGML and XML based documents, 
-      and it is not possible to disambiguate it 
-      based on the <code>DOCTYPE</code> Declaration in your document. Parsing
-      will continue in SGML mode.
-    </p>
-  </li>
 </TMPL_IF>
 <TMPL_IF NAME="W09">
   <li class="msg_warn" id="W09"><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">No <code>DOCTYPE</code> found! Attempting validation with <TMPL_VAR NAME="W09_dtd" ESCAPE="HTML">.</span>
