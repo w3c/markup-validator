@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.560 2007-09-05 08:14:32 ot Exp $
+# $Id: check,v 1.561 2007-09-05 08:20:23 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.560 $;
+  $VERSION =  q$Revision: 1.561 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -961,7 +961,8 @@ if ($File->{Opt}->{Output} eq 'xml') {
 
 $template->param(file_warnings => $File->{Warnings});
 $template->param(tidy_output => $File->{'Tidy'});
-$template->param(file_source => &source($File));
+$template->param(file_source => &source($File))
+  if ($template->param('opt_show_source') or ($File->{'Is Upload'}) or ($File->{'Direct Input'}));
 #$template->param('opt_show_esis' => TRUE)
 #  if $File->{Opt}->{'Show ESIS'};
 #$template->param('opt_show_raw_errors' => TRUE)
