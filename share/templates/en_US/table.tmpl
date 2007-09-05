@@ -36,7 +36,8 @@
     </tr>
     <tr>
 <TMPL_IF NAME="is_upload">
-      <th>File:</th><td colspan="2"><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></td>
+      <th>Direct Input:</th><td colspan="2"><textarea id="fragment" name="fragment" rows="12" cols="80"><TMPL_LOOP NAME="file_source"><TMPL_VAR NAME="file_source_line" ESCAPE="HTML">
+</TMPL_LOOP></textarea></td>
 <TMPL_ELSE>
       <th><label title="Address of Page to Validate" for="uri">Address</label>:</th>
       <td colspan="2"><input type="text" id="uri" name="uri" value="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">" size="50" /></td>
@@ -53,26 +54,21 @@
     <tr><th><TMPL_VAR NAME="name" ESCAPE="HTML">:</th><td colspan="2"><TMPL_VAR NAME="value" ESCAPE="HTML" DEFAULT="(undefined)"></td></tr>
   </TMPL_LOOP>
 </TMPL_IF>
-<TMPL_IF NAME="is_upload">
-    <tr><th>Encoding:</th><td colspan="2"><TMPL_VAR NAME="file_charset" ESCAPE="HTML"></td></tr>
-    <tr><th>Doctype:</th><td colspan="2"><TMPL_VAR NAME="file_version" ESCAPE="HTML"></td></tr>
+<TMPL_IF NAME="file_charset">
+  <tr>
+    <th><label title="Character Encoding" for="charset">Encoding</label>:</th>
+    <td><TMPL_VAR NAME="file_charset" ESCAPE="HTML"></td><td><TMPL_INCLUDE NAME="popup_charset.tmpl"></td>
+  </tr>
 <TMPL_ELSE>
-  <TMPL_IF NAME="file_charset">
-    <tr>
-      <th><label title="Character Encoding" for="charset">Encoding</label>:</th>
-      <td><TMPL_VAR NAME="file_charset" ESCAPE="HTML"></td><td><TMPL_INCLUDE NAME="popup_charset.tmpl"></td>
-    </tr>
-  <TMPL_ELSE>
-    <tr><th>Encoding:</th><td colspan="2"><TMPL_INCLUDE NAME="popup_charset.tmpl"></td></tr>
-  </TMPL_IF>
-  <TMPL_IF NAME="file_version">
-    <tr>
-      <th><label for="doctype" title="Document Type">Doctype</label>:</th>
-      <td><TMPL_VAR NAME="file_version" ESCAPE="HTML"></td><td><TMPL_INCLUDE NAME="popup_doctype.tmpl"></td>
-    </tr>
-  <TMPL_ELSE>
-    <tr><th>Doctype:</th><td colspan="2"><TMPL_INCLUDE NAME="popup_doctype.tmpl"></td></tr>
-  </TMPL_IF>
+  <tr><th>Encoding:</th><td colspan="2"><TMPL_INCLUDE NAME="popup_charset.tmpl"></td></tr>
+</TMPL_IF>
+<TMPL_IF NAME="file_version">
+  <tr>
+    <th><label for="doctype" title="Document Type">Doctype</label>:</th>
+    <td><TMPL_VAR NAME="file_version" ESCAPE="HTML"></td><td><TMPL_INCLUDE NAME="popup_doctype.tmpl"></td>
+  </tr>
+<TMPL_ELSE>
+  <tr><th>Doctype:</th><td colspan="2"><TMPL_INCLUDE NAME="popup_doctype.tmpl"></td></tr>
 </TMPL_IF>
 <TMPL_IF NAME="root_element">
   <tr>
@@ -98,7 +94,6 @@
 </TMPL_IF>
   </table>
 
-<TMPL_UNLESS NAME="is_upload">
         <fieldset id="revalidate_opts">
                  <legend>Options</legend>
 
@@ -149,8 +144,5 @@
         </p>
         <div id="revalidate_button" class="submit_button"><input type="submit" value="Revalidate" title="Validate this document again" /></div>
   </fieldset>
-  
-  
-</TMPL_UNLESS>
 </form>
 </TMPL_IF>
