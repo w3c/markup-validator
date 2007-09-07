@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.85 2007-09-03 06:57:40 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-09-03 06:57:40 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.86 2007-09-07 07:40:24 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-09-07 07:40:24 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -623,6 +623,14 @@ All these documents should validate, without "pretty print" for the document typ
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/long-lines.html">Long Lines</a> (cause a core)</li>
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/trailing-nul.html">A trailing ASCII NUL character</a> (trips up HTML::Parser (not really))</li>
 	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/colons.html">Undeclared namespace prefixes</a> (colons ":" in element names (trips up parsing of onsgmls output))</li>
+	<li>
+	  <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/857-svg_nodoctype.svg;doctype=SVG+1.1;ss=1">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=qa-dev.w3.org/wmvs/HEAD/dev/tests/857-svg_nodoctype.svg;doctype=SVG+1.1;ss=1">with v.w.o</a> - <a href="857-svg_nodoctype.svg">view</a>:
+	  Test of doctype override for SVG document with no doctype, but an XML decl. The doctype should sneak between
+	  the XML decl and the root svg start tag. (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=857" title="Bug 857 - DOCTYPE Override should take XML Decl into account."> 857 - DOCTYPE Override</a>)
+	</li>
+
+
       </ul>
 
 
