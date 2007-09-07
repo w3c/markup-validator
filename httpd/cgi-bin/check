@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.561 2007-09-05 08:20:23 ot Exp $
+# $Id: check,v 1.562 2007-09-07 07:32:54 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.561 $;
+  $VERSION =  q$Revision: 1.562 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1538,6 +1538,7 @@ sub override_doctype {
   local $org_dtd = '';
   local $HTML    = '';
   local $seen    = FALSE;
+  local $seen_root = FALSE;
 
   my $declaration = sub {
     $seen = TRUE;
@@ -1551,9 +1552,28 @@ sub override_doctype {
       $org_dtd = &ent($_[0]);
     }
   };
+  
+  my $start_element = sub{
+    if ($seen_root) {
+      $HTML .= $_[0]; # Stash it as is... moving on
+    }
+    else {
+      $seen_root = TRUE;
+      if ($seen) {
+        # doctype addition aldready done, we move on
+        $HTML .= $_[0];
+      }
+      else {
+        # no original doctype present, hence none replaced already
+        # => we sneak the chosen doctype before the root elt
+        $HTML .= "$dtd\n" . $_[0];
+      }
+    }
+  };
 
   HTML::Parser->new(default_h     => [sub {$HTML .= shift}, 'text'],
-                    declaration_h => [$declaration, 'text']
+                    declaration_h => [$declaration, 'text'],
+                    start_h => [$start_element, "text"]
                    )->parse(join "\n", @{$File->{Content}})->eof();
 
   $File->{Content} = [split /\n/, $HTML];
@@ -1567,7 +1587,6 @@ sub override_doctype {
       $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
     }
   } else {
-    unshift @{$File->{Content}}, $dtd;
 
     if ($File->{Opt}->{FB}->{DOCTYPE}) {
       &add_warning('W16', {W16_dtd => $File->{Opt}->{DOCTYPE}});
