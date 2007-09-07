@@ -21,7 +21,8 @@ X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num"></TMPL_IF>
 	<env:Text xml:lang="en-US">Transcode Error</env:Text>
      </env:Reason>
      <env:Detail>
-	<m:errordetail xml:lang="en-US">
+      <m:messageid>fatal_transcode_error</m:messageid>
+      <m:errordetail xml:lang="en-US">
         A fatal error occurred when attempting to transcode the character
         encoding of the document. Either we do not support this character
         encoding ("<TMPL_VAR NAME="fatal_transcode_charset" ESCAPE="HTML">")
@@ -37,7 +38,8 @@ X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num"></TMPL_IF>
 	<env:Text xml:lang="en-US">Incorrect Bytes detected</env:Text>
      </env:Reason>
      <env:Detail>
-	<m:errordetail xml:lang="en-US">
+       <m:messageid>fatal_byte_error</m:messageid>
+       <m:errordetail xml:lang="en-US">
         Sorry, I am unable to validate this document because on line
         <TMPL_VAR NAME="fatal_byte_lines">.
         it contained one or more bytes that I cannot interpret as
@@ -54,6 +56,7 @@ X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num"></TMPL_IF>
         <env:Text xml:lang="en-US">URL scheme not supported</env:Text>
      </env:Reason>
      <env:Detail>
+        <m:messageid>fatal_uri_error</m:messageid>
         <m:errordetail xml:lang="en-US">
         Sorry, this type of URL scheme
         (<TMPL_VAR NAME="fatal_uri_scheme" ESCAPE="HTML">) is not
@@ -66,6 +69,7 @@ X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num"></TMPL_IF>
         <env:Text xml:lang="en-US">No Content to validate</env:Text>
      </env:Reason>
      <env:Detail>
+				<m:messageid>fatal_no_content</m:messageid>
         <m:errordetail xml:lang="en-US">
         Sorry, I could not find any content to validate. It is probable that you
         clicked on the "check" button without choosing a URL, a file or entering
@@ -79,6 +83,7 @@ X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num"></TMPL_IF>
         <env:Text xml:lang="en-US">IP not public</env:Text>
      </env:Reason>
      <env:Detail>
+       <m:messageid>fatal_ip_error</m:messageid>
         <m:errordetail xml:lang="en-US">
         Sorry, the IP address <TMPL_IF NAME="fatal_ip_hostname">of</TMPL_IF>
         <TMPL_VAR NAME="fatal_ip_host"> is not public.
@@ -93,6 +98,7 @@ X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num"></TMPL_IF>
         <env:Text xml:lang="en-US">HTTP Error</env:Text>
      </env:Reason>
      <env:Detail>
+       <m:messageid>fatal_http_error</m:messageid>
         <m:errordetail xml:lang="en-US">
     Unexpected HTTP response 
     <TMPL_VAR NAME="fatal_http_code" ESCAPE="HTML"> <TMPL_VAR NAME="fatal_http_msg" ESCAPE="HTML">
@@ -111,6 +117,7 @@ X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num"></TMPL_IF>
         <env:Text xml:lang="en-US">unsupported or unrecognized Content Type</env:Text>
      </env:Reason>
      <env:Detail>
+       <m:messageid>fatal_mime_error</m:messageid>
         <m:errordetail xml:lang="en-US">
         Sorry, I am unable to validate this document because its content type
         is <TMPL_VAR NAME="fatal_mime_ct" ESCAPE="HTML">, which is
@@ -125,6 +132,7 @@ X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num"></TMPL_IF>
       Fatal Error: <TMPL_VAR NAME="fatal_parse_extid_msg" ESCAPE="HTML"></env:Text>
      </env:Reason>
      <env:Detail>
+       <m:messageid>fatal_parse_extid_error</m:messageid>
         <m:errordetail xml:lang="en-US">
         I could not parse this document, because it makes reference to a
         system-specific file instead of using a well-known public identifier
@@ -139,6 +147,7 @@ X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num"></TMPL_IF>
 </env:Text>
      </env:Reason>
      <env:Detail>
+       <m:messageid>fatal_referer_error</m:messageid>
         <m:errordetail xml:lang="en-US">
           You have requested we check the referring page, but your browser did
           not send the HTTP "Referer" header field. This can be for several
