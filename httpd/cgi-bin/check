@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.562 2007-09-07 07:32:54 ot Exp $
+# $Id: check,v 1.563 2007-09-11 05:02:21 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.562 $;
+  $VERSION =  q$Revision: 1.563 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1274,6 +1274,9 @@ sub handle_uri {
   return $File unless $ua->uri_ok($uri);
 
   my $req = new HTTP::Request(GET => $uri);
+  
+  # telling caches in the middle we want a fresh copy (Bug 4998)
+  $req->header(Cache_control=> "max-age=0");
 
   # If we got a Authorization header, the client is back at it after being
   # prompted for a password so we insert the header as is in the request.
