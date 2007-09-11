@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.566 2007-09-11 06:45:38 ot Exp $
+# $Id: check,v 1.567 2007-09-11 06:52:21 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.566 $;
+  $VERSION =  q$Revision: 1.567 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1426,17 +1426,17 @@ sub parse_content_type {
   $charset = HTML::Encoding::encoding_from_content_type($Content_Type);
 
   if ($mode =~ m(/)) { # a "/" means it's unknown or we'd have a mode here.
-    if ($ct =~ m(text/css) and defined $url) {
+    if ($ct eq 'text/css' and defined $url) {
       print redirect
         'http://jigsaw.w3.org/css-validator/validator?uri='
           . uri_escape $url;
       exit;
-    } elsif ($ct =~ m(application/atom\+xml) and defined $url) {
+    } elsif ($ct eq 'application/atom+xml' and defined $url) {
       print redirect
         'http://validator.w3.org/feed/check.cgi?url='
           . uri_escape $url;
       exit;
-    } elsif ($ct =~ m(application/.+\+xml)) {
+    } elsif ($ct =~ m(^application/.+\+xml$)) {
       # unknown media types which should be XML - we give these a try
       $mode = "XML";
     } else {
