@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.67 2007-09-04 04:09:18 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-09-04 04:09:18 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.68 2007-09-11 07:00:58 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-09-11 07:00:58 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#set var="feeds" value="1"
@@ -19,6 +19,22 @@
       </p>
     </div>
     <dl id="news">
+      <dt id="t2007-09-xx">2007-09-xx &mdash; 0.8.2 release:</dt>
+      <dd>
+        <p>The 0.8.2 release of the W3C Markup Validator is a bug fix, performance and usability
+          release, addressing the following issues:</p>
+        <ul>
+          <li>Bug Fix: processing of documents through HTML Tidy would be triggered even when not requested. 
+            The fix should provide a noticeable performance boost.</li>
+          <li>Bug Fix: forcing or overriding the Doctype declaration would not work with documents using an XML Declaration 
+            (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=857" title="Bug 857 - DOCTYPE Override should take XML Decl into account.">Bug 857</a>).
+            The fix should make it much easier to validate e.g. <abbr title="Scalable Vector Graphics">SVG</abbr> documents.</li>
+          <li>Bug Fix: Making sure that the validator requests a fresh version of the online resources, when an older cached version could be returned. (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=4998" title="Bug 4998 - Validator sometimes uses cached content (cache-control header on requests would be useful)">Bug 4998</a>)</li>
+          <li>Usability: when using file upload or direct input modes, the result page will now include a text area filled with the validated source, for easy fixing and revalidation.(<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=4342" title="Bug 4342 - Revalidation form for Upload and Direct Input">Bug 4342</a>)</li>
+          <li>Accessibility: the main interface was made friendlier to screen readers (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=4959" title="Bug 4959 - screen reader reads contents of entire form">Bug 4959</a>)</li>
+          <li>Documentation updates</li>
+        </ul>
+      </dd>
       <dt id="t2007-08-08">2007-08-08 &mdash; 0.8.1 Release:</dt>
       <dd>
         <p>The 0.8.1 release of the W3C Markup Validator is a bug fix 
