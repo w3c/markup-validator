@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.89 2007-09-11 03:17:04 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-09-11 03:17:04 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.90 2007-09-11 05:34:49 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-09-11 05:34:49 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -612,7 +612,10 @@ All these documents should validate, without "pretty print" for the document typ
 	  <a href="http://validator.w3.org/check?uri=http://validator.w3.org:8000/">with v.w.o</a> - 
 	  httpd on a non-standard port (should be working transparently if :8000 server is running)
 	</li>
-
+  <li><a href="../../check?uri=http://www.oreillynet.com/pub/feed/20">validate</a> -
+    a resource served as application/atom+xml, should be passed on to the Feed Validator.</li>
+  <li><a href="../../check?uri=http://www.w3.org/StyleSheets/Core/Swiss">validate</a> -
+    a resource served as text/css, should be passed on to the CSS Validator.</li>
 </ul>
 
       <h3  id="regress">Bugs and Regression Tests</h3>
