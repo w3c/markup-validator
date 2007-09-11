@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.565 2007-09-11 05:58:30 ot Exp $
+# $Id: check,v 1.566 2007-09-11 06:45:38 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.565 $;
+  $VERSION =  q$Revision: 1.566 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1844,7 +1844,7 @@ sub preparse_doctype {
   my $dtd = sub {
     return if $File->{Root};
     # TODO: The \s and \w are probably wrong now that the strings are utf8_on
-    ($File->{Root}, $File->{DOCTYPE}) = shift =~ m(<!DOCTYPE\s+(\w+)\s+(?:PUBLIC|SYSTEM)\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
+    ($File->{Root}, $File->{DOCTYPE}) = shift =~ m(<!DOCTYPE\s+(\w[\w\.-]+)\s+(?:PUBLIC|SYSTEM)\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
   };
 
   my $start = sub {
