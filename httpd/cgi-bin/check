@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.567 2007-09-11 06:52:21 ville Exp $
+# $Id: check,v 1.568 2007-09-12 06:12:43 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.567 $;
+  $VERSION =  q$Revision: 1.568 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -317,6 +317,10 @@ $File->{Templates}->{Result} = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                            $lang, 'result.tmpl'),
   loop_context_vars => TRUE,
+  filter => sub { 
+  my $ref = shift;
+  ${$ref} = Encode::decode_utf8(${$ref});  
+  }
 );
 $File->{Templates}->{Error} = HTML::Template->new(
   %template_defaults,
@@ -998,6 +1002,10 @@ sub prep_template ($$) {
   $T->param(is_upload => $File->{'Is Upload'});
 
   #
+  # Direct Input?
+  $T->param(is_direct_input => $File->{'Direct Input'});
+
+  #
   # The URI...
   $T->param(file_uri => $File->{URI});
   $T->param(file_uri_param => uri_escape($File->{URI}));
@@ -1389,7 +1397,7 @@ sub handle_frag {
   $File->{Size}        = '';
   $File->{ContentType} = ''; # @@TODO?
   $File->{URI}         = 'upload://Form Submission';
-  $File->{'Is Upload'} = TRUE;
+  $File->{'Is Upload'} = FALSE;
   $File->{'Direct Input'} = TRUE;
   $File->{Charset}->{HTTP} = "utf-8"; # by default, the form accepts utf-8 chars
 
@@ -1662,7 +1670,7 @@ sub report_errors ($) {
 #        }
         my $_msg = $RSRC->{msg}->{nomsg}->{verbose};
         $_msg =~ s/<!--MID-->/$num/g;
-        if ($File->{'Is Upload'})
+        if (($File->{'Is Upload'}) or ($File->{'Direct Input'}))
         {
           $_msg =~ s/<!--URI-->//g
         }
@@ -1993,12 +2001,12 @@ sub prepCGI {
   # Supersede URL with an uploaded fragment.
   if ($q->param('fragment')) {
     $q->param('uri', 'upload://Form Submission');
-    $File->{'Is Upload'} = TRUE; # Tag it for later use.
+    $File->{'Direct Input'} = TRUE; # Tag it for later use.
   }
 
   # Redirect to a GETable URL if method is POST without a file upload.
   if (defined $q->request_method and $q->request_method eq 'POST'
-      and not $File->{'Is Upload'}) {
+      and not ($File->{'Is Upload'} or $File->{'Direct Input'})) {
     my $thispage = &self_url_q($q, $File);
     print redirect $thispage;
     exit;
