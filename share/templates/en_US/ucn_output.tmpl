@@ -60,12 +60,17 @@ X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num"></TMPL_IF>
 	    </TMPL_IF>
 	  </longmessage>
 	  <longmessage>
-	    <TMPL_IF NAME="is_upload">
-	      The uploaded document &quot;<TMPL_VAR NAME="file_uri" ESCAPE="HTML">&quot;
-	      <TMPL_ELSE>
-		The document located at
-		<a href="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">"><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></a>
-	      </TMPL_IF>
+      <TMPL_IF NAME="is_upload">
+          The uploaded document "<TMPL_VAR NAME="file_uri" ESCAPE="HTML">"
+      <TMPL_ELSE>
+        <TMPL_IF NAME="is_direct_input">
+          The uploaded document
+        <TMPL_ELSE>
+          The document located at
+          &lt;<a href="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">"><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></a>&gt;
+        </TMPL_IF>  
+      </TMPL_IF>
+
 	      <TMPL_IF NAME="is_tentative">
 		was checked and found to be &lt;em&gt;tentatively&lt;/em&gt; valid <TMPL_VAR NAME="file_version" ESCAPE="HTML">.
 		This means that with the use of some fallback or override mechanism, 

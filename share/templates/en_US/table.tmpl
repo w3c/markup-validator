@@ -19,7 +19,11 @@
 <TMPL_IF NAME="is_upload">  
 <form id="form" method="post" action="check">
 <TMPL_ELSE>
-<form id="form" method="get" action="check">
+  <TMPL_IF NAME="is_direct_input">
+    <form id="form" method="post" action="check">
+  <TMPL_ELSE>
+    <form id="form" method="get" action="check">
+  </TMPL_IF>
 </TMPL_IF>
   <table class="header">
     <tr>
@@ -40,11 +44,20 @@
     </tr>
     <tr>
 <TMPL_IF NAME="is_upload">
-      <th>Uploaded Content:</th><td colspan="2"><textarea id="fragment" name="fragment" rows="12" cols="80"><TMPL_LOOP NAME="file_source"><TMPL_VAR NAME="file_source_line" ESCAPE="HTML">
-</TMPL_LOOP></textarea></td>
+  <th><label title="Choose a Local File to Upload and Validate" for="uploaded_file">File</label>:</th>
+  <td colspan="2">
+    <p>If you wish to re-validate an uploaded file, please select it again here:</p>
+    <input type="file" id="uploaded_file" name="uploaded_file" size="30" />
+  </td>
+  
 <TMPL_ELSE>
+  <TMPL_IF NAME="is_direct_input">
+          <th><label title="Uploaded source of your Document" for="fragment">Source</label>:</th><td colspan="2"><textarea id="fragment" name="fragment" rows="12" cols="80"><TMPL_LOOP NAME="file_source"><TMPL_VAR NAME="file_source_line" ESCAPE="HTML">
+    </TMPL_LOOP></textarea></td>
+  <TMPL_ELSE>  
       <th><label title="Address of Page to Validate" for="uri">Address</label>:</th>
       <td colspan="2"><input type="text" id="uri" name="uri" value="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">" size="50" /></td>
+  </TMPL_IF>    
 </TMPL_IF>
     </tr>
 <TMPL_IF NAME="opt_verbose">

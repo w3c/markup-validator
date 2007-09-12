@@ -22,8 +22,12 @@
 <TMPL_IF NAME="is_upload">
     The uploaded document "<TMPL_VAR NAME="file_uri" ESCAPE="HTML">"
 <TMPL_ELSE>
+  <TMPL_IF NAME="is_direct_input">
+    The uploaded document
+  <TMPL_ELSE>
     The document located at
     &lt;<a href="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">"><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></a>&gt;
+  </TMPL_IF>  
 </TMPL_IF>
 <TMPL_IF NAME="is_tentative">
     was checked and found to be <em>tentatively</em> valid <TMPL_VAR NAME="file_version" ESCAPE="HTML">.
@@ -90,6 +94,7 @@
   </p>
 </TMPL_IF>
 <TMPL_UNLESS NAME="is_upload">
+  <TMPL_UNLESS NAME="is_direct_input">
 <h4>Linking to this result</h4>
   <p>
     If you would like to create a link to <em>this</em> page (i.e., this
@@ -98,6 +103,7 @@
     &lt;<a href="<TMPL_VAR NAME="file_thispage" ESCAPE="HTML">"><TMPL_VAR NAME="file_thispage" ESCAPE="HTML"></a>&gt;
     (or you can just add the current page to your bookmarks or hotlist).
   </p>
+  </TMPL_UNLESS>
 </TMPL_UNLESS>
 <h4>Validating CSS Style Sheets</h4>
   <p>
@@ -106,9 +112,12 @@
 <TMPL_IF NAME="is_upload">
     check it for validity
 <TMPL_ELSE>
+  <TMPL_IF NAME="is_direct_input">
+  <TMPL_ELSE>
     <a title="Validate CSS at the W3C CSS Validator"
     href="http://jigsaw.w3.org/css-validator/validator?uri=<TMPL_VAR NAME="file_uri_param">">check
     it for validity</a>
+  </TMPL_IF>
 </TMPL_IF>
     using the W3C
     <a href="http://jigsaw.w3.org/css-validator/">CSS Validation Service</a>.
