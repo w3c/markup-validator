@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.19 2007-06-06 19:26:42 ot Exp $ */
+/* $Id: results.css,v 1.20 2007-09-13 03:46:52 ot Exp $ */
 
 div#results_container {
   margin: 2em;
@@ -53,6 +53,13 @@ div#results_container ul.navbar li {
 /* Various Bits of the Table Header */
 /*
 */
+
+p.revalidate_instructions {
+  font-size: small; 
+  font-style: italic; 
+  margin: .5em .5em 0 1em;
+}
+
 fieldset#revalidate_opts {
         width: 100%;
         margin: 0;

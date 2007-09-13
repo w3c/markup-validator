@@ -46,8 +46,9 @@
 <TMPL_IF NAME="is_upload">
   <th><label title="Choose a Local File to Upload and Validate" for="uploaded_file">File</label>:</th>
   <td colspan="2">
-    <p>If you wish to re-validate an uploaded file, please select it again here:</p>
+    
     <input type="file" id="uploaded_file" name="uploaded_file" size="30" />
+    <p class="revalidate_instructions">Use the file selection box above if you wish to re-validate the uploaded file <TMPL_VAR NAME="file_uri" ESCAPE="HTML"></p>
   </td>
   
 <TMPL_ELSE>
