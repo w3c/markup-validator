@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install_win.html,v 1.14 2007-07-10 03:30:13 ot Exp $" 
---><!--#set var="date" value="\$Date: 2007-07-10 03:30:13 $" 
+<!--#set var="revision" value="\$Id: install_win.html,v 1.15 2007-09-19 18:10:33 ville Exp $" 
+--><!--#set var="date" value="\$Date: 2007-09-19 18:10:33 $" 
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service (Windows, Apache)" 
 --><!--#set var="relroot" value="../" 
 --><!--#include virtual="../header.html" -->
@@ -274,7 +274,7 @@ Base = C:/www/validator
 <pre>#
 # Main Configuration File for the W3C Markup Validation Service.
 #
-# $Id: install_win.html,v 1.14 2007-07-10 03:30:13 ot Exp $
+# $Id: install_win.html,v 1.15 2007-09-19 18:10:33 ville Exp $
 #
 # See 'perldoc Config::General' for the syntax, and be aware that the
 # 'SplitPolicy' is 'equalsign', ie. keys and values are separated by '\s*=\s*',
@@ -474,28 +474,6 @@ BEGIN failed--compilation aborted at C:/www/validator/httpd/cgi-bin/check line 4
 </pre>  
 <p>It is easy to see that the missing module is &quot;Config General&quot;,
   that has to be installed.</p>
-<p>In some cases temporary files are needed by the check-skript. To locate the path for temporary
-  files, File::Spec->tmpdir() is called. That function returns, depending on the OS,
-  paths that could be used for such files. The script appends an <code>validator</code>,
-  so that a so called subdirectory in the proposed directory will be created.
-  Normally, your root directory will be proposed to use, so that all temporary
-  files will be created in <code>C:\validator</code>.<br /> If you get an error like</p>
-<pre>
-Thu Sep 21 15:30:00 2006] [error] [client 127.0.0.2] [Sat Sep 23 17:21:00 2006] check: HTML::Template->new() : can't mkdir \\\\validator (file_cache => 1): Invalid argument at C:/www/validator/httpd/cgi-bin/check line 280,
-referer: http://validator.example.org/
-</pre>
-<p>the script is not able to create that directory or to write to it. So
-  you have to verify that the user with whose permissons the apache is running is
-  allowed to do that (in most cases that will be &quot;System&quot;).<br />
-  If you want to relocate that folder, change the line</p>
-<pre>
-    file_cache_dir => File::Spec->catdir(File::Spec->tmpdir(), 'validator'),
-</pre>
-<p>to</p>
-<pre>
-    file_cache_dir => 'C:/temp/validator',
-</pre>
-<p>for example. In that case, <code>C:/temp/validator</code> will be used instead.</p>
 <p>Windows XP with Service Pack 2 installed might have problems with the
   loop back address 127.0.0.2. The Problem and its solution are 
   described at <a href="http://support.microsoft.com/default.aspx?kbid=884020">http://support.microsoft.com/default.aspx?kbid=884020</a>.</p>
