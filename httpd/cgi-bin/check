@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.568 2007-09-12 06:12:43 ot Exp $
+# $Id: check,v 1.569 2007-09-25 06:43:45 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.568 $;
+  $VERSION =  q$Revision: 1.569 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -772,6 +772,10 @@ sub parse (\$) {
     # see http://www.w3.org/Bugs/Public/show_bug.cgi?id=798#c5
     push(@spopt, 'xml');
     # FIXME when fixed s:p:o gets released
+  }
+  else {
+    # add warnings for shorttags
+    push(@spopt, 'min-tag');
   }
 
 
@@ -2582,6 +2586,14 @@ sub W3C::Validator::SAXHandler::error
      # hoping to get the DTDs fixed, see http://lists.w3.org/Archives/Public/www-html-editor/2007AprJun/0010.html 
      return; # don't report this, just proceed
    }
+
+   if (($err->{num} eq '248') or ($err->{num} eq '247') or ($err->{num} eq '246')) {
+     # these two errors should be triggered by -wmin-tag to report shorttag used, 
+     # but we're making them warnings, not errors
+     # see http://www.w3.org/TR/html4/appendix/notes.html#h-B.3.7
+     $err->{type} = "W";
+   }
+
 
   # Workaround for onsgmls as of 1.5 sometimes allegedly reporting errors
   # beyond EOL.  If you see this warning in your web server logs, please
