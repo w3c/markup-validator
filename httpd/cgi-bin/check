@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.570 2007-09-25 07:05:28 ot Exp $
+# $Id: check,v 1.571 2007-09-25 07:22:03 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.570 $;
+  $VERSION =  q$Revision: 1.571 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -326,11 +326,13 @@ $File->{Templates}->{Error} = HTML::Template->new(
   %template_defaults,
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                            $lang, 'fatal-error.tmpl'),
+  filter => sub { my $ref = shift;${$ref} = Encode::decode_utf8(${$ref});}
 );
 $File->{Templates}->{AuthzReq} = HTML::Template->new(
   %template_defaults,
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                            $lang, 'http_401_authrequired.tmpl'),
+ filter => sub { my $ref = shift;${$ref} = Encode::decode_utf8(${$ref});}
 );
 
 # templates for alternate output formats
@@ -339,30 +341,35 @@ $File->{Templates}->{XML} = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                           $lang, 'xml_output.tmpl'),
   loop_context_vars => TRUE,
+  filter => sub { my $ref = shift;${$ref} = Encode::decode_utf8(${$ref});}
 );
 $File->{Templates}->{SOAP} = HTML::Template->new(
   %template_defaults,
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                           $lang, 'soap_output.tmpl'),
   loop_context_vars => TRUE,
+  filter => sub { my $ref = shift;${$ref} = Encode::decode_utf8(${$ref});}
 );
 $File->{Templates}->{UCN} = HTML::Template->new(
   %template_defaults,
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                           $lang, 'ucn_output.tmpl'),
   loop_context_vars => TRUE,
+  filter => sub { my $ref = shift;${$ref} = Encode::decode_utf8(${$ref});}
 );
 $File->{Templates}->{SOAPFault} = HTML::Template->new(
   %template_defaults,
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                           $lang, 'soap_fault.tmpl'),
   loop_context_vars => TRUE,
+  filter => sub { my $ref = shift;${$ref} = Encode::decode_utf8(${$ref});}
 );
 $File->{Templates}->{SOAPDisabled} = HTML::Template->new(
   %template_defaults,
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                           $lang, 'soap_disabled.tmpl'),
   loop_context_vars => TRUE,
+  filter => sub { my $ref = shift;${$ref} = Encode::decode_utf8(${$ref});}
 );
 $File->{Templates}->{EARLXML} = HTML::Template->new(
   %template_defaults,
@@ -370,6 +377,7 @@ $File->{Templates}->{EARLXML} = HTML::Template->new(
                                           $lang, 'earl_xml.tmpl'),
   loop_context_vars => TRUE,
   global_vars       => TRUE,
+  filter => sub { my $ref = shift;${$ref} = Encode::decode_utf8(${$ref});}
 );
 $File->{Templates}->{EARLN3} = HTML::Template->new(
   %template_defaults,
@@ -377,6 +385,7 @@ $File->{Templates}->{EARLN3} = HTML::Template->new(
                                           $lang, 'earl_n3.tmpl'),
   loop_context_vars => TRUE,
   global_vars       => TRUE,
+  filter => sub { my $ref = shift;${$ref} = Encode::decode_utf8(${$ref});}
 );
 
 $File->{Templates}->{PrefillHTML} = HTML::Template->new(
@@ -385,6 +394,7 @@ $File->{Templates}->{PrefillHTML} = HTML::Template->new(
                                           $lang, 'prefill_html401.tmpl'),
   loop_context_vars => TRUE,
   global_vars       => TRUE,
+  filter => sub { my $ref = shift;${$ref} = Encode::decode_utf8(${$ref});}
 );
 $File->{Templates}->{PrefillXHTML} = HTML::Template->new(
   %template_defaults,
@@ -392,6 +402,7 @@ $File->{Templates}->{PrefillXHTML} = HTML::Template->new(
                                           $lang, 'prefill_xhtml10.tmpl'),
   loop_context_vars => TRUE,
   global_vars       => TRUE,
+  filter => sub { my $ref = shift;${$ref} = Encode::decode_utf8(${$ref});}
 );
 
 $File->{Templates}->{Result}->param(cfg_home_page => $CFG->{'Home Page'});
@@ -1670,7 +1681,7 @@ sub report_errors ($) {
 #          }
 #        } else {
 #          $Msgs{$num} = 1;
-          $explanation .= "\n    $RSRC->{msg}->{$num}->{verbose}\n"
+          $explanation .= Encode::decode_utf8("\n    $RSRC->{msg}->{$num}->{verbose}\n")
             if exists $RSRC->{msg}->{$num}
             && exists $RSRC->{msg}->{$num}->{verbose};
 #        }
