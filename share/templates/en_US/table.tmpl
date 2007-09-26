@@ -33,7 +33,7 @@
       <TMPL_IF NAME="is_tentative">
         Tentatively passed validation
       <TMPL_ELSE>
-        Passed validation
+        Passed validation<TMPL_IF Name="valid_warnings_num">, <TMPL_VAR NAME="valid_warnings_num"> warning(s)</TMPL_IF>
       </TMPL_IF>
     <TMPL_ELSE>
     <td colspan="2" class="invalid">
