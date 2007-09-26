@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.91 2007-09-11 06:44:15 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-09-11 06:44:15 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.92 2007-09-26 02:27:04 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-09-26 02:27:04 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -285,6 +285,12 @@ All these documents should validate, without "pretty print" for the document typ
     <a href="texthtml_unknownparsemode.html">view</a>:
     document served as <code>text/html</code>, using a custom DTD and for which parse mode is impossible to determine via generic heuristics (triggers warning W06)
   </li>
+	<li>
+	  <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/shorttags.html">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/shorttags.html">with v.w.o</a> - 
+	  <a href="shorttags.html">view</a> - 
+	  sample HTML 4 document using the (valid, but problematic) shorttags features
+	</li>
 
 </ul>
 
@@ -530,7 +536,6 @@ All these documents should validate, without "pretty print" for the document typ
     RDDL (with FPI, served as text/html - example of a custom XML language wrongly served as text/html)
   </li>
   
-	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/shorttags.html">SHORTTAGS and -wunclosed..</a></li>
         <li><a href="../../check?uri=http://www.w3.org/1999/09/SVG-access/computer.svg">image/svg</a> (is this a bug? I think this media type is not allowed any more)</li>
 	<li><a href="../../check?uri=http://www.oasis-open.org/committees/xmltest/xmlconf-19990712.xml;ss">validate</a> -
 	    <a href="http://validator.w3.org/check?uri=http://www.oasis-open.org/committees/xmltest/xmlconf-19990712.xml;ss">with v.w.o</a> -
