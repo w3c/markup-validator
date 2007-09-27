@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.571 2007-09-25 07:22:03 ot Exp $
+# $Id: check,v 1.572 2007-09-27 10:13:36 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.571 $;
+  $VERSION =  q$Revision: 1.572 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -438,6 +438,9 @@ $File->{Opt}->{'Output'}         = $q->param('output')  ? $q->param('output')   
 $File->{Opt}->{'Max Errors'}     = $q->param('me')      ? $q->param('me')        :     '';
 $File->{Opt}->{'Prefill'}        = $q->param('prefill') ? TRUE                   :  FALSE;
 $File->{Opt}->{'Prefill Doctype'}        = $q->param('prefill_doctype') ? $q->param('prefill_doctype')   :     'html401';
+
+$File->{Opt}->{'Accept Header'} = $q->param('accept') ? $q->param('accept') : '';
+$File->{Opt}->{'Accept-Language Header'} = $q->param('accept-language') ? $q->param('accept-language') : '';
 
 #
 # "Fallback" info for Character Encoding (fbc), Content-Type (fbt),
@@ -1302,6 +1305,16 @@ sub handle_uri {
   
   # telling caches in the middle we want a fresh copy (Bug 4998)
   $req->header(Cache_control=> "max-age=0");
+
+  # if one wants to use the accept and accept-language params
+  # in order to trigger specific negotiation
+  if ($File->{Opt}->{'Accept Header'}) {
+    $req->header(Accept => $File->{Opt}->{'Accept Header'});
+  }
+  if ($File->{Opt}->{'Accept-Language Header'}) {
+    $req->header(Accept_Language => $File->{Opt}->{'Accept-Language Header'});
+  }
+
 
   # If we got a Authorization header, the client is back at it after being
   # prompted for a password so we insert the header as is in the request.

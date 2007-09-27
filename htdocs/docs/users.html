@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: users.html,v 1.27 2007-07-09 04:56:26 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-07-09 04:56:26 $"
+<!--#set var="revision" value="\$Id: users.html,v 1.28 2007-09-27 10:13:33 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-09-27 10:13:33 $"
 --><!--#set var="title" value="User Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -196,6 +196,24 @@
           resource validated. This makes it a useful option if you prefer to be given 
           as much help as possible; if you prefer more concise reports, leave this option
           unset.</p>
+	</dd>
+	<dt id="option-accept">For Content-Negotiated resources, set a specific <code>Accept</code> Header (<code>accept</code>)</dt>
+	<dd>
+	  <p>This option (<em>experimental, as of 0.8.2</em>) is useful if your Web server 
+	  is set up to use format negotiation, serving different
+	  content based on the preferred/accepted media types of the user-agent. The validator
+	  can then emulate different HTTP <code>Accept</code> behaviors.</p>
+	  <p>For example, append "<code>accept=application%2Fxhtml%2Bxml%2C*</code>" and the validator
+	    will send the HTTP Header "<code>Accept: application/xhtml+xml,*</code>".</p>
+	</dd>
+	<dt id="option-accept-language">For Content-Negotiated resources, set a specific <code>Accept-Language</code> Header (<code>accept</code>)</dt>
+	<dd>
+	  <p>This option (<em>experimental, as of 0.8.2</em>) is useful if your Web server 
+	  is set up to use language negotiation, serving content in different languages
+	   based on the preferred/accepted language setup of the user-agent. The validator
+	  can then emulate different HTTP <code>Accept-Language</code> behaviors.</p>
+	  <p>For example, append "<code>accept-language=ja%2Cfr</code>" and the validator
+	    will send the HTTP Header "<code>Accept-Language: ja,fr</code>".</p>
 	</dd>
       </dl>
         <h4 id="Output">Output Options</h4>
