@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install_win.html,v 1.15 2007-09-19 18:10:33 ville Exp $" 
---><!--#set var="date" value="\$Date: 2007-09-19 18:10:33 $" 
+<!--#set var="revision" value="\$Id: install_win.html,v 1.16 2007-09-30 14:53:11 dtibbe Exp $" 
+--><!--#set var="date" value="\$Date: 2007-09-30 14:53:11 $" 
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service (Windows, Apache)" 
 --><!--#set var="relroot" value="../" 
 --><!--#include virtual="../header.html" -->
@@ -61,6 +61,8 @@ At <a href="http://ppm.activestate.com/">Active State</a>,
 <ul>
   <li>Class-Accessor</li>
   <li>Config-General</li>
+  <li>Encode::HanExtra</li>
+  <li>Encode::JIS2K</li>
   <li>HTML-Encoding</li>
   <li>HTML-Template</li>
   <li>HTML-Tidy</li>
@@ -70,7 +72,6 @@ At <a href="http://ppm.activestate.com/">Active State</a>,
   <li>XML-NamespaceSupport</li>
   <li>XML-SAX</li>
   <li>XML-LibXML-Common</li>
-  <li>Encode, Encode::HanExtra and Encode::JIS2K</li>
 </ul>
 <p>You can get each of them in a single package at ActiveState. They are also 
   packed  ready-to-install <a href="http://www.myhpi.de/~dtibbe/download/ppm.zip">in a single zip-file</a>,
@@ -249,16 +250,6 @@ Include conf/extra/httpd-manual.conf
 <p>In the directory <code>c:\www\validator\htdocs\config</code>, a file 
   called <code>validator.conf</code> can be found. Open it with the editor.
   Lines beginning with # are comments.</p>
-<p>Because of using a Windows-system, we have to define a
-  base path to the validator's directory. That is done by
-  uncommenting the line</p>
-<pre>
-#Base = /usr/local/validator
-</pre>
-<p>and changing it to</p>
-<pre>
-Base = C:/www/validator
-</pre>
 <p>For the SGML <code>Library</code>, <code>c:/www/sgml-lib</code>
   is declared. Notice that slashes are used here instead of 
   windows-like back slashes.</p>
@@ -274,7 +265,7 @@ Base = C:/www/validator
 <pre>#
 # Main Configuration File for the W3C Markup Validation Service.
 #
-# $Id: install_win.html,v 1.15 2007-09-19 18:10:33 ville Exp $
+# $Id: install_win.html,v 1.16 2007-09-30 14:53:11 dtibbe Exp $
 #
 # See 'perldoc Config::General' for the syntax, and be aware that the
 # 'SplitPolicy' is 'equalsign', ie. keys and values are separated by '\s*=\s*',
@@ -294,7 +285,7 @@ Base = C:/www/validator
   #
   # Base path.  Defaults to the value of the W3C_VALIDATOR_HOME environment
   # variable or /usr/local/validator if the variable does not exist.
-  Base = C:/www/validator
+  #Base = /usr/local/validator
 
   #
   # Location of template files
