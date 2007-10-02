@@ -432,7 +432,7 @@ div.options, p.submit_button, p.instructions, p#note {
 }
 
 p.submit_button {
-	padding: 4.6em 0 0;
+	padding: 0.6em 0 0;
 	margin: 0;
 	text-align: center;
 }
