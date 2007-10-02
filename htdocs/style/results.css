@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.20 2007-09-13 03:46:52 ot Exp $ */
+/* $Id: results.css,v 1.21 2007-10-02 02:45:34 ot Exp $ */
 
 div#results_container {
   margin: 2em;
@@ -416,6 +416,11 @@ td.valid {
   color:           #55B05A;
 }
 
+strong.has_warnings {
+  font-weight:bold;
+	color:#CFAC08;
+	background-color: white;
+}
 td.invalid, h3.invalid 
 {
   color:	#D23D24 !important;
