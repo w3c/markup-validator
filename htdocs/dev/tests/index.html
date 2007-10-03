@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.93 2007-10-02 06:10:42 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-10-02 06:10:42 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.94 2007-10-03 07:39:54 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-10-03 07:39:54 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -13,6 +13,7 @@
             <ul>
                     <li><a href="#doctypes">Document types support</a></li>
                     <li><a href="#valid_notcat">Document types outside the main catalogue</a></li>
+                    <li><a href="#valid_doctypeless">Valid Doctypeless Documents</a></li>
                     <li><a href="#valid_warn">Valid Documents, with Warnings</a></li>
                     <li><a href="#wrong_mime">Valid Documents served with a wrong media type</a></li>
 		    <li><a href="#valid_bugfix">Bug Regression Tests: Valid documents</a></li>
@@ -257,7 +258,76 @@ All these documents should validate, without "pretty print" for the document typ
 
 
 </ul>
-
+  <h4 id="valid_doctypeless">Valid Doctypeless Documents</h4>
+  <p>Some document types (SVG) do not require the presence of the DOCTYPE declaration, although a DTD can be used to validate. The validator can however determine the version to validate against by preparsing the root element and the presence of version, baseProfile attributes.</p>
+  <ul>
+    <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-10-doctype.svg;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-10-doctype.svg;ss">with v.w.o</a> -
+      <a href="3663-svg-10-doctype.svg">view</a>:
+      Valid SVG 1.0, using a DOCTYPE
+    </li>
+    <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-10-doctypeless.svg;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-10-doctypeless.svg;ss">with v.w.o</a> -
+      <a href="3663-svg-10-doctypeless.svg">view</a>:
+      Valid SVG 1.0, but no declared DOCTYPE. Version attribute present for auto-detection
+    </li>
+    <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-11-doctype.svg;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-11-doctype.svg;ss">with v.w.o</a> -
+      <a href="3663-svg-11-doctype.svg">view</a>:
+      Valid SVG 1.1, using a DOCTYPE
+    </li>
+    <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-11-doctypeless.svg;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-11-doctypeless.svg;ss">with v.w.o</a> -
+      <a href="3663-svg-11-doctypeless.svg">view</a>:
+      Valid SVG 1.1, no declared DOCTYPE. Version attribute present for auto-detection.
+    </li>
+    <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-basic-11-doctype.svg;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-basic-11-doctype.svg;ss">with v.w.o</a> -
+      <a href="3663-svg-basic-11-doctype.svg">view</a>:
+      Valid SVG Basic 1.1, using a DOCTYPE
+    </li>
+    <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-basic-11-doctypeless.svg;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-basic-11-doctypeless.svg;ss">with v.w.o</a> -
+      <a href="3663-svg-basic-11-doctypeless.svg">view</a>:
+      Valid SVG Basic 1.1, no declared DOCTYPE. Version and baseProfile attributes present for auto-detection.
+    </li>
+    <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-tiny-11-doctype.svg;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-tiny-11-doctype.svg;ss">with v.w.o</a> -
+      <a href="3663-svg-tiny-11-doctype.svg">view</a>:
+      Valid SVG Tiny 1.1, using a DOCTYPE
+    </li>
+    <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-tiny-11-doctypeless.svg;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-tiny-11-doctypeless.svg;ss">with v.w.o</a> -
+      <a href="3663-svg-tiny-11-doctypeless.svg">view</a>:
+      Valid SVG Basic 1.1, no declared DOCTYPE. Version and baseProfile attributes present for auto-detection.
+    </li>
+    <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-noversion-doctype.svg">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-noversion-doctype.svg;ss">with v.w.o</a> -
+      <a href="3663-svg-noversion-doctype.svg">view</a>:
+      Valid SVG 1.1, using a DOCTYPE. No version attribute (optional). Should use info given by doctype.
+    </li>
+    <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-noversion-doctype2.svg;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-noversion-doctype2.svg;ss">with v.w.o</a> -
+      <a href="html20.html">view</a>:
+      Valid SVG 1.0, using a DOCTYPE. No version attribute (optional). Should use info given by doctype.
+    </li>
+    <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-noversion-doctypeless.svg;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-noversion-doctypeless.svg;ss">with v.w.o</a> -
+      <a href="3663-svg-noversion-doctypeless.svg">view</a>:
+      SVG with neither DOCTYPE nor version attribute. The validator may use a default.
+    </li>
+  </ul>
   <h4 id="valid_warn">Valid Documents, with Warnings</h4>
 <ul>
   <li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/2342-opensp_type_X.html">validate</a> -
