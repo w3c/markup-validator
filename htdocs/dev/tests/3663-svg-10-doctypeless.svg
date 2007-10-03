@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
-<svg width="5cm" height="4cm"
+<svg width="5cm" height="4cm" version="1.0"
      xmlns="http://www.w3.org/2000/svg">
-  <desc>Four separate rectangles
+  <desc>This SVG document has no doctype, but uses the version attribute on root svg element to specify its SVG version
   </desc>
     <rect x="0.5cm" y="0.5cm" width="2cm" height="1cm"/>
     <rect x="0.5cm" y="2cm" width="1cm" height="1.5cm"/>
