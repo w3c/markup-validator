@@ -26,6 +26,14 @@ PUBLIC "-//W3C//DTD SVG 1.0//EN"
        "REC-SVG-20010904/svg10.dtd"
 PUBLIC "-//W3C//DTD SVG 1.1//EN"
        "REC-SVG11-20030114/svg11-flat.dtd"
+PUBLIC "-//W3C//DTD SVG Basic 1.1//EN"
+       "REC-SVG11-20030114/svg11-basic-flat.dtd"
+PUBLIC "-//W3C//DTD SVG Tiny 1.1//EN"
+       "REC-SVG11-20030114/svg11-tiny-flat.dtd"
+PUBLIC "-//W3C//DTD SVG 1.1 Basic//EN"
+       "REC-SVG11-20030114/svg11-basic-flat.dtd"
+PUBLIC "-//W3C//DTD SVG 1.1 Tiny//EN"
+       "REC-SVG11-20030114/svg11-tiny-flat.dtd"
 
 
 -- XHTML --
