@@ -82,7 +82,9 @@
 <TMPL_IF NAME="W24">
   <warning><messageid>W24</messageid><message>Rare or unregistered Character Encoding detected</message></warning>
 </TMPL_IF>
-
+<TMPL_IF NAME="W25">
+  <warning><messageid>W25</messageid><message><TMPL_VAR NAME="W25_dtd" ESCAPE="HTML"> document without DOCTYPE detected</message></warning>
+</TMPL_IF>
 <TMPL_IF NAME="W@@">
   <warning><messageid>W@@</messageid><message></message></warning>
 </TMPL_IF>

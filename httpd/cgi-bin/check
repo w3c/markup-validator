@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.572 2007-09-27 10:13:36 ot Exp $
+# $Id: check,v 1.573 2007-10-03 10:42:08 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.572 $;
+  $VERSION =  q$Revision: 1.573 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -266,6 +266,9 @@ $File->{XMLWF_ONLY} = FALSE;
 # Listrefs.
 $File->{Warnings}   = []; # Warnings...
 $File->{Namespaces} = []; # Other (non-root) Namespaces.
+
+# By default, doctype-less documents can not be valid
+$File->{"DOCTYPEless OK"} = FALSE;
 
 ###############################################################################
 #### Generate Template for Result. ############################################
@@ -1636,8 +1639,10 @@ sub override_doctype {
       $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
     }
   } else {
-
-    if ($File->{Opt}->{FB}->{DOCTYPE}) {
+    if ($File->{"DOCTYPEless OK"}) {
+      &add_warning('W25', {W25_dtd => $File->{Opt}->{DOCTYPE}});
+    }
+    elsif ($File->{Opt}->{FB}->{DOCTYPE}) {
       &add_warning('W16', {W16_dtd => $File->{Opt}->{DOCTYPE}});
       $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
     } else {
@@ -1896,6 +1901,8 @@ sub preparse_doctype {
       $File->{Root} = $tag;
     }
     if ($attr->{xmlns}) {$File->{Namespace} = $attr->{xmlns}};
+    if ($attr->{version}) {$File->{'Root Version'} = $attr->{version}};
+    if ($attr->{baseProfile}) {$File->{'Root BaseProfile'} = $attr->{baseProfile}};
   };
 
   # we use HTML::Parser as pre-parser. May use html5lib or other in the future
@@ -1916,8 +1923,49 @@ sub preparse_doctype {
   $File->{DOCTYPE} =~ s(\s+$){ }g;
   $File->{DOCTYPE} =~ s(\s+) { }g;
 
+  # Some document types actually need no doctype to be identified,
+  # root element and some version attribute is enough
+  # TODO applicable doctypes should be migrated to a config file?
+  
+  if (($File->{DOCTYPE} eq '') and ($File->{Root} eq "svg") ) {
+    if (($File->{'Root Version'}) or ($File->{'Root BaseProfile'}))
+    {
+      if ($File->{'Root Version'} eq "1.0"){
+        $File->{DOCTYPE} = "-//W3C//DTD SVG 1.0//EN";
+        $File->{"DOCTYPEless OK"} = TRUE;
+        $File->{Opt}->{DOCTYPE} = "SVG 1.0";
+      } 
+      elsif ((($File->{'Root Version'} eq "1.1") or (!$File->{'Root Version'})) and ($File->{'Root BaseProfile'} eq "tiny")) {
+          $File->{DOCTYPE} = "-//W3C//DTD SVG Tiny 1.1//EN";
+          $File->{"DOCTYPEless OK"} = TRUE;
+          $File->{Opt}->{DOCTYPE} = "SVG 1.1 Tiny";
+      }
+      elsif ((($File->{'Root Version'} eq "1.1")  or (!$File->{'Root Version'})) and ($File->{'Root BaseProfile'} eq "basic")) {
+          $File->{DOCTYPE} = "-//W3C//DTD SVG Basic 1.1//EN";
+          $File->{Opt}->{DOCTYPE} = "SVG 1.1 Basic";
+          $File->{"DOCTYPEless OK"} = TRUE;
+      }
+      elsif (($File->{'Root Version'} eq "1.1") and (!$File->{'Root BaseProfile'})) {
+          $File->{DOCTYPE} = "-//W3C//DTD SVG 1.1//EN";
+          $File->{Opt}->{DOCTYPE} = "SVG 1.1";
+          $File->{"DOCTYPEless OK"} = TRUE;
+      }
+    }
+    else {
+      # by default for an svg root elt, we use SVG 1.1
+      $File->{DOCTYPE} = "-//W3C//DTD SVG 1.1//EN";
+      $File->{Opt}->{DOCTYPE} = "SVG 1.1";
+      $File->{"DOCTYPEless OK"} = TRUE;
+    }
+  }
+  if (($File->{"DOCTYPEless OK"}) and ($File->{Opt}->{DOCTYPE})) {
+    # doctypeless document type found, we fake the override 
+    # so that the parser will have something to validate against
+    $File = &override_doctype($File);
+  }
   return $File;
 }
+
 
 #
 # Print out the raw error output for debugging.

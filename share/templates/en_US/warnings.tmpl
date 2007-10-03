@@ -453,7 +453,14 @@ to check these potential issues, and, if necessary, fix them and re-validate the
   </li>
 </TMPL_IF>
 
-
+<TMPL_IF NAME="W25">
+  <li class="msg_warn" id="W25"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg"><TMPL_VAR NAME="W25_dtd" ESCAPE="HTML"> document without DOCTYPE detected.</span></p>
+  
+    <p>This document does not declare any DOCTYPE. A Doctype declaration is generally 
+      needed for validation, but the checked document uses markup specific to <TMPL_VAR NAME="W25_dtd" ESCAPE="HTML">, which may be used without DOCTYPE. </p>
+    <p>Validation was performed as if the DOCTYPE for <TMPL_VAR NAME="W25_dtd" ESCAPE="HTML"> was present. If this automatic detection is not correct, <a href="http://www.w3.org/QA/2002/04/valid-dtd-list.html" title="W3C QA - Recommended list of DTDs you can use in your Web document">adding a DOCTYPE declaration</a> will help validate without ambiguity.</p>
+  </li>
+</TMPL_IF>
 
 <TMPL_IF NAME="W@@">
   <li class="msg_warn" id="W@@">
