@@ -129,7 +129,7 @@ to check these potential issues, and, if necessary, fix them and re-validate the
 
 <TMPL_IF NAME="W06">
   <li class="msg_warn" id="W06"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Unable to Determine Parse Mode!</span></p>
-  <p>The validator can process documents either as XML (for document types such as XHTML, SVG, etc.) or SGML (for HTML 4.01 and prior versions). For this document, there was no unambiguous information available to set the parsing mode:</p>
+  <p>The validator can process documents either as XML (for document types such as XHTML, SVG, etc.) or SGML (for HTML 4.01 and prior versions). For this document, the information available was not sufficient to determine the parsing mode unambiguously, because:</p>
   <ul>
     <TMPL_IF NAME="W06_mime"><li>
     the MIME Media Type (<code><TMPL_VAR NAME="W06_mime" ESCAPE="HTML"></code>)  can be used for XML or SGML document types</li><TMPL_ELSE><li>in <em>Direct Input</em> mode, no MIME Media Type is served to the validator</li></TMPL_IF>
@@ -261,7 +261,7 @@ to check these potential issues, and, if necessary, fix them and re-validate the
   
     <p>
       Namespace "<code><TMPL_VAR NAME="W11_rns" ESCAPE="HTML"></code>" found,
-      but the <TMPL_IF NAME="w11_doctype"><li><code><TMPL_VAR NAME="w11_doctype" ESCAPE="HTML"></code></TMPL_IF> document type is not an XML document type!
+      but the <TMPL_IF NAME="w11_doctype"><code><TMPL_VAR NAME="w11_doctype" ESCAPE="HTML"></code></TMPL_IF> document type is not an XML document type!
     </p>
   </li>
 </TMPL_IF>
