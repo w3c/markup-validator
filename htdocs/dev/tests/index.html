@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.96 2007-10-04 05:22:05 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-10-04 05:22:05 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.97 2007-10-04 06:53:14 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-10-04 06:53:14 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -33,6 +33,11 @@
     <li><a href="#errors">Error conditions &amp; strange cases</a></li>
     <li><a href="#ui">User Interface tests</a></li>
     <li><a href="#regress">Bugs and Regression Tests</a></li>
+    <li><a href="#output_test">Test for specific output</a>
+      <ul>
+        <li><a href="#output_preparse">Output of preparse warnings</a></li>
+      </ul>
+    </li>
 </ol>
 </div>
 
@@ -485,13 +490,6 @@ All these documents should validate, without "pretty print" for the document typ
       XHTML 1.0 missing space between attributes (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=2689" title="Bug 2689 - documents with no whitespace between attributes validate">Bug 2689</a>)
     </li>
 
-    <li>
-      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/W11-ht401-namespace.html;ss">validate</a> -
-      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/W11-ht401-namespace.html;ss">with v.w.o</a> 
-      
-      <a href="W11-ht401-namespace.html">view</a>:
-      HTML 4.01 with xmlns attribute on root element (should trigger a validation error, and preparse warning W11)
-    </li>
     
 
   </ul>
@@ -733,7 +731,154 @@ All these documents should validate, without "pretty print" for the document typ
 
       </ul>
 
+<h3 id="output_test">Test for specific output</h3>
+<h4 id="output_preparse">Output of preparse warnings</h4>
+<ul>
+  <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/textxml_nocharset.xml;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/textxml_nocharset.xml;ss">with v.w.o</a> -
+      <a href="textxml_nocharset.xml">view</a>:
+      text/xml, no charset (W01)
+	</li>
+	<li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/texthtml_nocharset.html;charset=iso-8859-1;fbc;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/texthtml_nocharset.html;fbc;charset=iso-8859-1;ss">with v.w.o</a> -
+      <a href="texthtml_nocharset.html">view</a>:
+      text/html, no charset, fbc set (W02)
+	</li>
+  <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html401-strict.html;charset=iso-8859-1;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html401-strict.html;charset=iso-8859-1;ss">with v.w.o</a> -
+      <a href="html401-strict.html">view</a>:
+      charset override (W03)
+	</li>
+	<li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/texthtml_nocharset.html;charset=iso-8859-1;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/texthtml_nocharset.html;charset=iso-8859-1;ss">with v.w.o</a> -
+      <a href="texthtml_nocharset.html">view</a>:
+      text/html, no charset, override set (W04)
+	</li>
+	
+  <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/texthtml_nocharset.html;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/texthtml_nocharset.html;ss">with v.w.o</a> -
+      <a href="texthtml_nocharset.html">view</a>:
+      text/html, no charset (W04)
+	</li>
+	<li>
+    <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.html;doctype=XHTML+1.0+Transitional;ss">validate</a> -
+    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.html;doctype=XHTML+1.0+Transitional;ss">with v.w.o</a> -
+    <a href="xhtml1-missing-doctype-and-xmlns.html">view</a>:
+    XHTML, no DOCTYPE, override ON.  (W05).
+  </li>
+	<li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/sgml_customdtd.html">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/sgml_customdtd.html">with v.w.o</a> - 
+      <a href="sgml_customdtd.html">view</a>:
+	  HTML4.0 plus blink ("Custom" SGML DTD), parse mode fallback to SGML (W06)
+  </li>
+  <li>
+    <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html401-strict.xhtml;ss">validate</a> -
+    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html401-strict.xhtml;ss">with v.w.o</a> -
+    <a href="html401-strict.xhtml">view</a>:
+    HTML 4.01 Strict served with an XHTML mime type. Parse mode conflict (W07) 
+  </li>
+  <li>W08 is obsolete</li>
+  <li>
+    <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.html;ss">validate</a> -
+    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.html;ss">with v.w.o</a> -
+    <a href="xhtml1-missing-doctype-and-xmlns.html">view</a>:
+    XHTML, no DOCTYPE, no xmlns (thus invalid).  (W09).
+  </li>
+  <li>
+    <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/sgml-nodoctype-syntaxnotok.html;ss">validate</a> -
+    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/sgml-nodoctype-syntaxnotok.html;ss">with v.w.o</a> -
+    <a href="sgml-nodoctype-syntaxnotok.html">view</a>:
+    SGML-ish document with root element != html. Served as text/html. No DOCTYPE. (W09nohtml)
+  </li>
+  <li>
+    <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xml-nodoctype-notwf.xml;ss">validate</a> -
+    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xml-nodoctype-notwf.xml;ss">with v.w.o</a> -
+    <a href="xml-nodoctype-notwf.xml">view</a>:
+    XML, no DOCTYPE, not well-formed (W09xml)
+  </li>
+  <li>W10 needs test case</li>
+  <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict.html;doctype=HTML+4.01+Transitional;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict.html;doctype=HTML+4.01+Transitional;ss">with v.w.o</a> -
+      <a href="xhtml1-strict.html">view</a>:
+      XHTML with doctype override to HTML401. namespace will trigger (W11) 
+	</li>
+	<li>
+    <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/W11-ht401-namespace.html;ss">validate</a> -
+    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/W11-ht401-namespace.html;ss">with v.w.o</a> 
 
+    <a href="W11-ht401-namespace.html">view</a>:
+    HTML 4.01 with xmlns attribute on root element. 
+    Should trigger a validation error (it does)
+    and preparse warning W11 (it doesn't!)
+  </li>
+  <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html401-strict.html;doctype=HTML+4.01+Transitional;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html401-strict.html;doctype=HTML+4.01+Transitional;ss">with v.w.o</a> -
+      <a href="html401-strict.html">view</a>:
+      HTML 4.01 Strict, validated with HTML 4.01 Transitional override (W13)
+	</li>
+	<li>w14 needs a test case</li>
+	<li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/texthtml_nodoctype.html.utf8;doctype=HTML+4.01+Transitional;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/texthtml_nodoctype.html.utf8;doctype=HTML+4.01+Transitional;ss">with v.w.o</a> -
+      <a href="texthtml_nodoctype.html.utf8">view</a>:
+      No doctype, override given, fallback fbd is off (W15)
+	</li>
+  <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/texthtml_nodoctype.html.utf8;doctype=HTML+4.01+Transitional;ss;fbd">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/texthtml_nodoctype.html.utf8;doctype=HTML+4.01+Transitional;ss;fbd">with v.w.o</a> -
+      <a href="texthtml_nodoctype.html.utf8">view</a>:
+      No doctype, fallback given (W16)
+	</li>
+  <li>W17 needs a test case. is it a DUP of W04 now?</li>
+  <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/charset_mismatch-http_xmldec.xhtml.utf8;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/charset_mismatch-http_xmldec.xhtml.utf8;ss">with v.w.o</a> -
+      <a href="charset_mismatch-http_xmldec.xhtml.utf8">view</a>:
+      charset mismatch HTTP / XML decl (W18)
+	</li>
+  <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/charset_mismatch-http_meta.html.utf8;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/charset_mismatch-http_meta.html.utf8;ss">with v.w.o</a> -
+      <a href="charset_mismatch-http_meta.html.utf8">view</a>:
+      charset mismatch HTTP / Meta (W19)
+	</li>
+	<li>W20 needs a test case. probably rare.</li>
+  <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-utf8-bom.xhtml;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-utf8-bom.xhtml;ss">with v.w.o</a> -
+      <a href="xhtml-utf8-bom.xhtml">view</a>:
+      UTF-8 document, with BOM (W21)
+	</li>
+	<li>W22 (bad encoding alias) needs test case
+	<li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/mathml2.html;ss">validate</a> - 
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/mathml2.html;ss">with v.w.o</a> - 
+      <a href="mathml2.html">view</a>:
+      MathML 2.0 as text/html (W23)
+  </li>
+    
+  <li>
+      <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/197-iso88591_alias.html;ss">validate</a> -
+      <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/197-iso88591_alias.html;ss">with v.w.o</a> -
+      <a href="197-iso88591_alias.html">view</a>:
+      supported, but rare, charset (W24)
+	</li>
+	<li>
+    <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-noversion-doctypeless.svg;ss">validate</a> -
+    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-noversion-doctypeless.svg;ss">with v.w.o</a> -
+    <a href="3663-svg-noversion-doctypeless.svg">view</a>:
+    SVG with neither DOCTYPE nor version attribute (OK in SVG). (W25)
+  </li>
+  
+</ul>
 
     <div id="suites">
       <h2>Other Test Suites</h2>
