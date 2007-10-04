@@ -49,51 +49,49 @@ to check these potential issues, and, if necessary, fix them and re-validate the
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W04">
-  <li class="msg_warn" id="W04"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">No Character Encoding Found!</span></p>
+  <li class="msg_warn" id="W04"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">No Character Encoding Found!
     <TMPL_IF NAME="W04_override">
       Using
     <TMPL_ELSE>
       Falling back to 
     </TMPL_IF>
-    <code><TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF></code>.
+    <code><TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF></code>.</span></p>
   
   
   <TMPL_IF NAME="W04_override">
-    <p>I was not able to extract a character encoding labeling from any of
-      the valid sources for such information. I will use the character 
+    <p>None of the standards sources gave any information on the character encoding labeling for this document. The character 
       encoding <code><TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF></code>,
-      which you have chosen via the <code>Encoding</code> override option, for 
-      tentative validation. 
+      which you have chosen via the <code>Encoding</code> override option, will be used for tentative validation. 
     </p>
   <TMPL_ELSE>
     <p>
-      I was not able to extract a character encoding labeling from any of
-      the valid sources for such information. Without encoding information
-      it is impossible to reliably validate the document. I'm falling back
-      to the "<code><TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF></code>" 
-      encoding and will attempt to perform the validation,
+      None of the standards sources gave any information on the character encoding
+      labeling for this document. Without encoding information
+      it is impossible to reliably validate the document. As a fallback
+      solution, the "<code><TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF></code>" 
+      encoding was used to read the content and attempt to perform the validation,
       but this is likely to fail for all non-trivial documents.
     </p>
   </TMPL_IF>
   <TMPL_IF NAME="opt_verbose">
-    <p>The sources I tried to find encoding information include:</p>
+    <p>The sources used to find encoding information include:</p>
     <ul>
       <li>The HTTP Content-Type field.</li>
       <li>The XML Declaration.</li>
       <li>The HTML "META" element.</li>
     </ul>
     <p>
-      And I even tried to autodetect it using the algorithm defined in
+      The algorithm defined in
       <a href="http://www.w3.org/TR/REC-xml#sec-guessing">Appendix F of
-        the XML 1.0 Recommendation</a>.
+        the XML 1.0 Recommendation</a> was also used, without success.
     </p>
     <p>
-      Since none of these sources yielded any usable information, I will not be
-      able to reliably validate this document. Sorry. Please make sure you
+      Since none of these sources yielded any usable information, reliable
+      validation of this document is not possible. Sorry. Please make sure you
       specify the character encoding in use.
     </p>
       <p>Specifying a character encoding is typically done by the web server
-	configuration, by the scripts that put together pages, and inside the
+	configuration, by the scripts that put together pages, or inside the
 	document itself. <a href="http://www.iana.org/"><abbr title="Internet Assigned Numbers Authority">IANA</abbr></a> 
     maintains the list of
 	<a href="http://www.iana.org/assignments/character-sets">official names for character
@@ -102,7 +100,7 @@ to check these potential issues, and, if necessary, fix them and re-validate the
 
 	<p>The W3C <abbr title="Internationalization">I18N</abbr> Activity has collected a 
 		<a href="http://www.w3.org/International/O-charset">few tips on
-	how to do this</a>.</p>
+	how to declare the encoding of a Web document</a>.</p>
 	<p>
       To quickly check whether the document would validate after addressing
       the missing character encoding information, you can use the "Encoding"
@@ -131,27 +129,30 @@ to check these potential issues, and, if necessary, fix them and re-validate the
 
 <TMPL_IF NAME="W06">
   <li class="msg_warn" id="W06"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Unable to Determine Parse Mode!</span></p>
-  <p>It was not possible  to reliably choose  a parsing mode for this document, because:</p>
+  <p>The validator can process documents either as XML (for document types such as XHTML, SVG, etc.) or SGML (for HTML 4.01 and prior versions). For this document, there was no unambiguous information available to set the parsing mode:</p>
   <ul>
     <TMPL_IF NAME="W06_mime"><li>
     the MIME Media Type (<code><TMPL_VAR NAME="W06_mime" ESCAPE="HTML"></code>)  can be used for XML or SGML document types</li><TMPL_ELSE><li>in <em>Direct Input</em> mode, no MIME Media Type is served to the validator</li></TMPL_IF>
     <TMPL_IF NAME="w06_doctype"><li>the Document Type (<code><TMPL_VAR NAME="w06_doctype" ESCAPE="HTML"></code>) is not in the validator's catalog</li><TMPL_ELSE><li>No known Document Type could be detected</li></TMPL_IF>
     <li>No XML declaration (<abbr>e.g</abbr> <code>&lt;?xml version="1.0"?&gt;</code>) could be found at the beginning of the document.</li>
     </ul>
-    <p>The validator is falling back to SGML mode.</p></li>
+    <p>As a default, the validator is falling back to SGML mode.</p>
+    </li>
 </TMPL_IF>
 <TMPL_IF NAME="W07">
   <li class="msg_warn" id="W07"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Contradictory Parse Modes Detected!</span></p>
-  
+    <p>The validator can process documents either as XML (for document types such as XHTML, SVG, etc.) or SGML (for HTML 4.01 and prior versions).</p>
     <p>
-      The MIME Media Type
-      (<code><TMPL_VAR NAME="W07_mime" ESCAPE="HTML"></code>) indicated parse
-       mode should be <TMPL_VAR NAME="W07_ct" ESCAPE="HTML">, but the
+      This document was served with HTTP headers declaring it as MIME Media Type
+      (<code><TMPL_VAR NAME="W07_mime" ESCAPE="HTML"></code>), for which the parsing
+       mode should be <TMPL_VAR NAME="W07_ct" ESCAPE="HTML">. However, the document's
        <code>DOCTYPE</code> Declaration indicates
-       <TMPL_VAR NAME="W07_dtd" ESCAPE="HTML"> mode.  Using
-       <TMPL_VAR NAME="W07_ct" ESCAPE="HTML"> mode based on the
-       <code>Content-Type</code> header.
+       <TMPL_VAR NAME="W07_dtd" ESCAPE="HTML"> mode.
+    <p>
+    <p>Following the rules of <a href="http://www.w3.org/TR/webarch/#metadata-inconsistencies" title="Architecture of the World Wide Web, Volume One - Inconsistencies between Representation Data and Metadata">Web Architecture</a>, validation proceeded using the <TMPL_VAR NAME="W07_ct" ESCAPE="HTML"> mode based on the <code>Content-Type</code> header.
     </p>
+    <p>Fixing this conflict involves either <a href="http://www.w3.org/QA/2007/10/http-media-type.html" title="Setting media type headers on your Web site - W3C Q&amp;A Weblog">setting the Content-Type header</a>, <a
+      href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">using a known document type</a> or adding an XML declaration (in the case of XML-based documents).</p>
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W08">
@@ -260,7 +261,7 @@ to check these potential issues, and, if necessary, fix them and re-validate the
   
     <p>
       Namespace "<code><TMPL_VAR NAME="W11_rns" ESCAPE="HTML"></code>" found,
-      but document type is not XML!
+      but the <TMPL_IF NAME="w11_doctype"><li><code><TMPL_VAR NAME="w11_doctype" ESCAPE="HTML"></code></TMPL_IF> document type is not an XML document type!
     </p>
   </li>
 </TMPL_IF>
