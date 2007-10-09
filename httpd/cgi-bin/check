@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.574 2007-10-09 00:48:23 ot Exp $
+# $Id: check,v 1.575 2007-10-09 16:37:05 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.574 $;
+  $VERSION =  q$Revision: 1.575 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2019,6 +2019,10 @@ sub prepCGI {
       $q->param($param, TRUE) unless $q->param($param);
     }
   }
+
+  # IIS reportedly does not provide the $path_info we expect - hack around it.
+  $path_info =~ s|(.*)/check\.pl(.*)$|$2|
+    if ($ENV{SERVER_SOFTWARE} and $ENV{SERVER_SOFTWARE} =~ /Microsoft-IIS/);
 
   # apparently, with mod_perl2, $path_info is empty even if it should be filled
   # working around that
