@@ -54,7 +54,7 @@
 <TMPL_ELSE>
   <TMPL_IF NAME="is_direct_input">
           <th><label title="Uploaded source of your Document" for="fragment">Source</label>:</th><td colspan="2"><textarea id="fragment" name="fragment" rows="12" cols="80"><TMPL_LOOP NAME="file_source"><TMPL_VAR NAME="file_source_line" ESCAPE="HTML">
-    </TMPL_LOOP></textarea></td>
+</TMPL_LOOP></textarea></td>
   <TMPL_ELSE>  
       <th><label title="Address of Page to Validate" for="uri">Address</label>:</th>
       <td colspan="2"><input type="text" id="uri" name="uri" value="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">" size="50" /></td>
