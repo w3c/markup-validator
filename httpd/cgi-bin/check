@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.573 2007-10-03 10:42:08 ot Exp $
+# $Id: check,v 1.574 2007-10-09 00:48:23 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.573 $;
+  $VERSION =  q$Revision: 1.574 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -920,7 +920,8 @@ if ($File->{Namespace}) {
       });
     }
   } else {
-    &add_warning('W11', {W11_ns => $File->{Namespace}});
+    &add_warning('W11', {W11_ns => $File->{Namespace},
+    w11_doctype => $File->{DOCTYPE}});
   }
 } else {
   if (&is_xml($File) and $CFG->{Types}->{$File->{Version}}->{Namespace}) {
@@ -1714,8 +1715,8 @@ sub report_errors ($) {
           my $escaped_uri = uri_escape($File->{URI});
           $_msg =~ s/<!--URI-->/$escaped_uri/g;
         }
-        $_msg =~ s/<!--CFG_HOME_PAGE-->/$CFG->{'Home Page'}/g;
         $explanation = "    $_msg\n$explanation"; # The send feedback plea.
+        $explanation =~ s/<!--CFG_HOME_PAGE-->/$CFG->{'Home Page'}/g;
       }
 
       $err->{src} = $line;
