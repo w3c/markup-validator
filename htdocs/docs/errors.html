@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: errors.html,v 1.42 2007-08-07 23:27:07 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-08-07 23:27:07 $"
+<!--#set var="revision" value="\$Id: errors.html,v 1.43 2007-10-10 07:07:54 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-10-10 07:07:54 $"
 --><!--#set var="title" value="Error Explanations for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -206,7 +206,7 @@
         <dt id="ve-73">73: end tag for X which is not finished</dt>
         <dd><div class="ve mid-73">
     <p>
-      Most likely, You nested tags and closed them in the wrong order. For 
+      Most likely, you nested tags and closed them in the wrong order. For 
       example &lt;p&gt;&lt;em&gt;...&lt;/p&gt; is not acceptable, as &lt;em&gt;
       must be closed before &lt;p&gt;. Acceptable nesting is: 
       &lt;p&gt;&lt;em&gt;...&lt;/em&gt;&lt;/p&gt;  
@@ -261,7 +261,7 @@
     </p>
     <p>
       If this error occurred in a script section of your document, you should probably
-      read this <a href="help.html#faq-javascript">FAQ entry</a>.
+      read this <a href="http://validator.w3.org/docs/help.html#faq-javascript">FAQ entry</a>.
     </p>
   </div>
 	<p>
@@ -346,7 +346,7 @@
       check that they are both allowed in the chosen document type, and/or
       use CSS instead of this attribute. If you received this error when using the 
       &lt;embed&gt; element to incorporate flash media in a Web page, see the 
-      <a href="help.html#faq-flash">FAQ item on valid flash</a>.
+      <a href="http://validator.w3.org/docs/help.html#faq-flash">FAQ item on valid flash</a>.
     </p>
   </div>
 	<p>
@@ -611,12 +611,27 @@
         <dt id="ve-187">187: no document type declaration; will parse without validation</dt>
         <dd><div class="ve mid-187">
     <p>The document type could not be determined, because the document had no correct DOCTYPE declaration. The document does not look like HTML, therefore automatic fallback could not be performed, and the document was only checked against basic markup syntax.</p>
-    <p>Learn <a href="help.html#faq-doctype">how to add a doctype to your document</a> 
+    <p>Learn <a href="http://validator.w3.org/docs/help.html#faq-doctype">how to add a doctype to your document</a> 
     from our <acronym title="Frequently Asked Questions">FAQ</acronym>, or use the validator's
     <code>Document Type</code> option to validate your document against a specific Document Type.</p>
   </div>
 	<p>
 	  <a href="../feedback.html?errmsg_id=187#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt id="ve-246">246: unclosed start-tag requires SHORTTAG YES</dt>
+        <dd><div class="ve mid-246">
+    <p>
+      The construct &lt;foo&lt;bar&gt; is valid in HTML (it is an example of the rather obscure “Shorttags” feature)
+      but <a href="http://www.w3.org/TR/html4/appendix/notes.html#h-B.3.7">its use is not recommended</a>.
+      In most cases, this is a typo that you will want to fix. If you really want to use shorttags, 
+      be aware that they are not well implemented by browsers.
+    </p>
+  </div>
+	<p>
+	  <a href="../feedback.html?errmsg_id=246#errormsg"
 	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
 	</p>
 	</dd>  
@@ -638,6 +653,21 @@
 	</p>
 	</dd>  
       
+        <dt id="ve-248">248: unclosed end-tag requires SHORTTAG YES</dt>
+        <dd><div class="ve mid-248">
+    <p>
+      The construct &lt;/foo&lt;bar&gt; is valid in HTML (it is an example of the rather obscure “Shorttags” feature)
+      but <a href="http://www.w3.org/TR/html4/appendix/notes.html#h-B.3.7">its use is not recommended</a>.
+      In most cases, this is a typo that you will want to fix. If you really want to use shorttags, 
+      be aware that they are not well implemented by browsers.
+    </p>
+  </div>
+	<p>
+	  <a href="../feedback.html?errmsg_id=248#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
         <dt id="ve-325">325: reference to entity X for which no system identifier could be generated</dt>
         <dd><div class="ve mid-325">
     <p>
@@ -648,6 +678,36 @@
   </div>
 	<p>
 	  <a href="../feedback.html?errmsg_id=325#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt id="ve-333">333: empty start-tag</dt>
+        <dd><div class="ve mid-334">
+      <p>
+        The construct &lt;&gt; is sometimes valid in HTML (it is an example of the rather obscure “Shorttags” feature)
+        but <a href="http://www.w3.org/TR/html4/appendix/notes.html#h-B.3.7">its use is not recommended</a>.
+        In most cases, this is a typo that you will want to fix. If you really want to use shorttags, 
+        be aware that they are not well implemented by browsers.
+      </p>
+    </div>
+	<p>
+	  <a href="../feedback.html?errmsg_id=333#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt id="ve-334">334: empty end-tag</dt>
+        <dd><div class="ve mid-334">
+      <p>
+        The construct &lt;/&gt; is valid in HTML (it is an example of the rather obscure “Shorttags” feature)
+        but <a href="http://www.w3.org/TR/html4/appendix/notes.html#h-B.3.7">its use is not recommended</a>.
+        In most cases, this is a typo that you will want to fix. If you really want to use shorttags, 
+        be aware that they are not well implemented by browsers.
+      </p>
+    </div>
+	<p>
+	  <a href="../feedback.html?errmsg_id=334#errormsg"
 	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
 	</p>
 	</dd>  
@@ -2094,18 +2154,6 @@
 	</p>
 	</li>
       
-        <li id="ve-246"><p>246: unclosed start-tag requires SHORTTAG YES
-	  <a href="../feedback.html?errmsg_id=246#errormsg"
-	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
-	</p>
-	</li>
-      
-        <li id="ve-248"><p>248: unclosed end-tag requires SHORTTAG YES
-	  <a href="../feedback.html?errmsg_id=248#errormsg"
-	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
-	</p>
-	</li>
-      
         <li id="ve-249"><p>249: DTDs other than base allowed only if CONCUR YES or EXPLICIT YES
 	  <a href="../feedback.html?errmsg_id=249#errormsg"
 	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
@@ -2600,18 +2648,6 @@
       
         <li id="ve-332"><p>332: earlier reference to entity X used default entity
 	  <a href="../feedback.html?errmsg_id=332#errormsg"
-	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
-	</p>
-	</li>
-      
-        <li id="ve-333"><p>333: empty start-tag
-	  <a href="../feedback.html?errmsg_id=333#errormsg"
-	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
-	</p>
-	</li>
-      
-        <li id="ve-334"><p>334: empty end-tag
-	  <a href="../feedback.html?errmsg_id=334#errormsg"
 	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
 	</p>
 	</li>
