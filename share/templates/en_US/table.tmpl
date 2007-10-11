@@ -17,10 +17,10 @@
 
 <TMPL_IF NAME="file_uri">
 <TMPL_IF NAME="is_upload">  
-<form id="form" method="post" action="check">
+<form id="form" method="post" enctype="multipart/form-data" action="check">
 <TMPL_ELSE>
   <TMPL_IF NAME="is_direct_input">
-    <form id="form" method="post" action="check">
+    <form id="form" method="post" enctype="multipart/form-data" action="check">
   <TMPL_ELSE>
     <form id="form" method="get" action="check">
   </TMPL_IF>
