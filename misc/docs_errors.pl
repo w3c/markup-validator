@@ -2,7 +2,7 @@
 ##
 ## Generates HTML documentation of error messages and explanations
 ## for W3C Markup Validation Service
-## $Id: docs_errors.pl,v 1.6 2007-10-10 07:05:32 ot Exp $
+## $Id: docs_errors.pl,v 1.7 2007-10-17 18:11:24 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -40,10 +40,8 @@ BEGIN {
        -AutoLaunder      => TRUE,
        -AutoTrue         => TRUE,
        -DefaultConfig    => {
-          Protocols => {Allow => 'http,https'},
           Paths => {
             Base => ($ENV{W3C_VALIDATOR_HOME} || '/usr/local/validator'),
-            SGML => {Parser => '/usr/bin/onsgmls'},
           },
        },
       );
