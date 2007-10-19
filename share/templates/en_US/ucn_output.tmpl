@@ -19,7 +19,7 @@ X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num"></TMPL_IF>
 	  <TMPL_LOOP NAME="file_errors"><TMPL_IF NAME="err_type_err">
 	    <error>
 	      <line><TMPL_VAR NAME="line"></line>
-	      <column><TMPL_VAR NAME="char"></column>
+	      <column><TMPL_VAR NAME="char" ESCAPE="HTML"></column>
 	      <message><TMPL_VAR NAME="msg" ESCAPE="HTML"></message>
 	 	  <context><TMPL_VAR NAME="src"></context>
     <longmessage>
@@ -37,7 +37,7 @@ X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num"></TMPL_IF>
 	<TMPL_LOOP NAME="file_errors"><TMPL_IF NAME="err_type_warn">
 	  <warning>
 	    <line><TMPL_VAR NAME="line"></line>
-	    <column><TMPL_VAR NAME="char"></column>
+	    <column><TMPL_VAR NAME="char" ESCAPE="HTML"></column>
 	    <message><TMPL_VAR NAME="msg" ESCAPE="HTML"></message>
     	<context><TMPL_VAR NAME="src"></context>
 	    <longmessage>
