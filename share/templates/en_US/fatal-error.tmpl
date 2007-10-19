@@ -114,6 +114,16 @@
     domain records are correct</a>, or ask your hosting company to do so.
   </p>
   </TMPL_IF>
+  <TMPL_IF NAME="fatal_http_warn">
+  <p>
+    More information about why this is happening may be available from
+    warnings reported by the validator's HTTP (and other protocol) client
+    library:
+  </p>
+  <blockquote>
+    <p><code><TMPL_VAR NAME="fatal_http_warn" ESCAPE="HTML"></code></p>
+  </blockquote>
+  </TMPL_IF>
 </li>
 </TMPL_IF>
 

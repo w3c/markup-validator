@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.575 2007-10-09 16:37:05 ville Exp $
+# $Id: check,v 1.576 2007-10-19 19:37:39 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.575 $;
+  $VERSION =  q$Revision: 1.576 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1337,10 +1337,14 @@ sub handle_uri {
     } else {
       $File->{'Error Flagged'} = TRUE;
 
+      my $warning = $res->header("Client-Warning");
+      $warning = undef if ($warning && $warning =~ /Internal response/i);
+
       $File->{Templates}->{Error}->param(fatal_http_error => TRUE);
       $File->{Templates}->{Error}->param(fatal_http_uri   => $uri->as_string);
       $File->{Templates}->{Error}->param(fatal_http_code  => $res->code);
       $File->{Templates}->{Error}->param(fatal_http_msg   => $res->message);
+      $File->{Templates}->{Error}->param(fatal_http_warn  => $warning);
       $File->{Templates}->{Error}->param(fatal_http_dns   => TRUE)
         if $res->code == 500;
     }

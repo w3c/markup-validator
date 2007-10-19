@@ -108,6 +108,12 @@ X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num"></TMPL_IF>
     also want to <a href="http://www.squish.net/dnscheck/">check that your
     domain records are correct</a>, or ask your hosting company to do so.
   </TMPL_IF>
+  <TMPL_IF NAME="fatal_http_warn">
+    More information about why this is happening may be available from
+    warnings reported by the validator's HTTP (and other protocol) client
+    library:
+    <TMPL_VAR NAME="fatal_http_warn" ESCAPE="HTML">
+  </TMPL_IF>
        </m:errordetail>
      </env:Detail>
 </TMPL_IF>
