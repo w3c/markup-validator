@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.576 2007-10-19 19:37:39 ville Exp $
+# $Id: check,v 1.577 2007-10-25 19:43:57 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.576 $;
+  $VERSION =  q$Revision: 1.577 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1268,7 +1268,7 @@ sub authenticate {
   $File->{Templates}->{AuthzReq}->param(http_401_headers => $headers);
   $File->{Templates}->{AuthzReq}->param(http_401_url     => $resource);
 
-  print $File->{Templates}->{AuthzReq}->output;
+  print Encode::encode('UTF-8', $File->{Templates}->{AuthzReq}->output);
 
   exit; # Further interaction will be a new HTTP request.
 }
