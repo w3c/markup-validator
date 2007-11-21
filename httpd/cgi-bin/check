@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.577 2007-10-25 19:43:57 ville Exp $
+# $Id: check,v 1.578 2007-11-21 06:55:48 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.577 $;
+  $VERSION =  q$Revision: 1.578 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1600,13 +1600,13 @@ sub override_doctype {
   my $declaration = sub {
     $seen = TRUE;
 
-    # No Override if Fallback was requested.
-    if ($File->{Opt}->{FB}->{DOCTYPE}) {
+    $org_dtd = &ent($_[0]);
+	($File->{Root}, $File->{DOCTYPE}) = $_[0] =~ m(<!DOCTYPE\s+(\w[\w\.-]+)\s+(?:PUBLIC|SYSTEM)\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
+    # No Override if Fallback was requested, or if override is the same as detected
+    if ($File->{Opt}->{FB}->{DOCTYPE} or ($File->{Opt}->{DOCTYPE} eq $CFG->{Types}->{$File->{DOCTYPE}}->{Display} )) {
       $HTML .= $_[0]; # Stash it as is...
     } else {
-      # Comment it out and insert the new one...
       $HTML .= "$dtd\n" . '<!-- ' . $_[0] . ' -->';
-      $org_dtd = &ent($_[0]);
     }
   };
   
