@@ -62,9 +62,7 @@ PUBLIC "-//W3C//ENTITIES XHTML Basic 1.0 Document Model 1.0//EN"
        "REC-xhtml-basic-20001219/xhtml-basic10-model-1.mod"
 
 PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN"
-      "WD-xhtml-basic-20060705/xhtml-basic11.dtd"
-PUBLIC "-//W3C//ENTITIES XHTML Basic 1.1 Document Model 1.0//EN"
-      "WD-xhtml-basic-20060705/xhtml-basic11-model-1.mod"
+      "CR-xhtml-basic-20070713/xhtml-basic11.dtd"
 
 
 PUBLIC "-//W3C//DTD XHTML-Print 1.0//EN"
