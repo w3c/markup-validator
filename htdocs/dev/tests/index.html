@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.99 2007-12-05 09:31:04 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-12-05 09:31:04 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.100 2007-12-19 05:44:04 ot Exp $"
+--><!--#set var="date" value="\$Date: 2007-12-19 05:44:04 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -613,6 +613,28 @@ All these documents should validate, without "pretty print" for the document typ
     <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/charset_mismatch-http_meta.html.utf8;ss">with v.w.o</a> - 
     <a href="charset_mismatch-http_meta.html.utf8">view</a>:
     Charset mismatch: HTTP Content-Type and meta http-equiv (sends warning, proceed with HTTP and pass)  
+  </li>
+	<li>
+    <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4520-iso88591-meta.html">validate</a> - 
+    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4520-iso88591-meta.html">with v.w.o</a> - 
+    <a href="4520-iso88591-meta.html">view</a>:
+	iso-8859-1 HTML document with charset declared in meta,
+    (test for <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=4520">Bug 4520</a> - charset override)
+	
+  </li>
+	<li>
+    <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4520-iso88591-no_meta.html">validate</a> - 
+    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4520-iso88591-no_meta.html">with v.w.o</a> - 
+    <a href="4520-iso88591-no_meta.html">view</a>:
+	iso-8859-1 HTML document with charset not declared in meta (nor in HTTP),
+    (test for <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=4520">Bug 4520</a> - charset override)
+  </li>
+	<li>
+    <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4917-meta_charset_case.html">validate</a> - 
+    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4917-meta_charset_case.html">with v.w.o</a> - 
+    <a href="4917-meta_charset_case.html">view</a>:
+
+	(<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=4917">Bug 4917</a>)
   </li>
       </ul>
 
