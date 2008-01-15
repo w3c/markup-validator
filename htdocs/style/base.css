@@ -114,6 +114,11 @@ h5,h6 {
 
 /* @group Inputs */
 
+div#frontforms input {
+    /* default for radio and checkbox. Others will be handled directly */
+    background-color: #EAEBEE;
+}
+
 input#uri, input#file, input#uploaded_file, input#keywords, input#short_desc, textarea {
 	font-family: Monaco, "Courier New", Monospace;
 	font-size: 0.9em;
