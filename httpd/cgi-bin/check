@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.579 2008-01-17 08:09:23 ot Exp $
+# $Id: check,v 1.580 2008-01-17 11:15:13 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.579 $;
+  $VERSION =  q$Revision: 1.580 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1885,7 +1885,10 @@ sub match_DTD_FPI_SI {
     if ($CFG->{Types}->{$FPI}) {
         if ($CFG->{Types}->{$FPI}->{SysID}){
             if ($SI ne $CFG->{Types}->{$FPI}->{SysID}) {
-                &add_warning('W26', {W26_dtd_pub => $CFG->{Types}->{$FPI}->{Display}, W26_dtd_sys=> $SI, W26_dtd_sys_recommend=> $CFG->{Types}->{$FPI}->{SysID}});
+                &add_warning('W26', {W26_dtd_pub => $CFG->{Types}->{$FPI}, 
+                W26_dtd_pub_display =>$CFG->{Types}->{$FPI}->{Display}, 
+                W26_dtd_sys=> $SI, 
+                W26_dtd_sys_recommend=> $CFG->{Types}->{$FPI}->{SysID}});
             }
         }
     }
