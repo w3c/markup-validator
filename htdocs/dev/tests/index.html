@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.100 2007-12-19 05:44:04 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-12-19 05:44:04 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.101 2008-01-17 08:08:17 ot Exp $"
+--><!--#set var="date" value="\$Date: 2008-01-17 08:08:17 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -366,6 +366,19 @@ All these documents should validate, without "pretty print" for the document typ
     <a href="texthtml_unknownparsemode.html">view</a>:
     document served as <code>text/html</code>, using a custom DTD and for which parse mode is impossible to determine via generic heuristics (triggers warning W06)
   </li>
+  <li>
+    <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4848-xhtml1-strict_FPI-SI-mismatch.xhtml">validate</a> - 
+    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4848-xhtml1-strict_FPI-SI-mismatch.xhtml">with v.w.o</a> - 
+    <a href="4848-xhtml1-strict_FPI-SI-mismatch.xhtml">view</a>:
+	FPI/SI doctype declaration mismatch (system Id refers to a 404)
+  </li>
+  <li>
+    <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4848-html40-transitional_FPI-SI-mismatch.html">validate</a> - 
+    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4848-html40-transitional_FPI-SI-mismatch.html">with v.w.o</a> - 
+    <a href="4848-html40-transitional_FPI-SI-mismatch.html">view</a>:
+	FPI/SI doctype declaration mismatch (html 4 doc with system Id refers to xhtml)
+  </li>
+
 	<li>
 	  <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/shorttags.html">validate</a> - 
 	  <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/shorttags.html">with v.w.o</a> - 
