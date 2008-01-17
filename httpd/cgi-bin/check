@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.578 2007-11-21 06:55:48 ot Exp $
+# $Id: check,v 1.579 2008-01-17 08:09:23 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.578 $;
+  $VERSION =  q$Revision: 1.579 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1879,6 +1879,17 @@ sub source {
   return \@source;
 }
 
+
+sub match_DTD_FPI_SI {
+    my ($File, $FPI, $SI) = @_;
+    if ($CFG->{Types}->{$FPI}) {
+        if ($CFG->{Types}->{$FPI}->{SysID}){
+            if ($SI ne $CFG->{Types}->{$FPI}->{SysID}) {
+                &add_warning('W26', {W26_dtd_pub => $CFG->{Types}->{$FPI}->{Display}, W26_dtd_sys=> $SI, W26_dtd_sys_recommend=> $CFG->{Types}->{$FPI}->{SysID}});
+            }
+        }
+    }
+}
 #
 # Do an initial parse of the Document Entity to extract FPI.
 sub preparse_doctype {
@@ -1892,7 +1903,13 @@ sub preparse_doctype {
   my $dtd = sub {
     return if $File->{Root};
     # TODO: The \s and \w are probably wrong now that the strings are utf8_on
-    ($File->{Root}, $File->{DOCTYPE}) = shift =~ m(<!DOCTYPE\s+(\w[\w\.-]+)\s+(?:PUBLIC|SYSTEM)\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
+    my $declaration = shift;
+    my $doctype_type;
+    my $doctype_secondpart;
+    ($File->{Root}, $doctype_type, $File->{DOCTYPE}, $doctype_secondpart) = $declaration =~ m(<!DOCTYPE\s+(\w[\w\.-]+)\s+(PUBLIC|SYSTEM)\s+(?:[\'\"])([^\"\']+)(?:[\"\'])(.*)>)si;
+    if (($doctype_type eq "PUBLIC") and (($doctype_secondpart) = $doctype_secondpart =~ m(\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*)si)){
+        &match_DTD_FPI_SI($File, $File->{DOCTYPE}, $doctype_secondpart);
+    }
   };
 
   my $start = sub {
@@ -2518,7 +2535,6 @@ sub W3C::Validator::SAXHandler::data
     $self->{_file}->{heading_outline} .= $data;
   }
 }
-
 
 sub W3C::Validator::SAXHandler::start_element
 {
