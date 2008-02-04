@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.101 2008-01-17 08:08:17 ot Exp $"
---><!--#set var="date" value="\$Date: 2008-01-17 08:08:17 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.102 2008-02-04 03:18:53 ot Exp $"
+--><!--#set var="date" value="\$Date: 2008-02-04 03:18:53 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -386,7 +386,30 @@ All these documents should validate, without "pretty print" for the document typ
 	  sample HTML 4 document using the (valid, but problematic) shorttags features
 	</li>
 </ul>
-
+<h4 id="appc">Valid XHTML 1.0 documents not conforming to HTML compatibility Guidelines</h4>
+<p>The XHTML 1.0 spec states: <q cite="http://www.w3.org/TR/xhtml1/#media">XHTML Documents which follow the guidelines set forth in Appendix C, "HTML Compatibility Guidelines" may be labeled with the Internet Media Type "text/html" [RFC2854], as they are compatible with most HTML browsers. </q>. It's really unclear as to whether this is a real conformance issue, but regardless there is demand for sending at least warnings when a text/html XHTML 1.0 document does not follow these guidelines.</p>
+<ul>
+<li>
+  <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-appc-xmldecl.html;ss">validate</a> -
+  <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-appc-xmldecl.html;ss">with v.w.o</a> -
+  <a href="xhtml1-appc-xmldecl.html">view</a>:
+  C1: XML Declaration
+</li>
+<li>
+  <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-appc-empty.html;ss">validate</a> -
+  <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-appc-empty.html;ss">with v.w.o</a> -
+  <a href="xhtml1-appc-empty.html">view</a>:
+  C2: empty elements and minimized form
+</li>
+<li>
+  <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-appc-emptycontent.html;ss">validate</a> -
+  <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-appc-emptycontent.html;ss">with v.w.o</a> -
+  <a href="xhtml1-appc-emptycontent.html">view</a>:
+  C3: Element Minimization and Empty Element Content
+</li>
+</ul>
+    
+    
 <h4 id="wrong_mime">Valid Documents served with a wrong media type</h4>
 <ul>
   <li>
