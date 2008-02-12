@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.581 2008-01-17 11:23:25 ot Exp $
+# $Id: check,v 1.582 2008-02-12 06:30:25 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.581 $;
+  $VERSION =  q$Revision: 1.582 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1892,6 +1892,16 @@ sub match_DTD_FPI_SI {
             }
         }
     }
+    else { # FPI not know, checking if the SI is
+        foreach my $proper_FPI (keys %{$CFG->{Types}}) {
+            if ($CFG->{Types}->{$proper_FPI}->{SysID} eq $SI) {
+                &add_warning('W26', {W26_dtd_pub => $FPI, 
+                W26_dtd_pub_display =>$CFG->{Types}->{$proper_FPI}->{Display}, 
+                W26_dtd_sys => $SI, 
+                W26_dtd_pub_recommend=> $proper_FPI });
+            }
+        }
+    }    
 }
 #
 # Do an initial parse of the Document Entity to extract FPI.

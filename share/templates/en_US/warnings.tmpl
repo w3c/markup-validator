@@ -467,12 +467,25 @@ to check these potential issues, and, if necessary, fix them and re-validate the
 </TMPL_IF>
 <TMPL_IF NAME="W26">
 <li class="msg_warn" id="W26"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Mismatch between Public and System identifiers in the DOCTYPE declaration</span></p>
-    <p>This document uses an inconsistent DOCTYPE declaration. The Public identifier  
+    <p>This document uses an inconsistent DOCTYPE declaration. 
+    <TMPL_IF NAME="W26_dtd_sys_recommend">
+    The Public Identifier  
 	<code><TMPL_VAR NAME="W26_dtd_pub" ESCAPE="HTML"></code> declares the 
-	<code><TMPL_VAR NAME="W26_dtd_pub_display" ESCAPE="HTML"></code> document type, but the associated System identifier
+	<code><TMPL_VAR NAME="W26_dtd_pub_display" ESCAPE="HTML"></code> document type, but the associated System Identifier
 	<code><TMPL_VAR NAME="W26_dtd_sys" ESCAPE="HTML"></code> does not match this document type.</p>
 	<p>The recommended System Identifier 
-	for <code><TMPL_VAR NAME="W26_dtd_pub_display" ESCAPE="HTML"></code> is <code><TMPL_VAR NAME="W26_dtd_sys_recommend" ESCAPE="HTML"></code>.</p>
+	for <code><TMPL_VAR NAME="W26_dtd_pub_display" ESCAPE="HTML"></code> is <code><TMPL_VAR NAME="W26_dtd_sys_recommend" ESCAPE="HTML"></code>.
+    </TMPL_IF>
+    <TMPL_IF NAME="W26_dtd_pub_recommend">
+    The System Identifier  
+	<code><TMPL_VAR NAME="W26_dtd_sys" ESCAPE="HTML"></code> declares the 
+	<code><TMPL_VAR NAME="W26_dtd_pub_display" ESCAPE="HTML"></code> document type, but the associated Public Identifier
+	<code><TMPL_VAR NAME="W26_dtd_pub" ESCAPE="HTML"></code> does not match this document type.</p>
+	<p>The recommended Public Identifier 
+	for <code><TMPL_VAR NAME="W26_dtd_sys" ESCAPE="HTML"></code> is <code><TMPL_VAR NAME="W26_dtd_pub_recommend" ESCAPE="HTML"></code>.
+    </TMPL_IF>	
+	
+	</p>
 	<p>The safest way to use a correct DOCTYPE declaration is to copy and paste one from the 
 	<a href="http://www.w3.org/QA/2002/04/valid-dtd-list.html" 
 	title="W3C QA - Recommended list of DTDs you can use in your Web document">recommended list</a> 
