@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: users.html,v 1.28 2007-09-27 10:13:33 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-09-27 10:13:33 $"
+<!--#set var="revision" value="\$Id: users.html,v 1.29 2008-02-13 05:57:24 ot Exp $"
+--><!--#set var="date" value="\$Date: 2008-02-13 05:57:24 $"
 --><!--#set var="title" value="User Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -214,6 +214,14 @@
 	  can then emulate different HTTP <code>Accept-Language</code> behaviors.</p>
 	  <p>For example, append "<code>accept-language=ja%2Cfr</code>" and the validator
 	    will send the HTTP Header "<code>Accept-Language: ja,fr</code>".</p>
+	</dd>
+	<dt id="option-accept-charset">Set a specific <code>Accept-Charset</code> Header (<code>accept-charset</code>)</dt>
+	<dd>
+	  <p>This option (<em>experimental, as of 0.8.3</em>) makes the validator send 
+	  a <code>Accept-Charset</code> HTTP header, specifying the character encodings 
+	  which it will accept from server. This option is mainly used to interface the Markup
+	  Validator for <a href="http://www.w3.org/TR/mobileOK-basic10-tests/#http_request">Mobile Web Best Practices</a>
+	  checking.</p>
 	</dd>
       </dl>
         <h4 id="Output">Output Options</h4>

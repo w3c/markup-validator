@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.582 2008-02-12 06:30:25 ot Exp $
+# $Id: check,v 1.583 2008-02-13 05:57:24 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.582 $;
+  $VERSION =  q$Revision: 1.583 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -444,6 +444,7 @@ $File->{Opt}->{'Prefill Doctype'}        = $q->param('prefill_doctype') ? $q->pa
 
 $File->{Opt}->{'Accept Header'} = $q->param('accept') ? $q->param('accept') : '';
 $File->{Opt}->{'Accept-Language Header'} = $q->param('accept-language') ? $q->param('accept-language') : '';
+$File->{Opt}->{'Accept-Charset Header'} = $q->param('accept-charset') ? $q->param('accept-charset') : '';
 
 #
 # "Fallback" info for Character Encoding (fbc), Content-Type (fbt),
@@ -1310,13 +1311,16 @@ sub handle_uri {
   # telling caches in the middle we want a fresh copy (Bug 4998)
   $req->header(Cache_control=> "max-age=0");
 
-  # if one wants to use the accept and accept-language params
+  # if one wants to use the accept, accept-charset and accept-language params
   # in order to trigger specific negotiation
   if ($File->{Opt}->{'Accept Header'}) {
     $req->header(Accept => $File->{Opt}->{'Accept Header'});
   }
   if ($File->{Opt}->{'Accept-Language Header'}) {
     $req->header(Accept_Language => $File->{Opt}->{'Accept-Language Header'});
+  }
+  if ($File->{Opt}->{'Accept-Charset Header'}) {
+    $req->header(Accept_Charset => $File->{Opt}->{'Accept-Charset Header'});
   }
 
 
