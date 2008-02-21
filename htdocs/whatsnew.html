@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.71 2007-10-10 08:58:44 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-10-10 08:58:44 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.72 2008-02-21 07:10:59 ot Exp $"
+--><!--#set var="date" value="\$Date: 2008-02-21 07:10:59 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#set var="feeds" value="1"
@@ -19,6 +19,22 @@
       </p>
     </div>
     <dl id="news">
+      <dt id="t2008-02-xx">2008-02-xx &mdash; 0.8.3 release:</dt>
+      <dd>
+          <p>The 0.8.3 release of the W3C Markup Validator is a bug fix release, with a few small additional features.
+              Changes include:
+            <ul>  
+              <li>Bug Fix: in version 0.8.2, revalidation of an uploaded file was broken (missing markup in the HTML form)</li>
+              <li>Updates: Added support for XHTML Basic, XHTML Mobile Profiles (1.0, 1.1 and 1.2) and the historical HTML i18n</li>
+              <li>Bug Fix: the validator won't override a given document type with itself</li>
+              <li>Conformance: The validator now warns about incorrect public/system identifiers combinations</li>
+              <li>API: The <a href="docs/api.html#http_headers">custom HTTP headers in validator responses</a> now also include the number of warnings</li>
+              <li>Experimental Feature: added the new option to send a specific <code>Accept-Charset</code> header, in addition to <code>Accept</code>
+                  and <code>Accept-Language</code> in <a href="#t2007-10-11">0.8.2</a>.</li>
+              <li>Some documentation updates</li>
+            </ul>
+        
+      </dd>
       <dt id="t2007-10-11">2007-10-11 &mdash; 0.8.2 release:</dt>
       <dd>
         <p>The 0.8.2 release of the W3C Markup Validator is a bug fix, performance and usability
