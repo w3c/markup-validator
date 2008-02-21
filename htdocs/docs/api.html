@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: api.html,v 1.15 2008-01-25 02:17:38 ot Exp $"
---><!--#set var="date" value="\$Date: 2008-01-25 02:17:38 $"
+<!--#set var="revision" value="\$Id: api.html,v 1.16 2008-02-21 07:07:56 ot Exp $"
+--><!--#set var="date" value="\$Date: 2008-02-21 07:07:56 $"
 --><!--#set var="title" value="Documentation of the Programmatic Interface (API) to The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -306,6 +306,7 @@ element, but also the <code>warning</code> element are <code>line</code>, <code>
     Content-Language: en
     Content-Type: text/html; charset=utf-8
     X-W3C-Validator-Errors: 0
+    X-W3C-Validator-Warnings: 0
     X-W3C-Validator-Recursion: 1
     X-W3C-Validator-Status: Valid
 </pre>
@@ -324,6 +325,11 @@ element, but also the <code>warning</code> element are <code>line</code>, <code>
         <td>X-W3C-Validator-Errors</td>
         <td>Number of Errors found during validation. <code>0</code> if no errors found.</td>
         <td>0 does not necessarily mean "valid" (it may mean that validation could not be performed)</td>
+    </tr>
+    <tr>
+        <td>X-W3C-Validator-Warnings</td>
+        <td>Number of Warnings found during validation. <code>0</code> if no errors found.</td>
+        <td>The warnings include validation warning, as well as pre-parsing warnings (such as character encoding mismatch, doctype override, etc.)</td>
     </tr>
     <tr>
         <td>X-W3C-Validator-Recursion</td>
