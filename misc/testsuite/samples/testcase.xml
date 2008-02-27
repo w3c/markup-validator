@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite 
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xml:lang="en"
+>
+<collection id="valid">
+    <dc:title>Valid Documents</dc:title>
+    <test>
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html20.html</uri>
+      <expect>
+        <Validity>Pass</Validity>
+      </expect>
+      <html:p>HTML 2.0</html:p>
+    </test>
+</collection>
+</testsuite>

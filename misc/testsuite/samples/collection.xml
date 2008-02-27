@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite 
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xml:lang="en"
+>
+<collection id="valid">
+    <dc:title>Valid Documents</dc:title>
+</collection>
+</testsuite>
