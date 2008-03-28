@@ -115,9 +115,14 @@ class ValidatorTestSuite():
 
     def readTestCase(self, testcase_node):
         """read metadata for a test case from an elementTree testcase node"""
-        title = ""
-        descr = ""
-        descr = testcase_node.findtext(".//{http://www.w3.org/1999/xhtml}p")
+        try:
+            title = testcase_node.findtext(".//{http://purl.org/dc/elements/1.1/}title")
+        except:
+            title = ""
+        try:
+            descr = testcase_node.findtext(".//{http://www.w3.org/1999/xhtml}p")
+        except:
+            descr = ""
         test_uri = ""
         test_uri = testcase_node.findtext(".//uri")
         expect_elt = testcase_node.find(".//expect")
