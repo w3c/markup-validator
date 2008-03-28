@@ -15,325 +15,426 @@
         The first validate link will attempt validation with the current instance, for test purposes. The v.w.o instance
         can be taken as reference/comparison.
     </html:p>
+
     <test>
-      <uri>html20.html</uri>
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html20.html</uri>
+      <dc:title>HTML 2.0 Document Type support test</dc:title>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>HTML 2.0</html:p>
+      <html:p>Valid HTML 2.0 sample document.</html:p>
     </test>
+
     <test>
-      <uri>html20-strict.html</uri>
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html20-strict.html</uri>
+      <dc:title>HTML 2.0 Document Type support test</dc:title>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>HTML 2.0 Strict</html:p>
+      <html:p>Valid HTML 2.0 Strict sample document.</html:p>
     </test>
+
     <test>
-      <uri>html40-strict.html</uri>
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html40-strict.html</uri>
+      <dc:title>HTML 4.0  Document Type support test</dc:title>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>HTML 4.0 Strict</html:p>
+      <html:p>Valid HTML 4.0 Strict sample document.</html:p>
     </test>
+
     <test>
-      <uri>html40-transitional.html</uri>
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html40-transitional.html</uri>
+      <dc:title>HTML 4.0 Transitional Document Type support test</dc:title>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>HTML 4.0 Transitional</html:p>
+      <html:p>Valid HTML 4.0 Transitional sample document.</html:p>
     </test>
+
     <test>
-      <uri>html40-frameset.html</uri>
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html40-frameset.html</uri>
+      <dc:title>HTML 4.0 Frameset Document Type support test</dc:title>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>HTML 4.0 Frameset</html:p>
+      <html:p>Valid HTML 4.0 Frameset sample document.</html:p>
     </test>
+
     <test>
-      <uri>html401-strict.html</uri>
+      <dc:title>HTML 4.01 Strict Document Type support test</dc:title>  
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html401-strict.html</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>HTML 4.01 Strict</html:p>
+      <html:p>Valid HTML 4.01 Strict sample document.</html:p>
     </test>
+
     <test>
       <uri>http://www.w3.org/TR/1999/PR-html40-19990824/</uri>
+      <dc:title>HTML 4.01 Transitional Document Type support test</dc:title>  
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>HTML 4.01 Transitional -  (from the HTML 4.01 PR)</html:p>
+      <html:p>Valid HTML 4.01 Transitional sample document -  (from the HTML 4.01 PR)</html:p>
     </test>
+
     <test>
+      <dc:title>HTML 4.01 Transitional (w/ iframe) Document Type support test</dc:title>      
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/2329-html401-transitional_iframe.html</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>HTML 4.01 Transitional -  with iframe element 
+      <html:p>Valid HTML 4.01 Transitional sample document. -  with iframe element 
           (test for <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=2329">Bug 2329</a>)</html:p>
     </test>    
+
     <test>
+        <dc:title>ISO-HTML Document Type support test</dc:title>  
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/iso-html.html</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>ISO-HTML (aka ISO/IEC 15445:2000)</html:p>
+      <html:p>Valid ISO-HTML (aka ISO/IEC 15445:2000) sample document.</html:p>
     </test>
+
     <test>
+      <dc:title>XHTML 1.0 Strict Document Type support test</dc:title>    
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict.html</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>XHTML 1.0 Strict</html:p>
+      <html:p>Valid XHTML 1.0 Strict sample document</html:p>
     </test>
+
     <test>
+      <dc:title>XHTML 1.0 Strict Document Type support test</dc:title>          
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict-minimal.html</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>XHTML 1.0 Strict (from XHTML Spec)</html:p>
+      <html:p>Valid XHTML 1.0 Strict (from XHTML Spec) sample document.</html:p>
     </test>
+    
     <test>
+      <dc:title>XHTML Basic 1.0 Document Type support test</dc:title>                  
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-basic10.xhtml</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>XHTML Basic 1.0</html:p>
+      <html:p>Valid XHTML Basic 1.0 sample document.</html:p>
     </test>
+    
     <test>
+      <dc:title>XHTML Basic 1.1 Document Type support test</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-basic11.xhtml</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>XHTML Basic 1.1</html:p>
+      <html:p>Valid XHTML Basic 1.1 sample document.</html:p>
     </test>
+
     <test>
+      <dc:title>XHTML Basic 1.1 (revised) Document Type support test</dc:title>
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml11-basic-w3c.xhtml</uri>
+      <expect>
+        <Validity>Pass</Validity>
+      </expect>
+      <html:p>W3C home page as XHTML 1.1 Basic. Should be valid but may not validate with the old REC versions of the DTD (would not like the class and style attributes)</html:p>
+    </test>
+
+    <test>
+      <dc:title>XHTML MP 1.2 Document Type support test</dc:title>   
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-mp-1_2.xhtml</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
       <html:p>XHTML MP 1.2</html:p>
     </test>
+    
     <test>
+      <dc:title>XHTML 1.1 Document Type support test</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml11-minimal.html</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
       <html:p>XHTML 1.1</html:p>
     </test>
+    
     <test>
+      <dc:title>XHTML+MathML2 Document Type support test</dc:title>  
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-mathml2-fpi.html</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>XHTML/MathML2 (with FPI)</html:p>
+      <html:p>Valid XHTML/MathML2 sample document (with FPI)</html:p>
     </test>
+    
     <test>
+      <dc:title>MathML 2.0 Document Type support test</dc:title>        
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/mathml2.mathml</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>MathML 2.0 (minimal test document)</html:p>
+      <html:p>Valid MathML 2.0 minimal test document</html:p>
     </test>
+    
     <test>
+      <dc:title>XHTML 1.1 (as application/xhtml+xml) Document Type support test</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/application-xhtml_xml.xhtml</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>XHTML 1.1 served as application/xhtml+xml</html:p>
+      <html:p>Valid XHTML 1.1 sample document, served as application/xhtml+xml</html:p>
     </test>
+    
     <test>
+      <dc:title>SMIL 1.0 Document Type support test</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/smil10-minimal.smi</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>SMIL 1.0 minimal document</html:p>
+      <html:p>Valid SMIL 1.0 minimal document</html:p>
     </test>
+    
     <test>
+      <dc:title>SMIL 2.0 Document Type support test</dc:title>  
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/smil20.smi</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>SMIL 2.0</html:p> 
+      <html:p>Valid SMIL 2.0 sample document.</html:p> 
     </test>
+    
     <test>
+      <dc:title>SMIL 2.1 Document Type support test</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/SMIL21.smil</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>SMIL 2.1</html:p> 
+      <html:p>Valid SMIL 2.1 sample document.</html:p> 
     </test>
+    
     <test>
+      <dc:title>SMIL 2.1 Mobile Document Type support test</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/SMIL21_Mobile.smil</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>SMIL 2.1 Mobile</html:p>
+      <html:p>Valid SMIL 2.1 Mobile sample document.</html:p>
     </test>
+    
     <test>
+      <dc:title>XHTML + MathML + SVG Document Type support test</dc:title>
       <uri>http://www.w3.org/TR/XHTMLplusMathMLplusSVG/sample.xhtml</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>XHTML + MathML + SVG (from the 9 August 2002 WD)</html:p>
+      <html:p>Valid XHTML + MathML + SVG sample document (from the 9 August 2002 WD)</html:p>
     </test>
+    
     <test>
+      <dc:title>XHTML Print 1.0 Document Type support test</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-print_1_0.xhtml</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>XHTML-Print</html:p>
+      <html:p>Valid XHTML-Print sample document.</html:p>
     </test>
+    
     <test>
+      <dc:title>SVG 1.0 Document Type support test</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/REC-SVG-1_0-minimal.svg</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>SVG 1.0 Rec. minimal document</html:p>
+      <html:p>Valid SVG 1.0 Rec. minimal document</html:p>
     </test>
+    
     <test>
+      <dc:title>SVG 1.0 Document Type support test</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/svg11.svg</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>SVG 1.1 Rec. minimal document</html:p>
+      <html:p>Valid SVG 1.1 Rec. minimal document</html:p>
     </test>
+    
     <test>
+      <dc:title>SVG 1.1 Tiny Document Type support test</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/svg_tiny_1_1.svg</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>SVG Tiny 1.1</html:p>
+      <html:p>Valid SVG Tiny 1.1 sample document.</html:p>
     </test>
+    
     <test>
+      <dc:title>XHTML + RDFa Document Type support test</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml_rdfa.xhtml</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>XHTML + RDFa</html:p>
+      <html:p>Valid XHTML + RDFa sample document.</html:p>
     </test>
 </collection>
+
 <collection id="valid_notcat">
     <dc:title>Document types outside the main catalogue</dc:title>
     <html:p>
-        Below is a number of other types of documents that the validator does not have in its "hardcoded" catalogue, 
-        but should support anyway. All these documents should validate, without "pretty print" for the document type
+        Below is a number of other types of documents that the validator 
+        does not have in its "hardcoded" catalogue, 
+        but should support anyway. All these documents should validate, 
+        without "pretty print" for the document type.
     </html:p>
+    
 	<test>
+	  <dc:title>HTML4.0 plus blink (Custom DTD) Type support test</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/sgml_customdtd.html</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
 	  <html:p>HTML4.0 plus blink ("Custom" SGML DTD)</html:p>
     </test>
+    
     <test>
+      <dc:title>RDDL (with FPI) Document Type support test</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/rddl_fpi.xhtml</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
       <html:p>RDDL (with FPI)</html:p>
     </test>
+    
     <test>
+      <dc:title>RDDL (SI only) Document Type support test</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/rddl_si.xhtml</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
       <html:p>RDDL (no FPI)</html:p>
     </test>
+    
     <test>
+      <dc:title>MusicXML Document Type support test</dc:title>  
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/5031-root_dash.xml</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>MusicXML (also test for <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=5031" title="Bug 5031 - Doctype detection fails if root element includes non &quot;word&quot; character">Bug 5031</a>)</html:p>
+      <html:p>sample MusicXML, a non-catalogued XML based document type. (also test for <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=5031" title="Bug 5031 - Doctype detection fails if root element includes non &quot;word&quot; character">Bug 5031</a>)</html:p>
     </test>
+    
 </collection>
+
 <collection id="valid_doctypeless">
     <dc:title>Valid Doctypeless Documents</dc:title>
   <html:p>Some document types (SVG) do not require the presence of the DOCTYPE declaration, although a DTD can be used to validate. The validator can however determine the version to validate against by preparsing the root element and the presence of version, baseProfile attributes.</html:p>
   
     <test>
+      <dc:title>(control) test for validation of SVG 1.0 with Doctype</dc:title>  
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-10-doctype.svg</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
       <html:p>Valid SVG 1.0, using a DOCTYPE</html:p>
     </test>
+    
     <test>
+      <dc:title>Test for validation of Doctype-less SVG 1.0</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-10-doctypeless.svg</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
       <html:p>Valid SVG 1.0, but no declared DOCTYPE. Version attribute present for auto-detection</html:p>
     </test>
+    
     <test>
+        <dc:title>(control) test for validation of SVG 1.1 with Doctype</dc:title>  
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-11-doctype.svg</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
       <html:p>Valid SVG 1.1, using a DOCTYPE</html:p>
     </test>
+    
     <test>
+      <dc:title>Test for validation of Doctype-less SVG 1.1</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-11-doctypeless.svg</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
       <html:p>Valid SVG 1.1, no declared DOCTYPE. Version attribute present for auto-detection.</html:p>
     </test>
+    
     <test>
+        <dc:title>(control) test for validation of SVG 1.1 Basic with Doctype</dc:title>  
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-basic-11-doctype.svg</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>Valid SVG Basic 1.1, using a DOCTYPE</html:p>
+      <html:p>Valid SVG Basic 1.1, using a DOCTYPE (test currently fails because of issues in the DTD)</html:p>
     </test>
+    
     <test>
+      <dc:title>Test for validation of Doctype-less SVG 1.1 Basic</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-basic-11-doctypeless.svg</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
-      <html:p>Valid SVG Basic 1.1, no declared DOCTYPE. Version and baseProfile attributes present for auto-detection.</html:p>
+      <html:p>Valid SVG Basic 1.1, no declared DOCTYPE. Version and baseProfile attributes present for auto-detection. (test currently fails because of issues in the DTD)</html:p>
     </test>
+    
     <test>
+        <dc:title>(control) test for validation of SVG 1.1 Tiny with Doctype</dc:title>  
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-tiny-11-doctype.svg</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
       <html:p>Valid SVG Tiny 1.1, using a DOCTYPE</html:p>
     </test>
+    
     <test>
+      <dc:title>Test for validation of Doctype-less SVG 1.1 Tiny</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-tiny-11-doctypeless.svg</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
       <html:p>Valid SVG Tiny 1.1, no declared DOCTYPE. Version and baseProfile attributes present for auto-detection.</html:p>
     </test>
+    
     <test>
+      <dc:title>Test for validation of SVG 1.1 without a version attribute, but with a DOCTYPE</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-noversion-doctype.svg</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
       <html:p>Valid SVG 1.1, using a DOCTYPE. No version attribute (optional). Should use info given by doctype.</html:p>
     </test>
+    
     <test>
-      <uri>html20.html</uri>
+      <dc:title>Test for validation of SVG 1.0 without a version attribute, but with a DOCTYPE</dc:title>
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-noversion-doctype2.svg</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
       <html:p>Valid SVG 1.0, using a DOCTYPE. No version attribute (optional). Should use info given by doctype.</html:p>
     </test>
+    
     <test>
+      <dc:title>Test for validation of SVG with neither a version attribute nor DOCTYPE</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-noversion-doctypeless.svg</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
       <html:p>SVG with neither DOCTYPE nor version attribute. The validator may use a default.</html:p>
     </test>
+    
 </collection>
 
 <collection id="valid_warn">
     <dc:title>Valid Documents, with Warnings</dc:title>
-  <test>    
+  <test>
+    <dc:title>Test document with reference to a non-existing ID</dc:title>    
     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/2342-opensp_type_X.html</uri>
     <expect>
       <Validity>Pass</Validity>
@@ -342,14 +443,18 @@
     <html:p>Reference to a non-existing ID
     (opensp message type X, See <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=2342">bug 2342</a>).</html:p>
   </test>
+  
   <test>
+    <dc:title>Test for warnings about non-SGML character(s)</dc:title>
     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/nonSGML-chars.html</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
      <html:p>Non-SGML Chars</html:p>
   </test>
+  
   <test>
+    <dc:title>Test for warning about ampersand as data (in SGML)</dc:title>
     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/ampersand-as-data_html401.html</uri>
       <expect>
         <Validity>Pass</Validity>
@@ -358,14 +463,18 @@
    <html:p>HTML 4.01 Document with Ampersand as data <br />
     (OK in SGML, not XML :see <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=798">Bug798: Ampersand as data in XHTML</a>)</html:p>
   </test>
+  
   <test>
+    <dc:title>Test for warning in case of ambiguous parse mode</dc:title>
     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/texthtml_unknownparsemode.html</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
     <html:p>document served as <code>text/html</code>, using a custom DTD and for which parse mode is impossible to determine via generic heuristics (triggers warning W06)</html:p>
   </test>
+  
   <test>
+    <dc:title>Test of warning in case of FPI/SI doctype mismatch (XHTML1)</dc:title>
     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4848-xhtml1-strict_FPI-SI-mismatch.xhtml</uri>
       <expect>
          <Validity>Pass</Validity>
@@ -373,14 +482,18 @@
       </expect>
 	<html:p>FPI/SI doctype declaration mismatch (system Id refers to a 404)</html:p>
   </test>
+  
   <test>
+    <dc:title>Test of warning in case of FPI/SI doctype mismatch (HTML4)</dc:title>
     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4848-html40-transitional_FPI-SI-mismatch.html</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
 	<html:p>FPI/SI doctype declaration mismatch (html 4 doc with system Id refers to xhtml)</html:p>
   </test>
+  
   <test>
+    <dc:title>Test of warning in case of FPI case mismatch in doctype</dc:title>
     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html401_doctypecase.html</uri>
       <expect>
         <Validity>Pass</Validity>
@@ -388,13 +501,16 @@
       </expect>
 	<html:p>FPI/SI doctype declaration mismatch (system Id is OK but FPI has wrong case)</html:p>
   </test>
-	<test>
-	  <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/shorttags.html</uri>
-      <expect>
-        <Validity>Pass</Validity>
-      </expect> 
-	  <html:p>sample HTML 4 document using the (valid, but problematic) shorttags features</html:p>
-	</test>
+  
+  <test>
+    <dc:title>Test of warning for the usage of shorttag constructs</dc:title>
+	<uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/shorttags.html</uri>
+    <expect>
+      <Validity>Pass</Validity>
+      <NumWarnings>yes</NumWarnings>
+    </expect> 
+	<html:p>sample HTML 4 document using the (valid, but problematic) shorttags features</html:p>
+  </test>
 </collection>
 
 <collection id="appc">
@@ -402,64 +518,77 @@
 
 <html:p>The XHTML 1.0 spec states: <q cite="http://www.w3.org/TR/xhtml1/#media">XHTML Documents which follow the guidelines set forth in Appendix C, "HTML Compatibility Guidelines" may be labeled with the Internet Media Type "text/html" [RFC2854], as they are compatible with most HTML browsers. </q>. It's really unclear as to whether this is a real conformance issue, but regardless there is demand for sending at least warnings when a text/html XHTML 1.0 document does not follow these guidelines.</html:p>
 
-<test>
-  <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-appc-xmldecl.html</uri>
+  <test>
+    <dc:title>Test of warning for non-HTML compatible XHTML document (C1)</dc:title>
+    <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-appc-xmldecl.html</uri>
       <expect>
         <Validity>Pass</Validity>
         <NumWarnings>yes</NumWarnings>
       </expect>
-  <html:p>C1: XML Declaration</html:p>
-</test>
-<test>
-  <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-appc-empty.html</uri>
+    <html:p>C1: XML Declaration</html:p>
+  </test>
+
+  <test>
+    <dc:title>Test of warning for non-HTML compatible XHTML document (C2)</dc:title>
+    <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-appc-empty.html</uri>
       <expect>
         <Validity>Pass</Validity>
         <NumWarnings>yes</NumWarnings>
       </expect>
-  <html:p>C2: empty elements and minimized form</html:p>
-</test>
-<test>
-  <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-appc-emptycontent.html</uri>
+    <html:p>C2: empty elements and minimized form</html:p>
+  </test>
+  
+  <test>
+    <dc:title>Test of warning for non-HTML compatible XHTML document (C3)</dc:title>
+    <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-appc-emptycontent.html</uri>
       <expect>
         <Validity>Pass</Validity>
         <NumWarnings>yes</NumWarnings>
       </expect>
-  <html:p>C3: Element Minimization and Empty Element Content</html:p>
-</test>
+    <html:p>C3: Element Minimization and Empty Element Content</html:p>
+  </test>
 </collection>
 
 <collection id="wrong_mime">
   <dc:title>Valid Documents served with a wrong media type</dc:title>
   <test>
+    <dc:title>Test of warning for HTML 4.01 served with wrong media type</dc:title>
     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html401-strict.xhtml</uri>
       <expect>
-        <Validity>Pass</Validity>
+        <Validity>Fail</Validity>
         <NumWarnings>yes</NumWarnings>
       </expect>
-    <html:p>HTML 4.01 Strict served with an XHTML mime type</html:p>
+    <html:p>HTML 4.01 Strict served with an XHTML mime type. This should fail validation
+        since the media type forces the XML parsing mode</html:p>
   </test>
+  
   <test>
-    <a href="REC-SVG-1_0-minimal.html">View</a> SVG 1.0 Rec. minimal document served as text/html</test>
-  <test>
-    <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-print_1_0.html</uri>
-      <expect>
-        <Validity>Pass</Validity>
-      </expect>
-    <html:p>XHTML-Print served as text/html</html:p>
+    <dc:title>Test of warning for SVG served with wrong media type</dc:title>
+    <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/REC-SVG-1_0-minimal.html</uri>
+    <expect>
+      <NumWarnings>yes</NumWarnings>
+    </expect>
+    <html:p>SVG 1.0 Rec. minimal document served as text/html. This may pass validation with a warning
+    as text/html will not trigger an unambiguous parsing mode, and doctype will prevail. 
+    (is that wrong?)</html:p>
   </test>
-  <test>
+  
+    <test>
+      <dc:title>Test of warning for MathML served with wrong media type</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/mathml2.html</uri>
       <expect>
-        <Validity>Pass</Validity>
         <NumWarnings>yes</NumWarnings>
       </expect>
-      <html:p>MathML 2.0 as text/html </html:p> 
+      <html:p>MathML 2.0 as text/html This may pass validation with a warning
+      as text/html will not trigger an unambiguous parsing mode, and doctype will prevail. 
+      (is that wrong?)</html:p> 
     </test>
 </collection>
 
 <collection id="valid_bugfix">
     <dc:title>Bug Regression Tests: Valid documents</dc:title>
     <test>
+        <dc:title>Regression test: non-unix newlines</dc:title>
         <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml_mathml_svg_newlines.xhtml</uri>
       <expect>
         <Validity>Pass</Validity>
@@ -467,7 +596,9 @@
         <html:p>XHTML+Math+SVG document with non-unix newlines,
    (See <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=3992">Bug 3992: non-unix newlines confuse the parser</a>)</html:p>
   </test>
+  
     <test>
+        <dc:title>Regression test: named entitles on a line with colons and numbers</dc:title>
         <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4892-entity.html</uri>
       <expect>
         <Validity>Pass</Validity>
@@ -486,65 +617,126 @@
     <test>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-bogus-element.html</uri>
       <html:p>XHTML1, bogus element (foo element not in DTD)</html:p>
-     </test>
-     <test>
+      <expect>
+        <Validity>Fail</Validity>
+      </expect>
+    </test>
+    
+    <test>
         <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-bogus-attribute.html</uri>
         <html:p>XHTML1, bogus attribute</html:p>
+        <expect>
+          <Validity>Fail</Validity>
+        </expect>
     </test>
+    
      <test>
         <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/uppercase_element.xhtml</uri>
         <html:p>XHTML1, bogus element (uppercase A element not in DTD), tends to cascade errors about each attribute</html:p>
+        <expect>
+          <Validity>Fail</Validity>
+        </expect>
     </test>
+    
     <test>
         <uri>http://www.w3.org/2001/01/xml-latin1.html</uri>
       <html:p>us-ascii xhtml document with a latin1 character</html:p> 
+      <expect>
+        <Validity>Abort</Validity>
+      </expect>
      </test>
+     
     <test>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/error_pls_warning.html</uri> 
       <html:p>Invalid document (img without alt, invalid <a href="http://www.w3.org/TR/html401/struct/objects.html#adef-alt">per</a>). 
       <br />
       Also has non-sgml character (testing for warning output)</html:p>
+      <expect>
+        <Validity>Fail</Validity>
+      </expect>
     </test>
+
     <test>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/no-newlines.html</uri>
       <html:p>invalid frames document (noframes in forbidden location). Also test for absence of newlines</html:p>
+      <expect>
+        <Validity>Fail</Validity>
+      </expect>
      </test>
+
     <test>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/2329-html401-strict_iframe.html</uri>
       <html:p>HTML 4.01 Strict -  with iframe element (test for <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=2329">Bug 2329</a>)</html:p>
+      <expect>
+        <Validity>Fail</Validity>
+      </expect>
     </test>    
+
     <test>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-blank-1st-line.html</uri>
       <html:p>XHTML1, blank first line (<a href="http://lists.w3.org/Archives/Public/www-validator/2000JanMar/0144.html">should be marked as invalid</a>)</html:p>
+      <expect>
+        <Validity>Fail</Validity>
+      </expect>
     </test>
+
     <test>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/ampersand-as-data.html</uri>
       <html:p>Bug <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=798">798: Ampersand as data in XHTML</a> (OK in SGML, not XML)</html:p>
+      <expect>
+        <Validity>Fail</Validity>
+      </expect>
     </test>
+
     <test>
-      <a href="bogus-xmlpi.xhtml">view</a>
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.xhtml</uri>
       <html:p>XHTML with bogus XML Decl, served as application/xhtml+xml (missing final "?")</html:p>
+      <expect>
+        <Validity>Fail</Validity>
+      </expect>
     </test>
-    <test><a href="bogus-xmlpi.html">view</a>
-      	<html:p>XHTML with bogus XML Decl, served as text/html (missing final "?")</html:p>
-    </test>
+
     <test>
-      <a href="bogus-fpi.html">view</a>
-      <html:p>bogus FPI #1: lowercase "doctype".</html:p>
+        <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-xmlpi.html</uri>
+      	<html:p>XHTML with bogus XML Decl, served as text/html (missing final "?")</html:p>
+      	<expect>
+          <Validity>Fail</Validity>
+        </expect>
     </test>
+    
+    <test>
+     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi.html</uri>
+      <html:p>bogus FPI #1: lowercase "doctype".</html:p>
+      <expect>
+        <Validity>Fail</Validity>
+      </expect>
+    </test>
+    
     <test>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/smil20-profile-doctype.smi</uri>
       <html:p>SMIL 2.0 with bogus xmlns and missing space between attributes</html:p>
+      <expect>
+        <Validity>Fail</Validity>
+      </expect>
     </test>
+
     <test>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/errors_sorting.smi</uri>
       <html:p>SMIL 2.0 with bogus xmlns, xml ill-formedness and bogus elements (used to test sorting of errors)</html:p>
+      <expect>
+        <Validity>Fail</Validity>
+      </expect>
     </test>
+
     <test>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/2689-attribute-no-space.xhtml</uri>
       <html:p>XHTML 1.0 missing space between attributes (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=2689" title="Bug 2689 - documents with no whitespace between attributes validate">Bug 2689</a>)</html:p>
+      <expect>
+        <Validity>Fail</Validity>
+      </expect>
     </test>
 </collection>        
+
 <collection id="invalid_nodoctype">
     <dc:title>Missing Doctype</dc:title>
 <html:p>See also <a href="well-formed">Docs that should be Well Formed</a> for examples of doctype-less but well-formed XML documents.</html:p>
@@ -552,56 +744,105 @@
   <test>
     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.html</uri>
     <html:p>XHTML, no DOCTYPE, no xmlns (thus invalid)</html:p>
+    <expect>
+      <Validity>Fail</Validity>
+    </expect>
   </test>
+
   <test>
     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xml-nodoctype-notwf.xml</uri>
     <html:p>XML, no DOCTYPE, not well-formed (marked as "invalid XML" - FIXME should be reworded)</html:p>
+    <expect>
+      <Validity>Fail</Validity>
+    </expect>
   </test>
+
   <test>
     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/sgml-nodoctype-syntaxok.html</uri>
     <html:p>SGML-ish document without html root. Served as text/html. No DOCTYPE. Correct SGML syntax. Would pass as well-formed XML if it were XML...</html:p>
+    <expect>
+      <Validity>Fail</Validity>
+    </expect>
   </test>
+
   <test>
     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/sgml-nodoctype-syntaxnotok.html</uri>
     <html:p>SGML-ish document without html root. Served as text/html. No DOCTYPE. Bogus SGML syntax.</html:p>
+    <expect>
+      <Validity>Fail</Validity>
+    </expect>
   </test>
+
 </collection>
+
 <collection id="nonconform">
     <dc:title>DTD-Valid but not conformant</dc:title>
     <html:p>For those, we will need to change the message, or hordes of SGML zombies will come down upon us ;)...</html:p>
     <test>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict-missing-xmlns.html</uri>
       <html:p>XHTML 1.0 Strict missing xmlns attribute (valid)</html:p>
+      <expect>
+        <Validity>Fail</Validity>
+      </expect>
     </test>
 </collection>
 
 <collection id="invalid_bug">
     <dc:title>Documents that are invalid, which the validator passes as OK</dc:title>
       
-        	<test><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi2.html;ss">bogus FPI #2: HTML 4.01 "Strict"</a></test>
-        	<test><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi3.html;ss">bogus FPI #3: XHTML 1.1 "Strict"</a></test>
+    <test>
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi2.html</uri>
+        	<html:p>bogus FPI #2: HTML 4.01 "Strict"</html:p>
+      <expect>
+        <Validity>Fail</Validity>
+      </expect>
+    </test>
+    
+	<test>
+	  <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi3.html</uri>
+	  <html:p>bogus FPI #3: XHTML 1.1 "Strict"</html:p>
+	  <expect>
+        <Validity>Fail</Validity>
+      </expect>
+	</test>
 </collection>
 </collection>
 
 <collection id="well-formed">
     <dc:title>Docs that should be Well Formed</dc:title>
     <html:p>well formed but no doctype. The validator could mark them as well formed, but not mention validity?</html:p>
+
     <test>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xml-nodoctype-wf.xml</uri>
       <html:p>Basic XML document, well formed. No doctype. Currently checked only for xmlwf. Passes.</html:p>
+	  <expect>
+        <Validity>Pass</Validity>
+      </expect>
     </test>
+
     <test>
        <uri>http://impressive.net/people/gerald/2000/10/18/test-staroffice-doc.xml</uri>
        <html:p>XML output from OpenOffice 5.2
        ("Build/Tag number OpenOffice605"), many namespaces. Currently checked only for xmlwf. Passes.</html:p>
+ 	  <expect>
+         <Validity>Pass</Validity>
+       </expect>
     </test>
+
     <test>
        <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4476-svg_nodoctype.svg</uri>
       <html:p>Very minimal SVG document, no document type. Currently checked only for xmlwf. Passes.</html:p>
+	  <expect>
+        <Validity>Pass</Validity>
+      </expect>
     </test>    
+
     <test>
        <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.xhtml</uri>
       <html:p>XHTML document without doctype, served as XML. Fallback to XHTML 1.0, and invalid.</html:p>
+	  <expect>
+        <Validity>Fail</Validity>
+      </expect>
     </test>
       
 </collection>
@@ -610,58 +851,92 @@
 	<test>
 	    <uri>http://www.w3.org/Press/1998/XSL-WD.html.ja</uri>
 	    <html:p>iso-2022-jp encoded document</html:p>
+  	  <expect>
+          <Validity>Pass</Validity>
+        </expect>
 	</test>
+
 	<test>
 	    <uri>http://www.vir.si/</uri>
 	    <html:p>windows-1250 encoded document (Slovenian)</html:p>
+  	  <expect>
+        </expect>
 	</test>
+
 	<test>
 	    <uri>http://www.w3.org/TR/ruby</uri>
 	    <html:p>utf-8 encoded document</html:p>
+  	  <expect>
+          <Validity>Pass</Validity>
+        </expect>
 	</test>
+
 	<test>
 	    <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/plane20-char.xml</uri>
 	    <html:p>XML file with a "Plane 20" character (bogus).</html:p>
+  	  <expect>
+          <Validity>Fail</Validity>
+        </expect>
 	</test>
+
 	<test>
         <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/charset_mismatch-http_xmldec.xhtml.utf8</uri>
         <html:p>Charset mismatch: HTTP Content-Type and XML Declaration (sends warning, proceed with HTTP and pass)</html:p>
+  	  <expect>
+          <Validity>Pass</Validity>
+          <NumWarnings>yes</NumWarnings>
+        </expect>
     </test>
+
     <test>
         <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/charset_mismatch-http_meta.html.utf8</uri>
         <html:p>Charset mismatch: HTTP Content-Type and meta http-equiv (sends warning, proceed with HTTP and pass)</html:p>
+    	  <expect>
+            <Validity>Pass</Validity>
+            <NumWarnings>yes</NumWarnings>
+          </expect>
     </test>
+
 	<test>
         <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4520-iso88591-meta.html</uri>
     	<html:p>iso-8859-1 HTML document with charset declared in meta,
         (test for <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=4520">Bug 4520</a> - charset override)</html:p>
+  	  <expect>
+          <Validity>Pass</Validity>
+        </expect>
     </test>
+
 	<test>
         <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4520-iso88591-no_meta.html</uri>
     	<html:p>iso-8859-1 HTML document with charset not declared in meta (nor in HTTP),
-        (test for <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=4520">Bug 4520</a> - charset override)</html:p>
+        (test for <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=4520">Bug 4520</a> - charset override). This test should PASS when running with charset override set to latin-1 but ABORT if no override/fallback given</html:p>
+  	  <expect>
+          <Validity>Abort</Validity>
+        </expect>
     </test>
+
 	<test>
+	    <dc:title>case-sensitivity of charset parameter in meta</dc:title>
         <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4917-meta_charset_case.html</uri>
-    	<html:p><a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=4917">Bug 4917</a></html:p>
+    	<html:p>This is a test for 
+    	    <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=4917">Bug 4917</a>. If HTML::Encoding is a sufficiently recent version, the test should PASS validation. Otherwise, it would FAIL with an encoding detection error.</html:p>
+    	  <expect>
+            <Validity>Pass</Validity>
+          </expect>
   </test>
 </collection>
 
 <collection id="errors">
     <dc:title>Error conditions &amp; strange cases</dc:title>
-      <html:p>This should be split in UI testing and regression tests</html:p>
 
-<html:p>The following documents trip up the parser pretty badly - finds errors way beyond the last line</html:p>      
-
-  <test>
-    <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/rddl_fpi.html</uri>
-    RDDL (with FPI, served as text/html - example of a custom XML language wrongly served as text/html)
-  </test>
   
-        <test><a href="../../check?uri=http://www.w3.org/1999/09/SVG-access/computer.svg">image/svg</a> (is this a bug? I think this media type is not allowed any more)</test>
-	<test>
-	    <uri>http://www.oasis-open.org/committees/xmltest/xmlconf-19990712.xml</uri>
-	    dereference relative URIs for DTDs </test>
+  <test>
+	<uri>http://www.oasis-open.org/committees/xmltest/xmlconf-19990712.xml</uri>
+	<html:p>DOCTYPE with a relative URI for the system identifier. Should probably pass if the sgml parser was given the base URI(?)</html:p> 
+	  <expect>
+      <Validity>Pass</Validity>
+    </expect>
+  </test>
       
 
 </collection>
@@ -670,105 +945,197 @@
 <collection id="output_preparse">
     <dc:title>Output of preparse warnings</dc:title>
   <test>
-      <uri>textxml_nocharset.xml</uri>
-      text/xml, no charset (W01)
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/textxml_nocharset.xml</uri>
+      <html:p>text/xml, no charset (W01)</html:p>
+      <expect>
+          <Validity>Pass</Validity>
+          <NumWarnings>yes</NumWarnings>
+      </expect> 
 	</test>
+
 	<test>
-      <uri>texthtml_nocharset.html</uri>
-      text/html, no charset, fbc set (W02)
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/texthtml_nocharset.html</uri>
+      <html:p>text/html, no charset, fbc set (W02)</html:p>
+      <expect>
+          <Validity>Pass</Validity>
+          <NumWarnings>yes</NumWarnings>
+      </expect> 
 	</test>
+
   <test>
-      <uri>html401-strict.html</uri>
-      charset override (W03)
-	</test>
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html401-strict.html</uri>
+      <html:p>charset override (W03)</html:p>
+      <expect>
+      </expect> 
+  </test>
+
 	<test>
-      <uri>texthtml_nocharset.html</uri>
-      text/html, no charset, override set (W04)
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/texthtml_nocharset.html</uri>
+      <html:p>text/html, no charset, override set (W04)</html:p>
+      <expect>
+          <Validity>Pass</Validity>
+          <NumWarnings>yes</NumWarnings>
+      </expect> 
 	</test>
 	
   <test>
-      <uri>texthtml_nocharset.html</uri>
-      text/html, no charset (W04)
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/texthtml_nocharset.html</uri>
+      <html:p>text/html, no charset (W04)</html:p>
+      <expect>
+          <Validity>Pass</Validity>
+          <NumWarnings>yes</NumWarnings>
+      </expect> 
 	</test>
+	
 	<test>
     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.html</uri>
-    XHTML, no DOCTYPE, override ON.  (W05).
+    <html:p>XHTML, no DOCTYPE, if overriden, should output W05.</html:p>
+    <expect>
+        <NumWarnings>yes</NumWarnings>
+    </expect> 
   </test>
+
 	<test>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/sgml_customdtd.html</uri>
-	  HTML4.0 plus blink ("Custom" SGML DTD), parse mode fallback to SGML (W06)
+	  <html:p>HTML4.0 plus blink ("Custom" SGML DTD), parse mode fallback to SGML (W06)</html:p>
+      <expect>
+          <Validity>Pass</Validity>
+          <NumWarnings>yes</NumWarnings>
+      </expect> 
   </test>
+
   <test>
-    <uri>html401-strict.xhtml</uri>
-    HTML 4.01 Strict served with an XHTML mime type. Parse mode conflict (W07) 
+    <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html401-strict.xhtml</uri>
+    <html:p>HTML 4.01 Strict served with an XHTML mime type. Parse mode conflict (W07) </html:p>
+    <expect>
+        <Validity>Pass</Validity>
+        <NumWarnings>yes</NumWarnings>
+    </expect>
   </test>
-  <test>W08 is obsolete</test>
+
   <test>
     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.html</uri>
-    XHTML, no DOCTYPE, no xmlns (thus invalid).  (W09).
+    <html:p>XHTML, no DOCTYPE, no xmlns (thus invalid).  (W09).</html:p>
+    <expect>
+        <Validity>Fail</Validity>
+        <NumWarnings>yes</NumWarnings>
+    </expect>
   </test>
+
   <test>
     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/sgml-nodoctype-syntaxnotok.html</uri>
     SGML-ish document with root element != html. Served as text/html. No DOCTYPE. (W09nohtml)
   </test>
   <test>
     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xml-nodoctype-notwf.xml</uri>
-    XML, no DOCTYPE, not well-formed (W09xml)
+    <html:p>XML, no DOCTYPE, not well-formed (W09xml)</html:p>
+    <expect>
+        <Validity>Fail</Validity>
+        <NumWarnings>yes</NumWarnings>
+    </expect>
   </test>
-  <test>W10 needs test case</test>
+
+  <test><html:p>W10 needs test case</html:p></test>
+
   <test>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-strict.html</uri>
-      XHTML with doctype override to HTML401. namespace will trigger (W11) 
-	</test>
-	<test>
-    <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/W11-ht401-namespace.html</uri>
-    HTML 4.01 with xmlns attribute on root element. 
-    Should trigger a validation error (it does)
-    and preparse warning W11 (it doesn't!)
+      <html:p>XHTML. If using doctype override to HTML401, namespace will trigger (W11) </html:p>
+      <expect>
+      </expect>
   </test>
+
   <test>
-      <uri>html401-strict.html</uri>
-      HTML 4.01 Strict, validated with HTML 4.01 Transitional override (W13)
-	</test>
-	<test>w14 needs a test case</test>
-	<test>
-      <uri>texthtml_nodoctype.html.utf8</uri>
-      No doctype, override given, fallback fbd is off (W15)
-	</test>
+     <dc:title>Test for xmlns in HTML content</dc:title>
+    <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/W11-ht401-namespace.html</uri>
+    <html:p>HTML 4.01 with xmlns attribute on root element. 
+    Should trigger a validation error (it does)
+    and preparse warning W11 (it doesn't!)</html:p>
+    <expect>
+        <Validity>Fail</Validity>
+        <NumErrors>yes</NumErrors>
+        <NumWarnings>yes</NumWarnings>
+    </expect>
+  </test>
+
   <test>
-      <uri>texthtml_nodoctype.html.utf8</uri>
-      No doctype, fallback given (W16)
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html401-strict.html</uri>
+      <html:p>HTML 4.01 Strict, validated with HTML 4.01 Transitional override (W13)</html:p>
+      <expect>
+      </expect>
+  </test>
+  
+  <test><html:p>w14 needs a test case</html:p></test>
+  
+  <test>
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/texthtml_nodoctype.html.utf8</uri>
+      <html:p>No doctype, override given, fallback fbd is off (W15)</html:p>
+      <expect>
+      </expect>
+  </test>
+
+  <test>
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/texthtml_nodoctype.html.utf8</uri>
+      <html:p>No doctype, fallback given (W16)</html:p>
+      <expect>
+      </expect>
 	</test>
+
   <test>W17 needs a test case. is it a DUP of W04 now?</test>
+
   <test>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/charset_mismatch-http_xmldec.xhtml.utf8</uri>
-      charset mismatch HTTP / XML decl (W18)
-	</test>
+      <html:p>charset mismatch HTTP / XML decl (W18)</html:p>
+      <expect>
+          <Validity>Pass</Validity>
+          <NumWarnings>1</NumWarnings>
+      </expect>
+  </test>
+
   <test>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/charset_mismatch-http_meta.html.utf8</uri>
-      charset mismatch HTTP / Meta (W19)
-	</test>
-	<test>W20 needs a test case. probably rare.</test>
+      <html:p>charset mismatch HTTP / Meta (W19)</html:p>
+      <expect>
+          <Validity>Pass</Validity>
+          <NumWarnings>1</NumWarnings>
+      </expect>
+  </test>
+
+  <test>W20 needs a test case. probably rare.</test>
+
   <test>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-utf8-bom.xhtml</uri>
-      UTF-8 document, with BOM (W21)
-	</test>
-	<test>W22 (bad encoding alias) needs test case</test>
-	<test>
+      <html:p>UTF-8 document, with BOM (W21)</html:p>
+  </test>
 
+  <test>W22 (bad encoding alias) needs test case</test>
 
+  <test>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/mathml2.html</uri>
-      MathML 2.0 as text/html (W23)
+      <html:p>MathML 2.0 as text/html (W23)</html:p>
+      <expect>
+          <Validity>Pass</Validity>
+          <NumWarnings>yes</NumWarnings>
+      </expect>
   </test>
     
   <test>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/197-iso88591_alias.html</uri>
-      supported, but rare, charset (W24)
+      <html:p>supported, but rare, charset (W24)</html:p>
+      <expect>
+          <Validity>Pass</Validity>
+          <NumWarnings>1</NumWarnings>
+      </expect>
 	</test>
+
 	<test>
     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/3663-svg-noversion-doctypeless.svg</uri>
-    SVG with neither DOCTYPE nor version attribute (OK in SVG). (W25)
+    <html:p>SVG with neither DOCTYPE nor version attribute (OK in SVG). (W25)</html:p>
+    <expect>
+        <Validity>Pass</Validity>
+        <NumWarnings>1</NumWarnings>
+    </expect>
   </test>
+
  </collection>
 </collection>
 </testsuite>
