@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.583 2008-02-13 05:57:24 ot Exp $
+# $Id: check,v 1.584 2008-04-23 04:23:31 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.583 $;
+  $VERSION =  q$Revision: 1.584 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -651,7 +651,7 @@ $File->{Errors} = [];
 # preparse with XML parser if necessary
 # we should really be using a SAX ErrorHandler, but I can't find
 # a way to make it work with XML::LibXML::SAX::Parser... ** FIXME **
-# ditto, we should try using W3C::Validator::SAXHandler,
+# ditto, we should try using W3C::Validator::EventHandler,
 # but it's badly linked to opensp at the moment
 if (&is_xml($File)) {
 
@@ -847,7 +847,13 @@ sub parse (\$) {
              ],
             );
 
-  my $h = W3C::Validator::SAXHandler->new($opensp, $File);
+  my $h; # event handler
+  if ($File->{Opt}->{'Outline'}) {
+      $h = W3C::Validator::EventHandler::Outliner->new($opensp, $File, $CFG);
+  }
+  else {
+      $h = W3C::Validator::EventHandler->new($opensp, $File, $CFG);      
+  }
 
   $opensp->handler($h);
   $opensp->parse_string(join"\n",@{$File->{Content}});
@@ -2521,47 +2527,39 @@ sub self_url_file {
 
 #####
 
-sub W3C::Validator::SAXHandler::new
+package W3C::Validator::EventHandler;
+#
+# Define global constants
+use constant TRUE  => 1;
+use constant FALSE => 0;
+
+#
+# Tentative Validation Severities.
+use constant T_WARN  =>  4; # 0000 0100
+use constant T_ERROR =>  8; # 0000 1000
+
+#
+# Output flags for error processing
+use constant O_SOURCE  => 1; # 0000 0001
+use constant O_CHARSET => 2; # 0000 0010
+use constant O_DOCTYPE => 4; # 0000 0100
+use constant O_NONE    => 8; # 0000 1000
+
+
+sub new
 {
   my $class = shift;
   my $parser = shift;
   my $File = shift;
-
-  my $self = { _file => $File, _parser => $parser,
-    current_heading_level => 0, am_in_heading => 0  };
-
+  my $CFG = shift;
+  my $self = { _file => $File, CFG => $CFG, _parser => $parser };
   bless $self, $class;
 }
 
-sub W3C::Validator::SAXHandler::characters
-{
-  my ($self, $chars) = @_;
-  if ($self->{am_in_heading} == 1) {
-    my $data = $chars->{Data};
-    $data =~  s/[\r|\n]/ /g;
-    $self->{_file}->{heading_outline} .= $data;
-  }
-}
 
-sub W3C::Validator::SAXHandler::data
-{
-  my ($self, $chars) = @_;
-  if ($self->{am_in_heading} == 1) {
-    my $data = $chars->{Data};
-    $data =~  s/[\r|\n]/ /g;
-    $self->{_file}->{heading_outline} .= $data;
-  }
-}
-
-sub W3C::Validator::SAXHandler::start_element
+sub start_element
 {
   my ($self, $element) = @_;
-  if ($element->{Name} =~ /^h([1-6])$/i) {
-    $self->{_file}->{heading_outline} ||= "";
-    $self->{_file}->{heading_outline} .=
-      "    " x int($1) . "[$element->{Name}] ";
-    $self->{am_in_heading} = 1;
-  }
 
   my $has_xmlns = FALSE;
   my $xmlns_value = undef;
@@ -2594,12 +2592,12 @@ sub W3C::Validator::SAXHandler::start_element
 
   my $doctype = $self->{_file}->{DOCTYPE};
 
-  if (!defined($CFG->{Types}->{$doctype}->{Name}) ||
-      $element->{Name} ne $CFG->{Types}->{$doctype}->{Name}) {
+  if (!defined($self->{CFG}->{Types}->{$doctype}->{Name}) ||
+      $element->{Name} ne $self->{CFG}->{Types}->{$doctype}->{Name}) {
     # add to list of non-root namespaces
     push(@{$self->{_file}->{Namespaces}}, $xmlns_value) if $has_xmlns;
   }
-  elsif (!$has_xmlns and $CFG->{Types}->{$doctype}->{"Namespace Required"}) {
+  elsif (!$has_xmlns and $self->{CFG}->{Types}->{$doctype}->{"Namespace Required"}) {
     # whine if the root xmlns attribute is noted as required by spec,
     # but not present
     my $err;
@@ -2610,15 +2608,15 @@ sub W3C::Validator::SAXHandler::start_element
     $err->{num}  = "no-xmlns";
     $err->{type} = "E";
     $err->{msg}  = "Missing xmlns attribute for element ".$element->{Name} . ". 
-    The value should be: $CFG->{Types}->{$doctype}->{Namespace}";
+    The value should be: $self->{CFG}->{Types}->{$doctype}->{Namespace}";
     
 
     # ...
     $self->{_file}->{'Is Valid'} = FALSE;
     push @{$self->{_file}->{Errors}}, $err;
   }
-  elsif ($has_xmlns and (defined $CFG->{Types}->{$doctype}->{Namespace})
-  and ($xmlns_value ne $CFG->{Types}->{$doctype}->{Namespace}) ) {
+  elsif ($has_xmlns and (defined $self->{CFG}->{Types}->{$doctype}->{Namespace})
+  and ($xmlns_value ne $self->{CFG}->{Types}->{$doctype}->{Namespace}) ) {
     # whine if root xmlns element is not the one specificed by the spec
     my $err;
     my $location = $self->{_parser}->get_location();
@@ -2628,7 +2626,7 @@ sub W3C::Validator::SAXHandler::start_element
     $err->{num}  = "wrong-xmlns";
     $err->{type} = "E";
     $err->{msg}  = "Wrong xmlns attribute for element $element->{Name}. ".
-      "The value should be: $CFG->{Types}->{$doctype}->{Namespace}";
+      "The value should be: $self->{CFG}->{Types}->{$doctype}->{Namespace}";
 
     # ...
     $self->{_file}->{'Is Valid'} = FALSE;
@@ -2637,17 +2635,7 @@ sub W3C::Validator::SAXHandler::start_element
 }
 
 
-sub W3C::Validator::SAXHandler::end_element
-{
-  my ($self, $element) = @_;
-  if ($element->{Name} =~ /^h[1-6]$/i) {
-    $self->{_file}->{heading_outline} .= "\n";
-    $self->{am_in_heading} = 0;
-  }
-
-}
-
-sub W3C::Validator::SAXHandler::error
+sub error
 {
   my $self = shift;
   my $error = shift;
@@ -2765,6 +2753,84 @@ sub W3C::Validator::SAXHandler::error
                              };
   }
 }
+
+package W3C::Validator::EventHandler::Outliner;
+#
+# Define global constants
+use constant TRUE  => 1;
+use constant FALSE => 0;
+
+#
+# Tentative Validation Severities.
+use constant T_WARN  =>  4; # 0000 0100
+use constant T_ERROR =>  8; # 0000 1000
+
+#
+# Output flags for error processing
+use constant O_SOURCE  => 1; # 0000 0001
+use constant O_CHARSET => 2; # 0000 0010
+use constant O_DOCTYPE => 4; # 0000 0100
+use constant O_NONE    => 8; # 0000 1000
+
+use base qw(W3C::Validator::EventHandler);
+
+sub new
+{
+  my $class = shift;
+  my $parser = shift;
+  my $File = shift;
+  my $CFG = shift;
+  my $self = $class->SUPER::new($parser, $File, $CFG);
+  $self->{current_heading_level}= 0;
+  $self->{am_in_heading} = 0;
+  bless $self, $class;
+}
+
+sub characters
+{
+  my ($self, $chars) = @_;
+  if ($self->{am_in_heading} == 1) {
+    my $data = $chars->{Data};
+    $data =~  s/[\r|\n]/ /g;
+    $self->{_file}->{heading_outline} .= $data;
+  }
+}
+
+sub data
+{
+  my ($self, $chars) = @_;
+  if ($self->{am_in_heading} == 1) {
+    my $data = $chars->{Data};
+    $data =~  s/[\r|\n]/ /g;
+    $self->{_file}->{heading_outline} .= $data;
+  }
+}
+
+sub start_element
+{
+  my ($self, $element) = @_;
+  if ($element->{Name} =~ /^h([1-6])$/i) {
+    $self->{_file}->{heading_outline} ||= "";
+    $self->{_file}->{heading_outline} .=
+      "    " x int($1) . "[$element->{Name}] ";
+    $self->{am_in_heading} = 1;
+  }
+
+return $self->SUPER::start_element($element)
+  
+}
+
+
+sub end_element
+{
+  my ($self, $element) = @_;
+  if ($element->{Name} =~ /^h[1-6]$/i) {
+    $self->{_file}->{heading_outline} .= "\n";
+    $self->{am_in_heading} = 0;
+  }
+
+}
+
 
 #####
 
