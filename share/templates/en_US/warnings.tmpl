@@ -72,6 +72,11 @@ to check these potential issues, and, if necessary, fix them and re-validate the
       encoding was used to read the content and attempt to perform the validation,
       but this is likely to fail for all non-trivial documents.
     </p>
+   <TMPL_IF NAME="W04_also_tried">
+	<p>Before defaulting to <code><TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF></code>
+		the validator also tried to read the content with the following encoding(s), without success: 
+		<code><TMPL_VAR NAME="W04_also_tried" ESCAPE="HTML"></code>.</p>
+   </TMPL_IF>
   </TMPL_IF>
   <TMPL_IF NAME="opt_verbose">
     <p>The sources used to find encoding information include:</p>

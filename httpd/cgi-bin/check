@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.584 2008-04-23 04:23:31 ot Exp $
+# $Id: check,v 1.585 2008-04-28 03:42:43 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -186,7 +186,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.584 $;
+  $VERSION =  q$Revision: 1.585 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -519,8 +519,7 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
   $File->{Charset}->{Use} = "utf-8";
 } elsif (&is_xml($File) and not $File->{ContentType} =~ m(^text/)) {
   $File->{Charset}->{Use} = 'utf-8'; # UTF-8 (image/svg+xml etc.)
-}
-
+} 
 unless ($File->{Charset}->{Use}) {
   $File->{Charset}->{Use} = $File->{Charset}->{META};
 }
@@ -563,12 +562,6 @@ if (charset_not_equal($File->{Opt}->{Charset}, '(detect automatically)')) {
   }
 }
 
-unless ($File->{Charset}->{Use}) { # No charset given...
-  &add_warning('W04', {W04_charset => 'UTF-8'});
-  $File->{Tentative} |= T_ERROR; # Can never be valid.
-  $File->{Charset}->{Use} = 'utf-8';
-}
-
 #
 # Abort if an error was flagged while finding the encoding.
 &abort_if_error_flagged($File, O_CHARSET|O_DOCTYPE);
@@ -598,9 +591,32 @@ Encode::Alias::define_alias('ksc_5601', 'KS_C_5601-1987');
 
 # gb18030 requires Encode::HanExtra but no additional alias
 
-#
+$File->{Charset}->{Default} = FALSE;
+unless ($File->{Charset}->{Use}) { # No charset given...
+     $File->{Charset}->{Use} = 'utf-8';
+     $File->{Charset}->{Default} = TRUE;
+    $File->{Tentative} |= T_ERROR; # Can never be valid.
+    &add_warning('W04', {W04_charset => "UTF-8"});
+}
+
+
 # Always transcode, even if the content claims to be UTF-8
 $File = transcode($File);
+if (($File->{ContentType} == "text/html") and ($File->{Charset}->{Default}) and $File->{'Error Flagged'}) {
+    $File->{'Error Flagged'} = FALSE; # reset
+    # we try again, this time with win-1252
+    $File->{Charset}->{Use} = 'windows-1252';
+    &add_warning('W04', {W04_charset => "windows-1252", W04_also_tried=> "UTF-8"});
+    $File = transcode($File);
+}
+if (($File->{ContentType} == "text/html") and ($File->{Charset}->{Default}) and $File->{'Error Flagged'}) {
+    $File->{'Error Flagged'} = FALSE; # reset
+    # we try again, this time with latin1...
+    $File->{Charset}->{Use} = 'iso-8859-1';
+    &add_warning('W04', {W04_charset => "iso-8859-1", W04_also_tried => "UTF-8, windows-1252"});
+    $File = transcode($File);
+}
+# if it still does not work, we abandon hope here
 &abort_if_error_flagged($File, O_CHARSET);
 
 #
