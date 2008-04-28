@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.585 2008-04-28 03:42:43 ot Exp $
+# $Id: check,v 1.586 2008-04-28 06:44:40 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -34,6 +34,8 @@ use strict;
 use warnings;
 use utf8;
 
+
+package W3C::Validator::MarkupValidator;
 #
 # Modules.  See also the BEGIN block further down below.
 #
@@ -186,7 +188,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.585 $;
+  $VERSION =  q$Revision: 1.586 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2693,7 +2695,7 @@ sub error
     # since parsing was done without validation, result can only be "well-formed"
     if ($File->{Mode} eq 'XML' and lc($File->{Root}) ne 'html') {
       $File->{XMLWF_ONLY} = TRUE;
-      add_warning('W09xml', {});
+      W3C::Validator::MarkupValidator::add_warning('W09xml', {});
       return; # don't report this as an error, just proceed
     }
     # if mode is not XML, we do report the error. It should not happen in the case of <html> without doctype,
@@ -2740,12 +2742,12 @@ sub error
     if (lc($File->{Root}) eq 'html') { 
       my $dtd = ($File->{Mode} eq 'XML' ?
                  'XHTML 1.0 Transitional' : 'HTML 4.01 Transitional' );      
-      add_warning('W09', {W09_dtd => $dtd});
+      W3C::Validator::MarkupValidator::add_warning('W09', {W09_dtd => $dtd});
     }
     else { # not html root element, we are not using fallback
       if ($File->{Mode} ne 'XML') {
         $File->{'Is Valid'} = FALSE;
-        add_warning('W09nohtml', {});
+        W3C::Validator::MarkupValidator::add_warning('W09nohtml', {});
       }
     }
     
@@ -2753,7 +2755,7 @@ sub error
   }
 
   # TODO: calling exit() here is probably a bad idea
-  abort_if_error_flagged($File, O_DOCTYPE);
+  W3C::Validator::MarkupValidator::abort_if_error_flagged($File, O_DOCTYPE);
 
   push @{$File->{Errors}}, $err;
   # ...
