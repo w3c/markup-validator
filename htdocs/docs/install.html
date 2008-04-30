@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.33 2007-11-29 02:08:33 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-11-29 02:08:33 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.34 2008-04-30 04:35:34 ot Exp $"
+--><!--#set var="date" value="\$Date: 2008-04-30 04:35:34 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -60,39 +60,40 @@
     
     <h3 id="install-fromsource">Installing from source (generic case)</h3>
     <p>These instructions are strongly inspired from Nick Talbott's guide for Slackware Linux. Thanks Nick!</p>
-    <h4><a id="install-download" name="install-download"></a>Download</h4>
-        <p>Download the <a href="http://validator.w3.org/validator.tar.gz">Validator's Tar Ball</a>
-        and the sgml-lib <a href="http://validator.w3.org/sgml-lib.tar.gz">DTD library</a> from our site.</p>
-        <p>Alternatively, if you want to work on the latest development version, you can download 
-        both from our CVS repository, but you should be aware that this version may not work at all.</p>
-        <p>(<a href="../source/">Read more</a> about retrieving the source)</p>
 
-    <h4><a id="install-prereq" name="install-prereq"></a>Prerequisites</h4>
+	<p>The installation guide assumes that you have a working Web server. We suggest
+    the popular Apache server, which is used for the W3C Markup Validation service. 
+    The validator may work with other Web servers than the popular Apache, but
+    we can not guarantee that it will. You will also need a working installation 
+    of the Perl language (standard on most Web servers).</p>
 
+    <h4 id="install-prereq">Step 0: Prerequisites</h4>
+    <p>
+       Apart from a properly configured Web server, the Validator needs a
+       SGML parser -- that does all the hard work --, Perl (version 5.8.0
+       or newer) and several Perl modules used by the "check" CGI script. 
+     </p>
+	<p>
+	   The following few steps will guide you through installing those 
+	   prerequisites, and then the validator itself</p>
+    
+    <h4 id="install-prereq-sp">Step 1: install OpenSP, the SGML (and XML) parser</h4>
      <p>
-        Apart from a properly configured Web server, the Validator needs a
-        SGML parser -- that does all the hard work --, Perl (version 5.8.0
-        or newer) and several Perl modules used by the "check" CGI script.
-      </p>
-     <h5 id="install-prereq-sp">OpenSP, the SGML (and XML) parser</h5>
-      <p>
-        The SGML parser we're currently using is <code>OpenSP 1.5.2</code>,
-        which can be found on the
-        <a href="http://sourceforge.net/projects/openjade/">OpenJade home page</a>.
-        Note that the validator will not work with any version of OpenSP earlier than 1.5.2.
-      </p>
+       The SGML parser we're currently using is <code>OpenSP 1.5.2</code>,
+       which can be found on the
+       <a href="http://sourceforge.net/projects/openjade/">OpenJade home page</a>.
+       Note that the validator will not work with any version of OpenSP earlier than 1.5.2.
+     </p>
+	 <p>If you install opensp from source, make sure to enable HTTP retrieval of DTDs:</p>
+	 <pre>
+[unpack opensp]
+./configure --enable-http
+make
+make install
+</pre>
 
-      <h5  id="install-prereq-perl">Perl Modules</h5>
-      <p>
-        The canonical list of Perl modules we use can be found in the source
-        for the "check" CGI script. There is a bunch of lines that of the form
-        "use Foo::Bar" where each "Foo::Bar" represents a module. Most modules
-        can be found on <a href="http://www.cpan.org/"><acronym
-            title="Comprehensive Perl Archive Network">CPAN</acronym></a>
-        (minimum versions in parenthesis after the name). The following
-        list was complete when CVS spit out:
-        <code>$Date: 2007-11-29 02:08:33 $</code>. <tt>:-)</tt>
-      </p>
+      <h4  id="install-prereq-perl">Step 2: install required Perl Modules</h4>
+	  <h5>Quick and Easy: install the CPAN bundle</h5>
      <p>
        One easy - and strongly recommended - way to take care of all these
        Perl module dependencies is to install
@@ -100,28 +101,19 @@
        from CPAN.  See the <a href="http://search.cpan.org/dist/Bundle-W3C-Validator/lib/Bundle/W3C/Validator.pm">documentation included with it</a>
        for more details.
      </p>
-     
-     <p id="spo_cvs">The only current exception is SGML::Parser::OpenSP, for which at this point in time the development version
-     of the validator requires a not-yet-released version, which can be downloaded and installed 
-     from <a href="http://sourceforge.net/projects/spo">SourceForge</a>. First make sure to have 
-     <a href="#install-prereq-sp">OpenSP</a> installed, then get 
-     <a href="http://sourceforge.net/cvs/?group_id=106431">the latest revision of the source code for SGML::Parser::OpenSP</a> from CVS, 
-     and follow these installation steps, as root:</p>
-     <ul>
-       <li>perl Makefile.PL</li>
-       <li>make</li>
-       <li>make test</li>
-       <li>make install</li>
-     </ul>
-     
-     <p>This should give you a working SGML::Parser::OpenSP. Just then proceed to install the other required perl modules through CPAN.</p>
-            
-     <h5>List of required Perl module distributions</h5>
-     
+	<pre>
+sudo perl -MCPAN -e shell
+[cpan shell starts, you may need to answer configuration questions]
+install Bundle::W3C::Validator
+</pre>
+
+     <h5>For reference: List of required Perl module distributions</h5>
+     <p><strong>You may skip this if you have successfully installed the bundle above</strong>.</p>
+
 	 <p>Below are the perl modules required to run the Markup Validator. This list is informative, 
 	 you do not need to install them individually if you follow the <a href="#install-prereq-perl">CPAN instructions</a>
 	 above.</p>
-	 
+
       <dl>
         <dt><a href="http://search.cpan.org/dist/CGI.pm/">CGI.pm</a> &gt;= 2.81</dt>
         <dd>
@@ -181,7 +173,7 @@
         </dd>
       </dl>
 
-     <h5>List of optional Perl module distributions</h5>
+     <h6>For reference: List of optional Perl module distributions</h6>
 
       <p>
         The perl modules listed below are optional; the validator will use
@@ -196,21 +188,21 @@
         </dd>
       </dl>
 
-    <h4><a id="install-components" name="install-components"></a>Install the various necessary components:</h4>
-        <ol>
-            <li><p>The installation guide assumes that you have a working Web server. We suggest
-            the popular Apache server, which is used for the W3C Markup Validation service. 
-            The validator may work with other Web servers than the popular Apache, but
-            we can not guarantee that it will. You will also need a working installation 
-            of the Perl language (standard on most Web servers).</p></li>
-                
-            <li><p>Proceed with the  Prerequisites, as detailed above.</p></li>
-                
+    <h4 id="install-download">Step 3: Download the validator and DTDs</h4>
+        <p>Download the <a href="http://validator.w3.org/validator.tar.gz">Validator's Tar Ball</a>
+        and the sgml-lib <a href="http://validator.w3.org/sgml-lib.tar.gz">DTD library</a> from our site.</p>
+        <p>Alternatively, if you want to work on the latest development version, you can download 
+        both from our CVS repository, but you should be aware that this version may not work at all.</p>
+        <p>(<a href="../source/">Read more</a> about retrieving the source)</p>
+
+
+    <h4 id="install-components">Step 4: Unpack the validator</h4>
+        <ol>                
             <li><p>Create a directory for the validator's installation. On Unix-based systems, 
-            the default will be <code>/usr/local/validator</code>. This
+            we suggest to use the default folder <code>/usr/local/validator</code>. This
             directory will be referred to as <code>[validatorpath]</code>
             throughout this guide.</p></li>
-                
+     
             <li>
               <p>
                 Unpack the two archives of the validator and sgml-lib into a
@@ -225,55 +217,65 @@
                 and and <code>share</code>.
               </p>
             </li>
+			<li>
+			  <p>The validator uses a number of configuration files, originally located under
+				<code>[validatorpath]/htdocs/config</code>. On unix-based systems, we recommend
+				to move all these files to the folder <code>/etc/w3c</code>.</p>
+			</li>
         </ol>
-    <h4><a id="install-configure" name="install-configure"></a>Configure</h4>
-	<h5>Configuration files</h5>
 
-      <p>
-	For reference, here is an overview of all the configuration files for
-	the Markup Validator.
-      </p>
+    <h4 id="install-configure">Step 5: Configure the Validator</h4>
+	    <ol>
+	        <li>
+	          <p>
+	            Create the directory <code>/etc/w3c</code> and copy a the files
+	            from <code>[validatorpath]/htdocs/config/</code> to it. You may keep 
+				the configuration files in place, but would have to modify the Web 
+				Server's environment variables to point to the configuration directory.
+				As this may be tedious, we recommend using <code>/etc/w3c</code>.
+	          </p>
+	        </li>
+	        <li>
+	          <p>
+	            Edit <code>/etc/w3c/validator.conf</code> to reflect where files
+	            are in your installation, and configure other parameters there as
+	            you wish.  This file is well commented and modifying it should be
+	            relatively straightforward. In general you will only need to check 
+			    that the Base path is set to where you have unpacked the validator
+			    files.
+	          </p>
+	        </li>
+	    </ol>
+	     <h5>For reference: list of configuration files</h5>
+	     <p><strong>You may skip this, unless you plan to modify the validator's default behavior.</strong>.</p>
+			  <dl>
+		        <dt>validator.conf</dt>
+		        <dd>
+		          The validator's <strong>main configuration file</strong>. This will
+		          generally be the only file you need to edit. It sets various parameters, such as:
+		          the address of the maintainer, the URL for the "Home Page", various file paths and locations,
+		          whether the <a href="api.html">API</a> is enabled, etc.
+		        </dd>
+		        <dt>charset.cfg</dt>
+		        <dd>
+		          Maps character sets to conversion parameters for validator's
+		          internal UTF-8 conversion.
+		        </dd>
+		        <dt>eref.cfg</dt>
+		        <dd>
+		          Contains the mappings from element names to a URL path
+		          (relative to a configurable URL) for their definitions. Used
+		          in output when the "Show Parse Tree" option is enabled.
+		        </dd>
+		        <dt>types.conf</dt>
+		        <dd>
+		          Maps MIME/HTTP Content-Types to an internal "document type" which
+		          is used for treating HTML, XML, and XHTML in different ways.
+		        </dd>
+		       </dl>
 
-      <p>
-        The validator uses a number of configuration files -- most of which
-        are really mapping tables of some form -- to avoid having to check in
-        a new version of the code every time a new version of HTML comes out.
-        All configuration files can be found in
-        <code>htdocs/config/</code>.
-      </p>
-      <p>
-        To really understand what each does you should read the source, but
-        here is a short description to get you started.
-      </p>
-      <dl>
-        <dt>validator.conf</dt>
-        <dd>
-          The validator's <strong>main configuration file</strong>. This will
-          generally be the only file you need to edit. It sets various parameters, such as:
-          the address of the maintainer, the URL for the "Home Page", various file paths and locations,
-          whether the <a href="api.html">API</a> is enabled, etc.
-        </dd>
-        <dt>charset.cfg</dt>
-        <dd>
-          Maps character sets to conversion parameters for validator's
-          internal UTF-8 conversion.
-        </dd>
-        <dt>eref.cfg</dt>
-        <dd>
-          Contains the mappings from element names to a URL path
-          (relative to a configurable URL) for their definitions. Used
-          in output when the "Show Parse Tree" option is enabled.
-        </dd>
-        <dt>types.conf</dt>
-        <dd>
-          Maps MIME/HTTP Content-Types to an internal "document type" which
-          is used for treating HTML, XML, and XHTML in different ways.
-        </dd>
-       </dl>
 
-
-
-	<h5>Configure the Web server</h5>
+	<h4 id="configure-apache">Step 6: Configure the Web server</h5>
 	<p>The following instructions are for the Apache Web server, and should be adapted 
 	if you plan on using another server.</p>
         <ol>
@@ -320,24 +322,7 @@
             <code>apachectl configtest</code> then <code>apachectl restart</code>)</p></li>
        </ol>
 
-    <h5>Configure the Validator itself</h5>
-    <ol>
-        <li>
-          <p>
-            Create the directory <code>/etc/w3c</code> and copy a the files
-            from <code>[validatorpath]/htdocs/config/</code> to it.
-          </p>
-        </li>
-        <li>
-          <p>
-            Edit <code>/etc/w3c/validator.conf</code> to reflect where files
-            are in your installation, and configure other parameters there as
-            you wish.  This file is well commented and modifying it should be
-            relatively straightforward.
-          </p>
-        </li>
-    </ol>
-    <h4><a id="install-check" name="install-check"></a>Check the installation</h4>
+    <h4 id="install-check">Step 7: Check the installation</h4>
     <ol>
         <li><p>Point your browser at the new site.</p></li> 
         <li><p>Check the error log of the Web server to get clues on what may be wrong 
