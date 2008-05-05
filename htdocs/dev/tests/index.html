@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: index.html,v 1.104 2008-02-12 06:59:53 ot Exp $"
---><!--#set var="date" value="\$Date: 2008-02-12 06:59:53 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.105 2008-05-05 01:52:13 ot Exp $"
+--><!--#set var="date" value="\$Date: 2008-05-05 01:52:13 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -564,6 +564,18 @@ All these documents should validate, without "pretty print" for the document typ
     <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-and-xmlns.html;ss">with v.w.o</a> -
     <a href="xhtml1-missing-doctype-and-xmlns.html">view</a>:
     XHTML, no DOCTYPE, no xmlns (thus invalid)
+  </li>
+  <li>
+    <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-has-xmlns.html;ss">validate</a> -
+    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-has-xmlns.html;ss">with v.w.o</a> -
+    <a href="xhtml1-missing-doctype-has-xmlns.html">view</a>:
+    XHTML, no DOCTYPE, has xmlns (served as text/html)
+  </li>
+  <li>
+    <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-has-xmlns.xhtml;ss">validate</a> -
+    <a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-has-xmlns.xhtml;ss">with v.w.o</a> -
+    <a href="xhtml1-missing-doctype-has-xmlns.xhtml">view</a>:
+    XHTML, no DOCTYPE, has xmlns (served as application/xhtml+xml)
   </li>
   <li>
     <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xml-nodoctype-notwf.xml;ss">validate</a> -

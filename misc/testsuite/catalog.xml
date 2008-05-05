@@ -748,6 +748,18 @@
       <Validity>Fail</Validity>
     </expect>
   </test>
+  <test>
+    <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-has-xmlns.html</uri>
+    <html:p>XHTML, no DOCTYPE, has xmlns (served as application/xhtml+xml)</html:p>
+    <expect>
+    </expect>
+  </test>
+  <test>
+    <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-missing-doctype-has-xmlns.xhtml</uri>
+    <html:p>XHTML, no DOCTYPE, has xmlns (served as application/xhtml+xml)</html:p>
+    <expect>
+    </expect>
+  </test>
 
   <test>
     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xml-nodoctype-notwf.xml</uri>
