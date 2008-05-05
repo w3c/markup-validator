@@ -140,6 +140,7 @@ to check these potential issues, and, if necessary, fix them and re-validate the
     the MIME Media Type (<code><TMPL_VAR NAME="W06_mime" ESCAPE="HTML"></code>)  can be used for XML or SGML document types</li><TMPL_ELSE><li>in <em>Direct Input</em> mode, no MIME Media Type is served to the validator</li></TMPL_IF>
     <TMPL_IF NAME="w06_doctype"><li>the Document Type (<code><TMPL_VAR NAME="w06_doctype" ESCAPE="HTML"></code>) is not in the validator's catalog</li><TMPL_ELSE><li>No known Document Type could be detected</li></TMPL_IF>
     <li>No XML declaration (<abbr>e.g</abbr> <code>&lt;?xml version="1.0"?&gt;</code>) could be found at the beginning of the document.</li>
+    <li>No XML namespace (<abbr>e.g</abbr> <code>&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"&gt;</code>) could be found at the root of the document.</li>
     </ul>
     <p>As a default, the validator is falling back to SGML mode.</p>
     </li>
@@ -166,21 +167,22 @@ to check these potential issues, and, if necessary, fix them and re-validate the
 -->
 </TMPL_IF>
 <TMPL_IF NAME="W09">
-  <li class="msg_warn" id="W09"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">No <code>DOCTYPE</code> found! Attempting validation with <TMPL_VAR NAME="W09_dtd" ESCAPE="HTML">.</span></p>
+  <li class="msg_warn" id="W09"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">No <code>DOCTYPE</code> found! Checking with default <TMPL_VAR NAME="W09_dtd" ESCAPE="HTML"> Document Type.</span></p>
   
     <p>
-      The DOCTYPE Declaration was not recognized or is missing. This
-      probably means that the Formal Public Identifier contains a spelling
-      error, or that the Declaration is not using correct syntax. Validation
-      has been performed using a default "fallback" Document Type Definition
-      that closely resembles "<TMPL_VAR NAME="W09_dtd" ESCAPE="HTML">", but the
-      document will not be Valid until you have corrected this problem with the
-      DOCTYPE Declaration.
+      No DOCTYPE Declaration could be found or recognized in this document. This
+      generally means that the document is not declaring its Document Type at the top. 
+      It can also mean that the DOCTYPE declaration contains a spelling error, 
+      or that it is not using the correct syntax.
+    </p>
+    <p> 
+      The document was checked using a default "fallback" Document Type Definition
+      that closely resembles “<TMPL_VAR NAME="W09_dtd" ESCAPE="HTML">”.
     </p>
     <TMPL_IF NAME="opt_verbose">
     <p>
-      You should place a DOCTYPE declaration as the very first thing in your
-      HTML document. For example, for a typical <a
+      It is recommended to use a DOCTYPE declaration as the very first thing in your
+      HTML document, to identify the precise language being used. For example, for a typical <a
       href="http://www.w3.org/TR/xhtml1/">XHTML 1.0</a> document:
     </p>
     <pre>
