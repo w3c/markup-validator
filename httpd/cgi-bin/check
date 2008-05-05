@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.586 2008-04-28 06:44:40 ot Exp $
+# $Id: check,v 1.587 2008-05-05 02:46:07 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -188,7 +188,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.586 $;
+  $VERSION =  q$Revision: 1.587 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2204,10 +2204,15 @@ sub set_parse_mode {
     /x
   ? 'XML' : 'TBD' );  
 
-  if (($parseModeFromMimeType eq 'TBD') and ($parseModeFromXMLDecl eq 'TBD') and (!exists $CFG->{Types}->{$fpi})) {
+  my $parseModeFromNamespace = 'TBD';
+  if ($File->{Namespace}) { $parseModeFromNamespace = 'XML'}
+
+  if (($parseModeFromMimeType eq 'TBD') and ($parseModeFromXMLDecl eq 'TBD') and ($parseModeFromNamespace eq 'TBD') and (!exists $CFG->{Types}->{$fpi})) {
     # if the mime type is text/html (ambiguous, hence TBD mode)
+    # and the doctype isn't in the catalogue
     # and XML prolog detection was unsuccessful
-    # and the doctype isn't in the catalogue... we scream
+    # and we found no namespace at the root
+    # ... throw in a warning
     &add_warning('W06', {
       W06_mime => $File->{ContentType},
       w06_doctype => $File->{DOCTYPE}
@@ -2215,10 +2220,10 @@ sub set_parse_mode {
     return;
   }
 
-  $parseModeFromDoctype = 'TBD' unless $parseModeFromDoctype eq 'SGML' or $parseModeFromDoctype eq 'XML';
+  $parseModeFromDoctype = 'TBD' unless $parseModeFromDoctype eq 'SGML' or $parseModeFromDoctype eq 'XML' or $parseModeFromNamespace eq 'XML';
 
-  if (($parseModeFromDoctype eq 'TBD')  and ($parseModeFromXMLDecl eq 'TBD') and ($parseModeFromMimeType eq 'TBD')) {
-    # if all three factors are useless to give us a parse mode
+  if (($parseModeFromDoctype eq 'TBD')  and ($parseModeFromXMLDecl eq 'TBD') and ($parseModeFromMimeType eq 'TBD') and ($parseModeFromNamespace eq 'TBD')) {
+    # if all factors are useless to give us a parse mode
     # => we use SGML as a default
     $File->{Mode} = 'SGML';
     $File->{ModeChoice} = 'Fallback';
@@ -2252,11 +2257,19 @@ sub set_parse_mode {
     $File->{ModeChoice} = 'Doctype';
     return;
   }
+  elsif ($parseModeFromXMLDecl ne 'TBD') {
+    # the mime type is ambiguous (hence we didn't stop at the previous test)
+    # but by now we're sure that the document type is a good indication
+    # so we use that.
+    $File->{Mode} = $parseModeFromXMLDecl;
+    $File->{ModeChoice} = 'XMLDecl';
+    return;
+  }
   else { 
     # this is the last case. We know that all three modes are not TBD, 
     # yet both mime type and doctype tests have failed => we are saved by the XML declaration 
-    $File->{Mode} = $parseModeFromXMLDecl;
-    $File->{ModeChoice} = 'XMLDecl';
+    $File->{Mode} = $parseModeFromNamespace;
+    $File->{ModeChoice} = 'Namespace';
   } 
 }
 
@@ -2706,6 +2719,12 @@ sub error
      # FIXME
      # this is a problem with some of the "flattened" W3C DTDs, filtering them out to not confuse users.
      # hoping to get the DTDs fixed, see http://lists.w3.org/Archives/Public/www-html-editor/2007AprJun/0010.html 
+     return; # don't report this, just proceed
+   }
+   if (($err->{num} eq '344') and ($File->{Namespace}) and ($File->{Mode} eq 'XML') )  {
+     # we are in XML mode, we have a namespace, but no doctype. 
+     # the validator will already have said "no doctype, falling back to default" above
+     # no need to report this. 
      return; # don't report this, just proceed
    }
 
