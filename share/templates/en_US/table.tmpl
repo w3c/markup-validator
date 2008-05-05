@@ -1,16 +1,16 @@
 <TMPL_IF NAME="VALID">
   <TMPL_IF NAME="is_tentative">
-    <h2 class="tentative_valid">This Page Is <em>Tentatively</em> Valid 
+    <h2 class="tentative_valid">This document was <em>Tentatively</em> checked as  
     <TMPL_VAR NAME="file_version" ESCAPE="HTML"></h2>
   <TMPL_ELSE>
-    <h2 class="valid">This Page Is <TMPL_IF NAME="xmlwf_only">well-formed<TMPL_ELSE>Valid</TMPL_IF>
+    <h2 class="valid">This document was successfully checked as <TMPL_IF NAME="xmlwf_only">well-formed</TMPL_IF>
      <TMPL_VAR NAME="file_version" ESCAPE="HTML">!</h2>
   </TMPL_IF>
 <TMPL_ELSE>
   <TMPL_IF NAME="fatal_error">
   <h2 id="results" class="invalid">Sorry! This document can not be checked.</h2>
   <TMPL_ELSE>  
-  <h2 id="results" class="invalid">This page is <strong>not</strong> Valid <TMPL_VAR NAME="file_version" ESCAPE="HTML">!</h2>
+  <h2 id="results" class="invalid">Error<TMPL_IF NAME="number_of_errors_is_plural">s</TMPL_IF> found while checking this document as <TMPL_VAR NAME="file_version" ESCAPE="HTML">!</h2>
   </TMPL_IF>  
 </TMPL_IF>  
 
@@ -31,13 +31,13 @@
     <TMPL_IF NAME="VALID">
     <td colspan="2" class="valid">
       <TMPL_IF NAME="is_tentative">
-        Tentatively passed validation<TMPL_IF Name="valid_warnings_num">, <strong class="has_warnings"><TMPL_VAR NAME="valid_warnings_num"> warning(s)</strong></TMPL_IF>
+        Tentatively passed<TMPL_IF Name="valid_warnings_num">, <strong class="has_warnings"><TMPL_VAR NAME="valid_warnings_num"> warning(s)</strong></TMPL_IF>
       <TMPL_ELSE>
-        Passed validation<TMPL_IF Name="valid_warnings_num">, <strong class="has_warnings"><TMPL_VAR NAME="valid_warnings_num"> warning(s)</strong></TMPL_IF>
+        Passed<TMPL_IF Name="valid_warnings_num">, <strong class="has_warnings"><TMPL_VAR NAME="valid_warnings_num"> warning(s)</strong></TMPL_IF>
       </TMPL_IF>
     <TMPL_ELSE>
     <td colspan="2" class="invalid">
-      Failed validation<TMPL_IF NAME="number_of_errors_is_1">, 1 Error</TMPL_IF><TMPL_IF NAME="number_of_errors_is_plural">, <TMPL_VAR NAME="valid_errors_num" ESCAPE="HTML"> Errors</TMPL_IF>
+      <TMPL_IF NAME="number_of_errors_is_1">1 Error</TMPL_IF><TMPL_IF NAME="number_of_errors_is_plural"><TMPL_VAR NAME="valid_errors_num" ESCAPE="HTML"> Errors</TMPL_IF><TMPL_IF Name="valid_warnings_num">, <TMPL_VAR NAME="valid_warnings_num"> warning(s)</TMPL_IF>
      <!-- this case where validation fails but no error is listed should never happen -->   
     </TMPL_IF>
     </td>

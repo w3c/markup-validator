@@ -8,7 +8,7 @@
 <h3 id="warning_loop">Validation Output<TMPL_IF NAME="number_of_warnings_is_1">: 1 Warning</TMPL_IF><TMPL_IF NAME="number_of_warnings_is_plural">: <TMPL_VAR NAME="valid_warnings_num" ESCAPE="HTML"> Warnings</TMPL_IF>
         </h3>
     <p>
-      Below is a list of the warning message(s) produced when validating your document.
+      Below is a list of the warning message(s) produced when checking your document.
     </p>
     <TMPL_IF NAME="opt_group_errors">
         <TMPL_INCLUDE NAME="error_loop_grouped.tmpl">
@@ -30,7 +30,7 @@
   </TMPL_IF>  
 </TMPL_IF>
 <TMPL_IF NAME="is_tentative">
-    was checked and found to be <em>tentatively</em> valid <TMPL_VAR NAME="file_version" ESCAPE="HTML">.
+    was <em>tentatively</em> checked as <TMPL_VAR NAME="file_version" ESCAPE="HTML">.
     This means that with the use of some fallback or override mechanism, 
     we successfully performed a formal validation using an SGML or XML 
     Parser. In other words, the document would validate as 
@@ -38,8 +38,8 @@
     to match the changes we have performed automatically, but 
     <strong>it will not be valid until you make these changes</strong>.
 <TMPL_ELSE>
-    was checked and found to be 
-    <TMPL_IF NAME="xmlwf_only">well-formed<TMPL_ELSE>valid</TMPL_IF>
+    was successfully checked as 
+    <TMPL_IF NAME="xmlwf_only">well-formed</TMPL_IF>
     <TMPL_VAR NAME="file_version" ESCAPE="HTML">.  
     <TMPL_IF NAME="xmlwf_only">This means that we were not able to determine 
     the exact document type, but that the document passed the XML well-formedness
@@ -110,13 +110,13 @@
     If you use <a href="http://www.w3.org/Style/CSS/">CSS</a> in your document,
     you can 
 <TMPL_IF NAME="is_upload">
-    check it for validity
+    check it 
 <TMPL_ELSE>
   <TMPL_IF NAME="is_direct_input">
   <TMPL_ELSE>
     <a title="Validate CSS at the W3C CSS Validator"
     href="http://jigsaw.w3.org/css-validator/validator?uri=<TMPL_VAR NAME="file_uri_param">">check
-    it for validity</a>
+    it</a>
   </TMPL_IF>
 </TMPL_IF>
     using the W3C
