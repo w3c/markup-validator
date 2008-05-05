@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.587 2008-05-05 02:46:07 ot Exp $
+# $Id: check,v 1.588 2008-05-05 03:30:18 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -188,7 +188,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.587 $;
+  $VERSION =  q$Revision: 1.588 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -271,6 +271,8 @@ $File->{Namespaces} = []; # Other (non-root) Namespaces.
 
 # By default, doctype-less documents can not be valid
 $File->{"DOCTYPEless OK"} = FALSE;
+$File->{"Default DOCTYPE"}->{"HTML"} = 'HTML 4.01 Transitional';
+$File->{"Default DOCTYPE"}->{"XHTML"} = 'XHTML 1.0 Transitional';
 
 ###############################################################################
 #### Generate Template for Result. ############################################
@@ -1127,7 +1129,9 @@ sub fin_template ($$) {
 
     # @@TODO@@ we should try falling back on other version
     # info, such as the ones stored in Version_ESIS
-    $T->param(file_version => '(no Doctype found)');
+    my $default_doctype = ($File->{Mode} eq 'XML' ?
+                 $File->{"Default DOCTYPE"}->{"XHTML"} : $File->{"Default DOCTYPE"}->{"HTML"});
+    $T->param(file_version => "$default_doctype");
   }
   else {
     $T->param(file_version => $File->{Version});
@@ -2760,7 +2764,7 @@ sub error
   if ($err->{msg} =~ m(prolog can\'t be omitted)) {
     if (lc($File->{Root}) eq 'html') { 
       my $dtd = ($File->{Mode} eq 'XML' ?
-                 'XHTML 1.0 Transitional' : 'HTML 4.01 Transitional' );      
+                 $File->{"Default DOCTYPE"}->{"XHTML"} : $File->{"Default DOCTYPE"}->{"HTML"} );      
       W3C::Validator::MarkupValidator::add_warning('W09', {W09_dtd => $dtd});
     }
     else { # not html root element, we are not using fallback
