@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.588 2008-05-05 03:30:18 ot Exp $
+# $Id: check,v 1.589 2008-06-20 08:51:01 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -188,7 +188,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.588 $;
+  $VERSION =  q$Revision: 1.589 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1114,6 +1114,17 @@ sub prep_template ($$) {
   if ($File->{Opt}->{Charset}) {
     my $over_charset_param = "override charset $File->{Opt}->{Charset}";
     $T->param($over_charset_param => TRUE);
+  }
+
+  # Allow content-negotiation
+  if ($File->{Opt}->{'Accept Header'}) {
+    $T->param('accept' => $File->{Opt}->{'Accept Header'});
+  }
+  if ($File->{Opt}->{'Accept-Language Header'}) {
+    $T->param('accept-language' => $File->{Opt}->{'Accept-Language Header'});
+  }
+  if ($File->{Opt}->{'Accept-Charset Header'}) {
+    $T->param('accept-charset' => $File->{Opt}->{'Accept-Charset Header'});
   }
   
   if ($File->{'Error Flagged'}) {
@@ -2073,6 +2084,9 @@ sub prepCGI {
     foreach my $param ($q->param) {
       next if $param eq 'uploaded_file'; # 'uploaded_file' contains data.
       next if $param eq 'fragment';      # Ditto 'fragment'.
+      next if $param eq 'accept';          # Original checking had a specific Accept: header sent.
+      next if $param eq 'accept-language'; # Ditto Accept-Language:.
+      next if $param eq 'accept-charset'; # Ditto Accept-Charset:.
       next if $q->param($param) eq '0';  # Keep false-but-set params.
 
       #
@@ -2128,6 +2142,9 @@ sub prepCGI {
   if ($q->param('uri') and $q->param('uri') eq 'referer') {
     if ($q->referer) {
       $q->param('uri', $q->referer);
+      $q->param('accept',$q->http('Accept')) if ($q->http('Accept'));
+      $q->param('accept-language',$q->http('Accept-Language')) if ($q->http('Accept-Language'));
+      $q->param('accept-charset',$q->http('Accept-Charset')) if ($q->http('Accept-Charset'));
       print redirect &self_url_q($q, $File);
       exit;
     } else {
@@ -2515,6 +2532,9 @@ sub self_url_q {
   $thispage .= 'No200=1;'   if $q->param('No200');
   $thispage .= 'verbose=1;' if $q->param('verbose');
   $thispage .= 'group=1;'   if $q->param('group');
+  $thispage .= 'accept=' . uri_escape($q->param('accept')) . ';' if $q->param('accept');
+  $thispage .= 'accept-language='. uri_escape($q->param('accept-language')) .';' if $q->param('accept-language');
+  $thispage .= 'accept-charset='. uri_escape($q->param('accept-charset')) .';' if $q->param('accept-charset');
 
   if ($q->param('doctype')
       and not $q->param('doctype') =~ /(Inline|detect)/i) {
@@ -2551,6 +2571,9 @@ sub self_url_file {
   $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
   $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
   $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
+  $thispage .= 'accept=' . uri_escape($File->{Opt}->{'Accept Header'}) . ';' if $File->{Opt}->{'Accept Header'};
+  $thispage .= 'accept-language=' . uri_escape($File->{Opt}->{'Accept-Language Header'}) .';' if $File->{Opt}->{'Accept-Language Header'};
+  $thispage .= 'accept-charset=' . uri_escape($File->{Opt}->{'Accept-Charset Header'}) .';' if $File->{Opt}->{'Accept-Charset Header'};
 
   # These were not added by report_valid; perhaps they should be?
   # $thispage .= ';verbose=1' if $File->{Opt}->{'Verbose'};
@@ -2674,6 +2697,7 @@ sub error
 {
   my $self = shift;
   my $error = shift;
+  # my $mess = $self->{_parser}->split_message($error);
   my $mess;
   eval {
     $mess = $self->{_parser}->split_message($error);
