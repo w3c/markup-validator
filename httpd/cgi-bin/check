@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.589 2008-06-20 08:51:01 ot Exp $
+# $Id: check,v 1.590 2008-06-30 18:45:56 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -188,7 +188,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.589 $;
+  $VERSION =  q$Revision: 1.590 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -446,9 +446,20 @@ $File->{Opt}->{'Max Errors'}     = $q->param('me')      ? $q->param('me')       
 $File->{Opt}->{'Prefill'}        = $q->param('prefill') ? TRUE                   :  FALSE;
 $File->{Opt}->{'Prefill Doctype'}        = $q->param('prefill_doctype') ? $q->param('prefill_doctype')   :     'html401';
 
+$File->{Opt}->{'User Agent'} = $q->param('user-agent') && $q->param('user-agent') ne 1 ? $q->param('user-agent') : "W3C_Validator/$VERSION";
+$File->{Opt}->{'User Agent'} =~ tr/\x00-\x09\x0b\x0c-\x1f//d;
+
+if ($File->{Opt}->{'User Agent'} eq 'mobileok') {
+    $File->{Opt}->{'User Agent'} = 'W3C-mobileOK/DDC-1.0 (see http://www.w3.org/2006/07/mobileok-ddc)';
+}
+
+
 $File->{Opt}->{'Accept Header'} = $q->param('accept') ? $q->param('accept') : '';
+$File->{Opt}->{'Accept Header'} =~ tr/\x00-\x09\x0b\x0c-\x1f//d;
 $File->{Opt}->{'Accept-Language Header'} = $q->param('accept-language') ? $q->param('accept-language') : '';
+$File->{Opt}->{'Accept-Language Header'} =~ tr/\x00-\x09\x0b\x0c-\x1f//d;
 $File->{Opt}->{'Accept-Charset Header'} = $q->param('accept-charset') ? $q->param('accept-charset') : '';
+$File->{Opt}->{'Accept-Charset Header'} =~ tr/\x00-\x09\x0b\x0c-\x1f//d;
 
 #
 # "Fallback" info for Character Encoding (fbc), Content-Type (fbt),
@@ -1126,7 +1137,9 @@ sub prep_template ($$) {
   if ($File->{Opt}->{'Accept-Charset Header'}) {
     $T->param('accept-charset' => $File->{Opt}->{'Accept-Charset Header'});
   }
-  
+  if ($File->{Opt}->{'User Agent'}) {
+    $T->param('user-agent' => $File->{Opt}->{'User Agent'});
+  }    
   if ($File->{'Error Flagged'}) {
     $T->param(fatal_error => TRUE);
   }
@@ -1324,7 +1337,7 @@ sub handle_uri {
 
   my $ua = new W3C::Validator::UserAgent ($CFG, $File);
   $ua->env_proxy();
-  $ua->agent("W3C_Validator/$VERSION");
+  $ua->agent($File->{Opt}->{'User Agent'});
   $ua->parse_head(0);  # Don't parse the http-equiv stuff.
 
   $ua->protocols_allowed($CFG->{Protocols}->{Allow} || ['http', 'https']);
