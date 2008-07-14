@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.590 2008-06-30 18:45:56 ot Exp $
+# $Id: check,v 1.591 2008-07-14 03:15:25 kdubost Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -188,7 +188,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.590 $;
+  $VERSION =  q$Revision: 1.591 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -394,7 +394,14 @@ $File->{Templates}->{EARLN3} = HTML::Template->new(
   global_vars       => TRUE,
   filter => sub { my $ref = shift;${$ref} = Encode::decode_utf8(${$ref});}
 );
-
+$File->{Templates}->{JSON} = HTML::Template->new(
+  %template_defaults,
+  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
+                                          $lang, 'json_ouput.tmpl'),
+  loop_context_vars => TRUE,
+  global_vars       => TRUE,
+  filter => sub { my $ref = shift;${$ref} = Encode::decode_utf8(${$ref});}
+);
 $File->{Templates}->{PrefillHTML} = HTML::Template->new(
   %template_defaults,
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
@@ -1000,6 +1007,8 @@ if ($File->{Opt}->{Output} eq 'xml') {
   $template = $File->{Templates}->{EARLXML};
 } elsif ($File->{Opt}->{Output} eq 'n3') {
   $template = $File->{Templates}->{EARLN3};
+} elsif ($File->{Opt}->{Output} eq 'json') {
+    $template = $File->{Templates}->{JSON};
 } elsif ($File->{Opt}->{Output} eq 'ucn') {
   $template = $File->{Templates}->{UCN};
 } elsif ($File->{Opt}->{Output} eq 'soap12') {
