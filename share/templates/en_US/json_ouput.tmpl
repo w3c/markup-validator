@@ -12,13 +12,13 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
         <TMPL_LOOP NAME="file_errors">
           {
               <TMPL_IF NAME="err_type_err">"type": "error",</TMPL_IF>
-              <TMPL_IF NAME="err_type_warn">"type": "warning",</TMPL_IF>
+              <TMPL_IF NAME="err_type_warn">"type": "info",
+              "subtype": "warning"</TMPL_IF>
               "lastLine": "<TMPL_VAR NAME="line">",
-              "firstColumn": "<TMPL_VAR NAME="char">",
+              "lastColumn": <TMPL_VAR NAME="char">,
               "message": "<TMPL_VAR ESCAPE="JS" NAME="msg">",
-              "messageid": "<TMPL_VAR NAME="num">",
+              "messageid": <TMPL_VAR NAME="num">,
               "explanation": "<TMPL_VAR ESCAPE="JS" NAME="expl">",
-              "extract":"<TMPL_VAR ESCAPE="JS" NAME="src">"
           }
         </TMPL_LOOP>
         
