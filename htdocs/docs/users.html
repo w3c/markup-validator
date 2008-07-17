@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: users.html,v 1.30 2008-04-30 03:05:33 ot Exp $"
---><!--#set var="date" value="\$Date: 2008-04-30 03:05:33 $"
+<!--#set var="revision" value="\$Id: users.html,v 1.31 2008-07-17 15:47:05 ot Exp $"
+--><!--#set var="date" value="\$Date: 2008-07-17 15:47:05 $"
 --><!--#set var="title" value="User Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -234,7 +234,7 @@
             provided when they exit the beta stage).
           </p>
           <dl>
-        <dt id="output-soap12">Web Service API (<em>NEW</em> in version 0.7.3)</dt>
+        <dt id="output-soap12">Web Service API</dt>
         <dd>Using the SOAP1.2 language over HTTP, this defines a web service with an output similar to the API for
   	  the W3C CSS validator and Feed Validator. The <a href="api">Full documentation</a> for this API is available.
   	  Can be called by using parameter <code>output=soap12</code>. This API is <em>still under development</em>,
@@ -242,11 +242,13 @@
         <dt id="output-earl">EARL/RDF</dt>
         <dd>Produces output in the EARL RDF syntax.
   	  		Can be called by using parameter <code>output=earl</code>. <em>This output may change or be removed in the future</em>.</dd>
-  	  <dt id="output-n3">Notation3 </dt>
+  	  <dt id="output-n3">Notation3</dt>
   	  <dd>Produces output in the Notation3 RDF syntax. 
   		Can be called by using parameter <code>output=n3</code>. <em>This output may change or be removed in the future</em>.</dd>
-  	  <dt id="output-xml">XML (<code>xml</code>)</dt>
-  	  <dd>This output option has been deprecated, and will be removed from subsequent versions of the validator. </dd>
+	  <dt id="output-json">JSON (<em>NEW</em> in version 0.8.3)</dt>
+	   <dd>Produces output using a JSON (JavaScript Object Notation) formatting equivalent to the <a href="http://wiki.whatwg.org/wiki/Validator.nu_JSON_Output">JSON output for validator.nu</a>.</dd> 
+  	  <dt id="output-xml">XML</dt>
+  	  <dd>This output option has been deprecated, and will be removed from subsequent versions of the validator. Can be called by using parameter <code>output=json</code>.</dd>
   	</dl>
  
     <h4 id="deprecated_options">Deprecated options</h4>
