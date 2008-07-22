@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: users.html,v 1.31 2008-07-17 15:47:05 ot Exp $"
---><!--#set var="date" value="\$Date: 2008-07-17 15:47:05 $"
+<!--#set var="revision" value="\$Id: users.html,v 1.32 2008-07-22 13:04:52 ot Exp $"
+--><!--#set var="date" value="\$Date: 2008-07-22 13:04:52 $"
 --><!--#set var="title" value="User Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -222,6 +222,14 @@
 	  which it will accept from server. This option is mainly used to interface the Markup
 	  Validator for <a href="http://www.w3.org/TR/mobileOK-basic10-tests/#http_request">Mobile Web Best Practices</a>
 	  checking.</p>
+	</dd>
+	<dt id="option-user-agent">Set a specific <code>User-Agent</code> Header (<code>user-agent</code>)</dt>
+	<dd>
+	  <p>This option (<em>experimental, as of 0.8.3</em>) makes the validator send 
+	  a custom <code>User-Agent</code> HTTP header instead of the usual <code>W3C_Validator/xx.xxxx</code>.
+	  If the value of this parameter is <code>mobileok</code>, the validator will output a <code>User-Agent</code>
+	  string as defined by the <a href="http://www.w3.org/TR/mobileOK-basic10-tests/#http_request">Mobile Web Best Practices</a>
+	  spec.</p>
 	</dd>
       </dl>
         <h4 id="Output">Output Options</h4>
