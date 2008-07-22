@@ -62,7 +62,7 @@ class ValidatorTestCase(unittest.TestCase):
             
         self.assertEqual(results_filtered, self.expectResults)
 
-class ValidatorTestSuite():
+class ValidatorTestSuite:
     """A Validator test suite is a flattened tree of test collections and test cases"""
     def __init__(self, checker=None):
         if checker == None:

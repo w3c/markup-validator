@@ -16,7 +16,7 @@ import unittest
 import urllib, urllib2
 import xml.etree.cElementTree as ET
 
-class W3CValidatorHTTP():
+class W3CValidatorHTTP:
     """Fetch and parse results from a validator using the W3C Validator SOAP API"""
     def __init__(self, check_URI=None):
         if check_URI != None:
@@ -56,7 +56,7 @@ class W3CValidatorHTTP_test(unittest.TestCase):
     def test_init(self):
         """Test initializing a client to W3C validator HTTP results"""
         default_checker = W3CValidatorHTTP()
-        self.assertEqual(default_checker.check_URI, 'http://qa-dev.w3.org/wmvs/HEAD/check?uri=%(URI)s;output=soap12')
+        self.assertEqual(default_checker.check_URI, 'http://qa-dev.w3.org/wmvs/HEAD/check?uri=%(URI)s')
     
     def test_contact_default(self):
         """Test Contacting the default validator instance"""
