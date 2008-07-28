@@ -20,7 +20,7 @@ basedir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(basedir, "lib"))
 from ValidatorsAPIs import W3CValidatorHTTP, W3CValidatorHTTP_test
 from TestCase import ValidatorTestCase, ValidatorTestSuite, ValidatorTestCase_UT, ValidatorTestSuite_UT
-#from Documentation import Documentation
+from Documentation import Documentation
 help_message = '''
 
 Run or Generate test suite for markup validator(s)
@@ -41,7 +41,9 @@ Usage: harness.py [options] [run|sanity|doc]
         run: run the test suite 
         sanity: check that this code is still working 
             useful after using test cases or modifying code
-        @@ TBD @@ doc: generate an HTML index of the test cases
+        list: list the available test collections
+        doc: generate an HTML index of the test cases
+        (to be saved in ../htdocs/dev/tests/index.html)
 '''
 
 class Usage(Exception):
@@ -112,6 +114,10 @@ def main(argv=None):
         suite4 = unittest.TestLoader().loadTestsFromTestCase(W3CValidatorHTTP_test)
         suite = unittest.TestSuite([suite1, suite2, suite3, suite4])
         unittest.TextTestRunner(verbosity=verbose).run(suite)
+
+    elif args[0] == "list":
+        listCollections()
+
         
     elif args[0] == "doc":
         generateIndex()
@@ -143,14 +149,18 @@ def runTestSuite(testsuite, verbose):
         if collection.countTestCases() > 0:
             unittest.TextTestRunner(verbosity=verbose).run(collection)
 
-# def generateIndex():
-#     index = Documentation('index')
-#     for testcollection_file in (glob.glob(os.path.join(basedir, 'testcases', '**', '*.collection'))):
-#         colldir = os.path.dirname(os.path.abspath(testcollection_file))
-#         colldir = os.path.split(colldir)[-1]        
-#         testcollection = readCollectionMeta(testcollection_file)
-#         index.addCollection(testcollection)
-#     print index.generate(template_path=os.path.join(basedir, "templates")).encode('utf-8')
+def listCollections():
+    index = Documentation('list')
+    test_suite = buildTestSuite()
+    index.addTestSuite(test_suite)
+    print index.generate(template_path=os.path.join(basedir, "templates")).encode('utf-8')
+
+
+def generateIndex():
+    index = Documentation('index')
+    test_suite = buildTestSuite()
+    index.addTestSuite(test_suite)
+    print index.generate(template_path=os.path.join(basedir, "templates")).encode('utf-8')
 
 
 

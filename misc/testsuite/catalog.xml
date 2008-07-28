@@ -858,7 +858,9 @@
     </test>
       
 </collection>
-<collection id="encodings">
+<collection id="encoding">
+    <dc:title>Document Encoding Tests</dc:title>  	
+	<collection id="encodings">
     <dc:title>Various Encodings</dc:title>  
 	<test>
 	    <uri>http://www.w3.org/Press/1998/XSL-WD.html.ja</uri>
@@ -936,6 +938,7 @@
             <Validity>Pass</Validity>
           </expect>
   </test>
+</collection>
 </collection>
 
 <collection id="errors">

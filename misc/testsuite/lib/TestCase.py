@@ -87,10 +87,13 @@ class ValidatorTestSuite:
             raise v
         return ts_node
 
-    def readTestCollection(self, collection_node):
+    def readTestCollection(self, collection_node, level=None):
         """read a test collection from a given ElementTree collection node
         The collection can have test cases as children (which will be read and returned)"""
+        if level == None:
+            level = 0
         testcollection = ValidatorTestCollection()
+        testcollection.level = level
         if collection_node.attrib.has_key("id"):
             testcollection.collection_id = collection_node.attrib["id"]
         else:
@@ -110,7 +113,7 @@ class ValidatorTestSuite:
             self.collections.append(testcollection)
         for child_node in collection_node.getchildren():
             if child_node.tag == "collection":
-                self.readTestCollection(child_node)
+                self.readTestCollection(child_node, level=level+1)
 
 
     def readTestCase(self, testcase_node):
@@ -137,6 +140,7 @@ class ValidatorTestCollection(unittest.TestSuite):
     def __init__(self):
         super(ValidatorTestCollection, self).__init__()
         self.collection_id = None
+        self.level = None
         self.title = None
                     
 

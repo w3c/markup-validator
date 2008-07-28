@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Link Check Test Suite Index</title>
+	<meta name="author" content="olivier Thereaux">
+	<style type="text/css" media="all">
+      @import "http://validator.w3.org/style/base.css";
+    </style>
+    
+</head>
+<body>
+<div id="banner">
+ <h1 id="title">
+   <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="http://validator.w3.org/images/w3c.png" /></a>
+			<a href="./"><span>Markup Validator Test Suite</span></a>
+   </h1>
+   <p id="tagline">Collection of test cases for W3C Markup Validator</p>
+</div>
+<div class="doc">
+   <h2>Test Suite Index</h2> 
+   <p id="skip">
+     This page lists a few test documents and test scenarios for the W3C Markup Validator
+     make sure everything works fine after making changes to
+     <a href="../../">the validator</a>. If you can think of interesting
+     test cases that aren't on this page,
+     <a href="../../feedback.html">let us know</a>.
+   </p>
+<p>
+    This test suite is work in progress. Please submit any issue or idea to the 
+    public mailing-list <a href="http://lists.w3.org/Archives/Public/public-qa-dev/" title="public-qa-dev@w3.org Mail Archives">public-qa-dev@w3.org</a>
+</p>
+
+<div id="toc">
+<ol>
+{% for collection in test_suite.collections %}
+{% if collection.level is sameas 1 %}
+<li><a href="#{{collection.collection_id}}">{{collection.title}}</a></li>
+{% endif %}
+{% endfor %}
+<li><a href="#nonauto">Non-Automated tests</a></li>
+</ol>
+</div>
+
+{% for collection in test_suite.collections %}
+<h{{collection.level +2}} id="{{collection.collection_id}}">{{collection.title}}</h{{collection.level +2}}>
+<p>{{collection.description}}</p>
+ {% for case in collection._tests %}
+    <h{{collection.level +3}}>{{case.title}}</h{{collection.level +3}}>
+    <p>
+		<a href="../../check?uri={{case.docURI}};ss">validate</a> -
+		<a href="http://validator.w3.org/check?uri={{case.docURI}};ss">with v.w.o</a> -
+		<a href="{{case.docURI}}">view</a>:
+    {{case.description}}</p>
+    
+ {% endfor %}
+{% endfor %}
+
+      <h3 id="nonauto">Non-Automated tests</h3>
+	<p>The following test collections are not managed by the automated test suite, and should be 
+		tested by hand on a regular basis</p>
+      <h4 id="ui">User Interface tests</h4>
+      <p>The following tests do not test the binary "validity" results, but the proper handling of options, errors, various outputs, etc. 
+      "validate" links use this instance, with validator.w3.org links added for reference comparison</p>
+<ul>
+	<li><a href="../../check?uri=file%3A///etc/passwd">validate</a> -
+	    <a href="http://validator.w3.org/check?uri=file%3A///etc/passwd">with v.w.o</a> - 
+	    a file: URL </li>
+	<li>
+	  <a href="../../check/referer">validate</a> - 
+	  <a href="http://validator.w3.org/check/referer">with v.w.o</a> - 
+	  /check/referer (deprecated)
+	</li>
+	<li>
+	  <a href="../../check/referer;verbose=1">validate</a> - 
+	  <a href="http://validator.w3.org/check/referer;verbose=1">with v.w.o</a> - 
+	  /check/referer;verbose=1 (unsupported)
+	</li>
+	<li>
+	  <a href="../../check/referer;verbose=1;No200=1">validate</a> - 
+	  <a href="http://validator.w3.org/check/referer;verbose=1;No200=1">with v.w.o</a> -
+	  /check/referer;verbose=1;No200=1 (unsupported)
+	</li>
+	<li>
+	  <a href="../../check?uri=referer">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=referer">with v.w.o</a> -
+	  /check?uri=referer (supported, should validate this test collection)
+	</li>
+	<li>
+	  <a href="../../check?uri=referer;verbose=1">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=referer;verbose=1">with v.w.o</a> - 
+	  /check?uri=referer;verbose=1 (supported, should validate this test collection)
+	</li>
+	<li>
+	  <a href="../../check?uri=referer&amp;verbose=1">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=refererr&amp;verbose=1">with v.w.o</a> - 
+	  /check?uri=refererr&amp;verbose=1 (supported, should validate this test collection)
+	</li>
+	<li>
+	  <a href="../../check?uri=referer;verbose=1;No200=1">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=referer;verbose=1;No200=1">with v.w.o</a> - 
+	  /check?uri=referer;verbose=1;No200=1 (supported, should validate this test collection)
+	</li>
+	<li>
+	  <a href="../../check?uri=http://www.w3.org/MarkUp">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=http://www.w3.org/MarkUp">with v.w.o</a> - 
+	  Directory Redirect (should mention the redirect and validate the redirection target
+	</li>
+	<li>
+	  <a href="../../check">validate</a> - 
+	  <a href="http://validator.w3.org/check">with v.w.o</a> - 
+	  script invoked with no parameters (gives an error)
+	</li>
+	<li>
+	  <a href="../../check?uri=">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=">with v.w.o</a> - 
+	  uri parameter is empty
+	</li>
+	<li>
+	  <a href="../../check?uri=www.w3.org/">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=www.w3.org/">with v.w.o</a> - 
+	  uri is missing http:// (silent fix)
+	</li>
+	<li>
+	  <a href="../../check?uri=http://www.w3.org/bogus">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=http://www.w3.org/bogus">with v.w.o</a> - 
+	  404 not found
+	</li>
+	<li>
+	  <a href="../../check?uri=http://www.w3.org/bogus;No200=1">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=http://www.w3.org/bogus;no200=1">with v.w.o</a> - 
+	  404 not found, with "validate error pages" ON 
+	</li>
+	<li>
+	  <a href="../../check?uri=http://validator.w3.org/sgml-lib/sgml.soc">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=http://validator.w3.org/sgml-lib/sgml.soc">with v.w.o</a> - 
+	  text/plain resource (refuses to validate)
+	</li>
+	<li>
+	  <a href="../../check?uri=http://validator.w3.org:8000/">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=http://validator.w3.org:8000/">with v.w.o</a> - 
+	  httpd on a non-standard port (should be working transparently if :8000 server is running)
+	</li>
+  <li><a href="../../check?uri=http://www.oreillynet.com/pub/feed/20">validate</a> -
+    a resource served as application/atom+xml, should be passed on to the Feed Validator.</li>
+  <li><a href="../../check?uri=http://www.w3.org/StyleSheets/Core/Swiss">validate</a> -
+    a resource served as text/css, should be passed on to the CSS Validator.</li>
+</ul>
+
+      <h4  id="regress">Bugs and Regression Tests</h4>
+      <p>These should be tied to a bug report on either mailing-list and/or bugzilla whenever possible.</p>
+      
+      <ul>
+          
+	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/long-lines.html">Long Lines</a> (cause a core)</li>
+	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/trailing-nul.html">A trailing ASCII NUL character</a> (trips up HTML::Parser (not really))</li>
+	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/colons.html">Undeclared namespace prefixes</a> (colons ":" in element names (trips up parsing of onsgmls output))</li>
+	<li>
+	  <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/857-svg_nodoctype.svg;doctype=SVG+1.1;ss=1">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=qa-dev.w3.org/wmvs/HEAD/dev/tests/857-svg_nodoctype.svg;doctype=SVG+1.1;ss=1">with v.w.o</a> - <a href="857-svg_nodoctype.svg">view</a>:
+	  Test of doctype override for SVG document with no doctype, but an XML decl. The doctype should sneak between
+	  the XML decl and the root svg start tag. (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=857" title="Bug 857 - DOCTYPE Override should take XML Decl into account."> 857 - DOCTYPE Override</a>)
+	</li>
+
+
+      </ul>
+</div><!-- doc -->
+<!--#include virtual="../../footer.html" -->
+  </body>
+</html>
