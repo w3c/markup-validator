@@ -1,0 +1,5 @@
+<p>
+This is the automated test suite for the <a href="http://validator.w3.org/">W3C
+HTML validation service</a>, a python-based framework checking the markup validator
+against its <a href="http://validator.w3.org/dev/tests/">support and regression tests</a>.
+</p>
