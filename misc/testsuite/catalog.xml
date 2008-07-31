@@ -1023,7 +1023,6 @@
     <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html401-strict.xhtml</uri>
     <html:p>HTML 4.01 Strict served with an XHTML mime type. Parse mode conflict (W07) </html:p>
     <expect>
-        <Validity>Pass</Validity>
         <NumWarnings>yes</NumWarnings>
     </expect>
   </test>
