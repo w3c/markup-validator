@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.591 2008-07-14 03:15:25 kdubost Exp $
+# $Id: check,v 1.592 2008-08-14 18:04:34 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -188,7 +188,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.591 $;
+  $VERSION =  q$Revision: 1.592 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -624,14 +624,14 @@ unless ($File->{Charset}->{Use}) { # No charset given...
 
 # Always transcode, even if the content claims to be UTF-8
 $File = transcode($File);
-if (($File->{ContentType} == "text/html") and ($File->{Charset}->{Default}) and $File->{'Error Flagged'}) {
+if (($File->{ContentType} eq "text/html") and ($File->{Charset}->{Default}) and $File->{'Error Flagged'}) {
     $File->{'Error Flagged'} = FALSE; # reset
     # we try again, this time with win-1252
     $File->{Charset}->{Use} = 'windows-1252';
     &add_warning('W04', {W04_charset => "windows-1252", W04_also_tried=> "UTF-8"});
     $File = transcode($File);
 }
-if (($File->{ContentType} == "text/html") and ($File->{Charset}->{Default}) and $File->{'Error Flagged'}) {
+if (($File->{ContentType} eq "text/html") and ($File->{Charset}->{Default}) and $File->{'Error Flagged'}) {
     $File->{'Error Flagged'} = FALSE; # reset
     # we try again, this time with latin1...
     $File->{Charset}->{Use} = 'iso-8859-1';
