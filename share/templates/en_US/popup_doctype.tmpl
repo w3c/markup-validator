@@ -1,5 +1,6 @@
 <select id="doctype" name="doctype">
   <option value="Inline">(detect automatically)</option>
+  <option value="HTML5"<TMPL_IF NAME="override doctype HTML5">selected="selected"</TMPL_IF>>(X)HTML5</option>
   <option value="XHTML 1.0 Strict"<TMPL_IF NAME="override doctype XHTML 1.0 Strict">selected="selected"</TMPL_IF>>XHTML 1.0 Strict</option>
   <option value="XHTML 1.0 Transitional" <TMPL_IF NAME="override doctype XHTML 1.0 Transitional">selected="selected"</TMPL_IF>>XHTML 1.0 Transitional</option>
   <option value="XHTML 1.0 Frameset" <TMPL_IF NAME="override doctype XHTML 1.0 Frameset">selected="selected"</TMPL_IF>>XHTML 1.0 Frameset</option>
