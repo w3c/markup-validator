@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.592 2008-08-14 18:04:34 ot Exp $
+# $Id: check,v 1.593 2008-08-15 13:28:09 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -118,6 +118,9 @@ BEGIN {
           Paths => {
             Base => ($ENV{W3C_VALIDATOR_HOME} || '/usr/local/validator'),
           },
+          External => {
+            HTML5 => FALSE,
+          },
        },
       );
     my %cfg = Config::General->new(%config_opts)->getall();
@@ -188,7 +191,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.592 $;
+  $VERSION =  q$Revision: 1.593 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -662,20 +665,24 @@ if ($File->{Charset}->{Use} eq 'utf-8' &&
 
 #
 # Override DOCTYPE if user asked for it.
-if ($File->{Opt}->{DOCTYPE}
-    and not $File->{Opt}->{DOCTYPE} =~ /(Inline|detect)/i) {
-  $File = &override_doctype($File);
+if ($File->{Opt}->{DOCTYPE}) {
+    if ($File->{Opt}->{DOCTYPE} eq "HTML5") {
+      $File->{DOCTYPE} = "HTML5";
+      $File->{Version} = $File->{DOCTYPE};        
+    }
+    elsif (not $File->{Opt}->{DOCTYPE} =~ /(Inline|detect)/i) {
+     $File = &override_doctype($File);
+    }
 }
 
-#
-# Try to extract a DOCTYPE or xmlns.
-$File = &preparse_doctype($File);
-
-#
-# Determine the parse mode (XML or SGML).
-##set_parse_mode($File, $CFG) if $File->{DOCTYPE};
+if ($File->{Opt}->{DOCTYPE} eq "HTML5") {
+  
+}
+else {
+  # Try to extract a DOCTYPE or xmlns.
+  $File = &preparse_doctype($File);
+}
 set_parse_mode($File, $CFG);
-
 #
 # Sanity check Charset information and add any warnings necessary.
 $File = &charset_conflicts($File);
@@ -692,124 +699,213 @@ $File->{Errors} = [];
 # ditto, we should try using W3C::Validator::EventHandler,
 # but it's badly linked to opensp at the moment
 if (&is_xml($File)) {
+  if ($File->{DOCTYPE} eq "HTML5")
+  {
+    $File->{DOCTYPE} = "XHTML5";
+    $File->{Version} = "XHTML5";
+  }
+  else {
+    my $xmlparser = XML::LibXML->new();
+    $xmlparser->line_numbers(1);
+    $xmlparser->validation(0);
+    $xmlparser->load_ext_dtd(0);
+    # [NOT] loading the XML catalog for entities resolution as it seems to cause a lot of unnecessary DTD/entities fetching (requires >= 1.53 if enabled)
+    #$xmlparser->load_catalog( File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc') );
+    my $xml_string = join"\n",@{$File->{Content}};
+    # the XML parser will check the value of encoding attribute in XML declaration
+    # so we have to amend it to reflect transcoding. see Bug 4867
+    $xml_string =~ s/(<\?xml.*)
+  (encoding[\x20|\x09|\x0D|\x0A]*=[\x20|\x09|\x0D|\x0A]*(?:"[A-Za-z][a-zA-Z0-9_-]+"|'[A-Za-z][a-zA-Z0-9_-]+'))
+  (.*\?>)/$1encoding="utf-8"$3/sx;
+    eval {
+      $xmlparser->parse_string($xml_string);
+    };
+    $xml_string = undef; 
+    my $xml_parse_errors_line = undef;
+    my @xmlwf_error_list;
+    if ($@) {
 
-  my $xmlparser = XML::LibXML->new();
-  $xmlparser->line_numbers(1);
-  $xmlparser->validation(0);
-  $xmlparser->load_ext_dtd(0);
-  # [NOT] loading the XML catalog for entities resolution as it seems to cause a lot of unnecessary DTD/entities fetching (requires >= 1.53 if enabled)
-  #$xmlparser->load_catalog( File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc') );
-  my $xml_string = join"\n",@{$File->{Content}};
-  # the XML parser will check the value of encoding attribute in XML declaration
-  # so we have to amend it to reflect transcoding. see Bug 4867
-  $xml_string =~ s/(<\?xml.*)
-(encoding[\x20|\x09|\x0D|\x0A]*=[\x20|\x09|\x0D|\x0A]*(?:"[A-Za-z][a-zA-Z0-9_-]+"|'[A-Za-z][a-zA-Z0-9_-]+'))
-(.*\?>)/$1encoding="utf-8"$3/sx;
-  eval {
-    $xmlparser->parse_string($xml_string);
-  };
-  $xml_string = undef; 
-  my $xml_parse_errors_line = undef;
-  my @xmlwf_error_list;
-  if ($@) {
+      my $xmlwf_errors = $@;
+      my $xmlwf_error_line = undef;
+      my $xmlwf_error_col = undef;
+      my $xmlwf_error_msg = undef;
+      my $got_error_message = 0;
+      my $got_quoted_line = 0;
+      my $num_xmlwf_error = 0;
+      foreach my $msg_line (split "\n", $xmlwf_errors){
 
-    my $xmlwf_errors = $@;
-    my $xmlwf_error_line = undef;
-    my $xmlwf_error_col = undef;
-    my $xmlwf_error_msg = undef;
-    my $got_error_message = 0;
-    my $got_quoted_line = 0;
-    my $num_xmlwf_error = 0;
-    foreach my $msg_line (split "\n", $xmlwf_errors){
+        $msg_line =~ s{[^\x0d\x0a](:\d+:)}{\n$1}g;
+        $msg_line =~ s{[^\x0d\x0a]+[\x0d\x0a]$}{};
+    
+        # first we get the actual error message
+        if (($got_error_message eq 0) and ($msg_line =~ /^(:\d+:)( parser error : .*)/ )) {
+          $xmlwf_error_line = $1;
+          $xmlwf_error_msg = $2;
+          $xmlwf_error_line =~ s/:(\d+):/$1/;
+          $xmlwf_error_msg =~ s/ parser error :/XML Parsing Error: /;
+          $got_error_message = 1;
+        }
+        # then we skip the second line, which shows the context (we don't use that)
+        elsif (($got_error_message eq 1) and ($got_quoted_line eq 0)) {
+          $got_quoted_line = 1;
+        }
+        # we now take the third line, with the pointer to the error's column
+        elsif (($msg_line =~ /(\s+)\^/) and ($got_error_message eq 1) and ($got_quoted_line eq 1)) {
+          $xmlwf_error_col = length($1);
+        }
 
-      $msg_line =~ s{[^\x0d\x0a](:\d+:)}{\n$1}g;
-      $msg_line =~ s{[^\x0d\x0a]+[\x0d\x0a]$}{};
+        #  cleanup for a number of bugs for the column number
+        if (defined($xmlwf_error_col)) {
+          if ((my $l = length($File->{Content}->[$xmlwf_error_line-1])) < $xmlwf_error_col) {
+            # http://bugzilla.gnome.org/show_bug.cgi?id=434196
+            #warn("Warning: reported error column larger than line length " .
+            #     "($xmlwf_error_col > $l) in $File->{URI} line " .
+            #     "$xmlwf_error_line, libxml2 bug? Resetting to line length.");
+            $xmlwf_error_col = $l;
+          }
+          elsif ($xmlwf_error_col == 79) {
+            # working around an apparent odd limitation of libxml
+            # which only gives context for lines up to 80 chars
+            # http://www.w3.org/Bugs/Public/show_bug.cgi?id=4420
+            # http://bugzilla.gnome.org/show_bug.cgi?id=424017
+            $xmlwf_error_col = "> 80";
+            # non-int line number will trigger the proper behavior in report_error
+          }
+        }
+
+        # when we have all the info (one full error message), proceed and move on to the next error
+        if ((defined $xmlwf_error_line) and (defined $xmlwf_error_col) and (defined $xmlwf_error_msg)){
+          # Reinitializing for the next batch of 3 lines
+          $got_error_message = 0;
+          $got_quoted_line = 0;
       
-      # first we get the actual error message
-      if (($got_error_message eq 0) and ($msg_line =~ /^(:\d+:)( parser error : .*)/ )) {
-        $xmlwf_error_line = $1;
-        $xmlwf_error_msg = $2;
-        $xmlwf_error_line =~ s/:(\d+):/$1/;
-        $xmlwf_error_msg =~ s/ parser error :/XML Parsing Error: /;
-        $got_error_message = 1;
-      }
-      # then we skip the second line, which shows the context (we don't use that)
-      elsif (($got_error_message eq 1) and ($got_quoted_line eq 0)) {
-        $got_quoted_line = 1;
-      }
-      # we now take the third line, with the pointer to the error's column
-      elsif (($msg_line =~ /(\s+)\^/) and ($got_error_message eq 1) and ($got_quoted_line eq 1)) {
-        $xmlwf_error_col = length($1);
-      }
+          # formatting the error message for output
+          my $err;
+          $err->{src}  = '...'; # do this with show_open_entities()?
+          $err->{line} = $xmlwf_error_line;
+          $err->{char} = $xmlwf_error_col;
+          $err->{num}  = 'xmlwf';
+          $err->{type} = "E";
+          $err->{msg}  = $xmlwf_error_msg;
 
-      #  cleanup for a number of bugs for the column number
-      if (defined($xmlwf_error_col)) {
-        if ((my $l = length($File->{Content}->[$xmlwf_error_line-1])) < $xmlwf_error_col) {
-          # http://bugzilla.gnome.org/show_bug.cgi?id=434196
-          #warn("Warning: reported error column larger than line length " .
-          #     "($xmlwf_error_col > $l) in $File->{URI} line " .
-          #     "$xmlwf_error_line, libxml2 bug? Resetting to line length.");
-          $xmlwf_error_col = $l;
-        }
-        elsif ($xmlwf_error_col == 79) {
-          # working around an apparent odd limitation of libxml
-          # which only gives context for lines up to 80 chars
-          # http://www.w3.org/Bugs/Public/show_bug.cgi?id=4420
-          # http://bugzilla.gnome.org/show_bug.cgi?id=424017
-          $xmlwf_error_col = "> 80";
-          # non-int line number will trigger the proper behavior in report_error
-        }
-      }
-
-      # when we have all the info (one full error message), proceed and move on to the next error
-      if ((defined $xmlwf_error_line) and (defined $xmlwf_error_col) and (defined $xmlwf_error_msg)){
-        # Reinitializing for the next batch of 3 lines
-        $got_error_message = 0;
-        $got_quoted_line = 0;
-        
-        # formatting the error message for output
-        my $err;
-        $err->{src}  = '...'; # do this with show_open_entities()?
-        $err->{line} = $xmlwf_error_line;
-        $err->{char} = $xmlwf_error_col;
-        $err->{num}  = 'xmlwf';
-        $err->{type} = "E";
-        $err->{msg}  = $xmlwf_error_msg;
-
-        # The validator will sometimes fail to dereference entities files
-        # we're filtering the bogus resulting error
-        if ($err->{msg} =~ /Entity '\w+' not defined/) {
+          # The validator will sometimes fail to dereference entities files
+          # we're filtering the bogus resulting error
+          if ($err->{msg} =~ /Entity '\w+' not defined/) {
+            $xmlwf_error_line = undef;
+            $xmlwf_error_col = undef;
+            $xmlwf_error_msg = undef;
+            next;
+          }
+          push (@xmlwf_error_list, $err);
           $xmlwf_error_line = undef;
           $xmlwf_error_col = undef;
           $xmlwf_error_msg = undef;
-          next;
-        }
-        push (@xmlwf_error_list, $err);
-        $xmlwf_error_line = undef;
-        $xmlwf_error_col = undef;
-        $xmlwf_error_msg = undef;
-        $num_xmlwf_error++;
+          $num_xmlwf_error++;
 
+        }
+      }
+      foreach my $errmsg (@xmlwf_error_list){
+        $File->{'Is Valid'} = FALSE;
+        push @{$File->{WF_Errors}}, $errmsg;
       }
     }
-    foreach my $errmsg (@xmlwf_error_list){
-      $File->{'Is Valid'} = FALSE;
-      push @{$File->{WF_Errors}}, $errmsg;
-    }
   }
-  
 }
 
 
 
 
-#
-# Abandon all hope ye who enter here...
-$File = &parse($File);
-sub parse (\$) {
-  my $File = shift;
+if (($File->{DOCTYPE} eq "HTML5") or ($File->{DOCTYPE} eq "XHTML5")) {
+  if ($CFG->{External}->{HTML5}) {
+    $File = &html5_validate($File);
+  }
+  else {
+    $File->{'Error Flagged'} = TRUE;
+    $File->{Templates}->{Error}->param(fatal_no_checker  => TRUE);   
+    $File->{Templates}->{Error}->param(fatal_missing_checker  => "HTML5 Validator");   
+  }
+}
+else {
+  $File = &dtd_validate($File);
+}
+&abort_if_error_flagged($File, 0);
 
-  # TODO switch parser on the fly
+sub html5_validate (\$) {
+  my $File = shift;
+  my $ua = new W3C::Validator::UserAgent ($CFG, $File);
+  my $html5_parser = "";
+  if ($File->{Mode} eq 'XML') {
+    $html5_parser = "xml";
+  }
+  $ua->env_proxy();
+  $ua->agent($File->{Opt}->{'User Agent'});
+  $ua->parse_head(0);  # Don't parse the http-equiv stuff.
+  eval { require HTTP::Request::Common;};
+  if ($@) {
+      warn "HTTP::Request::Common needs to be installed to check HTML5 content";
+      return $File;
+  }
+  use HTTP::Request::Common;
+  # telling caches in the middle we want a fresh copy (Bug 4998)
+  $ua->default_header(Cache_control=> "max-age=0");
+  
+  my $res = $ua->request(POST "$CFG->{External}->{HTML5}", Content_Type => 'form-data',
+  Content  => [out => "xml", parser=>$html5_parser, content => $File->{Bytes}]);
+  if (! $res->is_success()) {
+    $File->{'Error Flagged'} = TRUE;
+    $File->{Templates}->{Error}->param(fatal_no_checker  => TRUE);   
+    $File->{Templates}->{Error}->param(fatal_missing_checker  => "HTML5 Validator");   
+  }
+  else {    
+    my $content = $res->can('decoded_content') ?
+      $res->decoded_content(charset => 'none') : $res->content;
+    # and now we parse according to http://wiki.whatwg.org/wiki/Validator.nu_XML_Output
+    # I wish we could use XML::LibXML::Reader here. but SHAME on those major
+    # unix distributions still shipping with libxml2 2.6.16… 4 years after its release
+    my $xml_reader = XML::LibXML->new();
+    my $xmlDOM = $xml_reader->parse_string( $content);
+    my @nodelist = $xmlDOM->getElementsByTagName("messages");
+    my $messages_node = $nodelist[0];
+    my @message_nodes =  $messages_node->childNodes;  
+    # @@ TODO locator attributes
+    foreach my $message_node (@message_nodes) {
+      my $message_type = $message_node->localname;
+      my $err;
+      my ($html5_error_line, $html5_error_col, $html5_error_msg);
+      if  ($message_type eq "error") {
+        $err->{type} = "E";
+      }
+      elsif ($message_type eq "info") {
+        $err->{type} = "I";
+        if ($message_node->hasAttributes()) {
+          my @attributelist = $message_node->attributes();
+          foreach my $attribute (@attributelist) {
+            #@@ TODO parse attributes, find out if it is a warning
+          }
+        }
+      } 
+      my @child_nodes =  $message_node->childNodes;  
+      foreach my $child_node (@child_nodes) {
+        if ($child_node->localname eq "message") {
+          $html5_error_msg = $child_node->toString();
+          $html5_error_msg =~ s,</?message>,,gi;
+        }
+      }
+      # formatting the error message for output
+      $err->{src}  = '...'; # do this with show_open_entities()?
+      $err->{line} = $html5_error_line;
+      $err->{char} = $html5_error_col;
+      $err->{num}  = 'html5';
+      $err->{msg}  = $html5_error_msg;
+      push @{$File->{Errors}}, $err;
+      # @@ TODO message explanation / elaboration
+    }
+  }
+return $File;
+}
+
+sub dtd_validate (\$) {
+  my $File = shift;
   my $opensp = SGML::Parser::OpenSP->new();
   my $parser_name = "SGML::Parser::OpenSP";
   #
@@ -1160,8 +1256,6 @@ sub fin_template ($$) {
 
   if (! $File->{Doctype} and ($File->{Version} eq 'unknown' or $File->{Version} eq 'SGML' or (!$File->{Version}))) {
 
-    # @@TODO@@ we should try falling back on other version
-    # info, such as the ones stored in Version_ESIS
     my $default_doctype = ($File->{Mode} eq 'XML' ?
                  $File->{"Default DOCTYPE"}->{"XHTML"} : $File->{"Default DOCTYPE"}->{"HTML"});
     $T->param(file_version => "$default_doctype");
