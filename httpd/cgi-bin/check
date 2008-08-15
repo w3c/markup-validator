@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.593 2008-08-15 13:28:09 ot Exp $
+# $Id: check,v 1.594 2008-08-15 18:25:50 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -191,7 +191,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.593 $;
+  $VERSION =  q$Revision: 1.594 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -840,11 +840,6 @@ sub html5_validate (\$) {
   $ua->env_proxy();
   $ua->agent($File->{Opt}->{'User Agent'});
   $ua->parse_head(0);  # Don't parse the http-equiv stuff.
-  eval { require HTTP::Request::Common;};
-  if ($@) {
-      warn "HTTP::Request::Common needs to be installed to check HTML5 content";
-      return $File;
-  }
   use HTTP::Request::Common;
   # telling caches in the middle we want a fresh copy (Bug 4998)
   $ua->default_header(Cache_control=> "max-age=0");
@@ -863,7 +858,14 @@ sub html5_validate (\$) {
     # I wish we could use XML::LibXML::Reader here. but SHAME on those major
     # unix distributions still shipping with libxml2 2.6.16… 4 years after its release
     my $xml_reader = XML::LibXML->new();
-    my $xmlDOM = $xml_reader->parse_string( $content);
+    my $xmlDOM;
+    eval { $xmlDOM = $xml_reader->parse_string( $content);};
+    if ($@) {
+      $File->{'Error Flagged'} = TRUE;
+      $File->{Templates}->{Error}->param(fatal_no_checker  => TRUE);   
+      $File->{Templates}->{Error}->param(fatal_missing_checker  => "HTML5 Validator");   
+      return $File;
+    }     
     my @nodelist = $xmlDOM->getElementsByTagName("messages");
     my $messages_node = $nodelist[0];
     my @message_nodes =  $messages_node->childNodes;  
@@ -874,6 +876,7 @@ sub html5_validate (\$) {
       my ($html5_error_line, $html5_error_col, $html5_error_msg);
       if  ($message_type eq "error") {
         $err->{type} = "E";
+        $File->{'Is Valid'} = FALSE;
       }
       elsif ($message_type eq "info") {
         $err->{type} = "I";
