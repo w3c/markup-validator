@@ -8,8 +8,18 @@
       </TMPL_IF>
 
 <ol id="fatal-errors">
+<TMPL_IF NAME="fatal_no_checker">
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
+    <span class="msg">External Checker not available</span>
+    <p>
+      Checking the Document Type of this document requires the help of an external tool which was either not enabled
+      in this validator, or is currently unavailable. Check in the validator's system configuration 
+      that <TMPL_IF NAME="fatal_missing_checker"><TMPL_VAR NAME="fatal_missing_checker"> is enabled and functional<TMPL_ELSE>all external checkers are enabled, and test if they are responsive</TMPL_IF>.
+    </p>
+</li>
+</TMPL_IF>
 <TMPL_IF NAME="fatal_transcode_error">
-  <li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
+  <li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
       <p>
         A fatal error occurred when attempting to transcode the character
         encoding of the document. Either we do not support this character
@@ -29,7 +39,7 @@
 </TMPL_IF>
 
 <TMPL_IF NAME="fatal_byte_error">
-<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
       <p>
         Sorry, I am unable to validate this document because on line
         <strong><TMPL_VAR NAME="fatal_byte_lines"></strong>
@@ -46,7 +56,7 @@
 </TMPL_IF>
 
 <TMPL_IF NAME="fatal_uri_error">
-<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
       <p>
         Sorry, this type of
         <a href="http://www.w3.org/Addressing/">URL</a>
@@ -70,7 +80,7 @@
 </li>
 </TMPL_IF>
 <TMPL_IF NAME="fatal_no_content">
-<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
       <p>
         Sorry, I could not find any content to validate. It is probable that you
         clicked on the "check" button without choosing a URL, a file or entering
@@ -86,7 +96,7 @@
 
 
 <TMPL_IF NAME="fatal_ip_error">
-<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
       <p>
         Sorry, the IP address <TMPL_IF NAME="fatal_ip_hostname">of</TMPL_IF>
         <TMPL_VAR NAME="fatal_ip_host"> is
@@ -99,7 +109,7 @@
 
 
 <TMPL_IF NAME="fatal_http_error">
-<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
   <p>
     I got the following unexpected response when trying to
     retrieve &lt;<a href="<TMPL_VAR NAME="fatal_http_uri" ESCAPE="HTML">"><TMPL_VAR NAME="fatal_http_uri" ESCAPE="HTML"></a>&gt;:
@@ -128,7 +138,7 @@
 </TMPL_IF>
 
 <TMPL_IF NAME="fatal_mime_error">
-<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
       <p>
         Sorry, I am unable to validate this document because its content type
         is <code><TMPL_VAR NAME="fatal_mime_ct" ESCAPE="HTML"></code>, which is
@@ -156,7 +166,7 @@
 </TMPL_IF>
 
 <TMPL_IF NAME="fatal_parse_extid_error">
-<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
       <h3>Fatal Error: <TMPL_VAR NAME="fatal_parse_extid_msg" ESCAPE="HTML"></h3>
       <p>
         I could not parse this document, because it makes reference to a
@@ -168,7 +178,7 @@
 </TMPL_IF>
 
 <TMPL_IF NAME="fatal_referer_error">
-<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Warning" title="Error" /></span>
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
         <h3><strong>No Referer header found!</strong></h3>
         <p>
           You have requested we check the referring page, but your browser did
