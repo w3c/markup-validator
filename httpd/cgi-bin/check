@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.594 2008-08-15 18:25:50 ot Exp $
+# $Id: check,v 1.595 2008-08-15 18:52:49 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -191,7 +191,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.594 $;
+  $VERSION =  q$Revision: 1.595 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -666,22 +666,21 @@ if ($File->{Charset}->{Use} eq 'utf-8' &&
 #
 # Override DOCTYPE if user asked for it.
 if ($File->{Opt}->{DOCTYPE}) {
-    if ($File->{Opt}->{DOCTYPE} eq "HTML5") {
-      $File->{DOCTYPE} = "HTML5";
-      $File->{Version} = $File->{DOCTYPE};        
-    }
-    elsif (not $File->{Opt}->{DOCTYPE} =~ /(Inline|detect)/i) {
-     $File = &override_doctype($File);
-    }
+  if (not $File->{Opt}->{DOCTYPE} =~ /(Inline|detect)/i) {
+   $File = &override_doctype($File);
+  }
 }
 
-if ($File->{Opt}->{DOCTYPE} eq "HTML5") {
-  
+# Try to extract a DOCTYPE or xmlns.
+$File = &preparse_doctype($File);
+
+if ($File->{Opt}->{DOCTYPE}) {
+  if ($File->{Opt}->{DOCTYPE} eq "HTML5") {
+    $File->{DOCTYPE} = "HTML5";
+    $File->{Version} = $File->{DOCTYPE};        
+  }
 }
-else {
-  # Try to extract a DOCTYPE or xmlns.
-  $File = &preparse_doctype($File);
-}
+
 set_parse_mode($File, $CFG);
 #
 # Sanity check Charset information and add any warnings necessary.
@@ -701,8 +700,8 @@ $File->{Errors} = [];
 if (&is_xml($File)) {
   if ($File->{DOCTYPE} eq "HTML5")
   {
-    $File->{DOCTYPE} = "XHTML5";
-    $File->{Version} = "XHTML5";
+    # $File->{DOCTYPE} = "XHTML5";
+    # $File->{Version} = "XHTML5";
   }
   else {
     my $xmlparser = XML::LibXML->new();
@@ -2081,9 +2080,15 @@ sub preparse_doctype {
     my $declaration = shift;
     my $doctype_type;
     my $doctype_secondpart;
-    ($File->{Root}, $doctype_type, $File->{DOCTYPE}, $doctype_secondpart) = $declaration =~ m(<!DOCTYPE\s+(\w[\w\.-]+)\s+(PUBLIC|SYSTEM)\s+(?:[\'\"])([^\"\']+)(?:[\"\'])(.*)>)si;
-    if (($doctype_type eq "PUBLIC") and (($doctype_secondpart) = $doctype_secondpart =~ m(\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*)si)){
-        &match_DTD_FPI_SI($File, $File->{DOCTYPE}, $doctype_secondpart);
+    if ($declaration =~ m(<!DOCTYPE\s+HTML\s*>)si) {
+      $File->{Root} = "html";
+      $File->{DOCTYPE} = "HTML5";
+    }
+    else {
+      ($File->{Root}, $doctype_type, $File->{DOCTYPE}, $doctype_secondpart) = $declaration =~ m(<!DOCTYPE\s+(\w[\w\.-]+)\s+(PUBLIC|SYSTEM)\s+(?:[\'\"])([^\"\']+)(?:[\"\'])(.*)>)si;
+      if (($doctype_type eq "PUBLIC") and (($doctype_secondpart) = $doctype_secondpart =~ m(\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*)si)){
+          &match_DTD_FPI_SI($File, $File->{DOCTYPE}, $doctype_secondpart);
+      }
     }
   };
 
