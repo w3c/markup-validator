@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.595 2008-08-15 18:52:49 ot Exp $
+# $Id: check,v 1.596 2008-08-15 19:29:27 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -191,7 +191,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.595 $;
+  $VERSION =  q$Revision: 1.596 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -844,7 +844,7 @@ sub html5_validate (\$) {
   $ua->default_header(Cache_control=> "max-age=0");
   
   my $res = $ua->request(POST "$CFG->{External}->{HTML5}", Content_Type => 'form-data',
-  Content  => [out => "xml", parser=>$html5_parser, content => $File->{Bytes}]);
+  Content  => [out => "xml", parser=>$html5_parser, content => join "\n", @{$File->{Content}}]);
   if (! $res->is_success()) {
     $File->{'Error Flagged'} = TRUE;
     $File->{Templates}->{Error}->param(fatal_no_checker  => TRUE);   
@@ -1749,10 +1749,17 @@ sub override_doctype {
   my $pubid = $dt->{PubID};
   my $sysid = $dt->{SysID};
   my $name  = $dt->{Name};
-  local $dtd = qq(<!DOCTYPE $name PUBLIC "$pubid");
-  $dtd .= qq( "$sysid") if $sysid; # We don't have one for all types.
-  $dtd .= '>';
-
+  local $dtd;
+  
+  if (($pubid ne "") and ($sysid ne "")) {
+    $dtd = qq(<!DOCTYPE $name PUBLIC "$pubid");
+    $dtd .= qq( "$sysid") if $sysid; # We don't have one for all types.
+    $dtd .= '>';
+  }
+  else {
+    $dtd = qq(<!DOCTYPE $name>);
+  }
+  
   local $org_dtd = '';
   local $HTML    = '';
   local $seen    = FALSE;
