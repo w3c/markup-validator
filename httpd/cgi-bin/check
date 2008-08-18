@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.596 2008-08-15 19:29:27 ot Exp $
+# $Id: check,v 1.597 2008-08-18 14:32:32 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -191,7 +191,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.596 $;
+  $VERSION =  q$Revision: 1.597 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -868,7 +868,6 @@ sub html5_validate (\$) {
     my @nodelist = $xmlDOM->getElementsByTagName("messages");
     my $messages_node = $nodelist[0];
     my @message_nodes =  $messages_node->childNodes;  
-    # @@ TODO locator attributes
     foreach my $message_node (@message_nodes) {
       my $message_type = $message_node->localname;
       my $err;
@@ -878,14 +877,26 @@ sub html5_validate (\$) {
         $File->{'Is Valid'} = FALSE;
       }
       elsif ($message_type eq "info") {
-        $err->{type} = "I";
-        if ($message_node->hasAttributes()) {
-          my @attributelist = $message_node->attributes();
-          foreach my $attribute (@attributelist) {
-            #@@ TODO parse attributes, find out if it is a warning
-          }
-        }
+        $err->{type} = "I"; # by default - we find warnings in the type attribute (below)
       } 
+      if ($message_node->hasAttributes()) {
+        my @attributelist = $message_node->attributes();
+        foreach my $attribute (@attributelist) {
+          if($attribute->name eq "type"){
+            if (($attribute->getValue() eq "warning") and ($message_type eq "info")) {
+              $err->{type} = "W";                
+            } 
+            
+          }
+          if($attribute->name eq "last-column") {
+            $html5_error_col = $attribute->getValue();                
+          } 
+          if($attribute->name eq "last-line") {
+            $html5_error_line = $attribute->getValue();                
+          } 
+          
+        }
+      }
       my @child_nodes =  $message_node->childNodes;  
       foreach my $child_node (@child_nodes) {
         if ($child_node->localname eq "message") {
