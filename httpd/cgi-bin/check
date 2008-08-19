@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.598 2008-08-19 13:20:24 ot Exp $
+# $Id: check,v 1.599 2008-08-19 13:49:23 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -191,7 +191,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.598 $;
+  $VERSION =  q$Revision: 1.599 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -871,7 +871,7 @@ sub html5_validate (\$) {
     foreach my $message_node (@message_nodes) {
       my $message_type = $message_node->localname;
       my $err;
-      my ($html5_error_line, $html5_error_col, $html5_error_msg);
+      my ($html5_error_line, $html5_error_col, $html5_error_msg, $html5_error_expl);
       if  ($message_type eq "error") {
         $err->{type} = "E";
         $File->{'Is Valid'} = FALSE;
@@ -903,6 +903,11 @@ sub html5_validate (\$) {
           $html5_error_msg = $child_node->toString();
           $html5_error_msg =~ s,</?message>,,gi;
         }
+        if ($child_node->localname eq "elaboration") {
+          $html5_error_expl = $child_node->toString();
+          $html5_error_expl =~ s,</?elaboration>,,gi;
+          $html5_error_expl = "\n<div class=\"ve html5\">$html5_error_expl</div>\n";
+        }
       }
       # formatting the error message for output
       $err->{src}  = '...'; # do this with show_open_entities()?
@@ -910,6 +915,7 @@ sub html5_validate (\$) {
       $err->{char} = $html5_error_col;
       $err->{num}  = 'html5';
       $err->{msg}  = $html5_error_msg;
+      $err->{expl} = $html5_error_expl;
       push @{$File->{Errors}}, $err;
       # @@ TODO message explanation / elaboration
     }
@@ -1874,37 +1880,34 @@ sub report_errors ($) {
         $col = 0;
       }
       my $explanation = "";
-      if ($err->{num}) {
-        my $num = $err->{num};
-
-#        if (exists $Msgs{$num}) { # We've already seen this message...
-#          if ($File->{Opt}->{Verbose}) { # ...so only repeat it in Verbose mode.
-#            $explanation = qq(\n    <div class="hidden mid-$num"></div>\n);
-#          }
-#        } else {
-#          $Msgs{$num} = 1;
+      if ($err->{expl}) {
+        
+      }
+      else {
+        if ($err->{num}) {
+          my $num = $err->{num};
           $explanation .= Encode::decode_utf8("\n    $RSRC->{msg}->{$num}->{verbose}\n")
             if exists $RSRC->{msg}->{$num}
             && exists $RSRC->{msg}->{$num}->{verbose};
-#        }
-        my $_msg = $RSRC->{msg}->{nomsg}->{verbose};
-        $_msg =~ s/<!--MID-->/$num/g;
-        if (($File->{'Is Upload'}) or ($File->{'Direct Input'}))
-        {
-          $_msg =~ s/<!--URI-->//g
+          my $_msg = $RSRC->{msg}->{nomsg}->{verbose};
+          $_msg =~ s/<!--MID-->/$num/g;
+          if (($File->{'Is Upload'}) or ($File->{'Direct Input'}))
+          {
+            $_msg =~ s/<!--URI-->//g
+          }
+          else
+          {
+            my $escaped_uri = uri_escape($File->{URI});
+            $_msg =~ s/<!--URI-->/$escaped_uri/g;
+          }
+          $explanation = "    $_msg\n$explanation"; # The send feedback plea.
+          $explanation =~ s/<!--CFG_HOME_PAGE-->/$CFG->{'Home Page'}/g;
         }
-        else
-        {
-          my $escaped_uri = uri_escape($File->{URI});
-          $_msg =~ s/<!--URI-->/$escaped_uri/g;
-        }
-        $explanation = "    $_msg\n$explanation"; # The send feedback plea.
-        $explanation =~ s/<!--CFG_HOME_PAGE-->/$CFG->{'Home Page'}/g;
+        $err->{expl} = $explanation;
       }
-
+      
       $err->{src} = $line;
       $err->{col} = ' ' x $col;
-      $err->{expl} = $explanation;
       if ($err->{type} eq 'I')
       {
         $err->{class} = 'msg_info';
