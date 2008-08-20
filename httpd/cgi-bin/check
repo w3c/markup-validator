@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.599 2008-08-19 13:49:23 ot Exp $
+# $Id: check,v 1.600 2008-08-20 20:34:10 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -191,7 +191,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.599 $;
+  $VERSION =  q$Revision: 1.600 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2386,7 +2386,7 @@ sub set_parse_mode {
     return;
   }
 
-  $parseModeFromDoctype = 'TBD' unless $parseModeFromDoctype eq 'SGML' or $parseModeFromDoctype eq 'XML' or $parseModeFromNamespace eq 'XML';
+  $parseModeFromDoctype = 'TBD' unless $parseModeFromDoctype eq 'SGML' or $parseModeFromDoctype eq 'HTML5' or $parseModeFromDoctype eq 'XML' or $parseModeFromNamespace eq 'XML';
 
   if (($parseModeFromDoctype eq 'TBD')  and ($parseModeFromXMLDecl eq 'TBD') and ($parseModeFromMimeType eq 'TBD') and ($parseModeFromNamespace eq 'TBD')) {
     # if all factors are useless to give us a parse mode
