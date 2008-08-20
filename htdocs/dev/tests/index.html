@@ -1,6 +1,6 @@
 
-<!--#set var="revision" value="\$Id: index.html,v 1.106 2008-07-28 19:44:54 ot Exp $"
---><!--#set var="date" value="\$Date: 2008-07-28 19:44:54 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.107 2008-08-20 19:32:00 ot Exp $"
+--><!--#set var="date" value="\$Date: 2008-08-20 19:32:00 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -149,6 +149,14 @@
 		<a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/2329-html401-transitional_iframe.html">view</a>:
     Valid HTML 4.01 Transitional sample document. -  with iframe element 
           (test for </p>
+    
+ 
+    <h5>HTML5 support test</h5>
+    <p>
+		<a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-ok.html;ss">validate</a> -
+		<a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-ok.html;ss">with v.w.o</a> -
+		<a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-ok.html">view</a>:
+    HTML5 sample document.</p>
     
  
     <h5>ISO-HTML Document Type support test</h5>
@@ -516,6 +524,14 @@
     sample HTML 4 document using the (valid, but problematic) shorttags features</p>
     
  
+    <h5>Test for warning output from HTML5 parser</h5>
+    <p>
+		<a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-warning.html;ss">validate</a> -
+		<a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-warning.html;ss">with v.w.o</a> -
+		<a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-warning.html">view</a>:
+    sample HTML5 document using a construct that should pass checking, with a warning output.</p>
+    
+ 
 
 <h4 id="appc">Valid XHTML 1.0 documents not conforming to HTML compatibility Guidelines</h4>
 <p></p>
@@ -621,6 +637,30 @@
 		<a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-bogus-attribute.html;ss">with v.w.o</a> -
 		<a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-bogus-attribute.html">view</a>:
     XHTML1, bogus attribute</p>
+    
+ 
+    <h5>HTML5 document with tokenizer error (precise locator)</h5>
+    <p>
+		<a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-precise-error.html;ss">validate</a> -
+		<a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-precise-error.html;ss">with v.w.o</a> -
+		<a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-precise-error.html">view</a>:
+    HTML5 document with tokenizer error (precise locator)</p>
+    
+ 
+    <h5>HTML5 document with Tree builder (range locator)</h5>
+    <p>
+		<a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-range-error.html;ss">validate</a> -
+		<a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-range-error.html;ss">with v.w.o</a> -
+		<a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-range-error.html">view</a>:
+    HTML5 document with Tree builder (range locator)</p>
+    
+ 
+    <h5>HTML5 document with bogus attribute (should have an error explanation)</h5>
+    <p>
+		<a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-error-explanation.html;ss">validate</a> -
+		<a href="http://validator.w3.org/check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-error-explanation.html;ss">with v.w.o</a> -
+		<a href="http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-error-explanation.html">view</a>:
+    HTML5 document with bogus attribute (should have an error explanation)</p>
     
  
     <h5>XHTML1, bogus element (uppercase A element not in DTD), tends to cascade errors about each attribute</h5>

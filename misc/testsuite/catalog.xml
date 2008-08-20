@@ -90,6 +90,16 @@
     </test>    
 
     <test>
+        <dc:title>HTML5 support test</dc:title>  
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-ok.html</uri>
+      <expect>
+        <Validity>Pass</Validity>
+      </expect>
+      <html:p>HTML5 sample document.</html:p>
+    </test>
+
+
+    <test>
         <dc:title>ISO-HTML Document Type support test</dc:title>  
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/iso-html.html</uri>
       <expect>
@@ -511,6 +521,17 @@
     </expect> 
 	<html:p>sample HTML 4 document using the (valid, but problematic) shorttags features</html:p>
   </test>
+
+  <test>
+    <dc:title>Test for warning output from HTML5 parser</dc:title>
+	<uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-warning.html</uri>
+    <expect>
+      <Validity>Pass</Validity>
+      <NumWarnings>yes</NumWarnings>
+    </expect> 
+	<html:p>sample HTML5 document using a construct that should pass checking, with a warning output.</html:p>
+  </test>
+
 </collection>
 
 <collection id="appc">
@@ -629,6 +650,32 @@
           <Validity>Fail</Validity>
         </expect>
     </test>
+
+    <test>
+        <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-precise-error.html</uri>
+        <html:p>HTML5 document with tokenizer error (precise locator)</html:p>
+        <expect>
+          <Validity>Fail</Validity>
+        </expect>
+    </test>
+
+    <test>
+        <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-range-error.html</uri>
+        <html:p>HTML5 document with Tree builder (range locator)</html:p>
+        <expect>
+          <Validity>Fail</Validity>
+        </expect>
+    </test>
+
+    <test>
+        <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-error-explanation.html</uri>
+        <html:p>HTML5 document with bogus attribute (should have an error explanation)</html:p>
+        <expect>
+          <Validity>Fail</Validity>
+        </expect>
+    </test>
+
+
     
      <test>
         <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/uppercase_element.xhtml</uri>
