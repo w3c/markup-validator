@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.600 2008-08-20 20:34:10 ot Exp $
+# $Id: check,v 1.601 2008-08-22 11:36:29 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -191,7 +191,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.600 $;
+  $VERSION =  q$Revision: 1.601 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -844,7 +844,7 @@ sub html5_validate (\$) {
   $ua->default_header(Cache_control=> "max-age=0");
   
   my $res = $ua->request(POST "$CFG->{External}->{HTML5}", Content_Type => 'form-data',
-  Content  => [out => "xml", parser=>$html5_parser, content => join "\n", @{$File->{Content}}]);
+  Content  => [out => "xml", parser=>$html5_parser, content => Encode::encode_utf8(join "\n", @{$File->{Content}})]);
   if (! $res->is_success()) {
     $File->{'Error Flagged'} = TRUE;
     $File->{Templates}->{Error}->param(fatal_no_checker  => TRUE);   
