@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.601 2008-08-22 11:36:29 ot Exp $
+# $Id: check,v 1.602 2008-08-26 14:59:13 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -191,7 +191,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.601 $;
+  $VERSION =  q$Revision: 1.602 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2401,10 +2401,11 @@ sub set_parse_mode {
     return;
   }
   elsif ($parseModeFromMimeType ne 'TBD') {
-    # if The mime type gives clear indication of the parse mode
-    if (($parseModeFromDoctype ne 'TBD') and ($parseModeFromMimeType ne $parseModeFromDoctype)) {
-      #  if document-type recommended mode and content-type recommended mode clash
-      # shoot a warning
+    # if The mime type gives clear indication of whether the document is XML or not
+    if (($parseModeFromDoctype ne 'TBD') and ($parseModeFromDoctype ne 'HTML5') and ($parseModeFromMimeType ne $parseModeFromDoctype)) {
+      #  if document-type recommended mode and content-type recommended mode clash, shoot a warning
+      # unknown doctypes will not trigger this 
+      # neither will html5 documents, which can be XML or not
       &add_warning('W07', {
         W07_mime => $File->{ContentType},
         W07_ct   => $parseModeFromMimeType,
