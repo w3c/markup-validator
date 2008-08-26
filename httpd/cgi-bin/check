@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.602 2008-08-26 14:59:13 ot Exp $
+# $Id: check,v 1.603 2008-08-26 16:09:17 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -191,7 +191,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.602 $;
+  $VERSION =  q$Revision: 1.603 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -263,7 +263,7 @@ $File->{Charset}->{Override} = ''; # From CGI/user override.
 
 #
 # Misc simple types.
-$File->{Mode} = 'SGML'; # Default parse mode is SGML.
+$File->{Mode} = 'DTD+SGML'; # Default parse mode is  DTD validation in SGML mode.
 
 # By default, perform validation (we may perform only xml-wf in some cases)
 $File->{XMLWF_ONLY} = FALSE;
@@ -833,9 +833,12 @@ sub html5_validate (\$) {
   my $File = shift;
   my $ua = new W3C::Validator::UserAgent ($CFG, $File);
   my $html5_parser = "";
-  if ($File->{Mode} eq 'XML') {
+  if ($File->{Mode} =~ /XML/) {
     $html5_parser = "xml";
   }
+
+  $File->{ParserName} = "validator.nu";
+  $File->{ParserOpts} = "";
   $ua->env_proxy();
   $ua->agent($File->{Opt}->{'User Agent'});
   $ua->parse_head(0);  # Don't parse the http-equiv stuff.
@@ -934,6 +937,10 @@ sub dtd_validate (\$) {
   # default parsing options
   my @spopt = qw(valid non-sgml-char-ref no-duplicate);
 
+  $File->{ParserName} = $parser_name;
+  $File->{ParserOpts} = join " ", @spopt;
+
+
   #
   # Switch to XML semantics if file is XML.
   if (&is_xml($File)) {
@@ -966,39 +973,6 @@ sub dtd_validate (\$) {
   # so restricted file reading would defunct the Validator.
   $opensp->restrict_file_reading(1) unless $^O eq 'MSWin32';
 
-  #
-  # Set debug info for HTML report.
-  $File->{Templates}->{Result}->param(opt_debug => $DEBUG);
-  $File->{Templates}->{Result}->param(debug =>
-            [
-             map({name => $_, value => $ENV{$_}},
-               qw(no_proxy http_proxy https_proxy ftp_proxy FTP_PASSIVE)),
-             { name => 'Content-Encoding',  value => $File->{ContentEnc} },
-             { name => 'Content-Language', value => $File->{ContentLang} },
-             { name => 'Content-Location', value => $File->{ContentLoc} },
-             { name => 'Transfer-Encoding', value => $File->{TransferEnc} },
-             { name => 'Parse Mode', value => $File->{Mode} },
-             { name => 'Parse Mode Factor', value => $File->{ModeChoice} },
-             { name => 'Parser', value => $parser_name },
-             { name => 'Parser Options', value => join " ", @spopt },
-            ],
-           );
-   $File->{Templates}->{SOAP}->param(opt_debug => $DEBUG);
-   $File->{Templates}->{SOAP}->param(debug =>
-             [
-              map({name => $_, value => $ENV{$_}},
-                qw(no_proxy http_proxy https_proxy ftp_proxy FTP_PASSIVE)),
-              { name => 'Content-Encoding',  value => $File->{ContentEnc} },
-              { name => 'Content-Language', value => $File->{ContentLang} },
-              { name => 'Content-Location', value => $File->{ContentLoc} },
-              { name => 'Transfer-Encoding', value => $File->{TransferEnc} },
-              { name => 'Parse Mode', value => $File->{Mode} },
-              { name => 'Parse Mode Factor', value => $File->{ModeChoice} },
-              { name => 'Parser', value => $parser_name },
-              { name => 'Parser Options', value => join " ", @spopt },
-
-             ],
-            );
 
   my $h; # event handler
   if ($File->{Opt}->{'Outline'}) {
@@ -1273,9 +1247,29 @@ sub fin_template ($$) {
   my $File = shift;
   my $T    = shift;
 
+
+
+  #
+  # Set debug info for HTML report.
+  $T->param(opt_debug => $DEBUG);
+  $T->param(debug =>
+            [
+             map({name => $_, value => $ENV{$_}},
+               qw(no_proxy http_proxy https_proxy ftp_proxy FTP_PASSIVE)),
+             { name => 'Content-Encoding',  value => $File->{ContentEnc} },
+             { name => 'Content-Language', value => $File->{ContentLang} },
+             { name => 'Content-Location', value => $File->{ContentLoc} },
+             { name => 'Transfer-Encoding', value => $File->{TransferEnc} },
+             { name => 'Parse Mode', value => $File->{Mode} },
+             { name => 'Parse Mode Factor', value => $File->{ModeChoice} },
+             { name => 'Parser', value => $File->{ParserName} },
+             { name => 'Parser Options', value => $File->{ParserOpts} },
+            ],
+           );
+
   if (! $File->{Doctype} and ($File->{Version} eq 'unknown' or $File->{Version} eq 'SGML' or (!$File->{Version}))) {
 
-    my $default_doctype = ($File->{Mode} eq 'XML' ?
+    my $default_doctype = ($File->{Mode} =~ /XML/ ?
                  $File->{"Default DOCTYPE"}->{"XHTML"} : $File->{"Default DOCTYPE"}->{"HTML"});
     $T->param(file_version => "$default_doctype");
   }
@@ -2133,7 +2127,7 @@ sub preparse_doctype {
 
   # if content-type has shown we should pre-parse with XML mode, use that
   # otherwise (mostly text/html cases) use default mode
-  $p->xml_mode(TRUE) if ($File->{Mode} eq 'XML');
+  $p->xml_mode(TRUE) if ($File->{Mode} =~ /XML/);
   $p->ignore_elements('BODY');
   $p->ignore_elements('body');
   $p->handler(declaration => $dtd, 'text');
@@ -2339,6 +2333,7 @@ sub prepCGI {
 # * HTTP Content-Type
 # * Doctype Declaration
 # * XML Declaration
+# * XML namespaces
 sub set_parse_mode {
   my $File = shift;
   my $CFG = shift;
@@ -2346,6 +2341,8 @@ sub set_parse_mode {
   $File->{ModeChoice} = '';
   my $parseModeFromDoctype = $CFG->{Types}->{$fpi}->{'Parse Mode'} || 'TBD';
 
+  # $File->{Mode} may have been set in parse_content_type
+  # and it would come from the Media Type
   my $parseModeFromMimeType = $File->{Mode};
   my $begincontent = join "\x20",@{$File->{Content}}; # for the sake of xml decl detection, 
                                                        # the 10 first lines should be safe
@@ -2390,8 +2387,8 @@ sub set_parse_mode {
 
   if (($parseModeFromDoctype eq 'TBD')  and ($parseModeFromXMLDecl eq 'TBD') and ($parseModeFromMimeType eq 'TBD') and ($parseModeFromNamespace eq 'TBD')) {
     # if all factors are useless to give us a parse mode
-    # => we use SGML as a default
-    $File->{Mode} = 'SGML';
+    # => we use SGML-based DTD validation as a default
+    $File->{Mode} = 'DTD+SGML';
     $File->{ModeChoice} = 'Fallback';
     # and send warning about the fallback
     &add_warning('W06', {
@@ -2414,28 +2411,60 @@ sub set_parse_mode {
     }
     # mime type has precedence, we stick to it 
     $File->{ModeChoice} = 'Mime';
+    if ($parseModeFromDoctype eq "HTML5") {
+      $File->{Mode} = 'HTML5+'.$File->{Mode};
+    } else {
+      $File->{Mode} = 'DTD+'.$File->{Mode};
+    }
     return;
   }
   elsif ($parseModeFromDoctype ne 'TBD') {
     # the mime type is ambiguous (hence we didn't stop at the previous test)
     # but by now we're sure that the document type is a good indication
     # so we use that.
-    $File->{Mode} = $parseModeFromDoctype;
+    if ($parseModeFromDoctype eq "HTML5") {
+      if ($parseModeFromXMLDecl eq "XML" or $parseModeFromNamespace eq "XML") {
+        $File->{Mode} = "HTML5+XML";
+      }
+      else {
+        $File->{Mode} = "HTML5";
+      }
+    }
+    else { # not HTML5
+      $File->{Mode} = "DTD+".$parseModeFromDoctype;      
+    }
     $File->{ModeChoice} = 'Doctype';
     return;
   }
   elsif ($parseModeFromXMLDecl ne 'TBD') {
     # the mime type is ambiguous (hence we didn't stop at the previous test)
-    # but by now we're sure that the document type is a good indication
+    # and so was the doctype 
+    # but we found an XML declaration
     # so we use that.
-    $File->{Mode} = $parseModeFromXMLDecl;
+    if ($File->{Mode} eq "") {
+      $File->{Mode} = "DTD+".$parseModeFromXMLDecl;
+    }
+    elsif ($File->{Mode} =~ /\+/ ) { 
+      $File->{Mode} =~ s/\+.*/\+$parseModeFromXMLDecl/;
+    }
+    else {
+      $File->{Mode} =  $File->{Mode}."+".$parseModeFromXMLDecl;
+    }
     $File->{ModeChoice} = 'XMLDecl';
     return;
   }
   else { 
-    # this is the last case. We know that all three modes are not TBD, 
-    # yet both mime type and doctype tests have failed => we are saved by the XML declaration 
-    $File->{Mode} = $parseModeFromNamespace;
+    # this is the last case. We know that all  modes are not TBD, 
+    # yet mime type, doctype AND XML DECL tests have failed => we are saved by the presence of namespaces 
+    if ($File->{Mode} eq "") {
+      $File->{Mode} = "DTD+".$parseModeFromNamespace;
+    }
+    elsif ($File->{Mode} =~ /\+/ ) { 
+      $File->{Mode} =~ s/\+.*/\+$parseModeFromNamespace/;
+    }
+    else {
+      $File->{Mode} =  $File->{Mode}."+".$parseModeFromNamespace;
+    }
     $File->{ModeChoice} = 'Namespace';
   } 
 }
@@ -2443,7 +2472,7 @@ sub set_parse_mode {
 
 #
 # Utility sub to tell if mode "is" XML.
-sub is_xml {shift->{Mode} eq 'XML'};
+sub is_xml {shift->{Mode} =~ /XML/};
 
 #
 # Check charset conflicts and add any warnings necessary.
@@ -2768,7 +2797,7 @@ sub start_element
   my $has_xmlns = FALSE;
   my $xmlns_value = undef;
 
-  if ( ($self->{_file}->{Mode} eq 'XML')){
+  if ( ($self->{_file}->{Mode} =~ /XML/)){
     # if in XML mode, find namespace used for each element
     foreach my $attr (keys %{$element->{Attributes}}) {
       if ($element->{Attributes}->{$attr}->{Name} eq "xmlns") {
@@ -2868,7 +2897,7 @@ sub error
   # our parser OpenSP is not quite XML-aware, or XML Namespaces Aware, 
   # so we filter out a few errors for now
 
-  if ($File->{Mode} eq 'XML') {
+  if ($File->{Mode} =~ /XML/) {
     if ($err->{num} eq '108' and $err->{msg} =~ m{ "xmlns:\S+"}) {
       # the error is about a missing xmlns: attribute definition"
       return ;  # this is not an error, 'cause we said so
@@ -2880,7 +2909,7 @@ sub error
   # if root element is not html and mode is xml...
   {
     # since parsing was done without validation, result can only be "well-formed"
-    if ($File->{Mode} eq 'XML' and lc($File->{Root}) ne 'html') {
+    if ($File->{Mode} =~ /XML/ and lc($File->{Root}) ne 'html') {
       $File->{XMLWF_ONLY} = TRUE;
       W3C::Validator::MarkupValidator::add_warning('W09xml', {});
       return; # don't report this as an error, just proceed
@@ -2895,7 +2924,7 @@ sub error
      # hoping to get the DTDs fixed, see http://lists.w3.org/Archives/Public/www-html-editor/2007AprJun/0010.html 
      return; # don't report this, just proceed
    }
-   if (($err->{num} eq '344') and ($File->{Namespace}) and ($File->{Mode} eq 'XML') )  {
+   if (($err->{num} eq '344') and ($File->{Namespace}) and ($File->{Mode} =~ /XML/) )  {
      # we are in XML mode, we have a namespace, but no doctype. 
      # the validator will already have said "no doctype, falling back to default" above
      # no need to report this. 
@@ -2933,12 +2962,12 @@ sub error
   # No DOCTYPE found! We are falling back to vanilla DTD
   if ($err->{msg} =~ m(prolog can\'t be omitted)) {
     if (lc($File->{Root}) eq 'html') { 
-      my $dtd = ($File->{Mode} eq 'XML' ?
+      my $dtd = ($File->{Mode} =~ /XML/ ?
                  $File->{"Default DOCTYPE"}->{"XHTML"} : $File->{"Default DOCTYPE"}->{"HTML"} );      
       W3C::Validator::MarkupValidator::add_warning('W09', {W09_dtd => $dtd});
     }
     else { # not html root element, we are not using fallback
-      if ($File->{Mode} ne 'XML') {
+      if (! $File->{Mode} =~ /XML/) {
         $File->{'Is Valid'} = FALSE;
         W3C::Validator::MarkupValidator::add_warning('W09nohtml', {});
       }
