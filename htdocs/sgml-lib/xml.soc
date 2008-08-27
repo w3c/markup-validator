@@ -39,9 +39,9 @@ PUBLIC "-//W3C//DTD SVG 1.1 Tiny//EN"
 -- XHTML --
 
 PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-       "REC-xhtml11-20010531/xhtml11-flat.dtd"
+       "WD-xhtml11-20070216/xhtml11-flat.dtd"
 PUBLIC "-//W3C//ENTITIES XHTML 1.1 Document Model 1.0//EN"
-       "REC-xhtml11-20010531/xhtml11-model-1.mod"
+       "WD-xhtml11-20070216/xhtml11-model-1.mod"
 
 PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
        "REC-xhtml1-20020801/xhtml1-strict.dtd"
