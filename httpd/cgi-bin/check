@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.603 2008-08-26 16:09:17 ot Exp $
+# $Id: check,v 1.604 2008-09-09 12:55:33 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -191,7 +191,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.603 $;
+  $VERSION =  q$Revision: 1.604 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -903,8 +903,8 @@ sub html5_validate (\$) {
       my @child_nodes =  $message_node->childNodes;  
       foreach my $child_node (@child_nodes) {
         if ($child_node->localname eq "message") {
-          $html5_error_msg = $child_node->toString();
-          $html5_error_msg =~ s,</?message>,,gi;
+          $html5_error_msg= $child_node->toString();
+          $html5_error_msg =~ s,</?[^>]*>,,gsi;
         }
         if ($child_node->localname eq "elaboration") {
           $html5_error_expl = $child_node->toString();
@@ -1870,7 +1870,7 @@ sub report_errors ($) {
         $col = length($File->{Content}->[$err->{line}-1]);
         $col = 80 if ($col > 80);
         ($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $col);
-        $line = &ent($line) . "&hellip;";
+        $line = &ent($line) . "…";
         $col = 0;
       }
       my $explanation = "";
@@ -2893,6 +2893,8 @@ sub error
   $err->{num}  = $mess->{primary_message}{Number};
   $err->{type} = $mess->{primary_message}{Severity};
   $err->{msg}  = $mess->{primary_message}{Text};
+
+  $err->{msg}  =~ s/"&"/"&amp;"/gsi;
 
   # our parser OpenSP is not quite XML-aware, or XML Namespaces Aware, 
   # so we filter out a few errors for now
