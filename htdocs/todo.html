@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: todo.html,v 1.65 2007-09-19 20:53:22 ville Exp $"
---><!--#set var="date" value="\$Date: 2007-09-19 20:53:22 $"
+<!--#set var="revision" value="\$Id: todo.html,v 1.66 2008-10-23 10:19:14 ot Exp $"
+--><!--#set var="date" value="\$Date: 2008-10-23 10:19:14 $"
 --><!--#set var="title" value="Development Roadmap for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -24,6 +24,41 @@
       <a href="http://lists.w3.org/Archives/Public/www-validator/">www-validator
         mailing list</a>.</li>
     </ul>
+    <h3>High-Level Objectives</h3>
+    <ul>
+    <li>Provide the web with a one-stop service for Web Quality check </li>
+    <li>Help raise quality for (m)any kind(s) of Web content </li>
+    <li>Build a positive culture of Web Quality </li>
+    <li>Future-proof our services (new formats, new usage) </li>
+    <li>Leverage Communities energy </li>
+    <li>Remain the trusted source by professionals </li>
+    <li>Find the right balance between accuracy and user-friendliness </li></ul>
+
+    <h3>Roadmap</h3>
+    <ul>
+    <li><strong>Multi-engine validator</strong>. The current validator is mostly based on an DTD parser, with an XML parser used only for some checks. 
+        The current development version plugs into an html5 parser for the validation of HTML5 content. In the future, other engines 
+        could be used to check compound XML documents (with NVDL+relax, XML Schema, Schematron - using e.g the relaxed engine) </li>
+    <li><strong>Mulitilingual tool</strong>. The Markup Validator receives 1M requests per day, and is only in English. Making it multiligual 
+        would make the tool easier to use for web developers and designers worldwide. Although this may be technically tricky 
+        (given the number of message/engine sources), the community would be very excited in participating in the translation effort. </li>
+    <li><strong>Site-wide services</strong>. The markup validator currently checks a single page. Some companion software (such as the log validator) 
+            could be made into a web service to provide crawling, batch validation, scheduled checks etc. </li>
+    <li><strong>Check beyond markup</strong>: This may be in the roadmap for Unicorn rather than the markup validator, but it fits in the "long-term" 
+        vision of developing the W3C Web Quality services. Checking of RDDL, RDFa, microformats and other rich markup are in scope. 
+    Many other checks could be added to the validators, such as: <ul>
+        <li>document cacheability </li>
+        <li>spell checking </li>
+        <li>semantic extraction </li>
+        <li>accessibility evaluation </li>
+        </ul>
+    </li>
+    <li><strong>Less finger pointing, more problem solving</strong>. Most of our tools, and especially the "star" HTML validator, 
+        have a binary "valid/invalid" way of presenting their results. While this is useful for some, it tends to make people look away 
+        from the "big picture" of web quality. A new one-stop quality checker could help bring a paradigm shift by showing diverse 
+        aspects of web quality, while systematically suggesting solutions for every problem. This would involve working with designers 
+        to find ways to present aggregated quality information in a clear and positive manner. </li>
+    </ul>
 
     <h3>Past Releases Roadmap</h3>
     <dl>
@@ -38,70 +73,6 @@
       <dt>0.8.x</dt>
       <dd>The 0.8.0 release sees the validator code reorganized around a more modular architecture, adding better XML checking capabilities.</dd>
     </dl>
-    <h3>Future Roadmap</h3>
-    <dl>
-      <dt>0.9.x</dt>
-      <dd>The next big version of the validator should be about localization. Provide at least all the error messages to users in their languages, and if possible, UI and documentation as well. Other things that could make it to 0.9.x:
-      <ul>
-        <li>
-          Start caching validation results locally and doing an
-          <code>If-Modified-Since</code>
-          <acronym title="HyperText Transfer Protocol">HTTP</acronym>
-          request to only download and revalidate
-          <acronym title="Uniform Resource Locators">URLs</acronym>
-          if they actually changed since their last validation
-        </li>
-        <li>
-          Site walker/validator: need to add a "registered user" feature first,
-          because this feature could be abused (many requests on a server in a
-          short period of time)?
-        </li>
-        <li>
-          <acronym title="Uniform Resource Locator">URL</acronym>-minder service:
-          "remind me if this page or set of pages ever ceases to validate".
-        </li>
-       </ul>
-      </dd>
-      <dt>1.0</dt>
-      <dd>This is often seen as "blue sky". This version should build upon a modular structure, and
-        be able to use different parsers as alternates or in sequence: support relaxNG, schematron, etc. 
-        Also, investigate checking of <a
-          href="http://www.openhealth.org/RDDL/"><acronym
-            title="Resource Directory Description Language">RDDL</acronym></a>, microformats and other rich markup.
-        </dd>
-    
-    </dl>
-    
-    <h3>Miscellaneous things that should get into this roadmap</h3>
-     
-      <ul>
-        <li>
-          Add a section to the report on
-          <a href="http://www.mnot.net/cacheability/">document cacheability</a>?
-          (or just link to it?)
-        </li>
-        <li>
-          Make e.g. <code>http://validator.w3.org/check/referer;imgonly</code>
-          return only an image showing the validation status of the referring
-          page, or something similar with a landing page for referer validation,
-          showcasing what validation/web conformance/standards are, with most 
-          of the gritty stuff hidden from view.
-        </li>
-        <li>
-          Make an "elements found" section a la Webtechs, with links from each
-          element to the appropriate place in either the <acronym
-            title="Document Type Definition">DTD</acronym> tree listing
-          produced with dtd2html (after running dtd2html with all <acronym
-          title="Document Type Definitions">DTDs</acronym> in the
-          catalog), or the <acronym title="HyperText Markup Language">HTML</acronym>
-          3.2/4.0 specs, or htmlhelp.com stuff, ...
-        </li>
-        <li>
-          Add a "recommend a <acronym title="Document Type Definition">DTD</acronym>
-          for me" feature (check a document against all
-          available DTDs, report which one has the fewest errors)
-        </li>
-</ul>
   </div><!-- doc -->
 <!--#include virtual="footer.html" -->
   </body>
