@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.37 2008-10-27 16:25:31 ville Exp $"
---><!--#set var="date" value="\$Date: 2008-10-27 16:25:31 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.38 2008-11-10 21:08:27 ville Exp $"
+--><!--#set var="date" value="\$Date: 2008-11-10 21:08:27 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -342,6 +342,12 @@ Allow Private IPs = yes
             <pre>Alias /validator/ [validatorpath]/htdocs/</pre>
             </li>
                 
+            <li><p>Configure environment variables affective validator's outside connectivity
+            if needed (such as <code>http_proxy</code>), see examples in the supplied <code>httpd.conf</code>
+            and <a href="http://search.cpan.org/dist/libwww-perl/lib/LWP.pm#ENVIRONMENT">LWP</a>
+            and <a href="http://search.cpan.org/dist/libnet/Net/FTP.pm#CONSTRUCTOR">Net::FTP</a>
+            documentation.</p></li>
+
             <li><p>Finish editing this HTTP server configuration file, adapting 
             all the directory references to reflect the paths used in your installation.</p></li>
                 
