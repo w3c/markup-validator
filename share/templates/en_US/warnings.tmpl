@@ -3,6 +3,20 @@
 to check these potential issues, and, if necessary, fix them and re-validate the document.</p>
 <ol id="warnings">
 
+<TMPL_IF NAME="W00">
+  <li class="msg_warn" id="W00">
+      <p><span class="err_type"><img src="images/info_icons/info.png" alt="Info" title="Info" /></span> <span class="msg"> Using experimental feature:
+          <em><TMPL_VAR NAME="W00_experimental_name" ESCAPE="HTML"></em>.</span></p>
+    <p>The validator checked your document with an experimental feature:
+        <em><TMPL_VAR NAME="W00_experimental_name" ESCAPE="HTML"></em>. This feature has been 
+        made available for your convenience, but be aware that it may be unreliable, or not perfectly
+        up to date with the latest development of some cutting-edge technologies. If you find any issue 
+        with this feature, please <a href="<TMPL_VAR NAME="W00_experimental_URI" ESCAPE="HTML">">report them</a>. Thank you.
+    </p>
+  </li>
+</TMPL_IF>
+
+
 <TMPL_IF NAME="W01">
   <li class="msg_warn" id="W01"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Missing "<code>charset</code>" attribute for
     "<code><TMPL_VAR NAME="W01_ct" ESCAPE="HTML"></code>" document.</span></p>
@@ -499,6 +513,8 @@ to check these potential issues, and, if necessary, fix them and re-validate the
 	and avoid editing that part of your markup by hand.</p>
   </li>
 </TMPL_IF>
+
+
 
 <TMPL_IF NAME="W@@">
   <li class="msg_warn" id="W@@">

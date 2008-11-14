@@ -32,8 +32,8 @@
 <TMPL_IF NAME="is_tentative">
     was <em>tentatively</em> checked as <TMPL_VAR NAME="file_version" ESCAPE="HTML">.
     This means that with the use of some fallback or override mechanism, 
-    we successfully performed a formal validation using an SGML or XML 
-    Parser. In other words, the document would validate as 
+    we successfully performed a formal validation using an SGML, HTML5 and/or XML
+    Parser(s). In other words, the document would validate as 
     <TMPL_VAR NAME="file_version" ESCAPE="HTML"> if you changed the markup
     to match the changes we have performed automatically, but 
     <strong>it will not be valid until you make these changes</strong>.
@@ -48,8 +48,8 @@
     <TMPL_ELSE>
     This means that the resource in question identified itself as
     "<TMPL_VAR NAME="file_version" ESCAPE="HTML">" and that we successfully
-    performed a formal validation using an SGML or XML Parser (depending on
-    the markup language used).
+    performed a formal validation using an SGML, HTML5 and/or XML
+    Parser(s) (depending on the markup language used).
     </TMPL_IF>
 </TMPL_IF>
   </p>
