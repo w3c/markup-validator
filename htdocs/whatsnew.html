@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.77 2008-08-11 20:07:30 ot Exp $"
---><!--#set var="date" value="\$Date: 2008-08-11 20:07:30 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.78 2008-11-18 21:15:48 ot Exp $"
+--><!--#set var="date" value="\$Date: 2008-11-18 21:15:48 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#set var="feeds" value="1"
@@ -19,6 +19,20 @@
       </p>
     </div>
     <dl id="news">
+    <dt id="t2008-11-20">2008-11-20 &mdash; 0.8.4 release:</dt>
+    <dd>
+        <p>0.8.4 may sound like a very minor step from the <a href="t2008-08-08">version 0.8.3 released in August</a>, but this new release of the W3C Markup Validator brings some very important change: in addition to checking documents against etablished standards such as HTML 4.01 and XHTML 1.0, the validator can now check documents for conformance to <a href="http://www.w3.org/html/" title="Home page of the HTML Working Group at W3C">HTML5</a>, thanks to the integration with the <a href="http://about.validator.nu/">Validator.nu</a> html5 engine.</p>
+        <p> HTML5 is still work in progress and support for this next generation of the publishing language of the World Wide Web will remain experimental, but this integration should provide experimentation grounds for those interested in trying on authoring in this new version of html, as well as a feedback channel for the group working on building a stable, open standard.</p>
+        <p>Other bug fixes and improvement in this version include:</p>
+          <ul>  
+            <li>Bug Fix: version <a href="#t2008-08-08">0.8.3</a> came with a programming mistake that would not affect validation, but would flood the validator servers' logs with warnings.</li>
+            <li>Bug Fix - Document type support. A Typo in the machine-readable grammar published with the latest specification for XHTML1.1 caused spurrious validation errors when checking documents against XHTML1.1. <a href="http://lists.w3.org/Archives/Public/www-validator-cvs/2008Nov/0029.html">fixing the typo</a> solves the issue. Another <a href="http://lists.w3.org/Archives/Public/www-validator-cvs/2008Aug/0018.html">fixed typo</a> now makes the validation against the historical HTML i18n document type functional.</li>
+            <li>Documentation updates and fixes: the <a href="docs/install.html">installation documentation</a> used a misspelled option for the installation of the OpenSP parser. The correction should make installation of the validator a little easier. Also relevant to installing the validator, the <a href="config/validator.conf">sample validator configuration</a> now includes a documentation of <a href="http://lists.w3.org/Archives/Public/www-validator-cvs/2008Nov/0008.html">environment variables affecting connectivity</a>.</li>
+          </ul>
+      
+    </dd>
+
+
       <dt id="t2008-08-08">2008-08-08 &mdash; 0.8.3 release:</dt>
       <dd>
           <p>The 0.8.3 release of the W3C Markup Validator is a bug fix release, with a few small additional features.
