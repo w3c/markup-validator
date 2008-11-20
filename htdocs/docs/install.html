@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.39 2008-11-18 21:16:24 ot Exp $"
---><!--#set var="date" value="\$Date: 2008-11-18 21:16:24 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.40 2008-11-20 14:10:58 ot Exp $"
+--><!--#set var="date" value="\$Date: 2008-11-20 14:10:58 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -264,6 +264,15 @@ Allow Private IPs = yes
 </pre>
 
 	        </li>
+	        <li><p>If you want to check documents with the (external and experimental) HTML5 conformance 
+	            checker, you may want to <a href="http://about.validator.nu/">install the validator.nu</a>
+	            engine and enable it with the following in your validator.conf file:</p>
+<pre>
+&lt;External&gt;
+## Enable checking documents via external services
+HTML5 = http://localhost:8888/html5/   
+&lt;/External&gt;    
+</pre>
 			<li><p>You may now test the validator script, before plugging it into the Web Server:</p>
 <pre>
 # cd /usr/local/validator/
