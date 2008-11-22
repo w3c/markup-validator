@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.607 2008-11-22 07:01:23 ville Exp $
+# $Id: check,v 1.608 2008-11-22 07:02:14 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -191,7 +191,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.607 $;
+  $VERSION =  q$Revision: 1.608 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -309,7 +309,7 @@ if (($lang eq '') or (!$lang_ok)) { # use HTTP-based negotiation
   $lang = HTTP::Negotiate::choose(\@localizations);
 }
 
-# HTTP::Negotiate::choose may return undef 
+# HTTP::Negotiate::choose may return undef
 # e.g if sent Accept-Language: en;q=0
 $lang = 'en_US' if (!defined($lang));
 
@@ -327,9 +327,9 @@ $File->{Templates}->{Result} = HTML::Template->new(
   filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
                                            $lang, 'result.tmpl'),
   loop_context_vars => TRUE,
-  filter => sub { 
+  filter => sub {
   my $ref = shift;
-  ${$ref} = Encode::decode_utf8(${$ref});  
+  ${$ref} = Encode::decode_utf8(${$ref});
   }
 );
 $File->{Templates}->{Error} = HTML::Template->new(
@@ -544,7 +544,7 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
   $File->{Charset}->{Use} = "utf-8";
 } elsif (&is_xml($File) and not $File->{ContentType} =~ m(^text/)) {
   $File->{Charset}->{Use} = 'utf-8'; # UTF-8 (image/svg+xml etc.)
-} 
+}
 unless ($File->{Charset}->{Use}) {
   $File->{Charset}->{Use} = $File->{Charset}->{META};
 }
@@ -677,7 +677,7 @@ $File = &preparse_doctype($File);
 if ($File->{Opt}->{DOCTYPE}) {
   if ($File->{Opt}->{DOCTYPE} eq "HTML5") {
     $File->{DOCTYPE} = "HTML5";
-    $File->{Version} = $File->{DOCTYPE};        
+    $File->{Version} = $File->{DOCTYPE};
   }
 }
 
@@ -719,7 +719,7 @@ if (&is_xml($File)) {
     eval {
       $xmlparser->parse_string($xml_string);
     };
-    $xml_string = undef; 
+    $xml_string = undef;
     my $xml_parse_errors_line = undef;
     my @xmlwf_error_list;
     if ($@) {
@@ -735,7 +735,7 @@ if (&is_xml($File)) {
 
         $msg_line =~ s{[^\x0d\x0a](:\d+:)}{\n$1}g;
         $msg_line =~ s{[^\x0d\x0a]+[\x0d\x0a]$}{};
-    
+
         # first we get the actual error message
         if (($got_error_message eq 0) and ($msg_line =~ /^(:\d+:)( parser error : .*)/ )) {
           $xmlwf_error_line = $1;
@@ -777,7 +777,7 @@ if (&is_xml($File)) {
           # Reinitializing for the next batch of 3 lines
           $got_error_message = 0;
           $got_quoted_line = 0;
-      
+
           # formatting the error message for output
           my $err;
           $err->{src}  = '...'; # do this with show_open_entities()?
@@ -824,8 +824,8 @@ if (($File->{DOCTYPE} eq "HTML5") or ($File->{DOCTYPE} eq "XHTML5")) {
   }
   else {
     $File->{'Error Flagged'} = TRUE;
-    $File->{Templates}->{Error}->param(fatal_no_checker  => TRUE);   
-    $File->{Templates}->{Error}->param(fatal_missing_checker  => "HTML5 Validator");   
+    $File->{Templates}->{Error}->param(fatal_no_checker  => TRUE);
+    $File->{Templates}->{Error}->param(fatal_missing_checker  => "HTML5 Validator");
   }
 }
 else {
@@ -849,15 +849,15 @@ sub html5_validate (\$) {
   use HTTP::Request::Common;
   # telling caches in the middle we want a fresh copy (Bug 4998)
   $ua->default_header(Cache_control=> "max-age=0");
-  
+
   my $res = $ua->request(POST "$CFG->{External}->{HTML5}", Content_Type => 'form-data',
   Content  => [out => "xml", parser=>$html5_parser, content => Encode::encode_utf8(join "\n", @{$File->{Content}})]);
   if (! $res->is_success()) {
     $File->{'Error Flagged'} = TRUE;
-    $File->{Templates}->{Error}->param(fatal_no_checker  => TRUE);   
-    $File->{Templates}->{Error}->param(fatal_missing_checker  => "HTML5 Validator");   
+    $File->{Templates}->{Error}->param(fatal_no_checker  => TRUE);
+    $File->{Templates}->{Error}->param(fatal_missing_checker  => "HTML5 Validator");
   }
-  else {    
+  else {
     my $content = $res->can('decoded_content') ?
       $res->decoded_content(charset => 'none') : $res->content;
     # and now we parse according to http://wiki.whatwg.org/wiki/Validator.nu_XML_Output
@@ -868,13 +868,13 @@ sub html5_validate (\$) {
     eval { $xmlDOM = $xml_reader->parse_string( $content);};
     if ($@) {
       $File->{'Error Flagged'} = TRUE;
-      $File->{Templates}->{Error}->param(fatal_no_checker  => TRUE);   
-      $File->{Templates}->{Error}->param(fatal_missing_checker  => "HTML5 Validator");   
+      $File->{Templates}->{Error}->param(fatal_no_checker  => TRUE);
+      $File->{Templates}->{Error}->param(fatal_missing_checker  => "HTML5 Validator");
       return $File;
-    }     
+    }
     my @nodelist = $xmlDOM->getElementsByTagName("messages");
     my $messages_node = $nodelist[0];
-    my @message_nodes =  $messages_node->childNodes;  
+    my @message_nodes =  $messages_node->childNodes;
     foreach my $message_node (@message_nodes) {
       my $message_type = $message_node->localname;
       my $err;
@@ -885,26 +885,26 @@ sub html5_validate (\$) {
       }
       elsif ($message_type eq "info") {
         $err->{type} = "I"; # by default - we find warnings in the type attribute (below)
-      } 
+      }
       if ($message_node->hasAttributes()) {
         my @attributelist = $message_node->attributes();
         foreach my $attribute (@attributelist) {
           if($attribute->name eq "type"){
             if (($attribute->getValue() eq "warning") and ($message_type eq "info")) {
-              $err->{type} = "W";                
-            } 
-            
+              $err->{type} = "W";
+            }
+
           }
           if($attribute->name eq "last-column") {
-            $html5_error_col = $attribute->getValue()-1;                
-          } 
+            $html5_error_col = $attribute->getValue()-1;
+          }
           if($attribute->name eq "last-line") {
-            $html5_error_line = $attribute->getValue();                
-          } 
-          
+            $html5_error_line = $attribute->getValue();
+          }
+
         }
       }
-      my @child_nodes =  $message_node->childNodes;  
+      my @child_nodes =  $message_node->childNodes;
       foreach my $child_node (@child_nodes) {
         if ($child_node->localname eq "message") {
           $html5_error_msg= $child_node->toString();
@@ -983,7 +983,7 @@ sub dtd_validate (\$) {
       $h = W3C::Validator::EventHandler::Outliner->new($opensp, $File, $CFG);
   }
   else {
-      $h = W3C::Validator::EventHandler->new($opensp, $File, $CFG);      
+      $h = W3C::Validator::EventHandler->new($opensp, $File, $CFG);
   }
 
   $opensp->handler($h);
@@ -1112,7 +1112,7 @@ if ($File->{Opt}->{Output} eq 'xml') {
     $template = $File->{Templates}->{SOAPDisabled};
   } elsif ($File->{'Error Flagged'}) { # should send SOAP fault message
     $template = $File->{Templates}->{SOAPFault};
-    # we fill the soap fault template 
+    # we fill the soap fault template
     #with the variables that had been passed to the HTML fatal error template
     foreach my $fault_param ($File->{Templates}->{Error}->param()) {
       $template->param($fault_param => $File->{Templates}->{Error}->param($fault_param));
@@ -1206,7 +1206,7 @@ sub prep_template ($$) {
 
   # Root Element
   $T->param(root_element  => $File->{Root});
-  
+
   # Namespaces...
   $T->param(file_namespace  => $File->{Namespace});
   my %seen_ns = ();
@@ -1241,7 +1241,7 @@ sub prep_template ($$) {
   }
   if ($File->{Opt}->{'User Agent'}) {
     $T->param('user-agent' => $File->{Opt}->{'User Agent'});
-  }    
+  }
   if ($File->{'Error Flagged'}) {
     $T->param(fatal_error => TRUE);
   }
@@ -1378,7 +1378,7 @@ sub report_valid {
         }
       $T->param(have_alt_badge => TRUE);
       }
-      
+
       $T->param(badge_alt  => $cfg->{Badge}->{Alt});
       $T->param(badge_h    => $cfg->{Badge}->{Height});
       $T->param(badge_w    => $cfg->{Badge}->{Width});
@@ -1479,7 +1479,7 @@ sub handle_uri {
   return $File unless $ua->uri_ok($uri);
 
   my $req = new HTTP::Request(GET => $uri);
-  
+
   # telling caches in the middle we want a fresh copy (Bug 4998)
   $req->header(Cache_control=> "max-age=0");
 
@@ -1765,7 +1765,7 @@ sub override_doctype {
   my $sysid = $dt->{SysID};
   my $name  = $dt->{Name};
   local $dtd;
-  
+
   if ($pubid ne "") {
     $dtd = qq(<!DOCTYPE $name PUBLIC "$pubid");
     $dtd .= qq( "$sysid") if $sysid; # We don't have one for all types.
@@ -1774,7 +1774,7 @@ sub override_doctype {
   else {
     $dtd = qq(<!DOCTYPE $name>);
   }
-  
+
   local $org_dtd = '';
   local $HTML    = '';
   local $seen    = FALSE;
@@ -1792,7 +1792,7 @@ sub override_doctype {
       $HTML .= "$dtd\n" . '<!-- ' . $_[0] . ' -->';
     }
   };
-  
+
   my $start_element = sub{
     if ($seen_root) {
       $HTML .= $_[0]; # Stash it as is... moving on
@@ -1856,11 +1856,11 @@ sub report_errors ($) {
   my %Msgs; # Used to generate a UID for explanations.
 
   # for the sake of readability, at least until the xmlwf errors have explanations,
-  # we push the errors from the XML parser at the END of the error list. 
+  # we push the errors from the XML parser at the END of the error list.
   foreach my $errmsg (@{$File->{WF_Errors}}){
     push @{$File->{Errors}}, $errmsg;
   }
-  
+
 
   if (scalar @{$File->{Errors}}) {
     foreach my $err (@{$File->{Errors}}) {
@@ -1879,7 +1879,7 @@ sub report_errors ($) {
       }
       my $explanation = "";
       if ($err->{expl}) {
-        
+
       }
       else {
         if ($err->{num}) {
@@ -1903,7 +1903,7 @@ sub report_errors ($) {
         }
         $err->{expl} = $explanation;
       }
-      
+
       $err->{src} = $line;
       $err->{col} = ' ' x $col;
       if ($err->{type} eq 'I')
@@ -1970,7 +1970,7 @@ sub report_errors ($) {
   # of auxiliary messages such as "start tag was here". We'll have to live with
   # the fact that XML well-formedness errors are listed first, then validation errors
   #else {
-  #   sort error by lines 
+  #   sort error by lines
   #  @{$Errors} = sort {$a->{line} <=> $b->{line} } @{$Errors};
   #}
   return $number_of_errors, $number_of_warnings, $number_of_info, $Errors;
@@ -2065,9 +2065,9 @@ sub match_DTD_FPI_SI {
     if ($CFG->{Types}->{$FPI}) {
         if ($CFG->{Types}->{$FPI}->{SysID}){
             if ($SI ne $CFG->{Types}->{$FPI}->{SysID}) {
-                &add_warning('W26', {W26_dtd_pub => $FPI, 
-                W26_dtd_pub_display =>$CFG->{Types}->{$FPI}->{Display}, 
-                W26_dtd_sys=> $SI, 
+                &add_warning('W26', {W26_dtd_pub => $FPI,
+                W26_dtd_pub_display =>$CFG->{Types}->{$FPI}->{Display},
+                W26_dtd_sys=> $SI,
                 W26_dtd_sys_recommend=> $CFG->{Types}->{$FPI}->{SysID}});
             }
         }
@@ -2075,13 +2075,13 @@ sub match_DTD_FPI_SI {
     else { # FPI not know, checking if the SI is
         foreach my $proper_FPI (keys %{$CFG->{Types}}) {
             if ($CFG->{Types}->{$proper_FPI}->{SysID} eq $SI) {
-                &add_warning('W26', {W26_dtd_pub => $FPI, 
-                W26_dtd_pub_display =>$CFG->{Types}->{$proper_FPI}->{Display}, 
-                W26_dtd_sys => $SI, 
+                &add_warning('W26', {W26_dtd_pub => $FPI,
+                W26_dtd_pub_display =>$CFG->{Types}->{$proper_FPI}->{Display},
+                W26_dtd_sys => $SI,
                 W26_dtd_pub_recommend=> $proper_FPI });
             }
         }
-    }    
+    }
 }
 #
 # Do an initial parse of the Document Entity to extract FPI.
@@ -2147,7 +2147,7 @@ sub preparse_doctype {
   # Some document types actually need no doctype to be identified,
   # root element and some version attribute is enough
   # TODO applicable doctypes should be migrated to a config file?
-  
+
   if (($File->{DOCTYPE} eq '') and ($File->{Root} eq "svg") ) {
     if (($File->{'Root Version'}) or ($File->{'Root BaseProfile'}))
     {
@@ -2155,7 +2155,7 @@ sub preparse_doctype {
         $File->{DOCTYPE} = "-//W3C//DTD SVG 1.0//EN";
         $File->{"DOCTYPEless OK"} = TRUE;
         $File->{Opt}->{DOCTYPE} = "SVG 1.0";
-      } 
+      }
       elsif ((($File->{'Root Version'} eq "1.1") or (!$File->{'Root Version'})) and ($File->{'Root BaseProfile'} eq "tiny")) {
           $File->{DOCTYPE} = "-//W3C//DTD SVG Tiny 1.1//EN";
           $File->{"DOCTYPEless OK"} = TRUE;
@@ -2180,7 +2180,7 @@ sub preparse_doctype {
     }
   }
   if (($File->{"DOCTYPEless OK"}) and ($File->{Opt}->{DOCTYPE})) {
-    # doctypeless document type found, we fake the override 
+    # doctypeless document type found, we fake the override
     # so that the parser will have something to validate against
     $File = &override_doctype($File);
   }
@@ -2348,28 +2348,28 @@ sub set_parse_mode {
   # $File->{Mode} may have been set in parse_content_type
   # and it would come from the Media Type
   my $parseModeFromMimeType = $File->{Mode};
-  my $begincontent = join "\x20",@{$File->{Content}}; # for the sake of xml decl detection, 
+  my $begincontent = join "\x20",@{$File->{Content}}; # for the sake of xml decl detection,
                                                        # the 10 first lines should be safe
   my $parseModeFromXMLDecl = (
     $begincontent
     =~  /^ [\x20|\x09|\x0D|\x0A]*                        # whitespace before the decl should not be happening
                                                       # but we are greedy for the sake of detection, not validation
-      <\?xml                                          # start matching an XML Declaration            
+      <\?xml                                          # start matching an XML Declaration
       [\x20|\x09|\x0D|\x0A]+                             # x20, x09, xD and xA are the allowed "xml white space"
       version [\x20|\x09|\x0D|\x0A]* =                   # for documents, version info is mandatory
-      [\x20|\x09|\x0D|\x0A]* ("1.0"|"1.1"|'1.0'|'1.1')   # hardcoding the existing XML versions. 
+      [\x20|\x09|\x0D|\x0A]* ("1.0"|"1.1"|'1.0'|'1.1')   # hardcoding the existing XML versions.
                                                       # Maybe we should use \d\.\d
-      ([\x20|\x09|\x0D|\x0A]+ encoding                         
+      ([\x20|\x09|\x0D|\x0A]+ encoding
        [\x20|\x09|\x0D|\x0A]* = [\x20|\x09|\x0D|\x0A]*
        ("[A-Za-z][a-zA-Z0-9_-]+"|'[A-Za-z][a-zA-Z0-9_-]+')
       )?                                              # encoding info is optional
-      ([\x20|\x09|\x0D|\x0A]+ standalone 
+      ([\x20|\x09|\x0D|\x0A]+ standalone
        [\x20|\x09|\x0D|\x0A]* = [\x20|\x09|\x0D|\x0A]*
        ("yes"|"no"|'yes'|'no')
       )?                                              # ditto standalone info, optional
       [\x20|\x09|\x0D|\x0A]* \?>                         # end of XML Declaration
     /x
-  ? 'XML' : 'TBD' );  
+  ? 'XML' : 'TBD' );
 
   my $parseModeFromNamespace = 'TBD';
   if ($File->{Namespace}) { $parseModeFromNamespace = 'XML'}
@@ -2405,7 +2405,7 @@ sub set_parse_mode {
     # if The mime type gives clear indication of whether the document is XML or not
     if (($parseModeFromDoctype ne 'TBD') and ($parseModeFromDoctype ne 'HTML5') and ($parseModeFromMimeType ne $parseModeFromDoctype)) {
       #  if document-type recommended mode and content-type recommended mode clash, shoot a warning
-      # unknown doctypes will not trigger this 
+      # unknown doctypes will not trigger this
       # neither will html5 documents, which can be XML or not
       &add_warning('W07', {
         W07_mime => $File->{ContentType},
@@ -2413,7 +2413,7 @@ sub set_parse_mode {
         W07_dtd  => $parseModeFromDoctype,
       });
     }
-    # mime type has precedence, we stick to it 
+    # mime type has precedence, we stick to it
     $File->{ModeChoice} = 'Mime';
     if ($parseModeFromDoctype eq "HTML5") {
       $File->{Mode} = 'HTML5+'.$File->{Mode};
@@ -2435,20 +2435,20 @@ sub set_parse_mode {
       }
     }
     else { # not HTML5
-      $File->{Mode} = "DTD+".$parseModeFromDoctype;      
+      $File->{Mode} = "DTD+".$parseModeFromDoctype;
     }
     $File->{ModeChoice} = 'Doctype';
     return;
   }
   elsif ($parseModeFromXMLDecl ne 'TBD') {
     # the mime type is ambiguous (hence we didn't stop at the previous test)
-    # and so was the doctype 
+    # and so was the doctype
     # but we found an XML declaration
     # so we use that.
     if ($File->{Mode} eq "") {
       $File->{Mode} = "DTD+".$parseModeFromXMLDecl;
     }
-    elsif ($File->{Mode} =~ /\+/ ) { 
+    elsif ($File->{Mode} =~ /\+/ ) {
       $File->{Mode} =~ s/\+.*/\+$parseModeFromXMLDecl/;
     }
     else {
@@ -2457,20 +2457,20 @@ sub set_parse_mode {
     $File->{ModeChoice} = 'XMLDecl';
     return;
   }
-  else { 
-    # this is the last case. We know that all  modes are not TBD, 
-    # yet mime type, doctype AND XML DECL tests have failed => we are saved by the presence of namespaces 
+  else {
+    # this is the last case. We know that all  modes are not TBD,
+    # yet mime type, doctype AND XML DECL tests have failed => we are saved by the presence of namespaces
     if ($File->{Mode} eq "") {
       $File->{Mode} = "DTD+".$parseModeFromNamespace;
     }
-    elsif ($File->{Mode} =~ /\+/ ) { 
+    elsif ($File->{Mode} =~ /\+/ ) {
       $File->{Mode} =~ s/\+.*/\+$parseModeFromNamespace/;
     }
     else {
       $File->{Mode} =  $File->{Mode}."+".$parseModeFromNamespace;
     }
     $File->{ModeChoice} = 'Namespace';
-  } 
+  }
 }
 
 
@@ -2537,7 +2537,7 @@ sub transcode {
   if ($CFG->{Charsets}->{$cs}) {
     if ($CFG->{Charsets}->{$cs} =~ /ERR /) {
       # The encoding is not supported due to policy
-      
+
       $File->{'Error Flagged'} = TRUE;
       $File->{Templates}->{Error}->param(fatal_transcode_error   => TRUE);
       $File->{Templates}->{Error}->param(fatal_transcode_charset => $cs);
@@ -2554,7 +2554,7 @@ sub transcode {
       &add_warning('W22', {
         W22_declared => $cs,
         W22_suggested => $recommended_charset,
-      });      
+      });
     }
   }
 
@@ -2579,8 +2579,8 @@ sub transcode {
     # not in the list, but technically OK -> we warn
     &add_warning('W24', {
       W24_declared => $cs,
-    });      
-    
+    });
+
   }
 
   my $output;
@@ -2617,7 +2617,7 @@ sub transcode {
   # tentative fix for http://www.w3.org/Bugs/Public/show_bug.cgi?id=3992
   $output =~ s/(\r\n|\n|\r)/\n/g;
 
-  #debug: we could check if the content has utf8 bit on with 
+  #debug: we could check if the content has utf8 bit on with
   #$output= utf8::is_utf8($output) ? 1 : 0;
   $File->{Content} = [split/\n/, $output];
 
@@ -2844,9 +2844,9 @@ sub start_element
     $err->{char} = $location->{ColumnNumber};
     $err->{num}  = "no-xmlns";
     $err->{type} = "E";
-    $err->{msg}  = "Missing xmlns attribute for element ".$element->{Name} . ". 
+    $err->{msg}  = "Missing xmlns attribute for element ".$element->{Name} . ".
     The value should be: $self->{CFG}->{Types}->{$doctype}->{Namespace}";
-    
+
 
     # ...
     $self->{_file}->{'Is Valid'} = FALSE;
@@ -2900,7 +2900,7 @@ sub error
 
   $err->{msg}  =~ s/"&"/"&amp;"/gsi;
 
-  # our parser OpenSP is not quite XML-aware, or XML Namespaces Aware, 
+  # our parser OpenSP is not quite XML-aware, or XML Namespaces Aware,
   # so we filter out a few errors for now
 
   if ($File->{Mode} =~ /XML/) {
@@ -2927,18 +2927,18 @@ sub error
    if (($err->{num} eq '113') and ($err->{msg} =~ /xml:space/)) {
      # FIXME
      # this is a problem with some of the "flattened" W3C DTDs, filtering them out to not confuse users.
-     # hoping to get the DTDs fixed, see http://lists.w3.org/Archives/Public/www-html-editor/2007AprJun/0010.html 
+     # hoping to get the DTDs fixed, see http://lists.w3.org/Archives/Public/www-html-editor/2007AprJun/0010.html
      return; # don't report this, just proceed
    }
    if (($err->{num} eq '344') and ($File->{Namespace}) and ($File->{Mode} =~ /XML/) )  {
-     # we are in XML mode, we have a namespace, but no doctype. 
+     # we are in XML mode, we have a namespace, but no doctype.
      # the validator will already have said "no doctype, falling back to default" above
-     # no need to report this. 
+     # no need to report this.
      return; # don't report this, just proceed
    }
 
    if (($err->{num} eq '248') or ($err->{num} eq '247') or ($err->{num} eq '246')) {
-     # these two errors should be triggered by -wmin-tag to report shorttag used, 
+     # these two errors should be triggered by -wmin-tag to report shorttag used,
      # but we're making them warnings, not errors
      # see http://www.w3.org/TR/html4/appendix/notes.html#h-B.3.7
      $err->{type} = "W";
@@ -2967,9 +2967,9 @@ sub error
 
   # No DOCTYPE found! We are falling back to vanilla DTD
   if ($err->{msg} =~ m(prolog can\'t be omitted)) {
-    if (lc($File->{Root}) eq 'html') { 
+    if (lc($File->{Root}) eq 'html') {
       my $dtd = ($File->{Mode} =~ /XML/ ?
-                 $File->{"Default DOCTYPE"}->{"XHTML"} : $File->{"Default DOCTYPE"}->{"HTML"} );      
+                 $File->{"Default DOCTYPE"}->{"XHTML"} : $File->{"Default DOCTYPE"}->{"HTML"} );
       W3C::Validator::MarkupValidator::add_warning('W09', {W09_dtd => $dtd});
     }
     else { # not html root element, we are not using fallback
@@ -2978,7 +2978,7 @@ sub error
         W3C::Validator::MarkupValidator::add_warning('W09nohtml', {});
       }
     }
-    
+
     return; # Don't report this as a normal error.
   }
 
@@ -3063,7 +3063,7 @@ sub start_element
   }
 
 return $self->SUPER::start_element($element)
-  
+
 }
 
 
