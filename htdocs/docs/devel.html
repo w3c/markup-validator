@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: devel.html,v 1.17 2004-07-21 23:43:21 link Exp $"
---><!--#set var="date" value="\$Date: 2004-07-21 23:43:21 $"
+<!--#set var="revision" value="\$Id: devel.html,v 1.18 2008-12-03 20:57:31 ot Exp $"
+--><!--#set var="date" value="\$Date: 2008-12-03 20:57:31 $"
 --><!--#set var="title" value="Developer Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -59,8 +59,14 @@
          Any changes to the service will attempt to maintain
          compatibility with a <a href="../dev/tests/">list of test cases</a>.
        </p>
-       <p>We are in the process of turning this (crude) list into a more manageable 
-	testing framework.</p>
+
+       <p>The validator has an <a href="http://dev.w3.org/cvsweb/validator/misc/testsuite/">automated test suite</a> which is used 
+           frequently to check that no change has broken any feature or resurfaced a bug. Whenever possible, join a <em>test case</em>
+           with your patches.</p>
+           
+       <p><em>example</em>: for a patch for the detection of document encoding in the &lt;head&gt;, join as a test case a simple 
+           HTML document with encoding information in the &lt;head&gt;, and another document without.</p>
+
 
       <h4><a id="todo" name="todo"></a>TODO</h4>
       <p>
