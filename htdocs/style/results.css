@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.21 2007-10-02 02:45:34 ot Exp $ */
+/* $Id: results.css,v 1.22 2008-12-09 18:19:48 ot Exp $ */
 
 div#results_container {
   margin: 2em;
@@ -61,12 +61,28 @@ p.revalidate_instructions {
 }
 
 fieldset#revalidate_opts {
-        width: 100%;
         margin: 0;
         padding:0;
-        border: 1px dotted #ccc;
-        background-color: #fcfcfc;
+        border: 1px solid #ccc;
         padding-bottom: 1em;
+        padding-left: .5em;
+        margin-top: 1em;
+}
+
+fieldset#revalidate_opts, 
+fieldset#revalidate_opts label,
+fieldset#revalidate_opts p,
+fieldset#revalidate_opts div,
+fieldset#revalidate_opts a {
+    background-color: #fcfcfc;
+    
+}
+
+fieldset#revalidate_opts legend {
+/*    margin-top: 1.8em;
+*/    background-color: #eaebee;
+    padding: .5em;
+    border: 1px solid #ccc;
 }
 
 fieldset#revalidate_opts p.moreinfo {
@@ -98,7 +114,8 @@ div#results_container table td, div#results_container table th{
 	border-top: 0px solid #ddd;
 	border-bottom: 1px solid #ccc;
 	border-left: 1px solid #EAEBEE;
-	padding: 6px;
+	padding: .4em;
+	text-indent: .5em;
 	border-collapse: collapse;
 }
 div#results_container table th {
@@ -173,7 +190,8 @@ ol li.msg_info, ol li.msg_warn, ol li.msg_err {
   clear: both;
 }
 
-ol li.msg_info:hover, ol li.msg_warn:hover, ol li.msg_err:hover {
+ol li.msg_info:hover, ol li.msg_warn:hover, ol li.msg_err:hover,
+ol li.msg_info:hover *, ol li.msg_warn:hover *, ol li.msg_err:hover * {
   background-color: #fcfcfc;
   
 }
