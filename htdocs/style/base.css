@@ -385,7 +385,7 @@ div#fields {
 	border-bottom: 1px solid #DCDDE0;
 }
 
-div#fields legend, div#fields p, div#fields fieldset, div#fields form,div#fields form fieldset legend a, div#fields form p label, div#fields tr label   {
+div#fields legend, div#fields p, div#fields p strong, div#fields p a, div#fields fieldset, div#fields form,div#fields form fieldset legend a, div#fields form p label, div#fields tr label   {
   background-color: #EAEBEE;
 }
 
@@ -494,7 +494,7 @@ div#footer {
 
 p#activity_logos {
 	float: left;
-	margin-right: 2em;
+	padding-right: 2em;
 	margin-top: .6em;
 }
 
@@ -502,7 +502,10 @@ p#support_logo {
 	float: right;
 	font-size: 0.8em;
 	text-align: center;
-	margin-left: 2em;
+	padding-left: 2em;
+	padding-top: 1.8em;
+	width: 90px;
+    height: 100px;
 }
 
 p.copyright {
@@ -694,6 +697,8 @@ div.intro {
   margin: 1em 2em;
 	padding: 0.5em 0 0.3em;	
 }
+
+div.intro p { margin-bottom: .5em;}
 
 #news dt {
     font-weight: bold;
