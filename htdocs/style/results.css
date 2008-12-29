@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.22 2008-12-09 18:19:48 ot Exp $ */
+/* $Id: results.css,v 1.23 2008-12-29 16:49:06 ot Exp $ */
 
 div#results_container {
   margin: 2em;
@@ -67,6 +67,7 @@ fieldset#revalidate_opts {
         padding-bottom: 1em;
         padding-left: .5em;
         margin-top: 1em;
+        clear: left;
 }
 
 fieldset#revalidate_opts, 
