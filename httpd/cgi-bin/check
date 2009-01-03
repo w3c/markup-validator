@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.609 2009-01-03 15:24:33 ot Exp $
+# $Id: check,v 1.610 2009-01-03 21:02:28 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -191,7 +191,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.609 $;
+  $VERSION =  q$Revision: 1.610 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1764,16 +1764,17 @@ sub override_doctype {
   my $pubid = $dt->{PubID};
   my $sysid = $dt->{SysID};
   my $name  = $dt->{Name};
-  local $dtd;
 
-  if ($pubid ne "") {
-    $dtd = qq(<!DOCTYPE $name PUBLIC "$pubid");
-    $dtd .= qq( "$sysid") if $sysid; # We don't have one for all types.
-    $dtd .= '>';
+  # We don't have public/system ids for all types.
+  local $dtd = "<!DOCTYPE $name";
+  if ($pubid) {
+    $dtd .= qq( PUBLIC "$pubid");
+    $dtd .= qq( "$sysid") if $sysid;
   }
-  else {
-    $dtd = qq(<!DOCTYPE $name>);
+  elsif ($sysid) {
+    $dtd .= qq( SYSTEM "$sysid");
   }
+  $dtd .= '>';
 
   local $org_dtd = '';
   local $HTML    = '';
