@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.608 2008-11-22 07:02:14 ville Exp $
+# $Id: check,v 1.609 2009-01-03 15:24:33 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -191,7 +191,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.608 $;
+  $VERSION =  q$Revision: 1.609 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -837,9 +837,9 @@ sub html5_validate (\$) {
   my $File = shift;
   my $ua = new W3C::Validator::UserAgent ($CFG, $File);
   my $html5_parser = "";
-  if ($File->{Mode} =~ /XML/) {
-    $html5_parser = "xml";
-  }
+  # if ($File->{Mode} =~ /XML/) {
+  #   $html5_parser = "xml";
+  # }
 
   $File->{ParserName} = "validator.nu";
   $File->{ParserOpts} = "";
