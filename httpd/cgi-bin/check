@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.610 2009-01-03 21:02:28 ville Exp $
+# $Id: check,v 1.611 2009-01-03 21:09:31 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -57,7 +57,6 @@ use File::Spec                qw();
 use HTML::Encoding       0.52 qw();
 use HTML::Parser         3.25 qw(); # Need 3.25 for $p->ignore_elements.
 use HTML::Template       2.6  qw();
-use HTTP::Negotiate           qw();
 use HTTP::Request             qw();
 use HTTP::Headers::Auth       qw(); # Needs to be imported after other HTTP::*.
 use SGML::Parser::OpenSP      qw();
@@ -167,6 +166,14 @@ Directory not readable (permission denied): @_r
     $CFG->{Protocols}->{Allow} = [split(/\s*,\s*/, $allowed)];
   }
 
+  # Split available languages into a list
+  if (my $langs = delete($CFG->{Languages})) {
+    $CFG->{Languages} = [split(/\s+/, $langs)];
+  } else {
+    # Default to english
+    $CFG->{Languages} = ["en"];
+  }
+
   { # Make types config indexed by FPI.
     my $_types = {};
     map { $_types->{$CFG->{Types}->{$_}->{PubID}} = $CFG->{Types}->{$_} }
@@ -191,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.610 $;
+  $VERSION =  q$Revision: 1.611 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -281,37 +288,30 @@ $File->{"Default DOCTYPE"}->{"XHTML"} = 'XHTML 1.0 Transitional';
 #### Generate Template for Result. ############################################
 ###############################################################################
 
-# in case there is no language set up on the server, we'll use english as default:
-if (!defined $CFG->{Languages}) {
-  $CFG->{Languages} = "en";
-}
-
 # first we determine the chosen language based on
 # 1) lang argument given as parameter (if this language is available)
 # 2) HTTP language negotiation between variants available and user-agent choices
 # 3) English by default
-my $lang         = $q->param('lang')  ? $q->param('lang')    : '';
+my $lang = $q->param('lang') || '';
 my @localizations;
-my $lang_ok = FALSE;
-foreach my $lang_available (split(" ", $CFG->{Languages})) {
+foreach my $lang_available (@{$CFG->{Languages}}) {
   if ($lang eq $lang_available) {
-    $lang_ok = TRUE;
-    next;
+    # Requested language (from parameters) is available, just use it
+    undef @localizations;
+    last;
   }
+  push @localizations,
+    [$lang_available, 1, 'text/html', undef, 'utf-8', $lang_available, undef];
 }
 
-if (($lang eq '') or (!$lang_ok)) { # use HTTP-based negotiation
-  $lang = '';
-  foreach my $lang_available (split(" ", $CFG->{Languages})) {
-    push @localizations, [$lang_available, 1.000, 'text/html', undef,
-                          'utf-8', $lang_available, undef];
-  }
+# If language is not chosen yet, use HTTP-based negotiation
+if (@localizations) {
+  require HTTP::Negotiate;
   $lang = HTTP::Negotiate::choose(\@localizations);
 }
 
-# HTTP::Negotiate::choose may return undef
-# e.g if sent Accept-Language: en;q=0
-$lang = 'en_US' if (!defined($lang));
+# HTTP::Negotiate::choose may return undef e.g if sent Accept-Language: en;q=0
+$lang ||= 'en_US';
 
 if ($lang eq "en") {
   $lang = 'en_US'; # legacy
