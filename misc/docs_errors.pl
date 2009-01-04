@@ -2,7 +2,7 @@
 ##
 ## Generates HTML documentation of error messages and explanations
 ## for W3C Markup Validation Service
-## $Id: docs_errors.pl,v 1.7 2007-10-17 18:11:24 ville Exp $
+## $Id: docs_errors.pl,v 1.8 2009-01-04 10:41:20 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -11,8 +11,9 @@ use warnings;
 
 ## Modules.  See also the BEGIN block further down below.
 
-use HTML::Template  2.6  qw();
-use Config::General 2.19 qw(); # Need 2.19 for -AutoLaunder
+use File::Spec::Functions qw(catfile);
+use HTML::Template   2.6  qw();
+use Config::General  2.19 qw(); # Need 2.19 for -AutoLaunder
 
 use vars qw($DEBUG $CFG $RSRC $VERSION $HAVE_IPC_RUN);
 # Define global constants
@@ -64,7 +65,7 @@ delete $ENV{PATH};
 our $lang = 'en_US'; # @@@ TODO: conneg
 
 # Read error message + explanations file
-our $error_messages_file =  File::Spec->catfile($CFG->{Paths}->{Templates}, $lang, 'error_messages.cfg');
+our $error_messages_file = catfile($CFG->{Paths}->{Templates}, $lang, 'error_messages.cfg');
 our %config_errs = ( -MergeDuplicateBlocks => 1,
         -ConfigFile => $error_messages_file);
 our %rsrc = Config::General->new(%config_errs)->getall();
@@ -81,7 +82,7 @@ $RSRC = \%rsrc;
 
 
 our $T = HTML::Template->new(
-  filename          => File::Spec->catfile($CFG->{Paths}->{Templates}, $lang, 'docs_errors.tmpl'),
+  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'docs_errors.tmpl'),
   die_on_bad_params => FALSE,
 );
 

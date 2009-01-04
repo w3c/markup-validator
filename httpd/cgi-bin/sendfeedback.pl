@@ -1,7 +1,7 @@
 #!/usr/bin/perl -T
 ##
 ## feedback generator for W3C Markup Validation Service
-# # $Id: sendfeedback.pl,v 1.8 2007-05-25 21:34:29 ville Exp $
+# # $Id: sendfeedback.pl,v 1.9 2009-01-04 10:41:20 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -10,10 +10,10 @@ use warnings;
 
 ## Modules.  See also the BEGIN block further down below.
 
-use CGI qw();
-use HTML::Template  2.6  qw();
-use Config::General 2.19 qw(); # Need 2.19 for -AutoLaunder
-use File::Spec           qw();
+use CGI                   qw();
+use File::Spec::Functions qw(catfile);
+use HTML::Template   2.6  qw();
+use Config::General  2.19 qw(); # Need 2.19 for -AutoLaunder
 
 use vars qw($DEBUG $CFG $RSRC $VERSION $HAVE_IPC_RUN);
 # Define global constants
@@ -70,8 +70,8 @@ our $lang = 'en_US'; # @@@ TODO: conneg
 # Read error message + explanations file
 our %rsrc = Config::General->new(
   -MergeDuplicateBlocks => 1,
-  -ConfigFile           => File::Spec->catfile($CFG->{Paths}->{Templates},
-                                               $lang, 'error_messages.cfg'),
+  -ConfigFile => catfile($CFG->{Paths}->{Templates}, $lang,
+                         'error_messages.cfg'),
   )->getall();
 # Config::General workarounds for <msg 0> issues:
 # http://lists.w3.org/Archives/Public/public-qa-dev/2006Feb/0022.html
@@ -85,7 +85,7 @@ $rsrc{msg}{0} ||=
 $RSRC = \%rsrc;
 
 our $T = HTML::Template->new(
-  filename          => File::Spec->catfile($CFG->{Paths}->{Templates}, $lang, 'feedback.tmpl'),
+  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'feedback.tmpl'),
   die_on_bad_params => FALSE,
 );
 

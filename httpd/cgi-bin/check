@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.612 2009-01-04 10:23:10 ville Exp $
+# $Id: check,v 1.613 2009-01-04 10:41:20 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -53,7 +53,7 @@ use Encode::Alias             qw();
 use Encode::HanExtra          qw(); # for some chinese character encodings,
                                     # e.g gb18030
 use Encode::JIS2K             qw(); # ditto extra japanese encodings
-use File::Spec                qw();
+use File::Spec::Functions     qw(catfile);
 use HTML::Encoding       0.52 qw();
 use HTML::Parser         3.25 qw(); # Need 3.25 for $p->ignore_elements.
 use HTML::Template       2.6  qw();
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.612 $;
+  $VERSION =  q$Revision: 1.613 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -208,8 +208,8 @@ Directory not readable (permission denied): @_r
 # Read friendly error message file
 my %rsrc = Config::General->new(
   -MergeDuplicateBlocks => 1,
-  -ConfigFile           => File::Spec->catfile($CFG->{Paths}->{Templates},
-                                               'en_US', 'error_messages.cfg'),
+  -ConfigFile           => catfile($CFG->{Paths}->{Templates}, 'en_US',
+                                   'error_messages.cfg'),
   )->getall();
 # 'en_US' should be replaced by $lang for lang-neg
 # Config::General workarounds for <msg 0> issues:
@@ -325,84 +325,74 @@ my %template_defaults = (
 
 $File->{Templates}->{Result} = HTML::Template->new(
   %template_defaults,
-  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
-                                           $lang, 'result.tmpl'),
+  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'result.tmpl'),
   loop_context_vars => TRUE,
 );
 $File->{Templates}->{Error} = HTML::Template->new(
   %template_defaults,
-  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
-                                           $lang, 'fatal-error.tmpl'),
+  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'fatal-error.tmpl'),
 );
 $File->{Templates}->{AuthzReq} = HTML::Template->new(
   %template_defaults,
-  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
-                                           $lang, 'http_401_authrequired.tmpl'),
+  filename => catfile($CFG->{Paths}->{Templates}, $lang,
+                      'http_401_authrequired.tmpl'),
 );
 
 # templates for alternate output formats
 $File->{Templates}->{XML} = HTML::Template->new(
   %template_defaults,
-  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
-                                          $lang, 'xml_output.tmpl'),
+  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'xml_output.tmpl'),
   loop_context_vars => TRUE,
 );
 $File->{Templates}->{SOAP} = HTML::Template->new(
   %template_defaults,
-  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
-                                          $lang, 'soap_output.tmpl'),
-  loop_context_vars => TRUE,
-);
-$File->{Templates}->{UCN} = HTML::Template->new(
-  %template_defaults,
-  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
-                                          $lang, 'ucn_output.tmpl'),
+  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'soap_output.tmpl'),
   loop_context_vars => TRUE,
 );
 $File->{Templates}->{SOAPFault} = HTML::Template->new(
   %template_defaults,
-  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
-                                          $lang, 'soap_fault.tmpl'),
+  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'soap_fault.tmpl'),
   loop_context_vars => TRUE,
 );
 $File->{Templates}->{SOAPDisabled} = HTML::Template->new(
   %template_defaults,
-  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
-                                          $lang, 'soap_disabled.tmpl'),
+  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'soap_disabled.tmpl'),
+  loop_context_vars => TRUE,
+);
+$File->{Templates}->{UCN} = HTML::Template->new(
+  %template_defaults,
+  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'ucn_output.tmpl'),
   loop_context_vars => TRUE,
 );
 $File->{Templates}->{EARLXML} = HTML::Template->new(
   %template_defaults,
-  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
-                                          $lang, 'earl_xml.tmpl'),
+  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'earl_xml.tmpl'),
   loop_context_vars => TRUE,
   global_vars       => TRUE,
 );
 $File->{Templates}->{EARLN3} = HTML::Template->new(
   %template_defaults,
-  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
-                                          $lang, 'earl_n3.tmpl'),
+  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'earl_n3.tmpl'),
   loop_context_vars => TRUE,
   global_vars       => TRUE,
 );
 $File->{Templates}->{JSON} = HTML::Template->new(
   %template_defaults,
-  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
-                                          $lang, 'json_ouput.tmpl'),
+  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'json_ouput.tmpl'),
   loop_context_vars => TRUE,
   global_vars       => TRUE,
 );
 $File->{Templates}->{PrefillHTML} = HTML::Template->new(
   %template_defaults,
-  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
-                                          $lang, 'prefill_html401.tmpl'),
+  filename => catfile($CFG->{Paths}->{Templates}, $lang,
+                      'prefill_html401.tmpl'),
   loop_context_vars => TRUE,
   global_vars       => TRUE,
 );
 $File->{Templates}->{PrefillXHTML} = HTML::Template->new(
   %template_defaults,
-  filename          => File::Spec->catfile($CFG->{Paths}->{Templates},
-                                          $lang, 'prefill_xhtml10.tmpl'),
+  filename => catfile($CFG->{Paths}->{Templates}, $lang,
+                      'prefill_xhtml10.tmpl'),
   loop_context_vars => TRUE,
   global_vars       => TRUE,
 );
@@ -694,7 +684,7 @@ if (&is_xml($File)) {
     $xmlparser->validation(0);
     $xmlparser->load_ext_dtd(0);
     # [NOT] loading the XML catalog for entities resolution as it seems to cause a lot of unnecessary DTD/entities fetching (requires >= 1.53 if enabled)
-    #$xmlparser->load_catalog( File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc') );
+    #$xmlparser->load_catalog(catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc'));
     my $xml_string = join"\n",@{$File->{Content}};
     # the XML parser will check the value of encoding attribute in XML declaration
     # so we have to amend it to reflect transcoding. see Bug 4867
@@ -921,7 +911,7 @@ sub dtd_validate (\$) {
   my $parser_name = "SGML::Parser::OpenSP";
   #
   # By default, use SGML catalog file and SGML Declaration.
-  my $catalog  = File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'sgml.soc');
+  my $catalog = catfile($CFG->{Paths}->{SGML}->{Library}, 'sgml.soc');
 
   # default parsing options
   my @spopt = qw(valid non-sgml-char-ref no-duplicate);
@@ -933,7 +923,7 @@ sub dtd_validate (\$) {
   #
   # Switch to XML semantics if file is XML.
   if (&is_xml($File)) {
-    $catalog  = File::Spec->catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc');
+    $catalog = catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc');
     push(@spopt, 'xml');
     # workaround for a bug in s:p:o 0.99
     # see http://www.w3.org/Bugs/Public/show_bug.cgi?id=798#c5
