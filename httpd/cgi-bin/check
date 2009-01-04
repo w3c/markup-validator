@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.625 2009-01-04 20:05:51 ville Exp $
+# $Id: check,v 1.626 2009-01-04 20:08:26 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.625 $;
+  $VERSION =  q$Revision: 1.626 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -639,19 +639,21 @@ if ($File->{Charset}->{Use} eq 'utf-8' &&
 #
 # Override DOCTYPE if user asked for it.
 if ($File->{Opt}->{DOCTYPE}) {
-  if (not $File->{Opt}->{DOCTYPE} =~ /(Inline|detect)/i) {
-   $File = &override_doctype($File);
+  if ($File->{Opt}->{DOCTYPE} !~ /(Inline|detect)/i) {
+    $File = &override_doctype($File);
+  }
+  else {
+    # Get rid of inline|detect for easy truth value checking later
+    $File->{Opt}->{DOCTYPE} = '';
   }
 }
 
 # Try to extract a DOCTYPE or xmlns.
 $File = &preparse_doctype($File);
 
-if ($File->{Opt}->{DOCTYPE}) {
-  if ($File->{Opt}->{DOCTYPE} eq "HTML5") {
-    $File->{DOCTYPE} = "HTML5";
-    $File->{Version} = $File->{DOCTYPE};
-  }
+if ($File->{Opt}->{DOCTYPE} eq "HTML5") {
+  $File->{DOCTYPE} = "HTML5";
+  $File->{Version} = $File->{DOCTYPE};
 }
 
 set_parse_mode($File, $CFG);
