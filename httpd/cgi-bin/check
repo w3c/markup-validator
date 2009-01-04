@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.629 2009-01-04 21:52:22 ville Exp $
+# $Id: check,v 1.630 2009-01-04 22:12:15 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -199,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.629 $;
+  $VERSION =  q$Revision: 1.630 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -3109,8 +3109,16 @@ sub redirect_ok {
 
 sub uri_ok {
   my ($self, $uri) = @_;
+
   return 1 if ($self->{'W3C::Validator::CFG'}->{'Allow Private IPs'} or
                !$uri->can('host'));
+
+  my $h5uri = $self->{'W3C::Validator::CFG'}->{External}->{HTML5};
+  if ($h5uri) {
+    my $clone = $uri->clone(); $clone->query(undef); $clone->fragment(undef);
+    $h5uri = URI->new($h5uri); $h5uri->query(undef); $h5uri->fragment(undef);
+    return 1 if $clone->eq($h5uri);
+  }
 
   my $addr = my $iptype = undef;
   if (my $host = gethostbyname($uri->host())) {
