@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.621 2009-01-04 12:11:07 ville Exp $
+# $Id: check,v 1.622 2009-01-04 12:13:26 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.621 $;
+  $VERSION =  q$Revision: 1.622 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -810,10 +810,6 @@ else {
 sub html5_validate (\$) {
   my $File = shift;
   my $ua = new W3C::Validator::UserAgent ($CFG, $File);
-  my $html5_parser = "";
-  # if ($File->{Mode} =~ /XML/) {
-  #   $html5_parser = "xml";
-  # }
 
   $File->{ParserName} = "validator.nu";
   $File->{ParserOpts} = "";
@@ -821,7 +817,7 @@ sub html5_validate (\$) {
   use HTTP::Request::Common;
 
   my $res = $ua->request(POST "$CFG->{External}->{HTML5}", Content_Type => 'form-data',
-  Content  => [out => "xml", parser=>$html5_parser, content => Encode::encode_utf8(join "\n", @{$File->{Content}})]);
+  Content  => [out => "xml", content => Encode::encode_utf8(join "\n", @{$File->{Content}})]);
   if (! $res->is_success()) {
     $File->{'Error Flagged'} = TRUE;
     $File->{Templates}->{Error}->param(fatal_no_checker  => TRUE);
