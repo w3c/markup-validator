@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.620 2009-01-04 11:35:46 ville Exp $
+# $Id: check,v 1.621 2009-01-04 12:11:07 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.620 $;
+  $VERSION =  q$Revision: 1.621 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -462,6 +462,7 @@ if ($CFG->{'Allow Debug'}) {
 } else {
   $DEBUG = FALSE; # The default.
 }
+$File->{Opt}->{Debug} = $DEBUG;
 
 &abort_if_error_flagged($File, O_NONE);
 
@@ -3043,6 +3044,7 @@ sub end_element
 
 package W3C::Validator::UserAgent;
 
+use HTTP::Message        qw();
 use LWP::UserAgent 2.032 qw(); # Need 2.032 for default_header()
 use Net::hostent         qw(gethostbyname);
 use Net::IP              qw();
@@ -3067,6 +3069,10 @@ sub new {
 
   # Tell caches in the middle we want a fresh copy (Bug 4998).
   $self->default_header('Cache-Control' => 'max-age=0');
+
+  # If not in debug mode, set Accept-Encoding to what LWP (>= 5.816) can handle
+  $self->default_header('Accept-Encoding' => scalar HTTP::Message::decodable())
+    if (!$File->{Opt}->{Debug} && HTTP::Message->can('decodable'));
 
   return $self;
 }

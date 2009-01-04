@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.41 2009-01-04 11:34:56 ville Exp $"
---><!--#set var="date" value="\$Date: 2009-01-04 11:34:56 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.42 2009-01-04 12:11:07 ville Exp $"
+--><!--#set var="date" value="\$Date: 2009-01-04 12:11:07 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -155,7 +155,10 @@ install Bundle::W3C::Validator
           support for downloading pages off the net comes from.  Version 5.800
           or newer is required, however we strongly suggest a (much) newer
           version.  Validator's support for compressed responses is available
-          with version 5.802 and later.  If you want your Validator to
+          with version 5.802 and later, and announced using the
+          <code>Accept-Encoding</code> HTTP header with version 5.816 and
+          later, depending on if the modules required for libwww-perl's
+          compression facilities are installed.  If you want your Validator to
           support <abbr title="Secure Sockets Layer">SSL</abbr>/<abbr
           title="Transport Layer Security">TLS</abbr>, see
           <a href="http://search.cpan.org/dist/libwww-perl/README.SSL">README.SSL</a>
