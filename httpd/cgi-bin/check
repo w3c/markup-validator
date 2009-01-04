@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.614 2009-01-04 10:43:50 ville Exp $
+# $Id: check,v 1.615 2009-01-04 10:54:09 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.614 $;
+  $VERSION =  q$Revision: 1.615 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1841,11 +1841,11 @@ sub report_errors ($) {
     foreach my $err (@{$File->{Errors}}) {
       my $line;
       my $col;
-      if ($err->{char} =~ /^[0-9]+$/ ){
+      if (defined($err->{char}) && $err->{char} =~ /^[0-9]+$/ ){
         ($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $err->{char});
         $line = &mark_error($line, $col);
       }
-      else {
+      elsif (defined($err->{line})) {
         $col = length($File->{Content}->[$err->{line}-1]);
         $col = 80 if ($col > 80);
         ($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $col);

@@ -3,11 +3,11 @@
   <TMPL_LOOP NAME="file_errors">
       <li<TMPL_IF NAME="class"> class="<TMPL_VAR NAME="class">"</TMPL_IF>>
 <span class="err_type"><TMPL_IF NAME="err_type_info"><img src="images/info_icons/info.png" alt="Info" title="Info" /></TMPL_IF><TMPL_IF NAME="err_type_warn"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></TMPL_IF><TMPL_IF NAME="err_type_err"><img src="images/info_icons/error.png" alt="Error" title="Error" /></TMPL_IF></span>
-        <em>Line <a href="#line-<TMPL_VAR NAME="line" ESCAPE="HTML">"><TMPL_VAR NAME="line" ESCAPE="HTML"></a>,
-            Column <TMPL_VAR NAME="char" ESCAPE="HTML"></em>:
+        <TMPL_IF NAME="line"><em>Line <a href="#line-<TMPL_VAR NAME="line" ESCAPE="HTML">"><TMPL_VAR NAME="line" ESCAPE="HTML"></a><TMPL_IF NAME="char">,
+            Column <TMPL_VAR NAME="char" ESCAPE="HTML"></TMPL_IF></em>:</TMPL_IF>
         <span class="msg"><TMPL_VAR NAME="msg"></span>
 <TMPL_IF NAME="uri">(<a href="<TMPL_VAR NAME="uri" ESCAPE="HTML">">explain...</a>)</TMPL_IF>.
-<pre><code class="input"><TMPL_VAR NAME="src"></code></pre>
+<TMPL_IF NAME="src"><pre><code class="input"><TMPL_VAR NAME="src"></code></pre></TMPL_IF>
 <TMPL_IF NAME="expl"><TMPL_VAR NAME="expl"></TMPL_IF>
       </li>
   </TMPL_LOOP>
@@ -15,8 +15,8 @@
   <TMPL_LOOP NAME="file_errors">
       <li<TMPL_IF NAME="class"> class="<TMPL_VAR NAME="class">"</TMPL_IF>>
           <span class="err_type"><TMPL_IF NAME="err_type_info"><img src="images/info_icons/info.png" alt="Info" title="Info" /></TMPL_IF><TMPL_IF NAME="err_type_warn"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></TMPL_IF><TMPL_IF NAME="err_type_err"><img src="images/info_icons/error.png" alt="Error" title="Error" /></TMPL_IF></span>
-        <em>Line <TMPL_VAR NAME="line" ESCAPE="HTML">, Column <TMPL_VAR NAME="char" ESCAPE="HTML"></em>:
-        <span class="msg"><TMPL_VAR NAME="msg" ESCAPE="HTML"></span><TMPL_IF NAME="uri">(<a href="<TMPL_VAR NAME="uri" ESCAPE="HTML">">explain...</a>)</TMPL_IF>.<pre><code class="input"><TMPL_VAR NAME="src"></code></pre><TMPL_IF NAME="expl"><TMPL_VAR NAME="expl"></TMPL_IF>      </li>
+        <TMPL_IF NAME="line"><em>Line <TMPL_VAR NAME="line" ESCAPE="HTML"><TMPL_IF NAME="char">, Column <TMPL_VAR NAME="char" ESCAPE="HTML"></TMPL_IF></em>:</TMPL_IF>
+        <span class="msg"><TMPL_VAR NAME="msg" ESCAPE="HTML"></span><TMPL_IF NAME="uri">(<a href="<TMPL_VAR NAME="uri" ESCAPE="HTML">">explain...</a>)</TMPL_IF>.<TMPL_IF NAME="src"><pre><code class="input"><TMPL_VAR NAME="src"></code></pre></TMPL_IF><TMPL_IF NAME="expl"><TMPL_VAR NAME="expl"></TMPL_IF>      </li>
   </TMPL_LOOP>
 </TMPL_IF>    
 <TMPL_IF NAME="has_errors"></ol></TMPL_IF>
