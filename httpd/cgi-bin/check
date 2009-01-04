@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.622 2009-01-04 12:13:26 ville Exp $
+# $Id: check,v 1.623 2009-01-04 12:30:49 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.622 $;
+  $VERSION =  q$Revision: 1.623 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1747,7 +1747,7 @@ sub override_doctype {
     if ($File->{Opt}->{FB}->{DOCTYPE} or ($File->{Opt}->{DOCTYPE} eq $CFG->{Types}->{$File->{DOCTYPE}}->{Display} )) {
       $HTML .= $_[0]; # Stash it as is...
     } else {
-      $HTML .= "$dtd\n" . '<!-- ' . $_[0] . ' -->';
+      $HTML .= "$dtd<!-- $_[0] -->";
     }
   };
 
@@ -1764,7 +1764,7 @@ sub override_doctype {
       else {
         # no original doctype present, hence none replaced already
         # => we sneak the chosen doctype before the root elt
-        $HTML .= "$dtd\n" . $_[0];
+        $HTML .= "$dtd$_[0]";
       }
     }
   };
