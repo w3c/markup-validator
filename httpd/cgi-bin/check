@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.627 2009-01-04 20:35:08 ville Exp $
+# $Id: check,v 1.628 2009-01-04 21:05:43 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -199,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.627 $;
+  $VERSION =  q$Revision: 1.628 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -843,6 +843,10 @@ sub html5_validate (\$) {
     $req->content_type(HTTP::Headers::Util::join_header_words(@content_type));
     $req->content_ref(\$File->{Bytes});
   }
+
+  $req->content_language($File->{ContentLang}) if $File->{ContentLang};
+  # Intentionally using direct header access instead of $req->last_modified
+  $req->header('Last-Modified', $File->{Modified}) if $File->{Modified};
 
   my $res = $ua->request($req);
   if (! $res->is_success()) {
@@ -1522,11 +1526,6 @@ sub handle_uri {
                           scalar($res->request->uri),
                          );
 
-  my $lastmod = undef;
-  if ( $res->last_modified ) {
-    $lastmod = scalar(gmtime($res->last_modified));
-  }
-
   my $content = $res->can('decoded_content') ?
     $res->decoded_content(charset => 'none') : $res->content;
 
@@ -1538,7 +1537,7 @@ sub handle_uri {
   $File->{ContentLoc}      = $res->header('Content-Location');
   $File->{TransferEnc}     = $res->header('Client-Transfer-Encoding');
   $File->{Charset}->{HTTP} = lc $charset;
-  $File->{Modified}        = $lastmod;
+  $File->{Modified}        = $res->header('Last-Modified');
   $File->{Server}          = scalar $res->server;
 
   # TODO: Content-Length is not always set, so either this should
