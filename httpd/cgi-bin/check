@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.617 2009-01-04 11:13:46 ville Exp $
+# $Id: check,v 1.618 2009-01-04 11:22:19 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.617 $;
+  $VERSION =  q$Revision: 1.618 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -816,12 +816,8 @@ sub html5_validate (\$) {
 
   $File->{ParserName} = "validator.nu";
   $File->{ParserOpts} = "";
-  $ua->env_proxy();
-  $ua->agent($File->{Opt}->{'User Agent'});
-  $ua->parse_head(0);  # Don't parse the http-equiv stuff.
+
   use HTTP::Request::Common;
-  # telling caches in the middle we want a fresh copy (Bug 4998)
-  $ua->default_header(Cache_control=> "max-age=0");
 
   my $res = $ua->request(POST "$CFG->{External}->{HTML5}", Content_Type => 'form-data',
   Content  => [out => "xml", parser=>$html5_parser, content => Encode::encode_utf8(join "\n", @{$File->{Content}})]);
@@ -1429,11 +1425,6 @@ sub handle_uri {
   $uri->fragment(undef);
 
   my $ua = new W3C::Validator::UserAgent ($CFG, $File);
-  $ua->env_proxy();
-  $ua->agent($File->{Opt}->{'User Agent'});
-  $ua->parse_head(0);  # Don't parse the http-equiv stuff.
-
-  $ua->protocols_allowed($CFG->{Protocols}->{Allow} || ['http', 'https']);
 
   unless ($ua->is_protocol_supported($uri)) {
     $File->{'Error Flagged'} = TRUE;
@@ -1452,9 +1443,6 @@ sub handle_uri {
   return $File unless $ua->uri_ok($uri);
 
   my $req = new HTTP::Request(GET => $uri);
-
-  # telling caches in the middle we want a fresh copy (Bug 4998)
-  $req->header(Cache_control=> "max-age=0");
 
   # if one wants to use the accept, accept-charset and accept-language params
   # in order to trigger specific negotiation
@@ -3069,6 +3057,16 @@ sub new {
 
   $self->{'W3C::Validator::CFG'}  = $CFG;
   $self->{'W3C::Validator::File'} = $File;
+
+  $self->env_proxy();
+  $self->agent($File->{Opt}->{'User Agent'});
+  $self->protocols_allowed($CFG->{Protocols}->{Allow} || ['http', 'https']);
+
+  # Don't parse the http-equiv stuff.
+  $self->parse_head(0);
+
+  # Tell caches in the middle we want a fresh copy (Bug 4998).
+  $self->default_header('Cache-Control' => 'max-age=0');
 
   return $self;
 }
