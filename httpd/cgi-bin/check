@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.616 2009-01-04 11:11:16 ville Exp $
+# $Id: check,v 1.617 2009-01-04 11:13:46 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.616 $;
+  $VERSION =  q$Revision: 1.617 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -378,7 +378,7 @@ $File->{Templates}->{EARLN3} = HTML::Template->new(
 );
 $File->{Templates}->{JSON} = HTML::Template->new(
   %template_defaults,
-  filename          => 'json_ouput.tmpl',
+  filename          => 'json_output.tmpl',
   loop_context_vars => TRUE,
   global_vars       => TRUE,
 );
