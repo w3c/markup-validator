@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.626 2009-01-04 20:08:26 ville Exp $
+# $Id: check,v 1.627 2009-01-04 20:35:08 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -57,6 +57,7 @@ use File::Spec::Functions     qw(catfile);
 use HTML::Encoding       0.52 qw();
 use HTML::Parser         3.25 qw(); # Need 3.25 for $p->ignore_elements.
 use HTML::Template       2.6  qw(); # Need 2.6 for path param, other things.
+use HTTP::Headers::Util       qw();
 use HTTP::Request             qw();
 use HTTP::Headers::Auth       qw(); # Needs to be imported after other HTTP::*.
 use SGML::Parser::OpenSP      qw();
@@ -198,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.626 $;
+  $VERSION =  q$Revision: 1.627 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -815,10 +816,35 @@ sub html5_validate (\$) {
   $File->{ParserName} = "validator.nu";
   $File->{ParserOpts} = "";
 
-  use HTTP::Request::Common;
+  my $url = URI->new($CFG->{External}->{HTML5});
+  $url->query_form(out => "xml");
 
-  my $res = $ua->request(POST "$CFG->{External}->{HTML5}", Content_Type => 'form-data',
-  Content  => [out => "xml", content => Encode::encode_utf8(join "\n", @{$File->{Content}})]);
+  my $req = HTTP::Request->new(POST => $url);
+
+  if ($File->{Opt}->{DOCTYPE} || $File->{Charset}->{Override}) {
+    # Doctype or charset overridden, need to use $File->{Content} in UTF-8
+    # because $File->{Bytes} is not affected by the overrides.  This will
+    # most likely be a source of errors about internal/actual charset
+    # differences as long as our transcoding process does not "fix" the
+    # charset info in XML declaration and meta http-equiv (any others?).
+
+    $req->content_type("$File->{ContentType}; charset=UTF-8");
+    $req->content(Encode::encode_utf8(join("\n", @{$File->{Content}})));
+  }
+  else {
+    # Pass original bytes, Content-Type and charset as-is.
+    # We trust that our and validator.nu's interpretation of line numbers
+    # is the same (regardless of EOL chars used in the document).
+
+    my @content_type = ($File->{ContentType} => undef);
+    push(@content_type, charset => $File->{Charset}->{HTTP})
+      if $File->{Charset}->{HTTP};
+
+    $req->content_type(HTTP::Headers::Util::join_header_words(@content_type));
+    $req->content_ref(\$File->{Bytes});
+  }
+
+  my $res = $ua->request($req);
   if (! $res->is_success()) {
     $File->{'Error Flagged'} = TRUE;
     $File->{Templates}->{Error}->param(fatal_no_checker  => TRUE);
