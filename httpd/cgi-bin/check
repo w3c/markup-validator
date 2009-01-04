@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.628 2009-01-04 21:05:43 ville Exp $
+# $Id: check,v 1.629 2009-01-04 21:52:22 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -199,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.628 $;
+  $VERSION =  q$Revision: 1.629 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -847,6 +847,9 @@ sub html5_validate (\$) {
   $req->content_language($File->{ContentLang}) if $File->{ContentLang};
   # Intentionally using direct header access instead of $req->last_modified
   $req->header('Last-Modified', $File->{Modified}) if $File->{Modified};
+
+  # If not in debug mode, gzip the request (LWP >= 5.817)
+  eval { $req->encode("gzip"); } unless $File->{Opt}->{Debug};
 
   my $res = $ua->request($req);
   if (! $res->is_success()) {
