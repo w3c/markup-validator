@@ -29,7 +29,7 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
  HTML::Encoding 0.52
  HTML::Parser 3.25
  HTML::Template 2.6
- LWP::UserAgent 1.90
+ LWP::UserAgent 2.032
  Net::IP
  SGML::Parser::OpenSP
  URI

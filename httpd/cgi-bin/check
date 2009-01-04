@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.618 2009-01-04 11:22:19 ville Exp $
+# $Id: check,v 1.619 2009-01-04 11:34:56 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -50,9 +50,9 @@ use CGI::Carp                 qw(carp croak fatalsToBrowser);
 use Config::General      2.19 qw(); # Need 2.19 for -AutoLaunder
 use Encode                    qw();
 use Encode::Alias             qw();
-use Encode::HanExtra          qw(); # for some chinese character encodings,
+#use Encode::HanExtra          qw(); # for some chinese character encodings,
                                     # e.g gb18030
-use Encode::JIS2K             qw(); # ditto extra japanese encodings
+#use Encode::JIS2K             qw(); # ditto extra japanese encodings
 use File::Spec::Functions     qw(catfile);
 use HTML::Encoding       0.52 qw();
 use HTML::Parser         3.25 qw(); # Need 3.25 for $p->ignore_elements.
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.618 $;
+  $VERSION =  q$Revision: 1.619 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -3043,7 +3043,7 @@ sub end_element
 
 package W3C::Validator::UserAgent;
 
-use LWP::UserAgent  1.90 qw(); # Need 1.90 for protocols_(allowed|forbidden)
+use LWP::UserAgent 2.032 qw(); # Need 2.032 for default_header()
 use Net::hostent         qw(gethostbyname);
 use Net::IP              qw();
 use Socket               qw(inet_ntoa);
