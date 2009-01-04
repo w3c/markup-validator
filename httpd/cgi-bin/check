@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.613 2009-01-04 10:41:20 ville Exp $
+# $Id: check,v 1.614 2009-01-04 10:43:50 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.613 $;
+  $VERSION =  q$Revision: 1.614 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1470,7 +1470,6 @@ sub handle_uri {
     $req->header(Accept_Charset => $File->{Opt}->{'Accept-Charset Header'});
   }
 
-
   # If we got a Authorization header, the client is back at it after being
   # prompted for a password so we insert the header as is in the request.
   if($ENV{HTTP_AUTHORIZATION}){
@@ -1525,7 +1524,7 @@ sub handle_uri {
   $File->{Mode}            = $mode;
   $File->{ContentType}     = $ct;
   $File->{ContentEnc}      = $res->content_encoding;
-  $File->{ContentLang}      = $res->content_language;
+  $File->{ContentLang}     = $res->content_language;
   $File->{ContentLoc}      = $res->header('Content-Location');
   $File->{TransferEnc}     = $res->header('Client-Transfer-Encoding');
   $File->{Charset}->{HTTP} = lc $charset;
@@ -3069,8 +3068,10 @@ sub new {
   my ($proto, $CFG, $File, @rest) = @_;
   my $class = ref($proto) || $proto;
   my $self = $class->SUPER::new(@rest);
+
   $self->{'W3C::Validator::CFG'}  = $CFG;
   $self->{'W3C::Validator::File'} = $File;
+
   return $self;
 }
 
