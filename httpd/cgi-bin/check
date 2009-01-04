@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.615 2009-01-04 10:54:09 ville Exp $
+# $Id: check,v 1.616 2009-01-04 11:11:16 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -56,7 +56,7 @@ use Encode::JIS2K             qw(); # ditto extra japanese encodings
 use File::Spec::Functions     qw(catfile);
 use HTML::Encoding       0.52 qw();
 use HTML::Parser         3.25 qw(); # Need 3.25 for $p->ignore_elements.
-use HTML::Template       2.6  qw();
+use HTML::Template       2.6  qw(); # Need 2.6 for path param, other things.
 use HTTP::Request             qw();
 use HTTP::Headers::Auth       qw(); # Needs to be imported after other HTTP::*.
 use SGML::Parser::OpenSP      qw();
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.615 $;
+  $VERSION =  q$Revision: 1.616 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -320,79 +320,77 @@ if ($lang eq "en") {
 my %template_defaults = (
   die_on_bad_params => FALSE,
   cache             => TRUE,
+  path              => [ catfile($CFG->{Paths}->{Templates}, $lang) ],
   filter => sub { my $ref = shift; ${$ref} = Encode::decode_utf8(${$ref}); },
 );
 
 $File->{Templates}->{Result} = HTML::Template->new(
   %template_defaults,
-  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'result.tmpl'),
+  filename          => 'result.tmpl',
   loop_context_vars => TRUE,
 );
 $File->{Templates}->{Error} = HTML::Template->new(
   %template_defaults,
-  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'fatal-error.tmpl'),
+  filename          => 'fatal-error.tmpl',
 );
 $File->{Templates}->{AuthzReq} = HTML::Template->new(
   %template_defaults,
-  filename => catfile($CFG->{Paths}->{Templates}, $lang,
-                      'http_401_authrequired.tmpl'),
+  filename          => 'http_401_authrequired.tmpl',
 );
 
 # templates for alternate output formats
 $File->{Templates}->{XML} = HTML::Template->new(
   %template_defaults,
-  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'xml_output.tmpl'),
+  filename          => 'xml_output.tmpl',
   loop_context_vars => TRUE,
 );
 $File->{Templates}->{SOAP} = HTML::Template->new(
   %template_defaults,
-  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'soap_output.tmpl'),
+  filename          => 'soap_output.tmpl',
   loop_context_vars => TRUE,
 );
 $File->{Templates}->{SOAPFault} = HTML::Template->new(
   %template_defaults,
-  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'soap_fault.tmpl'),
+  filename          => 'soap_fault.tmpl',
   loop_context_vars => TRUE,
 );
 $File->{Templates}->{SOAPDisabled} = HTML::Template->new(
   %template_defaults,
-  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'soap_disabled.tmpl'),
+  filename          => 'soap_disabled.tmpl',
   loop_context_vars => TRUE,
 );
 $File->{Templates}->{UCN} = HTML::Template->new(
   %template_defaults,
-  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'ucn_output.tmpl'),
+  filename          => 'ucn_output.tmpl',
   loop_context_vars => TRUE,
 );
 $File->{Templates}->{EARLXML} = HTML::Template->new(
   %template_defaults,
-  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'earl_xml.tmpl'),
+  filename          => 'earl_xml.tmpl',
   loop_context_vars => TRUE,
   global_vars       => TRUE,
 );
 $File->{Templates}->{EARLN3} = HTML::Template->new(
   %template_defaults,
-  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'earl_n3.tmpl'),
+  filename          => 'earl_n3.tmpl',
   loop_context_vars => TRUE,
   global_vars       => TRUE,
 );
 $File->{Templates}->{JSON} = HTML::Template->new(
   %template_defaults,
-  filename => catfile($CFG->{Paths}->{Templates}, $lang, 'json_ouput.tmpl'),
+  filename          => 'json_ouput.tmpl',
   loop_context_vars => TRUE,
   global_vars       => TRUE,
 );
 $File->{Templates}->{PrefillHTML} = HTML::Template->new(
   %template_defaults,
-  filename => catfile($CFG->{Paths}->{Templates}, $lang,
-                      'prefill_html401.tmpl'),
+  filename          => 'prefill_html401.tmpl',
   loop_context_vars => TRUE,
   global_vars       => TRUE,
 );
 $File->{Templates}->{PrefillXHTML} = HTML::Template->new(
   %template_defaults,
-  filename => catfile($CFG->{Paths}->{Templates}, $lang,
-                      'prefill_xhtml10.tmpl'),
+  filename          => 'prefill_xhtml10.tmpl',
   loop_context_vars => TRUE,
   global_vars       => TRUE,
 );
