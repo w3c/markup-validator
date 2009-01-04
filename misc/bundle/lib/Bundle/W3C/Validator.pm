@@ -21,7 +21,7 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
 =head1 CONTENTS
 
  CGI 2.81
- Config::General 2.19
+ Config::General 2.31
  Encode
  Encode::HanExtra
  Encode::JIS2K

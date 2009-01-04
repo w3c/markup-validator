@@ -8,7 +8,7 @@ WriteMakefile(
     VERSION_FROM  => 'lib/Bundle/W3C/Validator.pm',
     PREREQ_PM     => {
                       CGI                   => 2.81,
-                      Config::General       => 2.19,
+                      Config::General       => 2.31,
                       Encode                => 0,
                       Encode::HanExtra      => 0,
                       Encode::JIS2K         => 0,

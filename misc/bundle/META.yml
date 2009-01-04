@@ -9,7 +9,7 @@ generated_by:        ExtUtils::MakeMaker version 6.42
 distribution_type:   module
 requires:     
     CGI:                           2.81
-    Config::General:               2.19
+    Config::General:               2.31
     Encode:                        0
     Encode::HanExtra:              0
     Encode::JIS2K:                 0

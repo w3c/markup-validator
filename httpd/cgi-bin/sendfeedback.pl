@@ -1,7 +1,7 @@
 #!/usr/bin/perl -T
 ##
 ## feedback generator for W3C Markup Validation Service
-# # $Id: sendfeedback.pl,v 1.9 2009-01-04 10:41:20 ville Exp $
+# # $Id: sendfeedback.pl,v 1.10 2009-01-04 16:54:19 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -13,7 +13,7 @@ use warnings;
 use CGI                   qw();
 use File::Spec::Functions qw(catfile);
 use HTML::Template   2.6  qw();
-use Config::General  2.19 qw(); # Need 2.19 for -AutoLaunder
+use Config::General  2.31 qw(); # Need 2.31 for (partial) <msg 0> sanity
 
 use vars qw($DEBUG $CFG $RSRC $VERSION $HAVE_IPC_RUN);
 # Define global constants
@@ -73,13 +73,12 @@ our %rsrc = Config::General->new(
   -ConfigFile => catfile($CFG->{Paths}->{Templates}, $lang,
                          'error_messages.cfg'),
   )->getall();
-# Config::General workarounds for <msg 0> issues:
+# Config::General 2.31 workaround for <msg 0> issues:
 # http://lists.w3.org/Archives/Public/public-qa-dev/2006Feb/0022.html
 # http://lists.w3.org/Archives/Public/public-qa-dev/2006Feb/0025.html
 # https://rt.cpan.org/Public/Bug/Display.html?id=17852
 $rsrc{msg}{0} ||=
-  delete($rsrc{'msg 0'}) ||                   # < 2.31
-  { original => delete($rsrc{msg}{original}), #   2.31
+  { original => delete($rsrc{msg}{original}),
     verbose  => delete($rsrc{msg}{verbose}),
   };
 $RSRC = \%rsrc;
