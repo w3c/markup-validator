@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.632 2009-01-06 21:21:08 ville Exp $
+# $Id: check,v 1.633 2009-01-06 21:33:10 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -199,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.632 $;
+  $VERSION =  q$Revision: 1.633 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1768,17 +1768,23 @@ sub override_doctype {
   local $seen_root    = FALSE;
 
   my $declaration = sub {
+    my ($tag, $text) = @_;
+    if ($seen_doctype || uc($tag) ne '!DOCTYPE') {
+      $HTML .= $text;
+      return;
+    }
+
     $seen_doctype = TRUE;
 
-    $org_dtd = &ent($_[0]);
-	($File->{Root}, $File->{DOCTYPE}) = $_[0] =~ m(<!DOCTYPE\s+(\w[\w\.-]+)\s+(?:PUBLIC|SYSTEM)\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
+    $org_dtd = &ent($text);
+    ($File->{Root}, $File->{DOCTYPE}) = $text =~ m(<!DOCTYPE\s+(\w[\w\.-]+)\s+(?:PUBLIC|SYSTEM)\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
     # No Override if Fallback was requested, or if override is the same as detected
     my $known = $CFG->{Types}->{$File->{DOCTYPE}};
     if ($File->{Opt}->{FB}->{DOCTYPE} or
         ($known && $File->{Opt}->{DOCTYPE} eq $known->{Display})) {
-      $HTML .= $_[0]; # Stash it as is...
+      $HTML .= $text; # Stash it as is...
     } else {
-      $HTML .= "$dtd<!-- $_[0] -->";
+      $HTML .= "$dtd<!-- $text -->";
     }
   };
 
@@ -1801,8 +1807,8 @@ sub override_doctype {
   };
 
   HTML::Parser->new(default_h     => [sub {$HTML .= shift}, 'text'],
-                    declaration_h => [$declaration, 'text'],
-                    start_h => [$start_element, "text"]
+                    declaration_h => [$declaration, 'tag,text'],
+                    start_h       => [$start_element, 'text']
                    )->parse(join "\n", @{$File->{Content}})->eof();
 
   $File->{Content} = [split /\n/, $HTML];
