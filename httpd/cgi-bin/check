@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.631 2009-01-06 21:12:06 ville Exp $
+# $Id: check,v 1.632 2009-01-06 21:21:08 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -199,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.631 $;
+  $VERSION =  q$Revision: 1.632 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1773,7 +1773,9 @@ sub override_doctype {
     $org_dtd = &ent($_[0]);
 	($File->{Root}, $File->{DOCTYPE}) = $_[0] =~ m(<!DOCTYPE\s+(\w[\w\.-]+)\s+(?:PUBLIC|SYSTEM)\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
     # No Override if Fallback was requested, or if override is the same as detected
-    if ($File->{Opt}->{FB}->{DOCTYPE} or ($File->{Opt}->{DOCTYPE} eq $CFG->{Types}->{$File->{DOCTYPE}}->{Display} )) {
+    my $known = $CFG->{Types}->{$File->{DOCTYPE}};
+    if ($File->{Opt}->{FB}->{DOCTYPE} or
+        ($known && $File->{Opt}->{DOCTYPE} eq $known->{Display})) {
       $HTML .= $_[0]; # Stash it as is...
     } else {
       $HTML .= "$dtd<!-- $_[0] -->";
@@ -1806,7 +1808,9 @@ sub override_doctype {
   $File->{Content} = [split /\n/, $HTML];
 
   if ($seen_doctype) {
-    unless (($File->{Opt}->{FB}->{DOCTYPE}) or ($File->{Opt}->{DOCTYPE} eq $CFG->{Types}->{$File->{DOCTYPE}}->{Display} )) {
+    my $known = $CFG->{Types}->{$File->{DOCTYPE}};
+    unless ($File->{Opt}->{FB}->{DOCTYPE} or
+            ($known && $File->{Opt}->{DOCTYPE} eq $known->{Display} )) {
       &add_warning('W13', {
         W13_org => $org_dtd,
         W13_new => $File->{Opt}->{DOCTYPE},
