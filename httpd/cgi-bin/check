@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.630 2009-01-04 22:12:15 ville Exp $
+# $Id: check,v 1.631 2009-01-06 21:12:06 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -199,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.630 $;
+  $VERSION =  q$Revision: 1.631 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1013,7 +1013,7 @@ sub dtd_validate (\$) {
 if (&is_xml($File) and not $File->{DOCTYPE} and  lc($File->{Root}) ne 'html') {
   $File->{Version} = 'XML';
 } else {
-  $File->{Version} = $File->{DOCTYPE} unless $File->{Version};
+  $File->{Version} ||= $File->{DOCTYPE};
 }
 
 #
@@ -1762,13 +1762,13 @@ sub override_doctype {
   }
   $dtd .= '>';
 
-  local $org_dtd = '';
-  local $HTML    = '';
-  local $seen    = FALSE;
-  local $seen_root = FALSE;
+  local $org_dtd      = '';
+  local $HTML         = '';
+  local $seen_doctype = FALSE;
+  local $seen_root    = FALSE;
 
   my $declaration = sub {
-    $seen = TRUE;
+    $seen_doctype = TRUE;
 
     $org_dtd = &ent($_[0]);
 	($File->{Root}, $File->{DOCTYPE}) = $_[0] =~ m(<!DOCTYPE\s+(\w[\w\.-]+)\s+(?:PUBLIC|SYSTEM)\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
@@ -1786,7 +1786,7 @@ sub override_doctype {
     }
     else {
       $seen_root = TRUE;
-      if ($seen) {
+      if ($seen_doctype) {
         # doctype addition aldready done, we move on
         $HTML .= $_[0];
       }
@@ -1805,7 +1805,7 @@ sub override_doctype {
 
   $File->{Content} = [split /\n/, $HTML];
 
-  if ($seen) {
+  if ($seen_doctype) {
     unless (($File->{Opt}->{FB}->{DOCTYPE}) or ($File->{Opt}->{DOCTYPE} eq $CFG->{Types}->{$File->{DOCTYPE}}->{Display} )) {
       &add_warning('W13', {
         W13_org => $org_dtd,
