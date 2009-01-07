@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.635 2009-01-07 22:02:42 ville Exp $
+# $Id: check,v 1.636 2009-01-07 22:04:23 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -199,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.635 $;
+  $VERSION =  q$Revision: 1.636 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1740,7 +1740,6 @@ sub truncate_line {
 #
 # Suppress any existing DOCTYPE by commenting it out.
 sub override_doctype {
-  no strict 'vars';
   my $File = shift;
 
   my ($dt) =
@@ -1755,7 +1754,7 @@ sub override_doctype {
   $pubid = undef if ($pubid eq 'HTML5');
 
   # We don't have public/system ids for all types.
-  local $dtd = "<!DOCTYPE $name";
+  my $dtd = "<!DOCTYPE $name";
   if ($pubid) {
     $dtd .= qq( PUBLIC "$pubid");
     $dtd .= qq( "$sysid") if $sysid;
@@ -1765,10 +1764,10 @@ sub override_doctype {
   }
   $dtd .= '>';
 
-  local $org_dtd      = '';
-  local $HTML         = '';
-  local $seen_doctype = FALSE;
-  local $seen_root    = FALSE;
+  my $org_dtd      = '';
+  my $HTML         = '';
+  my $seen_doctype = FALSE;
+  my $seen_root    = FALSE;
 
   my $declaration = sub {
     my ($tag, $text) = @_;
