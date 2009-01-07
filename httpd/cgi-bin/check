@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.634 2009-01-07 19:30:04 ville Exp $
+# $Id: check,v 1.635 2009-01-07 22:02:42 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -199,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.634 $;
+  $VERSION =  q$Revision: 1.635 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2114,7 +2114,6 @@ sub preparse_doctype {
   my $start = sub {
     my $tag  = shift;
     my $attr = shift;
-    my %attr = map {lc($_) => $attr->{$_}} keys %{$attr};
 
     if ($File->{Root}) {
       return unless $tag eq $File->{Root};
