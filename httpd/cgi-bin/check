@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.636 2009-01-07 22:04:23 ville Exp $
+# $Id: check,v 1.637 2009-01-07 22:19:30 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -55,7 +55,7 @@ use Encode::HanExtra          qw(); # for some chinese character encodings,
 use Encode::JIS2K             qw(); # ditto extra japanese encodings
 use File::Spec::Functions     qw(catfile);
 use HTML::Encoding       0.52 qw();
-use HTML::Parser         3.25 qw(); # Need 3.25 for $p->ignore_elements.
+use HTML::Parser         3.24 qw(); # Need 3.24 for $p->parse($code_ref)
 use HTML::Template       2.6  qw(); # Need 2.6 for path param, other things.
 use HTTP::Headers::Util       qw();
 use HTTP::Request             qw();
@@ -199,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.636 $;
+  $VERSION =  q$Revision: 1.637 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2111,8 +2111,7 @@ sub preparse_doctype {
   };
 
   my $start = sub {
-    my $tag  = shift;
-    my $attr = shift;
+    my ($p, $tag, $attr) = @_;
 
     if ($File->{Root}) {
       return unless $tag eq $File->{Root};
@@ -2122,6 +2121,9 @@ sub preparse_doctype {
     if ($attr->{xmlns}) {$File->{Namespace} = $attr->{xmlns}};
     if ($attr->{version}) {$File->{'Root Version'} = $attr->{version}};
     if ($attr->{baseProfile}) {$File->{'Root BaseProfile'} = $attr->{baseProfile}};
+
+    # We're done parsing.
+    $p->eof();
   };
 
   # we use HTML::Parser as pre-parser. May use html5lib or other in the future
@@ -2130,11 +2132,15 @@ sub preparse_doctype {
   # if content-type has shown we should pre-parse with XML mode, use that
   # otherwise (mostly text/html cases) use default mode
   $p->xml_mode(TRUE) if ($File->{Mode} =~ /XML/);
-  $p->ignore_elements('BODY');
-  $p->ignore_elements('body');
   $p->handler(declaration => $dtd, 'text');
-  $p->handler(start => $start, 'tag,attr');
-  $p->parse(join "\n", @{$File->{Content}});
+  $p->handler(start => $start, 'self,tag,attr');
+
+  my $line = 0;
+  my $max = scalar(@{$File->{Content}});
+  $p->parse(sub {
+    return ($line < $max) ? $File->{Content}->[$line++] . "\n" : undef;
+  });
+  $p->eof();
 
   # TODO: These \s here are probably wrong now that the strings are utf8_on
   $File->{DOCTYPE} = '' unless defined $File->{DOCTYPE};
