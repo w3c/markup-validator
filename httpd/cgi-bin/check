@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.633 2009-01-06 21:33:10 ville Exp $
+# $Id: check,v 1.634 2009-01-07 19:30:04 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -199,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.633 $;
+  $VERSION =  q$Revision: 1.634 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1750,6 +1750,9 @@ sub override_doctype {
   my $pubid = $dt->{PubID};
   my $sysid = $dt->{SysID};
   my $name  = $dt->{Name};
+
+  # The HTML5 PubID is a fake, reset it out of the way.
+  $pubid = undef if ($pubid eq 'HTML5');
 
   # We don't have public/system ids for all types.
   local $dtd = "<!DOCTYPE $name";
