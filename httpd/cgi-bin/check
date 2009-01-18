@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.637 2009-01-07 22:19:30 ville Exp $
+# $Id: check,v 1.638 2009-01-18 17:26:04 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -199,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.637 $;
+  $VERSION =  q$Revision: 1.638 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1779,7 +1779,13 @@ sub override_doctype {
     $seen_doctype = TRUE;
 
     $org_dtd = &ent($text);
-    ($File->{Root}, $File->{DOCTYPE}) = $text =~ m(<!DOCTYPE\s+(\w[\w\.-]+)\s+(?:PUBLIC|SYSTEM)\s+(?:[\'\"])([^\"\']+)(?:[\"\']).*>)si;
+    ($File->{Root}, undef, $File->{DOCTYPE}) = $text =~
+      /<!DOCTYPE\s+(\w[\w\.-]+)(?:\s+(?:PUBLIC|SYSTEM)\s+(['"])(.*?)\2)?\s*>/si;
+
+    $File->{DOCTYPE} = 'HTML5'
+      if (lc($File->{Root} || '') eq 'html' &&
+          (!defined($File->{DOCTYPE}) || $File->{DOCTYPE} eq 'XSLT-compat'));
+
     # No Override if Fallback was requested, or if override is the same as detected
     my $known = $CFG->{Types}->{$File->{DOCTYPE}};
     if ($File->{Opt}->{FB}->{DOCTYPE} or
@@ -2098,7 +2104,7 @@ sub preparse_doctype {
     my $declaration = shift;
     my $doctype_type;
     my $doctype_secondpart;
-    if ($declaration =~ m(<!DOCTYPE\s+HTML\s*>)si) {
+    if ($declaration =~ /<!DOCTYPE\s+html(?:\s+PUBLIC\s+(['"])XSLT-compat\1)?\s*>/si) {
       $File->{Root} = "html";
       $File->{DOCTYPE} = "HTML5";
     }
