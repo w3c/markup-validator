@@ -53,7 +53,7 @@ SYNTAX
                   SHORTREF SGMLREF
          NAMES    SGMLREF
          QUANTITY SGMLREF
-                  ATTCNT   100      -- increased --
+                  ATTCNT   200      -- increased --
                   ATTSPLEN 65536   -- These are the largest values --
                   LITLEN   65536   -- permitted in the declaration --
                   NAMELEN  65536   -- Avoid fixed limits in actual --
