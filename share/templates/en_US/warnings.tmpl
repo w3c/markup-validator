@@ -1,5 +1,5 @@
-<h3 id="preparse_warnings">Potential Issues</h3>
-<p>The following missing or conflicting information caused the validator to perform guesswork prior to validation. If the guess or fallback is incorrect, it may make validation results entirely incoherent. It is <em>highly recommended</em> 
+<h3 id="preparse_warnings">Notes and Potential Issues</h3>
+<p>The following notes and warnings highlight missing or conflicting information which caused the validator to perform some guesswork prior to validation. If the guess or fallback is incorrect, it could make validation results entirely incoherent. It is <em>highly recommended</em> 
 to check these potential issues, and, if necessary, fix them and re-validate the document.</p>
 <ol id="warnings">
 
@@ -511,6 +511,22 @@ to check these potential issues, and, if necessary, fix them and re-validate the
 	<a href="http://www.w3.org/QA/2002/04/valid-dtd-list.html" 
 	title="W3C QA - Recommended list of DTDs you can use in your Web document">recommended list</a> 
 	and avoid editing that part of your markup by hand.</p>
+  </li>
+</TMPL_IF>
+
+<TMPL_IF NAME="W27">
+  <li class="msg_info" id="W27"><p><span class="err_type"><img src="images/info_icons/info.png" alt="Info" title="Info" /></span> <span class="msg">No Character encoding declared at document level</span></p>
+  
+    <p>No character encoding information was found within the document, either in an HTML <code>meta</code> element or an XML declaration. It is often recommended to declare the character encoding in the document itself, especially if there is a chance that the document will be read from or saved to disk, CD, etc.</p>
+    <p>See <a href="http://www.w3.org/International/tutorials/tutorial-char-enc/#Slide0250">this tutorial on character encoding</a> for techniques and explanations.</p>
+  </li>
+</TMPL_IF>
+
+<TMPL_IF NAME="W28">
+  <li class="msg_info" id="W28"><p><span class="err_type"><img src="images/info_icons/info.png" alt="Info" title="Info" /></span> <span class="msg">Using Direct Input mode: UTF-8 character encoding assumed</span></p>
+  
+    <p>Unlike the “by URI” and “by File Upload” modes, the “Direct Input” mode of the validator provides validated content in the form of characters pasted or typed in the validator's form field. This will automatically make the data UTF-8, and therefore the validator does not need to determine the character encoding of your document, and will ignore any charset information specified.</p>
+    <p>If you notice a discrepancy in detected character encoding between the the “Direct Input” mode and other validator modes, this is likely to be the reason. It is neither a bug in the validator, nor in your document.</p>
   </li>
 </TMPL_IF>
 

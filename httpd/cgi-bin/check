@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.638 2009-01-18 17:26:04 ville Exp $
+# $Id: check,v 1.639 2009-01-28 15:30:17 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -199,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.638 $;
+  $VERSION =  q$Revision: 1.639 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -533,9 +533,8 @@ if (charset_not_equal($File->{Opt}->{Charset}, '(detect automatically)')) {
   $File->{Charset}->{Override} = lc($override);
 
   if ($File->{Opt}->{FB}->{Charset}) { # charset fallback mode
-    unless ($File->{Charset}->{Use}) {
+    unless ($File->{Charset}->{Use}) { # no charset detected, actual fallback
       &add_warning('W02', {W02_charset => $File->{Charset}->{Override}});
-
       $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
       $File->{Charset}->{Use} = $File->{Charset}->{Override};
     }
@@ -560,6 +559,14 @@ if (charset_not_equal($File->{Opt}->{Charset}, '(detect automatically)')) {
     }
   }
 }
+
+if ($File->{'Direct Input'}) { #explain why UTF-8 is forced
+    &add_warning('W28', {});    
+}
+unless ($File->{Charset}->{XML} || $File->{Charset}->{META}){ #suggest character encoding info within doc
+    &add_warning('W27', {});
+}
+
 
 #
 # Abort if an error was flagged while finding the encoding.
