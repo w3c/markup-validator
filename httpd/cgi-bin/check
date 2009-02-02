@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.640 2009-01-30 21:16:26 ville Exp $
+# $Id: check,v 1.641 2009-02-02 22:35:53 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -199,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.640 $;
+  $VERSION =  q$Revision: 1.641 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -397,6 +397,7 @@ $File->{Templates}->{PrefillXHTML} = HTML::Template->new(
 
 $File->{Templates}->{Result}->param(cfg_home_page => $CFG->{'Home Page'});
 $File->{Templates}->{SOAP}->param(cfg_home_page => $CFG->{'Home Page'});
+$File->{Templates}->{UCN}->param(cfg_home_page => $CFG->{'Home Page'});
 
 undef $lang;
 undef %template_defaults;
