@@ -5,6 +5,7 @@ var W3C = {
 		//select elements
 		
 		W3C.Legends = $$('legend.toggletext');
+		W3C.LegendImage = $$('.toggleicon');
 		W3C.Options = $$('div.options');
 		
 		W3C.TabSet = $('tabset_tabs');
@@ -50,10 +51,8 @@ var W3C = {
 		//creating links on legends, with event listeners
 		
 		W3C.Legends.each(function(legend, i){
-			var html = legend.innerHTML;
 			var pid = W3C.Sections[i].id.replace(/-/g, '_');
 			var opt = '+with_options';
-			legend.setHTML('<a href="#'+ pid + opt + '">' + html + '</a>');
 			var option = W3C.Options[i];
 			var link = legend.getFirst();
 			link.addEvent('click', function(event){
@@ -111,11 +110,33 @@ var W3C = {
 	refreshOptionLinks: function(options, idx){
 		
 		if (!options){
+    		W3C.LegendImage.each(function(legendimage, i){
+                legendimage.setProperties({
+                    src: '../images/arrow-closed.png',
+                    alt: 'Show '
+                });
+            legendimage.removeClass('toggled');
+		});
 			if ($chk(idx)) W3C.OptionsFx[idx].slideOut();
 			W3C.Legends.removeClass('toggled');
+            
 		} else {
+    		W3C.LegendImage.each(function(legendimage, i){
+                legendimage.setProperties({
+                    src: '../images/arrow-open.png',
+                    alt: 'Hide '
+                });
+                legendimage.addClass('toggled');
 			if ($chk(idx)) W3C.OptionsFx[idx].slideIn();
 			W3C.Legends.addClass('toggled');
+			W3C.Legends.each(function(legend, i){
+			    var link = legend.getFirst();
+			    var linkhref = link.getProperty("href").replace("+with_options", '');
+			    link.setProperty("href", linkhref);
+			});
+			
+            });
+            
 		}
 		
 		W3C.TabLinks.each(function(link){

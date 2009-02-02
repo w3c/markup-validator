@@ -405,12 +405,14 @@ legend a:link, legend a:visited, legend a:hover, legend a:active {
 
 legend.toggletext {
 	cursor: pointer;
-	padding-left: 0.8em;
-	background: #EAEBEE url(../images/arrow-closed.png) 0 1.2em no-repeat;
+	padding-left: 0.2em;
 }
-
-legend.toggled {
-	background: #EAEBEE url(../images/arrow-open.png) 0 1.4em no-repeat;
+legend.toggletext img {
+    padding-bottom: 2px;
+    
+}
+img.toggled { 
+padding-bottom: 4px;    
 }
 
 p.instructions {
