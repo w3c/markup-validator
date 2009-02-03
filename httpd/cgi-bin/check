@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.641 2009-02-02 22:35:53 ot Exp $
+# $Id: check,v 1.642 2009-02-03 00:43:36 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -199,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.641 $;
+  $VERSION =  q$Revision: 1.642 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1880,16 +1880,22 @@ sub report_errors ($) {
     foreach my $err (@{$File->{Errors}}) {
       my $line;
       my $col = 0;
-      if (defined($err->{char}) && $err->{char} =~ /^[0-9]+$/ ){
-        ($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $err->{char});
-        $line = &mark_error($line, $col);
+      if($File->{Content}->[$err->{line}-1]) { # avoid truncating lines that do not exist
+          if (defined($err->{char}) && $err->{char} =~ /^[0-9]+$/ ){
+            ($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $err->{char});
+            $line = &mark_error($line, $col);
+          }
+          elsif (defined($err->{line})) {
+            $col = length($File->{Content}->[$err->{line}-1]);
+            $col = 80 if ($col > 80);
+            ($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $col);
+            $line = &ent($line) . "…";
+            $col = 0;
+          }
       }
-      elsif (defined($err->{line})) {
-        $col = length($File->{Content}->[$err->{line}-1]);
-        $col = 80 if ($col > 80);
-        ($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $col);
-        $line = &ent($line) . "…";
-        $col = 0;
+      else {
+          $col = 0;
+          $line = "";
       }
       my $explanation = "";
       if ($err->{expl}) {
@@ -2088,11 +2094,13 @@ sub match_DTD_FPI_SI {
     }
     else { # FPI not know, checking if the SI is
         foreach my $proper_FPI (keys %{$CFG->{Types}}) {
-            if ($CFG->{Types}->{$proper_FPI}->{SysID} eq $SI) {
-                &add_warning('W26', {W26_dtd_pub => $FPI,
-                W26_dtd_pub_display =>$CFG->{Types}->{$proper_FPI}->{Display},
-                W26_dtd_sys => $SI,
-                W26_dtd_pub_recommend=> $proper_FPI });
+            if ($CFG->{Types}->{$proper_FPI}->{SysID}) {
+                if ($CFG->{Types}->{$proper_FPI}->{SysID} eq $SI) {
+                    &add_warning('W26', {W26_dtd_pub => $FPI,
+                    W26_dtd_pub_display =>$CFG->{Types}->{$proper_FPI}->{Display},
+                    W26_dtd_sys => $SI,
+                    W26_dtd_pub_recommend=> $proper_FPI });
+                }
             }
         }
     }
@@ -2170,17 +2178,19 @@ sub preparse_doctype {
   if (($File->{DOCTYPE} eq '') and ($File->{Root} eq "svg") ) {
     if (($File->{'Root Version'}) or ($File->{'Root BaseProfile'}))
     {
+      if (! $File->{'Root Version'}) { $File->{'Root Version'} = "0"; }
+      if (! $File->{'Root BaseProfile'}) { $File->{'Root BaseProfile'} = "0"; }
       if ($File->{'Root Version'} eq "1.0"){
         $File->{DOCTYPE} = "-//W3C//DTD SVG 1.0//EN";
         $File->{"DOCTYPEless OK"} = TRUE;
         $File->{Opt}->{DOCTYPE} = "SVG 1.0";
-      }
-      elsif ((($File->{'Root Version'} eq "1.1") or (!$File->{'Root Version'})) and ($File->{'Root BaseProfile'} eq "tiny")) {
+      }      
+      if ((($File->{'Root Version'} eq "1.1") or ($File->{'Root Version'} eq "0")) and ($File->{'Root BaseProfile'} eq "tiny")) {
           $File->{DOCTYPE} = "-//W3C//DTD SVG Tiny 1.1//EN";
           $File->{"DOCTYPEless OK"} = TRUE;
           $File->{Opt}->{DOCTYPE} = "SVG 1.1 Tiny";
       }
-      elsif ((($File->{'Root Version'} eq "1.1")  or (!$File->{'Root Version'})) and ($File->{'Root BaseProfile'} eq "basic")) {
+      elsif ((($File->{'Root Version'} eq "1.1")  or ($File->{'Root Version'} eq "0")) and ($File->{'Root BaseProfile'} eq "basic")) {
           $File->{DOCTYPE} = "-//W3C//DTD SVG Basic 1.1//EN";
           $File->{Opt}->{DOCTYPE} = "SVG 1.1 Basic";
           $File->{"DOCTYPEless OK"} = TRUE;
@@ -2190,6 +2200,8 @@ sub preparse_doctype {
           $File->{Opt}->{DOCTYPE} = "SVG 1.1";
           $File->{"DOCTYPEless OK"} = TRUE;
       }
+      if ($File->{'Root Version'} eq "0") { $File->{'Root Version'} = undef; }
+      if ($File->{'Root BaseProfile'} eq "0") { $File->{'Root BaseProfile'} = undef; }
     }
     else {
       # by default for an svg root elt, we use SVG 1.1
