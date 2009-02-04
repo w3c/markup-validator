@@ -11,7 +11,6 @@ WriteMakefile(
                       Config::General       => 2.31,
                       Encode                => 0,
                       Encode::HanExtra      => 0,
-                      Encode::JIS2K         => 0,
                       File::Spec::Functions => 0,
                       HTML::Encoding        => 0.52,
                       HTML::Parser          => 3.24,

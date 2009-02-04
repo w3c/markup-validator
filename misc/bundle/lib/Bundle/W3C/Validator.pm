@@ -24,7 +24,6 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
  Config::General 2.31
  Encode
  Encode::HanExtra
- Encode::JIS2K
  File::Spec::Functions
  HTML::Encoding 0.52
  HTML::Parser 3.24

@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.642 2009-02-03 00:43:36 ot Exp $
+# $Id: check,v 1.643 2009-02-04 20:01:39 ville Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -52,7 +52,6 @@ use Encode                    qw();
 use Encode::Alias             qw();
 use Encode::HanExtra          qw(); # for some chinese character encodings,
                                     # e.g gb18030
-use Encode::JIS2K             qw(); # ditto extra japanese encodings
 use File::Spec::Functions     qw(catfile);
 use HTML::Encoding       0.52 qw();
 use HTML::Parser         3.24 qw(); # Need 3.24 for $p->parse($code_ref)
@@ -199,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.642 $;
+  $VERSION =  q$Revision: 1.643 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -223,7 +222,10 @@ $rsrc{msg}{0} ||=
   };
 $RSRC = \%rsrc;
 
-
+eval {
+  local $SIG{__DIE__};
+  require Encode::JIS2K; # for optional extra Japanese encodings
+};
 
 } # end of BEGIN block.
 

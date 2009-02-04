@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.44 2009-01-07 22:19:31 ville Exp $"
---><!--#set var="date" value="\$Date: 2009-01-07 22:19:31 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.45 2009-02-04 20:01:39 ville Exp $"
+--><!--#set var="date" value="\$Date: 2009-02-04 20:01:39 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -132,7 +132,8 @@ install Bundle::W3C::Validator
         <dd>
           Configuration file handling.
         </dd>
-        <dt><a href="http://search.cpan.org/dist/Encode/">Encode</a>, <a href="http://search.cpan.org/dist/Encode-HanExtra/">Encode-HanExtra</a> and <a href="http://search.cpan.org/dist/Encode-JIS2K/">Encode-JIS2k</a></dt>
+        <dt><a href="http://search.cpan.org/dist/Encode/">Encode</a> and
+            <a href="http://search.cpan.org/dist/Encode-HanExtra/">Encode-HanExtra</a></dt>
         <dd>
           Support for multiple character encodings.
         </dd>
@@ -188,6 +189,13 @@ install Bundle::W3C::Validator
         The perl modules listed below are optional; the validator will use
         them to provide some extra functionality if they're available.
       </p>
+
+      <dl>
+        <dt><a href="http://search.cpan.org/dist/Encode-JIS2K/">Encode-JIS2K</a></dt>
+        <dd>
+          Support for additional Japanese character encodings.
+        </dd>
+      </dl>
 
       <dl>
         <dt><a href="http://search.cpan.org/dist/HTML-Tidy/">HTML-Tidy</a></dt>
