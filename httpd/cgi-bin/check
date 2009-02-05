@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.644 2009-02-04 20:06:48 ville Exp $
+# $Id: check,v 1.645 2009-02-05 21:54:08 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.644 $;
+  $VERSION =  q$Revision: 1.645 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -708,8 +708,43 @@ if (&is_xml($File)) {
     $xml_string = undef;
     my $xml_parse_errors_line = undef;
     my @xmlwf_error_list;
+    my @xmlwf_obj_error_list;
+    if (ref($@)) {
+        # handle a structured error (XML::LibXML::Error object)
+        # (lib XML::LibXML > 0.66, but will work MUCH better > 0.69 )
+        push (@xmlwf_obj_error_list, $@);
+        # my $prev_err = $@->_prev();
+        # die($prev_err->{msg});
+        my $err_obj = $@;
+        while($err_obj->_prev()) {
+            $err_obj = $err_obj->_prev();
+            unshift(@xmlwf_obj_error_list, $err_obj);
+        }
+        my $num_xmlwf_error = 0;
+        foreach my $err_obj (@xmlwf_obj_error_list){ 
+            #die($err_obj->dump());
+            my $err;
+            my $offset;
+            #if($err_obj->int2()) {$offset = $err_obj->int2();} # this should be the location of the column per http://xmlsoft.org/html/libxml-xmlerror.html
+            if ($err_obj->num2()) {$offset = $err_obj->num2();} # this is bogus but seems to be the actual behavior
+            $err->{src}  = '...'; # do this with show_open_entities()?
+            $err->{line} = $err_obj->line();
+            $err->{char} = $offset;
+            $err->{num}  = "libxml2-".$err_obj->code();
+            $err->{type} = "E";
+            $err->{msg}  = $err_obj->message();
+            # The validator will sometimes fail to dereference entities files
+            # we're filtering the bogus resulting error
+            if ($err->{msg} =~ /Entity '\w+' not defined/) {
+              $err = undef;
+              next;
+            }
+            push (@xmlwf_error_list, $err);
+            $num_xmlwf_error++;
+        }
+    } 
+    
     if ($@) {
-
       my $xmlwf_errors = $@;
       my $xmlwf_error_line = undef;
       my $xmlwf_error_col = undef;
@@ -789,10 +824,10 @@ if (&is_xml($File)) {
 
         }
       }
-      foreach my $errmsg (@xmlwf_error_list){
-        $File->{'Is Valid'} = FALSE;
-        push @{$File->{WF_Errors}}, $errmsg;
-      }
+    }
+    foreach my $errmsg (@xmlwf_error_list){
+      $File->{'Is Valid'} = FALSE;
+      push @{$File->{WF_Errors}}, $errmsg;
     }
   }
 }
@@ -837,8 +872,12 @@ sub html5_validate (\$) {
     # most likely be a source of errors about internal/actual charset
     # differences as long as our transcoding process does not "fix" the
     # charset info in XML declaration and meta http-equiv (any others?).
-
-    $req->content_type("$File->{ContentType}; charset=UTF-8");
+    if($File->{'Direct Input'}) { # sane default when using html5 validator by direct input
+        $req->content_type("text/html; charset=UTF-8");        
+    }
+    else {
+        $req->content_type("$File->{ContentType}; charset=UTF-8");
+    }
     $req->content(Encode::encode_utf8(join("\n", @{$File->{Content}})));
   }
   else {
@@ -906,7 +945,7 @@ sub html5_validate (\$) {
 
           }
           if($attribute->name eq "last-column") {
-            $html5_error_col = $attribute->getValue()-1;
+            $html5_error_col = $attribute->getValue();
           }
           if($attribute->name eq "last-line") {
             $html5_error_line = $attribute->getValue();
@@ -2018,7 +2057,7 @@ sub mark_error (\$\$) {
     } elsif ($col == length $line) { # If error is at EOL...
       $length = $col - 1; # ...leave last char to indicate position.
     } else { # Otherwise grab everything up to pos of error.
-      $length = $col;
+      $length = $col-1;
     }
     $left = substr $line, $offset, $length;
   }
@@ -2033,7 +2072,7 @@ sub mark_error (\$\$) {
     if ($col == length $line) { # If err is at EOL...
       $offset = $col - 1; # ...then grab last char on line instead.
     } else {
-      $offset = $col; # Otherwise just grab the char.
+      $offset = $col-1; # Otherwise just grab the char.
     }
     $char = substr $line, $offset, $length;
     $char = &ent($char);
@@ -2050,7 +2089,7 @@ sub mark_error (\$\$) {
     if ($col == length $line) { # If at EOL...
       $offset = 0; # Don't bother as there is nothing left to grab.
     } else {
-      $offset = $col + 1; # Otherwise get everything from char-after-error.
+      $offset = $col; # Otherwise get everything from char-after-error.
     }
 
     # Length...
@@ -2926,7 +2965,7 @@ sub error
 
   $err->{src}  = '...'; # do this with show_open_entities()?
   $err->{line} = $mess->{primary_message}{LineNumber};
-  $err->{char} = $mess->{primary_message}{ColumnNumber};
+  $err->{char} = $mess->{primary_message}{ColumnNumber}+1;
   $err->{num}  = $mess->{primary_message}{Number};
   $err->{type} = $mess->{primary_message}{Severity};
   $err->{msg}  = $mess->{primary_message}{Text};
