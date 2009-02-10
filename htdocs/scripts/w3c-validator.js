@@ -112,7 +112,7 @@ var W3C = {
 		if (!options){
     		W3C.LegendImage.each(function(legendimage, i){
                 legendimage.setProperties({
-                    src: '../images/arrow-closed.png',
+                    src: './images/arrow-closed.png',
                     alt: 'Show '
                 });
             legendimage.removeClass('toggled');
@@ -123,7 +123,7 @@ var W3C = {
 		} else {
     		W3C.LegendImage.each(function(legendimage, i){
                 legendimage.setProperties({
-                    src: '../images/arrow-open.png',
+                    src: './images/arrow-open.png',
                     alt: 'Hide '
                 });
                 legendimage.addClass('toggled');
