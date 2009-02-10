@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.645 2009-02-05 21:54:08 ot Exp $
+# $Id: check,v 1.646 2009-02-10 13:53:01 ot Exp $
 
 #
 # Disable buffering on STDOUT!
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.645 $;
+  $VERSION =  q$Revision: 1.646 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -713,8 +713,6 @@ if (&is_xml($File)) {
         # handle a structured error (XML::LibXML::Error object)
         # (lib XML::LibXML > 0.66, but will work MUCH better > 0.69 )
         push (@xmlwf_obj_error_list, $@);
-        # my $prev_err = $@->_prev();
-        # die($prev_err->{msg});
         my $err_obj = $@;
         while($err_obj->_prev()) {
             $err_obj = $err_obj->_prev();
@@ -725,8 +723,7 @@ if (&is_xml($File)) {
             #die($err_obj->dump());
             my $err;
             my $offset;
-            #if($err_obj->int2()) {$offset = $err_obj->int2();} # this should be the location of the column per http://xmlsoft.org/html/libxml-xmlerror.html
-            if ($err_obj->num2()) {$offset = $err_obj->num2();} # this is bogus but seems to be the actual behavior
+            eval {$offset = $err_obj->column()}; # only in XML::LibXML 0.69_2 and above, so wrapping it safely
             $err->{src}  = '...'; # do this with show_open_entities()?
             $err->{line} = $err_obj->line();
             $err->{char} = $offset;
@@ -743,8 +740,7 @@ if (&is_xml($File)) {
             $num_xmlwf_error++;
         }
     } 
-    
-    if ($@) {
+    elsif ($@) {
       my $xmlwf_errors = $@;
       my $xmlwf_error_line = undef;
       my $xmlwf_error_col = undef;
