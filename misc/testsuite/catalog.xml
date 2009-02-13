@@ -652,6 +652,14 @@
     </test>
 
     <test>
+        <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/4412-fuzzymatch.xhtml</uri>
+        <html:p>Testing fuzzy matching: typos in attribute and element, and wrong-cased attribute and element. </html:p>
+        <expect>
+          <Validity>Fail</Validity>
+        </expect>
+    </test>
+
+    <test>
         <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html5-precise-error.html</uri>
         <html:p>HTML5 document with tokenizer error (precise locator)</html:p>
         <expect>
