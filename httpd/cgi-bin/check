@@ -14,8 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.646 2009-02-10 13:53:01 ot Exp $
-
+# $Id: check,v 1.647 2009-02-13 21:04:15 ot Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -63,6 +62,7 @@ use SGML::Parser::OpenSP      qw();
 use URI                       qw();
 use URI::Escape               qw(uri_escape);
 use XML::LibXML               qw();
+use String::Approx            qw(amatch adist adistr);
 
 ###############################################################################
 #### Constant definitions. ####################################################
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.646 $;
+  $VERSION =  q$Revision: 1.647 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2990,6 +2990,38 @@ sub error
     }
     # if mode is not XML, we do report the error. It should not happen in the case of <html> without doctype,
     # in that case the error message will be #344
+  }
+
+  if ( ($err->{num} eq '108') or ($err->{num} eq '76') )
+  # element or attribute does not exist? Let's try and fuzzy-match it
+  {
+      my $bogus_elt_attr = $err->{msg};
+      $bogus_elt_attr =~ s/.*"(.+)".*/$1/;
+      
+      if (
+          ((exists $self->{CFG}->{Attributes}->{lc($bogus_elt_attr)}) and ($err->{num} eq '108'))
+          or
+           ((exists $self->{CFG}->{Elements}->{lc($bogus_elt_attr)}) and ($err->{num} eq '76'))
+          )
+      { 
+          $err->{msg} .= '. Maybe you meant "'.lc($bogus_elt_attr).'"?';
+      }
+      else {
+          my @matches;
+          @matches = String::Approx::amatch($bogus_elt_attr, ["3i"], keys %{$self->{CFG}->{Attributes}}); 
+          if (@matches){
+              my %distances;
+              @distances{@matches} = map { abs } String::Approx::adistr(lc($bogus_elt_attr), @matches);
+              my @matches_sorted = sort { $distances{$a} <=> $distances{$b} } @matches;
+               if (@matches > 1){
+                  $err->{msg} .= '. Maybe you meant "'.$matches_sorted[0].'" or "'.$matches_sorted[1].'"?';
+              
+              }
+              else {
+                  $err->{msg} .= '. Maybe you meant "'.$matches_sorted[0].'"?';
+              }
+          }
+      }
   }
 
    if (($err->{num} eq '113') and ($err->{msg} =~ /xml:space/)) {

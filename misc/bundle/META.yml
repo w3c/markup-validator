@@ -21,6 +21,7 @@ requires:
     SGML::Parser::OpenSP:          0
     URI:                           0
     XML::LibXML:                   0
+    String::Approx:                0
 meta-spec:
     url:     http://module-build.sourceforge.net/META-spec-v1.3.html
     version: 1.3
