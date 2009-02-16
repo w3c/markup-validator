@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.647 2009-02-13 21:04:15 ot Exp $
+# $Id: check,v 1.648 2009-02-16 14:11:42 ot Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.647 $;
+  $VERSION =  q$Revision: 1.648 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1424,6 +1424,13 @@ sub report_valid {
       $T->param(have_alt_badge => TRUE);
       }
 
+      if (exists $CFG->{Types}->{$File->{DOCTYPE}}->{Badge}->{'RDFa'}) {
+        $T->param(have_badge_rdfa => TRUE);
+        $T->param(badge_rdfa => $CFG->{Types}->{$File->{DOCTYPE}}->{Badge}->{'RDFa'});
+      } else {
+        $T->param(have_badge_rdfa => FALSE);
+      }
+      
       $T->param(badge_alt  => $cfg->{Badge}->{Alt});
       $T->param(badge_h    => $cfg->{Badge}->{Height});
       $T->param(badge_w    => $cfg->{Badge}->{Width});
