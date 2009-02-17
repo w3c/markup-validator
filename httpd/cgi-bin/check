@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.648 2009-02-16 14:11:42 ot Exp $
+# $Id: check,v 1.649 2009-02-17 14:10:41 ot Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.648 $;
+  $VERSION =  q$Revision: 1.649 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -3015,11 +3015,20 @@ sub error
       }
       else {
           my @matches;
-          @matches = String::Approx::amatch($bogus_elt_attr, ["3i"], keys %{$self->{CFG}->{Attributes}}); 
+          if ($err->{num} eq '108') {
+              @matches = String::Approx::amatch($bogus_elt_attr, ["3i"], keys %{$self->{CFG}->{Attributes}});
+          } 
+          elsif ($err->{num} eq '76') {
+              @matches = String::Approx::amatch($bogus_elt_attr, ["3i"], keys %{$self->{CFG}->{Elements}});
+          } 
           if (@matches){
               my %distances;
-              @distances{@matches} = map { abs } String::Approx::adistr(lc($bogus_elt_attr), @matches);
+              @distances{@matches} = map { abs } String::Approx::adist(lc($bogus_elt_attr), @matches);
               my @matches_sorted = sort { $distances{$a} <=> $distances{$b} } @matches;
+              # a bit of printf debugging can't hurt
+              # foreach my $match (@matches_sorted) {
+              #     $err->{msg} .= '<br /> match '.$match.': '.$distances{$match};
+              # }
                if (@matches > 1){
                   $err->{msg} .= '. Maybe you meant "'.$matches_sorted[0].'" or "'.$matches_sorted[1].'"?';
               
