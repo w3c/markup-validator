@@ -31,6 +31,7 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
  LWP::UserAgent 2.032
  Net::IP
  SGML::Parser::OpenSP
+ String::Approx
  URI
  XML::LibXML
 

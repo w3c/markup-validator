@@ -18,6 +18,7 @@ WriteMakefile(
                       LWP::UserAgent        => 2.032,
                       Net::IP               => 0,
                       SGML::Parser::OpenSP  => 0,
+                      String::Approx        => 0,
                       URI                   => 0,
                       XML::LibXML           => 0,
                      },
