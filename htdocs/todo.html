@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: todo.html,v 1.66 2008-10-23 10:19:14 ot Exp $"
---><!--#set var="date" value="\$Date: 2008-10-23 10:19:14 $"
+<!--#set var="revision" value="\$Id: todo.html,v 1.67 2009-02-24 18:11:30 ot Exp $"
+--><!--#set var="date" value="\$Date: 2009-02-24 18:11:30 $"
 --><!--#set var="title" value="Development Roadmap for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
@@ -24,7 +24,7 @@
       <a href="http://lists.w3.org/Archives/Public/www-validator/">www-validator
         mailing list</a>.</li>
     </ul>
-    <h3>High-Level Objectives</h3>
+    <h3 id="highlevel">High-Level Objectives</h3>
     <ul>
     <li>Provide the web with a one-stop service for Web Quality check </li>
     <li>Help raise quality for (m)any kind(s) of Web content </li>
@@ -34,44 +34,64 @@
     <li>Remain the trusted source by professionals </li>
     <li>Find the right balance between accuracy and user-friendliness </li></ul>
 
-    <h3>Roadmap</h3>
-    <ul>
-    <li><strong>Multi-engine validator</strong>. The current validator is mostly based on an DTD parser, with an XML parser used only for some checks. 
-        The current development version plugs into an html5 parser for the validation of HTML5 content. In the future, other engines 
-        could be used to check compound XML documents (with NVDL+relax, XML Schema, Schematron - using e.g the relaxed engine) </li>
-    <li><strong>Mulitilingual tool</strong>. The Markup Validator receives 1M requests per day, and is only in English. Making it multiligual 
+    <h3 id="roadmap">Roadmap</h3>
+    <h4>Multi-engine validator</h4>
+    <p>The current validator is mostly based on an DTD parser, with an XML parser used only for some checks. 
+      It also plugs into an html5 parser for the validation of HTML5 content. In the future, other engines 
+        should be used to check compound XML documents (with NVDL+relax, XML Schema, Schematron - using e.g the relaxed engine)</p>
+    <p>The following flowchart describes the validation engine architecture, as it is now, and as we envision it in the near future.
+      
+      </p>
+      <p style="float: left; width: 600px; text-align: center"><a href="images/roadmap/validators-chart.png"><img src="images/roadmap/validators-chart-small.png" alt="validator flow chart: now and next generation"></a><br />(follow link to enlarge, or download the vector-based 
+      <a href="images/roadmap/validators-chart.graffle">graffle</a>,    
+      <a href="images/roadmap/validators-chart.pdf">PDF</a> or       
+      <a href="images/roadmap/validators-chart.svg">SVG</a> version)</p>
+      <div style="display: block; margin-left: 620px;">
+        <h5>Milestones</h5>
+        <p>@@ TODO @@ add these as Bugzilla entries</p>
+        <ol>
+          <li><p>Interface with an NVDL+RelaxNG engine for validation of compound XML documents (coding the interface will be similar to the one
+            done for hTML5 engine)</p></li>
+          <li><p>Choose the right NVDL+RelaxNG engine. relaxed and validator.nu provide such capability, and of course there is the option to roll our own (jing, etc).</p></li>
+          <li><p>Change check code to send multiple-namespace XML documents to NVDL+RelaxNG engine</p></li>
+          <li><p>Interface with the feed validator, RDF validator and CSS validator programatically (instead of redirecting, as done today)</p></li>  
+        </ol>
+      </div>
+    <h4 style="clear: both">Mulitilingual tool</h4>
+    <p>The Markup Validator receives 1M requests per day, and is only in English. Making it multiligual 
         would make the tool easier to use for web developers and designers worldwide. Although this may be technically tricky 
-        (given the number of message/engine sources), the community would be very excited in participating in the translation effort. </li>
-    <li><strong>Site-wide services</strong>. The markup validator currently checks a single page. Some companion software (such as the log validator) 
-            could be made into a web service to provide crawling, batch validation, scheduled checks etc. </li>
-    <li><strong>Check beyond markup</strong>: This may be in the roadmap for Unicorn rather than the markup validator, but it fits in the "long-term" 
+        (given the number of message/engine sources), the community would be very excited in participating in the translation effort.</p>
+    <h4>Site-wide services</h4>
+    <p>The markup validator currently checks a single page. Some companion software (such as the log validator) 
+            could be made into a web service to provide crawling, batch validation, scheduled checks etc.</p>
+    <h4>Check beyond markup</h4>
+    <p>This may be in the roadmap for Unicorn rather than the markup validator, but it fits in the "long-term" 
         vision of developing the W3C Web Quality services. Checking of RDDL, RDFa, microformats and other rich markup are in scope. 
-    Many other checks could be added to the validators, such as: <ul>
+    Many other checks could be added to the validators, such as: </p><ul>
         <li>document cacheability </li>
         <li>spell checking </li>
         <li>semantic extraction </li>
         <li>accessibility evaluation </li>
         </ul>
-    </li>
-    <li><strong>Less finger pointing, more problem solving</strong>. Most of our tools, and especially the "star" HTML validator, 
+    <h4>Less finger pointing, more problem solving</h4>
+    <p>Most of our tools, and especially the "star" HTML validator, 
         have a binary "valid/invalid" way of presenting their results. While this is useful for some, it tends to make people look away 
         from the "big picture" of web quality. A new one-stop quality checker could help bring a paradigm shift by showing diverse 
         aspects of web quality, while systematically suggesting solutions for every problem. This would involve working with designers 
-        to find ways to present aggregated quality information in a clear and positive manner. </li>
-    </ul>
-
+        to find ways to present aggregated quality information in a clear and positive manner.</p>
+        
     <h3>Past Releases Roadmap</h3>
     <dl>
-      <dt>Versions Prior to 0.6.0</dt>
-      <dd>Versioning up to version 0.5.x was only done as a development mechanism, and 
-        the validator was not following a strict release cycle.</dd>
+      <dt>0.8.x</dt>
+      <dd>The 0.8.0 release sees the validator code reorganized around a more modular architecture, adding better XML checking capabilities. In 0.8.5, HTML5 checking capabilities were added by interfacing with the validator.nu engine.</dd>
+      <dt>0.7.x</dt>
+      <dd>The 0.7.0 release reorganized the validator to use templates, making it easier to produce different outputs (hence the development of an API). 0.7.0 through 0.7.4 included mostly bug fixes and documentation updates.</dd>
       <dt>0.6.x</dt>
       <dd>The 0.6.0 release, in 2002, kicked in a new phase of open source development for the validator, 
         including a number of bug fixes. 0.6.0 through 0.6.7 included mostly bug fixes and documentation updates.</dd>
-      <dt>0.7.x</dt>
-      <dd>The 0.7.0 release reorganized the validator to use templates, making it easier to produce different outputs (hence the development of an API). 0.7.0 through 0.7.4 included mostly bug fixes and documentation updates.</dd>
-      <dt>0.8.x</dt>
-      <dd>The 0.8.0 release sees the validator code reorganized around a more modular architecture, adding better XML checking capabilities.</dd>
+      <dt>Versions Prior to 0.6.0</dt>
+      <dd>Versioning up to version 0.5.x was only done as a development mechanism, and 
+        the validator was not following a strict release cycle.</dd>
     </dl>
   </div><!-- doc -->
 <!--#include virtual="footer.html" -->
