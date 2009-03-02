@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.650 2009-03-02 18:32:36 ot Exp $
+# $Id: check,v 1.651 2009-03-02 18:41:14 ot Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.650 $;
+  $VERSION =  q$Revision: 1.651 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -3004,8 +3004,15 @@ sub error
   {
       my $bogus_elt_attr = $err->{msg};
       $bogus_elt_attr =~ s/.*"(.+)".*/$1/;
+      if ($err->{num} eq '108') {
+          $err->{msg} = "Attribute \"".$bogus_elt_attr."\" is not a valid attribute";
+      }
       
-      if ( (
+      if((exists $self->{CFG}->{Attributes}->{lc($bogus_elt_attr)}) and (lc($bogus_elt_attr) eq $bogus_elt_attr) and ($err->{num} eq '108')) {
+          # attribute not available in this context.
+          $err->{msg} = 'Attribute "'.$bogus_elt_attr.'" exists, but can not be used for this element.';
+      }
+      elsif ( (
              ((exists $self->{CFG}->{Attributes}->{lc($bogus_elt_attr)}) and ($err->{num} eq '108'))
            or
              ((exists $self->{CFG}->{Elements}->{lc($bogus_elt_attr)}) and ($err->{num} eq '76'))
@@ -3015,11 +3022,7 @@ sub error
       { 
           $err->{msg} .= '. Did you mean "'.lc($bogus_elt_attr).'"?';
       }
-      elsif((lc($bogus_elt_attr) eq $bogus_elt_attr) and ($err->{num} eq '108')) {
-          # attribute not available in this context.
-          $err->{msg} = 'Attribute '.$bogus_elt_attr.' exists, but can not be used for this element.';
-      }
-      else {
+      else { #fuzzy-match and suggest alternatives
           my @matches;
           if ($err->{num} eq '108') {
               @matches = String::Approx::amatch($bogus_elt_attr, ["3i"], keys %{$self->{CFG}->{Attributes}});
