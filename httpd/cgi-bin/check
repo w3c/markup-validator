@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.649 2009-02-17 14:10:41 ot Exp $
+# $Id: check,v 1.650 2009-03-02 18:32:36 ot Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.649 $;
+  $VERSION =  q$Revision: 1.650 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -3005,13 +3005,19 @@ sub error
       my $bogus_elt_attr = $err->{msg};
       $bogus_elt_attr =~ s/.*"(.+)".*/$1/;
       
-      if (
-          ((exists $self->{CFG}->{Attributes}->{lc($bogus_elt_attr)}) and ($err->{num} eq '108'))
-          or
-           ((exists $self->{CFG}->{Elements}->{lc($bogus_elt_attr)}) and ($err->{num} eq '76'))
+      if ( (
+             ((exists $self->{CFG}->{Attributes}->{lc($bogus_elt_attr)}) and ($err->{num} eq '108'))
+           or
+             ((exists $self->{CFG}->{Elements}->{lc($bogus_elt_attr)}) and ($err->{num} eq '76'))
           )
+          and (lc($bogus_elt_attr) ne $bogus_elt_attr)
+        ) 
       { 
-          $err->{msg} .= '. Maybe you meant "'.lc($bogus_elt_attr).'"?';
+          $err->{msg} .= '. Did you mean "'.lc($bogus_elt_attr).'"?';
+      }
+      elsif((lc($bogus_elt_attr) eq $bogus_elt_attr) and ($err->{num} eq '108')) {
+          # attribute not available in this context.
+          $err->{msg} = 'Attribute '.$bogus_elt_attr.' exists, but can not be used for this element.';
       }
       else {
           my @matches;
@@ -3030,11 +3036,11 @@ sub error
               #     $err->{msg} .= '<br /> match '.$match.': '.$distances{$match};
               # }
                if (@matches > 1){
-                  $err->{msg} .= '. Maybe you meant "'.$matches_sorted[0].'" or "'.$matches_sorted[1].'"?';
+                  $err->{msg} .= '. Did you mean "'.$matches_sorted[0].'" or "'.$matches_sorted[1].'"?';
               
               }
               else {
-                  $err->{msg} .= '. Maybe you meant "'.$matches_sorted[0].'"?';
+                  $err->{msg} .= '. Did you mean "'.$matches_sorted[0].'"?';
               }
           }
       }
