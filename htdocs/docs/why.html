@@ -1,67 +1,111 @@
-<!--#set var="revision" value="\$Id: why.html,v 1.8 2004-07-21 15:07:10 link Exp $"
---><!--#set var="date" value="\$Date: 2004-07-21 15:07:10 $"
+<!--#set var="revision" value="\$Id: why.html,v 1.9 2009-03-09 20:08:01 ot Exp $"
+--><!--#set var="date" value="\$Date: 2009-03-09 20:08:01 $"
 --><!--#set var="title" value="Why Validate?"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
-    <div id="skip" class="colophon">
+<div class="doc">
       <h2>Why Validate?</h2>
+
       <p>
         This document attempts to answer the questions many people have
         regarding <em>why</em> they should bother with Validating their
         web sites and tries to dispel a few common myths.
       </p>
+      <h3 id="TableOfContents">Table of contents</h3>
+
+      <div id="toc">
+        <ol>
+      <li><a href="#history">History of this document</a></li>
+      <li><a href="#why_pros">Why Web professionals choose to validate</a>
+      <ol>
+        <li><a href="#debug">Validation as a debugging tool</a></li>
+        <li><a href="#futureproof">Validation as a future-proof quality check</a></li>
+        <li><a href="#maintenance">Validation eases maintenance</a></li>
+        <li><a href="#learning">Validation helps teach good practices</a></li>
+        <li><a href="#professionalism">Validation is a sign of professionalism</a></li>
+      </ol>
+      </li>
+      <li><a href="#faq">Frequently asked questions</a>
+        <ol>
+          <li><a href="#looksfine">“My site looks right and works fine - isn't that enough?”</a></li>
+          <li><a href="#bignames">“Lots of websites out there don't validate -including household-name companies”</a></li>
+          <li><a href="#boring">“Validation means boring websites, and stifles creativity”</a></li>
+        </ol>
+      </li>
+</ol>
+</div>
+      <h3 id="history">History of this document</h3>
       <p>
         The original version was written by
         <a href="http://www.webthing.com/~nick/">Nick Kew</a> of
         <a href="http://www.webthing.com/">Web&#222;ing Ltd.</a> for their
         <a href="http://valet.webthing.com/">Site Valet</a> service and he has
-        generously donated it for our use. This version has been slightly
-        modified, but is essentially the same.
+        generously donated it for our use.
       </p>
-    </div>
-    <div class="intro">
-      <h3>What is Validation?</h3>
-      <p>
-        Validation is a process of checking your documents against a formal
-        Standard, such as those published by the
-        <a href="http://www.w3.org/">World Wide Web Consortium (W3C)</a>
-        for HTML and XML-derived Web document types, or by the
-        <a href="http://www.wapforum.org/">WapForum</a> for WML, etc.  It
-        serves a similar purpose to spell checking and proofreading for grammar
-        and syntax, but is much more precise and reliable than any of those
-        processes because it is dealing with precisely-specified machine
-        languages, not with nebulously-defined human natural language.
-      </p>
-      <p>
-        It is important to note that validation has a very precise meaning.
-        Unfortunately the issue is confused by the fact that some products
-        falsely claim to "validate", whilst in fact applying an arbitrary
-        selection of tests that are not derived from any standard.  Such 
-        tools may be genuinely useful, but should be used alongside true
-        validation, not in place of it.
-      </p>
-    </div>
-    <div>
-      <h3>Why Validate?</h3>
-      <p>
-        Well, firstly there is the very practical issue that non-valid
-        pages are (by definition) relying on error-correction by a
-        browser.  This error correction can and does vary radically
-        across different browsers and versions, so that many authors
-        who unwittingly relied on the quirks of Netscape 1.1 suddenly
+      <p>The document has been updated over time, notably thanks to the many 
+        Web authors who shared their own rationale and motivation for using 
+        Web Quality checking tools.
+      </p> 
+      <h3 id="why_pros">Why Web professionals choose to validate</h3>
+      <p>In early 2009 we <a href="http://www.w3.org/QA/2009/01/valid_sites_work_better.html" 
+        title="Valid sites work better(?) - W3C Q&amp;A Weblog">asked the Web community</a>
+        if they thought there still was a strong motivation for validation. Here are some 
+        reasons they mentioned:</p>
+      <h4 id="debug">Validation as a debugging tool</h4>
+      <p>While contemporary Web browsers do an increasingly good job of parsing even the 
+        worst HTML “tag soup”, some errors are not always caught gracefully. Very often, 
+        different software on different platforms will not handle errors in a similar 
+        fashion, making it extremely difficult to apply style or layout consistently.</p> 
+        
+        <p>Using standard, interoperable markup and stylesheets, on the other hand, offers a much greater
+        chance of having one's page handled consistently across platforms and user-agents. Indeed, most 
+        developers creating rich Web applications know that reliable scripting needs the document to be 
+        parsed by User-Agents without any unexpected error, and will make sure that their markup and CSS is
+        validated before creating a rich interactive layer.</p>
+      <p>When surveyed, a large majority of Web professionals will state that validation errors
+        is the first thing they will check whenever they run into a Web styling or scripting bug.</p> 
+        
+      <h4 id="futureproof">Validation as a future-proof quality check</h4>
+      <p>Checking that a page “displays fine” in several contemporary browsers may be a 
+        reasonable insurance that the page will “work” today, but it does not guarantee
+        that it will work tomorrow.</p>
+        <p>In the past, many authors who relied on the quirks of Netscape 1.1 suddenly
         found their pages appeared totally blank in Netscape 2.0.
         Whilst Internet Explorer initially set out to be bug-compatible
         with Netscape, it too has moved towards standards compliance in
-        later releases.  Other browsers differ further.
-      </p>
-      <p>
-        The three questions below deal with three different points of
-        view on the issue of Validation.
-      </p>
-      <dl>
-        <dt>The novice (or non-technical website owner) question:</dt>
-        <dd>
-          <h4>"My site looks right and works fine - isn't that enough?"</h4>
+        later releases.</p>
+        <p> Validation is one of the simplest ways to check whether 
+        a page is built in accordance with Web standards, and provides one of the most reliable 
+        guarantee that future Web platforms will handle it as designed.</p>
+        
+      <h4 id="maintenance">Validation eases maintenance</h4>
+      <p>It is reasonable to consider that standards such as HTML and CSS are a form of
+        “coding style” which is globally agreed upon. Creating Web pages or applications
+        according to a widely accepted coding style makes them easier to maintain, even
+        if the maintenance and evolution is performed by someone else.</p>
+
+      <h4 id="learning">Validation helps teach good practices</h4>
+      <p>Many professionals have been authoring the Web with HTML and CSS for years and 
+        know these technologies by heart. Beginners and students, on the other hands, will
+        find automated checking tools invaluable in spotting mistakes. Some teachers also
+        stress that automated validation tests are a good introduction to broader, more
+        complex quality concepts such as accessibility.</p>
+      
+      <h4 id="professionalism">Validation is a sign of professionalism</h4>
+      <p>As of today, there is little or no certification for Web professionals, and only
+        few universities teach Web technologies, leaving most Web-smiths to learn by themselves, 
+        with varied success. Seasoned, able professionals will take pride in creating Web content
+        using semantic and well-formed markup, separation of style and content, etc. Validation
+        can then be used as a quick check to determine whether the code is the clean work of a
+        seasoned HTML author, or quickly hacked-together tag soup.</p>
+
+      <h3 id="faq">Frequently asked questions</h3>
+      <p>Validation, as any process of debugging code, is sometimes difficult, and
+        the vast improvements in automatic error correction has made modern browser
+        cope very well with errors in HTML or CSS. This makes validation seem useless
+        or costly to many people, and the following questions (or statement) are 
+        widespread:</p>
+          <h4 id="looksfine">“My site looks right and works fine - isn't that enough?”</h4>
           <p>
             The answer to this one is that markup languages are no more than
             data formats.  So a website doesn't look like anything at all!
@@ -78,19 +122,8 @@
             or text-to-speech without a publisher having to go to the
             trouble and expense of preparing a separate edition.
           </p>
-          <p>
-            It is perhaps unfortunate that the best-known browsers - Netscape
-            Navigator and MS Internet Explorer on Windows - are visually very
-            similar indeed in their presentation of many documents, differing
-            only in trivial details like margins and spacings.  The "same"
-            browser on a Mac or Unix/Linux display will often look far more
-            different.
-          </p>
-        </dd>
-        <dt>The perceptive observation</dt>
-        <dd>
-          <h4>"Lots of websites out there don't validate -
-            including household-name companies."</h4>
+          <h4 id="bignames">“Lots of websites out there don't validate -
+            including household-name companies.”</h4>
           <p>
             Do remember: household-name companies expect people to visit 
             <em>because of</em> the name and <em>in spite of</em>
@@ -107,31 +140,15 @@
             awarded damages to a blind user against the owners
             of a website he found inaccessible (Maguire vs SOCOG, August 2000).
           </p>
-        </dd>
-        <dt>The strawman argument</dt>
-        <dd>
-          <h4>"Validation means boring websites, and stifles creativity"</h4>
+          <h4 id="boring">“Validation means boring websites, and stifles creativity”</h4>
           <p>
-            This is simply head-in-the-sand ignorance (indeed, it lies at the
-            heart of the most spectacular hype-filled dot-com failures).
-            Validation is fully compatible with a wide range of dynamic pages,
-            multimedia presentations, scripting and active content, etc.  It
-            is part of the difference between doing it right and doing it
-            wrong in a dynamic multimedia presentation, just as much as in a
-            purely textual site.
+            That might have been the case a decade ago, when validation was the tool
+            of choice of people more interested in harnessing the power of the markup languages than
+            creating beautiful designs for their content; when many designers were not taught basics
+            of Web technology and would create beautiful but fragile and unreliable web sites.
           </p>
-          <p>
-            It is perfectly in order for authors to express their creativity on
-            the Web, though it is of course generally more appropriate to some
-            sites (e.g. recreational ones) than to others (e.g. informational
-            or functional sites like this one). But authors with creative
-            ambitions should bear in mind that in any artistic field, you
-            <em>must</em> start with a thorough understanding
-            of the rules before breaking them.  Otherwise you just look
-            foolish.
-          </p>
-        </dd>
-      </dl>
+          <p>This argument is completely moot today. In the past decade, most of the stunning, content
+            and design-rich Web sites were built with standard (X)HTML, CSS and scripting.</p>
     </div>
 <!--#include virtual="../footer.html" -->
   </body>
