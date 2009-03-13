@@ -4,7 +4,7 @@ use 5.8.0;
 use strict;
 
 use vars qw($VERSION);
-$VERSION = '0.8.4';
+$VERSION = '0.8.5';
 
 1;
 

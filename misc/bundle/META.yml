@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Bundle-W3C-Validator
-version:             0.8.4
+version:             0.8.5
 abstract:            Bundle of modules required by the W3C Markup Validator
 license:             ~
 author:              
