@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.78 2008-11-18 21:15:48 ot Exp $"
---><!--#set var="date" value="\$Date: 2008-11-18 21:15:48 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.79 2009-03-13 15:21:28 ot Exp $"
+--><!--#set var="date" value="\$Date: 2009-03-13 15:21:28 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#set var="feeds" value="1"
@@ -17,8 +17,37 @@
       <p>
         News for this service are also available as <a href="whatsnew.atom">an ATOM feed</a>.
       </p>
+      <p>Want to know not just the <em>latest news</em> but see the future and read about what's next?
+        Check out the <a href="todo.html">development Roadmap and TODO list</a>.</p>
     </div>
     <dl id="news">
+      <dt id="t2009-03-XX">2009-03-XX &mdash; 0.8.5 release:</dt>
+      <dd>
+          <p>The 0.8.5 release of the markup validator is a feature and bugfix release. Changes include:</p>
+          <ul>
+            <li>UI fix: many of our users were confused by the behaviour of the "More options" arrow. 
+              A small UI change should make the user experience less confusing.</li>
+            <li>New Feature: fuzzy matching used to suggest corrected markup. Analysis of many invalid
+              pages shows that the most common error comes from invalid (typo or non standard) elements and attributes used.
+              The <a href="http://www.w3.org/blog/systeam/2009/02/16/validator_fuzzy_match" 
+              title="blog post on the validator's fuzzy matching">new feature</a> will help by suggesting possible (valid)
+              alternatives.</li>
+            <li>Bug Fix: <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6524">issues with SVG</a> were creating very 
+              large log output when validating SVG documents. The validator code has been amended to limit this log flood.</li>
+            <li>Bug Fix: the HTML5 validator integration broke some of the validator's “document type override” functionalities
+              in version 0.8.4. This is fixed in 0.8.5.</li> 
+            <li>New: the validator icon code, which one can add to web pages, now <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=65252">includes XHTML+RDFa</a> when applicable</li>
+            <li>Bug Fix / New: implementing <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6329">XML::LibXML Structured Errors</a>. The validator uses libxml2 and the XML::LibXML for well-formedness check. 
+              Recent versions of the perl library had bugs that made in backard-incompatible, causing the validator to not output all
+              well-formedness errors reliably. Some code was added to the validator to work with all future versions of that library, but 
+              we recommend not using XML::LibXML between versions 1.67 and 1.69 inclusive (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6329#c15">see how</a>).</li>
+            <li>UI Fix: accessibility improvements for screen readers.</li>
+            <li>Usability: the way in which the validator has to handle 
+              <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6259">direct input and character encodings</a>
+              has long been confusing to many. Improvements have been made that explain in clearer ways what the validator does.</li>
+            <li>New: the validator now recommends to declare  character encoding in the document itself, especially if there is a chance that the document will be read from or saved to disk, CD, etc - in accordance with <a href="http://www.w3.org/International/tutorials/tutorial-char-enc/#Slide0250">internationalization recommendations</a>.</li>
+          </ul>
+      </dd>
     <dt id="t2008-11-20">2008-11-20 &mdash; 0.8.4 release:</dt>
     <dd>
         <p>0.8.4 may sound like a very minor step from the <a href="t2008-08-08">version 0.8.3 released in August</a>, but this new release of the W3C Markup Validator brings some very important change: in addition to checking documents against etablished standards such as HTML 4.01 and XHTML 1.0, the validator can now check documents for conformance to <a href="http://www.w3.org/html/" title="Home page of the HTML Working Group at W3C">HTML5</a>, thanks to the integration with the <a href="http://about.validator.nu/">Validator.nu</a> html5 engine.</p>
