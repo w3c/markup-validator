@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.653 2009-03-17 16:50:32 ot Exp $
+# $Id: check,v 1.654 2009-03-17 18:03:43 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.653 $;
+  $VERSION =  q$Revision: 1.654 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1720,7 +1720,7 @@ sub handle_uri {
   my ($mode, $ct, $charset)
     = &parse_content_type(
                           $File,
-                          $res->header('Content-Type'),
+                          scalar($res->header('Content-Type')),
                           scalar($res->request->uri),
                          );
 
