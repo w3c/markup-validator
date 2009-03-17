@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.651 2009-03-02 18:41:14 ot Exp $
+# $Id: check,v 1.652 2009-03-17 16:27:34 ot Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.651 $;
+  $VERSION =  q$Revision: 1.652 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -845,10 +845,147 @@ if (($File->{DOCTYPE} eq "HTML5") or ($File->{DOCTYPE} eq "XHTML5")) {
     $File->{Templates}->{Error}->param(fatal_missing_checker  => "HTML5 Validator");
   }
 }
+elsif(($File->{DOCTYPE} eq '') and (($File->{Root} eq "svg") or @{$File->{Namespaces}} >1)){
+    # we send doctypeless SVG, or any doctypeless XML document with multiple namespaces found, to a different engine
+    # WARNING this is experimental.
+    if ($CFG->{External}->{CompoundXML}) {
+      $File = &compoundxml_validate($File);
+      &add_warning('W00', {
+        W00_experimental_name => "validator.nu Conformance Checker",
+        W00_experimental_URI  => "feedback.html"
+      });
+    }    
+}
 else {
   $File = &dtd_validate($File);
 }
 &abort_if_error_flagged($File, 0);
+
+sub compoundxml_validate (\$) {
+  my $File = shift;
+  my $ua = new W3C::Validator::UserAgent ($CFG, $File);
+
+  $File->{ParserName} = "validator.nu";
+  $File->{ParserOpts} = "";
+
+  my $url = URI->new($CFG->{External}->{CompoundXML});
+  $url->query_form(out => "xml");
+
+  my $req = HTTP::Request->new(POST => $url);
+
+  if ($File->{Opt}->{DOCTYPE} || $File->{Charset}->{Override}) {
+    # Doctype or charset overridden, need to use $File->{Content} in UTF-8
+    # because $File->{Bytes} is not affected by the overrides.  This will
+    # most likely be a source of errors about internal/actual charset
+    # differences as long as our transcoding process does not "fix" the
+    # charset info in XML declaration and meta http-equiv (any others?).
+    if($File->{'Direct Input'}) { # sane default when using html5 validator by direct input
+        $req->content_type("application/xml; charset=UTF-8");        
+    }
+    else {
+        $req->content_type("$File->{ContentType}; charset=UTF-8");
+    }
+    $req->content(Encode::encode_utf8(join("\n", @{$File->{Content}})));
+  }
+  else {
+    # Pass original bytes, Content-Type and charset as-is.
+    # We trust that our and validator.nu's interpretation of line numbers
+    # is the same (regardless of EOL chars used in the document).
+
+    my @content_type = ($File->{ContentType} => undef);
+    push(@content_type, charset => $File->{Charset}->{HTTP})
+      if $File->{Charset}->{HTTP};
+
+    $req->content_type(HTTP::Headers::Util::join_header_words(@content_type));
+    $req->content_ref(\$File->{Bytes});
+  }
+
+  $req->content_language($File->{ContentLang}) if $File->{ContentLang};
+  # Intentionally using direct header access instead of $req->last_modified
+  $req->header('Last-Modified', $File->{Modified}) if $File->{Modified};
+
+  # If not in debug mode, gzip the request (LWP >= 5.817)
+  eval { $req->encode("gzip"); } unless $File->{Opt}->{Debug};
+
+  my $res = $ua->request($req);
+  if (! $res->is_success()) {
+    $File->{'Error Flagged'} = TRUE;
+    $File->{Templates}->{Error}->param(fatal_no_checker  => TRUE);
+    $File->{Templates}->{Error}->param(fatal_missing_checker  => "HTML5 Validator");
+  }
+  else {
+    my $content = $res->can('decoded_content') ?
+      $res->decoded_content(charset => 'none') : $res->content;
+    # and now we parse according to http://wiki.whatwg.org/wiki/Validator.nu_XML_Output
+    # I wish we could use XML::LibXML::Reader here. but SHAME on those major
+    # unix distributions still shipping with libxml2 2.6.16… 4 years after its release
+    my $xml_reader = XML::LibXML->new();
+    my $xmlDOM;
+    eval { $xmlDOM = $xml_reader->parse_string( $content);};
+    if ($@) {
+      $File->{'Error Flagged'} = TRUE;
+      $File->{Templates}->{Error}->param(fatal_no_checker  => TRUE);
+      $File->{Templates}->{Error}->param(fatal_missing_checker  => "HTML5 Validator");
+      return $File;
+    }
+    my @nodelist = $xmlDOM->getElementsByTagName("messages");
+    my $messages_node = $nodelist[0];
+    my @message_nodes =  $messages_node->childNodes;
+    foreach my $message_node (@message_nodes) {
+      my $message_type = $message_node->localname;
+      my $err;
+      my ($xml_error_line, $xml_error_col, $xml_error_msg, $xml_error_expl);
+      if  ($message_type eq "error") {
+        $err->{type} = "E";
+        $File->{'Is Valid'} = FALSE;
+      }
+      elsif ($message_type eq "info") {
+        $err->{type} = "I"; # by default - we find warnings in the type attribute (below)
+      }
+      if ($message_node->hasAttributes()) {
+        my @attributelist = $message_node->attributes();
+        foreach my $attribute (@attributelist) {
+          if($attribute->name eq "type"){
+            if (($attribute->getValue() eq "warning") and ($message_type eq "info")) {
+              $err->{type} = "W";
+            }
+
+          }
+          if($attribute->name eq "last-column") {
+            $xml_error_col = $attribute->getValue();
+          }
+          if($attribute->name eq "last-line") {
+            $xml_error_line = $attribute->getValue();
+          }
+
+        }
+      }
+      my @child_nodes =  $message_node->childNodes;
+      foreach my $child_node (@child_nodes) {
+        if ($child_node->localname eq "message") {
+          $xml_error_msg= $child_node->toString();
+          $xml_error_msg =~ s,</?[^>]*>,,gsi;
+        }
+        if ($child_node->localname eq "elaboration") {
+          $xml_error_expl = $child_node->toString();
+          $xml_error_expl =~ s,</?elaboration>,,gi;
+          $xml_error_expl = "\n<div class=\"ve xml\">$xml_error_expl</div>\n";
+        }
+      }
+      # formatting the error message for output
+      $err->{src}  = '...'; # do this with show_open_entities()?
+      $err->{line} = $xml_error_line;
+      $err->{char} = $xml_error_col;
+      $err->{num}  = 'html5';
+      $err->{msg}  = $xml_error_msg;
+      $err->{expl} = $xml_error_expl;
+      push @{$File->{Errors}}, $err;
+      # @@ TODO message explanation / elaboration
+    }
+  }
+return $File;
+}
+
 
 sub html5_validate (\$) {
   my $File = shift;
@@ -2219,41 +2356,41 @@ sub preparse_doctype {
   # root element and some version attribute is enough
   # TODO applicable doctypes should be migrated to a config file?
 
-  if (($File->{DOCTYPE} eq '') and ($File->{Root} eq "svg") ) {
-    if (($File->{'Root Version'}) or ($File->{'Root BaseProfile'}))
-    {
-      if (! $File->{'Root Version'}) { $File->{'Root Version'} = "0"; }
-      if (! $File->{'Root BaseProfile'}) { $File->{'Root BaseProfile'} = "0"; }
-      if ($File->{'Root Version'} eq "1.0"){
-        $File->{DOCTYPE} = "-//W3C//DTD SVG 1.0//EN";
-        $File->{"DOCTYPEless OK"} = TRUE;
-        $File->{Opt}->{DOCTYPE} = "SVG 1.0";
-      }      
-      if ((($File->{'Root Version'} eq "1.1") or ($File->{'Root Version'} eq "0")) and ($File->{'Root BaseProfile'} eq "tiny")) {
-          $File->{DOCTYPE} = "-//W3C//DTD SVG Tiny 1.1//EN";
-          $File->{"DOCTYPEless OK"} = TRUE;
-          $File->{Opt}->{DOCTYPE} = "SVG 1.1 Tiny";
-      }
-      elsif ((($File->{'Root Version'} eq "1.1")  or ($File->{'Root Version'} eq "0")) and ($File->{'Root BaseProfile'} eq "basic")) {
-          $File->{DOCTYPE} = "-//W3C//DTD SVG Basic 1.1//EN";
-          $File->{Opt}->{DOCTYPE} = "SVG 1.1 Basic";
-          $File->{"DOCTYPEless OK"} = TRUE;
-      }
-      elsif (($File->{'Root Version'} eq "1.1") and (!$File->{'Root BaseProfile'})) {
-          $File->{DOCTYPE} = "-//W3C//DTD SVG 1.1//EN";
-          $File->{Opt}->{DOCTYPE} = "SVG 1.1";
-          $File->{"DOCTYPEless OK"} = TRUE;
-      }
-      if ($File->{'Root Version'} eq "0") { $File->{'Root Version'} = undef; }
-      if ($File->{'Root BaseProfile'} eq "0") { $File->{'Root BaseProfile'} = undef; }
-    }
-    else {
-      # by default for an svg root elt, we use SVG 1.1
-      $File->{DOCTYPE} = "-//W3C//DTD SVG 1.1//EN";
-      $File->{Opt}->{DOCTYPE} = "SVG 1.1";
-      $File->{"DOCTYPEless OK"} = TRUE;
-    }
-  }
+  # if (($File->{DOCTYPE} eq '') and ($File->{Root} eq "svg") ) {
+  #   if (($File->{'Root Version'}) or ($File->{'Root BaseProfile'}))
+  #   {
+  #     if (! $File->{'Root Version'}) { $File->{'Root Version'} = "0"; }
+  #     if (! $File->{'Root BaseProfile'}) { $File->{'Root BaseProfile'} = "0"; }
+  #     if ($File->{'Root Version'} eq "1.0"){
+  #       $File->{DOCTYPE} = "-//W3C//DTD SVG 1.0//EN";
+  #       $File->{"DOCTYPEless OK"} = TRUE;
+  #       $File->{Opt}->{DOCTYPE} = "SVG 1.0";
+  #     }      
+  #     if ((($File->{'Root Version'} eq "1.1") or ($File->{'Root Version'} eq "0")) and ($File->{'Root BaseProfile'} eq "tiny")) {
+  #         $File->{DOCTYPE} = "-//W3C//DTD SVG Tiny 1.1//EN";
+  #         $File->{"DOCTYPEless OK"} = TRUE;
+  #         $File->{Opt}->{DOCTYPE} = "SVG 1.1 Tiny";
+  #     }
+  #     elsif ((($File->{'Root Version'} eq "1.1")  or ($File->{'Root Version'} eq "0")) and ($File->{'Root BaseProfile'} eq "basic")) {
+  #         $File->{DOCTYPE} = "-//W3C//DTD SVG Basic 1.1//EN";
+  #         $File->{Opt}->{DOCTYPE} = "SVG 1.1 Basic";
+  #         $File->{"DOCTYPEless OK"} = TRUE;
+  #     }
+  #     elsif (($File->{'Root Version'} eq "1.1") and (!$File->{'Root BaseProfile'})) {
+  #         $File->{DOCTYPE} = "-//W3C//DTD SVG 1.1//EN";
+  #         $File->{Opt}->{DOCTYPE} = "SVG 1.1";
+  #         $File->{"DOCTYPEless OK"} = TRUE;
+  #     }
+  #     if ($File->{'Root Version'} eq "0") { $File->{'Root Version'} = undef; }
+  #     if ($File->{'Root BaseProfile'} eq "0") { $File->{'Root BaseProfile'} = undef; }
+  #   }
+  #   else {
+  #     # by default for an svg root elt, we use SVG 1.1
+  #     $File->{DOCTYPE} = "-//W3C//DTD SVG 1.1//EN";
+  #     $File->{Opt}->{DOCTYPE} = "SVG 1.1";
+  #     $File->{"DOCTYPEless OK"} = TRUE;
+  #   }
+  # }
   if (($File->{"DOCTYPEless OK"}) and ($File->{Opt}->{DOCTYPE})) {
     # doctypeless document type found, we fake the override
     # so that the parser will have something to validate against
