@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.652 2009-03-17 16:27:34 ot Exp $
+# $Id: check,v 1.653 2009-03-17 16:50:32 ot Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.652 $;
+  $VERSION =  q$Revision: 1.653 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -976,10 +976,16 @@ sub compoundxml_validate (\$) {
       $err->{src}  = '...'; # do this with show_open_entities()?
       $err->{line} = $xml_error_line;
       $err->{char} = $xml_error_col;
-      $err->{num}  = 'html5';
+      $err->{num}  = 'validator.nu';
       $err->{msg}  = $xml_error_msg;
       $err->{expl} = $xml_error_expl;
-      push @{$File->{Errors}}, $err;
+      
+      if ($err->{msg} =~ /Using the preset for (.*) based on the root namespace/ ) {
+          $File->{DOCTYPE} = $1;
+      }
+      else {
+          push @{$File->{Errors}}, $err;
+      }
       # @@ TODO message explanation / elaboration
     }
   }
