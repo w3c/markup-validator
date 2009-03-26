@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.80 2009-03-13 16:06:51 ot Exp $"
---><!--#set var="date" value="\$Date: 2009-03-13 16:06:51 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.81 2009-03-26 19:09:58 ot Exp $"
+--><!--#set var="date" value="\$Date: 2009-03-26 19:09:58 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#set var="feeds" value="1"
@@ -21,7 +21,7 @@
         Check out the <a href="todo.html">development Roadmap and TODO list</a>.</p>
     </div>
     <dl id="news">
-      <dt id="t2009-03-XX">2009-03-XX &mdash; 0.8.5 release:</dt>
+      <dt id="t2009-03-26">2009-03-26 &mdash; 0.8.5 release:</dt>
       <dd>
           <p>The 0.8.5 release of the markup validator is a feature and bugfix release. Changes include:</p>
           <ul>
@@ -41,12 +41,13 @@
               Recent versions of the perl library had bugs that made in backard-incompatible, causing the validator to not output all
               well-formedness errors reliably. Some code was added to the validator to work with all future versions of that library, but 
               we recommend not using XML::LibXML between versions 1.67 and 1.69 inclusive (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6329#c15">see how</a>).</li>
+              <li>Experimental: validation of SVG documents is now passed to the validator.nu engine. At the time of this release, neither validator.nu nor the DTD engine previously used are perfect for the validation of SVG, but the technologies used in the validator.nu engine (nvdl and relaxNG) makes it more promising.</li>
             <li>UI Fix: accessibility improvements for screen readers.</li>
             <li>Documentation: updated the <a href="docs/why.html">Why Validate?</a> document.</li>
             <li>Usability: the way in which the validator has to handle 
               <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6259">direct input and character encodings</a>
               has long been confusing to many. Improvements have been made that explain in clearer ways what the validator does.</li>
-            <li>New: the validator now recommends to declare  character encoding in the document itself, especially if there is a chance that the document will be read from or saved to disk, CD, etc - in accordance with <a href="http://www.w3.org/International/tutorials/tutorial-char-enc/#Slide0250">internationalization recommendations</a>.</li>
+            <li>New: the validator now recommends to declare character encoding in the document itself, especially if there is a chance that the document will be read from or saved to disk, CD, etc - in accordance with <a href="http://www.w3.org/International/tutorials/tutorial-char-enc/#Slide0250">internationalization recommendations</a>.</li>
           </ul>
       </dd>
     <dt id="t2008-11-20">2008-11-20 &mdash; 0.8.4 release:</dt>
