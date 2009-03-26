@@ -26,14 +26,14 @@ code page</a>.
 
 <p>Note that the latest development code may be broken at any time. If you want a working version,
 you should get the latest release version from the tar balls available from the <a href="http://validator.w3.org/source/">source code availability</a> page at validator.w3.org. 
-Alternatively, you can get the latest released version, v0.8.4, via CVS:</p>
+Alternatively, you can get the latest released version, v0.8.5, via CVS:</p>
 
           <pre>
     bash$ <kbd>export CVSROOT=":pserver:anonymous@dev.w3.org:/sources/public"</kbd>
     bash$ <kbd>cvs login</kbd>
     (Logging in to anonymous@dev.w3.org)
     CVS password: <kbd>anonymous</kbd>
-    bash$ <kbd>cvs get -r validator-0_8_4-release validator</kbd>
+    bash$ <kbd>cvs get -r validator-0_8_5-release validator</kbd>
     cvs server: Updating validator
     cvs server: Updating validator/htdocs
     U validator/htdocs/about.html
