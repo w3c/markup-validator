@@ -1,4 +1,4 @@
-use 5.8.0;
+use 5.008;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
