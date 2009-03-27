@@ -37,6 +37,7 @@ WriteMakefile(
                       Encode::JIS2K         => 0,
                       HTML::Tidy            => 0,
                      },
+  depend          => { distdir => 'ChangeLog' },
   dist            => { TARFLAGS => '--owner=0 --group=0 -cvf' },
   clean           => { FILES => 'ChangeLog.bak' },
 );
