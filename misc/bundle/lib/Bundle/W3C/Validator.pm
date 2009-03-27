@@ -59,7 +59,7 @@ perl(1)
 
 =head1 AUTHOR
 
-The W3C Markup Validator Team, E<lt>www-validator@w3.orgE<gt>
+W3C QA-dev Team, E<lt>public-qa-dev@w3.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 

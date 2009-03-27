@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     NAME          => 'Bundle::W3C::Validator',
     ABSTRACT_FROM => 'lib/Bundle/W3C/Validator.pm',
-    AUTHOR        => 'The W3C Markup Validator Team <www-validator@w3.org>',
+    AUTHOR        => 'W3C QA-dev Team <public-qa-dev@w3.org>',
     LICENSE       => 'open_source',
     VERSION_FROM  => 'lib/Bundle/W3C/Validator.pm',
     PREREQ_PM     => {
