@@ -1,6 +1,6 @@
 package Bundle::W3C::Validator;
 
-use 5.8.0;
+use 5.008;
 use strict;
 
 use vars qw($VERSION);
