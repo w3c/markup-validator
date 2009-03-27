@@ -1,3 +1,73 @@
+2009-03-27  ville
+
+	* README, lib/Bundle/W3C/Validator.pm: Update author/maintainer
+	info.
+
+2009-03-27  ville
+
+	* lib/Bundle/W3C/Validator.pm: Avoid v-string non-portability
+	warning with Perl 5.10.0.
+
+2009-03-27  ville
+
+	* lib/Bundle/W3C/Validator.pm: List all dependencies, mention
+	"hard" and optional ones.
+
+2009-03-13  ot
+
+	* lib/Bundle/W3C/Validator.pm: preparing 0.8.5. still need some
+	testing before we get green light
+
+2009-02-19  ville
+
+	* lib/Bundle/W3C/Validator.pm: Add String::Approx dependency.
+
+2009-02-04  ville
+
+	* README, lib/Bundle/W3C/Validator.pm: 2009
+
+2009-02-04  ville
+
+	* lib/Bundle/W3C/Validator.pm: Make Encode::JIS2K optional.
+
+2009-01-07  ville
+
+	* lib/Bundle/W3C/Validator.pm: Improve doctype preparse performance
+	by aborting as soon as possible, fix required HTML::Parser version.
+
+2009-01-04  ville
+
+	* lib/Bundle/W3C/Validator.pm: Purge Config::General <= 2.30
+	compatibility hack; 2.31 one still preserved for current Debian
+	stable.
+
+2009-01-04  ville
+
+	* lib/Bundle/W3C/Validator.pm: LWP::UserAgent >= 2.032 (libwww-perl
+	>= 5.800) is required for default_header().
+
+2009-01-04  ville
+
+	* lib/Bundle/W3C/Validator.pm: Use File::Spec::Functions for
+	somewhat more compact code.
+
+2008-11-18  ot
+
+	* lib/Bundle/W3C/Validator.pm: version bump. Preparing for v0.8.4
+
+2008-02-21  ot
+
+	* lib/Bundle/W3C/Validator.pm: getting reading for 0.8.3
+
+2007-10-10  ot
+
+	* lib/Bundle/W3C/Validator.pm: pushing towards 0.8.2 release
+
+2007-08-07  ot
+
+	* lib/Bundle/W3C/Validator.pm: preparing 0.8.1, changelog and
+	version bump
+
 2007-07-26  ville
 
 	* lib/Bundle/W3C/Validator.pm: Back down to unversioned
