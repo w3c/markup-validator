@@ -21,18 +21,30 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
 =head1 CONTENTS
 
  CGI 2.81
+ CGI::Carp
  Config::General 2.31
  Encode
+ Encode::Alias
  Encode::HanExtra
+ Encode::JIS2K - (optional)
  File::Spec::Functions
  HTML::Encoding 0.52
  HTML::Parser 3.24
  HTML::Template 2.6
+ HTML::Tidy - (optional)
+ HTTP::Headers::Auth
+ HTTP::Headers::Util
+ HTTP::Message
+ HTTP::Negotiate
+ HTTP::Request
  LWP::UserAgent 2.032
  Net::IP
+ Net::hostent
  SGML::Parser::OpenSP
+ Socket
  String::Approx
  URI
+ URI::Escape
  XML::LibXML
 
 =head1 DESCRIPTION
