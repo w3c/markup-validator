@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.654 2009-03-17 18:03:43 ville Exp $
+# $Id: check,v 1.655 2009-05-19 22:50:05 ot Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.654 $;
+  $VERSION =  q$Revision: 1.655 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -3151,9 +3151,9 @@ sub error
           $err->{msg} = "Attribute \"".$bogus_elt_attr."\" is not a valid attribute";
       }
       
-      if((exists $self->{CFG}->{Attributes}->{lc($bogus_elt_attr)}) and (lc($bogus_elt_attr) eq $bogus_elt_attr) and ($err->{num} eq '108')) {
+      if((exists $self->{CFG}->{Attributes}->{lc($bogus_elt_attr)}) and ($err->{num} eq '108')) {
           # attribute not available in this context.
-          $err->{msg} = 'Attribute "'.$bogus_elt_attr.'" exists, but can not be used for this element.';
+          $err->{msg} = 'Attribute "'.lc($bogus_elt_attr).'" can not be used for this element.';
       }
       elsif ( (
              ((exists $self->{CFG}->{Attributes}->{lc($bogus_elt_attr)}) and ($err->{num} eq '108'))
