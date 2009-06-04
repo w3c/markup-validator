@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.655 2009-05-19 22:50:05 ot Exp $
+# $Id: check,v 1.656 2009-06-04 15:28:26 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -198,7 +198,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.655 $;
+  $VERSION =  q$Revision: 1.656 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -564,7 +564,7 @@ if (charset_not_equal($File->{Opt}->{Charset}, '(detect automatically)')) {
 }
 
 if ($File->{'Direct Input'}) { #explain why UTF-8 is forced
-    &add_warning('W28', {});    
+    &add_warning('W28', {});
 }
 unless ($File->{Charset}->{XML} || $File->{Charset}->{META}){ #suggest character encoding info within doc
     &add_warning('W27', {});
@@ -719,7 +719,7 @@ if (&is_xml($File)) {
             unshift(@xmlwf_obj_error_list, $err_obj);
         }
         my $num_xmlwf_error = 0;
-        foreach my $err_obj (@xmlwf_obj_error_list){ 
+        foreach my $err_obj (@xmlwf_obj_error_list){
             #die($err_obj->dump());
             my $err;
             my $offset;
@@ -739,7 +739,7 @@ if (&is_xml($File)) {
             push (@xmlwf_error_list, $err);
             $num_xmlwf_error++;
         }
-    } 
+    }
     elsif ($@) {
       my $xmlwf_errors = $@;
       my $xmlwf_error_line = undef;
@@ -854,7 +854,7 @@ elsif(($File->{DOCTYPE} eq '') and (($File->{Root} eq "svg") or @{$File->{Namesp
         W00_experimental_name => "validator.nu Conformance Checker",
         W00_experimental_URI  => "feedback.html"
       });
-    }    
+    }
 }
 else {
   $File = &dtd_validate($File);
@@ -880,7 +880,7 @@ sub compoundxml_validate (\$) {
     # differences as long as our transcoding process does not "fix" the
     # charset info in XML declaration and meta http-equiv (any others?).
     if($File->{'Direct Input'}) { # sane default when using html5 validator by direct input
-        $req->content_type("application/xml; charset=UTF-8");        
+        $req->content_type("application/xml; charset=UTF-8");
     }
     else {
         $req->content_type("$File->{ContentType}; charset=UTF-8");
@@ -979,7 +979,7 @@ sub compoundxml_validate (\$) {
       $err->{num}  = 'validator.nu';
       $err->{msg}  = $xml_error_msg;
       $err->{expl} = $xml_error_expl;
-      
+
       if ($err->{msg} =~ /Using the preset for (.*) based on the root namespace/ ) {
           $File->{DOCTYPE} = $1;
       }
@@ -1012,7 +1012,7 @@ sub html5_validate (\$) {
     # differences as long as our transcoding process does not "fix" the
     # charset info in XML declaration and meta http-equiv (any others?).
     if($File->{'Direct Input'}) { # sane default when using html5 validator by direct input
-        $req->content_type("text/html; charset=UTF-8");        
+        $req->content_type("text/html; charset=UTF-8");
     }
     else {
         $req->content_type("$File->{ContentType}; charset=UTF-8");
@@ -1573,7 +1573,7 @@ sub report_valid {
       } else {
         $T->param(have_badge_rdfa => FALSE);
       }
-      
+
       $T->param(badge_alt  => $cfg->{Badge}->{Alt});
       $T->param(badge_h    => $cfg->{Badge}->{Height});
       $T->param(badge_w    => $cfg->{Badge}->{Width});
@@ -2371,7 +2371,7 @@ sub preparse_doctype {
   #       $File->{DOCTYPE} = "-//W3C//DTD SVG 1.0//EN";
   #       $File->{"DOCTYPEless OK"} = TRUE;
   #       $File->{Opt}->{DOCTYPE} = "SVG 1.0";
-  #     }      
+  #     }
   #     if ((($File->{'Root Version'} eq "1.1") or ($File->{'Root Version'} eq "0")) and ($File->{'Root BaseProfile'} eq "tiny")) {
   #         $File->{DOCTYPE} = "-//W3C//DTD SVG Tiny 1.1//EN";
   #         $File->{"DOCTYPEless OK"} = TRUE;
@@ -3150,7 +3150,7 @@ sub error
       if ($err->{num} eq '108') {
           $err->{msg} = "Attribute \"".$bogus_elt_attr."\" is not a valid attribute";
       }
-      
+
       if((exists $self->{CFG}->{Attributes}->{lc($bogus_elt_attr)}) and ($err->{num} eq '108')) {
           # attribute not available in this context.
           $err->{msg} = 'Attribute "'.lc($bogus_elt_attr).'" can not be used for this element.';
@@ -3161,18 +3161,18 @@ sub error
              ((exists $self->{CFG}->{Elements}->{lc($bogus_elt_attr)}) and ($err->{num} eq '76'))
           )
           and (lc($bogus_elt_attr) ne $bogus_elt_attr)
-        ) 
-      { 
+        )
+      {
           $err->{msg} .= '. Did you mean "'.lc($bogus_elt_attr).'"?';
       }
       else { #fuzzy-match and suggest alternatives
           my @matches;
           if ($err->{num} eq '108') {
               @matches = String::Approx::amatch($bogus_elt_attr, ["3i"], keys %{$self->{CFG}->{Attributes}});
-          } 
+          }
           elsif ($err->{num} eq '76') {
               @matches = String::Approx::amatch($bogus_elt_attr, ["3i"], keys %{$self->{CFG}->{Elements}});
-          } 
+          }
           if (@matches){
               my %distances;
               @distances{@matches} = map { abs } String::Approx::adist(lc($bogus_elt_attr), @matches);
@@ -3183,7 +3183,7 @@ sub error
               # }
                if (@matches > 1){
                   $err->{msg} .= '. Did you mean "'.$matches_sorted[0].'" or "'.$matches_sorted[1].'"?';
-              
+
               }
               else {
                   $err->{msg} .= '. Did you mean "'.$matches_sorted[0].'"?';
