@@ -37,8 +37,8 @@
       </TMPL_IF>
     <TMPL_ELSE>
     <td colspan="2" class="invalid">
-      <TMPL_IF NAME="number_of_errors_is_1">1 Error</TMPL_IF><TMPL_IF NAME="number_of_errors_is_plural"><TMPL_VAR NAME="valid_errors_num" ESCAPE="HTML"> Errors</TMPL_IF><TMPL_IF Name="valid_warnings_num">, <TMPL_VAR NAME="valid_warnings_num"> warning(s)</TMPL_IF>
-     <!-- this case where validation fails but no error is listed should never happen -->   
+      <TMPL_IF NAME="number_of_errors_is_1">1 Error</TMPL_IF><TMPL_IF NAME="number_of_errors_is_plural"><TMPL_VAR NAME="valid_errors_num" ESCAPE="HTML"> Errors</TMPL_IF><TMPL_IF NAME="valid_warnings_num">, <TMPL_VAR NAME="valid_warnings_num"> warning(s)</TMPL_IF>
+      <TMPL_IF NAME="number_of_errors_is_0">Invalid<!-- this case where validation fails but no error is listed should never happen --></TMPL_IF>
     </TMPL_IF>
     </td>
     </tr>
