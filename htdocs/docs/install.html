@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install.html,v 1.48 2009-03-16 19:13:32 ot Exp $"
---><!--#set var="date" value="\$Date: 2009-03-16 19:13:32 $"
+<!--#set var="revision" value="\$Id: install.html,v 1.49 2009-06-23 17:59:49 ville Exp $"
+--><!--#set var="date" value="\$Date: 2009-06-23 17:59:49 $"
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -150,15 +150,14 @@ install Bundle::W3C::Validator
           Template system which allows us to separate Validator's logic and
           presentation.
         </dd>
-        <dt><a href="http://search.cpan.org/dist/libwww-perl/">libwww-perl</a> &gt;= 5.800</dt>
+        <dt><a href="http://search.cpan.org/dist/libwww-perl/">libwww-perl</a> &gt;= 5.802</dt>
         <dd>
           Gisle Aas' most excellent WWW library for Perl. This is where our
-          support for downloading pages off the net comes from.  Version 5.800
+          support for downloading pages off the net comes from.  Version 5.802
           or newer is required, however we strongly suggest a (much) newer
-          version.  Validator's support for compressed responses is available
-          with version 5.802 and later, and announced using the
-          <code>Accept-Encoding</code> HTTP header with version 5.816 and
-          later, depending on if the modules required for libwww-perl's
+          version.  Validator's support for compressed responses is announced
+          using the <code>Accept-Encoding</code> HTTP header with version 5.816
+          and later, depending on if the modules required for libwww-perl's
           compression facilities are installed.  If you want your Validator to
           support <abbr title="Secure Sockets Layer">SSL</abbr>/<abbr
           title="Transport Layer Security">TLS</abbr>, see

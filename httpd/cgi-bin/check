@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.656 2009-06-04 15:28:26 ville Exp $
+# $Id: check,v 1.657 2009-06-23 17:59:48 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -56,6 +56,7 @@ use HTML::Encoding       0.52 qw();
 use HTML::Parser         3.24 qw(); # Need 3.24 for $p->parse($code_ref)
 use HTML::Template       2.6  qw(); # Need 2.6 for path param, other things.
 use HTTP::Headers::Util       qw();
+use HTTP::Message        1.52 qw(); # Need 1.52 for decoded_content()
 use HTTP::Request             qw();
 use HTTP::Headers::Auth       qw(); # Needs to be imported after other HTTP::*.
 use SGML::Parser::OpenSP      qw();
@@ -198,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.656 $;
+  $VERSION =  q$Revision: 1.657 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -914,8 +915,7 @@ sub compoundxml_validate (\$) {
     $File->{Templates}->{Error}->param(fatal_missing_checker  => "HTML5 Validator");
   }
   else {
-    my $content = $res->can('decoded_content') ?
-      $res->decoded_content(charset => 'none') : $res->content;
+    my $content = $res->decoded_content(charset => 'none');
     # and now we parse according to http://wiki.whatwg.org/wiki/Validator.nu_XML_Output
     # I wish we could use XML::LibXML::Reader here. but SHAME on those major
     # unix distributions still shipping with libxml2 2.6.16… 4 years after its release
@@ -1046,8 +1046,7 @@ sub html5_validate (\$) {
     $File->{Templates}->{Error}->param(fatal_missing_checker  => "HTML5 Validator");
   }
   else {
-    my $content = $res->can('decoded_content') ?
-      $res->decoded_content(charset => 'none') : $res->content;
+    my $content = $res->decoded_content(charset => 'none');
     # and now we parse according to http://wiki.whatwg.org/wiki/Validator.nu_XML_Output
     # I wish we could use XML::LibXML::Reader here. but SHAME on those major
     # unix distributions still shipping with libxml2 2.6.16… 4 years after its release
@@ -1724,8 +1723,7 @@ sub handle_uri {
                           scalar($res->request->uri),
                          );
 
-  my $content = $res->can('decoded_content') ?
-    $res->decoded_content(charset => 'none') : $res->content;
+  my $content = $res->decoded_content(charset => 'none');
 
   $File->{Bytes}           = $content;
   $File->{Mode}            = $mode;

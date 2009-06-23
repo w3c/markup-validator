@@ -21,7 +21,7 @@ WriteMakefile(
                       HTML::Template        => 2.6,
                       HTTP::Headers::Auth   => 0,
                       HTTP::Headers::Util   => 0,
-                      HTTP::Message         => 0,
+                      HTTP::Message         => 1.52,
                       HTTP::Negotiate       => 0,
                       HTTP::Request         => 0,
                       LWP::UserAgent        => 2.032,

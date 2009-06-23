@@ -34,7 +34,7 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
  HTML::Tidy - (optional)
  HTTP::Headers::Auth
  HTTP::Headers::Util
- HTTP::Message
+ HTTP::Message 1.52
  HTTP::Negotiate
  HTTP::Request
  LWP::UserAgent 2.032
