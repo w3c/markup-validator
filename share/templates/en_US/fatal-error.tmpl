@@ -55,6 +55,21 @@
       </li>
 </TMPL_IF>
 
+<TMPL_IF NAME="fatal_decode_error">
+  <li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
+      <p>
+        A fatal error occurred when attempting to decode response body
+        from <TMPL_VAR NAME="fatal_decode_uri" ESCAPE="HTML">.
+        Either we do not support the content encoding specified
+        ("<TMPL_VAR NAME="fatal_decode_cenc" ESCAPE="HTML">"), or an
+        error occurred while decoding it.
+      </p>
+      <p>The error was:
+        <TMPL_VAR NAME="fatal_decode_errmsg" DEFAULT="(no error message given)" ESCAPE="HTML">
+      </p>
+  </li>
+</TMPL_IF>
+
 <TMPL_IF NAME="fatal_uri_error">
 <li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
       <p>

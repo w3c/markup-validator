@@ -34,6 +34,23 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
     </env:Detail>
 </TMPL_IF>
 
+<TMPL_IF NAME="fatal_decode_error">
+     <env:Reason>
+	<env:Text xml:lang="en-US">Decode Error</env:Text>
+     </env:Reason>
+     <env:Detail>
+      <m:messageid>fatal_decode_error</m:messageid>
+      <m:errordetail xml:lang="en-US">
+        A fatal error occurred when attempting to decode response body
+        from <TMPL_VAR NAME="fatal_decode_uri" ESCAPE="HTML">.
+        Either we do not support the content encoding specified
+        ("<TMPL_VAR NAME="fatal_decode_cenc" ESCAPE="HTML">"), or an
+        error occurred while decoding it.
+        The error was: "<TMPL_VAR NAME="fatal_decode_errmsg" ESCAPE="HTML">".
+      </m:errordetail>
+    </env:Detail>
+</TMPL_IF>
+
 <TMPL_IF NAME="fatal_byte_error">
      <env:Reason>
 	<env:Text xml:lang="en-US">Incorrect Bytes detected</env:Text>

@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.657 2009-06-23 17:59:48 ville Exp $
+# $Id: check,v 1.658 2009-06-23 18:08:21 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -199,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.657 $;
+  $VERSION =  q$Revision: 1.658 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -915,7 +915,9 @@ sub compoundxml_validate (\$) {
     $File->{Templates}->{Error}->param(fatal_missing_checker  => "HTML5 Validator");
   }
   else {
-    my $content = $res->decoded_content(charset => 'none');
+    my $content = &get_content($File, $res);
+    return $File if $File->{'Error Flagged'};
+
     # and now we parse according to http://wiki.whatwg.org/wiki/Validator.nu_XML_Output
     # I wish we could use XML::LibXML::Reader here. but SHAME on those major
     # unix distributions still shipping with libxml2 2.6.16… 4 years after its release
@@ -1046,7 +1048,9 @@ sub html5_validate (\$) {
     $File->{Templates}->{Error}->param(fatal_missing_checker  => "HTML5 Validator");
   }
   else {
-    my $content = $res->decoded_content(charset => 'none');
+    my $content = &get_content($File, $res);
+    return $File if $File->{'Error Flagged'};
+
     # and now we parse according to http://wiki.whatwg.org/wiki/Validator.nu_XML_Output
     # I wish we could use XML::LibXML::Reader here. but SHAME on those major
     # unix distributions still shipping with libxml2 2.6.16… 4 years after its release
@@ -1723,7 +1727,8 @@ sub handle_uri {
                           scalar($res->request->uri),
                          );
 
-  my $content = $res->decoded_content(charset => 'none');
+  my $content = &get_content($File, $res);
+  return $File if $File->{'Error Flagged'};
 
   $File->{Bytes}           = $content;
   $File->{Mode}            = $mode;
@@ -1848,6 +1853,31 @@ sub parse_content_type {
   }
 
   return $mode, $ct, $charset;
+}
+
+#
+# Get content with Content-Encodings decoded from a response.
+sub get_content ($$) {
+  my $File = shift;
+  my $res  = shift;
+
+  my $content;
+  eval {
+    $content = $res->decoded_content(charset => 'none', raise_error => 1);
+  };
+  if ($@) {
+    (my $errmsg = $@) =~ s/ at .*//s;
+    my $cenc = $res->header("Content-Encoding");
+    my $uri  = $res->request->uri;
+    $File->{'Error Flagged'} = TRUE;
+    $File->{Templates}->{Error}->param(fatal_decode_error  => TRUE);
+    $File->{Templates}->{Error}->param(fatal_decode_errmsg => $errmsg);
+    $File->{Templates}->{Error}->param(fatal_decode_cenc   => $cenc);
+    # Include URI because it might be a subsystem (eg. HTML5 validator) one
+    $File->{Templates}->{Error}->param(fatal_decode_uri    => $uri);
+  }
+
+  return $content;
 }
 
 #
