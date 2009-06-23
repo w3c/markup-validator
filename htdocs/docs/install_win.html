@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install_win.html,v 1.18 2009-02-18 15:17:53 ot Exp $" 
---><!--#set var="date" value="\$Date: 2009-02-18 15:17:53 $" 
+<!--#set var="revision" value="\$Id: install_win.html,v 1.19 2009-06-23 18:27:39 ville Exp $" 
+--><!--#set var="date" value="\$Date: 2009-06-23 18:27:39 $" 
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service (Windows, Apache)" 
 --><!--#set var="relroot" value="../" 
 --><!--#include virtual="../header.html" -->
@@ -13,7 +13,7 @@
     <li><a href="#needed-programs">Needed programs and other prerequisites</a></li>
     <li><a href="#directory-structure">Directory Structure</a></li>
     <li><a href="#install-programs">Installation of the Programs</a></li>
-    <li><a href="#modules">Integration of the Perl-Modules</a></li>
+    <li><a href="#modules">Integration of the Perl Modules</a></li>
     <li><a href="#config-apache">Configuration of the Apache Web server</a></li>
     <li><a href="#adaption-of-hosts">Adaptation of the hosts-File</a></li>
     <li><a href="#config-validator">Configuration of the Validator</a></li>
@@ -91,7 +91,7 @@ At <a href="http://ppm.activestate.com/">Active State</a>,
 
 <p>One suggested method is to  have a directory <code>C:\www</code> in which all programs concerning the
   Web server are located (in subfolders, obviously). For instance, Apache is installed in
-  <code>C:\www\Apache2</code>, Perl in <code>C:\www\perl</code>, the perl modules unzipped in
+  <code>C:\www\Apache2</code>, Perl in <code>C:\www\perl</code>, the Perl modules unzipped in
   <code>C:\www\pmm</code>, the validator itself in <code>C:\www\validator</code> and finally
   the DTD-Collection in <code>C:\www\sgml-lib</code></p>
 
@@ -111,7 +111,7 @@ own setup.</p>
   <code>C:\www</code> as installation directory, and Apache will be installed to
   <code>C:\www\Apache2</code>.</p>
     
-<h3 id="modules">Adding the Perl-Modules</h3>
+<h3 id="modules">Adding the Perl Modules</h3>
 <p>Since Perl 5.8.8 build 817.91 PPM has a <acronym title="Graphical User Interface">GUI</acronym>.
   It is quite easy to use, if you do have any problems have a look at its documentation.</p>
 <p>You can add the modules from the downloaded package or directly from the web. If you want
@@ -269,7 +269,7 @@ Include conf/extra/httpd-manual.conf
 <pre>#
 # Main Configuration File for the W3C Markup Validation Service.
 #
-# $Id: install_win.html,v 1.18 2009-02-18 15:17:53 ot Exp $
+# $Id: install_win.html,v 1.19 2009-06-23 18:27:39 ville Exp $
 #
 # See 'perldoc Config::General' for the syntax, and be aware that the
 # 'SplitPolicy' is 'equalsign', ie. keys and values are separated by '\s*=\s*',

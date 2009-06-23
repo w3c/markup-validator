@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.81 2009-03-26 19:09:58 ot Exp $"
---><!--#set var="date" value="\$Date: 2009-03-26 19:09:58 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.82 2009-06-23 18:27:39 ville Exp $"
+--><!--#set var="date" value="\$Date: 2009-06-23 18:27:39 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#set var="feeds" value="1"
@@ -38,7 +38,7 @@
               in version 0.8.4. This is fixed in 0.8.5.</li> 
             <li>New: the validator icon code, which one can add to web pages, now <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=65252">includes XHTML+RDFa</a> when applicable</li>
             <li>Bug Fix / New: implementing <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6329">XML::LibXML Structured Errors</a>. The validator uses libxml2 and the XML::LibXML for well-formedness check. 
-              Recent versions of the perl library had bugs that made in backard-incompatible, causing the validator to not output all
+              Recent versions of the Perl library had bugs that made in backward incompatible, causing the validator to not output all
               well-formedness errors reliably. Some code was added to the validator to work with all future versions of that library, but 
               we recommend not using XML::LibXML between versions 1.67 and 1.69 inclusive (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6329#c15">see how</a>).</li>
               <li>Experimental: validation of SVG documents is now passed to the validator.nu engine. At the time of this release, neither validator.nu nor the DTD engine previously used are perfect for the validation of SVG, but the technologies used in the validator.nu engine (nvdl and relaxNG) makes it more promising.</li>
