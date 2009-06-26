@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.659 2009-06-26 20:50:01 ville Exp $
+# $Id: check,v 1.660 2009-06-26 20:51:50 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -199,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.659 $;
+  $VERSION =  q$Revision: 1.660 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2095,7 +2095,8 @@ sub report_errors ($) {
     foreach my $err (@{$File->{Errors}}) {
       my $line;
       my $col = 0;
-      if($File->{Content}->[$err->{line}-1]) { # avoid truncating lines that do not exist
+      # avoid truncating lines that do not exist
+      if (defined($err->{line}) && $File->{Content}->[$err->{line}-1]) {
           if (defined($err->{char}) && $err->{char} =~ /^[0-9]+$/ ){
             ($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $err->{char});
             $line = &mark_error($line, $col);
