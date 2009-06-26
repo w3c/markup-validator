@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.660 2009-06-26 20:51:50 ville Exp $
+# $Id: check,v 1.661 2009-06-26 21:15:06 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -199,34 +199,34 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.660 $;
+  $VERSION =  q$Revision: 1.661 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
   # Use passive FTP by default.
   $ENV{FTP_PASSIVE} = 1 unless exists($ENV{FTP_PASSIVE});
 
-# Read friendly error message file
-my %rsrc = Config::General->new(
-  -MergeDuplicateBlocks => 1,
-  -ConfigFile           => catfile($CFG->{Paths}->{Templates}, 'en_US',
-                                   'error_messages.cfg'),
+  # Read friendly error message file
+  my %rsrc = Config::General->new(
+    -MergeDuplicateBlocks => 1,
+    -ConfigFile           => catfile($CFG->{Paths}->{Templates}, 'en_US',
+                                     'error_messages.cfg'),
   )->getall();
-# 'en_US' should be replaced by $lang for lang-neg
-# Config::General 2.31 workaround for <msg 0> issues:
-# http://lists.w3.org/Archives/Public/public-qa-dev/2006Feb/0022.html
-# http://lists.w3.org/Archives/Public/public-qa-dev/2006Feb/0025.html
-# https://rt.cpan.org/Public/Bug/Display.html?id=17852
-$rsrc{msg}{0} ||=
+  # 'en_US' should be replaced by $lang for lang-neg
+  # Config::General 2.31 workaround for <msg 0> issues:
+  # http://lists.w3.org/Archives/Public/public-qa-dev/2006Feb/0022.html
+  # http://lists.w3.org/Archives/Public/public-qa-dev/2006Feb/0025.html
+  # https://rt.cpan.org/Public/Bug/Display.html?id=17852
+  $rsrc{msg}{0} ||=
   { original => delete($rsrc{msg}{original}),
     verbose  => delete($rsrc{msg}{verbose}),
   };
-$RSRC = \%rsrc;
+  $RSRC = \%rsrc;
 
-eval {
-  local $SIG{__DIE__};
-  require Encode::JIS2K; # for optional extra Japanese encodings
-};
+  eval {
+    local $SIG{__DIE__};
+    require Encode::JIS2K; # for optional extra Japanese encodings
+  };
 
 } # end of BEGIN block.
 
