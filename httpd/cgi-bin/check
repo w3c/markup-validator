@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.658 2009-06-23 18:08:21 ville Exp $
+# $Id: check,v 1.659 2009-06-26 20:50:01 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -199,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.658 $;
+  $VERSION =  q$Revision: 1.659 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -991,7 +991,7 @@ sub compoundxml_validate (\$) {
       # @@ TODO message explanation / elaboration
     }
   }
-return $File;
+  return $File;
 }
 
 
@@ -1118,7 +1118,7 @@ sub html5_validate (\$) {
       # @@ TODO message explanation / elaboration
     }
   }
-return $File;
+  return $File;
 }
 
 sub dtd_validate (\$) {
