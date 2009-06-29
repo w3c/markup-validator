@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.662 2009-06-29 14:33:38 ville Exp $
+# $Id: check,v 1.663 2009-06-29 14:35:22 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -199,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.662 $;
+  $VERSION =  q$Revision: 1.663 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -833,8 +833,8 @@ if (($File->{DOCTYPE} eq "HTML5") or ($File->{DOCTYPE} eq "XHTML5")) {
   }
   else {
     $File->{'Error Flagged'} = TRUE;
-    $File->{Templates}->{Error}->param(fatal_no_checker  => TRUE);
-    $File->{Templates}->{Error}->param(fatal_missing_checker  => "HTML5 Validator");
+    $File->{Templates}->{Error}->param(fatal_no_checker => TRUE);
+    $File->{Templates}->{Error}->param(fatal_missing_checker => "HTML5 Validator");
   }
 }
 elsif(($File->{DOCTYPE} eq '') and (($File->{Root} eq "svg") or @{$File->{Namespaces}} >1)){
@@ -1283,7 +1283,7 @@ if ($File->{Opt}->{Output} eq 'xml') {
 } elsif ($File->{Opt}->{Output} eq 'n3') {
   $template = $File->{Templates}->{EARLN3};
 } elsif ($File->{Opt}->{Output} eq 'json') {
-    $template = $File->{Templates}->{JSON};
+  $template = $File->{Templates}->{JSON};
 } elsif ($File->{Opt}->{Output} eq 'ucn') {
   $template = $File->{Templates}->{UCN};
 } elsif ($File->{Opt}->{Output} eq 'soap12') {

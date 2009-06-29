@@ -2,7 +2,7 @@
 ##
 ## Generates HTML documentation of error messages and explanations
 ## for W3C Markup Validation Service
-## $Id: docs_errors.pl,v 1.9 2009-06-29 14:33:39 ville Exp $
+## $Id: docs_errors.pl,v 1.10 2009-06-29 14:35:22 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -99,7 +99,7 @@ sub list_errors_hasverbose{
 		$single_error{id} = $error_id;
 		$single_error{verbose} = $rsrc->{msg}->{$error_id}->{verbose};
 		$single_error{verbose} =~ s/<!--CFG_HOME_PAGE-->/$CFG->{'Home Page'}/g;
-    
+
 		push @{$errors}, \%single_error;
                 # Fix up relative paths (/check vs /docs/errors.html)
                 s/href="docs\//href="/
@@ -140,7 +140,7 @@ sub list_errors_noverbose{
 sub de_template_explanation {
 # takes the error message template, and replace "template keywords" with real life keywords
     my $explanation = shift;
-    if ($explanation){ 
+    if ($explanation) {
         $explanation =~ s/\%1/X/;
         $explanation =~ s/\%2/Y/;
         $explanation =~ s/\%3/Z/;
