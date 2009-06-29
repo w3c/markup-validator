@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.665 2009-06-29 19:57:51 ville Exp $
+# $Id: check,v 1.666 2009-06-29 20:22:43 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.665 $;
+  $VERSION =  q$Revision: 1.666 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1104,10 +1104,6 @@ sub dtd_validate (\$) {
   # default parsing options
   my @spopt = qw(valid non-sgml-char-ref no-duplicate);
 
-  $File->{ParserName} = $parser_name;
-  $File->{ParserOpts} = join " ", @spopt;
-
-
   #
   # Switch to XML semantics if file is XML.
   if (&is_xml($File)) {
@@ -1125,6 +1121,8 @@ sub dtd_validate (\$) {
     push(@spopt, 'min-tag');
   }
 
+  $File->{ParserName} = $parser_name;
+  $File->{ParserOpts} = join(" ", @spopt);
 
   #
   # Parser configuration
