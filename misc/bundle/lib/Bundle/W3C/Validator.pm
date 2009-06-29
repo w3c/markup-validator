@@ -37,6 +37,7 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
  HTTP::Message 1.52
  HTTP::Negotiate
  HTTP::Request
+ JSON 2.00
  LWP::UserAgent 2.032
  Net::IP
  Net::hostent

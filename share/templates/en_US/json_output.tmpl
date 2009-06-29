@@ -5,7 +5,6 @@ X-W3C-Validator-Status: <TMPL_VAR NAME="valid_status"></TMPL_IF>
 X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num">
 X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
 
-
 {
     "url": "<TMPL_VAR NAME="file_uri">",
     "messages": [
@@ -16,15 +15,13 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
               "subtype": "warning"</TMPL_IF>
               "lastLine": "<TMPL_VAR NAME="line">",
               "lastColumn": <TMPL_VAR NAME="char">,
-              "message": "<TMPL_VAR ESCAPE="JS" NAME="msg">",
+              "message": <TMPL_VAR NAME="msg">,
               "messageid": <TMPL_VAR NAME="num">,
-              "explanation": "<TMPL_VAR ESCAPE="JS" NAME="expl">",
-          }
+              "explanation": <TMPL_VAR NAME="expl">
+          }<TMPL_UNLESS NAME="__last__">,</TMPL_UNLESS>
         </TMPL_LOOP>
-        
         ],
     "source": {
         "encoding": "<TMPL_VAR NAME="file_charset">"
     }
 }
-

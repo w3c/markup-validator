@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.663 2009-06-29 14:35:22 ville Exp $
+# $Id: check,v 1.664 2009-06-29 18:21:16 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -59,6 +59,7 @@ use HTTP::Headers::Util       qw();
 use HTTP::Message        1.52 qw(); # Need 1.52 for decoded_content()
 use HTTP::Request             qw();
 use HTTP::Headers::Auth       qw(); # Needs to be imported after other HTTP::*.
+use JSON                 2.00 qw();
 use SGML::Parser::OpenSP      qw();
 use URI                       qw();
 use URI::Escape               qw(uri_escape);
@@ -199,7 +200,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.663 $;
+  $VERSION =  q$Revision: 1.664 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1320,6 +1321,21 @@ $template->param(file_source => &source($File))
 #$template->param('file_raw_errors' => &show_errors($File))
 #  if $template->param('opt_show_raw_errors');
 #  $T->param(file_outline   => &outline($File)) if $T->param('opt_show_outline');
+
+if ($File->{Opt}->{Output} eq 'json') {
+  # No JSON escaping in HTML::Template (and "JS" is not the right thing here)
+  my $json = JSON->new();
+  $json->allow_nonref(TRUE);
+  for my $msgs ($template->param("file_errors"),
+                $template->param("file_warnings")) {
+    next unless $msgs;
+    for my $msg (@$msgs) {
+      for my $key (qw(msg expl)) {
+        $msg->{$key} = $json->encode($msg->{$key}) if $msg->{$key};
+      }
+    }
+  }
+}
 
 # transcode output from perl's internal to utf-8 and output
 print Encode::encode('UTF-8', $template->output);

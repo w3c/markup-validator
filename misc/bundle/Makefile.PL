@@ -24,6 +24,7 @@ WriteMakefile(
                       HTTP::Message         => 1.52,
                       HTTP::Negotiate       => 0,
                       HTTP::Request         => 0,
+                      JSON                  => 2.00,
                       LWP::UserAgent        => 2.032,
                       Net::hostent          => 0,
                       Net::IP               => 0,
