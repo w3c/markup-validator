@@ -2,7 +2,7 @@
 ##
 ## Generates HTML documentation of error messages and explanations
 ## for W3C Markup Validation Service
-## $Id: docs_errors.pl,v 1.8 2009-01-04 10:41:20 ville Exp $
+## $Id: docs_errors.pl,v 1.9 2009-06-29 14:33:39 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -13,9 +13,9 @@ use warnings;
 
 use File::Spec::Functions qw(catfile);
 use HTML::Template   2.6  qw();
-use Config::General  2.19 qw(); # Need 2.19 for -AutoLaunder
+use Config::General  2.32 qw(); # Need 2.32 for <msg 0>, rt.cpan.org#17852
 
-use vars qw($DEBUG $CFG $RSRC $VERSION $HAVE_IPC_RUN);
+use vars qw($DEBUG $CFG $VERSION $HAVE_IPC_RUN);
 # Define global constants
 use constant TRUE  => 1;
 use constant FALSE => 0;
@@ -69,16 +69,6 @@ our $error_messages_file = catfile($CFG->{Paths}->{Templates}, $lang, 'error_mes
 our %config_errs = ( -MergeDuplicateBlocks => 1,
         -ConfigFile => $error_messages_file);
 our %rsrc = Config::General->new(%config_errs)->getall();
-# Config::General workarounds for <msg 0> issues:
-# http://lists.w3.org/Archives/Public/public-qa-dev/2006Feb/0022.html
-# http://lists.w3.org/Archives/Public/public-qa-dev/2006Feb/0025.html
-# https://rt.cpan.org/Public/Bug/Display.html?id=17852
-$rsrc{msg}{0} ||=
-  delete($rsrc{'msg 0'}) ||                   # < 2.31
-  { original => delete($rsrc{msg}{original}), #   2.31
-    verbose  => delete($rsrc{msg}{verbose}),
-  };
-$RSRC = \%rsrc;
 
 
 our $T = HTML::Template->new(
@@ -86,28 +76,28 @@ our $T = HTML::Template->new(
   die_on_bad_params => FALSE,
 );
 
-$T->param(list_errors_hasverbose => &list_errors_hasverbose($RSRC));
-$T->param(list_errors_noverbose => &list_errors_noverbose($RSRC));
+$T->param(list_errors_hasverbose => &list_errors_hasverbose(\%rsrc));
+$T->param(list_errors_noverbose => &list_errors_noverbose(\%rsrc));
 print $T->output;
 
 sub list_errors_hasverbose{
-    my $RSRC = shift;
+    my $rsrc = shift;
     my $errors = [];
     my $error_id;
     my $max_error_id=500; # where to stop
     for ($error_id=0;$error_id<$max_error_id;$error_id++)
     {
 	my %single_error;
-	if ($RSRC->{msg}->{$error_id})
+	if ($rsrc->{msg}->{$error_id})
 	{
-	    my $verbose = $RSRC->{msg}->{$error_id}->{verbose};
+	    my $verbose = $rsrc->{msg}->{$error_id}->{verbose};
 	    if ($verbose)
 	    {
-		my $original = $RSRC->{msg}->{$error_id}->{original};
+		my $original = $rsrc->{msg}->{$error_id}->{original};
 		$original = &de_template_explanation($original);
 		$single_error{original} = $original;
 		$single_error{id} = $error_id;
-		$single_error{verbose} = $RSRC->{msg}->{$error_id}->{verbose};
+		$single_error{verbose} = $rsrc->{msg}->{$error_id}->{verbose};
 		$single_error{verbose} =~ s/<!--CFG_HOME_PAGE-->/$CFG->{'Home Page'}/g;
     
 		push @{$errors}, \%single_error;
@@ -122,23 +112,23 @@ sub list_errors_hasverbose{
 }
 
 sub list_errors_noverbose{
-    my $RSRC = shift;
+    my $rsrc = shift;
     my $errors = [];
     my $error_id;
     my $max_error_id=500; # where to stop
     for ($error_id=0;$error_id<$max_error_id;$error_id++)
     {
 	my %single_error;
-	if ($RSRC->{msg}->{$error_id})
+	if ($rsrc->{msg}->{$error_id})
 	{
-	    my $verbose = $RSRC->{msg}->{$error_id}->{verbose};
+	    my $verbose = $rsrc->{msg}->{$error_id}->{verbose};
 	    if (! $verbose)
 	    {
-		my $original = $RSRC->{msg}->{$error_id}->{original};
+		my $original = $rsrc->{msg}->{$error_id}->{original};
 		$original = &de_template_explanation($original);
 		$single_error{original} = $original;
 		$single_error{id} = $error_id;
-		$single_error{verbose} = $RSRC->{msg}->{$error_id}->{verbose};
+		$single_error{verbose} = $rsrc->{msg}->{$error_id}->{verbose};
 		push @{$errors}, \%single_error;
 	    }
 

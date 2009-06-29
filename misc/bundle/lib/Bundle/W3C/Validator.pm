@@ -22,7 +22,7 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
 
  CGI 2.81
  CGI::Carp
- Config::General 2.31
+ Config::General 2.32
  Encode
  Encode::Alias
  Encode::HanExtra

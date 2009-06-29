@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.661 2009-06-26 21:15:06 ville Exp $
+# $Id: check,v 1.662 2009-06-29 14:33:38 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -46,7 +46,7 @@ package W3C::Validator::MarkupValidator;
 
 use CGI                  2.81 qw(-newstyle_urls -private_tempfiles redirect);
 use CGI::Carp                 qw(carp croak fatalsToBrowser);
-use Config::General      2.31 qw(); # Need 2.31 for (partial) <msg 0> sanity
+use Config::General      2.32 qw(); # Need 2.32 for <msg 0>, rt.cpan.org#17852
 use Encode                    qw();
 use Encode::Alias             qw();
 use Encode::HanExtra          qw(); # for some chinese character encodings,
@@ -88,7 +88,7 @@ use constant O_NONE    => 8; # 0000 1000
 
 #
 # Define global variables.
-use vars qw($DEBUG $CFG $RSRC $VERSION);
+use vars qw($DEBUG $CFG %RSRC $VERSION);
 
 #
 # Things inside BEGIN don't happen on every request in persistent environments
@@ -199,7 +199,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.661 $;
+  $VERSION =  q$Revision: 1.662 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -207,21 +207,12 @@ Directory not readable (permission denied): @_r
   $ENV{FTP_PASSIVE} = 1 unless exists($ENV{FTP_PASSIVE});
 
   # Read friendly error message file
-  my %rsrc = Config::General->new(
+  # 'en_US' should be replaced by $lang for lang-neg
+  %RSRC = Config::General->new(
     -MergeDuplicateBlocks => 1,
     -ConfigFile           => catfile($CFG->{Paths}->{Templates}, 'en_US',
                                      'error_messages.cfg'),
   )->getall();
-  # 'en_US' should be replaced by $lang for lang-neg
-  # Config::General 2.31 workaround for <msg 0> issues:
-  # http://lists.w3.org/Archives/Public/public-qa-dev/2006Feb/0022.html
-  # http://lists.w3.org/Archives/Public/public-qa-dev/2006Feb/0025.html
-  # https://rt.cpan.org/Public/Bug/Display.html?id=17852
-  $rsrc{msg}{0} ||=
-  { original => delete($rsrc{msg}{original}),
-    verbose  => delete($rsrc{msg}{verbose}),
-  };
-  $RSRC = \%rsrc;
 
   eval {
     local $SIG{__DIE__};
@@ -2120,10 +2111,10 @@ sub report_errors ($) {
       else {
         if ($err->{num}) {
           my $num = $err->{num};
-          $explanation .= Encode::decode_utf8("\n    $RSRC->{msg}->{$num}->{verbose}\n")
-            if exists $RSRC->{msg}->{$num}
-            && exists $RSRC->{msg}->{$num}->{verbose};
-          my $_msg = $RSRC->{msg}->{nomsg}->{verbose};
+          $explanation .= Encode::decode_utf8("\n    $RSRC{msg}->{$num}->{verbose}\n")
+            if exists $RSRC{msg}->{$num}
+            && exists $RSRC{msg}->{$num}->{verbose};
+          my $_msg = $RSRC{msg}->{nomsg}->{verbose};
           $_msg =~ s/<!--MID-->/$num/g;
           if (($File->{'Is Upload'}) or ($File->{'Direct Input'}))
           {
@@ -2176,7 +2167,7 @@ sub report_errors ($) {
           $Errors_bytype{$err->{num}}->{instances} = [];
           my $msg_text;
           if ($err->{num} ne 'xmlwf') {
-            $msg_text = $RSRC->{msg}->{$err->{num}}->{original};
+            $msg_text = $RSRC{msg}->{$err->{num}}->{original};
             $msg_text =~ s/%1/X/;
             $msg_text =~ s/%2/Y/;
           }

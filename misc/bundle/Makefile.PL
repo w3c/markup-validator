@@ -11,7 +11,7 @@ WriteMakefile(
                       # Hard dependencies:
                       CGI                   => 2.81,
                       CGI::Carp             => 0,
-                      Config::General       => 2.31,
+                      Config::General       => 2.32,
                       Encode                => 0,
                       Encode::Alias         => 0,
                       Encode::HanExtra      => 0,

@@ -1,7 +1,7 @@
 #!/usr/bin/perl -T
 ##
 ## feedback generator for W3C Markup Validation Service
-# # $Id: sendfeedback.pl,v 1.10 2009-01-04 16:54:19 ville Exp $
+# # $Id: sendfeedback.pl,v 1.11 2009-06-29 14:33:38 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -13,9 +13,9 @@ use warnings;
 use CGI                   qw();
 use File::Spec::Functions qw(catfile);
 use HTML::Template   2.6  qw();
-use Config::General  2.31 qw(); # Need 2.31 for (partial) <msg 0> sanity
+use Config::General  2.32 qw(); # Need 2.32 for <msg 0>, rt.cpan.org#17852
 
-use vars qw($DEBUG $CFG $RSRC $VERSION $HAVE_IPC_RUN);
+use vars qw($DEBUG $CFG %RSRC $VERSION $HAVE_IPC_RUN);
 # Define global constants
 use constant TRUE  => 1;
 use constant FALSE => 0;
@@ -68,20 +68,11 @@ our $q = new CGI;
 our $lang = 'en_US'; # @@@ TODO: conneg
 
 # Read error message + explanations file
-our %rsrc = Config::General->new(
+%RSRC = Config::General->new(
   -MergeDuplicateBlocks => 1,
   -ConfigFile => catfile($CFG->{Paths}->{Templates}, $lang,
                          'error_messages.cfg'),
   )->getall();
-# Config::General 2.31 workaround for <msg 0> issues:
-# http://lists.w3.org/Archives/Public/public-qa-dev/2006Feb/0022.html
-# http://lists.w3.org/Archives/Public/public-qa-dev/2006Feb/0025.html
-# https://rt.cpan.org/Public/Bug/Display.html?id=17852
-$rsrc{msg}{0} ||=
-  { original => delete($rsrc{msg}{original}),
-    verbose  => delete($rsrc{msg}{verbose}),
-  };
-$RSRC = \%rsrc;
 
 our $T = HTML::Template->new(
   filename => catfile($CFG->{Paths}->{Templates}, $lang, 'feedback.tmpl'),
@@ -97,7 +88,7 @@ sub process_query {
     $validated_uri = $q->param('uri');
     $errmsg_id = $q->param('errmsg_id');
     if ($errmsg_id) {
-        $errmsg_text = "$RSRC->{msg}->{$errmsg_id}->{original}";
+        $errmsg_text = "$RSRC{msg}->{$errmsg_id}->{original}";
         $errmsg_text = de_template_explanation($errmsg_text);
     }
     # Trigger "thanks for your message. If your query requires an answer,..." ack paragraph
@@ -114,12 +105,12 @@ sub send_message {
 
 sub error_choices {
 # creates drop-down menu with all possible error messages to send feedback about
-    my @msgnumbers = keys( %{$RSRC->{msg}} );
+    my @msgnumbers = keys( %{$RSRC{msg}} );
     @msgnumbers = sort { $a <=> $b } @msgnumbers;
     my $errlabel;
 
     for my $errnum ( @msgnumbers ) {
-        $errlabel = $RSRC->{msg}->{$errnum}->{original};
+        $errlabel = $RSRC{msg}->{$errnum}->{original};
         $errlabel = de_template_explanation($errlabel);
 	if (length($errlabel) > 70) { $errlabel = substr($errlabel, 0, 67)."..." }
         $errlist = $errlist.'<option value="'. $errnum.'"';
