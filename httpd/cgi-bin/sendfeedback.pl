@@ -1,7 +1,7 @@
 #!/usr/bin/perl -T
 ##
 ## feedback generator for W3C Markup Validation Service
-# # $Id: sendfeedback.pl,v 1.11 2009-06-29 14:33:38 ville Exp $
+# # $Id: sendfeedback.pl,v 1.12 2009-06-29 14:37:08 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -15,7 +15,7 @@ use File::Spec::Functions qw(catfile);
 use HTML::Template   2.6  qw();
 use Config::General  2.32 qw(); # Need 2.32 for <msg 0>, rt.cpan.org#17852
 
-use vars qw($DEBUG $CFG %RSRC $VERSION $HAVE_IPC_RUN);
+use vars qw($DEBUG $CFG %RSRC $VERSION);
 # Define global constants
 use constant TRUE  => 1;
 use constant FALSE => 0;

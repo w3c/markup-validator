@@ -2,7 +2,7 @@
 ##
 ## Generates HTML documentation of error messages and explanations
 ## for W3C Markup Validation Service
-## $Id: docs_errors.pl,v 1.10 2009-06-29 14:35:22 ville Exp $
+## $Id: docs_errors.pl,v 1.11 2009-06-29 14:37:08 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -15,7 +15,7 @@ use File::Spec::Functions qw(catfile);
 use HTML::Template   2.6  qw();
 use Config::General  2.32 qw(); # Need 2.32 for <msg 0>, rt.cpan.org#17852
 
-use vars qw($DEBUG $CFG $VERSION $HAVE_IPC_RUN);
+use vars qw($DEBUG $CFG $VERSION);
 # Define global constants
 use constant TRUE  => 1;
 use constant FALSE => 0;
