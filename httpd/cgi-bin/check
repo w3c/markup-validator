@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.664 2009-06-29 18:21:16 ville Exp $
+# $Id: check,v 1.665 2009-06-29 19:57:51 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -191,6 +191,12 @@ Directory not readable (permission denied): @_r
   }
 
   #
+  # Register Encode aliases.
+  while (my ($key, $value) = each %{$CFG->{Charsets}}) {
+    Encode::Alias::define_alias($key, $1) if ($value =~ /^[AX] (\S+)/);
+  }
+
+  #
   # Set debug flag.
   if ($CFG->{'Allow Debug'}) {
     $DEBUG = TRUE if $ENV{W3C_VALIDATOR_DEBUG} || $CFG->{'Enable Debug'};
@@ -200,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.664 $;
+  $VERSION =  q$Revision: 1.665 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -568,31 +574,6 @@ unless ($File->{Charset}->{XML} || $File->{Charset}->{META}){ #suggest character
 # Abort if an error was flagged while finding the encoding.
 &abort_if_error_flagged($File, O_CHARSET|O_DOCTYPE);
 
-#
-# Encode alias definitions. This might not be the best
-# place for them, feel free to move them elsewhere.
-
-# implicit bidi, but character encoding is the same
-Encode::Alias::define_alias('iso-8859-6-i', 'iso-8859-6');
-
-# implicit bidi, but character encoding is the same
-Encode::Alias::define_alias('iso-8859-8-i', 'iso-8859-8');
-
-# 0xA0 is U+00A0 in ISO-8859-11 but undefined in tis-620
-# other than that the character encodings are equivalent
-Encode::Alias::define_alias('tis-620', 'iso-8859-11');
-
-# Encode::Byte does not know 'macintosh' but MacRoman
-Encode::Alias::define_alias('macintosh', 'MacRoman');
-
-# x-mac-roman is the non-standard version of 'macintosh'
-Encode::Alias::define_alias('x-mac-roman', 'MacRoman');
-
-# Encode only knows the long hand version of 'ksc_5601'
-Encode::Alias::define_alias('ksc_5601', 'KS_C_5601-1987');
-
-# gb18030 requires Encode::HanExtra but no additional alias
-
 $File->{Charset}->{Default} = FALSE;
 unless ($File->{Charset}->{Use}) { # No charset given...
      $File->{Charset}->{Use} = 'utf-8';
@@ -600,7 +581,6 @@ unless ($File->{Charset}->{Use}) { # No charset given...
     $File->{Tentative} |= T_ERROR; # Can never be valid.
     &add_warning('W04', {W04_charset => "UTF-8"});
 }
-
 
 # Always transcode, even if the content claims to be UTF-8
 $File = transcode($File);
