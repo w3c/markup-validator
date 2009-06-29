@@ -41,7 +41,7 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
  LWP::UserAgent 2.032
  Net::IP
  Net::hostent
- SGML::Parser::OpenSP
+ SGML::Parser::OpenSP 0.991
  Socket
  String::Approx
  URI

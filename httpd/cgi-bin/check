@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.666 2009-06-29 20:22:43 ville Exp $
+# $Id: check,v 1.667 2009-06-29 20:30:47 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -44,27 +44,27 @@ package W3C::Validator::MarkupValidator;
 # polluting our namespace.
 #
 
-use CGI                  2.81 qw(-newstyle_urls -private_tempfiles redirect);
-use CGI::Carp                 qw(carp croak fatalsToBrowser);
-use Config::General      2.32 qw(); # Need 2.32 for <msg 0>, rt.cpan.org#17852
-use Encode                    qw();
-use Encode::Alias             qw();
-use Encode::HanExtra          qw(); # for some chinese character encodings,
-                                    # e.g gb18030
-use File::Spec::Functions     qw(catfile);
-use HTML::Encoding       0.52 qw();
-use HTML::Parser         3.24 qw(); # Need 3.24 for $p->parse($code_ref)
-use HTML::Template       2.6  qw(); # Need 2.6 for path param, other things.
-use HTTP::Headers::Util       qw();
-use HTTP::Message        1.52 qw(); # Need 1.52 for decoded_content()
-use HTTP::Request             qw();
-use HTTP::Headers::Auth       qw(); # Needs to be imported after other HTTP::*.
-use JSON                 2.00 qw();
-use SGML::Parser::OpenSP      qw();
-use URI                       qw();
-use URI::Escape               qw(uri_escape);
-use XML::LibXML               qw();
-use String::Approx            qw(amatch adist adistr);
+use CGI                  2.81  qw(-newstyle_urls -private_tempfiles redirect);
+use CGI::Carp                  qw(carp croak fatalsToBrowser);
+use Config::General      2.32  qw(); # Need 2.32 for <msg 0>, rt.cpan.org#17852
+use Encode                     qw();
+use Encode::Alias              qw();
+use Encode::HanExtra           qw(); # for some chinese character encodings,
+                                     # e.g gb18030
+use File::Spec::Functions      qw(catfile);
+use HTML::Encoding       0.52  qw();
+use HTML::Parser         3.24  qw(); # Need 3.24 for $p->parse($code_ref)
+use HTML::Template       2.6   qw(); # Need 2.6 for path param, other things.
+use HTTP::Headers::Util        qw();
+use HTTP::Message        1.52  qw(); # Need 1.52 for decoded_content()
+use HTTP::Request              qw();
+use HTTP::Headers::Auth        qw(); # Needs to be imported after other HTTP::*.
+use JSON                 2.00  qw();
+use SGML::Parser::OpenSP 0.991 qw();
+use URI                        qw();
+use URI::Escape                qw(uri_escape);
+use XML::LibXML                qw();
+use String::Approx             qw(amatch adist adistr);
 
 ###############################################################################
 #### Constant definitions. ####################################################
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.666 $;
+  $VERSION =  q$Revision: 1.667 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1109,15 +1109,9 @@ sub dtd_validate (\$) {
   if (&is_xml($File)) {
     $catalog = catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc');
     push(@spopt, 'xml');
-    # workaround for a bug in s:p:o 0.99
-    # see http://www.w3.org/Bugs/Public/show_bug.cgi?id=798#c5
-    push(@spopt, 'xml');
-    # FIXME when fixed s:p:o gets released
   }
   else {
     # add warnings for shorttags
-    push(@spopt, 'min-tag');
-    # twice, ditto above re: s:p:o bug in 0.99
     push(@spopt, 'min-tag');
   }
 
