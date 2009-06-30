@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.672 2009-06-30 17:26:45 ville Exp $
+# $Id: check,v 1.673 2009-06-30 18:49:07 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.672 $;
+  $VERSION =  q$Revision: 1.673 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -3026,28 +3026,22 @@ sub start_element
   my $has_xmlns = FALSE;
   my $xmlns_value = undef;
 
-  if ( ($self->{_file}->{Mode} =~ /XML/)){
-    # if in XML mode, find namespace used for each element
-    foreach my $attr (keys %{$element->{Attributes}}) {
-      if ($element->{Attributes}->{$attr}->{Name} eq "xmlns") {
-        # Try with SAX method
-        if($element->{Attributes}->{$attr}->{Value} ){
-          $has_xmlns = TRUE;
-          $xmlns_value = $element->{Attributes}->{$attr}->{Value};
-        }
-        #next if ($has_xmlns);
+  # If in XML mode, find namespace used for each element.
+  if ($self->{_file}->{Mode} =~ /XML/) {
+    if (my $attr = $element->{Attributes}->{xmlns}) {
+      $xmlns_value = "";
+      # Try with SAX method
+      if ($attr->{Value}) {
+        $has_xmlns = TRUE;
+        $xmlns_value = $attr->{Value};
+      }
+      #next if $has_xmlns;
 
-        # the following is not SAX, but OPENSP specific
-
-        if ( $element->{Attributes}->{$attr}->{Defaulted}){
-
-          if ($element->{Attributes}->{$attr}->{Defaulted} eq "specified") {
-            $has_xmlns = TRUE;
-            foreach my $datachunk (@{$element->{Attributes}->{$attr}->{CdataChunks}}) {
-              $xmlns_value = $xmlns_value.$datachunk->{Data};
-            }
-          }
-        }
+      # The following is not SAX, but OpenSP specific.
+      my $defaulted = $attr->{Defaulted} || '';
+      if ($defaulted eq "specified") {
+        $has_xmlns = TRUE;
+        $xmlns_value .= join("", map { $_->{Data} } @{$attr->{CdataChunks}});
       }
     }
   }
