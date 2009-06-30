@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.667 2009-06-29 20:30:47 ville Exp $
+# $Id: check,v 1.668 2009-06-30 15:10:38 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -64,7 +64,7 @@ use SGML::Parser::OpenSP 0.991 qw();
 use URI                        qw();
 use URI::Escape                qw(uri_escape);
 use XML::LibXML                qw();
-use String::Approx             qw(amatch adist adistr);
+use String::Approx             qw();
 
 ###############################################################################
 #### Constant definitions. ####################################################
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.667 $;
+  $VERSION =  q$Revision: 1.668 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
