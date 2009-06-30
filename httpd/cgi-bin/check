@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.669 2009-06-30 15:13:57 ville Exp $
+# $Id: check,v 1.670 2009-06-30 15:17:57 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.669 $;
+  $VERSION =  q$Revision: 1.670 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1513,6 +1513,8 @@ sub fin_template ($$) {
     $T->param(number_of_warnings_is_plural => FALSE );
   }
 
+  $T->param(file_outline => $File->{heading_outline})
+    if $File->{Opt}->{Outline};
 
   $T->param(file_errors => $reported_errors);
   if ($File->{'Is Valid'}) {
@@ -1565,9 +1567,6 @@ sub report_valid {
     $T->param(is_tentative => TRUE);
   }
 
-  if ($File->{Opt}->{'Outline'}) {
-    $T->param(file_outline => $File->{heading_outline});
-  }
   if ($File->{XMLWF_ONLY}){
     $T->param(xmlwf_only => TRUE);
   }
