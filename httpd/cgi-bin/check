@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.671 2009-06-30 15:20:52 ville Exp $
+# $Id: check,v 1.672 2009-06-30 17:26:45 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.671 $;
+  $VERSION =  q$Revision: 1.672 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -3301,19 +3301,15 @@ sub new
   my $File = shift;
   my $CFG = shift;
   my $self = $class->SUPER::new($parser, $File, $CFG);
-  $self->{current_heading_level}= 0;
   $self->{am_in_heading} = 0;
+  $self->{heading_text} = [];
   bless $self, $class;
 }
 
 sub data
 {
   my ($self, $chars) = @_;
-  if ($self->{am_in_heading} == 1) {
-    my $data = $chars->{Data};
-    $data =~  s/[\r|\n]/ /g;
-    $self->{_file}->{heading_outline} .= $data;
-  }
+  push(@{$self->{heading_text}}, $chars->{Data}) if $self->{am_in_heading};
 }
 
 sub start_element
@@ -3333,8 +3329,13 @@ sub end_element
 {
   my ($self, $element) = @_;
   if ($element->{Name} =~ /^h[1-6]$/i) {
-    $self->{_file}->{heading_outline} .= "\n";
+    my $text = join("", @{$self->{heading_text}});
+    $text =~ s/^\s+//g;
+    $text =~ s/\s+/ /g;
+    $text =~ s/\s+$//g;
+    $self->{_file}->{heading_outline} .= "$text\n";
     $self->{am_in_heading} = 0;
+    $self->{heading_text} = [];
   }
 }
 
