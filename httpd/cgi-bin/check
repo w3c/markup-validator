@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.668 2009-06-30 15:10:38 ville Exp $
+# $Id: check,v 1.669 2009-06-30 15:13:57 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.668 $;
+  $VERSION =  q$Revision: 1.669 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1576,7 +1576,7 @@ sub report_valid {
 }
 
 #
-# Add a waring message to the output.
+# Add a warning message to the output.
 sub add_warning ($$) {
   my $WID    = shift;
   my $params = shift;
@@ -3102,7 +3102,6 @@ sub error
 {
   my $self = shift;
   my $error = shift;
-  # my $mess = $self->{_parser}->split_message($error);
   my $mess;
   eval {
     $mess = $self->{_parser}->split_message($error);
@@ -3206,6 +3205,7 @@ sub error
      # hoping to get the DTDs fixed, see http://lists.w3.org/Archives/Public/www-html-editor/2007AprJun/0010.html
      return; # don't report this, just proceed
    }
+
    if (($err->{num} eq '344') and ($File->{Namespace}) and ($File->{Mode} =~ /XML/) )  {
      # we are in XML mode, we have a namespace, but no doctype.
      # the validator will already have said "no doctype, falling back to default" above
@@ -3219,7 +3219,6 @@ sub error
      # see http://www.w3.org/TR/html4/appendix/notes.html#h-B.3.7
      $err->{type} = "W";
    }
-
 
   # Workaround for onsgmls as of 1.5 sometimes allegedly reporting errors
   # beyond EOL.  If you see this warning in your web server logs, please
@@ -3338,10 +3337,8 @@ sub start_element
     $self->{am_in_heading} = 1;
   }
 
-return $self->SUPER::start_element($element)
-
+  return $self->SUPER::start_element($element);
 }
-
 
 sub end_element
 {
@@ -3350,7 +3347,6 @@ sub end_element
     $self->{_file}->{heading_outline} .= "\n";
     $self->{am_in_heading} = 0;
   }
-
 }
 
 
