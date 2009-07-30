@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.674 2009-07-30 16:51:02 ville Exp $
+# $Id: check,v 1.675 2009-07-30 16:58:14 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.674 $;
+  $VERSION =  q$Revision: 1.675 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1443,7 +1443,7 @@ sub fin_template ($$) {
 
   if (! $File->{Doctype} and ($File->{Version} eq 'unknown' or $File->{Version} eq 'SGML' or (!$File->{Version}))) {
 
-    my $default_doctype = ($File->{Mode} =~ /XML/ ?
+    my $default_doctype = (&is_xml($File) ?
                  $File->{"Default DOCTYPE"}->{"XHTML"} : $File->{"Default DOCTYPE"}->{"HTML"});
     $T->param(file_version => "$default_doctype");
   }
@@ -2348,7 +2348,7 @@ sub preparse_doctype {
 
   # if content-type has shown we should pre-parse with XML mode, use that
   # otherwise (mostly text/html cases) use default mode
-  $p->xml_mode(TRUE) if ($File->{Mode} =~ /XML/);
+  $p->xml_mode(&is_xml($File));
   $p->handler(declaration => $dtd, 'text');
   $p->handler(start => $start, 'self,tag,attr');
 
@@ -3028,7 +3028,7 @@ sub start_element
   my $xmlns_value = undef;
 
   # If in XML mode, find namespace used for each element.
-  if ($self->{_file}->{Mode} =~ /XML/) {
+  if (&is_xml($self->{_file})) {
     if (my $attr = $element->{Attributes}->{xmlns}) {
       $xmlns_value = "";
       # Try with SAX method
@@ -3122,11 +3122,11 @@ sub error
   # our parser OpenSP is not quite XML-aware, or XML Namespaces Aware,
   # so we filter out a few errors for now
 
-  if ($File->{Mode} =~ /XML/) {
-    if ($err->{num} eq '108' and $err->{msg} =~ m{ "xmlns:\S+"}) {
-      # the error is about a missing xmlns: attribute definition"
-      return ;  # this is not an error, 'cause we said so
-    }
+  my $is_xml = &is_xml($File);
+
+  if ($is_xml and $err->{num} eq '108' and $err->{msg} =~ m{ "xmlns:\S+"}) {
+    # the error is about a missing xmlns: attribute definition"
+    return;  # this is not an error, 'cause we said so
   }
 
   if ($err->{num} eq '187')
@@ -3134,7 +3134,7 @@ sub error
   # if root element is not html and mode is xml...
   {
     # since parsing was done without validation, result can only be "well-formed"
-    if ($File->{Mode} =~ /XML/ and lc($File->{Root}) ne 'html') {
+    if ($is_xml and lc($File->{Root}) ne 'html') {
       $File->{XMLWF_ONLY} = TRUE;
       W3C::Validator::MarkupValidator::add_warning('W09xml', {});
       return; # don't report this as an error, just proceed
@@ -3200,7 +3200,7 @@ sub error
      return; # don't report this, just proceed
    }
 
-   if (($err->{num} eq '344') and ($File->{Namespace}) and ($File->{Mode} =~ /XML/) )  {
+   if ($is_xml and $err->{num} eq '344' and $File->{Namespace}) {
      # we are in XML mode, we have a namespace, but no doctype.
      # the validator will already have said "no doctype, falling back to default" above
      # no need to report this.
@@ -3237,12 +3237,12 @@ sub error
   # No DOCTYPE found! We are falling back to vanilla DTD
   if ($err->{msg} =~ m(prolog can\'t be omitted)) {
     if (lc($File->{Root}) eq 'html') {
-      my $dtd = ($File->{Mode} =~ /XML/ ?
+      my $dtd = ($is_xml ?
                  $File->{"Default DOCTYPE"}->{"XHTML"} : $File->{"Default DOCTYPE"}->{"HTML"} );
       W3C::Validator::MarkupValidator::add_warning('W09', {W09_dtd => $dtd});
     }
     else { # not html root element, we are not using fallback
-      if (! $File->{Mode} =~ /XML/) {
+      unless ($is_xml) {
         $File->{'Is Valid'} = FALSE;
         W3C::Validator::MarkupValidator::add_warning('W09nohtml', {});
       }
