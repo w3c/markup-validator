@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.676 2009-07-30 17:06:38 ville Exp $
+# $Id: check,v 1.677 2009-07-30 19:29:12 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.676 $;
+  $VERSION =  q$Revision: 1.677 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -540,24 +540,20 @@ if (charset_not_equal($File->{Opt}->{Charset}, '(detect automatically)')) {
       $File->{Tentative} |= T_ERROR; # Tag it as Invalid.
       $File->{Charset}->{Use} = $File->{Charset}->{Override};
     }
-  } else { # charset "hard override" mode
+  }
+  else { # charset "hard override" mode
     if (! $File->{Charset}->{Use}) { # overriding "nothing"
-      &add_warning('W04', {W04_charset => $File->{Charset}->{Override}, W04_override => TRUE});
+      &add_warning('W04', { W04_charset  => $File->{Charset}->{Override},
+                            W04_override => TRUE});
       $File->{Tentative} |= T_ERROR;
       $File->{Charset}->{Use} = $File->{Charset}->{Override};
-     }
-     else { #actually overriding something
-      # Warn about Override unless it's the same as the real charset...
-
-      unless ($File->{Charset}->{Override} eq $File->{Charset}->{Use}) {
-        &add_warning('W03', {
-          W03_use => $File->{Charset}->{Use},
-          W03_opt => $File->{Charset}->{Override},
-        });
-
-        $File->{Tentative} |= T_ERROR;
-        $File->{Charset}->{Use} = $File->{Charset}->{Override};
-      }
+    }
+    elsif ($File->{Charset}->{Override} ne $File->{Charset}->{Use}) {
+      # Actually overriding something; warn about override.
+      &add_warning('W03', { W03_use => $File->{Charset}->{Use},
+                            W03_opt => $File->{Charset}->{Override}});
+      $File->{Tentative} |= T_ERROR;
+      $File->{Charset}->{Use} = $File->{Charset}->{Override};
     }
   }
 }
