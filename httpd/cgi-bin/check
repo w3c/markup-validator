@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.673 2009-06-30 18:49:07 ville Exp $
+# $Id: check,v 1.674 2009-07-30 16:51:02 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.673 $;
+  $VERSION =  q$Revision: 1.674 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2437,6 +2437,7 @@ sub prepCGI {
     # just trump the query string for the duration of calling methods we
     # know we don't need it for and which have been affected in the past.
     # More info: http://www.w3.org/Bugs/Public/show_bug.cgi?id=4365
+    # ->url() reportedly fixed in CGI.pm 3.34, ->path_info() in 3.40.
 
     local $ENV{REQUEST_URI} = URI->new($ENV{REQUEST_URI})->path()
       if $ENV{REQUEST_URI};
