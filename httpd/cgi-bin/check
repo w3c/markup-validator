@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.677 2009-07-30 19:29:12 ville Exp $
+# $Id: check,v 1.678 2009-07-30 19:48:47 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.677 $;
+  $VERSION =  q$Revision: 1.678 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2458,7 +2458,7 @@ sub prepCGI {
       # Parameters that are given to us without specifying a value get
       # set to "1" (the "TRUE" constant). This is so we can test for the
       # boolean value of a parameter instead of first checking whether
-      # the param was given and then testing it's value. Needed because
+      # the param was given and then testing its value. Needed because
       # CGI.pm sets ";param" and ";param=" to a boolean false value
       # (undef() or a null string, respectively).
       $q->param($param, TRUE) unless $q->param($param);
@@ -2950,7 +2950,7 @@ sub self_url_q {
 }
 
 #
-# Return random Tip with it's URL.
+# Return random tip and its URL.
 sub get_tip {
   my @tipAddrs = keys %{$CFG->{Tips}};
   my $tipAddr  = $tipAddrs[rand scalar @tipAddrs];
