@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.675 2009-07-30 16:58:14 ville Exp $
+# $Id: check,v 1.676 2009-07-30 17:06:38 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.675 $;
+  $VERSION =  q$Revision: 1.676 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2874,12 +2874,12 @@ sub find_encodings
   foreach my $try (@first)
   {
     # @@FIXME I think the old code used HTML::Parser xml mode, check this is ok
-    my $meta = lc HTML::Encoding::encoding_from_meta_element($File->{Bytes}, $try);
-    $metah{$meta}++ if defined $meta and length $meta;
+    my $meta = HTML::Encoding::encoding_from_meta_element($File->{Bytes}, $try);
+    $metah{lc($meta)}++ if defined $meta and length $meta;
   }
 
   my @meta = sort { $metah{$b} <=> $metah{$a} } keys %metah;
-  $File->{Charset}->{META} = lc $meta[0] if @meta;
+  $File->{Charset}->{META} = $meta[0] if @meta;
 
   return $File;
 }
