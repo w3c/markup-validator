@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.678 2009-07-30 19:48:47 ville Exp $
+# $Id: check,v 1.679 2009-08-11 11:04:12 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.678 $;
+  $VERSION =  q$Revision: 1.679 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -3024,7 +3024,7 @@ sub start_element
   my $xmlns_value = undef;
 
   # If in XML mode, find namespace used for each element.
-  if (&is_xml($self->{_file})) {
+  if (&W3C::Validator::MarkupValidator::is_xml($self->{_file})) {
     if (my $attr = $element->{Attributes}->{xmlns}) {
       $xmlns_value = "";
       # Try with SAX method
@@ -3118,7 +3118,7 @@ sub error
   # our parser OpenSP is not quite XML-aware, or XML Namespaces Aware,
   # so we filter out a few errors for now
 
-  my $is_xml = &is_xml($File);
+  my $is_xml = &W3C::Validator::MarkupValidator::is_xml($File);
 
   if ($is_xml and $err->{num} eq '108' and $err->{msg} =~ m{ "xmlns:\S+"}) {
     # the error is about a missing xmlns: attribute definition"
