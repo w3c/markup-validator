@@ -149,6 +149,15 @@
     <p><code><TMPL_VAR NAME="fatal_http_warn" ESCAPE="HTML"></code></p>
   </blockquote>
   </TMPL_IF>
+  <TMPL_IF NAME="fatal_http_no200">
+  <p>
+    You can choose to
+    <a href="<TMPL_VAR NAME="fatal_http_no200" ESCAPE="HTML">">validate
+    the received error document</a> for example if the URL intentionally
+    points to one (there is also a "Validate error pages" option in the
+    options view for this purpose).
+  </p>
+  </TMPL_IF>
 </li>
 </TMPL_IF>
 

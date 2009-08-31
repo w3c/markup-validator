@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.681 2009-08-31 21:17:39 ville Exp $
+# $Id: check,v 1.682 2009-08-31 21:30:03 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.681 $;
+  $VERSION =  q$Revision: 1.682 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1676,8 +1676,21 @@ sub handle_uri {
     } else {
       $File->{'Error Flagged'} = TRUE;
 
+      my $no200url = undef;
+      if (!$File->{Opt}->{No200}) {
+        # $File->{URI} not set yet; setting it non-local has side effects
+        local $File->{URI}          = $uri->as_string;
+        local $File->{Opt}->{No200} = TRUE;
+        $no200url                   = &self_url_file($File);
+      }
+
       my $warning = $res->header("Client-Warning");
-      $warning = undef if ($warning && $warning =~ /Internal response/i);
+      if ($warning && $warning =~ /Internal response/i) {
+        # Response doc generated internally by LWP, no need to show that info
+        # nor to provide error doc validation link to it.
+        $warning  = undef;
+        $no200url = undef;
+      }
 
       $File->{Templates}->{Error}->param(fatal_http_error => TRUE);
       $File->{Templates}->{Error}->param(fatal_http_uri   => $uri->as_string);
@@ -1686,6 +1699,7 @@ sub handle_uri {
       $File->{Templates}->{Error}->param(fatal_http_warn  => $warning);
       $File->{Templates}->{Error}->param(fatal_http_dns   => TRUE)
         if $res->code == 500;
+      $File->{Templates}->{Error}->param(fatal_http_no200 => $no200url);
     }
     return $File;
   }
