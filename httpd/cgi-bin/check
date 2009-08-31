@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.680 2009-08-13 15:33:05 ville Exp $
+# $Id: check,v 1.681 2009-08-31 21:17:39 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.680 $;
+  $VERSION =  q$Revision: 1.681 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2972,14 +2972,12 @@ sub self_url_file {
   $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
   $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
   $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
+  $thispage .= ';No200=1'   if $File->{Opt}->{'No200'};
+  $thispage .= ';verbose=1' if $File->{Opt}->{'Verbose'};
+  $thispage .= ';group=1'   if $File->{Opt}->{'Group Errors'};
   $thispage .= ';accept=' . uri_escape($File->{Opt}->{'Accept Header'}) if $File->{Opt}->{'Accept Header'};
   $thispage .= ';accept-language=' . uri_escape($File->{Opt}->{'Accept-Language Header'}) if $File->{Opt}->{'Accept-Language Header'};
   $thispage .= ';accept-charset=' . uri_escape($File->{Opt}->{'Accept-Charset Header'}) if $File->{Opt}->{'Accept-Charset Header'};
-
-  # These were not added by report_valid; perhaps they should be?
-  # $thispage .= ';verbose=1' if $File->{Opt}->{'Verbose'};
-  # $thispage .= ';group=1' if $File->{Opt}->{'Group Errors'};
-  # $thispage .= ';No200=1'   if $File->{Opt}->{'No200'};
 
   return $thispage;
 }
