@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.682 2009-08-31 21:30:03 ville Exp $
+# $Id: check,v 1.683 2009-09-03 19:10:25 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.682 $;
+  $VERSION =  q$Revision: 1.683 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2938,19 +2938,19 @@ sub charset_not_equal {
 sub self_url_q {
   my ($q, $File) = @_;
   my $thispage = $File->{Env}->{'Self URI'} . '?';
-  $thispage .= 'uri='       . uri_escape($q->param('uri')) . ';'
-                            if $q->param('uri');
-  $thispage .= 'ss=1;'      if $q->param('ss');
-  $thispage .= 'sp=1;'      if $q->param('sp');
-  $thispage .= 'noatt=1;'   if $q->param('noatt');
-  $thispage .= 'outline=1;' if $q->param('outline');
-  $thispage .= 'No200=1;'   if $q->param('No200');
-  $thispage .= 'verbose=1;' if $q->param('verbose');
-  $thispage .= 'group=1;'   if $q->param('group');
-  $thispage .= 'accept=' . uri_escape($q->param('accept')) . ';' if $q->param('accept');
-  $thispage .= 'accept-language='. uri_escape($q->param('accept-language')) .';' if $q->param('accept-language');
-  $thispage .= 'accept-charset='. uri_escape($q->param('accept-charset')) .';' if $q->param('accept-charset');
 
+  # Pass-through parameters
+  for my $param (qw(uri accept accept-language accept-charset)) {
+    $thispage .= "$param=" . uri_escape($q->param($param)) . ';'
+      if $q->param($param);
+  }
+
+  # Boolean parameters
+  for my $param (qw(ss sp noatt outline No200 verbose group)) {
+    $thispage .= "$param=1;" if $q->param($param);
+  }
+
+  # Others
   if ($q->param('doctype')
       and not $q->param('doctype') =~ /(Inline|detect)/i) {
     $thispage .= 'doctype=' . uri_escape($q->param('doctype')) . ';';
