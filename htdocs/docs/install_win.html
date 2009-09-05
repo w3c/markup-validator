@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install_win.html,v 1.20 2009-06-29 18:21:16 ville Exp $" 
---><!--#set var="date" value="\$Date: 2009-06-29 18:21:16 $" 
+<!--#set var="revision" value="\$Id: install_win.html,v 1.21 2009-09-05 11:45:16 ville Exp $" 
+--><!--#set var="date" value="\$Date: 2009-09-05 11:45:16 $" 
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service (Windows, Apache)" 
 --><!--#set var="relroot" value="../" 
 --><!--#include virtual="../header.html" -->
@@ -270,7 +270,7 @@ Include conf/extra/httpd-manual.conf
 <pre>#
 # Main Configuration File for the W3C Markup Validation Service.
 #
-# $Id: install_win.html,v 1.20 2009-06-29 18:21:16 ville Exp $
+# $Id: install_win.html,v 1.21 2009-09-05 11:45:16 ville Exp $
 #
 # See 'perldoc Config::General' for the syntax, and be aware that the
 # 'SplitPolicy' is 'equalsign', ie. keys and values are separated by '\s*=\s*',
@@ -346,10 +346,6 @@ Maintainer = www-validator@w3.org
 # The &quot;Home Page&quot; for the service.  Make sure this ends with a slash.
 Home Page = http://validator.example.org/
 
-#
-# Base URI for the Element Reference.
-Element Ref URI = http://www.htmlhelp.com/reference/html40/
-
 # Localization
 # only English available for now
 Languages = en
@@ -361,7 +357,7 @@ Languages = en
 #
 
 #
-# Maps element names to URLs (cf. &quot;Element Ref URI&quot; above).
+# Maps element names to URLs.
 &lt;Elements&gt;
   Include eref.cfg
 &lt;/Elements&gt;

@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.684 2009-09-05 10:46:02 ville Exp $
+# $Id: check,v 1.685 2009-09-05 11:45:16 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.684 $;
+  $VERSION =  q$Revision: 1.685 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -416,10 +416,6 @@ $q = &prepCGI($File, $q);
 $File->{Opt}->{'Outline'}        = $q->param('outline') ? TRUE                   :  FALSE;
 $File->{Opt}->{'Show Source'}    = $q->param('ss')      ? TRUE                   :  FALSE;
 $File->{Opt}->{'Show Tidy'}      = $q->param('st')      ? TRUE                   :  FALSE;
-$File->{Opt}->{'Show Parsetree'} = $q->param('sp')      ? TRUE                   :  FALSE;
-$File->{Opt}->{'No Attributes'}  = $q->param('noatt')   ? TRUE                   :  FALSE;
-$File->{Opt}->{'Show ESIS'}      = $q->param('esis')    ? TRUE                   :  FALSE;
-$File->{Opt}->{'Show Errors'}    = $q->param('errors')  ? TRUE                   :  FALSE;
 $File->{Opt}->{'Verbose'}        = $q->param('verbose') ? TRUE                   :  FALSE;
 $File->{Opt}->{'Group Errors'}   = $q->param('group') ? TRUE                   :  FALSE;
 $File->{Opt}->{'Debug'}          = $q->param('debug')   ? TRUE                   :  FALSE;
@@ -427,7 +423,6 @@ $File->{Opt}->{'No200'}          = $q->param('No200')   ? TRUE                  
 $File->{Opt}->{'Charset'}        = $q->param('charset') ? lc $q->param('charset'):     '';
 $File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') ? $q->param('doctype')   :     '';
 $File->{Opt}->{'Output'}         = $q->param('output')  ? $q->param('output')    : 'html';
-$File->{Opt}->{'Max Errors'}     = $q->param('me')      ? $q->param('me')        :     '';
 $File->{Opt}->{'Prefill'}        = $q->param('prefill') ? TRUE                   :  FALSE;
 $File->{Opt}->{'Prefill Doctype'}        = $q->param('prefill_doctype') ? $q->param('prefill_doctype')   :     'html401';
 
@@ -1282,12 +1277,6 @@ $template->param(file_warnings => $File->{Warnings});
 $template->param(tidy_output => $File->{'Tidy'});
 $template->param(file_source => &source($File))
   if ($template->param('opt_show_source') or ($File->{'Is Upload'}) or ($File->{'Direct Input'}));
-#$template->param('opt_show_esis' => TRUE)
-#  if $File->{Opt}->{'Show ESIS'};
-#$template->param('opt_show_raw_errors' => TRUE)
-#  if $File->{Opt}->{'Show Errors'};
-#$template->param('file_raw_errors' => &show_errors($File))
-#  if $template->param('opt_show_raw_errors');
 
 if ($File->{Opt}->{Output} eq 'json') {
   # No JSON escaping in HTML::Template (and "JS" is not the right thing here)
@@ -1357,8 +1346,6 @@ sub prep_template ($$) {
   $T->param(opt_show_source    => $File->{Opt}->{'Show Source'});
   $T->param(opt_show_tidy    => $File->{Opt}->{'Show Tidy'});
   $T->param(opt_show_outline   => $File->{Opt}->{'Outline'});
-  $T->param(opt_show_parsetree => $File->{Opt}->{'Show Parsetree'});
-  $T->param(opt_show_noatt     => $File->{Opt}->{'No Attributes'});
   $T->param(opt_verbose        => $File->{Opt}->{'Verbose'});
   $T->param(opt_group_errors        => $File->{Opt}->{'Group Errors'});
   $T->param(opt_no200          => $File->{Opt}->{'No200'});
@@ -2423,17 +2410,6 @@ sub preparse_doctype {
 
 
 #
-# Print out the raw error output for debugging.
-sub show_errors ($) {
-  # @@FIXME This is broken with SGML::Parser::OpenSP
-  my $file_raw_errors = "";
-  for (@{shift->{DEBUG}->{Errors}}) {
-    $file_raw_errors .= ent $_;
-  }
-  return $file_raw_errors;
-}
-
-#
 # Preprocess CGI parameters.
 sub prepCGI {
   my $File = shift;
@@ -2945,7 +2921,7 @@ sub self_url_q {
   }
 
   # Boolean parameters
-  for my $param (qw(ss sp noatt outline No200 verbose group)) {
+  for my $param (qw(ss outline No200 verbose group)) {
     $thispage .= "$param=1;" if $q->param($param);
   }
 
@@ -2982,8 +2958,6 @@ sub self_url_file {
   $thispage .= qq(?uri=$escaped_uri);
   $thispage .= ';ss=1'      if $File->{Opt}->{'Show Source'};
   $thispage .= ';st=1'      if $File->{Opt}->{'Show Tidy'};
-  $thispage .= ';sp=1'      if $File->{Opt}->{'Show Parsetree'};
-  $thispage .= ';noatt=1'   if $File->{Opt}->{'No Attributes'};
   $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
   $thispage .= ';No200=1'   if $File->{Opt}->{'No200'};
   $thispage .= ';verbose=1' if $File->{Opt}->{'Verbose'};

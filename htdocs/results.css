@@ -1,5 +1,5 @@
 /* style sheet for the validator's results page          */
-/* $Id: results.css,v 1.33 2007-02-07 15:25:10 ot Exp $ */
+/* $Id: results.css,v 1.34 2009-09-05 11:45:16 ville Exp $ */
 
 .input {
   color: black;
@@ -275,10 +275,3 @@ td.invalid
 img.inline-badge {
   float: left;
 }
-
-
-div.mtb { /* "Medium Thematic Break" */
-  margin-top: 5em;
-  border-top: 1px solid black;
-}
-
