@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.683 2009-09-03 19:10:25 ville Exp $
+# $Id: check,v 1.684 2009-09-05 10:46:02 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.683 $;
+  $VERSION =  q$Revision: 1.684 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1288,7 +1288,6 @@ $template->param(file_source => &source($File))
 #  if $File->{Opt}->{'Show Errors'};
 #$template->param('file_raw_errors' => &show_errors($File))
 #  if $template->param('opt_show_raw_errors');
-#  $T->param(file_outline   => &outline($File)) if $T->param('opt_show_outline');
 
 if ($File->{Opt}->{Output} eq 'json') {
   # No JSON escaping in HTML::Template (and "JS" is not the right thing here)
