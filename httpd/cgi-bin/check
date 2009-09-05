@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.685 2009-09-05 11:45:16 ville Exp $
+# $Id: check,v 1.686 2009-09-05 12:07:36 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.685 $;
+  $VERSION =  q$Revision: 1.686 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -413,18 +413,18 @@ $q = &prepCGI($File, $q);
 
 #
 # Set session switches.
-$File->{Opt}->{'Outline'}        = $q->param('outline') ? TRUE                   :  FALSE;
-$File->{Opt}->{'Show Source'}    = $q->param('ss')      ? TRUE                   :  FALSE;
-$File->{Opt}->{'Show Tidy'}      = $q->param('st')      ? TRUE                   :  FALSE;
-$File->{Opt}->{'Verbose'}        = $q->param('verbose') ? TRUE                   :  FALSE;
-$File->{Opt}->{'Group Errors'}   = $q->param('group') ? TRUE                   :  FALSE;
-$File->{Opt}->{'Debug'}          = $q->param('debug')   ? TRUE                   :  FALSE;
-$File->{Opt}->{'No200'}          = $q->param('No200')   ? TRUE                   :  FALSE;
-$File->{Opt}->{'Charset'}        = $q->param('charset') ? lc $q->param('charset'):     '';
-$File->{Opt}->{'DOCTYPE'}        = $q->param('doctype') ? $q->param('doctype')   :     '';
-$File->{Opt}->{'Output'}         = $q->param('output')  ? $q->param('output')    : 'html';
-$File->{Opt}->{'Prefill'}        = $q->param('prefill') ? TRUE                   :  FALSE;
-$File->{Opt}->{'Prefill Doctype'}        = $q->param('prefill_doctype') ? $q->param('prefill_doctype')   :     'html401';
+$File->{Opt}->{'Outline'}         = $q->param('outline') ? TRUE  :  FALSE;
+$File->{Opt}->{'Show Source'}     = $q->param('ss')      ? TRUE  :  FALSE;
+$File->{Opt}->{'Show Tidy'}       = $q->param('st')      ? TRUE  :  FALSE;
+$File->{Opt}->{'Verbose'}         = $q->param('verbose') ? TRUE  :  FALSE;
+$File->{Opt}->{'Group Errors'}    = $q->param('group')   ? TRUE  :  FALSE;
+$File->{Opt}->{'Debug'}           = $q->param('debug')   ? TRUE  :  FALSE;
+$File->{Opt}->{'No200'}           = $q->param('No200')   ? TRUE  :  FALSE;
+$File->{Opt}->{'Prefill'}         = $q->param('prefill') ? TRUE  :  FALSE;
+$File->{Opt}->{'Prefill Doctype'} = $q->param('prefill_doctype') || 'html401';
+$File->{Opt}->{'Charset'}         = lc($q->param('charset')      || '');
+$File->{Opt}->{'DOCTYPE'}         = $q->param('doctype')         || '';
+$File->{Opt}->{'Output'}          = $q->param('output')          || 'html';
 
 $File->{Opt}->{'User Agent'} = $q->param('user-agent') && $q->param('user-agent') ne 1 ? $q->param('user-agent') : "W3C_Validator/$VERSION";
 $File->{Opt}->{'User Agent'} =~ tr/\x00-\x09\x0b\x0c-\x1f//d;
@@ -434,12 +434,11 @@ if ($File->{Opt}->{'User Agent'} eq 'mobileok') {
 }
 
 
-$File->{Opt}->{'Accept Header'} = $q->param('accept') ? $q->param('accept') : '';
-$File->{Opt}->{'Accept Header'} =~ tr/\x00-\x09\x0b\x0c-\x1f//d;
-$File->{Opt}->{'Accept-Language Header'} = $q->param('accept-language') ? $q->param('accept-language') : '';
-$File->{Opt}->{'Accept-Language Header'} =~ tr/\x00-\x09\x0b\x0c-\x1f//d;
-$File->{Opt}->{'Accept-Charset Header'} = $q->param('accept-charset') ? $q->param('accept-charset') : '';
-$File->{Opt}->{'Accept-Charset Header'} =~ tr/\x00-\x09\x0b\x0c-\x1f//d;
+$File->{Opt}->{'Accept Header'}          = $q->param('accept')          || '';
+$File->{Opt}->{'Accept-Language Header'} = $q->param('accept-language') || '';
+$File->{Opt}->{'Accept-Charset Header'}  = $q->param('accept-charset')  || '';
+$File->{Opt}->{$_} =~ tr/\x00-\x09\x0b\x0c-\x1f//d
+  for ('Accept Header', 'Accept-Language Header', 'Accept-Charset Header');
 
 #
 # "Fallback" info for Character Encoding (fbc), Content-Type (fbt),
@@ -1343,12 +1342,12 @@ sub prep_template ($$) {
 
   #
   # Output options...
-  $T->param(opt_show_source    => $File->{Opt}->{'Show Source'});
+  $T->param(opt_show_source  => $File->{Opt}->{'Show Source'});
   $T->param(opt_show_tidy    => $File->{Opt}->{'Show Tidy'});
-  $T->param(opt_show_outline   => $File->{Opt}->{'Outline'});
-  $T->param(opt_verbose        => $File->{Opt}->{'Verbose'});
-  $T->param(opt_group_errors        => $File->{Opt}->{'Group Errors'});
-  $T->param(opt_no200          => $File->{Opt}->{'No200'});
+  $T->param(opt_show_outline => $File->{Opt}->{'Outline'});
+  $T->param(opt_verbose      => $File->{Opt}->{'Verbose'});
+  $T->param(opt_group_errors => $File->{Opt}->{'Group Errors'});
+  $T->param(opt_no200        => $File->{Opt}->{'No200'});
 
   #
   # Tip of the Day...
