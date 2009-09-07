@@ -93,11 +93,11 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
                   </longmessage>
                   <longmessage>
                     <img
-                        class="inline-badge" src="<TMPL_IF NAME="have_local_badge"><TMPL_VAR NAME="local_badge_uri" ESCAPE="HTML"><TMPL_ELSE><TMPL_VAR NAME="badge_uri" ESCAPE="HTML"></TMPL_IF>"
+                        class="inline-badge" src="<TMPL_VAR NAME="badge_uri" ESCAPE="HTML">"
                     alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"
                     <TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF>
                     <TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF>
-                    /> <pre class="badgeSnippet">
+                    /> <code>
                     &lt;p<TMPL_IF NAME="have_badge_rdfa"> about=""
                     resource="<TMPL_VAR NAME="badge_rdfa">"
                     rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"</TMPL_IF>&gt;
@@ -105,16 +105,16 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
                     src="<TMPL_VAR NAME="badge_uri" ESCAPE="HTML">"
                     <TMPL_IF NAME="badge_alt">alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"</TMPL_IF> <TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF> <TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF><TMPL_VAR NAME="badge_tagc">&gt;&lt;/a&gt;
                     &lt;/p&gt;
-                  </pre>
+                  </code>
                   </longmessage>
                   <TMPL_IF NAME="have_alt_badge">
                   <longmessage>
                     <img
-                        class="inline-badge" src="<TMPL_IF NAME="have_local_badge"><TMPL_VAR NAME="local_alt_badge_uri" ESCAPE="HTML"><TMPL_ELSE><TMPL_VAR NAME="badge_alt_uri" ESCAPE="HTML"></TMPL_IF>"
+                        class="inline-badge" src="<TMPL_VAR NAME="badge_alt_uri" ESCAPE="HTML">"
                     alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"
                     <TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF>
                     <TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF>
-                    /> <pre class="badgeSnippet">
+                    /> <code>
                     &lt;p<TMPL_IF NAME="have_badge_rdfa"> about=""
                     resource="<TMPL_VAR NAME="badge_rdfa">"
                     rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"</TMPL_IF>&gt;
@@ -122,7 +122,7 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
                     src="<TMPL_VAR NAME="badge_alt_uri" ESCAPE="HTML">"
                     <TMPL_IF NAME="badge_alt">alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"</TMPL_IF> <TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF> <TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF><TMPL_VAR NAME="badge_tagc">&gt;&lt;/a&gt;
                     &lt;/p&gt;
-                  </pre>
+                  </code>
                 </longmessage>
                 </TMPL_IF>
                 <longmessage>
