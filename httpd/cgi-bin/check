@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.688 2009-09-12 14:29:28 ville Exp $
+# $Id: check,v 1.689 2009-09-12 14:49:28 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.688 $;
+  $VERSION =  q$Revision: 1.689 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1220,7 +1220,7 @@ if (!$File->{'Is Valid'} && $File->{Opt}->{'Show Tidy'}) {
     require HTML::Tidy;
     my $tidy = HTML::Tidy->new({config_file => $CFG->{Paths}->{TidyConf}});
     my $cleaned = $tidy->clean(join("\n", @{$File->{Content}}));
-    $cleaned = Encode::decode('utf-8', $cleaned);
+    $cleaned = Encode::decode_utf8($cleaned);
     $File->{Tidy} = $cleaned;
   };
   $File->{Tidy_OK} = !$@;
