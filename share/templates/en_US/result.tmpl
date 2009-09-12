@@ -24,9 +24,9 @@
         <TMPL_INCLUDE NAME="opt_show_source.tmpl">
       </TMPL_IF>
 
-      <TMPL_IF NAME="opt_show_tidy">
+      <TMPL_IF NAME="opt_show_tidy"><TMPL_IF NAME="tidy_output">
         <TMPL_INCLUDE NAME="opt_show_tidy.tmpl">
-      </TMPL_IF>
+      </TMPL_IF></TMPL_IF>
 
       <TMPL_IF NAME="opt_show_outline">
         <TMPL_INCLUDE NAME="opt_show_outline.tmpl">

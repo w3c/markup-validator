@@ -1,5 +1,5 @@
 <h3 id="preparse_warnings">Notes and Potential Issues</h3>
-<p>The following notes and warnings highlight missing or conflicting information which caused the validator to perform some guesswork prior to validation. If the guess or fallback is incorrect, it could make validation results entirely incoherent. It is <em>highly recommended</em> 
+<p>The following notes and warnings highlight missing or conflicting information which caused the validator to perform some guesswork prior to validation, or other things affecting the output below. If the guess or fallback is incorrect, it could make validation results entirely incoherent. It is <em>highly recommended</em> 
 to check these potential issues, and, if necessary, fix them and re-validate the document.</p>
 <ol id="warnings">
 
@@ -486,6 +486,7 @@ to check these potential issues, and, if necessary, fix them and re-validate the
     <p>Validation was performed as if the DOCTYPE for <TMPL_VAR NAME="W25_dtd" ESCAPE="HTML"> was present. If this automatic detection is not correct, <a href="http://www.w3.org/QA/2002/04/valid-dtd-list.html" title="W3C QA - Recommended list of DTDs you can use in your Web document">adding a DOCTYPE declaration</a> will help validate without ambiguity.</p>
   </li>
 </TMPL_IF>
+
 <TMPL_IF NAME="W26">
 <li class="msg_warn" id="W26"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Mismatch between Public and System identifiers in the DOCTYPE declaration</span></p>
     <p>This document uses an inconsistent DOCTYPE declaration. 
@@ -527,6 +528,20 @@ to check these potential issues, and, if necessary, fix them and re-validate the
   
     <p>Unlike the “by URI” and “by File Upload” modes, the “Direct Input” mode of the validator provides validated content in the form of characters pasted or typed in the validator's form field. This will automatically make the data UTF-8, and therefore the validator does not need to determine the character encoding of your document, and will ignore any charset information specified.</p>
     <p>If you notice a discrepancy in detected character encoding between the “Direct Input” mode and other validator modes, this is likely to be the reason. It is neither a bug in the validator, nor in your document.</p>
+  </li>
+</TMPL_IF>
+
+<TMPL_IF NAME="W29">
+  <li class="msg_warn" id="W29"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Error cleaning up markup with HTML Tidy.</span></p>
+    <p>
+      An error occurred while cleaning up markup with HTML Tidy.  The reported
+      error was:<br />
+      <TMPL_VAR NAME="W29_msg" ESCAPE="HTML">
+    </p>
+    <p>
+      It is unlikely that this is a problem with the checked document, but
+      rather a software or configuration issue with the validator.
+    </p>
   </li>
 </TMPL_IF>
 

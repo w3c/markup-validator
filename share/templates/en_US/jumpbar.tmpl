@@ -17,9 +17,9 @@
   <TMPL_IF NAME="opt_show_source">
           <li><a title="Listing of Source Input" href="#source">Source Listing</a></li>
   </TMPL_IF>
-  <TMPL_IF NAME="opt_show_tidy">
+  <TMPL_IF NAME="opt_show_tidy"><TMPL_IF NAME="tidy_output">
           <li><a title="Listing of cleaned-up Source Input" href="#tidy">Tidy Source</a></li>
-  </TMPL_IF>
+  </TMPL_IF></TMPL_IF>
   <TMPL_IF NAME="opt_show_outline">
           <li><a title="Document Outline" href="#outlineresult">Outline</a></li>
   </TMPL_IF>

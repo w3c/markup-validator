@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.689 2009-09-12 14:49:28 ville Exp $
+# $Id: check,v 1.690 2009-09-12 15:57:50 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.689 $;
+  $VERSION =  q$Revision: 1.690 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1223,15 +1223,11 @@ if (!$File->{'Is Valid'} && $File->{Opt}->{'Show Tidy'}) {
     $cleaned = Encode::decode_utf8($cleaned);
     $File->{Tidy} = $cleaned;
   };
-  $File->{Tidy_OK} = !$@;
+  if ($@) {
+    (my $errmsg = $@) =~ s/ at .*//s;
+    &add_warning('W29', { W29_msg => $errmsg });
+  }
 }
-else {
-  # if document is valid, we don't really need tidy, do we?
-  $File->{Tidy_OK} = FALSE;
-}
-
-# if tidy not available, disable
-$File->{Opt}->{'Show Tidy'} &&= $File->{Tidy_OK};
 
 my $template;
 
