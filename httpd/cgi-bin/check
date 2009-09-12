@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.687 2009-09-12 14:22:49 ville Exp $
+# $Id: check,v 1.688 2009-09-12 14:29:28 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.687 $;
+  $VERSION =  q$Revision: 1.688 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -3330,8 +3330,8 @@ sub new {
   my $class = ref($proto) || $proto;
   my $self = $class->SUPER::new(@rest);
 
-  $self->{W3C::Validator::CFG}  = $CFG;
-  $self->{W3C::Validator::File} = $File;
+  $self->{'W3C::Validator::CFG'}  = $CFG;
+  $self->{'W3C::Validator::File'} = $File;
 
   $self->env_proxy();
   $self->agent($File->{Opt}->{'User Agent'});
@@ -3358,10 +3358,10 @@ sub redirect_ok {
 sub uri_ok {
   my ($self, $uri) = @_;
 
-  return 1 if ($self->{W3C::Validator::CFG}->{'Allow Private IPs'} or
+  return 1 if ($self->{'W3C::Validator::CFG'}->{'Allow Private IPs'} or
                !$uri->can('host'));
 
-  my $h5uri = $self->{W3C::Validator::CFG}->{External}->{HTML5};
+  my $h5uri = $self->{'W3C::Validator::CFG'}->{External}->{HTML5};
   if ($h5uri) {
     my $clone = $uri->clone(); $clone->query(undef); $clone->fragment(undef);
     $h5uri = URI->new($h5uri); $h5uri->query(undef); $h5uri->fragment(undef);
@@ -3376,7 +3376,7 @@ sub uri_ok {
     }
   }
   if ($iptype && $iptype ne 'PUBLIC') {
-    my $File = $self->{W3C::Validator::File};
+    my $File = $self->{'W3C::Validator::File'};
     $File->{'Error Flagged'} = 1;
     $File->{Templates}->{Error}->param(fatal_ip_error    => 1);
     $File->{Templates}->{Error}->param(fatal_ip_hostname => 1)
