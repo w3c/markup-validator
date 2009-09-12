@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.686 2009-09-05 12:07:36 ville Exp $
+# $Id: check,v 1.687 2009-09-12 14:22:49 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.686 $;
+  $VERSION =  q$Revision: 1.687 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -413,18 +413,18 @@ $q = &prepCGI($File, $q);
 
 #
 # Set session switches.
-$File->{Opt}->{'Outline'}         = $q->param('outline') ? TRUE  :  FALSE;
+$File->{Opt}->{Outline}           = $q->param('outline') ? TRUE  :  FALSE;
 $File->{Opt}->{'Show Source'}     = $q->param('ss')      ? TRUE  :  FALSE;
 $File->{Opt}->{'Show Tidy'}       = $q->param('st')      ? TRUE  :  FALSE;
-$File->{Opt}->{'Verbose'}         = $q->param('verbose') ? TRUE  :  FALSE;
+$File->{Opt}->{Verbose}           = $q->param('verbose') ? TRUE  :  FALSE;
 $File->{Opt}->{'Group Errors'}    = $q->param('group')   ? TRUE  :  FALSE;
-$File->{Opt}->{'Debug'}           = $q->param('debug')   ? TRUE  :  FALSE;
-$File->{Opt}->{'No200'}           = $q->param('No200')   ? TRUE  :  FALSE;
-$File->{Opt}->{'Prefill'}         = $q->param('prefill') ? TRUE  :  FALSE;
+$File->{Opt}->{Debug}             = $q->param('debug')   ? TRUE  :  FALSE;
+$File->{Opt}->{No200}             = $q->param('No200')   ? TRUE  :  FALSE;
+$File->{Opt}->{Prefill}           = $q->param('prefill') ? TRUE  :  FALSE;
 $File->{Opt}->{'Prefill Doctype'} = $q->param('prefill_doctype') || 'html401';
-$File->{Opt}->{'Charset'}         = lc($q->param('charset')      || '');
-$File->{Opt}->{'DOCTYPE'}         = $q->param('doctype')         || '';
-$File->{Opt}->{'Output'}          = $q->param('output')          || 'html';
+$File->{Opt}->{Charset}           = lc($q->param('charset')      || '');
+$File->{Opt}->{DOCTYPE}           = $q->param('doctype')         || '';
+$File->{Opt}->{Output}            = $q->param('output')          || 'html';
 
 $File->{Opt}->{'User Agent'} = $q->param('user-agent') && $q->param('user-agent') ne 1 ? $q->param('user-agent') : "W3C_Validator/$VERSION";
 $File->{Opt}->{'User Agent'} =~ tr/\x00-\x09\x0b\x0c-\x1f//d;
@@ -1124,7 +1124,7 @@ sub dtd_validate (\$) {
 
 
   my $h; # event handler
-  if ($File->{Opt}->{'Outline'}) {
+  if ($File->{Opt}->{Outline}) {
       $h = W3C::Validator::EventHandler::Outliner->new($opensp, $File, $CFG);
   }
   else {
@@ -1214,28 +1214,24 @@ if ($File->{Namespace}) {
 
 
 ## if invalid content, AND if requested, pass through tidy
-if ((! $File->{'Is Valid'}) and ($File->{Opt}->{'Show Tidy'}) ) {
+if (!$File->{'Is Valid'} && $File->{Opt}->{'Show Tidy'}) {
   eval {
     local $SIG{__DIE__};
     require HTML::Tidy;
     my $tidy = HTML::Tidy->new({config_file => $CFG->{Paths}->{TidyConf}});
-
-    $File->{'Tidy'} = Encode::decode('utf-8', $tidy->clean(join"\n",@{$File->{Content}}));
-    $File->{'Tidy_OK'} = TRUE;
+    my $cleaned = $tidy->clean(join("\n", @{$File->{Content}}));
+    $cleaned = Encode::decode('utf-8', $cleaned);
+    $File->{Tidy} = $cleaned;
   };
-  if ($@) {
-    $File->{'Tidy_OK'} = FALSE;
-  }
+  $File->{Tidy_OK} = !$@;
 }
 else {
   # if document is valid, we don't really need tidy, do we?
-  $File->{'Tidy_OK'} = FALSE;
+  $File->{Tidy_OK} = FALSE;
 }
 
-if (!$File->{'Tidy_OK'}) {
-  # if tidy not available, disable
-  $File->{Opt}->{'Show Tidy'} = FALSE;
-}
+# if tidy not available, disable
+$File->{Opt}->{'Show Tidy'} &&= $File->{Tidy_OK};
 
 my $template;
 
@@ -1273,7 +1269,7 @@ if ($File->{Opt}->{Output} eq 'xml') {
 &fin_template($File, $template);
 
 $template->param(file_warnings => $File->{Warnings});
-$template->param(tidy_output => $File->{'Tidy'});
+$template->param(tidy_output => $File->{Tidy});
 $template->param(file_source => &source($File))
   if ($template->param('opt_show_source') or ($File->{'Is Upload'}) or ($File->{'Direct Input'}));
 
@@ -1344,10 +1340,10 @@ sub prep_template ($$) {
   # Output options...
   $T->param(opt_show_source  => $File->{Opt}->{'Show Source'});
   $T->param(opt_show_tidy    => $File->{Opt}->{'Show Tidy'});
-  $T->param(opt_show_outline => $File->{Opt}->{'Outline'});
-  $T->param(opt_verbose      => $File->{Opt}->{'Verbose'});
+  $T->param(opt_show_outline => $File->{Opt}->{Outline});
+  $T->param(opt_verbose      => $File->{Opt}->{Verbose});
   $T->param(opt_group_errors => $File->{Opt}->{'Group Errors'});
-  $T->param(opt_no200        => $File->{Opt}->{'No200'});
+  $T->param(opt_no200        => $File->{Opt}->{No200});
 
   #
   # Tip of the Day...
@@ -1532,9 +1528,9 @@ sub report_valid {
       $T->param(have_alt_badge => TRUE);
       }
 
-      if (exists $CFG->{Types}->{$File->{DOCTYPE}}->{Badge}->{'RDFa'}) {
+      if (exists $CFG->{Types}->{$File->{DOCTYPE}}->{Badge}->{RDFa}) {
         $T->param(have_badge_rdfa => TRUE);
-        $T->param(badge_rdfa => $CFG->{Types}->{$File->{DOCTYPE}}->{Badge}->{'RDFa'});
+        $T->param(badge_rdfa => $CFG->{Types}->{$File->{DOCTYPE}}->{Badge}->{RDFa});
       } else {
         $T->param(have_badge_rdfa => FALSE);
       }
@@ -1772,7 +1768,7 @@ sub handle_frag {
   $File->{'Direct Input'} = TRUE;
   $File->{Charset}->{HTTP} = "utf-8"; # by default, the form accepts utf-8 chars
 
-  if ($File->{Opt}->{'Prefill'}) {
+  if ($File->{Opt}->{Prefill}) {
     # we surround the HTML fragment with some basic document structure
     my $prefill_Template = undef;
     if ($File->{Opt}->{'Prefill Doctype'} eq 'html401') {
@@ -2957,9 +2953,9 @@ sub self_url_file {
   $thispage .= qq(?uri=$escaped_uri);
   $thispage .= ';ss=1'      if $File->{Opt}->{'Show Source'};
   $thispage .= ';st=1'      if $File->{Opt}->{'Show Tidy'};
-  $thispage .= ';outline=1' if $File->{Opt}->{'Outline'};
-  $thispage .= ';No200=1'   if $File->{Opt}->{'No200'};
-  $thispage .= ';verbose=1' if $File->{Opt}->{'Verbose'};
+  $thispage .= ';outline=1' if $File->{Opt}->{Outline};
+  $thispage .= ';No200=1'   if $File->{Opt}->{No200};
+  $thispage .= ';verbose=1' if $File->{Opt}->{Verbose};
   $thispage .= ';group=1'   if $File->{Opt}->{'Group Errors'};
   $thispage .= ';accept=' . uri_escape($File->{Opt}->{'Accept Header'}) if $File->{Opt}->{'Accept Header'};
   $thispage .= ';accept-language=' . uri_escape($File->{Opt}->{'Accept-Language Header'}) if $File->{Opt}->{'Accept-Language Header'};
@@ -3334,8 +3330,8 @@ sub new {
   my $class = ref($proto) || $proto;
   my $self = $class->SUPER::new(@rest);
 
-  $self->{'W3C::Validator::CFG'}  = $CFG;
-  $self->{'W3C::Validator::File'} = $File;
+  $self->{W3C::Validator::CFG}  = $CFG;
+  $self->{W3C::Validator::File} = $File;
 
   $self->env_proxy();
   $self->agent($File->{Opt}->{'User Agent'});
@@ -3362,10 +3358,10 @@ sub redirect_ok {
 sub uri_ok {
   my ($self, $uri) = @_;
 
-  return 1 if ($self->{'W3C::Validator::CFG'}->{'Allow Private IPs'} or
+  return 1 if ($self->{W3C::Validator::CFG}->{'Allow Private IPs'} or
                !$uri->can('host'));
 
-  my $h5uri = $self->{'W3C::Validator::CFG'}->{External}->{HTML5};
+  my $h5uri = $self->{W3C::Validator::CFG}->{External}->{HTML5};
   if ($h5uri) {
     my $clone = $uri->clone(); $clone->query(undef); $clone->fragment(undef);
     $h5uri = URI->new($h5uri); $h5uri->query(undef); $h5uri->fragment(undef);
@@ -3380,7 +3376,7 @@ sub uri_ok {
     }
   }
   if ($iptype && $iptype ne 'PUBLIC') {
-    my $File = $self->{'W3C::Validator::File'};
+    my $File = $self->{W3C::Validator::File};
     $File->{'Error Flagged'} = 1;
     $File->{Templates}->{Error}->param(fatal_ip_error    => 1);
     $File->{Templates}->{Error}->param(fatal_ip_hostname => 1)
