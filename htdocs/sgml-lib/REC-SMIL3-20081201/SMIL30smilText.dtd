@@ -1,0 +1,156 @@
+<!-- ...................................................................... -->
+<!-- SMIL 3.0 smilText DTD ................................................ -->
+<!-- file: SMIL30smilText.dtd
+
+        This is SMIL 3.0.
+
+        Copyright: 2008 W3C (MIT, ERCIM, Keio), All Rights
+        Reserved.  See http://www.w3.org/Consortium/Legal/.
+
+        Editor: Sjoerd Mullender, CWI
+        $Revision: 1.4 $
+        $Date: 2008/09/07 20:39:37 $
+
+ This is the driver file for the SMIL 3.0 smilText Profile DTD.
+
+     This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+
+     PUBLIC "-//W3C//DTD SMIL 3.0 smilText//EN"
+     SYSTEM "http://www.w3.org/2008/SMIL30/SMIL30smilText.dtd"
+
+-->
+
+<!-- Define the prefix to be used (none) -->
+<!ENTITY % NS.prefixed "IGNORE" >
+
+<!-- Define the default for the baseProfile attribute -->
+<!ENTITY % SMIL.baseProfile.default "#FIXED 'smilText'">
+
+<!-- Define which modules to include -->
+<!-- Structure -->
+<!ENTITY % SMIL.Structure.module                      "IGNORE">
+<!ENTITY % SMIL.Identity.module                       "INCLUDE">
+<!-- Media Object -->
+<!ENTITY % SMIL.BasicMedia.module                     "IGNORE">
+<!ENTITY % SMIL.BrushMedia.module                     "IGNORE">
+<!ENTITY % SMIL.MediaAccessibility.module             "IGNORE">
+<!ENTITY % SMIL.MediaClipMarkers.module               "IGNORE">
+<!ENTITY % SMIL.MediaClipping.module                  "IGNORE">
+<!ENTITY % SMIL.MediaDescription.module               "IGNORE">
+<!ENTITY % SMIL.MediaOpacity.module                   "IGNORE">
+<!ENTITY % SMIL.MediaPanZoom.module                   "IGNORE">
+<!ENTITY % SMIL.MediaParam.module                     "IGNORE">
+<!ENTITY % SMIL.MediaRenderAttributes.module          "IGNORE">
+<!-- Timing and Synchronization -->
+<!ENTITY % SMIL.AccessKeyTiming.module                "IGNORE">
+<!ENTITY % SMIL.BasicExclTimeContainers.module        "IGNORE">
+<!ENTITY % SMIL.BasicInlineTiming.module              "IGNORE">
+<!ENTITY % SMIL.BasicPriorityClassContainers.module   "IGNORE">
+<!ENTITY % SMIL.BasicTimeContainers.module            "IGNORE">
+<!ENTITY % SMIL.DOMTimingMethods.module               "IGNORE">
+<!ENTITY % SMIL.EventTiming.module                    "IGNORE">
+<!ENTITY % SMIL.FillDefault.module                    "IGNORE">
+<!ENTITY % SMIL.MediaMarkerTiming.module              "IGNORE">
+<!ENTITY % SMIL.MinMaxTiming.module                   "IGNORE">
+<!ENTITY % SMIL.MultiArcTiming.module                 "IGNORE">
+<!ENTITY % SMIL.RepeatTiming.module                   "IGNORE">
+<!ENTITY % SMIL.RepeatValueTiming.module              "IGNORE">
+<!ENTITY % SMIL.RestartDefault.module                 "IGNORE">
+<!ENTITY % SMIL.RestartTiming.module                  "IGNORE">
+<!ENTITY % SMIL.SyncbaseTiming.module                 "IGNORE">
+<!ENTITY % SMIL.SyncBehaviorDefault.module            "IGNORE">
+<!ENTITY % SMIL.SyncBehavior.module                   "IGNORE">
+<!ENTITY % SMIL.SyncMaster.module                     "IGNORE">
+<!ENTITY % SMIL.TimeContainerAttributes.module        "IGNORE">
+<!ENTITY % SMIL.WallclockTiming.module                "IGNORE">
+<!-- Content Control -->
+<!ENTITY % SMIL.BasicContentControl.module            "IGNORE">
+<!ENTITY % SMIL.CustomTestAttributes.module           "IGNORE">
+<!ENTITY % SMIL.PrefetchControl.module                "IGNORE">
+<!ENTITY % SMIL.RequiredContentControl.module         "INCLUDE">
+<!ENTITY % SMIL.SkipContentControl.module             "IGNORE">
+<!-- Layout -->
+<!ENTITY % SMIL.AlignmentLayout.module                "IGNORE">
+<!ENTITY % SMIL.AudioLayout.module                    "IGNORE">
+<!ENTITY % SMIL.BackgroundTilingLayout.module         "IGNORE">
+<!ENTITY % SMIL.BasicLayout.module                    "IGNORE">
+<!ENTITY % SMIL.MultiWindowLayout.module              "IGNORE">
+<!ENTITY % SMIL.OverrideLayout.module                 "IGNORE">
+<!ENTITY % SMIL.StructureLayout.module                "IGNORE">
+<!ENTITY % SMIL.SubRegionLayout.module                "IGNORE">
+<!-- smilText -->
+<!ENTITY % SMIL.BasicText.module                      "INCLUDE">
+<!ENTITY % SMIL.TextMotion.module                     "INCLUDE">
+<!ENTITY % SMIL.TextStyling.module                    "INCLUDE">
+<!-- Linking -->
+<!ENTITY % SMIL.BasicLinking.module                   "IGNORE">
+<!ENTITY % SMIL.LinkingAttributes.module              "IGNORE">
+<!ENTITY % SMIL.ObjectLinking.module                  "IGNORE">
+<!-- Metainformation -->
+<!ENTITY % SMIL.Metainformation.module                "INCLUDE">
+<!-- Transition Effects -->
+<!ENTITY % SMIL.BasicTransitions.module               "IGNORE">
+<!ENTITY % SMIL.FullScreenTransitionEffects.module    "IGNORE">
+<!ENTITY % SMIL.InlineTransitions.module              "IGNORE">
+<!ENTITY % SMIL.TransitionModifiers.module            "IGNORE">
+<!-- Animation -->
+<!ENTITY % SMIL.BasicAnimation.module                 "IGNORE">
+<!ENTITY % SMIL.SplineAnimation.module                "IGNORE">
+<!-- State -->
+<!ENTITY % SMIL.StateInterpolation.module             "IGNORE">
+<!ENTITY % SMIL.StateSubmission.module                "IGNORE">
+<!ENTITY % SMIL.StateTest.module                      "IGNORE">
+<!ENTITY % SMIL.UserState.module                      "IGNORE">
+<!-- Time Manipulation -->
+<!ENTITY % SMIL.TimeManipulations.module              "IGNORE">
+<!-- External Timing -->
+<!ENTITY % SMIL.Timesheet.module                      "IGNORE">
+
+<!-- Define which variants to use -->
+<!ENTITY % SMIL.animation-targetElement               "IGNORE">
+<!ENTITY % SMIL.animation-XLinkTarget                 "IGNORE">
+<!ENTITY % SMIL.transition-targetElement              "IGNORE">
+<!ENTITY % SMIL.transition-XLinkTarget                "IGNORE">
+<!ENTITY % SMIL.ContentControl.deprecated.module      "IGNORE">
+<!ENTITY % SMIL.MediaClipping.deprecated.module       "IGNORE">
+<!ENTITY % SMIL.RepeatTiming.deprecated.module        "IGNORE">
+<!ENTITY % SMIL.BasicLinking.deprecated.module        "IGNORE">
+<!ENTITY % SMIL.ITS-Attributes.module                 "INCLUDE">
+<!ENTITY % SMIL.RoleAttributes.module                 "IGNORE">
+<!ENTITY % SMIL.submission-post                       "IGNORE">
+<!ENTITY % SMIL.TextExternal.module                   "INCLUDE">
+
+<!-- Define the Content Model -->
+<!ENTITY % smil-model.mod
+    PUBLIC "-//W3C//ENTITIES SMIL 3.0 Document Model 1.0//EN"
+           "smil-profile-model-1.mod" >
+
+<!-- Modular Framework Module  ............................................ -->
+<!ENTITY % smil-framework.module "INCLUDE" >
+<![%smil-framework.module;[
+<!ENTITY % smil-framework.mod
+     PUBLIC "-//W3C//ENTITIES SMIL 3.0 Modular Framework 1.0//EN"
+            "smil-framework-1.mod" >
+%smil-framework.mod;]]>
+
+<!-- List module files to include -->
+<!ENTITY % SMIL.control-mod 
+  PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Content Control//EN" 
+  "SMIL-control.mod">
+<!ENTITY % SMIL.meta-mod   
+  PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Document Metainformation//EN" 
+  "SMIL-metainformation.mod">
+<!ENTITY % SMIL.struct-mod 
+  PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Document Structure//EN" 
+  "SMIL-struct.mod">
+<!ENTITY % SMIL.text-mod 
+  PUBLIC "-//W3C//ELEMENTS SMIL 3.0 SMILtext//EN" 
+  "SMIL-smiltext.mod">
+
+<!-- Include module files -->
+%SMIL.struct-mod;
+%SMIL.control-mod;
+%SMIL.meta-mod;
+%SMIL.text-mod;
+
+<!-- end of SMIL30smilText.dtd -->
