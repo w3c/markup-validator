@@ -7,23 +7,26 @@ SYSTEM "spec.dtd"
        "http://www.w3.org/XML/1998/06/xmlspec-v20.dtd"
 
 
--- MathML --
+-- MathML 2.0 --
 
 PUBLIC "-//W3C//DTD MathML 2.0//EN"
        "REC-MathML2-20031021/mathml2.dtd"
 SYSTEM "http://www.w3.org/Math/DTD/mathml2/mathml2.dtd"
        "REC-MathML2-20031021/mathml2.dtd"
-
 PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN"
        "REC-MathML2-20031021/xhtml-math11-f.dtd"
 SYSTEM "http://www.w3.org/Math/DTD/mathml2/xhtml-math11-f.dtd"
        "REC-MathML2-20031021/xhtml-math11-f.dtd"
 
 
--- SVG --
+-- SVG 1.0 --
 
 PUBLIC "-//W3C//DTD SVG 1.0//EN"
        "REC-SVG-20010904/svg10.dtd"
+
+
+-- SVG 1.1 --
+
 PUBLIC "-//W3C//DTD SVG 1.1//EN"
        "REC-SVG11-20030114/svg11-flat.dtd"
 PUBLIC "-//W3C//DTD SVG Basic 1.1//EN"
@@ -36,12 +39,8 @@ PUBLIC "-//W3C//DTD SVG 1.1 Tiny//EN"
        "REC-SVG11-20030114/svg11-tiny-flat.dtd"
 
 
--- XHTML --
 
-PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-       "WD-xhtml11-20070216/xhtml11-flat.dtd"
-PUBLIC "-//W3C//ENTITIES XHTML 1.1 Document Model 1.0//EN"
-       "WD-xhtml11-20070216/xhtml11-model-1.mod"
+-- XHTML 1.0 --
 
 PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
        "REC-xhtml1-20020801/xhtml1-strict.dtd"
@@ -56,14 +55,30 @@ PUBLIC "-//W3C//ENTITIES Symbols for XHTML//EN"
 PUBLIC "-//W3C//ENTITIES Special for XHTML//EN"
        "REC-xhtml1-20020801/xhtml-special.ent"
 
+
+-- XHTML 1.1 --
+
+PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+       "WD-xhtml11-20070216/xhtml11-flat.dtd"
+PUBLIC "-//W3C//ENTITIES XHTML 1.1 Document Model 1.0//EN"
+       "WD-xhtml11-20070216/xhtml11-model-1.mod"
+
+
+-- XHTML Basic 1.0 --
+
 PUBLIC "-//W3C//DTD XHTML Basic 1.0//EN"
        "REC-xhtml-basic-20001219/xhtml-basic10.dtd"
 PUBLIC "-//W3C//ENTITIES XHTML Basic 1.0 Document Model 1.0//EN"
        "REC-xhtml-basic-20001219/xhtml-basic10-model-1.mod"
 
+
+-- XHTML Basic 1.1 --
+
 PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN"
         "REC-xhtml-basic-20080729/xhtml-basic11.dtd"
 
+
+-- XHTML Print 1.0 --
 
 PUBLIC "-//W3C//DTD XHTML-Print 1.0//EN"
        "REC-xhtml-print-20060920/xhtml-print10.dtd"
@@ -77,17 +92,19 @@ PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
        "WD-XHTMLplusMathMLplusSVG-20020809/xhtml-math-svg-flat.dtd"
 
 
--- SMIL --
+-- SMIL 1.0 --
 
--- DTD drivers --
-PUBLIC "-//W3C//DTD SMIL 1.0//EN"       "REC-smil-19980615/smil10.dtd"
-PUBLIC "-//W3C//DTD SMIL 2.0//EN"       "REC-smil20-20050107/SMIL20.dtd"
-PUBLIC "-//W3C//DTD SMIL 2.0 Basic//EN" "REC-smil20-20050107/SMIL20Basic.dtd"
-PUBLIC "-//W3C//DTD SMIL 2.1//EN" "REC-SMIL2-20051213/SMIL21.dtd"
-PUBLIC "-//W3C//DTD SMIL 2.1 Extended Mobile//EN" "REC-SMIL2-20051213/SMIL21ExtendedMobile.dtd"
-PUBLIC "-//W3C//DTD SMIL 2.1 Mobile//EN" "REC-SMIL2-20051213/SMIL21Mobile.dtd"
+PUBLIC "-//W3C//DTD SMIL 1.0//EN"
+       "REC-smil-19980615/smil10.dtd"
 
--- SMIL 2.0 Framework utilities --
+
+-- SMIL 2.0 --
+
+PUBLIC "-//W3C//DTD SMIL 2.0//EN"
+       "REC-smil20-20050107/SMIL20.dtd"
+PUBLIC "-//W3C//DTD SMIL 2.0 Basic//EN"
+       "REC-smil20-20050107/SMIL20Basic.dtd"
+
 PUBLIC "-//W3C//ENTITIES SMIL 2.0 Modular Framework 1.0//EN"
        "REC-smil20-20050107/smil-framework-1.mod"
 PUBLIC "-//W3C//ENTITIES SMIL 2.0 Datatypes 1.0//EN"
@@ -99,7 +116,6 @@ PUBLIC "-//W3C//ENTITIES SMIL 2.0 Common Attributes 1.0//EN"
 PUBLIC "-//W3C//ENTITIES SMIL 2.0 Document Model 1.0//EN"
        "REC-smil20-20050107/smil-model-1.mod"
 
--- SMIL 2.0 elements from section modules --
 PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Document Structure//EN"
        "REC-smil20-20050107/SMIL-struct.mod"
 PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Animation//EN"
@@ -122,15 +138,30 @@ PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Integration//EN"
        "REC-smil20-20050107/SMIL-integrate.mod"
 
 
--- SMIL 2.1 Document model files for the predefined profiles -- 
+-- SMIL 2.1 --
+
+PUBLIC "-//W3C//DTD SMIL 2.1//EN"
+       "REC-SMIL2-20051213/SMIL21.dtd"
+PUBLIC "-//W3C//DTD SMIL 2.1 Extended Mobile//EN"
+       "REC-SMIL2-20051213/SMIL21ExtendedMobile.dtd"
+PUBLIC "-//W3C//DTD SMIL 2.1 Mobile//EN"
+       "REC-SMIL2-20051213/SMIL21Mobile.dtd"
+
 PUBLIC "-//W3C//ENTITIES SMIL 2.1 Language Profile Document Model 1.0//EN"
        "REC-SMIL2-20051213/smil-language-profile-model-1.mod"
 PUBLIC "-//W3C//ENTITIES SMIL 2.1 Extended Mobile Profile Document Model 1.0//EN"
        "REC-SMIL2-20051213/smil-extended-mobile-profile-model-1.mod"
 PUBLIC "-//W3C//ENTITIES SMIL 2.1 Mobile Profile Document Model 1.0//EN"
        "REC-SMIL2-20051213/smil-mobile-profile-model-1.mod"
+PUBLIC "-//W3C//ENTITIES SMIL 2.1 Datatypes 1.0//EN"
+       "REC-SMIL2-20051213/smil-datatypes-1.mod"
+PUBLIC "-//W3C//ENTITIES SMIL 2.1 Common Attributes 1.0//EN"
+       "REC-SMIL2-20051213/smil-attribs-1.mod"
+PUBLIC "-//W3C//ENTITIES SMIL 2.1 Qualified Names 1.0//EN"
+       "REC-SMIL2-20051213/smil-qname-1.mod"
+PUBLIC "-//W3C//ENTITIES SMIL 2.1 Modular Framework 1.0//EN"
+       "REC-SMIL2-20051213/smil-framework-1.mod"
 
--- SMIL 2.1 module files --
 PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Animation//EN"
        "REC-SMIL2-20051213/SMIL-anim.mod"
 PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Content Control//EN"
@@ -150,16 +181,6 @@ PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Timing//EN"
 PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Transition//EN"
        "REC-SMIL2-20051213/SMIL-transition.mod"
 
--- SMIL 2.1 Other utilities: data types, common attributes, qname and frame work files --
-PUBLIC "-//W3C//ENTITIES SMIL 2.1 Datatypes 1.0//EN"
-       "REC-SMIL2-20051213/smil-datatypes-1.mod"
-PUBLIC "-//W3C//ENTITIES SMIL 2.1 Common Attributes 1.0//EN"
-       "REC-SMIL2-20051213/smil-attribs-1.mod"
-PUBLIC "-//W3C//ENTITIES SMIL 2.1 Qualified Names 1.0//EN"
-       "REC-SMIL2-20051213/smil-qname-1.mod"
-PUBLIC "-//W3C//ENTITIES SMIL 2.1 Modular Framework 1.0//EN"
-       "REC-SMIL2-20051213/smil-framework-1.mod"
-
 
 -- SMIL 3.0 --
 
@@ -174,16 +195,21 @@ PUBLIC "-//W3C//DTD SMIL 3.0 Tiny//EN"
 PUBLIC "-//W3C//DTD SMIL 3.0 smilText//EN"
        "REC-SMIL3-20081201/SMIL30smilText.dtd
 
-PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Animation//EN"
-       "REC-SMIL3-20081201/SMIL-anim.mod"
-PUBLIC "-//W3C//ENTITIES SMIL 3.0 Common Attributes 1.0//EN"
-       "REC-SMIL3-20081201/smil-attribs-1.mod"
-PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Content Control//EN"
-       "REC-SMIL3-20081201/SMIL-control.mod"
 PUBLIC "-//W3C//ENTITIES SMIL 3.0 Datatypes 1.0//EN"
        "REC-SMIL3-20081201/smil-datatypes-1.mod"
 PUBLIC "-//W3C//ENTITIES SMIL 3.0 Modular Framework 1.0//EN"
        "REC-SMIL3-20081201/smil-framework-1.mod"
+PUBLIC "-//W3C//ENTITIES SMIL 3.0 Document Model 1.0//EN"
+       "REC-SMIL3-20081201/smil-profile-model-1.mod"
+PUBLIC "-//W3C//ENTITIES SMIL 3.0 Qualified Names 1.0//EN"
+       "REC-SMIL3-20081201/smil-qname-1.mod"
+PUBLIC "-//W3C//ENTITIES SMIL 3.0 Common Attributes 1.0//EN"
+       "REC-SMIL3-20081201/smil-attribs-1.mod"
+
+PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Animation//EN"
+       "REC-SMIL3-20081201/SMIL-anim.mod"
+PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Content Control//EN"
+       "REC-SMIL3-20081201/SMIL-control.mod"
 PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Layout//EN"
        "REC-SMIL3-20081201/SMIL-layout.mod"
 PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Linking//EN"
@@ -192,10 +218,6 @@ PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Media Objects//EN"
        "REC-SMIL3-20081201/SMIL-media.mod"
 PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Document Metainformation//EN"
        "REC-SMIL3-20081201/SMIL-metainformation.mod"
-PUBLIC "-//W3C//ENTITIES SMIL 3.0 Document Model 1.0//EN"
-       "REC-SMIL3-20081201/smil-profile-model-1.mod"
-PUBLIC "-//W3C//ENTITIES SMIL 3.0 Qualified Names 1.0//EN"
-       "REC-SMIL3-20081201/smil-qname-1.mod"
 PUBLIC "-//W3C//ELEMENTS SMIL 3.0 SMILtext//EN"
        "REC-SMIL3-20081201/SMIL-smiltext.mod"
 PUBLIC "-//W3C//ELEMENTS SMIL 3.0 State//EN"
@@ -211,12 +233,15 @@ PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Transition//EN"
 
 
 -- XHTML + RDFa --
+
 PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" 
        "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"
 
 
 -- Do not prefer document type name over a SYSTEM Identifier. --
+
 OVERRIDE NO
 
 -- Fallback if no FPI is given. --
+
 DOCTYPE html xml.dtd
