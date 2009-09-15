@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.692 2009-09-15 19:05:55 ville Exp $
+# $Id: check,v 1.693 2009-09-15 19:24:40 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.692 $;
+  $VERSION =  q$Revision: 1.693 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1038,7 +1038,9 @@ sub html5_validate (\$) {
       my $message_type = $message_node->localname;
       my $err;
       my ($html5_error_line, $html5_error_col, $html5_error_msg, $html5_error_expl);
-      if  ($message_type eq "error") {
+      # TODO: non-document errors should receive different/better treatment,
+      #       but this is better than hiding all problems for now (#6747)
+      if ($message_type eq "error" || $message_type eq "non-document-error") {
         $err->{type} = "E";
         $File->{'Is Valid'} = FALSE;
       }
