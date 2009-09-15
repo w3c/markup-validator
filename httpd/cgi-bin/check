@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.690 2009-09-12 15:57:50 ville Exp $
+# $Id: check,v 1.691 2009-09-15 19:01:06 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.690 $;
+  $VERSION =  q$Revision: 1.691 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -974,7 +974,8 @@ sub html5_validate (\$) {
     # because $File->{Bytes} is not affected by the overrides.  This will
     # most likely be a source of errors about internal/actual charset
     # differences as long as our transcoding process does not "fix" the
-    # charset info in XML declaration and meta http-equiv (any others?).
+    # charset info in XML declaration, meta http-equiv/charset and/or BOM
+    # (any others?).
     if($File->{'Direct Input'}) { # sane default when using html5 validator by direct input
         $req->content_type("text/html; charset=UTF-8");
     }
@@ -986,7 +987,8 @@ sub html5_validate (\$) {
   else {
     # Pass original bytes, Content-Type and charset as-is.
     # We trust that our and validator.nu's interpretation of line numbers
-    # is the same (regardless of EOL chars used in the document).
+    # is the same later when displaying error contexts (regardless of EOL chars
+    # used in the document).
 
     my @content_type = ($File->{ContentType} => undef);
     push(@content_type, charset => $File->{Charset}->{HTTP})
@@ -998,6 +1000,8 @@ sub html5_validate (\$) {
 
   $req->content_language($File->{ContentLang}) if $File->{ContentLang};
   # Intentionally using direct header access instead of $req->last_modified
+  # (the latter takes seconds since epoch, but $File->{Modified} is an already
+  # formatted string).
   $req->header('Last-Modified', $File->{Modified}) if $File->{Modified};
 
   # If not in debug mode, gzip the request (LWP >= 5.817)
