@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.691 2009-09-15 19:01:06 ville Exp $
+# $Id: check,v 1.692 2009-09-15 19:05:55 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.691 $;
+  $VERSION =  q$Revision: 1.692 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -824,6 +824,7 @@ else {
 }
 &abort_if_error_flagged($File, 0);
 
+# TODO: need to bring in fixes from html5_validate() here
 sub compoundxml_validate (\$) {
   my $File = shift;
   my $ua = new W3C::Validator::UserAgent ($CFG, $File);
@@ -976,12 +977,9 @@ sub html5_validate (\$) {
     # differences as long as our transcoding process does not "fix" the
     # charset info in XML declaration, meta http-equiv/charset and/or BOM
     # (any others?).
-    if($File->{'Direct Input'}) { # sane default when using html5 validator by direct input
-        $req->content_type("text/html; charset=UTF-8");
-    }
-    else {
-        $req->content_type("$File->{ContentType}; charset=UTF-8");
-    }
+
+    my $ct = $File->{'Direct Input'} ? "text/html" : $File->{ContentType};
+    $req->content_type("$ct; charset=UTF-8");
     $req->content(Encode::encode_utf8(join("\n", @{$File->{Content}})));
   }
   else {
@@ -990,11 +988,15 @@ sub html5_validate (\$) {
     # is the same later when displaying error contexts (regardless of EOL chars
     # used in the document).
 
-    my @content_type = ($File->{ContentType} => undef);
-    push(@content_type, charset => $File->{Charset}->{HTTP})
-      if $File->{Charset}->{HTTP};
-
-    $req->content_type(HTTP::Headers::Util::join_header_words(@content_type));
+    if ($File->{'Direct Input'}) {
+      $req->content_type("text/html; charset=UTF-8");
+    }
+    else {
+      my @ct = ($File->{ContentType} => undef);
+      push(@ct, charset => $File->{Charset}->{HTTP})
+        if $File->{Charset}->{HTTP};
+      $req->content_type(HTTP::Headers::Util::join_header_words(@ct));
+    }
     $req->content_ref(\$File->{Bytes});
   }
 
