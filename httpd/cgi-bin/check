@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.694 2009-09-16 16:08:23 ville Exp $
+# $Id: check,v 1.695 2009-09-16 17:32:07 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.694 $;
+  $VERSION =  q$Revision: 1.695 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1056,10 +1056,10 @@ sub html5_validate (\$) {
             }
 
           }
-          if($attribute->name eq "last-column") {
+          elsif ($attribute->name eq "last-column") {
             $html5_error_col = $attribute->getValue();
           }
-          if($attribute->name eq "last-line") {
+          elsif ($attribute->name eq "last-line") {
             $html5_error_line = $attribute->getValue();
           }
 
@@ -1070,7 +1070,7 @@ sub html5_validate (\$) {
         if ($child_node->localname eq "message") {
           $html5_error_msg = $child_node->textContent();
         }
-        if ($child_node->localname eq "elaboration") {
+        elsif ($child_node->localname eq "elaboration") {
           $html5_error_expl = $child_node->toString();
           $html5_error_expl =~ s,</?elaboration>,,gi;
           $html5_error_expl = "\n<div class=\"ve html5\">$html5_error_expl</div>\n";
