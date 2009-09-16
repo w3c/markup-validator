@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.693 2009-09-15 19:24:40 ville Exp $
+# $Id: check,v 1.694 2009-09-16 16:08:23 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -206,7 +206,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.693 $;
+  $VERSION =  q$Revision: 1.694 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1068,8 +1068,7 @@ sub html5_validate (\$) {
       my @child_nodes =  $message_node->childNodes;
       foreach my $child_node (@child_nodes) {
         if ($child_node->localname eq "message") {
-          $html5_error_msg= $child_node->toString();
-          $html5_error_msg =~ s,</?[^>]*>,,gsi;
+          $html5_error_msg = $child_node->textContent();
         }
         if ($child_node->localname eq "elaboration") {
           $html5_error_expl = $child_node->toString();
