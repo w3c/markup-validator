@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.695 2009-09-16 17:32:07 ville Exp $
+# $Id: check,v 1.696 2009-09-16 19:15:19 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -64,7 +64,6 @@ use SGML::Parser::OpenSP 0.991 qw();
 use URI                        qw();
 use URI::Escape                qw(uri_escape);
 use XML::LibXML                qw();
-use String::Approx             qw();
 
 ###############################################################################
 #### Constant definitions. ####################################################
@@ -206,7 +205,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.695 $;
+  $VERSION =  q$Revision: 1.696 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -3120,58 +3119,6 @@ sub error
     }
     # if mode is not XML, we do report the error. It should not happen in the case of <html> without doctype,
     # in that case the error message will be #344
-  }
-
-  if ( ($err->{num} eq '108') or ($err->{num} eq '76') )
-  # element or attribute does not exist? Let's try and fuzzy-match it
-  {
-      my $bogus_elt_attr = $err->{msg};
-      $bogus_elt_attr =~ s/.*"(.+)".*/$1/;
-      if ($err->{num} eq '108') {
-          $err->{msg} = "Attribute \"".$bogus_elt_attr."\" is not a valid attribute";
-      }
-
-      if(($err->{num} eq '108') and
-         (exists $self->{CFG}->{Attributes}->{lc($bogus_elt_attr)}) and
-         (!$is_xml || $bogus_elt_attr eq lc($bogus_elt_attr))) {
-          # attribute not available in this context.
-          $err->{msg} = "Attribute \"$bogus_elt_attr\" can not be used for this element.";
-      }
-      elsif ( (
-             ((exists $self->{CFG}->{Attributes}->{lc($bogus_elt_attr)}) and ($err->{num} eq '108'))
-           or
-             ((exists $self->{CFG}->{Elements}->{lc($bogus_elt_attr)}) and ($err->{num} eq '76'))
-          )
-          and (lc($bogus_elt_attr) ne $bogus_elt_attr)
-        )
-      {
-          $err->{msg} .= '. Did you mean "'.lc($bogus_elt_attr).'"?';
-      }
-      else { #fuzzy-match and suggest alternatives
-          my @matches;
-          if ($err->{num} eq '108') {
-              @matches = String::Approx::amatch($bogus_elt_attr, ["3i"], keys %{$self->{CFG}->{Attributes}});
-          }
-          elsif ($err->{num} eq '76') {
-              @matches = String::Approx::amatch($bogus_elt_attr, ["3i"], keys %{$self->{CFG}->{Elements}});
-          }
-          if (@matches){
-              my %distances;
-              @distances{@matches} = map { abs } String::Approx::adist(lc($bogus_elt_attr), @matches);
-              my @matches_sorted = sort { $distances{$a} <=> $distances{$b} } @matches;
-              # a bit of printf debugging can't hurt
-              # foreach my $match (@matches_sorted) {
-              #     $err->{msg} .= '<br /> match '.$match.': '.$distances{$match};
-              # }
-               if (@matches > 1){
-                  $err->{msg} .= '. Did you mean "'.$matches_sorted[0].'" or "'.$matches_sorted[1].'"?';
-
-              }
-              else {
-                  $err->{msg} .= '. Did you mean "'.$matches_sorted[0].'"?';
-              }
-          }
-      }
   }
 
    if (($err->{num} eq '113') and ($err->{msg} =~ /xml:space/)) {

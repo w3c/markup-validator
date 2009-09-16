@@ -43,7 +43,6 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
  Net::hostent
  SGML::Parser::OpenSP 0.991
  Socket
- String::Approx
  URI
  URI::Escape
  XML::LibXML

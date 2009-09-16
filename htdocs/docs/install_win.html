@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: install_win.html,v 1.21 2009-09-05 11:45:16 ville Exp $" 
---><!--#set var="date" value="\$Date: 2009-09-05 11:45:16 $" 
+<!--#set var="revision" value="\$Id: install_win.html,v 1.22 2009-09-16 19:15:19 ville Exp $" 
+--><!--#set var="date" value="\$Date: 2009-09-16 19:15:19 $" 
 --><!--#set var="title" value="Installation Documentation for The W3C Markup Validation Service (Windows, Apache)" 
 --><!--#set var="relroot" value="../" 
 --><!--#include virtual="../header.html" -->
@@ -71,7 +71,6 @@ At <a href="http://ppm.activestate.com/">Active State</a>,
   <li>XML-NamespaceSupport</li>
   <li>XML-SAX</li>
   <li>XML-LibXML-Common</li>
-  <li>String-Approx</li>
 </ul>
 <p>...and the following are optional:</p>
 <ul>
@@ -270,7 +269,7 @@ Include conf/extra/httpd-manual.conf
 <pre>#
 # Main Configuration File for the W3C Markup Validation Service.
 #
-# $Id: install_win.html,v 1.21 2009-09-05 11:45:16 ville Exp $
+# $Id: install_win.html,v 1.22 2009-09-16 19:15:19 ville Exp $
 #
 # See 'perldoc Config::General' for the syntax, and be aware that the
 # 'SplitPolicy' is 'equalsign', ie. keys and values are separated by '\s*=\s*',
@@ -355,12 +354,6 @@ Languages = en
 #
 # Mapping tables etc...
 #
-
-#
-# Maps element names to URLs.
-&lt;Elements&gt;
-  Include eref.cfg
-&lt;/Elements&gt;
 
 #
 # Main document Type Registry; contains all information on the types
