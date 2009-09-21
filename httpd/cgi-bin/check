@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.697 2009-09-21 19:00:05 ville Exp $
+# $Id: check,v 1.698 2009-09-21 19:07:23 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -205,7 +205,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.697 $;
+  $VERSION =  q$Revision: 1.698 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -514,9 +514,7 @@ if ($File->{Charset}->{HTTP}) { # HTTP, if given, is authoritative.
 } elsif (&is_xml($File) and not $File->{ContentType} =~ m(^text/)) {
   $File->{Charset}->{Use} = 'utf-8'; # UTF-8 (image/svg+xml etc.)
 }
-unless ($File->{Charset}->{Use}) {
-  $File->{Charset}->{Use} = $File->{Charset}->{META};
-}
+$File->{Charset}->{Use} ||= $File->{Charset}->{META};
 
 #
 # Handle any Fallback or Override for the charset.
@@ -2457,27 +2455,24 @@ sub prepCGI {
 
   # apparently, with mod_perl2, $path_info is empty even if it should be filled
   # working around that
-  if (!$path_info) {
-    if ($File->{Env}->{'Self URI'} =~ /check\/referer$/){
-      $path_info = '/referer';
-      $File->{Env}->{'Self URI'} =~ s/\/referer//;
-    }
+  if (!$path_info && $File->{Env}->{'Self URI'} =~ /check\/referer$/) {
+    $path_info = '/referer';
+    $File->{Env}->{'Self URI'} =~ s/\/referer//;
   }
+
   # Futz the URL so "/referer" works.
   if ($path_info) {
-    if ($path_info eq '/referer' or $path_info eq '/referrer') {
+    if ($path_info =~ m|^/referr?er$|) {
       if ($q->referer) {
         $q->param('uri', $q->referer);
         print redirect &self_url_q($q, $File);
-        exit;
       } else {
         print redirect $File->{Env}->{'Self URI'} . '?uri=referer';
-        exit;
       }
     } else {
       print redirect &self_url_q($q, $File);
-      exit;
     }
+    exit;
   }
 
   # Use "url" unless a "uri" was also given.
