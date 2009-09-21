@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.696 2009-09-16 19:15:19 ville Exp $
+# $Id: check,v 1.697 2009-09-21 19:00:05 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -205,7 +205,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.696 $;
+  $VERSION =  q$Revision: 1.697 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2279,7 +2279,7 @@ sub match_DTD_FPI_SI {
             }
         }
     }
-    else { # FPI not know, checking if the SI is
+    else { # FPI not known, checking if the SI is
         foreach my $proper_FPI (keys %{$CFG->{Types}}) {
             if ($CFG->{Types}->{$proper_FPI}->{SysID}) {
                 if ($CFG->{Types}->{$proper_FPI}->{SysID} eq $SI) {
