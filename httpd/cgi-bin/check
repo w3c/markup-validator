@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.698 2009-09-21 19:07:23 ville Exp $
+# $Id: check,v 1.699 2009-09-21 19:08:41 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -205,7 +205,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.698 $;
+  $VERSION =  q$Revision: 1.699 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2455,9 +2455,9 @@ sub prepCGI {
 
   # apparently, with mod_perl2, $path_info is empty even if it should be filled
   # working around that
-  if (!$path_info && $File->{Env}->{'Self URI'} =~ /check\/referer$/) {
+  if (!$path_info && $File->{Env}->{'Self URI'} =~ /check\/referr?er$/) {
     $path_info = '/referer';
-    $File->{Env}->{'Self URI'} =~ s/\/referer//;
+    $File->{Env}->{'Self URI'} =~ s/\/referr?er$//;
   }
 
   # Futz the URL so "/referer" works.
