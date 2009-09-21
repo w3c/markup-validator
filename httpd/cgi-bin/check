@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.700 2009-09-21 19:12:03 ville Exp $
+# $Id: check,v 1.701 2009-09-21 20:40:54 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -208,7 +208,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.700 $;
+  $VERSION =  q$Revision: 1.701 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1789,8 +1789,11 @@ sub handle_frag {
     }
     $prefill_Template->param(fragment => $File->{Bytes});
     $File->{Bytes} = $prefill_Template->output();
-    # let's force the view source so that the user knows what we've put around their code
+    # Let's force the view source so that the user knows what we've put around
+    # their code.
     $File->{Opt}->{'Show Source'} = TRUE;
+    # Ignore doctype overrides (#5132).
+    $File->{Opt}->{DOCTYPE} = 'Inline';
   }
 
   return $File;
