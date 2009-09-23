@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.703 2009-09-23 21:13:04 ville Exp $
+# $Id: check,v 1.704 2009-09-23 21:27:32 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -208,7 +208,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.703 $;
+  $VERSION =  q$Revision: 1.704 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2087,7 +2087,7 @@ sub report_errors ($) {
             $col = length($File->{Content}->[$err->{line}-1]);
             $col = 80 if ($col > 80);
             ($line, $col) = &truncate_line($File->{Content}->[$err->{line}-1], $col);
-            $line = &ent($line) . "…";
+            $line = &ent($line);
             $col = 0;
           }
       }
