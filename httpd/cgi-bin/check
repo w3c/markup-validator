@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.702 2009-09-23 21:11:01 ville Exp $
+# $Id: check,v 1.703 2009-09-23 21:13:04 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -208,7 +208,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.702 $;
+  $VERSION =  q$Revision: 1.703 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2198,7 +2198,7 @@ sub report_errors ($) {
 # Chop the source line into 3 pieces; the character at which the error
 # was detected, and everything to the left and right of that position.
 # That way we can add markup to the relevant char without breaking &ent().
-sub mark_error (\$\$) {
+sub mark_error ($$) {
   my $line = shift;
   my $col  = shift;
 
