@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: users.html,v 1.33 2009-09-05 11:45:16 ville Exp $"
---><!--#set var="date" value="\$Date: 2009-09-05 11:45:16 $"
+<!--#set var="revision" value="\$Id: users.html,v 1.34 2009-09-27 18:03:53 ville Exp $"
+--><!--#set var="date" value="\$Date: 2009-09-27 18:03:53 $"
 --><!--#set var="title" value="User Documentation for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -148,7 +148,7 @@
 	  is not served with character encoding information. Think of this as a gentler 
 	  override mechanism.</p>
 	</dd>
-	<dt><a id="option-doctype" name="option-doctype"></a>Document Type (Doctype)</dt>
+	<dt><a id="option-doctype" name="option-doctype"></a>Document Type (Doctype) (<code>doctype</code>)</dt>
 	<dd>
 	  <p>This allows you to <strong>override</strong> the DOCTYPE declaration for you
 	  document. You may use this option for test 
@@ -182,7 +182,7 @@
           
         </dd>
 
-	<dt><a id="option-no200" name="option-no200"></a>Validate error pages (<code>no200</code>)</dt>
+	<dt><a id="option-no200" name="option-no200"></a>Validate error pages (<code>No200</code>)</dt>
 	<dd>
 	  <p>The Markup Validator will usually tell you if the page you tried to validate
 	  could not be retrieved (for example, if the server gave a "404 not found" message.
@@ -232,38 +232,52 @@
 	  spec.</p>
 	</dd>
       </dl>
-        <h4 id="Output">Output Options</h4>
-          <p>
-            In addition to the HTML output intended for human consumption in a
-            browser, the Validator has some experimental features to generate
-            machine parseable output in a few different forms. To enable these
-            output options, append "<code>;output=&lt;option&gt;</code>" to the
-            URL of the Validation results (an interface for these options will be
-            provided when they exit the beta stage).
-          </p>
-          <dl>
-        <dt id="output-soap12">Web Service API</dt>
-        <dd>Using the SOAP1.2 language over HTTP, this defines a web service with an output similar to the API for
-  	  the W3C CSS validator and Feed Validator. The <a href="api">Full documentation</a> for this API is available.
-  	  Can be called by using parameter <code>output=soap12</code>. This API is <em>still under development</em>,
-  	  and subject to change.</dd>
-        <dt id="output-earl">EARL/RDF</dt>
-        <dd>Produces output in the EARL RDF syntax.
-  	  		Can be called by using parameter <code>output=earl</code>. <em>This output may change or be removed in the future</em>.</dd>
-  	  <dt id="output-n3">Notation3</dt>
-  	  <dd>Produces output in the Notation3 RDF syntax. 
-  		Can be called by using parameter <code>output=n3</code>. <em>This output may change or be removed in the future</em>.</dd>
-	  <dt id="output-json">JSON (<em>NEW</em> in version 0.8.3)</dt>
-	   <dd>Produces output using a JSON (JavaScript Object Notation) formatting equivalent to the <a href="http://wiki.whatwg.org/wiki/Validator.nu_JSON_Output">JSON output for validator.nu</a>.</dd> 
-  	  <dt id="output-xml">XML</dt>
-  	  <dd>This output option has been deprecated, and will be removed from subsequent versions of the validator. Can be called by using parameter <code>output=json</code>.</dd>
-  	</dl>
+      <h4 id="Output">Output Options</h4>
+      <p>
+        In addition to the HTML output intended for human consumption in a
+        browser, the Validator has some experimental features to generate
+        machine parseable output in a few different forms. To enable these
+        output options, append "<code>;output=&lt;option&gt;</code>" to the
+        URL of the Validation results (an interface for these options will be
+        provided when they exit the beta stage).
+      </p>
+      <dl>
+        <dt id="output-soap12">Web Service API (<code>output=soap12</code>)</dt>
+        <dd>
+          Using the SOAP1.2 language over HTTP, this defines a web service with
+          an output similar to the API for the W3C CSS validator and Feed
+          Validator. The <a href="api">Full documentation</a> for this API is
+          available. This API is <em>still under development</em>, and subject
+          to change.
+        </dd>
+        <dt id="output-earl">EARL/RDF (<code>output=earl</code>)</dt>
+        <dd>
+          Produces output in the EARL RDF syntax.
+  	  <em>This output may change or be removed in the future</em>.
+        </dd>
+  	<dt id="output-n3">Notation3 (<code>output=n3</code>)</dt>
+  	<dd>
+          Produces output in the Notation3 RDF syntax. 
+  	  <em>This output may change or be removed in the future</em>.
+        </dd>
+	<dt id="output-json">JSON (<code>output=json</code>)</dt>
+	<dd>Produces output using a JSON (JavaScript Object Notation)
+          formatting equivalent to the
+          <a href="http://wiki.whatwg.org/wiki/Validator.nu_JSON_Output">JSON
+            output for validator.nu</a>.
+        </dd> 
+  	<dt id="output-xml">XML (<code>output=xml</code>)</dt>
+  	<dd>
+          This output option has been deprecated, and will be removed from
+          future versions of the validator.
+        </dd>
+      </dl>
  
     <h4 id="deprecated_options">Deprecated options</h4>
     <p>A number of options once available  have been deprecated and are not available any more.
         This includes the <em>Show parse tree</em>  
-          and <em>exclude attributes from the parse tree</em>, as well as <em>Show Esis</em> 
-          and <em>Show Raw Errors</em>.
+          and <em>exclude attributes from the parse tree</em>, as well as <em>Show ESIS</em> 
+          and <em>Show raw errors</em>.
         </p>
     </div>
 
