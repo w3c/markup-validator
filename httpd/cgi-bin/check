@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.705 2009-09-27 18:30:11 ville Exp $
+# $Id: check,v 1.706 2009-10-04 20:38:25 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -208,7 +208,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.705 $;
+  $VERSION =  q$Revision: 1.706 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -683,13 +683,11 @@ if (&is_xml($File)) {
         }
         my $num_xmlwf_error = 0;
         foreach my $err_obj (@xmlwf_obj_error_list){
-            #die($err_obj->dump());
             my $err;
-            my $offset;
-            eval {$offset = $err_obj->column()}; # only in XML::LibXML 0.69_2 and above, so wrapping it safely
             $err->{src}  = '...'; # do this with show_open_entities()?
             $err->{line} = $err_obj->line();
-            $err->{char} = $offset;
+            # -> column() is available in XML::LibXML >= 1.69_2
+            $err->{char} = eval { $err_obj->column() };
             $err->{num}  = "libxml2-".$err_obj->code();
             $err->{type} = "E";
             $err->{msg}  = $err_obj->message();
