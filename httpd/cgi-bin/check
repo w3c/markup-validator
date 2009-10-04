@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.706 2009-10-04 20:38:25 ville Exp $
+# $Id: check,v 1.707 2009-10-04 20:42:01 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -208,7 +208,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.706 $;
+  $VERSION =  q$Revision: 1.707 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -1896,48 +1896,37 @@ sub ent {
 
 #
 # Truncate source lines for report.
-#
+# Expects 1-based column indexes.
 sub truncate_line {
-  my $line  = shift;
-  my $col   = shift;
+  my $line   = shift;
+  my $col    = shift;
+  my $maxlen = 80;    # max line length to truncate to
 
-  my $start = $col;
-  my $end   = $col;
+  my $diff = length($line) - $maxlen;
 
-  for (1..40) {
-    $start-- if ($start - 1 >= 0);            # in/de-crement until...
-    $end++   if ($end   + 1 <= length $line); # ...we hit end of line.
+  # Don't truncate at all if it fits.
+  return ($line, $col) if ($diff <= 0);
+
+  my $start = $col - int($maxlen/2);
+  if ($start < 0) {
+    # Truncate only from end of line.
+    $start = 0;
+    $line = substr($line, $start, $maxlen - 1) . '…';
+  }
+  elsif ($start > $diff) {
+    # Truncate only from beginning of line.
+    $start = $diff;
+    $line = '…' . substr($line, $start + 1);
+  }
+  else {
+    # Truncate from both beginning and end of line.
+    $line = '…' . substr($line, $start + 1, $maxlen - 2) . '…';
   }
 
-  unless ($end - $start == 80) {
-    if ($start == 0) { # Hit start of line, maybe grab more at end.
-      my $diff = 40 - $col;
-      for (1..$diff) {
-        $end++ if ($end + 1 <= length $line);
-      }
-    } elsif ($end == length $line) { # Hit end of line, maybe grab more at beginning.
-      my $diff = 80 - $col;
-      for (1..$diff) {
-        $start-- if ($start - 1 >= 0);
-      }
-    }
-  }
+  # Shift column if we truncated from beginning of line.
+  $col -= $start;
 
-  #
-  # Add ellipsis at end if necessary.
-  unless ($end   == length $line) {substr $line, -3, 3, '…'};
-
-  $col = $col - $start; # New offset is diff from $col to $start.
-  $line = substr $line, $start, $end - $start; # Truncate.
-
-  #
-  # Add ellipsis at start if necessary.
-  unless ($start == 0)  {
-      substr $line,  0, 3, '…';
-      $col = $col - 2;
-    };
-
-  return $line, $col;
+  return ($line, $col);
 }
 
 #
