@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.709 2009-10-05 15:13:58 ville Exp $
+# $Id: check,v 1.710 2009-10-05 19:49:45 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -208,7 +208,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.709 $;
+  $VERSION =  q$Revision: 1.710 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2216,8 +2216,8 @@ sub source {
   my $File = shift;
 
   # Remove any BOM since we're not at BOT anymore...
-  $File->{Content}->[0] =
-    substr $File->{Content}->[0], ($File->{BOM} ? 1 : 0); # remove BOM
+  $File->{Content}->[0] = substr($File->{Content}->[0], 1)
+    if ($File->{BOM} && scalar(@{$File->{Content}}));
 
   my @source = map({file_source_line => $_}, @{$File->{Content}});
   return \@source;
