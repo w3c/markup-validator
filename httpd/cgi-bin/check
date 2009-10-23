@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.712 2009-10-10 07:49:03 ville Exp $
+# $Id: check,v 1.713 2009-10-23 19:09:44 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -208,7 +208,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.712 $;
+  $VERSION =  q$Revision: 1.713 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -500,20 +500,20 @@ unless ($File->{Charset}->{Use}) { # No charset given...
 
 # Always transcode, even if the content claims to be UTF-8
 $File = transcode($File);
-if (($File->{ContentType} eq "text/html") and ($File->{Charset}->{Default}) and $File->{'Error Flagged'}) {
+
+# Try guessing if it didn't work out
+if ($File->{ContentType} eq 'text/html' && $File->{Charset}->{Default}) {
+  my $also_tried = 'UTF-8';
+  for my $cs (qw(windows-1252 iso-8859-1)) {
+    last unless $File->{'Error Flagged'};
     $File->{'Error Flagged'} = FALSE; # reset
-    # we try again, this time with win-1252
-    $File->{Charset}->{Use} = 'windows-1252';
-    &add_warning('W04', {W04_charset => "windows-1252", W04_also_tried=> "UTF-8"});
+    $File->{Charset}->{Use} = $cs;
+    &add_warning('W04', { W04_charset => $cs, W04_also_tried => $also_tried });
     $File = transcode($File);
+    $also_tried .= ", $cs";
+  }
 }
-if (($File->{ContentType} eq "text/html") and ($File->{Charset}->{Default}) and $File->{'Error Flagged'}) {
-    $File->{'Error Flagged'} = FALSE; # reset
-    # we try again, this time with latin1...
-    $File->{Charset}->{Use} = 'iso-8859-1';
-    &add_warning('W04', {W04_charset => "iso-8859-1", W04_also_tried => "UTF-8, windows-1252"});
-    $File = transcode($File);
-}
+
 # if it still does not work, we abandon hope here
 &abort_if_error_flagged($File, O_CHARSET);
 
@@ -2714,7 +2714,7 @@ sub transcode {
   # Transcoding failed
   if ($@) {
     my $line_num = 0;
-    foreach my $input_line (split /\r\n|\n|\r/, $input){
+    foreach my $input_line (split /\r\n|\n|\r/, $input) {
       $line_num++;
       eval { Encode::decode($cs, $input_line, Encode::FB_CROAK); };
       if ($@) {
