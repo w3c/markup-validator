@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.713 2009-10-23 19:09:44 ville Exp $
+# $Id: check,v 1.714 2009-10-23 19:18:00 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -208,7 +208,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.713 $;
+  $VERSION =  q$Revision: 1.714 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -2680,9 +2680,9 @@ sub transcode {
   }
 
   # Does the system support decoding this encoding?
-  eval { Encode::decode($cs, ''); };
+  my $enc = Encode::find_encoding($cs);
 
-  if ($@) {
+  if (!$enc) {
     # This system's Encode installation does not support
     # the character encoding; might need additional modules
 
@@ -2708,15 +2708,17 @@ sub transcode {
 
   # Try to transcode
   eval {
-    $output = Encode::decode($cs, $input, Encode::FB_CROAK);
+    $output = $enc->decode($input, Encode::FB_CROAK);
   };
 
-  # Transcoding failed
   if ($@) {
+    # Transcoding failed - do it again line by line to find out exactly where
     my $line_num = 0;
     foreach my $input_line (split /\r\n|\n|\r/, $input) {
       $line_num++;
-      eval { Encode::decode($cs, $input_line, Encode::FB_CROAK); };
+      eval {
+        $enc->decode($input_line, Encode::FB_CROAK);
+      };
       if ($@) {
         my $croak_message = $@;
         $croak_message =~ s/ at .*//;
