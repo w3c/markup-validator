@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.714 2009-10-23 19:18:00 ville Exp $
+# $Id: check,v 1.715 2009-10-23 20:46:13 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -208,7 +208,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.714 $;
+  $VERSION =  q$Revision: 1.715 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -829,9 +829,7 @@ if (!$File->{'Is Valid'} && $File->{Opt}->{'Show Tidy'}) {
 
 my $template;
 
-if ($File->{Opt}->{Output} eq 'xml') {
-  $template = &get_template($File, 'xml_output.tmpl');
-} elsif ($File->{Opt}->{Output} eq 'earl') {
+if ($File->{Opt}->{Output} eq 'earl') {
   $template = &get_template($File, 'earl_xml.tmpl');
 } elsif ($File->{Opt}->{Output} eq 'n3') {
   $template = &get_template($File, 'earl_n3.tmpl');
