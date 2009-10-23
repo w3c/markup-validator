@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.82 2009-06-23 18:27:39 ville Exp $"
---><!--#set var="date" value="\$Date: 2009-06-23 18:27:39 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.83 2009-10-23 16:56:36 ville Exp $"
+--><!--#set var="date" value="\$Date: 2009-10-23 16:56:36 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#set var="feeds" value="1"
@@ -8,234 +8,531 @@
     <h2>News for the W3C Markup Validator</h2>
     <div class="intro">
       <p>
-        This page lists recent changes to <a href="./">the <acronym
-          title="World Wide Web Consortium">W3C</acronym> Markup Validation
-            Service</a>. For minor changes and bug fixes that aren't listed on this
-        page, see <a href="http://dev.w3.org/cvsweb/validator/">the
+        This page lists recent changes to <a href="./">the
+          <acronym title="World Wide Web Consortium">W3C</acronym> Markup
+          Validation Service</a>. For minor changes and bug fixes that aren't
+        listed on this page, see
+        <a href="http://dev.w3.org/cvsweb/validator/">the
           <acronym title="Concurrent Versions System">CVS</acronym> log</a>.
       </p>
       <p>
-        News for this service are also available as <a href="whatsnew.atom">an ATOM feed</a>.
+        News for this service are also available as
+        <a href="whatsnew.atom">an ATOM feed</a>.
       </p>
-      <p>Want to know not just the <em>latest news</em> but see the future and read about what's next?
-        Check out the <a href="todo.html">development Roadmap and TODO list</a>.</p>
+      <p>
+        Want to know not just the <em>latest news</em> but see the future and
+        read about what's next? Check out the
+        <a href="todo.html">development Roadmap and TODO list</a>.
+      </p>
     </div>
     <dl id="news">
       <dt id="t2009-03-26">2009-03-26 &mdash; 0.8.5 release:</dt>
       <dd>
-          <p>The 0.8.5 release of the markup validator is a feature and bugfix release. Changes include:</p>
-          <ul>
-            <li>UI fix: many of our users were confused by the behaviour of the "More options" arrow. 
-              A small UI change should make the user experience less confusing.</li>
-            <li>New Feature: fuzzy matching used to suggest corrected markup. Analysis of many invalid
-              pages shows that the most common error comes from invalid (typo or non standard) elements and attributes used.
-              The <a href="http://www.w3.org/blog/systeam/2009/02/16/validator_fuzzy_match" 
-              title="blog post on the validator's fuzzy matching">new feature</a> will help by suggesting possible (valid)
-              alternatives.</li>
-            <li>Bug Fix: <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6524">issues with SVG</a> were creating very 
-              large log output when validating SVG documents. The validator code has been amended to limit this log flood.</li>
-            <li>Bug Fix: the HTML5 validator integration broke some of the validator's “document type override” functionalities
-              in version 0.8.4. This is fixed in 0.8.5.</li> 
-            <li>New: the validator icon code, which one can add to web pages, now <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=65252">includes XHTML+RDFa</a> when applicable</li>
-            <li>Bug Fix / New: implementing <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6329">XML::LibXML Structured Errors</a>. The validator uses libxml2 and the XML::LibXML for well-formedness check. 
-              Recent versions of the Perl library had bugs that made in backward incompatible, causing the validator to not output all
-              well-formedness errors reliably. Some code was added to the validator to work with all future versions of that library, but 
-              we recommend not using XML::LibXML between versions 1.67 and 1.69 inclusive (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6329#c15">see how</a>).</li>
-              <li>Experimental: validation of SVG documents is now passed to the validator.nu engine. At the time of this release, neither validator.nu nor the DTD engine previously used are perfect for the validation of SVG, but the technologies used in the validator.nu engine (nvdl and relaxNG) makes it more promising.</li>
-            <li>UI Fix: accessibility improvements for screen readers.</li>
-            <li>Documentation: updated the <a href="docs/why.html">Why Validate?</a> document.</li>
-            <li>Usability: the way in which the validator has to handle 
-              <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6259">direct input and character encodings</a>
-              has long been confusing to many. Improvements have been made that explain in clearer ways what the validator does.</li>
-            <li>New: the validator now recommends to declare character encoding in the document itself, especially if there is a chance that the document will be read from or saved to disk, CD, etc - in accordance with <a href="http://www.w3.org/International/tutorials/tutorial-char-enc/#Slide0250">internationalization recommendations</a>.</li>
-          </ul>
+        <p>
+          The 0.8.5 release of the markup validator is a feature and bugfix
+          release. Changes include:
+        </p>
+        <ul>
+          <li>
+            UI fix: many of our users were confused by the behaviour of the
+            "More options" arrow. A small UI change should make the user
+            experience less confusing.
+          </li>
+          <li>
+            New Feature: fuzzy matching used to suggest corrected markup.
+            Analysis of many invalid pages shows that the most common error
+            comes from invalid (typo or non standard) elements and attributes
+            used. The
+            <a href="http://www.w3.org/blog/systeam/2009/02/16/validator_fuzzy_match" 
+               title="blog post on the validator's fuzzy matching">new
+              feature</a> will help by suggesting possible (valid)
+            alternatives.
+          </li>
+          <li>
+            Bug Fix: <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6524">issues with SVG</a>
+            were creating very large log output when validating SVG documents.
+            The validator code has been amended to limit this log flood.
+          </li>
+          <li>
+            Bug Fix: the HTML5 validator integration broke some of the
+            validator's “document type override” functionalities in version
+            0.8.4. This is fixed in 0.8.5.
+          </li> 
+          <li>
+            New: the validator icon code, which one can add to web pages, now
+            <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=65252">includes XHTML+RDFa</a>
+            when applicable.
+          </li>
+          <li>
+            Bug Fix / New: implementing
+            <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6329">XML::LibXML Structured Errors</a>.
+            The validator uses libxml2 and the XML::LibXML for well-formedness
+            check. Recent versions of the Perl library had bugs that made in
+            backward incompatible, causing the validator to not output all
+            well-formedness errors reliably. Some code was added to the
+            validator to work with all future versions of that library, but 
+            we recommend not using XML::LibXML between versions 1.67 and 1.69
+            inclusive
+            (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6329#c15">see how</a>).
+          </li>
+          <li>
+            Experimental: validation of SVG documents is now passed to the
+            validator.nu engine. At the time of this release, neither
+            validator.nu nor the DTD engine previously used are perfect for the
+            validation of SVG, but the technologies used in the validator.nu
+            engine (nvdl and relaxNG) makes it more promising.
+          </li>
+          <li>
+            UI Fix: accessibility improvements for screen readers.
+          </li>
+          <li>
+            Documentation: updated the
+            <a href="docs/why.html">Why Validate?</a> document.
+          </li>
+          <li>
+            Usability: the way in which the validator has to handle 
+            <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6259">direct
+              input and character encodings</a> has long been confusing to
+            many. Improvements have been made that explain in clearer ways what
+            the validator does.
+          </li>
+          <li>
+            New: the validator now recommends to declare character encoding in
+            the document itself, especially if there is a chance that the
+            document will be read from or saved to disk, CD, etc - in
+            accordance with
+            <a href="http://www.w3.org/International/tutorials/tutorial-char-enc/#Slide0250">internationalization recommendations</a>.
+          </li>
+        </ul>
       </dd>
-    <dt id="t2008-11-20">2008-11-20 &mdash; 0.8.4 release:</dt>
-    <dd>
-        <p>0.8.4 may sound like a very minor step from the <a href="t2008-08-08">version 0.8.3 released in August</a>, but this new release of the W3C Markup Validator brings some very important change: in addition to checking documents against etablished standards such as HTML 4.01 and XHTML 1.0, the validator can now check documents for conformance to <a href="http://www.w3.org/html/" title="Home page of the HTML Working Group at W3C">HTML5</a>, thanks to the integration with the <a href="http://about.validator.nu/">Validator.nu</a> html5 engine.</p>
-        <p> HTML5 is still work in progress and support for this next generation of the publishing language of the World Wide Web will remain experimental, but this integration should provide experimentation grounds for those interested in trying on authoring in this new version of html, as well as a feedback channel for the group working on building a stable, open standard.</p>
-        <p>Other bug fixes and improvement in this version include:</p>
-          <ul>  
-            <li>Bug Fix: version <a href="#t2008-08-08">0.8.3</a> came with a programming mistake that would not affect validation, but would flood the validator servers' logs with warnings.</li>
-            <li>Bug Fix - Document type support. A Typo in the machine-readable grammar published with the latest specification for XHTML1.1 caused spurrious validation errors when checking documents against XHTML1.1. <a href="http://lists.w3.org/Archives/Public/www-validator-cvs/2008Nov/0029.html">fixing the typo</a> solves the issue. Another <a href="http://lists.w3.org/Archives/Public/www-validator-cvs/2008Aug/0018.html">fixed typo</a> now makes the validation against the historical HTML i18n document type functional.</li>
-            <li>Documentation updates and fixes: the <a href="docs/install.html">installation documentation</a> used a misspelled option for the installation of the OpenSP parser. The correction should make installation of the validator a little easier. Also relevant to installing the validator, the <a href="config/validator.conf">sample validator configuration</a> now includes a documentation of <a href="http://lists.w3.org/Archives/Public/www-validator-cvs/2008Nov/0008.html">environment variables affecting connectivity</a>.</li>
-          </ul>
-      
-    </dd>
 
+      <dt id="t2008-11-20">2008-11-20 &mdash; 0.8.4 release:</dt>
+      <dd>
+        <p>
+          0.8.4 may sound like a very minor step from the
+          <a href="t2008-08-08">version 0.8.3 released in August</a>, but this
+          new release of the W3C Markup Validator brings some very important
+          change: in addition to checking documents against established
+          standards such as HTML 4.01 and XHTML 1.0, the validator can now
+          check documents for conformance to
+          <a href="http://www.w3.org/html/" title="Home page of the HTML Working Group at W3C">HTML5</a>,
+          thanks to the integration with the
+          <a href="http://about.validator.nu/">Validator.nu</a> html5 engine.
+        </p>
+        <p>
+          HTML5 is still work in progress and support for this next generation
+          of the publishing language of the World Wide Web will remain
+          experimental, but this integration should provide experimentation
+          grounds for those interested in trying on authoring in this new
+          version of HTML, as well as a feedback channel for the group working
+          on building a stable, open standard.
+        </p>
+        <p>
+          Other bug fixes and improvement in this version include:
+        </p>
+        <ul>  
+          <li>
+            Bug Fix: version <a href="#t2008-08-08">0.8.3</a> came with a
+            programming mistake that would not affect validation, but would
+            flood the validator servers' logs with warnings.
+          </li>
+          <li>
+            Bug Fix - Document type support. A Typo in the machine-readable
+            grammar published with the latest specification for XHTML 1.1
+            caused spurrious validation errors when checking documents against
+            XHTML 1.1.
+            <a href="http://lists.w3.org/Archives/Public/www-validator-cvs/2008Nov/0029.html">Fixing the typo</a>
+            solves the issue. Another
+            <a href="http://lists.w3.org/Archives/Public/www-validator-cvs/2008Aug/0018.html">fixed typo</a>
+            now makes the validation against the historical HTML i18n document
+            type functional.
+          </li>
+          <li>
+            Documentation updates and fixes: the
+            <a href="docs/install.html">installation documentation</a> used a
+            misspelled option for the installation of the OpenSP parser. The
+            correction should make installation of the validator a little
+            easier. Also relevant to installing the validator, the
+            <a href="config/validator.conf">sample validator configuration</a>
+            now includes documentation of
+            <a href="http://lists.w3.org/Archives/Public/www-validator-cvs/2008Nov/0008.html">environment variables affecting connectivity</a>.
+          </li>
+        </ul>
+      </dd>
 
       <dt id="t2008-08-08">2008-08-08 &mdash; 0.8.3 release:</dt>
       <dd>
-          <p>The 0.8.3 release of the W3C Markup Validator is a bug fix release, with a few small additional features.
-              Changes include:</p>
-            <ul>  
-              <li>Bug Fix: in version 0.8.2, revalidation of an uploaded file was broken (missing markup in the HTML form)</li>
-              <li>Updates: Added support for XHTML Basic 1.1, XHTML Mobile Profiles (1.0, 1.1 and 1.2) and the historical HTML i18n</li>
-              <li>Bug Fix: the validator won't override a given document type with itself</li>
-              <li>Conformance: The validator now warns about inconsistent public/system identifiers combinations</li>
-              <li>API: The <a href="docs/api.html#http_headers">custom HTTP headers in validator responses</a> now also include the number of warnings</li>
-              <li>Experimental Feature: added the new option to send specific <code>Accept-Charset</code> and <code>User-Agent</code> headers, 
-				in addition to <code>Accept</code> and <code>Accept-Language</code> in version <a href="#t2007-10-11">0.8.2</a>.</li>
-			  <li>Experimental Feature: the validator can output its <a href="/docs/users.html#Output">results as JSON</a>.</li>
-              <li>Documentation: Some documentation updates</li>
-              <li>Development: New automated support and regression test suite</li>
-            </ul>
-        
-      </dd>
-      <dt id="t2007-10-11">2007-10-11 &mdash; 0.8.2 release:</dt>
-      <dd>
-        <p>The 0.8.2 release of the W3C Markup Validator is a bug fix, performance and usability
-          release, addressing the following issues:</p>
+        <p>
+          The 0.8.3 release of the W3C Markup Validator is a bug fix release,
+          with a few small additional features. Changes include:
+        </p>
         <ul>
-          <li>Bug Fix: processing of documents through HTML Tidy would be triggered even when not requested. 
-            The fix should provide a noticeable performance boost.</li>
-          <li>Bug Fix: forcing or overriding the Doctype declaration would not work with documents using an XML Declaration 
-            (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=857" title="Bug 857 - DOCTYPE Override should take XML Decl into account.">Bug 857</a>).
-            The fix should make it much easier to validate e.g. <abbr title="Scalable Vector Graphics">SVG</abbr> documents.</li>
-          <li>Bug Fix: Making sure that the validator requests a fresh version of the online resources, when an older cached version could be returned. (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=4998" title="Bug 4998 - Validator sometimes uses cached content (cache-control header on requests would be useful)">Bug 4998</a>)</li>
-          <li>Usability: when using file upload or direct input modes, the result page will now include a text area filled with the validated source, for easy fixing and revalidation.(<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=4342" title="Bug 4342 - Revalidation form for Upload and Direct Input">Bug 4342</a>)</li>
-          <li>Accessibility: the main interface was made friendlier to screen readers (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=4959" title="Bug 4959 - screen reader reads contents of entire form">Bug 4959</a>)</li>
-          <li>Experimental Feature: new options were added to trigger <a href="http://validator.w3.org/docs/users.html#option-accept">Format</a> and <a href="http://validator.w3.org/docs/users.html#option-accept-language">Language</a> negotiation.</li>
-          <li>New Feature: automatic detection of the document type for SVG documents, even without a DOCTYPE declaration. 
-            Validation of SVG only supported for standalone SVG documents, up to SVG 1.1.</li>
-          <li>Documentation updates</li>
+          <li>
+            Bug Fix: in version 0.8.2, revalidation of an uploaded file was
+            broken (missing markup in the HTML form).
+          </li>
+          <li>
+            Updates: Added support for XHTML Basic 1.1, XHTML Mobile Profiles
+            (1.0, 1.1 and 1.2) and the historical HTML i18n.
+          </li>
+          <li>
+            Bug Fix: the validator won't override a given document type with
+            itself.
+          </li>
+          <li>
+            Conformance: The validator now warns about inconsistent
+            public/system identifiers combinations.
+          </li>
+          <li>
+            API: The <a href="docs/api.html#http_headers">custom HTTP headers
+              in validator responses</a> now also include the number of
+            warnings.
+          </li>
+          <li>
+            Experimental Feature: added the new option to send specific
+            <code>Accept-Charset</code> and <code>User-Agent</code> headers, 
+	    in addition to <code>Accept</code> and <code>Accept-Language</code>
+            in version <a href="#t2007-10-11">0.8.2</a>.
+          </li>
+	  <li>
+            Experimental Feature: the validator can output its
+            <a href="docs/users.html#Output">results as JSON</a>.
+          </li>
+          <li>
+            Documentation: Some documentation updates.</li>
+          <li>
+            Development: New automated support and regression test suite.
+          </li>
         </ul>
       </dd>
+
+      <dt id="t2007-10-11">2007-10-11 &mdash; 0.8.2 release:</dt>
+      <dd>
+        <p>
+          The 0.8.2 release of the W3C Markup Validator is a bug fix,
+          performance and usability release, addressing the following issues:
+        </p>
+        <ul>
+          <li>
+            Bug Fix: processing of documents through HTML Tidy would be
+            triggered even when not requested. The fix should provide a
+            noticeable performance boost.
+          </li>
+          <li>
+            Bug Fix: forcing or overriding the Doctype declaration would not
+            work with documents using an XML Declaration 
+            (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=857"
+                title="Bug 857 - DOCTYPE Override should take XML Decl into account.">Bug 857</a>).
+            The fix should make it much easier to validate e.g.
+            <abbr title="Scalable Vector Graphics">SVG</abbr> documents.
+          </li>
+          <li>
+            Bug Fix: Making sure that the validator requests a fresh version of
+            the online resources, when an older cached version could be
+            returned.
+            (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=4998" title="Bug 4998 - Validator sometimes uses cached content (cache-control header on requests would be useful)">Bug 4998</a>)
+          </li>
+          <li>
+            Usability: when using file upload or direct input modes, the result
+            page will now include a text area filled with the validated source,
+            for easy fixing and revalidation.
+            (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=4342" title="Bug 4342 - Revalidation form for Upload and Direct Input">Bug 4342</a>)
+          </li>
+          <li>
+            Accessibility: the main interface was made friendlier to screen
+            readers.
+            (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=4959" title="Bug 4959 - screen reader reads contents of entire form">Bug 4959</a>)
+          </li>
+          <li>
+            Experimental Feature: new options were added to trigger
+            <a href="http://validator.w3.org/docs/users.html#option-accept">Format</a> and
+            <a href="http://validator.w3.org/docs/users.html#option-accept-language">Language</a>
+            negotiation.
+          </li>
+          <li>
+            New Feature: automatic detection of the document type for SVG
+            documents, even without a DOCTYPE declaration. Validation of SVG
+            only supported for standalone SVG documents, up to SVG 1.1.
+          </li>
+          <li>Documentation updates.</li>
+        </ul>
+      </dd>
+
       <dt id="t2007-08-08">2007-08-08 &mdash; 0.8.1 Release:</dt>
       <dd>
-        <p>The 0.8.1 release of the W3C Markup Validator is a bug fix 
-          release, addressing the following issues:</p>
+        <p>
+          The 0.8.1 release of the W3C Markup Validator is a bug fix release,
+          addressing the following issues:
+        </p>
         <ul>
-          <li>Bug Fix: changed set up of parser responsible for checking XML 
-            well-formedness, which would retrieve schemas for entities 
-            each time the validator would run.</li>
-          <li>Bug Fix: the validator would incorrectly complain about HTML/XML 
-            named entities (such as &amp;copy;).</li>
-          <li>Bug Fix: fixing <a href="docs/users.html#Calling">referer checking</a> 
-            when running with Apache and mod_perl2.</li>
-          <li>Bug Fix: the validator would crash when called from browsers with rare language preference settings</li>
-          <li>… and small performance and code cleanup fixes</li>
-  
+          <li>
+            Bug Fix: changed set up of parser responsible for checking XML 
+            well-formedness, which would retrieve schemas for entities each
+            time the validator would run.
+          </li>
+          <li>
+            Bug Fix: the validator would incorrectly complain about HTML/XML 
+            named entities (such as &amp;copy;).
+          </li>
+          <li>
+            Bug Fix: fixing <a href="docs/users.html#Calling">referer
+              checking</a> when running with Apache and mod_perl2.
+          </li>
+          <li>
+            Bug Fix: the validator would crash when called from browsers with
+            rare language preference settings.
+          </li>
+          <li>
+            … and small performance and code cleanup fixes.
+          </li>
         </ul>      
       </dd>
 
       <dt id="t2007-07-25">2007-07-25 &mdash; 0.8.0 Release:</dt>
       <dd>
         <p>
-          Releasing version 0.8.0 of the W3C Markup Validator,
-          a major milestone in the development of the  
-          validator, including changes in its architecture, UI, new features  
-          and fewer bugs, for a better, more accurate and helpful quality  
-          process.
+          Releasing version 0.8.0 of the W3C Markup Validator, a major
+          milestone in the development of the validator, including changes in
+          its architecture, UI, new features and fewer bugs, for a better, more
+          accurate and helpful quality process.
         </p>
-        <p>This release includes all the changes and bug reports of the 
+        <p>
+          This release includes all the changes and bug reports of the 
           <a href="#t2007-04-19">0.8.0 Beta 1</a> and
           <a href="#t2007-06-01">0.8.0 Beta 2</a>.
         </p>
       </dd>
+
       <dt id="t2007-06-01">2007-06-01 &mdash; 0.8.0 Beta 2:</dt>
       <dd>
         <p>
-          Testing the second beta revision of the validator version 0.8.0. This new version
-          builds upon the <a href="#t2007-04-19">0.8.0 Beta 1</a>, and adds bug fixes, documentation
-          updates and a polished UI with improved style and interaction. Changes include:
+          Testing the second beta revision of the validator version 0.8.0. This
+          new version builds upon the <a href="#t2007-04-19">0.8.0 Beta 1</a>,
+          and adds bug fixes, documentation updates and a polished UI with
+          improved style and interaction. Changes include:
         </p>
-          <ul>
-            <li>Revised main UI. Cleaner design. Improved tabbing between validation methods. Adding toggled option visibility</li>
-            <li>Bug Fix: Fixing transcoding issues, encoding of source display</li>
-            <li>Bug Fix: For XML document types, not reporting xmlns:* attributes as an error</li>
-            <li>New Feature: Adding error message id to the SOAP API, error context (source snippet), added error message explanation</li>
-            <li>Bug Fix: Fixed fatal error display in SOAP API</li>
-            <li>Bug Fix: Fixed line number display in case of broken encoding</li>
-            <li>Usability: more usable fatal error displays, removed "reset form" button, rewordings, error message explanations...</li>
-            <li>Bug Fix: Fixed outline for non-xml document types</li>
-            <li>New Feature: Added support for XHTML + RDFa</li>
-            <li>New Feature: For non-xhtml XML documents without document type, 
-              the validator will not try to perform validation and will only check well-formedness</li>
-            <li>code cleanup, other bug fixes</li>
-          </ul>
-          <p><strong>Participate in this Beta Test</strong>! 
-            Read the <a href="http://lists.w3.org/Archives/Public/www-validator/2007Jun/0002.html">Instructions</a> and start testing.</p>
+        <ul>
+          <li>
+            Revised main UI. Cleaner design. Improved tabbing between
+            validation methods. Adding toggled option visibility.
+          </li>
+          <li>
+            Bug Fix: Fixing transcoding issues, encoding of source display.
+          </li>
+          <li>
+            Bug Fix: For XML document types, not reporting xmlns:* attributes
+            as an error.
+          </li>
+          <li>
+            New Feature: Adding error message id to the SOAP API, error context
+            (source snippet), added error message explanation.
+          </li>
+          <li>
+            Bug Fix: Fixed fatal error display in SOAP API.
+          </li>
+          <li>
+            Bug Fix: Fixed line number display in case of broken encoding.
+          </li>
+          <li>
+            Usability: more usable fatal error displays, removed "reset form"
+            button, rewordings, error message explanations...
+          </li>
+          <li>
+            Bug Fix: Fixed outline for non-xml document types.
+          </li>
+          <li>
+            New Feature: Added support for XHTML + RDFa.
+          </li>
+          <li>
+            New Feature: For non-xhtml XML documents without document type, the
+            validator will not try to perform validation and will only check
+            well-formedness.
+          </li>
+          <li>
+            Code cleanup, other bug fixes.
+          </li>
+        </ul>
+        <p>
+          <strong>Participate in this Beta Test</strong>! 
+          Read the
+          <a href="http://lists.w3.org/Archives/Public/www-validator/2007Jun/0002.html">instructions</a>
+          and start testing.
+        </p>
       </dd>
-        <dt id="t2007-04-19">2007-04-19 &mdash; 0.8.0 Beta 1:</dt>
-        <dd>
-          <p>Testing version 0.8.0 Beta #1 of the Markup Validator; a new version including
-            important changes in architecture, performance, reliability of validation for XML-based languages,
-            improvements to the User Interface, and a number of new features. Changes include:</p>
-          <ul>
-            <li>New architecture, faster and more reliable, scaling better to the growing usage of the validator</li>
-            <li>Improved interface for better usability, accessibility</li>
-            <li>New feature: automatic cleanup of markup (with Tidy)</li>
-            <li>New feature: additional XML-Well-Formedness check, for more reliable validation of XML-based languages</li>
-            <li>Back by popular demand: document outline feature</li>
-            <li>New feature: checking that the documents are sent with proper Internet Media Type (MIME type)</li>
-            <li>New feature: for XML documents, checking that the xmlns is present, and properly set.</li>
-            <li>New feature: grouped messages, an alternate view to the sequential display of errors</li>
-            <li>New feature: Direct Input validation can check full documents AND HTML fragments</li>
-            <li>Added support for SMIL 2.1, XHTML Basic 1.1</li>
-            <li>Bug fixes</li>
-          </ul>
-        </dd>
-        <dt id="t2006-11-14">2006-11-14 &mdash; 0.7.4 Release:</dt>
-        <dd>
-          <p>Releasing version 0.7.4 of the W3C Markup Validator,
-              a maintenance release including bug fixes and documentation updates.</p>
-          <p>Changes include:</p>
-          <ul>
-              <li>Bug fixes to the validator's <a href="docs/api.html">API</a> </li>
-              <li>The proprietary XML output format is (still) deprecated, and will be removed in version 0.8.0</li>
-              <li>The outline feature, broken in version 0.7.3, is back.</li>
-              <li>Local installations of the validator can be configured to enable, or disable, the API</li>
-              <li>"<a href="http://www.w3.org/QA/Tools/Icons">Validation icons</a>" are now available 
-                  in two colors and 4 file formats, including <acronym title="Portable Network Graphics">PNG</acronym>
-                  and <acronym title="Scalable Vector Graphics">SVG</acronym></li>
-              <li>Documentation updates</li>
-          </ul>
-        </dd>
+
+      <dt id="t2007-04-19">2007-04-19 &mdash; 0.8.0 Beta 1:</dt>
+      <dd>
+        <p>
+          Testing version 0.8.0 Beta #1 of the Markup Validator; a new version
+          including important changes in architecture, performance, reliability
+          of validation for XML-based languages, improvements to the user
+          interface, and a number of new features. Changes include:
+        </p>
+        <ul>
+          <li>
+            New architecture, faster and more reliable, scaling better to the
+            growing usage of the validator.
+          </li>
+          <li>
+            Improved interface for better usability, accessibility.
+          </li>
+          <li>
+            New feature: automatic cleanup of markup (with Tidy).
+          </li>
+          <li>
+            New feature: additional XML-Well-Formedness check, for more
+            reliable validation of XML-based languages.
+          </li>
+          <li>
+            Back by popular demand: document outline feature.
+          </li>
+          <li>
+            New feature: checking that the documents are sent with proper
+            Internet Media Type (MIME type).
+          </li>
+          <li>
+            New feature: for XML documents, checking that the xmlns is present,
+            and properly set.
+          </li>
+          <li>
+            New feature: grouped messages, an alternate view to the sequential
+            display of errors.
+          </li>
+          <li>
+            New feature: Direct Input validation can check full documents AND
+            HTML fragments.
+          </li>
+          <li>
+            Added support for SMIL 2.1, and XHTML Basic 1.1.
+          </li>
+          <li>
+            Bug fixes.
+          </li>
+        </ul>
+      </dd>
+
+      <dt id="t2006-11-14">2006-11-14 &mdash; 0.7.4 Release:</dt>
+      <dd>
+        <p>
+          Releasing version 0.7.4 of the W3C Markup Validator, a maintenance
+          release including bug fixes and documentation updates.
+        </p>
+        <p>Changes include:</p>
+        <ul>
+          <li>
+            Bug fixes to the validator's <a href="docs/api.html">API</a>.
+          </li>
+          <li>
+            The proprietary XML output format is (still) deprecated, and will
+            be removed in version 0.8.0.
+          </li>
+          <li>
+            The outline feature, broken in version 0.7.3, is back.
+          </li>
+          <li>
+            Local installations of the validator can be configured to enable
+            or disable the API.
+          </li>
+          <li>
+            "<a href="http://www.w3.org/QA/Tools/Icons">Validation icons</a>"
+            are now available in two colors and 4 file formats, including
+            <acronym title="Portable Network Graphics">PNG</acronym> and
+            <acronym title="Scalable Vector Graphics">SVG</acronym>.
+          </li>
+          <li>
+            Documentation updates.
+          </li>
+        </ul>
+      </dd>
       
       <dt id="t2006-10-23">2006-10-23 &mdash; 0.7.3 Release:</dt>
       <dd>
-        <p>Releasing version 0.7.3 of the W3C Markup Validator,
-            a maintenance release including fixes, updates, and includes an 
-            experimental API to interface the validator with other programs and services.</p>
-        <p>Changes include:</p>
+        <p>
+          Releasing version 0.7.3 of the W3C Markup Validator, a maintenance
+          release including fixes, updates, and includes an experimental API
+          to interface the validator with other programs and services.
+        </p>
+        <p>
+          Changes include:
+        </p>
         <ul>
-            <li>A new (experimental) <a href="docs/api.html">Web Services API</a> </li>
-            <li>The proprietary (and experimental) XML output format is deprecated</li>
-            <li>New Document type supported: XHTML-Print</li>
-            <li>New Character Encoding supported ISO-8859-11 (Thai)</li>
-            <li>Usability fix: better error messages for documents with no character encoding
-                declared, and for which the encoding fallback fails</li>
-            <li>HTTP Fix: Be more lenient about whitespace and linefeeds in Content-Type</li>
-            <li>Usability Fix: Adding the possibility of Doctype Override for SVG Document Types</li>
-            <li>Compatibility Fix for OpenSP 1.5.2</li>
-            <li>documentation updates and improvements</li>
-            <li>Improved Feedback mechanisms</li>
+          <li>
+            A new (experimental) <a href="docs/api.html">Web Services API</a>.
+          </li>
+          <li>
+            The proprietary (and experimental) XML output format is deprecated.
+          </li>
+          <li>
+            New Document type supported: XHTML-Print.
+          </li>
+          <li>
+            New Character Encoding supported: ISO-8859-11 (Thai).
+          </li>
+          <li>
+            Usability fix: better error messages for documents with no
+            character encoding declared, and for which the encoding fallback
+            fails.
+          </li>
+          <li>
+            HTTP Fix: Be more lenient about whitespace and linefeeds in
+            Content-Type.
+          </li>
+          <li>
+            Usability Fix: Adding the possibility of Doctype Override for SVG
+            Document Types.
+          </li>
+          <li>
+            Compatibility Fix for OpenSP 1.5.2.
+          </li>
+          <li>
+            Documentation updates and improvements.
+          </li>
+          <li>
+            Improved Feedback mechanisms.
+          </li>
         </ul>
       </dd>
       
       <dt id="t2006-02-20">2006-02-20 &mdash; 0.7.2 Release:</dt>
       <dd>
         <p>
-          Releasing version 0.7.2 of the Markup Validator, a maintenance release 
-          including minor fixes as described below:
+          Releasing version 0.7.2 of the Markup Validator, a maintenance
+          release including minor fixes as described below:
         </p>
-<ul>
-<li> update for compatibility with new version of Config::General module</li>
-<li> fixed the recognized root element for XHTML 1.1 plus MathML 2.0 (plus SVG)</li>
-<li> avoid Text::Wrap error with deeply nested documents</li>
-<li> documentation fixes (typos, broken link)</li>
-<li> avoid trailing comma in failed validation results if number of errors is unknown</li>
-<li> consistency fixes for character encoding selection</li>
-<li>fixed support for iso-8859-3 and iso-8859-4 encodings, added support for iso-ir-111</li>
-</ul>
-
+        <ul>
+          <li>
+            Update for compatibility with new version of Config::General
+            module.
+          </li>
+          <li>
+            Fixed the recognized root element for XHTML 1.1 plus MathML 2.0
+            (plus SVG).
+          </li>
+          <li>
+            Avoid Text::Wrap error with deeply nested documents.
+          </li>
+          <li>
+            Documentation fixes (typos, broken link).
+          </li>
+          <li>
+            Avoid trailing comma in failed validation results if number of
+            errors is unknown.
+          </li>
+          <li>
+            Consistency fixes for character encoding selection.
+          </li>
+          <li>
+            Fixed support for ISO-8859-3 and ISO-8859-4 encodings, added
+            support for ISO-IR-111.
+          </li>
+        </ul>
       </dd>
-       <dt id="t2005-10-18">2005-10-18 &mdash; 0.7.1 Release:</dt>
+
+      <dt id="t2005-10-18">2005-10-18 &mdash; 0.7.1 Release:</dt>
       <dd>
         <p>
-          Releasing version 0.7.1 of the Markup Validator, a maintenance release 
-          introducing performance enhancements and including minor 
+          Releasing version 0.7.1 of the Markup Validator, a maintenance
+          release introducing performance enhancements and including minor 
           <a href="http://www.w3.org/Bugs/Public/buglist.cgi?bug_id=1809%2C+1833%2C+1839%2C+1845">fixes</a>
           in the user interface and in the "Direct Input" validation results.
         </p>
@@ -244,71 +541,140 @@
       <dt id="t2005-08-08">2005-08-08 &mdash; 0.7.0 Release:</dt>
       <dd>
         <p>
-          Stable release including all the fixes and improvements made in consecutive 
-          beta versions <a href="#t2005-07-28">0.7.0 Beta #2</a> and 
-          <a href="#t2005-07-12">0.7.0 Beta #1</a>.
+          Stable release including all the fixes and improvements made in
+          consecutive beta versions <a href="#t2005-07-28">0.7.0 Beta #2</a>
+          and <a href="#t2005-07-12">0.7.0 Beta #1</a>.
         </p>
       </dd>
+
       <dt id="t2005-07-28">2005-07-28 &mdash; 0.7.0 Beta #2:</dt>
       <dd>
         <p>
-          Testing version 0.7.0 Beta #2 of the Markup Validator, the second phase
-          of beta test of a new version, including the results of feedback
-          during the  <a href="#t2005-07-12">first phase</a> of beta testing.
+          Testing version 0.7.0 Beta #2 of the Markup Validator, the second
+          phase of beta test of a new version, including the results of
+          feedback during the <a href="#t2005-07-12">first phase</a> of beta
+          testing.
         </p>
         <p>
-          Most bugs and issues resolved were recorded in <a href="http://www.w3.org/Bugs/Public/buglist.cgi?query_format=advanced&amp;bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;bug_id=%2C941%2C1810%2C1815%2C1816%2C1819">our bugzilla database</a>. Changes from version <a href="#t2005-07-12">0.7.0 Beta#1</a> include:
+          Most bugs and issues resolved were recorded in
+          <a href="http://www.w3.org/Bugs/Public/buglist.cgi?query_format=advanced&amp;bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;bug_id=%2C941%2C1810%2C1815%2C1816%2C1819">our Bugzilla database</a>.
+          Changes from version <a href="#t2005-07-12">0.7.0 Beta#1</a> include:
         </p>
         <ul>
-          <li>Improvements in the way the results and errors number is displayed, with a bug fix in error count.</li>
-          <li>Bug fixes:
-          <ul> 
-            <li> The error number count in results now only counts errors, not warnings or other messages</li>
-            <li> A missing entry in the SGML catalog was added</li>
-            <li> The direct input interface now handles cases where no content is set properly</li>
-          </ul></li>
-	  <li>Running the validator under mod_perl is no longer supported</li>
-          <li>Simplified configuration sample for an installation on the Apache Server</li>
-          <li>Documentation updates</li>
+          <li>
+            Improvements in the way the results and errors number is displayed,
+            with a bug fix in error count.
+          </li>
+          <li>
+            Bug fixes:
+            <ul> 
+              <li>
+                The error number count in results now only counts errors, not
+                warnings or other messages.
+              </li>
+              <li>
+                A missing entry in the SGML catalog was added.
+              </li>
+              <li>
+                The direct input interface now handles cases where no content
+                is set properly.
+              </li>
+            </ul>
+          </li>
+	  <li>
+            Running the validator under mod_perl is no longer supported.
+          </li>
+          <li>
+            Simplified configuration sample for an installation on the Apache
+            server.
+          </li>
+          <li>
+            Documentation updates.
+          </li>
         </ul>
       </dd>
+
       <dt id="t2005-07-12">2005-07-12 &mdash; 0.7.0 Beta #1:</dt>
       <dd>
         <p>
-          Testing version 0.7.0 Beta #1 of the Markup Validator; a new version including
-          small architectural changes, improvements to the User Interface, documentation
-          and user-friendliness, as well as a number of bug fixes.</p>
-        <p>Most bugs and issues resolved were recorded in <a href="http://www.w3.org/Bugs/Public/buglist.cgi?query_format=advanced&amp;bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;bug_id=1184%2C1181%2C1161%2C1071%2C981%2C980%2C932%2C926%2C919%2C900%2C887%2C880%2C877%2C866%2C847%2C811%2C798%2C789%2C786%2C773%2C772%2C752%2C749%2C747%2C736%2C705%2C213%2C204%2C194%2C109%2C98%2C84%2C75%2C63%2C48%2C45">our bugzilla database</a>.
+          Testing version 0.7.0 Beta #1 of the Markup Validator; a new version
+          including small architectural changes, improvements to the user
+          interface, documentation and user-friendliness, as well as a number
+          of bug fixes.
+        </p>
+        <p>
+          Most bugs and issues resolved were recorded in
+          <a href="http://www.w3.org/Bugs/Public/buglist.cgi?query_format=advanced&amp;bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;bug_id=1184%2C1181%2C1161%2C1071%2C981%2C980%2C932%2C926%2C919%2C900%2C887%2C880%2C877%2C866%2C847%2C811%2C798%2C789%2C786%2C773%2C772%2C752%2C749%2C747%2C736%2C705%2C213%2C204%2C194%2C109%2C98%2C84%2C75%2C63%2C48%2C45">our Bugzilla database</a>.
           Changes include:
         </p>
         <ul>
           <li>Templates for the XHTML output of validation results:
             <ul>
-              <li>less inline markup</li>
-              <li>easier for multi-format output</li>
-              <li>getting close to the possibility of localization</li>
+              <li>
+                Less inline markup.
+              </li>
+              <li>
+                Easier for multi-format output.
+              </li>
+              <li>
+                Getting close to the possibility of localization.
+              </li>
             </ul>
           </li>
           <li>Better <a href="feedback.html">feedback</a> mechanisms
             <ul>
-              <li>Integration of the feedback page with validation results for better error message feedback</li>
-              <li>The feedback page now allows direct search of the mailing-list and bug database</li>
+              <li>
+                Integration of the feedback page with validation results for
+                better error message feedback.
+              </li>
+              <li>
+                The feedback page now allows direct search of the mailing-list
+                and bug database.
+              </li>
             </ul>
           </li>
-          <li>Additional and improved error messages explanations and documentation</li>
-          <li>Variants of HTML2, MathML and SVG added to the bundled SGML and XML catalogs</li>
-          <li>Better support for validation of non-W3C document types, including <em>custom DTDs</em></li>
-          <li> User Interface and style changes for a user-friendlier experience, including 
+          <li>
+            Additional and improved error messages explanations and
+            documentation.
+          </li>
+          <li>
+            Variants of HTML2, MathML and SVG added to the bundled SGML and/or
+            XML catalogs.
+          </li>
+          <li>
+            Better support for validation of non-W3C document types, including
+            <em>custom DTDs</em>.
+          </li>
+          <li>
+            User interface and style changes for a user-friendlier experience,
+            including
             <ul>
-              <li>New print stylesheet, handheld stylesheets</li>
-              <li>Style differentiating errors, warnings and information in validation results</li>
+              <li>
+                New print stylesheet, handheld stylesheets.
+              </li>
+              <li>
+                Style differentiating errors, warnings and information in
+                validation results.
+              </li>
             </ul>
           </li>
-          <li>(re-)Added the possibility of validating markup by direct input</li>
-          <li>Simplified configuration syntax (for local installations)</li>
-          <li>Made easier to run on Windows platform (still needs testing and documentation)</li>
-          <li>Global updates to the <a href="docs/">documentation</a></li>
-          <li>Simplified, documented and checked the consistency of our usage of <a href="accesskeys.html">Access Keys</a></li>
+          <li>
+            (re-)Added the possibility of validating markup by direct input.
+          </li>
+          <li>
+            Simplified configuration syntax (for local installations).
+          </li>
+          <li>
+            Made easier to run on Windows platform (still needs testing and
+            documentation).
+          </li>
+          <li>
+            Global updates to the <a href="docs/">documentation</a>.
+          </li>
+          <li>
+            Simplified, documented and checked the consistency of our usage of
+            <a href="accesskeys.html">Access Keys</a>.
+          </li>
         </ul>
       </dd>
 
@@ -326,23 +692,25 @@
             href="#t2004-05-21">v0.6.6 release notes</a> for details.
         </p>
       </dd>
+
       <dt id="t2004-05-21">2004-05-21 &mdash; 0.6.6 Release:</dt>
       <dd>
         <p>
           A maintenance release that fixes a 
-<a href="http://www.w3.org/Bugs/Public/buglist.cgi?product=Validator&amp;target_milestone=0.6.6">few minor bugs</a>, 
-	  resurrects the
-          whitespace-preserving source display, adds explanations for additional
-          error messages, and makes some slight tweaks to the website style.
+          <a href="http://www.w3.org/Bugs/Public/buglist.cgi?product=Validator&amp;target_milestone=0.6.6">few minor bugs</a>, 
+	  resurrects the whitespace-preserving source display, adds
+          explanations for additional error messages, and makes some slight
+          tweaks to the website style.
         </p>
         <p>
-            This version also tentatively fixes a bug where, for Document Instances 
-	    with a Document Type Name of "html", but with
-            an incorrect Formal Public Identifier, the Validator would fall back
-            to HTML 4.01 Transitional and, if no other errors were found,
-            silently ignore the erroneous FPI.
+          This version also tentatively fixes a bug where, for document
+          instances with a document type name of "html", but with an incorrect
+          Formal Public Identifier, the Validator would fall back to HTML 4.01
+          Transitional and, if no other errors were found, silently ignore the
+          erroneous FPI.
         </p>
       </dd>
+
       <dt id="t2004-05-07">2004-05-07 &mdash; 0.6.5 Release:</dt>
       <dd>
         <p>
@@ -357,17 +725,22 @@
       <dt id="t2004-04-30">2004-04-30 &mdash; 0.6.5 Beta #3:</dt>
       <dd>
         <p>
-          Testing version 0.6.5 Beta #3 of the Markup Validator; an intermediary
-          version including further layout, style and documentation improvements
-          over version 0.6.5 Beta #2, based on discussion and comments during
-          the testing phase of that version. Changes include:
+          Testing version 0.6.5 Beta #3 of the Markup Validator; an
+          intermediary version including further layout, style and
+          documentation improvements over version 0.6.5 Beta #2, based on
+          discussion and comments during the testing phase of that version.
+          Changes include:
         </p>
         <ul>
-          <li>Simpler navigation system - removed the "links" navigation bar</li>
-          <li>More consistent layout</li>
           <li>
-            A few issues with the way some agents were dealing with our Style
-            Sheets were fixed. Other minor style fixes were also applied.
+            Simpler navigation system - removed the "links" navigation bar.
+          </li>
+          <li>
+            More consistent layout.
+          </li>
+          <li>
+            A few issues with the way some agents were dealing with our style
+            sheets were fixed. Other minor style fixes were also applied.
           </li>
           <li>
             Cleanup of grammar issues and typos in a large part of the
@@ -379,97 +752,188 @@
       <dt id="t2004-04-15">2004-04-15 &mdash; 0.6.5 Beta #2:</dt>
       <dd>
 	<p>
-	  Testing version 0.6.5 Beta #2 of the Markup Validator; an intermediary
-	  version addressing comments received for the version 0.6.5 Beta #1
-	  and adding significant User Interface and Documentation improvements.
-	  Changes include:
+	  Testing version 0.6.5 Beta #2 of the Markup Validator; an
+          intermediary version addressing comments received for the version
+          0.6.5 Beta #1 and adding significant user interface and documentation
+          improvements. Changes include:
 	</p>
 	<ul>
-	  <li>More explanations for most of the validation error messages</li>
-	  <li>New documentation on installing the Markup Validator locally</li> 
-	  <li>The "fussy" parsing mode is no longer available and will be 
-	  drastically improved before it comes back - if ever </li>
-	  <li>The W3C Link Checker has now been spun off into a standalone product
-	  and is no longer bundled with the Markup Validator</li>
-	  <li>Stylesheets have been updated, with a more pleasant look</li>
-	  <li>Easier navigation, more accessible documentation</li>
-	  <li>More "Quality Tips" have been added</li>
+	  <li>
+            More explanations for most of the validation error messages.
+          </li>
+	  <li>
+            New documentation on installing the Markup Validator locally.
+          </li> 
+	  <li>
+            The "fussy" parsing mode is no longer available and will be 
+	    drastically improved before it comes back - if ever.
+          </li>
+	  <li>
+            The W3C Link Checker has now been spun off into a standalone
+            product and is no longer bundled with the Markup Validator.
+          </li>
+	  <li>
+            Stylesheets have been updated, with a more pleasant look.
+          </li>
+	  <li>
+            Easier navigation, more accessible documentation.
+          </li>
+	  <li>
+            More "Quality Tips" have been added.
+          </li>
 	</ul>
       </dd>
+
       <dt id="t2003-08-26">2003-08-26 &mdash; 0.6.5 Beta #1:</dt>
       <dd>
         <p>
-          Testing version 0.6.5 Beta #1 of the Markup Validator; an intermediary
-          version addressing various issues and add requested features.
-          Changes include:
+          Testing version 0.6.5 Beta #1 of the Markup Validator; an
+          intermediary version addressing various issues and add requested
+          features. Changes include:
         </p>
         <ul>
-	  <li>Stylesheets updated to work around browser issues.</li>
+	  <li>
+            Stylesheets updated to work around browser issues.
+          </li>
           <li>Added a pointer to contributed <a href="source/#rpm">RPMs</a>
-              courtesy of <a href="http://www.iki.fi/scop/">Ville Skytt&auml;</a>.</li>
-          <li>Fixed broken links in Copyright statement.</li>
-          <li>Added current version number in page headings.</li>
-          <li>Detect proxies stripping the Referer header.</li>
-          <li>Added "Comma Tools".</li>
-          <li>Minor Accessibility fixes.</li>
-          <li>A few new Webmaster Tips for the Tip of The Day.</li>
-          <li>The Link Checker now sends Accept, and Accept-Language headers.</li>
-          <li>The Link Checker supports more HTTP Status Codes.</li>
-          <li>The documentation has seen much improvement.</li>
-          <li>The RPM spec file is now available in the download.</li>
-          <li>Update ISO-HTML DTD to TC1.</li>
-          <li>Update SVG 1.0 DTD to current Errata.</li>
-          <li>Added support for ISO-8859-16 Encoding.</li>
-          <li>Added support for the data: URL scheme.</li>
-          <li>The Link Checker in command-line mode now supports bundling of options.</li>
-          <li>The Validator RPMs now try to integrate with the system catalog.</li>
+              courtesy of Ville Skytt&auml;.
+          </li>
+          <li>
+            Fixed broken links in Copyright statement.
+          </li>
+          <li>
+            Added current version number in page headings.
+          </li>
+          <li>
+            Detect proxies stripping the Referer header.
+          </li>
+          <li>
+            Added "Comma Tools".
+          </li>
+          <li>
+            Minor accessibility fixes.
+          </li>
+          <li>
+            A few new Webmaster Tips for the Tip of The Day.
+          </li>
+          <li>
+            The Link Checker now sends Accept, and Accept-Language headers.
+          </li>
+          <li>
+            The Link Checker supports more HTTP status codes.
+          </li>
+          <li>
+            The documentation has seen much improvement.
+          </li>
+          <li>
+            The RPM spec file is now available in the download.
+          </li>
+          <li>
+            Update ISO-HTML DTD to TC1.
+          </li>
+          <li>
+            Update SVG 1.0 DTD to current errata.
+          </li>
+          <li>
+            Added support for ISO-8859-16 encoding.
+          </li>
+          <li>
+            Added support for the data: URL scheme.
+          </li>
+          <li>
+            The Link Checker in command-line mode now supports bundling of
+            options.
+          </li>
+          <li>
+            The Validator RPMs now try to integrate with the system catalog.
+          </li>
           <li>
             Added options to make the DOCTYPE and Charset Override behave like
             Fallbacks. i.e. With these options enabled, the Override will only
             insert the relevant new value iff one was not already present.
           </li>
-          <li>No longer treat missing DOCTYPE or Charset as a fatal error.</li>
-          <li>Much improved error messages for several error situations.</li>
-          <li>Updated and expanded error explanations.</li>
-          <li>Use passive (PASV) FTP by default.</li>
-          <li>Updated experimental mod_perl support to work with Apache/mod_perl 2.</li>
-          <li>Added support for the Big5-HKSCS encoding.</li>
-          <li>The MathML2 DTDs were updated to the 20030620 errata version.</li>
-          <li>Add option to restrict access to private IP addresses.</li>
-          <li>Added custom, inline, verbose error messages.</li>
-          <li>Tweaked markup and style for source display.</li>
-          <li>Tweaked markup and style for indicating position of error.</li>
-          <li>Changes in output mandated by W3C Legal.</li>
-          <li>Verbose output is now the default from the home page.</li>
+          <li>
+            No longer treat missing DOCTYPE or Charset as a fatal error.
+          </li>
+          <li>
+            Much improved error messages for several error situations.
+          </li>
+          <li>
+            Updated and expanded error explanations.
+          </li>
+          <li>
+            Use passive (PASV) FTP by default.
+          </li>
+          <li>
+            Updated experimental mod_perl support to work with Apache/mod_perl
+            2.
+          </li>
+          <li>
+            Added support for the Big5-HKSCS encoding.
+          </li>
+          <li>
+            The MathML2 DTDs were updated to the 20030620 errata version.
+          </li>
+          <li>
+            Add option to restrict access to private IP addresses.
+          </li>
+          <li>
+            Added custom, inline, verbose error messages.
+          </li>
+          <li>
+            Tweaked markup and style for source display.
+          </li>
+          <li>
+            Tweaked markup and style for indicating position of error.
+          </li>
+          <li>
+            Changes in output mandated by W3C Legal.
+          </li>
+          <li>
+            Verbose output is now the default from the home page.
+          </li>
           <li>
             Added new "fussy" parse mode (enabled by default from the home
             page) that should make it easier to locate SHORTTAGS-related
             problems (such as implied end tags).
           </li>
-          <li>Valid Badge usage guidelines are now available.</li>
-          <li>Various internal restructuring to make way for future (post-0.6.5) features.</li>
+          <li>
+            Valid Badge usage guidelines are now available.
+          </li>
+          <li>
+            Various internal restructuring to make way for future (post-0.6.5)
+            features.
+          </li>
           <li>
             "/referer" is now deprecated in favor of "?uri=referer";
             this allows us to preserve additional options in referer links.
           </li>
         </ul>
       </dd>
+
       <dt id="t2002-12-01">2002-12-01 &mdash; 0.6.1 Release:</dt>
       <dd>
         <ul>
 	  <li>	
-	    Maintenance release to fix various minor issues reported against the
-	    <a href="#t2002-11-26">November 26</a> release. Stylesheet updates,
-	    ability to turn on Verbose output, and bug fixes.
+	    Maintenance release to fix various minor issues reported against
+            the <a href="#t2002-11-26">November 26</a> release. Stylesheet
+            updates, ability to turn on verbose output, and bug fixes.
           </li>
         </ul>
       </dd>
+
       <dt id="t2002-11-26">2002-11-26 &mdash; 0.6.0 Release:</dt>
       <dd>
         <ul>
-          <li>Improved design of layout, including for Validation results.</li>
-          <li>Added "beefed up" Tip-of-the-Day.</li>
-          <li>Many accessibility fixes, both to the web site and the Result page.</li>
+          <li>
+            Improved design of layout, including for Validation results.
+          </li>
+          <li>
+            Added "beefed up" Tip-of-the-Day.
+          </li>
+          <li>
+            Many accessibility fixes, both to the web site and the Result page.
+          </li>
           <li>
 	    Major internal restructuring. The code has undergone significant
             refactoring with many benefits. It is more readable and easier to
@@ -509,85 +973,130 @@
               </li>
             </ul>
           </li>
-          <li>Output has been reworked to be easier to understand.</li>
-          <li>And a whole bunch of bugfixes... :-)</li>
+          <li>
+            Output has been reworked to be easier to understand.
+          </li>
+          <li>
+            And a whole bunch of bugfixes... :-)
+          </li>
         </ul>
       </dd>
+
       <dt id="t2001-10-06">2001-10-06:</dt>
       <dd>
         <ul>
-          <li>Finished redesign and use consistent style for all pages..</li>
-          <li>Added Tip-of-the-Day.</li>
+          <li>
+            Finished redesign and use consistent style for all pages..
+          </li>
+          <li>
+            Added Tip-of-the-Day.
+          </li>
         </ul>
       </dd>
+
       <dt id="t2001-09-24">2001-09-24:</dt>
       <dd>
         <ul>
-          <li>Added experimental support for <acronym
-          	title="Scalable Vector Graphics">SVG</acronym> 1.0.</li>
-          <li>Added experimental support for <code>spec-prod</code> 2.0.</li>
-          <li>...and several minor bug fixes.</li>
+          <li>
+            Added experimental support for
+            <acronym title="Scalable Vector Graphics">SVG</acronym> 1.0.
+          </li>
+          <li>
+            Added experimental support for <code>spec-prod</code> 2.0.
+          </li>
+          <li>
+            ...and several minor bug fixes.
+          </li>
         </ul>
       </dd>
+
       <dt id="t2001-09-13">2001-09-13:</dt>
       <dd>
         <ul>
-          <li>Added support for <acronym
-          	title="eXtensible HyperText Markup Language">XHTML</acronym> 1.1 and
-          	<acronym title="eXtensible HyperText Markup Language">XHTML</acronym>
-          		Basic 1.0.</li>
-          <li>Added experimental support for
-            <abbr title="Mathematical Markup Language">MathML</abbr> 2.0.</li>
-          <li>You can now tweak options from results page.</li>
-          <li>Added option to override Character Encoding.</li>
-          <li>Various bug fixes and minor changes.</li>
+          <li>
+            Added support for
+            <acronym
+               title="eXtensible HyperText Markup Language">XHTML</acronym> 1.1
+            and <acronym
+                   title="eXtensible HyperText Markup Language">XHTML</acronym>
+            Basic 1.0.
+          </li>
+          <li>
+            Added experimental support for
+            <abbr title="Mathematical Markup Language">MathML</abbr> 2.0.
+          </li>
+          <li>
+            You can now tweak options from results page.
+          </li>
+          <li>
+            Added option to override Character Encoding.
+          </li>
+          <li>
+            Various bug fixes and minor changes.
+          </li>
         </ul>
       </dd>
+
       <dt id="t2001-06-22">2001-06-22:</dt>
       <dd>
         <ul>
-          <li>Various bug fixes; notably two related to the File Upload feature.</li>
-          <li>Some changes to make local installations easier.</li>
-          <li>Support for more Character Encodings (e.g. <code>ISO-8859-8-I</code>).</li>
-          <li>Generally improved handling of Character Encodings.</li>
-          <li>Documentation donated by Scott Bigham (Thanks Scott!).</li>
+          <li>
+            Various bug fixes; notably two related to the file upload feature.
+          </li>
+          <li>
+            Some changes to make local installations easier.
+          </li>
+          <li>
+            Support for more character encodings (e.g.
+            <code>ISO-8859-8-I</code>).
+          </li>
+          <li>
+            Generally improved handling of character encodings.
+          </li>
+          <li>
+            Documentation donated by Scott Bigham (Thanks Scott!).
+          </li>
         </ul>
       </dd>
+
       <dt id="t2000-10-18">2000-10-18:</dt>
       <dd>
         <p>
-          Added support for <a
-          	href="http://purl.org/NET/ISO+IEC.15445/15445.html"><acronym
-          		title="Internation Organization for Standardization">ISO</acronym>/<acronym
-          		title="International Electrotechnical Commission">IEC</acronym> 15445:2000</a>
-          (<acronym title="Internation Organization for Standardization">ISO</acronym>-<acronym title="HyperText Markup Language">HTML</acronym>).
-          See also: <a href="http://purl.org/NET/ISO+IEC.15445/Users-Guide.html">User's
-          Guide to <acronym title="Internation Organization for Standardization">ISO</acronym>-<acronym title="HyperText Markup Language">HTML</acronym></a>.
+          Added support for
+          <a href="http://purl.org/NET/ISO+IEC.15445/15445.html"><acronym
+            title="Internation Organization for Standardization">ISO</acronym>/<acronym title="International Electrotechnical Commission">IEC</acronym> 15445:2000</a>
+          (ISO-HTML). See also:
+          <a href="http://purl.org/NET/ISO+IEC.15445/Users-Guide.html">User's
+            Guide to ISO-HTML</a>.
         </p>
       </dd>
+
       <dt id="t2000-06-30">2000-06-30:</dt>
       <dd>
         <p>
-          The service now checks <acronym
-          	title="eXtensible HyperText Markup Language">XHTML</acronym> documents
-          	for validity as well as <acronym
-          		title="eXtensible Markup Language">XML</acronym> well-formedness.
+          The service now checks
+          <acronym title="eXtensible HyperText Markup Language">XHTML</acronym>
+          documents for validity as well as
+          <acronym title="eXtensible Markup Language">XML</acronym>
+          well-formedness.
         </p>
       </dd>
+
       <dt id="t2000-04-28">2000-04-28:</dt>
       <dd>
         <p>
           Added the <a href="file-upload.html">file upload</a> feature.
         </p>
         <p>
-          Created the <a href="http://lists.w3.org/Archives/Public/www-validator-cvs/">www-validator-cvs
-          mailing list</a>.
+          Created the
+          <a href="http://lists.w3.org/Archives/Public/www-validator-cvs/">www-validator-cvs mailing list</a>.
         </p>
         <p>
           Updated the <a href="./">home page</a>, moved some things to
           <a href="about.html">another page</a>.
         </p>
       </dd>
+
       <dt id="t2000-01-26">2000-01-26:</dt>
       <dd>
         <p>
@@ -598,6 +1107,7 @@
             title="HyperText Markup Language">HTML</acronym> 4.01</a>.
         </p>
       </dd>
+
       <dt id="t1999-08-24">1999-08-24:</dt>
       <dd>
         <p>
@@ -611,6 +1121,7 @@
           title="eXtensible HyperText Markup Language">XHTML</acronym> 1.0</a>.
         </p>
       </dd>
+
       <dt id="t1999-04-08">1999-04-08:</dt>
       <dd>
         <p>
@@ -625,6 +1136,7 @@
           of libwww-perl, <a href="http://www.linpro.no/lwp/">LWP</a>.
         </p>
       </dd>
+
       <dt id="t1999-03-04">1999-03-04:</dt>
       <dd>
         <p>
@@ -635,6 +1147,7 @@
           19990304 working draft</a>. (see <a href="http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/check.diff?r1=text&amp;tr1=1.13&amp;r2=text&amp;tr2=1.16&amp;f=h">the changes</a>)
         </p>
       </dd>
+
       <dt id="t1999-02-25">1999-02-25:</dt>
       <dd>
         <p>
@@ -653,6 +1166,7 @@
           changes</a>).
         </p>
       </dd>
+
       <dt id="t1998-08-26">1998-08-26:</dt>
       <dd>
         <p>
@@ -661,6 +1175,7 @@
           Web.
         </p>
       </dd>
+
       <dt id="t1998-08-05">1998-08-05:</dt>
       <dd>
         <p>Posted some new documents on the Web:</p>
@@ -674,6 +1189,7 @@
           </li>
         </ul>
       </dd>
+
       <dt id="t1998-07-24">1998-07-24:</dt>
       <dd>
         <p>
@@ -687,6 +1203,7 @@
           1.3.1.</a>
         </p>
       </dd>
+
       <dt id="t1998-06-19">1998-06-19:</dt>
       <dd>
         <p>
@@ -694,6 +1211,7 @@
           behind this service</a>.
         </p>
       </dd>
+
       <dt id="t1998-04-20">1998-04-20:</dt>
       <dd>
         <p>
@@ -703,6 +1221,7 @@
           (you can try the link to see how it works).
         </p>
       </dd>
+
       <dt id="t1997-12-18">1997-12-18:</dt>
       <dd>
         <p>
@@ -713,7 +1232,7 @@
         </p>
       </dd>
     </dl>
-</div>
+  </div>
 <!--#include virtual="footer.html" -->
   </body>
 </html>
