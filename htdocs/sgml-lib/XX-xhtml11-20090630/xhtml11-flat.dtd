@@ -8,7 +8,7 @@
      This is XHTML, a reformulation of HTML as a modular XML application.
 
      The Extensible HyperText Markup Language (XHTML)
-     Copyright 1998-2005 World Wide Web Consortium
+     Copyright 1998-2008 World Wide Web Consortium
         (Massachusetts Institute of Technology, European Research Consortium
          for Informatics and Mathematics, Keio University).
          All Rights Reserved.
@@ -22,7 +22,7 @@
      It is provided "as is" without expressed or implied warranty.
 
         Author:     Murray M. Altheim <altheim@eng.sun.com>
-        Revision:   $Id: xhtml11.dtd,v 1.24 2005/04/13 12:25:40 mimasa Exp $
+        Revision:   $Id: xhtml11.dtd,v 1.29 2009/05/05 15:04:30 ahby Exp $
 
 -->
 <!-- This is the driver file for version 1.1 of the XHTML DTD.
@@ -65,7 +65,7 @@
 
        <?xml version="1.0"?>
        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-                             "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+                             "http://www.w3.org/MarkUp/DTD/xhtml11.dtd">
        <html xmlns="http://www.w3.org/1999/xhtml"
              xml:lang="en">
        ...
@@ -149,6 +149,105 @@
 <!ENTITY % xhtml-model.mod
      PUBLIC "-//W3C//ENTITIES XHTML 1.1 Document Model 1.0//EN"
             "http://www.w3.org/MarkUp/DTD/xhtml11-model-1.mod" >
+
+<!-- adding the lang attribute into the I18N collection -->
+
+<!ENTITY % xhtml-datatypes.module "INCLUDE" >
+<![%xhtml-datatypes.module;[
+<!ENTITY % xhtml-datatypes.mod
+     PUBLIC "-//W3C//ENTITIES XHTML Datatypes 1.0//EN"
+            "xhtml-datatypes-1.mod" >
+<!-- ...................................................................... -->
+<!-- XHTML Datatypes Module  .............................................. -->
+<!-- file: xhtml-datatypes-1.mod
+
+     This is XHTML, a reformulation of HTML as a modular XML application.
+     Copyright 1998-2005 W3C (MIT, ERCIM, Keio), All Rights Reserved.
+     Revision: $Id: xhtml-datatypes-1.mod,v 4.1 2001/04/06 19:23:32 altheim Exp $ SMI
+
+     This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+
+       PUBLIC "-//W3C//ENTITIES XHTML Datatypes 1.0//EN"
+       SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-datatypes-1.mod"
+
+     Revisions:
+     (none)
+     ....................................................................... -->
+
+<!-- Datatypes
+
+     defines containers for the following datatypes, many of
+     these imported from other specifications and standards.
+-->
+
+<!-- Length defined for cellpadding/cellspacing -->
+
+<!-- nn for pixels or nn% for percentage length -->
+<!ENTITY % Length.datatype "CDATA" >
+
+<!-- space-separated list of link types -->
+<!ENTITY % LinkTypes.datatype "NMTOKENS" >
+
+<!-- single or comma-separated list of media descriptors -->
+<!ENTITY % MediaDesc.datatype "CDATA" >
+
+<!-- pixel, percentage, or relative -->
+<!ENTITY % MultiLength.datatype "CDATA" >
+
+<!-- one or more digits (NUMBER) -->
+<!ENTITY % Number.datatype "CDATA" >
+
+<!-- integer representing length in pixels -->
+<!ENTITY % Pixels.datatype "CDATA" >
+
+<!-- script expression -->
+<!ENTITY % Script.datatype "CDATA" >
+
+<!-- textual content -->
+<!ENTITY % Text.datatype "CDATA" >
+
+<!-- Imported Datatypes ................................ -->
+
+<!-- a single character from [ISO10646] -->
+<!ENTITY % Character.datatype "CDATA" >
+
+<!-- a character encoding, as per [RFC2045] -->
+<!ENTITY % Charset.datatype "CDATA" >
+
+<!-- a space separated list of character encodings, as per [RFC2045] -->
+<!ENTITY % Charsets.datatype "CDATA" >
+
+<!-- Color specification using color name or sRGB (#RRGGBB) values -->
+<!ENTITY % Color.datatype "CDATA" >
+
+<!-- media type, as per [RFC2045] -->
+<!ENTITY % ContentType.datatype "CDATA" >
+
+<!-- comma-separated list of media types, as per [RFC2045] -->
+<!ENTITY % ContentTypes.datatype "CDATA" >
+
+<!-- date and time information. ISO date format -->
+<!ENTITY % Datetime.datatype "CDATA" >
+
+<!-- formal public identifier, as per [ISO8879] -->
+<!ENTITY % FPI.datatype "CDATA" >
+
+<!-- a language code, as per [RFC3066] or its successor -->
+<!ENTITY % LanguageCode.datatype "CDATA" >
+
+<!-- a Uniform Resource Identifier, see [URI] -->
+<!ENTITY % URI.datatype "CDATA" >
+
+<!-- a space-separated list of Uniform Resource Identifiers, see [URI] -->
+<!ENTITY % URIs.datatype "CDATA" >
+
+<!-- end of xhtml-datatypes-1.mod -->
+]]>
+
+<!ENTITY % lang.attrib
+     "xml:lang     %LanguageCode.datatype;  #IMPLIED
+      lang         %LanguageCode.datatype;  #IMPLIED"
+>
 
 <!-- Modular Framework Module (required) ......................... -->
 <!ENTITY % xhtml-framework.module "INCLUDE" >
@@ -929,8 +1028,8 @@
 <!-- file: xhtml11-model-1.mod
 
      This is XHTML 1.1, a reformulation of HTML as a modular XML application.
-     Copyright 1998-2005 W3C (MIT, ERCIM, Keio), All Rights Reserved.
-     Revision: $Id: xhtml11-model-1.mod,v 1.14 2005/04/13 12:25:16 mimasa Exp $ SMI
+     Copyright 1998-2008 W3C (MIT, ERCIM, Keio), All Rights Reserved.
+     Revision: $Id: xhtml11-model-1.mod,v 1.17 2009/02/03 14:31:50 ahby Exp $ SMI
 
      This DTD module is identified by the PUBLIC and SYSTEM identifiers:
 
@@ -2629,7 +2728,7 @@
 <![%xhtml-ruby.module;[
 <!ENTITY % xhtml-ruby.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Ruby 1.0//EN"
-            "http://www.w3.org/TR/ruby/xhtml-ruby-1.mod" >
+            "http://www.w3.org/MarkUp/DTD/xhtml-ruby-1.mod" >
 <!-- ...................................................................... -->
 <!-- XHTML Ruby Module .................................................... -->
 <!-- file: xhtml-ruby-1.mod
@@ -4394,67 +4493,6 @@
 <!-- end of xhtml-form-1.mod -->
 ]]>
 
-<!-- Target Attribute Module  .................................... -->
-<!ENTITY % xhtml-target.module "INCLUDE" >
-<![%xhtml-target.module;[
-<!ENTITY % xhtml-target.mod
-     PUBLIC "-//W3C//ELEMENTS XHTML Target 1.0//EN"
-            "http://www.w3.org/MarkUp/DTD/xhtml-target-1.mod" >
-<!-- ...................................................................... -->
-<!-- XHTML Target Module  ................................................. -->
-<!-- file: xhtml-target-1.mod
-
-     This is XHTML, a reformulation of HTML as a modular XML application.
-     Copyright 1998-2005 W3C (MIT, ERCIM, Keio), All Rights Reserved.
-     Revision: $Id: xhtml-target-1.mod,v 4.0 2001/04/02 22:42:49 altheim Exp $ SMI
-
-     This DTD module is identified by the PUBLIC and SYSTEM identifiers:
-
-       PUBLIC "-//W3C//ELEMENTS XHTML Target 1.0//EN"
-       SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-target-1.mod"
-
-     Revisions:
-     (none)
-     ....................................................................... -->
-
-<!-- Target 
-
-        target
-
-     This module declares the 'target' attribute used for opening windows
--->
-
-<!-- render in this frame --> 
-<!ENTITY % FrameTarget.datatype "CDATA" >
-
-<!-- add 'target' attribute to 'a' element -->
-<!ATTLIST %a.qname;
-      target       %FrameTarget.datatype;   #IMPLIED
->
-
-<!-- add 'target' attribute to 'area' element -->
-<!ATTLIST %area.qname;
-      target       %FrameTarget.datatype;   #IMPLIED
->
-
-<!-- add 'target' attribute to 'link' element -->
-<!ATTLIST %link.qname;
-      target       %FrameTarget.datatype;   #IMPLIED
->
-
-<!-- add 'target' attribute to 'form' element -->
-<!ATTLIST %form.qname;
-      target       %FrameTarget.datatype;   #IMPLIED
->
-
-<!-- add 'target' attribute to 'base' element -->
-<!ATTLIST %base.qname;
-      target       %FrameTarget.datatype;   #IMPLIED
->
-
-<!-- end of xhtml-target-1.mod -->
-]]>
-
 <!-- Legacy Markup ............................................... -->
 <!ENTITY % xhtml-legacy.module "IGNORE" >
 <![%xhtml-legacy.module;[
@@ -4612,3 +4650,4 @@
 
 <!-- end of XHTML 1.1 DTD  ................................................. -->
 <!-- ....................................................................... -->
+]><html><head><title>title</title></head><body><p>text</p></body></html>

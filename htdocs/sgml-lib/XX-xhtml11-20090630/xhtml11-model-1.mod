@@ -3,8 +3,8 @@
 <!-- file: xhtml11-model-1.mod
 
      This is XHTML 1.1, a reformulation of HTML as a modular XML application.
-     Copyright 1998-2007 W3C (MIT, ERCIM, Keio), All Rights Reserved.
-     Revision: $Id: xhtml11-model-1.mod,v 1.1 2007/02/15 23:14:56 jean-gui Exp $ SMI
+     Copyright 1998-2008 W3C (MIT, ERCIM, Keio), All Rights Reserved.
+     Revision: $Id: xhtml11-model-1.mod,v 1.18 2009/06/24 17:24:55 ahby Exp $ SMI
 
      This DTD module is identified by the PUBLIC and SYSTEM identifiers:
 
