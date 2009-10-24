@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.715 2009-10-23 20:46:13 ville Exp $
+# $Id: check,v 1.716 2009-10-24 15:59:18 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -51,7 +51,7 @@ use Encode                     qw();
 use Encode::Alias              qw();
 use Encode::HanExtra           qw(); # for some chinese character encodings,
                                      # e.g gb18030
-use File::Spec::Functions      qw(catfile);
+use File::Spec::Functions      qw(catfile rel2abs tmpdir);
 use HTML::Encoding       0.52  qw();
 use HTML::Parser         3.24  qw(); # Need 3.24 for $p->parse($code_ref)
 use HTML::Template       2.6   qw(); # Need 2.6 for path param, other things.
@@ -119,7 +119,8 @@ BEGIN {
        -DefaultConfig    => {
           Protocols => {Allow => 'http,https'},
           Paths => {
-            Base => ($ENV{W3C_VALIDATOR_HOME} || '/usr/local/validator'),
+            Base  => ($ENV{W3C_VALIDATOR_HOME} || '/usr/local/validator'),
+            Cache => '',
           },
           External => {
             HTML5 => FALSE,
@@ -208,7 +209,7 @@ Directory not readable (permission denied): @_r
 
   #
   # Strings
-  $VERSION =  q$Revision: 1.715 $;
+  $VERSION =  q$Revision: 1.716 $;
   $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
   #
@@ -322,12 +323,19 @@ if ($lang eq "en") {
 
 $File->{Template_Defaults} = {
   die_on_bad_params => FALSE,
-  cache             => TRUE,
   loop_context_vars => TRUE,
   global_vars       => TRUE,
   path              => [ catfile($CFG->{Paths}->{Templates}, $lang) ],
   filter => sub { my $ref = shift; ${$ref} = Encode::decode_utf8(${$ref}); },
 };
+if (IS_MODPERL2()) {
+  $File->{Template_Defaults}->{cache} = TRUE;
+}
+elsif ($CFG->{Paths}->{Cache}) {
+  $File->{Template_Defaults}->{file_cache} = TRUE;
+  $File->{Template_Defaults}->{file_cache_dir} =
+    rel2abs($CFG->{Paths}->{Cache}, tmpdir());
+}
 
 undef $lang;
 
