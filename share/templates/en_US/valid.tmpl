@@ -53,7 +53,7 @@
     </TMPL_IF>
 </TMPL_IF>
   </p>
-<TMPL_IF NAME="have_badge">
+<TMPL_IF NAME="badge_uri">
 <h4>"valid" Icon(s) on your Web page</h4>
   <p>
     To show your readers that you have taken the care to create an
@@ -62,12 +62,12 @@
     to your Web page:
   </p>
   <img
-    class="inline-badge" src="<TMPL_IF NAME="have_local_badge"><TMPL_VAR NAME="local_badge_uri" ESCAPE="HTML"><TMPL_ELSE><TMPL_VAR NAME="badge_uri" ESCAPE="HTML"></TMPL_IF>"
+    class="inline-badge" src="<TMPL_IF NAME="local_badge_uri"><TMPL_VAR NAME="local_badge_uri" ESCAPE="HTML"><TMPL_ELSE><TMPL_VAR NAME="badge_uri" ESCAPE="HTML"></TMPL_IF>"
     alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"
     <TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF>
     <TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF>
      /> <pre class="badgeSnippet">
-  &lt;p<TMPL_IF NAME="have_badge_rdfa"> about=""
+  &lt;p<TMPL_IF NAME="badge_rdfa"> about=""
      resource="<TMPL_VAR NAME="badge_rdfa">"
      rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"</TMPL_IF>&gt;
     &lt;a href="<TMPL_VAR NAME="cfg_home_page" ESCAPE="HTML">check?uri=referer"&gt;&lt;img
@@ -75,14 +75,14 @@
         <TMPL_IF NAME="badge_alt">alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"</TMPL_IF> <TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF> <TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF><TMPL_VAR NAME="badge_tagc">&gt;&lt;/a&gt;
   &lt;/p&gt;
   </pre>
-  <TMPL_IF NAME="have_alt_badge">
+  <TMPL_IF NAME="badge_alt_uri">
   <img
-    class="inline-badge" src="<TMPL_IF NAME="have_local_badge"><TMPL_VAR NAME="local_alt_badge_uri" ESCAPE="HTML"><TMPL_ELSE><TMPL_VAR NAME="badge_alt_uri" ESCAPE="HTML"></TMPL_IF>"
+    class="inline-badge" src="<TMPL_IF NAME="local_alt_badge_uri"><TMPL_VAR NAME="local_alt_badge_uri" ESCAPE="HTML"><TMPL_ELSE><TMPL_VAR NAME="badge_alt_uri" ESCAPE="HTML"></TMPL_IF>"
     alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"
     <TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF>
     <TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF>
      /> <pre class="badgeSnippet">
-  &lt;p<TMPL_IF NAME="have_badge_rdfa"> about=""
+  &lt;p<TMPL_IF NAME="badge_rdfa"> about=""
      resource="<TMPL_VAR NAME="badge_rdfa">"
      rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"</TMPL_IF>&gt;
     &lt;a href="<TMPL_VAR NAME="cfg_home_page" ESCAPE="HTML">check?uri=referer"&gt;&lt;img

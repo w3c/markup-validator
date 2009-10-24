@@ -84,7 +84,7 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
                       </TMPL_IF>
                     </TMPL_IF>
                   </longmessage>
-                  <TMPL_IF NAME="have_badge">
+                  <TMPL_IF NAME="badge_uri">
                   <longmessage>
                       To show your readers that you have taken the care to create an
                       interoperable Web page, you may display this icon on any page
@@ -97,7 +97,7 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
                     alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"
                     <TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF>
                     <TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF>
-                    /> <code>&lt;p<TMPL_IF NAME="have_badge_rdfa"> about="" 
+                    /> <code>&lt;p<TMPL_IF NAME="badge_rdfa"> about="" 
                                    resource="<TMPL_VAR NAME="badge_rdfa">" 
                                    rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"</TMPL_IF>&gt;
     &lt;a href="<TMPL_VAR NAME="cfg_home_page" ESCAPE="HTML">check?uri=referer"&gt;
@@ -107,14 +107,14 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
     &lt;/a&gt;
 &lt;/p&gt;</code>
                   </longmessage>
-                  <TMPL_IF NAME="have_alt_badge">
+                  <TMPL_IF NAME="badge_alt_uri">
                   <longmessage>
                     <img
                         class="inline-badge" src="<TMPL_VAR NAME="badge_alt_uri" ESCAPE="HTML">"
                     alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"
                     <TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF>
                     <TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF>
-                    /> <code>&lt;p<TMPL_IF NAME="have_badge_rdfa"> about="" 
+                    /> <code>&lt;p<TMPL_IF NAME="badge_rdfa"> about="" 
                                    resource="<TMPL_VAR NAME="badge_rdfa">" 
                                    rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"</TMPL_IF>&gt;
     &lt;a href="<TMPL_VAR NAME="cfg_home_page" ESCAPE="HTML">check?uri=referer"&gt;
