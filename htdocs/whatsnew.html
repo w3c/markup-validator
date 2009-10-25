@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.83 2009-10-23 16:56:36 ville Exp $"
---><!--#set var="date" value="\$Date: 2009-10-23 16:56:36 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.84 2009-10-25 08:50:12 ville Exp $"
+--><!--#set var="date" value="\$Date: 2009-10-25 08:50:12 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#set var="feeds" value="1"
@@ -43,7 +43,7 @@
             Analysis of many invalid pages shows that the most common error
             comes from invalid (typo or non standard) elements and attributes
             used. The
-            <a href="http://www.w3.org/blog/systeam/2009/02/16/validator_fuzzy_match" 
+            <a href="http://www.w3.org/blog/systeam/2009/02/16/validator_fuzzy_match"
                title="blog post on the validator's fuzzy matching">new
               feature</a> will help by suggesting possible (valid)
             alternatives.
@@ -57,7 +57,7 @@
             Bug Fix: the HTML5 validator integration broke some of the
             validator's “document type override” functionalities in version
             0.8.4. This is fixed in 0.8.5.
-          </li> 
+          </li>
           <li>
             New: the validator icon code, which one can add to web pages, now
             <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=65252">includes XHTML+RDFa</a>
@@ -70,7 +70,7 @@
             check. Recent versions of the Perl library had bugs that made in
             backward incompatible, causing the validator to not output all
             well-formedness errors reliably. Some code was added to the
-            validator to work with all future versions of that library, but 
+            validator to work with all future versions of that library, but
             we recommend not using XML::LibXML between versions 1.67 and 1.69
             inclusive
             (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6329#c15">see how</a>).
@@ -90,7 +90,7 @@
             <a href="docs/why.html">Why Validate?</a> document.
           </li>
           <li>
-            Usability: the way in which the validator has to handle 
+            Usability: the way in which the validator has to handle
             <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6259">direct
               input and character encodings</a> has long been confusing to
             many. Improvements have been made that explain in clearer ways what
@@ -130,7 +130,7 @@
         <p>
           Other bug fixes and improvement in this version include:
         </p>
-        <ul>  
+        <ul>
           <li>
             Bug Fix: version <a href="#t2008-08-08">0.8.3</a> came with a
             programming mistake that would not affect validation, but would
@@ -190,7 +190,7 @@
           </li>
           <li>
             Experimental Feature: added the new option to send specific
-            <code>Accept-Charset</code> and <code>User-Agent</code> headers, 
+            <code>Accept-Charset</code> and <code>User-Agent</code> headers,
 	    in addition to <code>Accept</code> and <code>Accept-Language</code>
             in version <a href="#t2007-10-11">0.8.2</a>.
           </li>
@@ -220,7 +220,7 @@
           </li>
           <li>
             Bug Fix: forcing or overriding the Doctype declaration would not
-            work with documents using an XML Declaration 
+            work with documents using an XML Declaration
             (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=857"
                 title="Bug 857 - DOCTYPE Override should take XML Decl into account.">Bug 857</a>).
             The fix should make it much easier to validate e.g.
@@ -266,12 +266,12 @@
         </p>
         <ul>
           <li>
-            Bug Fix: changed set up of parser responsible for checking XML 
+            Bug Fix: changed set up of parser responsible for checking XML
             well-formedness, which would retrieve schemas for entities each
             time the validator would run.
           </li>
           <li>
-            Bug Fix: the validator would incorrectly complain about HTML/XML 
+            Bug Fix: the validator would incorrectly complain about HTML/XML
             named entities (such as &amp;copy;).
           </li>
           <li>
@@ -285,7 +285,7 @@
           <li>
             … and small performance and code cleanup fixes.
           </li>
-        </ul>      
+        </ul>
       </dd>
 
       <dt id="t2007-07-25">2007-07-25 &mdash; 0.8.0 Release:</dt>
@@ -297,7 +297,7 @@
           accurate and helpful quality process.
         </p>
         <p>
-          This release includes all the changes and bug reports of the 
+          This release includes all the changes and bug reports of the
           <a href="#t2007-04-19">0.8.0 Beta 1</a> and
           <a href="#t2007-06-01">0.8.0 Beta 2</a>.
         </p>
@@ -353,7 +353,7 @@
           </li>
         </ul>
         <p>
-          <strong>Participate in this Beta Test</strong>! 
+          <strong>Participate in this Beta Test</strong>!
           Read the
           <a href="http://lists.w3.org/Archives/Public/www-validator/2007Jun/0002.html">instructions</a>
           and start testing.
@@ -444,7 +444,7 @@
           </li>
         </ul>
       </dd>
-      
+
       <dt id="t2006-10-23">2006-10-23 &mdash; 0.7.3 Release:</dt>
       <dd>
         <p>
@@ -492,7 +492,7 @@
           </li>
         </ul>
       </dd>
-      
+
       <dt id="t2006-02-20">2006-02-20 &mdash; 0.7.2 Release:</dt>
       <dd>
         <p>
@@ -532,12 +532,12 @@
       <dd>
         <p>
           Releasing version 0.7.1 of the Markup Validator, a maintenance
-          release introducing performance enhancements and including minor 
+          release introducing performance enhancements and including minor
           <a href="http://www.w3.org/Bugs/Public/buglist.cgi?bug_id=1809%2C+1833%2C+1839%2C+1845">fixes</a>
           in the user interface and in the "Direct Input" validation results.
         </p>
       </dd>
-      
+
       <dt id="t2005-08-08">2005-08-08 &mdash; 0.7.0 Release:</dt>
       <dd>
         <p>
@@ -567,7 +567,7 @@
           </li>
           <li>
             Bug fixes:
-            <ul> 
+            <ul>
               <li>
                 The error number count in results now only counts errors, not
                 warnings or other messages.
@@ -680,8 +680,8 @@
 
       <dt id="t2004-07-23">2004-07-23 &mdash; 0.6.7 Release:</dt>
       <dd>
-        <p> 
-          A maintenance release that fixes a 
+        <p>
+          A maintenance release that fixes a
           <a href="http://www.w3.org/Bugs/Public/buglist.cgi?product=Validator&amp;target_milestone=0.6.7">few minor bugs</a>,
           improves authentication proxying, and makes some slight tweaks to the
           website style and markup.
@@ -696,8 +696,8 @@
       <dt id="t2004-05-21">2004-05-21 &mdash; 0.6.6 Release:</dt>
       <dd>
         <p>
-          A maintenance release that fixes a 
-          <a href="http://www.w3.org/Bugs/Public/buglist.cgi?product=Validator&amp;target_milestone=0.6.6">few minor bugs</a>, 
+          A maintenance release that fixes a
+          <a href="http://www.w3.org/Bugs/Public/buglist.cgi?product=Validator&amp;target_milestone=0.6.6">few minor bugs</a>,
 	  resurrects the whitespace-preserving source display, adds
           explanations for additional error messages, and makes some slight
           tweaks to the website style.
@@ -763,9 +763,9 @@
           </li>
 	  <li>
             New documentation on installing the Markup Validator locally.
-          </li> 
+          </li>
 	  <li>
-            The "fussy" parsing mode is no longer available and will be 
+            The "fussy" parsing mode is no longer available and will be
 	    drastically improved before it comes back - if ever.
           </li>
 	  <li>
@@ -914,7 +914,7 @@
       <dt id="t2002-12-01">2002-12-01 &mdash; 0.6.1 Release:</dt>
       <dd>
         <ul>
-	  <li>	
+	  <li>
 	    Maintenance release to fix various minor issues reported against
             the <a href="#t2002-11-26">November 26</a> release. Stylesheet
             updates, ability to turn on verbose output, and bug fixes.
