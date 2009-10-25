@@ -92,6 +92,16 @@ PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
        "WD-XHTMLplusMathMLplusSVG-20020809/xhtml-math-svg-flat.dtd"
 
 
+-- XHTML + RDFa --
+
+PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
+       "REC-rdfa-syntax-20081014/xhtml-rdfa-1.dtd"
+PUBLIC "-//W3C//ENTITIES XHTML+RDFa Document Model 1.0//EN"
+       "REC-rdfa-syntax-20081014/xhtml-rdfa-model-1.mod"
+PUBLIC "-//W3C//ENTITIES XHTML MetaAttributes 1.0//EN"
+       "REC-rdfa-syntax-20081014/xhtml-metaAttributes-1.mod"
+
+
 -- SMIL 1.0 --
 
 PUBLIC "-//W3C//DTD SMIL 1.0//EN"
