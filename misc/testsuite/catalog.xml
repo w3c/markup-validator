@@ -182,7 +182,7 @@
     
     <test>
       <dc:title>MathML 2.0 Document Type support test</dc:title>        
-      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/mathml2.mathml</uri>
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/mathml2.mml</uri>
       <expect>
         <Validity>Pass</Validity>
       </expect>
