@@ -10,13 +10,13 @@ SYSTEM "spec.dtd"
 -- MathML 2.0 --
 
 PUBLIC "-//W3C//DTD MathML 2.0//EN"
-       "REC-MathML2-20031021/mathml2.dtd"
+       "XX-MathML2-20031104/mathml2.dtd"
 SYSTEM "http://www.w3.org/Math/DTD/mathml2/mathml2.dtd"
-       "REC-MathML2-20031021/mathml2.dtd"
+       "XX-MathML2-20031104/mathml2.dtd"
 PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN"
-       "REC-MathML2-20031021/xhtml-math11-f.dtd"
+       "XX-MathML2-20031104/xhtml-math11-f.dtd"
 SYSTEM "http://www.w3.org/Math/DTD/mathml2/xhtml-math11-f.dtd"
-       "REC-MathML2-20031021/xhtml-math11-f.dtd"
+       "XX-MathML2-20031104/xhtml-math11-f.dtd"
 
 
 -- SVG 1.0 --
