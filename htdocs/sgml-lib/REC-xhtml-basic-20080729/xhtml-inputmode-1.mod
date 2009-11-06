@@ -4,7 +4,7 @@
 
      This is XHTML, a reformulation of HTML as a modular XML application.
      Copyright 1998-2007 W3C (MIT, ERCIM, Keio), All Rights Reserved.
-     Revision: $Id: xhtml-inputmode-1.mod,v 1.1 2008/07/26 17:02:27 jules Exp $
+     Revision: $Id: xhtml-inputmode-1.mod,v 1.1.2.3 2007/07/13 14:20:31 ahby Exp $
 
      This DTD module is identified by the PUBLIC and SYSTEM identifiers:
 
