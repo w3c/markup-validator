@@ -4,7 +4,7 @@
 
      This is XHTML-Print 1.0, a variant of XHTML Basic for printing.
      Copyright 1998-2003 W3C (MIT, ERCIM, Keio), All Rights Reserved.
-     Revision: $Id: xhtml-print10-model-1.mod,v 1.1 2006/09/25 14:44:04 jean-gui Exp $
+     Revision: $Id: xhtml-print10-model-1.mod,v 1.7 2003/10/24 22:14:40 fujisawa Exp $
 
      This DTD module is identified by the PUBLIC and SYSTEM identifiers:
 
