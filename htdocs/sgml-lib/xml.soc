@@ -70,6 +70,10 @@ PUBLIC "-//W3C//ENTITIES XHTML Basic 1.0 Document Model 1.0//EN"
 
 PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN"
         "REC-xhtml-basic-20080729/xhtml-basic11.dtd"
+PUBLIC "-//W3C//ENTITIES XHTML Basic 1.1 Document Model 1.0//EN"
+       "REC-xhtml-basic-20080729/xhtml-basic11-model-1.mod"
+PUBLIC "-//W3C//ELEMENTS XHTML Inputmode 1.0//EN"
+       "REC-xhtml-basic-20080729/xhtml-inputmode-1.mod"
 
 
 -- XHTML Print 1.0 --
