@@ -89,7 +89,9 @@ PUBLIC "-//W3C//ENTITIES XHTML-Print 1.0 Document Model 1.0//EN"
 -- XHTML + MathML + SVG --
 
 PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
-       "WD-XHTMLplusMathMLplusSVG-20020809/xhtml-math-svg-flat.dtd"
+       "WD-XHTMLplusMathMLplusSVG-20020809/xhtml-math-svg.dtd"
+PUBLIC "-//W3C//DTD XHTML Basic plus SVG Tiny//EN"
+       "WD-XHTMLplusMathMLplusSVG-20020809/xhtml-basic-svg-tiny.dtd"
 
 
 -- XHTML + RDFa --
