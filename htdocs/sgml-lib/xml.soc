@@ -69,7 +69,7 @@ PUBLIC "-//W3C//ENTITIES XHTML Basic 1.0 Document Model 1.0//EN"
 -- XHTML Basic 1.1 --
 
 PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN"
-        "REC-xhtml-basic-20080729/xhtml-basic11.dtd"
+       "REC-xhtml-basic-20080729/xhtml-basic11.dtd"
 PUBLIC "-//W3C//ENTITIES XHTML Basic 1.1 Document Model 1.0//EN"
        "REC-xhtml-basic-20080729/xhtml-basic11-model-1.mod"
 PUBLIC "-//W3C//ELEMENTS XHTML Inputmode 1.0//EN"
@@ -242,7 +242,7 @@ PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Transition//EN"
 
 -- XHTML + RDFa --
 
-PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" 
+PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
        "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"
 
 
@@ -305,9 +305,9 @@ PUBLIC "-//W3C//ELEMENTS XHTML Editing Markup 1.0//EN"
        "REC-xhtml-modularization-20081008/xhtml-edit-1.mod"
 -- xhtml-bdo-1: both "BDO Element" and "BIDI Override Element" in the wild --
 PUBLIC "-//W3C//ELEMENTS XHTML BDO Element 1.0//EN"
-       "REC-xhtml-modularization-20081008/xhtml-bdo-1.mod" 
+       "REC-xhtml-modularization-20081008/xhtml-bdo-1.mod"
 PUBLIC "-//W3C//ELEMENTS XHTML BIDI Override Element 1.0//EN"
-       "REC-xhtml-modularization-20081008/xhtml-bdo-1.mod" 
+       "REC-xhtml-modularization-20081008/xhtml-bdo-1.mod"
 PUBLIC "-//W3C//ELEMENTS XHTML Basic Forms 1.0//EN"
        "REC-xhtml-modularization-20081008/xhtml-basic-form-1.mod"
 PUBLIC "-//W3C//ELEMENTS XHTML Forms 1.0//EN"
@@ -339,7 +339,7 @@ PUBLIC "-//W3C//ELEMENTS XHTML Legacy Redeclarations 1.0//EN"
 PUBLIC "-//W3C//ELEMENTS XHTML Legacy Markup 1.0//EN"
        "REC-xhtml-modularization-20081008/xhtml-legacy-1.mod"
 PUBLIC "-//W3C//ELEMENTS XHTML Embedded Object 1.0//EN"
-       "REC-xhtml-modularization-20081008/xhtml-object-1.mod" 
+       "REC-xhtml-modularization-20081008/xhtml-object-1.mod"
 PUBLIC "-//W3C//ELEMENTS XHTML Frames 1.0//EN"
        "REC-xhtml-modularization-20081008/xhtml-frames-1.mod"
 PUBLIC "-//W3C//ELEMENTS XHTML Target 1.0//EN"
