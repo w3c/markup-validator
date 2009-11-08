@@ -240,12 +240,6 @@ PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Transition//EN"
        "REC-SMIL3-20081201/SMIL-transition.mod"
 
 
--- XHTML + RDFa --
-
-PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
-       "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"
-
-
 -- XHTML Modularization --
 
 -- XHTML framework modules --
