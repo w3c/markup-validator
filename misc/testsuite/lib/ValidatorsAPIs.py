@@ -28,7 +28,7 @@ class W3CValidatorHTTP:
     def call_check(self, TC_uri):
         """Make a request to the checker and store its response"""
         data = urllib.quote(TC_uri, "")
-        final_checker_URI = self.check_URI % {"URI": TC_uri }
+        final_checker_URI = self.check_URI % {"URI": data }
         try:
             response = urllib2.urlopen(final_checker_URI)
             return response
