@@ -69,7 +69,7 @@ def main(argv=None):
             opts, args = getopt.getopt(argv[1:], "ho:vq", ["help", "verbose", "quiet", "id=", "validator=", "validator_uri="])
             for (opt, value) in opts:
                 if opt == "h" or opt == "--help":
-                    raise Usage(msg)
+                    raise Usage(help_message)
         except getopt.GetoptError as err:
             raise Usage(err)
     
