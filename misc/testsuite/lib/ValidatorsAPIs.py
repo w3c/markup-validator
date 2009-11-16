@@ -31,9 +31,9 @@ class W3CValidatorHTTP:
         final_checker_URI = self.check_URI % {"URI": data }
         try:
             response = urllib2.urlopen(final_checker_URI)
-            return response
-        except (urllib2.HTTPError, urllib2.URLError):
-            return None
+        except (urllib2.HTTPError, urllib2.URLError) as exc:
+            return (None, str(exc) + ": " + final_checker_URI)
+        return (response, None)
 
     def parse_response(self, response):
         """Parse a W3C Markup Validator Response via its HTTP headers"""
@@ -61,34 +61,39 @@ class W3CValidatorHTTP_test(unittest.TestCase):
     def test_contact_default(self):
         """Test Contacting the default validator instance"""
         default_checker = W3CValidatorHTTP()
-        checked = default_checker.call_check("http://www.w3.org")
-        self.assertNotEqual(checked, None)
+        (res, err) = default_checker.call_check("http://www.w3.org")
+        self.assertEqual(err, None)
+        self.assertNotEqual(res, None)
 
     def test_contact_vwo(self):
         """Test Contacting the main W3C validator instance"""
         default_checker = W3CValidatorHTTP("http://validator.w3.org/check?uri=%(URI)s")
-        checked = default_checker.call_check("http://www.w3.org")
-        self.assertNotEqual(checked, None)
+        (res, err) = default_checker.call_check("http://www.w3.org")
+        self.assertEqual(err, None)
+        self.assertNotEqual(res, None)
 
     def test_parse_response(self):
         """Test parsing response from default validator instance"""
         default_checker = W3CValidatorHTTP()
-        checked = default_checker.call_check("http://www.w3.org")
-        results = default_checker.parse_response(checked)
+        (res, err) = default_checker.call_check("http://www.w3.org")
+        self.assertEqual(err, None)
+        results = default_checker.parse_response(res)
         self.assert_(isinstance(results,dict))
 
     def test_parse_response_invalid(self):
         """Test parsing response for a known invalid resource"""
         default_checker = W3CValidatorHTTP()
-        checked = default_checker.call_check("http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-bogus-element.html")
-        results = default_checker.parse_response(checked)
+        (res, err) = default_checker.call_check("http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml1-bogus-element.html")
+        self.assertEqual(err, None)
+        results = default_checker.parse_response(res)
         self.assertNotEquals(results["NumErrors"], 0)
 
     def test_parse_response_valid(self):
         """Test parsing response for a known valid HTML resource"""
         default_checker = W3CValidatorHTTP()
-        checked = default_checker.call_check("http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html20.html")
-        results = default_checker.parse_response(checked)
+        (res, err) = default_checker.call_check("http://qa-dev.w3.org/wmvs/HEAD/dev/tests/html20.html")
+        self.assertEqual(err, None)
+        results = default_checker.parse_response(res)
         self.assertNotEquals([results["NumErrors"], results["Validity"]], [0, "Valid"])
 
 if __name__ == '__main__':

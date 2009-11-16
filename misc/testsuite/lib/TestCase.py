@@ -50,7 +50,9 @@ class ValidatorTestCase(unittest.TestCase):
         We first remove irrelevant result keys in the validation results,
         and compare that to the expected results
         """
-        results = self.checker.parse_response(self.checker.call_check(self.docURI))
+        (res, err) = self.checker.call_check(self.docURI)
+        self.assertEqual(err, None)
+        results = self.checker.parse_response(res)
         results_filtered = dict()
         for result_key in self.expectResults.iterkeys():
             if results.has_key(result_key):
