@@ -70,8 +70,8 @@ def main(argv=None):
             for (opt, value) in opts:
                 if opt == "h" or opt == "--help":
                     raise Usage(msg)
-        except getopt.error, msg:
-            raise Usage(msg)
+        except getopt.GetoptError as err:
+            raise Usage(err)
     
         # option processing
         for option, value in opts:
@@ -93,9 +93,9 @@ def main(argv=None):
         if len(args) == 0:
             raise Usage(help_message)
     
-    except Usage, err:
-        print >> sys.stderr, sys.argv[0].split("/")[-1] + ": " + str(err.msg)
-        print >> sys.stderr, "\t for help use --help"
+    except Usage as err:
+        sys.stderr.write("%s: %s\n\t for help use --help\n" % \
+                             (sys.argv[0].split("/")[-1], str(err.msg)))
         return 2
 
         
@@ -145,7 +145,7 @@ def buildTestSuite(ts_file=None, collection_id=None, checker=None):
 def runTestSuite(testsuite, verbose):
     """Describe each test collection in the test suite and run them"""
     for collection in testsuite.collections:
-        print "*** Running Collection #%s: %s" % (collection.collection_id, collection.title)
+        print ("*** Running Collection #%s: %s" % (collection.collection_id, collection.title))
         if collection.countTestCases() > 0:
             unittest.TextTestRunner(verbosity=verbose).run(collection)
 
@@ -153,14 +153,14 @@ def listCollections():
     index = Documentation('list')
     test_suite = buildTestSuite()
     index.addTestSuite(test_suite)
-    print index.generate(template_path=os.path.join(basedir, "templates")).encode('utf-8')
+    print (index.generate(template_path=os.path.join(basedir, "templates")).encode('utf-8'))
 
 
 def generateIndex():
     index = Documentation('index')
     test_suite = buildTestSuite()
     index.addTestSuite(test_suite)
-    print index.generate(template_path=os.path.join(basedir, "templates")).encode('utf-8')
+    print (index.generate(template_path=os.path.join(basedir, "templates")).encode('utf-8'))
 
 
 
