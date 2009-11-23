@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.722 2009-11-23 22:32:49 ville Exp $
+# $Id: check,v 1.723 2009-11-23 22:37:41 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -215,7 +215,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.722 $;
+    $VERSION = q$Revision: 1.723 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     #
@@ -376,8 +376,8 @@ $File->{Opt}->{Output}  = $q->param('output')  || 'html';
 
 $File->{Opt}->{'User Agent'} =
     $q->param('user-agent') &&
-    $q->param('user-agent') ne 1 ? $q->param('user-agent') :
-                                   "W3C_Validator/$VERSION";
+    $q->param('user-agent') != "1" ? $q->param('user-agent') :
+                                     "W3C_Validator/$VERSION";
 $File->{Opt}->{'User Agent'} =~ tr/\x00-\x09\x0b\x0c-\x1f//d;
 
 if ($File->{Opt}->{'User Agent'} eq 'mobileok') {
@@ -683,8 +683,8 @@ if (&is_xml($File)) {
             my $xmlwf_error_line  = undef;
             my $xmlwf_error_col   = undef;
             my $xmlwf_error_msg   = undef;
-            my $got_error_message = 0;
-            my $got_quoted_line   = 0;
+            my $got_error_message = undef;
+            my $got_quoted_line   = undef;
             my $num_xmlwf_error   = 0;
             foreach my $msg_line (split "\n", $xmlwf_errors) {
 
@@ -692,7 +692,7 @@ if (&is_xml($File)) {
                 $msg_line =~ s{[^\x0d\x0a]+[\x0d\x0a]$}{};
 
                 # first we get the actual error message
-                if (($got_error_message eq 0) and
+                if (!$got_error_message and
                     ($msg_line =~ /^(:\d+:)( parser error : .*)/))
                 {
                     $xmlwf_error_line = $1;
@@ -703,14 +703,14 @@ if (&is_xml($File)) {
                 }
 
                 # then we skip the second line, which shows the context (we don't use that)
-                elsif (($got_error_message eq 1) and ($got_quoted_line eq 0)) {
+                elsif ($got_error_message and !$got_quoted_line) {
                     $got_quoted_line = 1;
                 }
 
                 # we now take the third line, with the pointer to the error's column
                 elsif (($msg_line =~ /(\s+)\^/) and
-                    ($got_error_message eq 1) and
-                    ($got_quoted_line eq 1))
+                    $got_error_message and
+                    $got_quoted_line)
                 {
                     $xmlwf_error_col = length($1);
                 }
@@ -748,8 +748,8 @@ if (&is_xml($File)) {
                 {
 
                     # Reinitializing for the next batch of 3 lines
-                    $got_error_message = 0;
-                    $got_quoted_line   = 0;
+                    $got_error_message = undef;
+                    $got_quoted_line   = undef;
 
                     # formatting the error message for output
                     my $err;
@@ -1534,7 +1534,7 @@ sub fin_template ($$)
     if ($num_errors > 1) {
         $T->param(number_of_errors_is_0 => FALSE);
         $T->param(number_of_errors_is_1 => FALSE);
-        if ($num_errors eq 2) {
+        if ($num_errors == 2) {
             $T->param(number_of_errors_is_2 => TRUE);
         }
         else {
@@ -1542,7 +1542,7 @@ sub fin_template ($$)
         }
         $T->param(number_of_errors_is_plural => TRUE);
     }
-    elsif ($num_errors eq 1) {
+    elsif ($num_errors == 1) {
         $T->param(number_of_errors_is_0      => FALSE);
         $T->param(number_of_errors_is_1      => TRUE);
         $T->param(number_of_errors_is_2      => FALSE);
@@ -1558,7 +1558,7 @@ sub fin_template ($$)
     if ($num_warnings > 1) {
         $T->param(number_of_warnings_is_0 => FALSE);
         $T->param(number_of_warnings_is_1 => FALSE);
-        if ($num_warnings eq 2) {
+        if ($num_warnings == 2) {
             $T->param(number_of_warnings_is_2 => TRUE);
         }
         else {
@@ -1566,7 +1566,7 @@ sub fin_template ($$)
         }
         $T->param(number_of_warnings_is_plural => TRUE);
     }
-    elsif ($num_warnings eq 1) {
+    elsif ($num_warnings == 1) {
         $T->param(number_of_warnings_is_0      => FALSE);
         $T->param(number_of_warnings_is_1      => TRUE);
         $T->param(number_of_warnings_is_2      => FALSE);
