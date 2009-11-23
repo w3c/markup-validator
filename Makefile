@@ -6,8 +6,8 @@ PERLTIDY = perltidy --profile=misc/perltidyrc --backup-and-modify-in-place
 
 all:
 
-tidy:
+perltidy:
 	for file in $(PERL_FILES) ; do \
-		echo "Tidying $$file..." ; \
+		echo "Perltidying $$file..." ; \
 		$(PERLTIDY) $$file ; \
 	done
