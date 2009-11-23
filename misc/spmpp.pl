@@ -4,7 +4,7 @@
 #         for use in the Validator, from an OpenSP ParserMessages.rc.
 #         (spmpp = "SP Message Pre-Processor")
 #
-# $Id: spmpp.pl,v 1.2 2004-05-09 15:56:55 link Exp $
+# $Id: spmpp.pl,v 1.3 2009-11-23 22:15:18 ville Exp $
 #
 
 #
@@ -23,14 +23,14 @@ my @msg;
 #
 # Snarf OpenSP's ParserMessages.rc and populate @msg.
 my $msgfile = $ARGV[0] || "/usr/local/validator/htdocs/config/verbosemsg.rc";
-open FH, $msgfile
-  or die "Can't open OpenSP ParserMessages file '$msgfile': $!";
+open FH, $msgfile or
+    die "Can't open OpenSP ParserMessages file '$msgfile': $!";
 while (<FH>) {
-  next if /^\s*$/;
-  my($id, $s) = split /, /, $_, 2;
-  $id += 0; # Force numerical (kill leading space)...
-  chomp $s; # Strip newline from end of message...
-  push @msg, [$id, $s];
+    next if /^\s*$/;
+    my ($id, $s) = split /, /, $_, 2;
+    $id += 0;    # Force numerical (kill leading space)...
+    chomp $s;    # Strip newline from end of message...
+    push @msg, [$id, $s];
 }
 close FH;
 
@@ -53,7 +53,7 @@ print <<".EOF.";
 # the last digit of the "muid" is replaced at runtime).
 #
 for (@msg) {
-  print <<"_.EOF._";
+    print <<"_.EOF._";
 <msg $_->[0]>
   original = $_->[1]
   verbose <<.EOF.
