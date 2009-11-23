@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.721 2009-11-23 22:24:15 ville Exp $
+# $Id: check,v 1.722 2009-11-23 22:32:49 ville Exp $
 #
 # Disable buffering on STDOUT!
 $| = 1;
@@ -215,7 +215,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.721 $;
+    $VERSION = q$Revision: 1.722 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     #
@@ -1509,10 +1509,8 @@ sub fin_template ($$)
         )
     {
 
-        my $default_doctype = (
-            &is_xml($File) ? $File->{"Default DOCTYPE"}->{"XHTML"} :
-                $File->{"Default DOCTYPE"}->{"HTML"}
-        );
+        my $default_doctype =
+            $File->{"Default DOCTYPE"}->{&is_xml($File) ? "XHTML" : "HTML"};
         $T->param(file_version => "$default_doctype");
     }
     else {
@@ -3424,10 +3422,7 @@ sub error
     # No DOCTYPE found! We are falling back to vanilla DTD
     if ($err->{msg} =~ m(prolog can\'t be omitted)) {
         if (lc($File->{Root}) eq 'html') {
-            my $dtd = (
-                $is_xml ? $File->{"Default DOCTYPE"}->{"XHTML"} :
-                    $File->{"Default DOCTYPE"}->{"HTML"}
-            );
+            my $dtd = $File->{"Default DOCTYPE"}->{$is_xml ? "XHTML" : "HTML"};
             W3C::Validator::MarkupValidator::add_warning('W09',
                 {W09_dtd => $dtd});
         }
