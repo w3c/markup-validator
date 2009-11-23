@@ -1,7 +1,7 @@
 #!/usr/bin/perl -T
 ##
 ## feedback generator for W3C Markup Validation Service
-# # $Id: sendfeedback.pl,v 1.13 2009-11-23 22:15:18 ville Exp $
+# # $Id: sendfeedback.pl,v 1.14 2009-11-23 22:24:15 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -55,11 +55,11 @@ BEGIN {
         $CFG = \%cfg;
     };
     if ($@) {
-        die <<".EOF.";
+        die <<EOF;
 Could not read configuration.  Set the W3C_VALIDATOR_CFG environment variable
 or copy conf/* to /etc/w3c/. Make sure that the configuration file and all
 included files are readable by the web server user. The error was:\n'$@'
-.EOF.
+EOF
     }
 }    # end of BEGIN block.
 
