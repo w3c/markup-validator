@@ -2,6 +2,7 @@ package Bundle::W3C::Validator;
 
 use 5.008;
 use strict;
+use warnings;
 
 use vars qw($VERSION);
 $VERSION = '0.8.5';

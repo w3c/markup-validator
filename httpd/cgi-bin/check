@@ -14,10 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.724 2009-11-23 22:49:23 ville Exp $
-#
-# Disable buffering on STDOUT!
-$| = 1;
+# $Id: check,v 1.725 2009-11-24 18:44:58 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -32,6 +29,10 @@ use 5.008;
 use strict;
 use warnings;
 use utf8;
+
+#
+# Disable buffering on STDOUT!
+$| = 1;
 
 package W3C::Validator::MarkupValidator;
 
@@ -215,7 +216,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.724 $;
+    $VERSION = q$Revision: 1.725 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     #
