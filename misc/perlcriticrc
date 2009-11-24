@@ -1,0 +1,39 @@
+# perlcritic(1) profile for the W3C Markup Validator
+
+severity = 3
+# uncomment to find out policy modules
+#verbose = 8
+
+[Modules::ProhibitMultiplePackages]
+# not yet
+severity = 1
+
+[Modules::RequireFilenameMatchesPackage]
+# not yet
+severity = 1
+
+[RegularExpressions::RequireExtendedFormatting]
+severity = 1
+
+[Subroutines::ProhibitExcessComplexity]
+# not yet
+severity = 1
+
+[Subroutines::ProhibitSubroutinePrototypes]
+# not yet
+severity = 1
+
+[Subroutines::RequireFinalReturn]
+# not yet
+severity = 1
+
+[Variables::ProhibitPackageVars]
+# not yet
+severity = 1
+
+[Variables::ProhibitReusedNames]
+# not yet
+severity = 1
+
+[ValuesAndExpressions::ProhibitConstantPragma]
+severity = 1
