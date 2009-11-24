@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.725 2009-11-24 18:44:58 ville Exp $
+# $Id: check,v 1.726 2009-11-24 18:49:51 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -216,7 +216,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.725 $;
+    $VERSION = q$Revision: 1.726 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     #
@@ -697,8 +697,8 @@ if (&is_xml($File)) {
                 $msg_line =~ s{[^\x0d\x0a]+[\x0d\x0a]$}{};
 
                 # first we get the actual error message
-                if (!$got_error_message and
-                    ($msg_line =~ /^(:\d+:)( parser error : .*)/))
+                if (!$got_error_message &&
+                    $msg_line =~ /^(:\d+:)( parser error : .*)/)
                 {
                     $xmlwf_error_line = $1;
                     $xmlwf_error_msg  = $2;
@@ -709,7 +709,7 @@ if (&is_xml($File)) {
 
                 # then we skip the second line, which shows the context
                 # (we don't use that)
-                elsif ($got_error_message and !$got_quoted_line) {
+                elsif ($got_error_message && !$got_quoted_line) {
                     $got_quoted_line = 1;
                 }
 
@@ -1520,13 +1520,12 @@ sub fin_template ($$)
         ],
     );
 
-    if (!$File->{Doctype} and
-        ($File->{Version} eq 'unknown' or
-            $File->{Version} eq 'SGML' or
-            (!$File->{Version}))
+    if (!$File->{Doctype} &&
+        (!$File->{Version} ||
+            $File->{Version} eq 'unknown' ||
+            $File->{Version} eq 'SGML')
         )
     {
-
         my $default_doctype =
             $File->{"Default DOCTYPE"}->{&is_xml($File) ? "XHTML" : "HTML"};
         $T->param(file_version => "$default_doctype");
@@ -3301,7 +3300,7 @@ sub start_element
         # add to list of non-root namespaces
         push(@{$self->{_file}->{Namespaces}}, $xmlns_value) if $has_xmlns;
     }
-    elsif (!$has_xmlns and
+    elsif (!$has_xmlns &&
         $self->{CFG}->{Types}->{$doctype}->{"Namespace Required"})
     {
 
@@ -3615,7 +3614,7 @@ sub uri_ok
     my ($self, $uri) = @_;
 
     return 1
-        if ($self->{'W3C::Validator::CFG'}->{'Allow Private IPs'} or
+        if ($self->{'W3C::Validator::CFG'}->{'Allow Private IPs'} ||
         !$uri->can('host'));
 
     my $h5uri = $self->{'W3C::Validator::CFG'}->{External}->{HTML5};
