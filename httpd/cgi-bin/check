@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.727 2009-11-24 18:53:34 ville Exp $
+# $Id: check,v 1.728 2009-11-24 18:58:59 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -133,7 +133,7 @@ BEGIN {
         $CFG = \%cfg;
     };
     if ($@) {
-        die <<EOF;
+        die <<"EOF";
 Could not read configuration.  Set the W3C_VALIDATOR_CFG environment variable
 or copy conf/* to /etc/w3c/. Make sure that the configuration file and all
 included files are readable by the web server user. The error was:\n'$@'
@@ -148,12 +148,8 @@ EOF
         my @_d    = grep { not $paths{$_}->[0] } keys %paths;
         my @_r    = grep { not $paths{$_}->[1] } keys %paths;
         return TRUE if (scalar(@_d) + scalar(@_r) == 0);
-        die <<EOF   if scalar @_d;
-Does not exist or is not a directory: @_d
-EOF
-        die <<EOF if scalar @_r;
-Directory not readable (permission denied): @_r
-EOF
+        die "Does not exist or is not a directory: @_d\n"       if scalar(@_d);
+        die "Directory not readable (permission denied): @_r\n" if scalar(@_r);
     }
 
     #
@@ -216,7 +212,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.727 $;
+    $VERSION = q$Revision: 1.728 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     #
