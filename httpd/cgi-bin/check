@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.728 2009-11-24 18:58:59 ville Exp $
+# $Id: check,v 1.729 2009-11-24 19:03:12 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -212,7 +212,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.728 $;
+    $VERSION = q$Revision: 1.729 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     #
@@ -3307,8 +3307,8 @@ sub start_element
         $err->{num}  = "no-xmlns";
         $err->{type} = "E";
         $err->{msg} =
-            "Missing xmlns attribute for element " . $element->{Name} . ".
-    The value should be: $self->{CFG}->{Types}->{$doctype}->{Namespace}";
+            "Missing xmlns attribute for element $element->{Name}. The " .
+            "value should be: $self->{CFG}->{Types}->{$doctype}->{Namespace}";
 
         # ...
         $self->{_file}->{'Is Valid'} = FALSE;
@@ -3328,8 +3328,8 @@ sub start_element
         $err->{num}  = "wrong-xmlns";
         $err->{type} = "E";
         $err->{msg} =
-            "Wrong xmlns attribute for element $element->{Name}. " .
-            "The value should be: $self->{CFG}->{Types}->{$doctype}->{Namespace}";
+            "Wrong xmlns attribute for element $element->{Name}. The " .
+            "value should be: $self->{CFG}->{Types}->{$doctype}->{Namespace}";
 
         # ...
         $self->{_file}->{'Is Valid'} = FALSE;
