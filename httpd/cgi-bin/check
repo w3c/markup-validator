@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.726 2009-11-24 18:49:51 ville Exp $
+# $Id: check,v 1.727 2009-11-24 18:53:34 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -216,7 +216,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.726 $;
+    $VERSION = q$Revision: 1.727 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     #
@@ -2203,9 +2203,6 @@ sub report_errors ($)
     my $number_of_errors   = 0;
     my $number_of_warnings = 0;
     my $number_of_info     = 0;
-
-    # Hash to keep track of how many of each error is reported.
-    my %Msgs;    # Used to generate a UID for explanations.
 
     # for the sake of readability, at least until the xmlwf errors have
     # explanations, we push the errors from the XML parser at the END of the
