@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.731 2009-11-25 19:09:39 ville Exp $
+# $Id: check,v 1.732 2009-11-25 19:52:47 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -201,7 +201,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.731 $;
+    $VERSION = q$Revision: 1.732 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     #
@@ -909,19 +909,15 @@ if (!$File->{'Is Valid'} && $File->{Opt}->{'Show Tidy'}) {
     }
 }
 
-my $template;
-
-if ($File->{Opt}->{Output} eq 'earl') {
-    $template = &get_template($File, 'earl_xml.tmpl');
-}
-elsif ($File->{Opt}->{Output} eq 'n3') {
-    $template = &get_template($File, 'earl_n3.tmpl');
-}
-elsif ($File->{Opt}->{Output} eq 'json') {
-    $template = &get_template($File, 'json_output.tmpl');
-}
-elsif ($File->{Opt}->{Output} eq 'ucn') {
-    $template = &get_template($File, 'ucn_output.tmpl');
+my %templates = (
+    earl => 'earl_xml.tmpl',
+    n3   => 'earl_n3.tmpl',
+    json => 'json_output.tmpl',
+    ucn  => 'ucn_output.tmpl',
+);
+my $template = $templates{$File->{Opt}->{Output}};
+if ($template) {
+    $template = &get_template($File, $template);
 }
 elsif ($File->{Opt}->{Output} eq 'soap12') {
     if ($CFG->{'Enable SOAP'} != 1) {
@@ -2791,7 +2787,8 @@ sub set_parse_mode
         );
         return;
     }
-    elsif ($parseModeFromMimeType ne 'TBD') {
+
+    if ($parseModeFromMimeType ne 'TBD') {
 
         # if The mime type gives clear indication of whether the document is
         # XML or not
@@ -2823,7 +2820,8 @@ sub set_parse_mode
         }
         return;
     }
-    elsif ($parseModeFromDoctype ne 'TBD') {
+
+    if ($parseModeFromDoctype ne 'TBD') {
 
         # the mime type is ambiguous (hence we didn't stop at the previous test)
         # but by now we're sure that the document type is a good indication
@@ -2844,7 +2842,8 @@ sub set_parse_mode
         $File->{ModeChoice} = 'Doctype';
         return;
     }
-    elsif ($parseModeFromXMLDecl ne 'TBD') {
+
+    if ($parseModeFromXMLDecl ne 'TBD') {
 
         # the mime type is ambiguous (hence we didn't stop at the previous test)
         # and so was the doctype
@@ -2861,22 +2860,20 @@ sub set_parse_mode
         $File->{ModeChoice} = 'XMLDecl';
         return;
     }
-    else {
 
-        # this is the last case. We know that all  modes are not TBD,
-        # yet mime type, doctype AND XML DECL tests have failed => we are saved
-        # by the presence of namespaces
-        if ($File->{Mode} eq "") {
-            $File->{Mode} = "DTD+" . $parseModeFromNamespace;
-        }
-        elsif ($File->{Mode} =~ /\+/) {
-            $File->{Mode} =~ s/\+.*/\+$parseModeFromNamespace/;
-        }
-        else {
-            $File->{Mode} = $File->{Mode} . "+" . $parseModeFromNamespace;
-        }
-        $File->{ModeChoice} = 'Namespace';
+    # this is the last case. We know that all  modes are not TBD,
+    # yet mime type, doctype AND XML DECL tests have failed => we are saved
+    # by the presence of namespaces
+    if ($File->{Mode} eq "") {
+        $File->{Mode} = "DTD+" . $parseModeFromNamespace;
     }
+    elsif ($File->{Mode} =~ /\+/) {
+        $File->{Mode} =~ s/\+.*/\+$parseModeFromNamespace/;
+    }
+    else {
+        $File->{Mode} = $File->{Mode} . "+" . $parseModeFromNamespace;
+    }
+    $File->{ModeChoice} = 'Namespace';
 }
 
 #
