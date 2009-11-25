@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.734 2009-11-25 20:24:06 ville Exp $
+# $Id: check,v 1.735 2009-11-25 22:05:33 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -201,7 +201,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.734 $;
+    $VERSION = q$Revision: 1.735 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     #
@@ -217,7 +217,7 @@ EOF
     )->getall();
 
     eval {
-        local $SIG{__DIE__};
+        local $SIG{__DIE__} = undef;
         require Encode::JIS2K;    # for optional extra Japanese encodings
     };
 
@@ -896,7 +896,7 @@ else {
 ## if invalid content, AND if requested, pass through tidy
 if (!$File->{'Is Valid'} && $File->{Opt}->{'Show Tidy'}) {
     eval {
-        local $SIG{__DIE__};
+        local $SIG{__DIE__} = undef;
         require HTML::Tidy;
         my $tidy = HTML::Tidy->new({config_file => $CFG->{Paths}->{TidyConf}});
         my $cleaned = $tidy->clean(join("\n", @{$File->{Content}}));
@@ -1731,7 +1731,7 @@ sub handle_uri
     # All Apache configurations don't set HTTP_AUTHORIZATION for CGI scripts.
     # If we're under mod_perl, there is a way around it...
     eval {
-        local $SIG{__DIE__};
+        local $SIG{__DIE__} = undef;
         my $auth =
             Apache2::RequestUtil->request()->headers_in()->{Authorization};
         $ENV{HTTP_AUTHORIZATION} = $auth if $auth;
