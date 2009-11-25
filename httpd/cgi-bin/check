@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.732 2009-11-25 19:52:47 ville Exp $
+# $Id: check,v 1.733 2009-11-25 20:21:36 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -170,10 +170,10 @@ EOF
     }
 
     {    # Make types config indexed by FPI.
-        my $_types = {};
-        map { $_types->{$CFG->{Types}->{$_}->{PubID}} = $CFG->{Types}->{$_} }
-            keys %{$CFG->{Types}};
-        $CFG->{Types} = $_types;
+        my $types = {};
+        $types->{$CFG->{Types}->{$_}->{PubID}} = $CFG->{Types}->{$_}
+            for keys(%{$CFG->{Types}});
+        $CFG->{Types} = $types;
     }
 
     #
@@ -201,7 +201,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.732 $;
+    $VERSION = q$Revision: 1.733 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     #
