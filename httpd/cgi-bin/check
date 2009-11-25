@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.733 2009-11-25 20:21:36 ville Exp $
+# $Id: check,v 1.734 2009-11-25 20:24:06 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -201,7 +201,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.733 $;
+    $VERSION = q$Revision: 1.734 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     #
@@ -362,7 +362,7 @@ $File->{Opt}->{Output}  = $q->param('output')  || 'html';
 
 $File->{Opt}->{'User Agent'} =
     $q->param('user-agent') &&
-    $q->param('user-agent') != "1" ? $q->param('user-agent') :
+    $q->param('user-agent') ne "1" ? $q->param('user-agent') :
                                      "W3C_Validator/$VERSION";
 $File->{Opt}->{'User Agent'} =~ tr/\x00-\x09\x0b\x0c-\x1f//d;
 
