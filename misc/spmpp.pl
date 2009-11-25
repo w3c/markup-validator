@@ -4,7 +4,7 @@
 #         for use in the Validator, from an OpenSP ParserMessages.rc.
 #         (spmpp = "SP Message Pre-Processor")
 #
-# $Id: spmpp.pl,v 1.5 2009-11-24 18:58:59 ville Exp $
+# $Id: spmpp.pl,v 1.6 2009-11-25 22:11:21 ville Exp $
 #
 
 #
@@ -23,16 +23,16 @@ my @msg;
 #
 # Snarf OpenSP's ParserMessages.rc and populate @msg.
 my $msgfile = $ARGV[0] || "/usr/local/validator/htdocs/config/verbosemsg.rc";
-open FH, $msgfile or
+open my $fh, '<', $msgfile or
     die "Can't open OpenSP ParserMessages file '$msgfile': $!";
-while (<FH>) {
+while (<$fh>) {
     next if /^\s*$/;
     my ($id, $s) = split /, /, $_, 2;
     $id += 0;    # Force numerical (kill leading space)...
     chomp $s;    # Strip newline from end of message...
     push @msg, [$id, $s];
 }
-close FH;
+close $fh;
 
 print <<"EOF";
 #
