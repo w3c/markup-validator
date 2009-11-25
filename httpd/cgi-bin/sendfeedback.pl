@@ -1,7 +1,7 @@
 #!/usr/bin/perl -T
 ##
 ## feedback generator for W3C Markup Validation Service
-# # $Id: sendfeedback.pl,v 1.15 2009-11-24 18:58:59 ville Exp $
+# # $Id: sendfeedback.pl,v 1.16 2009-11-25 19:09:39 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -67,7 +67,7 @@ EOF
 # Get rid of (possibly insecure) $PATH.
 delete $ENV{PATH};
 
-our $q    = new CGI;
+our $q    = CGI->new();
 our $lang = 'en_US';    # @@@ TODO: conneg
 
 # Read error message + explanations file

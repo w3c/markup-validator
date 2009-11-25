@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.730 2009-11-24 19:07:44 ville Exp $
+# $Id: check,v 1.731 2009-11-25 19:09:39 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -201,7 +201,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.730 $;
+    $VERSION = q$Revision: 1.731 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     #
@@ -239,7 +239,7 @@ delete $ENV{PATH};
 
 #
 # Create a new CGI object.
-my $q = new CGI;
+my $q = CGI->new();
 
 #
 # The data structure that will hold all session data.
@@ -1009,7 +1009,7 @@ sub get_template ($$)
 sub compoundxml_validate (\$)
 {
     my $File = shift;
-    my $ua = new W3C::Validator::UserAgent($CFG, $File);
+    my $ua = W3C::Validator::UserAgent->new($CFG, $File);
 
     $File->{ParserName} = "validator.nu";
     $File->{ParserOpts} = "";
@@ -1164,7 +1164,7 @@ sub compoundxml_validate (\$)
 sub html5_validate (\$)
 {
     my $File = shift;
-    my $ua = new W3C::Validator::UserAgent($CFG, $File);
+    my $ua = W3C::Validator::UserAgent->new($CFG, $File);
 
     $File->{ParserName} = "validator.nu";
     $File->{ParserOpts} = "";
@@ -1691,10 +1691,10 @@ sub handle_uri
     my $q    = shift;    # The CGI object.
     my $File = shift;    # The master datastructure.
 
-    my $uri = new URI(ref $q ? $q->param('uri') : $q)->canonical();
+    my $uri = URI->new(ref $q ? $q->param('uri') : $q)->canonical();
     $uri->fragment(undef);
 
-    my $ua = new W3C::Validator::UserAgent($CFG, $File);
+    my $ua = W3C::Validator::UserAgent->new($CFG, $File);
 
     unless ($ua->is_protocol_supported($uri)) {
         $File->{'Error Flagged'} = TRUE;
@@ -1716,7 +1716,7 @@ sub handle_uri
 
     return $File unless $ua->uri_ok($uri);
 
-    my $req = new HTTP::Request(GET => $uri);
+    my $req = HTTP::Request->new(GET => $uri);
 
     # if one wants to use the accept, accept-charset and accept-language params
     # in order to trigger specific negotiation
