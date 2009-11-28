@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.735 2009-11-25 22:05:33 ville Exp $
+# $Id: check,v 1.736 2009-11-28 21:44:43 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -201,7 +201,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.735 $;
+    $VERSION = q$Revision: 1.736 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     #
@@ -3633,6 +3633,7 @@ sub uri_ok
 # Local Variables:
 # mode: perl
 # indent-tabs-mode: nil
+# cperl-indent-level: 4
 # perl-indent-level: 4
 # End:
 # ex: ts=4 sw=4 et
