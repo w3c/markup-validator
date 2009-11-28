@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.736 2009-11-28 21:44:43 ville Exp $
+# $Id: check,v 1.737 2009-11-28 21:52:30 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -99,11 +99,10 @@ use constant IS_MODPERL2 =>
 # (such as mod_perl); so let's do the globals, eg. read config, here.
 BEGIN {
 
+    my $base = $ENV{W3C_VALIDATOR_HOME} || '/usr/local/validator';
+
     # Launder data for -T; -AutoLaunder doesn't catch this one.
-    if (exists $ENV{W3C_VALIDATOR_HOME}) {
-        $ENV{W3C_VALIDATOR_HOME} =~ /^(.*)$/;
-        $ENV{W3C_VALIDATOR_HOME} = $1;
-    }
+    $base = $1 if ($base =~ /^(.*)$/);
 
     #
     # Read Config Files.
@@ -122,8 +121,7 @@ BEGIN {
             -DefaultConfig         => {
                 Protocols => {Allow => 'http,https'},
                 Paths     => {
-                    Base =>
-                        ($ENV{W3C_VALIDATOR_HOME} || '/usr/local/validator'),
+                    Base  => $base,
                     Cache => '',
                 },
                 External => {HTML5 => FALSE,},
@@ -201,7 +199,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.736 $;
+    $VERSION = q$Revision: 1.737 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     #
