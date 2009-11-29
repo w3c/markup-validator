@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.739 2009-11-29 19:16:15 ville Exp $
+# $Id: check,v 1.740 2009-11-29 19:27:27 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,12 +197,8 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.739 $;
+    $VERSION = q$Revision: 1.740 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
-
-    #
-    # Use passive FTP by default.
-    $ENV{FTP_PASSIVE} = 1 unless exists($ENV{FTP_PASSIVE});
 
     # Read friendly error message file
     # 'en_US' should be replaced by $lang for lang-neg
