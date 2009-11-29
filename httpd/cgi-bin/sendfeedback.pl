@@ -1,7 +1,7 @@
 #!/usr/bin/perl -T
 ##
 ## feedback generator for W3C Markup Validation Service
-# # $Id: sendfeedback.pl,v 1.17 2009-11-25 19:52:48 ville Exp $
+# # $Id: sendfeedback.pl,v 1.18 2009-11-29 19:13:49 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -173,4 +173,10 @@ process_query;
 #error_choices;
 print_prefilled_form;
 
-# END
+# Local Variables:
+# mode: perl
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# perl-indent-level: 4
+# End:
+# ex: ts=4 sw=4 et

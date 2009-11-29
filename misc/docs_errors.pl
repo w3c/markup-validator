@@ -2,7 +2,7 @@
 ##
 ## Generates HTML documentation of error messages and explanations
 ## for W3C Markup Validation Service
-## $Id: docs_errors.pl,v 1.14 2009-11-24 18:58:59 ville Exp $
+## $Id: docs_errors.pl,v 1.15 2009-11-29 19:13:49 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -155,3 +155,11 @@ sub de_template_explanation
     }
     return $explanation;
 }
+
+# Local Variables:
+# mode: perl
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# perl-indent-level: 4
+# End:
+# ex: ts=4 sw=4 et
