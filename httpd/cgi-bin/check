@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.738 2009-11-28 21:55:25 ville Exp $
+# $Id: check,v 1.739 2009-11-29 19:16:15 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -98,7 +98,9 @@ BEGIN {
     my $base = $ENV{W3C_VALIDATOR_HOME} || '/usr/local/validator';
 
     # Launder data for -T; -AutoLaunder doesn't catch this one.
-    $base = $1 if ($base =~ /^(.*)$/);
+    if ($base =~ /^(.*)$/) {
+        $base = $1;
+    }
 
     #
     # Read Config Files.
@@ -195,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.738 $;
+    $VERSION = q$Revision: 1.739 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     #
