@@ -4,7 +4,7 @@
 
      This is SVG, a language for describing two-dimensional graphics in XML.
      Copyright 2001, 2002 W3C (MIT, INRIA, Keio), All Rights Reserved.
-     Revision: $Id: svg-qname.mod,v 1.1.2.1 2003/06/08 20:19:47 link Exp $
+     Revision: $Id: svg-qname.mod,v 1.3 2002/11/03 15:54:14 fujisawa Exp $
 
      This DTD module is identified by the PUBLIC and SYSTEM identifiers:
 
