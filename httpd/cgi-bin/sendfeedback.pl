@@ -1,7 +1,7 @@
 #!/usr/bin/perl -T
 ##
 ## feedback generator for W3C Markup Validation Service
-# # $Id: sendfeedback.pl,v 1.18 2009-11-29 19:13:49 ville Exp $
+# # $Id: sendfeedback.pl,v 1.19 2009-11-29 19:18:28 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -24,10 +24,11 @@ use constant FALSE => 0;
 # environments, such as mod_perl.  So let's do globals, eg. read config here.
 BEGIN {
 
+    my $base = $ENV{W3C_VALIDATOR_HOME} || '/usr/local/validator';
+
     # Launder data for -T; -AutoLaunder doesn't catch this one.
-    if (exists $ENV{W3C_VALIDATOR_HOME}) {
-        $ENV{W3C_VALIDATOR_HOME} =~ /^(.*)$/;
-        $ENV{W3C_VALIDATOR_HOME} = $1;
+    if ($base =~ /^(.*)$/) {
+        $base = $1;
     }
 
     #
@@ -44,12 +45,7 @@ BEGIN {
             -InterPolateVars       => TRUE,
             -AutoLaunder           => TRUE,
             -AutoTrue              => TRUE,
-            -DefaultConfig         => {
-                Paths => {
-                    Base =>
-                        ($ENV{W3C_VALIDATOR_HOME} || '/usr/local/validator'),
-                },
-            },
+            -DefaultConfig         => {Paths => {Base => $base,},},
         );
         my %cfg = Config::General->new(%config_opts)->getall();
         $CFG = \%cfg;
@@ -100,7 +96,9 @@ sub process_query
     my $sent = $q->param('send');
     if ($sent) {
         print "hello";
-        if ($sent == "yes") { $T->param(ack_ok => TRUE); }
+        if ($sent eq "yes") {
+            $T->param(ack_ok => TRUE);
+        }
     }
 }
 
