@@ -2,7 +2,7 @@
 ##
 ## Generates HTML documentation of error messages and explanations
 ## for W3C Markup Validation Service
-## $Id: docs_errors.pl,v 1.15 2009-11-29 19:13:49 ville Exp $
+## $Id: docs_errors.pl,v 1.16 2009-11-29 22:23:10 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -22,10 +22,11 @@ use constant FALSE => 0;
 
 BEGIN {
 
+    my $base = $ENV{W3C_VALIDATOR_HOME} || '/usr/local/validator';
+
     # Launder data for -T; -AutoLaunder doesn't catch this one.
-    if (exists $ENV{W3C_VALIDATOR_HOME}) {
-        $ENV{W3C_VALIDATOR_HOME} =~ /^(.*)$/;
-        $ENV{W3C_VALIDATOR_HOME} = $1;
+    if ($base =~ /^(.*)$/) {
+        $base = $1;
     }
 
     #
@@ -42,12 +43,7 @@ BEGIN {
             -InterPolateVars       => TRUE,
             -AutoLaunder           => TRUE,
             -AutoTrue              => TRUE,
-            -DefaultConfig         => {
-                Paths => {
-                    Base =>
-                        ($ENV{W3C_VALIDATOR_HOME} || '/usr/local/validator'),
-                },
-            },
+            -DefaultConfig         => {Paths => {Base => $base,},},
         );
         my %cfg = Config::General->new(%config_opts)->getall();
         $CFG = \%cfg;
