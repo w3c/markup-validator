@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.740 2009-11-29 19:27:27 ville Exp $
+# $Id: check,v 1.741 2009-11-29 20:38:17 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.740 $;
+    $VERSION = q$Revision: 1.741 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -1722,17 +1722,17 @@ sub handle_uri
 
     # All Apache configurations don't set HTTP_AUTHORIZATION for CGI scripts.
     # If we're under mod_perl, there is a way around it...
+    my $http_auth = $ENV{HTTP_AUTHORIZATION};
     eval {
         local $SIG{__DIE__} = undef;
         my $auth =
             Apache2::RequestUtil->request()->headers_in()->{Authorization};
-        $ENV{HTTP_AUTHORIZATION} = $auth if $auth;
-    } if (IS_MODPERL2() && !$ENV{HTTP_AUTHORIZATION});
+        $http_auth = $auth if $auth;
+    } if (IS_MODPERL2() && !$http_auth);
 
     # If we got a Authorization header, the client is back at it after being
     # prompted for a password so we insert the header as is in the request.
-    $req->headers->header(Authorization => $ENV{HTTP_AUTHORIZATION})
-        if $ENV{HTTP_AUTHORIZATION};
+    $req->headers->header(Authorization => $http_auth) if $http_auth;
 
     my $res = $ua->request($req);
 
