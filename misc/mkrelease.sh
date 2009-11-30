@@ -55,3 +55,5 @@ tar zc --owner=0 --group=0 -f $topdir/sgml-lib-$tbversion.tar.gz \
 rm -rf validator-$version/htdocs/sgml-lib
 tar zc --owner=0 --group=0 -f $topdir/validator-$tbversion.tar.gz \
   validator-$version
+
+ls -l $topdir/validator-$tbversion.tar.gz $topdir/sgml-lib-$tbversion.tar.gz
