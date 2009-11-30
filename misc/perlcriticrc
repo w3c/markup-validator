@@ -4,6 +4,10 @@ severity = 3
 # uncomment to find out policy modules
 #verbose = 8
 
+[ErrorHandling::RequireCheckingReturnValueOfEval]
+# not yet
+severity = 1
+
 [Modules::ProhibitMultiplePackages]
 # not yet
 severity = 1
