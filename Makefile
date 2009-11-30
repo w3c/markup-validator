@@ -5,7 +5,12 @@ PERL_FILES = httpd/cgi-bin/check httpd/cgi-bin/sendfeedback.pl \
 PERLTIDY = perltidy --profile=misc/perltidyrc --backup-and-modify-in-place
 PERLCRITIC = perlcritic --profile misc/perlcriticrc
 
+VALIDATOR_URI = http://localhost/w3c-validator/check
+
 all:
+
+test:
+	misc/testsuite/harness.py --validator_uri=$(VALIDATOR_URI) run
 
 perlcritic:
 	$(PERLCRITIC) $(PERL_FILES)
