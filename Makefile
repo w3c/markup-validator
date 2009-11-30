@@ -1,3 +1,5 @@
+VERSION = 0.8.6
+
 PERL_FILES = httpd/cgi-bin/check httpd/cgi-bin/sendfeedback.pl \
 	misc/spmpp.pl misc/docs_errors.pl misc/bundle/Makefile.PL \
 	misc/bundle/lib/Bundle/W3C/Validator.pm
@@ -20,3 +22,6 @@ perltidy:
 		echo "$(PERLTIDY) $$file" ; \
 		$(PERLTIDY) $$file ; \
 	done
+
+dist:
+	misc/mkrelease.sh $(VERSION)
