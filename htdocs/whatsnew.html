@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.85 2009-10-25 08:59:45 ville Exp $"
---><!--#set var="date" value="\$Date: 2009-10-25 08:59:45 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.86 2009-12-02 19:37:17 ville Exp $"
+--><!--#set var="date" value="\$Date: 2009-12-02 19:37:17 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#set var="feeds" value="1"
@@ -27,6 +27,133 @@
       </p>
     </div>
     <dl id="news">
+
+      <dt id="t2009-12-xx">2009-12-xx &mdash; 0.8.6 release:</dt>
+      <dd>
+        <p>
+          The 0.8.6 release of the markup validator is an enhancement and
+          bugfix release. Changes include:
+        </p>
+        <ul>
+          <li>
+            Removed feature: the "fuzzy matching" feature introduced in
+            0.8.5 has been removed because it produced too many confusing
+            and invalid suggestions.
+          </li>
+          <li>
+            Removed feature: the proprietary XML output option has been
+            removed (finally, it was supposed to be gone already in 2006).
+          </li>
+          <li>
+            Enhancement: improved error handling and diagnostics for problems
+            occurred when decoding Content-Encodings, when cleaning up
+            markup with Tidy, and when interpreting non-document errors from
+            the HTML5 validator.
+          </li>
+          <li>
+            Enhancement: recognition of more (non-recommended) aliases for
+            various character encodings.
+          </li>
+          <li>
+            Enhancement: the document outline feature is
+            <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6748">now
+              available for invalid documents</a> as well, and its layout
+            has been improved.
+          </li>
+          <li>
+            Enhancement: a
+            <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=7399">direct
+              link for validating an error page</a> has been added to the
+            "this document can not be checked" error page.
+          </li>
+          <li>
+            Enhancement: updated
+            <a href="http://qa-dev.w3.org/unicorn/">Unicorn</a> output.
+          </li>
+          <li>
+            Enhancement: several updates to validator's internal DTD library
+            and catalog, most notably switching to use/reuse more modular DTDs
+            rather than flat ones than before.
+          </li>
+          <li>
+            Enhancement: validator can now be configured to do file based
+            caching of its templates, resulting in noticeable performance
+            improvement in non-mod_perl environments.
+          </li>
+          <li>
+            Bug fix:
+            <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=5132">full
+              document doctype was incorrectly in effect</a> when validating
+            a document fragment wrapped in a doctype template.
+          </li>
+          <li>
+            Bug fix: recommended
+            <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6573">system
+              identifier for XHTML 1.1 plus MathML 2.0 documents</a> was
+            incorrect.
+          </li>
+          <li>
+            Bug fix: HTML5 validator error messages were
+            <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6302">doubly
+              escaped</a>.
+          </li>
+          <li>
+            Bug fix: direct input whenout overriding doctype or charset
+            <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6747">passed
+              an invalid Content-Type header</a> to the HTML5 validator.
+          </li>
+          <li>
+            Bug fix:
+            <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=7592">"wide
+              characters"</a> in Tidy's output caused an error which prevented
+            the whole Tidy output from being displayed.
+          </li>
+          <li>
+            Bug fix: there were
+            <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=7000">several
+              errors in the JSON output</a>.
+          </li>
+          <li>
+            Bug fix: the description for missing xmlns errors contained
+            an example for XHTML documents that was
+            <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6995">not
+              valid XHTML 1.1</a>.
+          </li>
+          <li>
+            Bug fix: bad DC terms namespace prefix in the XHTML+RDFa "badge"
+            example code.
+          </li>
+          <li>
+            Bug fix: the state of the "validate error pages", verbosity,
+            error grouping, and "clean up with Tidy" options were not always
+            preserved.
+          </li>
+          <li>
+            Bug fix: several issues in error message locators in shown
+            source snippets as well as showing the actual portion of a
+            line with errors on it have been fixed.
+          </li>
+          <li>
+            Bug fix: HTTP responses
+            <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=6678">containing
+              lines longer than 4k bytes</a> could not be processed.
+          </li>
+          <li>
+            Dependency changes: new dependency: JSON &gt;= 2.00; new minimum
+            required versions: libwww-perl 5.802, Config-General 2.32,
+            SGML-Parser-OpenSP 0.991; String-Approx is no longer required.
+          </li>
+          <li>
+            … and a whole slew of minor spelling, code cleanup, server error
+            log warning trash, minor performance and the like fixes here and
+            there.  Kudos to
+            <a href="http://perltidy.sourceforge.net/">perltidy</a> and
+            <a href="http://www.perlcritic.org/">perlcritic</a> for many of
+            these.
+          </li>
+        </ul>
+      </dd>
+
       <dt id="t2009-03-26">2009-03-26 &mdash; 0.8.5 release:</dt>
       <dd>
         <p>
