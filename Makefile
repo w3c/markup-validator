@@ -1,4 +1,4 @@
-VERSION = 0.8.6
+VERSION = $(shell perl -ne '/^version:\s*(\S+)/ && print $$1' misc/bundle/META.yml)
 
 PERL_FILES = httpd/cgi-bin/check httpd/cgi-bin/sendfeedback.pl \
 	misc/spmpp.pl misc/docs_errors.pl misc/bundle/Makefile.PL \
