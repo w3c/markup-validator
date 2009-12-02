@@ -1,10 +1,10 @@
 # RPM spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.13 2009-03-13 15:29:15 ot Exp $
+# $Id: w3c-markup-validator.spec,v 1.14 2009-12-02 19:53:34 ville Exp $
 
 %{expand: %%define tbver %(echo %{version} | tr . _)}
 
 Name:           w3c-markup-validator
-Version:        0.8.5
+Version:        0.8.6
 Release:        0
 Summary:        W3C Markup Validator
 

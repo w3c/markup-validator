@@ -1,3 +1,39 @@
+2009-11-24  ville
+
+	* lib/Bundle/W3C/Validator.pm: Fix perlcritic "Code before
+	strictures/warnings" errors.
+
+2009-09-16  ville
+
+	* lib/Bundle/W3C/Validator.pm: Remove fuzzy matching/"Did you mean
+	..." implementation due to too many incorrect suggestions emitted.
+	We'd need to be aware of which attributes and/or elements are valid
+	in the checked document in the particular position; flat lists of
+	all HTML elements and attributes results in too many false
+	positives.  String::Approx usage would have probably needed some
+	work as well, or perhaps it wasn't the best choice for the task to
+	begin with.
+
+2009-06-29  ville
+
+	* lib/Bundle/W3C/Validator.pm: Drop SGML::Parser::OpenSP < 0.991
+	workarounds, require >= 0.991.
+
+2009-06-29  ville
+
+	* lib/Bundle/W3C/Validator.pm: Fix JSON output errors
+	(missing/extra commas, incorrect escaping) (#7000).  New
+	dependency: JSON >= 2.00.
+
+2009-06-29  ville
+
+	* lib/Bundle/W3C/Validator.pm: Drop Config::General <= 2.31
+	workarounds, require >= 2.32.
+
+2009-06-23  ville
+
+	* lib/Bundle/W3C/Validator.pm: Require libwww-perl >= 5.802.
+
 2009-03-27  ville
 
 	* README, lib/Bundle/W3C/Validator.pm: Update author/maintainer
