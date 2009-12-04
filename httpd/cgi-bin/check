@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.742 2009-12-04 21:31:34 ville Exp $
+# $Id: check,v 1.743 2009-12-04 22:28:42 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.742 $;
+    $VERSION = q$Revision: 1.743 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -782,10 +782,9 @@ if (($File->{DOCTYPE} eq "HTML5") or ($File->{DOCTYPE} eq "XHTML5")) {
     }
     else {
         $File->{'Error Flagged'} = TRUE;
-        &get_template($File, 'fatal-error.tmpl')->param(
-            fatal_no_checker      => TRUE,
-            fatal_missing_checker => 'HTML5 Validator',
-        );
+        my $tmpl = &get_template($File, 'fatal-error.tmpl');
+        $tmpl->param(fatal_no_checker      => TRUE);
+        $tmpl->param(fatal_missing_checker => 'HTML5 Validator');
     }
 }
 elsif (($File->{DOCTYPE} eq '') and
@@ -1049,10 +1048,9 @@ sub compoundxml_validate (\$)
     my $res = $ua->request($req);
     if (!$res->is_success()) {
         $File->{'Error Flagged'} = TRUE;
-        &get_template($File, 'fatal-error.tmpl')->param(
-            fatal_no_checker      => TRUE,
-            fatal_missing_checker => 'HTML5 Validator',
-        );
+        my $tmpl = &get_template($File, 'fatal-error.tmpl');
+        $tmpl->param(fatal_no_checker      => TRUE);
+        $tmpl->param(fatal_missing_checker => 'HTML5 Validator');
     }
     else {
         my $content = &get_content($File, $res);
@@ -1068,10 +1066,9 @@ sub compoundxml_validate (\$)
         eval { $xmlDOM = $xml_reader->parse_string($content); };
         if ($@) {
             $File->{'Error Flagged'} = TRUE;
-            &get_template($File, 'fatal-error.tmpl')->param(
-                fatal_no_checker      => TRUE,
-                fatal_missing_checker => 'HTML5 Validator',
-            );
+            my $tmpl = &get_template($File, 'fatal-error.tmpl');
+            $tmpl->param(fatal_no_checker      => TRUE);
+            $tmpl->param(fatal_missing_checker => 'HTML5 Validator');
             return $File;
         }
         my @nodelist      = $xmlDOM->getElementsByTagName("messages");
@@ -1207,10 +1204,9 @@ sub html5_validate (\$)
     my $res = $ua->request($req);
     if (!$res->is_success()) {
         $File->{'Error Flagged'} = TRUE;
-        &get_template($File, 'fatal-error.tmpl')->param(
-            fatal_no_checker      => TRUE,
-            fatal_missing_checker => 'HTML5 Validator',
-        );
+        my $tmpl = &get_template($File, 'fatal-error.tmpl');
+        $tmpl->param(fatal_no_checker      => TRUE);
+        $tmpl->param(fatal_missing_checker => 'HTML5 Validator');
     }
     else {
         my $content = &get_content($File, $res);
@@ -1226,10 +1222,9 @@ sub html5_validate (\$)
         eval { $xmlDOM = $xml_reader->parse_string($content); };
         if ($@) {
             $File->{'Error Flagged'} = TRUE;
-            &get_template($File, 'fatal-error.tmpl')->param(
-                fatal_no_checker      => TRUE,
-                fatal_missing_checker => 'HTML5 Validator',
-            );
+            my $tmpl = &get_template($File, 'fatal-error.tmpl');
+            $tmpl->param(fatal_no_checker      => TRUE);
+            $tmpl->param(fatal_missing_checker => 'HTML5 Validator');
             return $File;
         }
         my @nodelist      = $xmlDOM->getElementsByTagName("messages");
@@ -1596,17 +1591,15 @@ sub report_valid
 
         if (exists $CFG->{Types}->{$File->{DOCTYPE}}->{Badge}) {
             my $cfg = $CFG->{Types}->{$File->{DOCTYPE}};
-            $T->param(
-                badge_uri           => $cfg->{Badge}->{URI},
-                local_badge_uri     => $cfg->{Badge}->{'Local URI'},
-                badge_alt_uri       => $cfg->{Badge}->{'Alt URI'},
-                local_alt_badge_uri => $cfg->{Badge}->{'Local ALT URI'},
-                badge_alt           => $cfg->{Badge}->{Alt},
-                badge_rdfa          => $cfg->{Badge}->{RDFa},
-                badge_h             => $cfg->{Badge}->{Height},
-                badge_w             => $cfg->{Badge}->{Width},
-                badge_tagc => $cfg->{'Parse Mode'} eq 'XML' ? ' /' : '',
-            );
+            $T->param(badge_uri           => $cfg->{Badge}->{URI});
+            $T->param(local_badge_uri     => $cfg->{Badge}->{'Local URI'});
+            $T->param(badge_alt_uri       => $cfg->{Badge}->{'Alt URI'});
+            $T->param(local_alt_badge_uri => $cfg->{Badge}->{'Local ALT URI'});
+            $T->param(badge_alt           => $cfg->{Badge}->{Alt});
+            $T->param(badge_rdfa          => $cfg->{Badge}->{RDFa});
+            $T->param(badge_h             => $cfg->{Badge}->{Height});
+            $T->param(badge_w             => $cfg->{Badge}->{Width});
+            $T->param(badge_tagc => $cfg->{'Parse Mode'} eq 'XML' ? ' /' : '');
         }
     }
     elsif (defined $File->{Tentative}) {
@@ -1666,7 +1659,8 @@ sub authenticate
     chomp($headers);
 
     my $tmpl = &get_template($File, 'http_401_authrequired.tmpl');
-    $tmpl->param(http_401_headers => $headers, http_401_url => $resource);
+    $tmpl->param(http_401_headers => $headers);
+    $tmpl->param(http_401_url     => $resource);
 
     print Encode::encode('UTF-8', $tmpl->output);
     exit;    # Further interaction will be a new HTTP request.
@@ -1694,10 +1688,8 @@ sub handle_uri
             $tmpl->param(fatal_no_content => TRUE);
         }
         else {
-            $tmpl->param(
-                fatal_uri_error  => TRUE,
-                fatal_uri_scheme => $uri->scheme()
-            );
+            $tmpl->param(fatal_uri_error  => TRUE);
+            $tmpl->param(fatal_uri_scheme => $uri->scheme());
         }
         return $File;
     }
@@ -1766,15 +1758,13 @@ sub handle_uri
             }
 
             my $tmpl = &get_template($File, 'fatal-error.tmpl');
-            $tmpl->param(
-                fatal_http_error => TRUE,
-                fatal_http_uri   => $uri->as_string,
-                fatal_http_code  => $res->code,
-                fatal_http_msg   => $res->message,
-                fatal_http_warn  => $warning,
-                fatal_http_no200 => $no200url,
-            );
-            $tmpl->param(fatal_http_dns => TRUE) if ($res->code == 500);
+            $tmpl->param(fatal_http_error => TRUE);
+            $tmpl->param(fatal_http_uri   => $uri->as_string);
+            $tmpl->param(fatal_http_code  => $res->code);
+            $tmpl->param(fatal_http_msg   => $res->message);
+            $tmpl->param(fatal_http_warn  => $warning);
+            $tmpl->param(fatal_http_no200 => $no200url);
+            $tmpl->param(fatal_http_dns   => TRUE) if ($res->code == 500);
         }
 
         return $File;
@@ -1923,10 +1913,9 @@ sub parse_content_type
         }
         else {
             $File->{'Error Flagged'} = TRUE;
-            &get_template($File, 'fatal-error.tmpl')->param(
-                fatal_mime_error => TRUE,
-                fatal_mime_ct    => $ct,
-            );
+            my $tmpl = &get_template($File, 'fatal-error.tmpl');
+            $tmpl->param(fatal_mime_error => TRUE);
+            $tmpl->param(fatal_mime_ct    => $ct);
         }
     }
 
@@ -1949,15 +1938,13 @@ sub get_content ($$)
         my $cenc = $res->header("Content-Encoding");
         my $uri  = $res->request->uri;
         $File->{'Error Flagged'} = TRUE;
-        &get_template($File, 'fatal-error.tmpl')->param(
-            fatal_decode_error  => TRUE,
-            fatal_decode_errmsg => $errmsg,
-            fatal_decode_cenc   => $cenc,
+        my $tmpl = &get_template($File, 'fatal-error.tmpl');
+        $tmpl->param(fatal_decode_error  => TRUE);
+        $tmpl->param(fatal_decode_errmsg => $errmsg);
+        $tmpl->param(fatal_decode_cenc   => $cenc);
 
-            # Include URI because it might be a subsystem
-            # (eg. HTML5 validator) one
-            fatal_decode_uri => $uri,
-        );
+        # Include URI because it might be a subsystem (eg. HTML5 validator) one
+        $tmpl->param(fatal_decode_uri => $uri);
     }
 
     return $content;
@@ -2678,10 +2665,9 @@ sub prepCGI
     # Flag an error if we didn't get a file to validate.
     unless ($q->param('uri')) {
         $File->{'Error Flagged'} = TRUE;
-        &get_template($File, 'fatal-error.tmpl')->param(
-            fatal_uri_error  => TRUE,
-            fatal_uri_scheme => 'undefined',
-        );
+        my $tmpl = &get_template($File, 'fatal-error.tmpl');
+        $tmpl->param(fatal_uri_error  => TRUE);
+        $tmpl->param(fatal_uri_scheme => 'undefined');
     }
 
     return $q;
@@ -2960,14 +2946,13 @@ sub transcode
             # The encoding is not supported due to policy
 
             $File->{'Error Flagged'} = TRUE;
-            &get_template($File, 'fatal-error.tmpl')->param(
-                fatal_transcode_error   => TRUE,
-                fatal_transcode_charset => $cs,
+            my $tmpl = &get_template($File, 'fatal-error.tmpl');
+            $tmpl->param(fatal_transcode_error   => TRUE);
+            $tmpl->param(fatal_transcode_charset => $cs);
 
-                # @@FIXME might need better text
-                fatal_transcode_errmsg =>
-                    'This encoding is not supported by the validator.',
-            );
+            # @@FIXME might need better text
+            $tmpl->param(fatal_transcode_errmsg =>
+                    'This encoding is not supported by the validator.');
             return $File;
         }
         elsif ($CFG->{Charsets}->{$cs} =~ /X /) {
@@ -2993,13 +2978,12 @@ sub transcode
         # the character encoding; might need additional modules
 
         $File->{'Error Flagged'} = TRUE;
-        &get_template($File, 'fatal-error.tmpl')->param(
-            fatal_transcode_error   => TRUE,
-            fatal_transcode_charset => $cs,
+        my $tmpl = &get_template($File, 'fatal-error.tmpl');
+        $tmpl->param(fatal_transcode_error   => TRUE);
+        $tmpl->param(fatal_transcode_charset => $cs);
 
-            # @@FIXME might need better text
-            fatal_transcode_errmsg => 'Encoding not supported.',
-        );
+        # @@FIXME might need better text
+        $tmpl->param(fatal_transcode_errmsg => 'Encoding not supported.');
         return $File;
     }
     elsif (!$CFG->{Charsets}->{$cs}) {
@@ -3027,12 +3011,11 @@ sub transcode
                 my $croak_message = $@;
                 $croak_message =~ s/ at .*//;
                 $File->{'Error Flagged'} = TRUE;
-                &get_template($File, 'fatal-error.tmpl')->param(
-                    fatal_byte_error     => TRUE,
-                    fatal_byte_lines     => $line_num,
-                    fatal_byte_charset   => $cs,
-                    fatal_byte_error_msg => $croak_message,
-                );
+                my $tmpl = &get_template($File, 'fatal-error.tmpl');
+                $tmpl->param(fatal_byte_error     => TRUE);
+                $tmpl->param(fatal_byte_lines     => $line_num);
+                $tmpl->param(fatal_byte_charset   => $cs);
+                $tmpl->param(fatal_byte_error_msg => $croak_message);
             }
         }
         return $File;
@@ -3417,11 +3400,10 @@ sub error
     # No or unknown FPI and a relative SI.
     if ($err->{msg} =~ m(cannot (open|find))) {
         $File->{'Error Flagged'} = TRUE;
-        &W3C::Validator::MarkupValidator::get_template($File,
-            'fatal-error.tmpl')->param(
-            fatal_parse_extid_error => TRUE,
-            fatal_parse_extid_msg   => $err->{msg},
-            );
+        my $tmpl = &W3C::Validator::MarkupValidator::get_template($File,
+            'fatal-error.tmpl');
+        $tmpl->param(fatal_parse_extid_error => TRUE);
+        $tmpl->param(fatal_parse_extid_msg   => $err->{msg});
     }
 
     # No DOCTYPE found! We are falling back to vanilla DTD
@@ -3612,10 +3594,8 @@ sub uri_ok
         $File->{'Error Flagged'} = 1;
         my $tmpl = &W3C::Validator::MarkupValidator::get_template($File,
             'fatal-error.tmpl');
-        $tmpl->param(
-            fatal_ip_error => 1,
-            fatal_ip_host  => $uri->host() || 'undefined',
-        );
+        $tmpl->param(fatal_ip_error    => 1);
+        $tmpl->param(fatal_ip_host     => $uri->host() || 'undefined');
         $tmpl->param(fatal_ip_hostname => 1)
             if ($addr and $uri->host() ne $addr);
         return 0;
