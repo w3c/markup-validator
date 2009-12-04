@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.741 2009-11-29 20:38:17 ville Exp $
+# $Id: check,v 1.742 2009-12-04 21:31:34 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.741 $;
+    $VERSION = q$Revision: 1.742 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -2432,12 +2432,13 @@ sub preparse_doctype
             $File->{Root}    = "html";
             $File->{DOCTYPE} = "HTML5";
         }
-        else {
+        elsif ($declaration =~
+            m(<!DOCTYPE\s+(\w[\w\.-]+)\s+(PUBLIC|SYSTEM)\s+(?:[\'\"])([^\"\']+)(?:[\"\'])(.*)>)si
+            )
+        {
             (   $File->{Root},    $doctype_type,
                 $File->{DOCTYPE}, $doctype_secondpart
-                )
-                = $declaration =~
-                m(<!DOCTYPE\s+(\w[\w\.-]+)\s+(PUBLIC|SYSTEM)\s+(?:[\'\"])([^\"\']+)(?:[\"\'])(.*)>)si;
+            ) = ($1, $2, $3, $4);
             if (($doctype_type eq "PUBLIC") and
                 (($doctype_secondpart) =
                     $doctype_secondpart =~
