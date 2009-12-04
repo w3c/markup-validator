@@ -1,6 +1,6 @@
 
-<!--#set var="revision" value="\$Id: index.html,v 1.110 2009-12-04 21:05:22 ville Exp $"
---><!--#set var="date" value="\$Date: 2009-12-04 21:05:22 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.111 2009-12-04 21:45:02 ville Exp $"
+--><!--#set var="date" value="\$Date: 2009-12-04 21:45:02 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -1251,10 +1251,16 @@
 	  <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fvalidator.w3.org%3A8000%2F">with v.w.o</a> - 
 	  httpd on a non-standard port (should be working transparently if :8000 server is running)
 	</li>
-  <li><a href="../../check?uri=http%3A%2F%2Fwww.oreillynet.com%2Fpub%2Ffeed%2F20">validate</a> -
-    a resource served as application/atom+xml, should be passed on to the Feed Validator.</li>
-  <li><a href="../../check?uri=http%3A%2F%2Fwww.w3.org%2FStyleSheets%2FCore%2FSwiss">validate</a> -
-    a resource served as text/css, should be passed on to the CSS Validator.</li>
+	<li>
+	  <a href="../../check?uri=http%3A%2F%2Fidenti.ca%2Fapi%2Fstatuses%2Fuser_timeline%2Fw3c.atom">validate</a> -
+	  <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fidenti.ca%2Fapi%2Fstatuses%2Fuser_timeline%2Fw3c.atom">with v.w.o</a> -
+	  a resource served as application/atom+xml, should be passed on to the Feed Validator.
+	</li>
+	<li>
+	  <a href="../../check?uri=http%3A%2F%2Fwww.w3.org%2FStyleSheets%2FCore%2FSwiss">validate</a> -
+	  <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fwww.w3.org%2FStyleSheets%2FCore%2FSwiss">with v.w.o</a> -
+	  a resource served as text/css, should be passed on to the CSS Validator.
+	</li>
 </ul>
 
       <h4  id="regress">Bugs and Regression Tests</h4>
