@@ -81,7 +81,7 @@
         <input id="type-index" name="type-index" type="hidden" value="www-validator" />
         <input id="index-type" name="index-type" type="hidden" value="t" />
   <TMPL_IF NAME="errmsg_id">
-        <input id="keywords" name="keywords" type="text" size="33" maxlength="100" value="[VE][<TMPL_VAR NAME="errmsg_id" ESCAPE="URL">]" />
+        <input id="keywords" name="keywords" type="text" size="33" maxlength="100" value="[VE][<TMPL_VAR NAME="errmsg_id" ESCAPE="HTML">]" />
   <TMPL_ELSE>
         <input id="keywords" name="keywords" type="text" size="33" maxlength="100" value="" />
   </TMPL_IF>
@@ -92,7 +92,7 @@
   <p>Once you have checked that your suggestion has not been given yet, you can send your message. To write an efficient message:</p>
   <ul>
     <li><strong>Add a meaningful subject line</strong>: summarize your feedback in a handful of words;</li>
-    <li>If our system added <TMPL_IF NAME="errmsg_id">[VE][<TMPL_VAR NAME="errmsg_id">]<TMPL_ELSE>[VE][XX]</TMPL_IF> at the beginning of the mail subject, keep it. 
+    <li>If our system added [VE][<TMPL_IF NAME="errmsg_id"><TMPL_VAR NAME="errmsg_id" ESCAPE="HTML"><TMPL_ELSE>XX</TMPL_IF>] at the beginning of the mail subject, keep it. 
     Otherwise, please precise which error message you are sending feedback about;</li>
     <li><strong>Give some context</strong>. Generally speaking, this means <strong>give the URL</strong> of the page you were trying to validate.
     The more context you give, the easier it will be for others to understand your problem, question or feedback.
