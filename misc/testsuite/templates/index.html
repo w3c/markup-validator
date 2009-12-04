@@ -1,6 +1,6 @@
 
-<!--#set var="revision" value="\$Id: index.html,v 1.3 2008-07-28 19:43:58 ot Exp $"
---><!--#set var="date" value="\$Date: 2008-07-28 19:43:58 $"
+<!--#set var="revision" value="\$Id: index.html,v 1.4 2009-12-04 21:01:17 ville Exp $"
+--><!--#set var="date" value="\$Date: 2009-12-04 21:01:17 $"
 --><!--#set var="title" value="The W3C Markup Validation Service: Tests"
 --><!--#set var="relroot" value="../../"
 --><!--#include virtual="../../header.html" -->
@@ -25,7 +25,7 @@
 <ol>
 {% for collection in test_suite.collections %}
 {% if collection.level is sameas 1 %}
-<li><a href="#{{collection.collection_id}}">{{collection.title}}</a></li>
+<li><a href="#{{collection.collection_id}}">{{collection.title|e}}</a></li>
 {% endif %}
 {% endfor %}
 <li><a href="#nonauto">Non-Automated tests</a></li>
@@ -33,15 +33,15 @@
 </div>
 
 {% for collection in test_suite.collections %}
-<h{{collection.level +2}} id="{{collection.collection_id}}">{{collection.title}}</h{{collection.level +2}}>
+<h{{collection.level +2}} id="{{collection.collection_id}}">{{collection.title|e}}</h{{collection.level +2}}>
 <p>{{collection.description}}</p>
  {% for case in collection._tests %}
-    <h{{collection.level +3}}>{{case.title}}</h{{collection.level +3}}>
+    <h{{collection.level +3}}>{{case.title|e}}</h{{collection.level +3}}>
     <p>
-		<a href="../../check?uri={{case.docURI}};ss">validate</a> -
-		<a href="http://validator.w3.org/check?uri={{case.docURI}};ss">with v.w.o</a> -
-		<a href="{{case.docURI}}">view</a>:
-    {{case.description}}</p>
+	<a href="../../check?uri={{case.docURI|replace(':','%3A')|replace('/','%2F')|replace(';','%3B')|replace('&','%26')|e}};ss">validate</a> -
+	<a href="http://validator.w3.org/check?uri={{case.docURI|replace(':','%3A')|replace('/','%2F')|replace(';','%3B')|replace('&','%26')|e}};ss">with v.w.o</a> -
+	<a href="{{case.docURI|e}}">view</a>:
+    {{case.description|e}}</p>
     
  {% endfor %}
 {% endfor %}
@@ -53,8 +53,8 @@
       <p>The following tests do not test the binary "validity" results, but the proper handling of options, errors, various outputs, etc. 
       "validate" links use this instance, with validator.w3.org links added for reference comparison</p>
 <ul>
-	<li><a href="../../check?uri=file%3A///etc/passwd">validate</a> -
-	    <a href="http://validator.w3.org/check?uri=file%3A///etc/passwd">with v.w.o</a> - 
+	<li><a href="../../check?uri=file%3A%2F%2F%2Fetc%2Fpasswd">validate</a> -
+	    <a href="http://validator.w3.org/check?uri=file%3A%2F%2F%2Fetc%2Fpasswd">with v.w.o</a> - 
 	    a file: URL </li>
 	<li>
 	  <a href="../../check/referer">validate</a> - 
@@ -92,8 +92,8 @@
 	  /check?uri=referer;verbose=1;No200=1 (supported, should validate this test collection)
 	</li>
 	<li>
-	  <a href="../../check?uri=http://www.w3.org/MarkUp">validate</a> - 
-	  <a href="http://validator.w3.org/check?uri=http://www.w3.org/MarkUp">with v.w.o</a> - 
+	  <a href="../../check?uri=http%3A%2F%2Fwww.w3.org%2FMarkUp">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fwww.w3.org%2FMarkUp">with v.w.o</a> - 
 	  Directory Redirect (should mention the redirect and validate the redirection target
 	</li>
 	<li>
@@ -107,33 +107,33 @@
 	  uri parameter is empty
 	</li>
 	<li>
-	  <a href="../../check?uri=www.w3.org/">validate</a> - 
-	  <a href="http://validator.w3.org/check?uri=www.w3.org/">with v.w.o</a> - 
+	  <a href="../../check?uri=www.w3.org%2F">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=www.w3.org%2F">with v.w.o</a> - 
 	  uri is missing http:// (silent fix)
 	</li>
 	<li>
-	  <a href="../../check?uri=http://www.w3.org/bogus">validate</a> - 
-	  <a href="http://validator.w3.org/check?uri=http://www.w3.org/bogus">with v.w.o</a> - 
+	  <a href="../../check?uri=http%3A%2F%2Fwww.w3.org%2Fbogus">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fwww.w3.org%2Fbogus">with v.w.o</a> - 
 	  404 not found
 	</li>
 	<li>
-	  <a href="../../check?uri=http://www.w3.org/bogus;No200=1">validate</a> - 
-	  <a href="http://validator.w3.org/check?uri=http://www.w3.org/bogus;no200=1">with v.w.o</a> - 
+	  <a href="../../check?uri=http%3A%2F%2Fwww.w3.org%2Fbogus;No200=1">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fwww.w3.org%2Fbogus;no200=1">with v.w.o</a> - 
 	  404 not found, with "validate error pages" ON 
 	</li>
 	<li>
-	  <a href="../../check?uri=http://validator.w3.org/sgml-lib/sgml.soc">validate</a> - 
-	  <a href="http://validator.w3.org/check?uri=http://validator.w3.org/sgml-lib/sgml.soc">with v.w.o</a> - 
+	  <a href="../../check?uri=http%3A%2F%2Fvalidator.w3.org%2Fsgml-lib%2Fsgml.soc">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fvalidator.w3.org%2Fsgml-lib%2Fsgml.soc">with v.w.o</a> - 
 	  text/plain resource (refuses to validate)
 	</li>
 	<li>
-	  <a href="../../check?uri=http://validator.w3.org:8000/">validate</a> - 
-	  <a href="http://validator.w3.org/check?uri=http://validator.w3.org:8000/">with v.w.o</a> - 
+	  <a href="../../check?uri=http%3A%2F%2Fvalidator.w3.org%3A8000%2F">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fvalidator.w3.org%3A8000%2F">with v.w.o</a> - 
 	  httpd on a non-standard port (should be working transparently if :8000 server is running)
 	</li>
-  <li><a href="../../check?uri=http://www.oreillynet.com/pub/feed/20">validate</a> -
+  <li><a href="../../check?uri=http%3A%2F%2Fwww.oreillynet.com%2Fpub%2Ffeed%2F20">validate</a> -
     a resource served as application/atom+xml, should be passed on to the Feed Validator.</li>
-  <li><a href="../../check?uri=http://www.w3.org/StyleSheets/Core/Swiss">validate</a> -
+  <li><a href="../../check?uri=http%3A%2F%2Fwww.w3.org%2FStyleSheets%2FCore%2FSwiss">validate</a> -
     a resource served as text/css, should be passed on to the CSS Validator.</li>
 </ul>
 
@@ -142,12 +142,12 @@
       
       <ul>
           
-	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/long-lines.html">Long Lines</a> (cause a core)</li>
-	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/trailing-nul.html">A trailing ASCII NUL character</a> (trips up HTML::Parser (not really))</li>
-	<li><a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/colons.html">Undeclared namespace prefixes</a> (colons ":" in element names (trips up parsing of onsgmls output))</li>
+	<li><a href="../../check?uri=http%3A%2F%2Fqa-dev.w3.org%2Fwmvs%2FHEAD%2Fdev%2Ftests%2Flong-lines.html">Long Lines</a> (cause a core)</li>
+	<li><a href="../../check?uri=http%3A%2F%2Fqa-dev.w3.org%2Fwmvs%2FHEAD%2Fdev%2Ftests%2Ftrailing-nul.html">A trailing ASCII NUL character</a> (trips up HTML::Parser (not really))</li>
+	<li><a href="../../check?uri=http%3A%2F%2Fqa-dev.w3.org%2Fwmvs%2FHEAD%2Fdev%2Ftests%2Fcolons.html">Undeclared namespace prefixes</a> (colons ":" in element names (trips up parsing of onsgmls output))</li>
 	<li>
-	  <a href="../../check?uri=http://qa-dev.w3.org/wmvs/HEAD/dev/tests/857-svg_nodoctype.svg;doctype=SVG+1.1;ss=1">validate</a> - 
-	  <a href="http://validator.w3.org/check?uri=qa-dev.w3.org/wmvs/HEAD/dev/tests/857-svg_nodoctype.svg;doctype=SVG+1.1;ss=1">with v.w.o</a> - <a href="857-svg_nodoctype.svg">view</a>:
+	  <a href="../../check?uri=http%3A%2F%2Fqa-dev.w3.org%2Fwmvs%2FHEAD%2Fdev%2Ftests%2F857-svg_nodoctype.svg;doctype=SVG+1.1;ss=1">validate</a> - 
+	  <a href="http://validator.w3.org/check?uri=qa-dev.w3.org%2Fwmvs%2FHEAD%2Fdev%2Ftests%2F857-svg_nodoctype.svg;doctype=SVG+1.1;ss=1">with v.w.o</a> - <a href="857-svg_nodoctype.svg">view</a>:
 	  Test of doctype override for SVG document with no doctype, but an XML decl. The doctype should sneak between
 	  the XML decl and the root svg start tag. (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=857" title="Bug 857 - DOCTYPE Override should take XML Decl into account."> 857 - DOCTYPE Override</a>)
 	</li>
