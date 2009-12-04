@@ -1,7 +1,7 @@
 #!/usr/bin/perl -T
 ##
 ## feedback generator for W3C Markup Validation Service
-# # $Id: sendfeedback.pl,v 1.19 2009-11-29 19:18:28 ville Exp $
+# # $Id: sendfeedback.pl,v 1.20 2009-12-04 22:44:19 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -88,7 +88,7 @@ sub process_query
     $validated_uri = $q->param('uri');
     $errmsg_id     = $q->param('errmsg_id');
     if ($errmsg_id) {
-        $errmsg_text = "$RSRC{msg}->{$errmsg_id}->{original}";
+        $errmsg_text = $RSRC{msg}->{$errmsg_id}->{original};
         $errmsg_text = de_template_explanation($errmsg_text);
     }
 
