@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.743 2009-12-04 22:28:42 ville Exp $
+# $Id: check,v 1.744 2009-12-05 10:05:35 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.743 $;
+    $VERSION = q$Revision: 1.744 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -986,7 +986,8 @@ sub get_template ($$)
     if (!$File->{_Templates}->{$fname}) {
         my $tmpl = HTML::Template->new(%{$File->{Template_Defaults}},
             filename => $fname);
-        $tmpl->param(cfg_home_page => $CFG->{'Home Page'});
+        $tmpl->param(cfg_home_page     => $CFG->{'Home Page'});
+        $tmpl->param(validator_version => $VERSION);
         $File->{_Templates}->{$fname} = $tmpl;
     }
     return $File->{_Templates}->{$fname};
