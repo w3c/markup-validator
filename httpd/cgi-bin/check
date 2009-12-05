@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.744 2009-12-05 10:05:35 ville Exp $
+# $Id: check,v 1.745 2009-12-05 10:22:04 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.744 $;
+    $VERSION = q$Revision: 1.745 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -901,14 +901,16 @@ if (!$File->{'Is Valid'} && $File->{Opt}->{'Show Tidy'}) {
 }
 
 my %templates = (
-    earl => 'earl_xml.tmpl',
-    n3   => 'earl_n3.tmpl',
-    json => 'json_output.tmpl',
-    ucn  => 'ucn_output.tmpl',
+    earl => ['earl_xml.tmpl', default_escape => 'HTML'],
+    n3   => ['earl_n3.tmpl'],
+    json => ['json_output.tmpl'],
+    ucn  => ['ucn_output.tmpl'],
 );
 my $template = $templates{$File->{Opt}->{Output}};
 if ($template) {
-    $template = &get_template($File, $template);
+    my $tname = shift(@$template);
+    my $tmpl = &get_template($File, $tname, @$template);
+    $template = $tmpl;
 }
 elsif ($File->{Opt}->{Output} eq 'soap12') {
     if ($CFG->{'Enable SOAP'} != 1) {
@@ -980,12 +982,15 @@ exit;
 # Subroutine definitions
 #############################################################################
 
-sub get_template ($$)
+sub get_template ($$;@)
 {
-    my ($File, $fname) = @_;
+    my ($File, $fname, @opts) = @_;
     if (!$File->{_Templates}->{$fname}) {
-        my $tmpl = HTML::Template->new(%{$File->{Template_Defaults}},
-            filename => $fname);
+        my $tmpl = HTML::Template->new(
+            %{$File->{Template_Defaults}},
+            filename => $fname,
+            @opts
+        );
         $tmpl->param(cfg_home_page     => $CFG->{'Home Page'});
         $tmpl->param(validator_version => $VERSION);
         $File->{_Templates}->{$fname} = $tmpl;

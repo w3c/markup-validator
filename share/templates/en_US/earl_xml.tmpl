@@ -1,57 +1,64 @@
 Content-Type: application/rdf+xml; charset=UTF-8
 X-W3C-Validator-Recursion: <TMPL_VAR NAME="depth" DEFAULT="1"><TMPL_IF NAME="fatal_error">
 X-W3C-Validator-Status: Abort<TMPL_ELSE><TMPL_IF NAME="valid_status">
-X-W3C-Validator-Status: <TMPL_VAR NAME="valid_status"></TMPL_IF>
-X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num">
-X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
+X-W3C-Validator-Status: <TMPL_VAR NAME="valid_status" ESCAPE="NONE"></TMPL_IF>
+X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num" ESCAPE="NONE">
+X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num" ESCAPE="NONE"></TMPL_IF>
 
 <?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-  xmlns="http://www.w3.org/2001/03/earl/1.0-test#"
-  xmlns:val="http://validator.w3.org/this_will_change/do_not_rely_on_it!">
+  xmlns:dct="http://purl.org/dc/terms/"
+  xmlns:foaf="http://xmlns.com/foaf/spec/#"
+  xmlns:ptr="http://www.w3.org/2009/pointers#"
+  xmlns="http://www.w3.org/ns/earl#">
 
-  <Assertor rdf:about="http://validator.w3.org/">
-    <name>W3 Validator</name>
-    <contactInfo rdf:resource="http://validator.w3.org/about.html"/>
-    <testMode rdf:resource="http://www.w3.org/2001/03/earl/1.00#Auto" />
+  <Software rdf:about="<TMPL_VAR NAME="cfg_home_page">about.html">
+    <dct:title xml:lang="en">W3C Markup Validation Service</dct:title>
+    <dct:description xml:lang="en">
+      The W3C Markup Validation Service is a free service by W3C that helps
+      check the validity of Web documents.
+    </dct:description>
+    <foaf:homepage><TMPL_VAR NAME="cfg_home_page"></foaf:homepage>
+    <dct:hasVersion><TMPL_VAR NAME="validator_version"></dct:hasVersion>
+  </Software>
+
+  <TestRequirement rdf:about="http://www.w3.org/Markup/">
+    <dct:title xml:lang="en">Markup validity</dct:title>
+  </TestRequirement>
 
 <TMPL_IF NAME="VALID">
-  <asserts>
-   <Assertion>
-    <subject rdf:resource="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">" />
-    <result rdf:resource="http://www.w3.org/2001/03/earl/1.00#passes" />
-    <testCase rdf:resource="http://www.w3.org/MarkUp/" />
-    <note>Valid!</note>
-   </Assertion>
-  </asserts>
+  <Assertion>
+    <assertedBy rdf:resource="<TMPL_VAR NAME="cfg_home_page">about.html"/>
+    <test rdf:resource="http://www.w3.org/Markup/"/>
+    <subject rdf:resource="<TMPL_VAR NAME="file_uri">"/>
+    <mode rdf:resource="http://www.w3.org/ns/earl#automatic"/>
+    <result rdf:resource="http://www.w3.org/ns/earl#passed" />
+  </Assertion>
 <TMPL_ELSE>
-
-  <asserts>
-   <Assertion rdf:ID="result">
-    <subject rdf:resource="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">" />
-    <result rdf:resource="http://www.w3.org/2001/03/earl/1.00#fails" />
-    <testCase rdf:resource="http://www.w3.org/MarkUp/" />
-    <note>Invalid!</note>
-   </Assertion>
-  </asserts>
-
 <TMPL_LOOP NAME="file_errors">
-    <asserts>
-      <Assertion rdf:ID="err<TMPL_VAR NAME="__counter__" ESCAPE="HTML">">
-        <subject rdf:parseType="Resource">
-          <reprOf rdf:resource="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">"/>
-          <val:line><TMPL_VAR NAME="line" ESCAPE="HTML"></val:line>
-          <val:column><TMPL_VAR NAME="char" ESCAPE="HTML"></val:column>
-        </subject>
-        <result rdf:resource="http://www.w3.org/2003/03/earl/1.00#fails" />
-        <testCase rdf:resource="http://www.w3.org/Markup/" />
-        <note><TMPL_VAR NAME="msg" ESCAPE="HTML"></note>
-      </Assertion>
-    </asserts>
+  <Assertion rdf:ID="assert<TMPL_VAR NAME="__counter__">">
+    <assertedBy rdf:resource="<TMPL_VAR NAME="cfg_home_page">about.html"/>
+    <subject rdf:resource="<TMPL_VAR NAME="file_uri">"/>
+    <mode rdf:resource="http://www.w3.org/ns/earl#automatic"/>
+    <test rdf:resource="http://www.w3.org/Markup/"/>
+    <result rdf:resource="#error<TMPL_VAR NAME="__counter__">"/>
+  </Assertion>
+
+  <TestResult rdf:ID="error<TMPL_VAR NAME="__counter__">">
+    <outcome rdf:resource="http://www.w3.org/ns/earl#failed"/>
+    <dct:description xml:lang="en"><TMPL_VAR NAME="msg"></dct:description><TMPL_IF NAME="line">
+    <pointer rdf:resource="#pointer<TMPL_VAR NAME="__counter__">"/></TMPL_IF>
+  </TestResult>
+
+<TMPL_IF NAME="line">
+  <ptr:LineCharPointer rdf:ID="pointer<TMPL_VAR NAME="__counter__">">
+    <ptr:lineNumber><TMPL_VAR NAME="line"></ptr:lineNumber><TMPL_IF NAME="char">
+    <ptr:charNumber><TMPL_VAR NAME="char"></ptr:charNumber></TMPL_IF>
+  </ptr:LineCharPointer>
+</TMPL_IF>
+
 </TMPL_LOOP>
 </TMPL_IF>
 
-  </Assertor>
 </rdf:RDF>
-
