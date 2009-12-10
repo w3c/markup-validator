@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.745 2009-12-05 10:22:04 ville Exp $
+# $Id: check,v 1.746 2009-12-10 19:28:13 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.745 $;
+    $VERSION = q$Revision: 1.746 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -3559,6 +3559,13 @@ sub new
     $self->default_header(
         'Accept-Encoding' => scalar HTTP::Message::decodable())
         if (!$File->{Opt}->{Debug} && HTTP::Message->can('decodable'));
+
+    # Our timeout should be set to something lower than the web server's,
+    # remembering to give some head room for the actual validation to take
+    # place after the document has been fetched (something like 15 seconds
+    # should be plenty).  validator.w3.org instances have their timeout set
+    # to 60 seconds as of writing this (#4985, #6950).
+    $self->timeout(45);
 
     return $self;
 }
