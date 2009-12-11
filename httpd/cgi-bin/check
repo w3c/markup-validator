@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.746 2009-12-10 19:28:13 ville Exp $
+# $Id: check,v 1.747 2009-12-11 18:40:24 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.746 $;
+    $VERSION = q$Revision: 1.747 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -3069,8 +3069,47 @@ sub find_encodings
         $metah{lc($meta)}++ if defined $meta and length $meta;
     }
 
-    my @meta = sort { $metah{$b} <=> $metah{$a} } keys %metah;
-    $File->{Charset}->{META} = $meta[0] if @meta;
+    if (!%metah) {
+
+        # HTML::Encoding doesn't support HTML5 <meta charset> as of 0.60,
+        # check it ourselves.  HTML::HeadParser >= 3.60 is required for this.
+
+        if (eval {
+                local $SIG{__DIE__} = undef;
+                require HTML::HeadParser;
+                HTML::HeadParser->VERSION(3.60);
+            }
+            )
+        {
+            my $hp           = HTML::HeadParser->new();
+            my $seen_doctype = FALSE;
+            my $is_html5     = FALSE;
+            $hp->handler(
+                declaration => sub {
+                    my ($tag, $text) = @_;
+                    return if ($seen_doctype || uc($tag) ne '!DOCTYPE');
+                    $seen_doctype = TRUE;
+                    $is_html5     = TRUE
+                        if (
+                        $text =~ /<!DOCTYPE\s+html
+                                    (\s+SYSTEM\s+(['"])about:legacy-compat\2)?
+                                    \s*>/six
+                        );
+                },
+                'tag,text'
+            );
+            $hp->parse($File->{Bytes});
+            if ($is_html5) {
+                my $cs = $hp->header('X-Meta-Charset');
+                $metah{lc($cs)}++ if (defined($cs) && length($cs));
+            }
+        }
+    }
+
+    if (%metah) {
+        my @meta = sort { $metah{$b} <=> $metah{$a} } keys %metah;
+        $File->{Charset}->{META} = $meta[0];
+    }
 
     return $File;
 }
