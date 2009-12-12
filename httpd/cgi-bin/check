@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.747 2009-12-11 18:40:24 ville Exp $
+# $Id: check,v 1.748 2009-12-12 11:15:13 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.747 $;
+    $VERSION = q$Revision: 1.748 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -1057,6 +1057,7 @@ sub compoundxml_validate (\$)
         my $tmpl = &get_template($File, 'fatal-error.tmpl');
         $tmpl->param(fatal_no_checker      => TRUE);
         $tmpl->param(fatal_missing_checker => 'HTML5 Validator');
+        $tmpl->param(fatal_checker_error   => $res->status_line());
     }
     else {
         my $content = &get_content($File, $res);
@@ -1071,10 +1072,12 @@ sub compoundxml_validate (\$)
         my $xmlDOM;
         eval { $xmlDOM = $xml_reader->parse_string($content); };
         if ($@) {
+            my $errmsg = $@;
             $File->{'Error Flagged'} = TRUE;
             my $tmpl = &get_template($File, 'fatal-error.tmpl');
             $tmpl->param(fatal_no_checker      => TRUE);
             $tmpl->param(fatal_missing_checker => 'HTML5 Validator');
+            $tmpl->param(fatal_checker_error   => $errmsg);
             return $File;
         }
         my @nodelist      = $xmlDOM->getElementsByTagName("messages");
@@ -1213,6 +1216,7 @@ sub html5_validate (\$)
         my $tmpl = &get_template($File, 'fatal-error.tmpl');
         $tmpl->param(fatal_no_checker      => TRUE);
         $tmpl->param(fatal_missing_checker => 'HTML5 Validator');
+        $tmpl->param(fatal_checker_error   => $res->status_line());
     }
     else {
         my $content = &get_content($File, $res);
@@ -1227,10 +1231,12 @@ sub html5_validate (\$)
         my $xmlDOM;
         eval { $xmlDOM = $xml_reader->parse_string($content); };
         if ($@) {
+            my $errmsg = $@;
             $File->{'Error Flagged'} = TRUE;
             my $tmpl = &get_template($File, 'fatal-error.tmpl');
             $tmpl->param(fatal_no_checker      => TRUE);
             $tmpl->param(fatal_missing_checker => 'HTML5 Validator');
+            $tmpl->param(fatal_checker_error   => $errmsg);
             return $File;
         }
         my @nodelist      = $xmlDOM->getElementsByTagName("messages");

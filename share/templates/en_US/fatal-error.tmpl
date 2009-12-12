@@ -16,6 +16,12 @@
       in this validator, or is currently unavailable. Check in the validator's system configuration 
       that <TMPL_IF NAME="fatal_missing_checker"><TMPL_VAR NAME="fatal_missing_checker"> is enabled and functional<TMPL_ELSE>all external checkers are enabled, and test if they are responsive</TMPL_IF>.
     </p>
+    <TMPL_IF NAME="fatal_checker_error">
+    <p>
+      The error encountered was:
+      <code><TMPL_VAR NAME="fatal_checker_error" ESCAPE="HTML"></code>
+    </p>
+    </TMPL_IF>
 </li>
 </TMPL_IF>
 <TMPL_IF NAME="fatal_transcode_error">
