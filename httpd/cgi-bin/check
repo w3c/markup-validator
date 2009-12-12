@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.750 2009-12-12 12:47:19 ville Exp $
+# $Id: check,v 1.751 2009-12-12 20:06:36 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.750 $;
+    $VERSION = q$Revision: 1.751 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -1213,8 +1213,15 @@ sub html5_validate (\$)
     # formatted string).
     $req->header('Last-Modified', $File->{Modified}) if $File->{Modified};
 
-    # If not in debug mode, gzip the request (LWP >= 5.817)
-    eval { $req->encode("gzip"); } unless $File->{Opt}->{Debug};
+    # Use gzip in non-debug, remote HTML5 validator mode (LWP >= 5.817).
+    if (!$File->{Opt}->{Debug} &&
+        $url->host() !~ /^(?:localhost|127(?:\.\d+){3}|.*\.localdomain)$/i)
+    {
+        eval { $req->encode("gzip"); };
+    }
+    else {
+        $req->header('Accept-Encoding', 'identity');
+    }
 
     my $res = $ua->request($req);
     if (!$res->is_success()) {
