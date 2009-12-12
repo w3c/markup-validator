@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.748 2009-12-12 11:15:13 ville Exp $
+# $Id: check,v 1.749 2009-12-12 11:36:27 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.748 $;
+    $VERSION = q$Revision: 1.749 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -1167,6 +1167,7 @@ sub html5_validate (\$)
     $url->query_form(out => "xml");
 
     my $req = HTTP::Request->new(POST => $url);
+    my $ct = &is_xml($File) ? "application/xhtml+xml" : "text/html";
 
     if ($File->{Opt}->{DOCTYPE} || $File->{Charset}->{Override}) {
 
@@ -1177,8 +1178,11 @@ sub html5_validate (\$)
         # charset info in XML declaration, meta http-equiv/charset and/or BOM
         # (any others?).
 
-        my $ct = $File->{'Direct Input'} ? "text/html" : $File->{ContentType};
-        $req->content_type("$ct; charset=UTF-8");
+        $ct = $File->{ContentType} unless $File->{'Direct Input'};
+        my @ct = ($ct => undef, charset => "UTF-8");
+        $ct = HTTP::Headers::Util::join_header_words(@ct);
+
+        $req->content_type($ct);
         $req->content(Encode::encode_utf8(join("\n", @{$File->{Content}})));
     }
     else {
@@ -1189,14 +1193,16 @@ sub html5_validate (\$)
         # chars used in the document).
 
         if ($File->{'Direct Input'}) {
-            $req->content_type("text/html; charset=UTF-8");
+            $ct .= "; charset=UTF-8";
         }
         else {
             my @ct = ($File->{ContentType} => undef);
             push(@ct, charset => $File->{Charset}->{HTTP})
                 if $File->{Charset}->{HTTP};
-            $req->content_type(HTTP::Headers::Util::join_header_words(@ct));
+            $ct = HTTP::Headers::Util::join_header_words(@ct);
         }
+
+        $req->content_type($ct);
         $req->content_ref(\$File->{Bytes});
     }
 
