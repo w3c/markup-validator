@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.749 2009-12-12 11:36:27 ville Exp $
+# $Id: check,v 1.750 2009-12-12 12:47:19 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.749 $;
+    $VERSION = q$Revision: 1.750 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -1008,7 +1008,7 @@ sub compoundxml_validate (\$)
     $File->{ParserOpts} = "";
 
     my $url = URI->new($CFG->{External}->{CompoundXML});
-    $url->query_form(out => "xml");
+    $url->query("out=xml");
 
     my $req = HTTP::Request->new(POST => $url);
 
@@ -1164,7 +1164,7 @@ sub html5_validate (\$)
     $File->{ParserOpts} = "";
 
     my $url = URI->new($CFG->{External}->{HTML5});
-    $url->query_form(out => "xml");
+    $url->query("out=xml");
 
     my $req = HTTP::Request->new(POST => $url);
     my $ct = &is_xml($File) ? "application/xhtml+xml" : "text/html";
