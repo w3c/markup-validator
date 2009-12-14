@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.753 2009-12-14 21:18:33 ville Exp $
+# $Id: check,v 1.754 2009-12-14 22:03:54 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -60,7 +60,7 @@ use JSON 2.00 qw();
 use SGML::Parser::OpenSP 0.991 qw();
 use URI qw();
 use URI::Escape qw(uri_escape);
-use XML::LibXML qw();
+use XML::LibXML 1.56 qw();        # Need 1.56 for line_numbers()
 
 ###############################################################################
 #### Constant definitions. ####################################################
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.753 $;
+    $VERSION = q$Revision: 1.754 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -611,8 +611,7 @@ if (&is_xml($File)) {
         $xmlparser->load_ext_dtd(0);
 
         # [NOT] loading the XML catalog for entities resolution as it seems to
-        # cause a lot of unnecessary DTD/entities fetching (requires >= 1.53 if
-        # enabled)
+        # cause a lot of unnecessary DTD/entities fetching
         #$xmlparser->load_catalog(catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc'));
         my $xml_string = join "\n", @{$File->{Content}};
 

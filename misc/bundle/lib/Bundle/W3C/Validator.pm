@@ -46,7 +46,7 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
  Socket
  URI
  URI::Escape
- XML::LibXML
+ XML::LibXML 1.56
 
 =head1 DESCRIPTION
 
