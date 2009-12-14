@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.756 2009-12-14 22:19:09 ville Exp $
+# $Id: check,v 1.757 2009-12-14 22:39:18 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.756 $;
+    $VERSION = q$Revision: 1.757 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -647,7 +647,7 @@ if (&is_xml($File)) {
             # handle a structured error (XML::LibXML::Error object)
             # (lib XML::LibXML > 0.66, but will work MUCH better > 0.69 )
 
-            my $err_obj = $@;
+            my $err_obj         = $@;
             my $num_xmlwf_error = 0;
             while ($err_obj) {
                 my $err;
@@ -2742,22 +2742,22 @@ sub set_parse_mode
                                 # the 10 first lines should be safe
     my $parseModeFromXMLDecl = (
         $begincontent =~
-            /^ [\x20|\x09|\x0D|\x0A]*                        # whitespace before the decl should not be happening
+            /^ [\x20\x09\x0D\x0A]*                    # whitespace before the decl should not be happening
                                                       # but we are greedy for the sake of detection, not validation
       <\?xml                                          # start matching an XML Declaration
-      [\x20|\x09|\x0D|\x0A]+                             # x20, x09, xD and xA are the allowed "xml white space"
-      version [\x20|\x09|\x0D|\x0A]* =                   # for documents, version info is mandatory
-      [\x20|\x09|\x0D|\x0A]* ("1.0"|"1.1"|'1.0'|'1.1')   # hardcoding the existing XML versions.
+      [\x20\x09\x0D\x0A]+                             # x20, x09, xD and xA are the allowed "xml white space"
+      version [\x20\x09\x0D\x0A]* =                   # for documents, version info is mandatory
+      [\x20\x09\x0D\x0A]* (["'])1.[01]\1              # hardcoding the existing XML versions.
                                                       # Maybe we should use \d\.\d
-      ([\x20|\x09|\x0D|\x0A]+ encoding
-       [\x20|\x09|\x0D|\x0A]* = [\x20|\x09|\x0D|\x0A]*
-       ("[A-Za-z][a-zA-Z0-9_-]+"|'[A-Za-z][a-zA-Z0-9_-]+')
+      (?:[\x20\x09\x0D\x0A]+ encoding
+       [\x20\x09\x0D\x0A]* = [\x20\x09\x0D\x0A]*
+       (["'])[A-Za-z][a-zA-Z0-9_-]+\2
       )?                                              # encoding info is optional
-      ([\x20|\x09|\x0D|\x0A]+ standalone
-       [\x20|\x09|\x0D|\x0A]* = [\x20|\x09|\x0D|\x0A]*
-       ("yes"|"no"|'yes'|'no')
+      (?:[\x20\x09\x0D\x0A]+ standalone
+       [\x20\x09\x0D\x0A]* = [\x20\x09\x0D\x0A]*
+       (["'])(?:yes|no)\3
       )?                                              # ditto standalone info, optional
-      [\x20|\x09|\x0D|\x0A]* \?>                         # end of XML Declaration
+      [\x20\x09\x0D\x0A]* \?>                         # end of XML Declaration
     /x
         ?
             'XML' :
