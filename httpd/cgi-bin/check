@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.758 2009-12-14 22:51:18 ville Exp $
+# $Id: check,v 1.759 2009-12-14 22:56:00 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.758 $;
+    $VERSION = q$Revision: 1.759 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -617,24 +617,26 @@ if (&is_xml($File)) {
         #$xmlparser->load_catalog(catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc'));
         my $xml_string = join "\n", @{$File->{Content}};
 
+        my $xmlws = qr/[\x20\x09\x0D\x0A]/o;
+
         # the XML parser will check the value of encoding attribute in XML
         # declaration so we have to amend it to reflect transcoding.
         # see Bug 4867
         $xml_string =~ s/
-               (^<\?xml\b[^>]*[\x20\x09\x0D\x0A])
-               (encoding[\x20\x09\x0D\x0A]*=[\x20\x09\x0D\x0A]*
+               (^<\?xml\b[^>]*${xmlws})
+               (encoding${xmlws}*=${xmlws}*
                    (?:(["'])[A-Za-z][a-zA-Z0-9_-]+\3)
                )
                ([^>].*\?>)
-           /$1encoding="UTF-8"$4/sx;
+           /$1encoding="UTF-8"$4/sox;
 
         # Is the document standalone?  Need to check with a regex because
         # the parser may fail to return a document we could use for this.
         my $standalone = (
-            $xml_string =~ /^<\?xml\b[^>]*[\x20\x09\x0D\x0A]
-                           standalone[\x20\x09\x0D\x0A]*=[\x20\x09\x0D\x0A]*
+            $xml_string =~ /^<\?xml\b[^>]*${xmlws}
+                           standalone${xmlws}*=${xmlws}*
                            (["'])yes\1
-                          /sx
+                          /sox
         );
 
         eval { $xmlparser->parse_string($xml_string); };
@@ -2735,6 +2737,8 @@ sub set_parse_mode
     $File->{ModeChoice} = '';
     my $parseModeFromDoctype = $CFG->{Types}->{$fpi}->{'Parse Mode'} || 'TBD';
 
+    my $xmlws = qr/[\x20\x09\x0D\x0A]/o;
+
     # $File->{Mode} may have been set in parse_content_type
     # and it would come from the Media Type
     my $parseModeFromMimeType = $File->{Mode};
@@ -2743,23 +2747,22 @@ sub set_parse_mode
                                 # the 10 first lines should be safe
     my $parseModeFromXMLDecl = (
         $begincontent =~
-            /^ [\x20\x09\x0D\x0A]*                    # whitespace before the decl should not be happening
-                                                      # but we are greedy for the sake of detection, not validation
-      <\?xml                                          # start matching an XML Declaration
-      [\x20\x09\x0D\x0A]+                             # x20, x09, xD and xA are the allowed "xml white space"
-      version [\x20\x09\x0D\x0A]* =                   # for documents, version info is mandatory
-      [\x20\x09\x0D\x0A]* (["'])1.[01]\1              # hardcoding the existing XML versions.
-                                                      # Maybe we should use \d\.\d
-      (?:[\x20\x09\x0D\x0A]+ encoding
-       [\x20\x09\x0D\x0A]* = [\x20\x09\x0D\x0A]*
+            /^ ${xmlws}*                # whitespace before the decl should not be happening
+                                        # but we are greedy for the sake of detection, not validation
+      <\?xml ${xmlws}+                  # start matching an XML Declaration
+      version ${xmlws}* =               # for documents, version info is mandatory
+      ${xmlws}* (["'])1.[01]\1          # hardcoding the existing XML versions.
+                                        # Maybe we should use \d\.\d
+      (?:${xmlws}+ encoding
+       ${xmlws}* = ${xmlws}*
        (["'])[A-Za-z][a-zA-Z0-9_-]+\2
-      )?                                              # encoding info is optional
-      (?:[\x20\x09\x0D\x0A]+ standalone
-       [\x20\x09\x0D\x0A]* = [\x20\x09\x0D\x0A]*
+      )?                                # encoding info is optional
+      (?:${xmlws}+ standalone
+       ${xmlws}* = ${xmlws}*
        (["'])(?:yes|no)\3
-      )?                                              # ditto standalone info, optional
-      [\x20\x09\x0D\x0A]* \?>                         # end of XML Declaration
-    /x
+      )?                                # ditto standalone info, optional
+      ${xmlws}* \?>                     # end of XML Declaration
+    /ox
         ?
             'XML' :
             'TBD'
