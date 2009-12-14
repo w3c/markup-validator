@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.755 2009-12-14 22:09:17 ville Exp $
+# $Id: check,v 1.756 2009-12-14 22:19:09 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.755 $;
+    $VERSION = q$Revision: 1.756 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -641,20 +641,15 @@ if (&is_xml($File)) {
         $xml_string = undef;
         my $xml_parse_errors_line = undef;
         my @xmlwf_error_list;
-        my @xmlwf_obj_error_list;
 
         if (ref($@)) {
 
             # handle a structured error (XML::LibXML::Error object)
             # (lib XML::LibXML > 0.66, but will work MUCH better > 0.69 )
-            push(@xmlwf_obj_error_list, $@);
+
             my $err_obj = $@;
-            while ($err_obj->_prev()) {
-                $err_obj = $err_obj->_prev();
-                unshift(@xmlwf_obj_error_list, $err_obj);
-            }
             my $num_xmlwf_error = 0;
-            foreach my $err_obj (@xmlwf_obj_error_list) {
+            while ($err_obj) {
                 my $err;
                 $err->{src} = '...';    # do this with show_open_entities()?
                 $err->{line} = $err_obj->line();
@@ -674,8 +669,10 @@ if (&is_xml($File)) {
                     $err = undef;
                     next;
                 }
-                push(@xmlwf_error_list, $err);
+
+                unshift(@xmlwf_error_list, $err);
                 $num_xmlwf_error++;
+                $err_obj = $err_obj->_prev();
             }
         }
         elsif ($@) {
