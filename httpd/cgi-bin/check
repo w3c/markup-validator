@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.754 2009-12-14 22:03:54 ville Exp $
+# $Id: check,v 1.755 2009-12-14 22:09:17 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.754 $;
+    $VERSION = q$Revision: 1.755 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -609,6 +609,8 @@ if (&is_xml($File)) {
         $xmlparser->line_numbers(1);
         $xmlparser->validation(0);
         $xmlparser->load_ext_dtd(0);
+        $xmlparser->base_uri($File->{URI})
+            unless ($File->{'Direct Input'} || $File->{'Is Upload'});
 
         # [NOT] loading the XML catalog for entities resolution as it seems to
         # cause a lot of unnecessary DTD/entities fetching
@@ -1088,6 +1090,8 @@ sub compoundxml_validate (\$)
         # major unix distributions still shipping with libxml2 2.6.16… 4 years
         # after its release
         my $xml_reader = XML::LibXML->new();
+        $xml_reader->base_uri($res->base());
+
         my $xmlDOM;
         eval { $xmlDOM = $xml_reader->parse_string($content); };
         if ($@) {
@@ -1260,6 +1264,8 @@ sub html5_validate (\$)
         # major unix distributions still shipping with libxml2 2.6.16… 4 years
         # after its release
         my $xml_reader = XML::LibXML->new();
+        $xml_reader->base_uri($res->base());
+
         my $xmlDOM;
         eval { $xmlDOM = $xml_reader->parse_string($content); };
         if ($@) {
