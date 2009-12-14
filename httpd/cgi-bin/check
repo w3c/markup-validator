@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.757 2009-12-14 22:39:18 ville Exp $
+# $Id: check,v 1.758 2009-12-14 22:51:18 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.757 $;
+    $VERSION = q$Revision: 1.758 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -660,6 +660,8 @@ if (&is_xml($File)) {
                 $err->{type} = "E";
                 $err->{msg}  = $err_obj->message();
 
+                $err_obj = $err_obj->_prev();
+
                 # The validator will sometimes fail to dereference entities
                 # files; we're filtering the resulting bogus error for
                 # non-standalone documents. @@@TODO: is this still needed?
@@ -672,7 +674,6 @@ if (&is_xml($File)) {
 
                 unshift(@xmlwf_error_list, $err);
                 $num_xmlwf_error++;
-                $err_obj = $err_obj->_prev();
             }
         }
         elsif ($@) {
