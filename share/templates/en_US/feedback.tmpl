@@ -153,14 +153,28 @@
       <li><a href="http://www.w3.org/Bugs/Public/enter_bug.cgi?product=Validator">New Markup Validator issue</a></li>
     </ul>
 
-      <form method="get" action="http://www.w3.org/Bugs/Public/buglist.cgi">
+    <form method="get" action="http://www.w3.org/Bugs/Public/buglist.cgi">
       <p>You may also search the bug database directly:<br />
       <input name="short_desc_type" type="hidden" value="allwordssubstr" />
       <input name="product" type="hidden" value="Validator" />
       <input name="short_desc" id="short_desc" type="text" size="40" maxlength="100" value="" />
       <input type="submit" name="search" id="bugsearch" value="Search Bug database" />
       </p>      
-</form>
+    </form>
+
+    <p>
+      If you encounter an HTML 5 related issue in the W3C validator, before
+      reporting it in the W3C Bugzilla, see if you can reproduce it also with
+      <a href="http://validator.nu/">Validator.nu</a>.  If you can, report
+      it according to the
+      <a href="http://about.validator.nu/#reporting-bugs">Validator.nu
+        bug reporting instructions</a> instead.  This inconvenience is because
+      the W3C validator uses the Validator.nu engine which is developed and
+      maintained by a different team than the W3C validator to validate HTML 5
+      documents, and addressing bug reports directly to the team working on the
+      system in question is likely to result in better and more timely
+      responses.
+    </p>
 
 </div>
 
