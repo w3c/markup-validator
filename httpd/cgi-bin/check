@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.759 2009-12-14 22:56:00 ville Exp $
+# $Id: check,v 1.760 2010-01-06 21:43:51 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.759 $;
+    $VERSION = q$Revision: 1.760 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -2497,8 +2497,12 @@ sub preparse_doctype
         else {
             $File->{Root} = $tag;
         }
-        if ($attr->{xmlns}) { $File->{Namespace} = $attr->{xmlns} }
-        if ($attr->{version}) { $File->{'Root Version'} = $attr->{version} }
+        if ($attr->{xmlns}) {
+            $File->{Namespace} = $attr->{xmlns};
+        }
+        if ($attr->{version}) {
+            $File->{'Root Version'} = $attr->{version};
+        }
         if ($attr->{baseProfile}) {
             $File->{'Root BaseProfile'} = $attr->{baseProfile};
         }
