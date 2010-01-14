@@ -3,7 +3,7 @@
 # W3C Markup Validation Service
 # A CGI script to retrieve and validate a markup file
 #
-# Copyright 1995-2009 World Wide Web Consortium, (Massachusetts
+# Copyright 1995-2010 World Wide Web Consortium, (Massachusetts
 # Institute of Technology, European Research Consortium for Informatics
 # and Mathematics, Keio University). All Rights Reserved.
 #
@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.760 2010-01-06 21:43:51 ville Exp $
+# $Id: check,v 1.761 2010-01-14 17:02:23 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.760 $;
+    $VERSION = q$Revision: 1.761 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
