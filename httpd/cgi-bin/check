@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.761 2010-01-14 17:02:23 ville Exp $
+# $Id: check,v 1.762 2010-01-26 18:45:41 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.761 $;
+    $VERSION = q$Revision: 1.762 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -3708,6 +3708,8 @@ sub uri_ok
 # mode: perl
 # indent-tabs-mode: nil
 # cperl-indent-level: 4
+# cperl-continued-statement-offset: 4
+# cperl-brace-offset: -4
 # perl-indent-level: 4
 # End:
 # ex: ts=4 sw=4 et

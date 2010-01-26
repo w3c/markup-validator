@@ -1,7 +1,7 @@
 #!/usr/bin/perl -T
 ##
 ## feedback generator for W3C Markup Validation Service
-# # $Id: sendfeedback.pl,v 1.20 2009-12-04 22:44:19 ville Exp $
+# # $Id: sendfeedback.pl,v 1.21 2010-01-26 18:45:41 ville Exp $
 
 ## Pragmas.
 use strict;
@@ -175,6 +175,8 @@ print_prefilled_form;
 # mode: perl
 # indent-tabs-mode: nil
 # cperl-indent-level: 4
+# cperl-continued-statement-offset: 4
+# cperl-brace-offset: -4
 # perl-indent-level: 4
 # End:
 # ex: ts=4 sw=4 et
