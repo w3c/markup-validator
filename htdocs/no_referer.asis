@@ -1,4 +1,5 @@
 Status: 403 Forbidden
+Vary: Referer
 Content-type: text/html
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
