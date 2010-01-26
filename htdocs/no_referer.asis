@@ -40,9 +40,11 @@ Content-type: text/html
           You have requested we check the referring page, but your browser did
           not send the HTTP "Referer" header field. This can be for several
           reasons, but most commonly it is because your browser does not
-          know about this header, has been configured not to send one, or is
-          behind a proxy or firewall that strips it out of the request before
-          it reaches us.
+          know about this header, has been configured not to send one,
+          transferred the referring document over a secure protocol such as
+          https but is accessing the validator over ordinary non-secure http,
+          or is behind a proxy or firewall that strips it out of the request
+          before it reaches us.
         </p>
         <p>This is <em>not</em> an error in the referring page!</p>
         <p>
