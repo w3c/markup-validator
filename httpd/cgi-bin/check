@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.764 2010-01-26 20:16:38 ville Exp $
+# $Id: check,v 1.765 2010-01-26 20:29:42 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -75,13 +75,6 @@ use constant FALSE => 0;
 # Tentative Validation Severities.
 use constant T_WARN  => 4;    # 0000 0100
 use constant T_ERROR => 8;    # 0000 1000
-
-#
-# Output flags for error processing
-use constant O_SOURCE  => 1;    # 0000 0001
-use constant O_CHARSET => 2;    # 0000 0010
-use constant O_DOCTYPE => 4;    # 0000 0100
-use constant O_NONE    => 8;    # 0000 1000
 
 #
 # Define global variables.
@@ -197,7 +190,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.764 $;
+    $VERSION = q$Revision: 1.765 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -389,7 +382,7 @@ else {
 }
 $File->{Opt}->{Debug} = $DEBUG;
 
-&abort_if_error_flagged($File, O_NONE);
+&abort_if_error_flagged($File);
 
 #
 # Get the file and metadata.
@@ -405,7 +398,7 @@ elsif ($q->param('uri')) {
 
 #
 # Abort if an error was flagged during initialization.
-&abort_if_error_flagged($File, 0);
+&abort_if_error_flagged($File);
 
 #
 # Get rid of the CGI object.
@@ -510,7 +503,7 @@ unless ($File->{Charset}->{XML} || $File->{Charset}->{META})
 
 #
 # Abort if an error was flagged while finding the encoding.
-&abort_if_error_flagged($File, O_CHARSET | O_DOCTYPE);
+&abort_if_error_flagged($File);
 
 $File->{Charset}->{Default} = FALSE;
 unless ($File->{Charset}->{Use}) {    # No charset given...
@@ -538,7 +531,7 @@ if ($File->{ContentType} eq 'text/html' && $File->{Charset}->{Default}) {
 }
 
 # if it still does not work, we abandon hope here
-&abort_if_error_flagged($File, O_CHARSET);
+&abort_if_error_flagged($File);
 
 #
 # Add a warning if doc is UTF-8 and contains a BOM.
@@ -826,7 +819,7 @@ elsif (($File->{DOCTYPE} eq '') and
 else {
     $File = &dtd_validate($File);
 }
-&abort_if_error_flagged($File, 0);
+&abort_if_error_flagged($File);
 
 #
 # Force "XML" if type is an XML type and an FPI was not found.
@@ -3168,8 +3161,7 @@ sub find_encodings
 # Abort with a message if an error was flagged at point.
 sub abort_if_error_flagged
 {
-    my $File  = shift;
-    my $Flags = shift;
+    my $File = shift;
 
     return unless $File->{'Error Flagged'};
     return if $File->{'Error Handled'};    # Previous error, keep going.
@@ -3278,13 +3270,6 @@ use constant FALSE => 0;
 # Tentative Validation Severities.
 use constant T_WARN  => 4;    # 0000 0100
 use constant T_ERROR => 8;    # 0000 1000
-
-#
-# Output flags for error processing
-use constant O_SOURCE  => 1;    # 0000 0001
-use constant O_CHARSET => 2;    # 0000 0010
-use constant O_DOCTYPE => 4;    # 0000 0100
-use constant O_NONE    => 8;    # 0000 1000
 
 sub new
 {
@@ -3503,7 +3488,7 @@ sub error
     }
 
     # TODO: calling exit() here is probably a bad idea
-    W3C::Validator::MarkupValidator::abort_if_error_flagged($File, O_DOCTYPE);
+    W3C::Validator::MarkupValidator::abort_if_error_flagged($File);
 
     push @{$File->{Errors}}, $err;
 
@@ -3534,13 +3519,6 @@ use constant FALSE => 0;
 # Tentative Validation Severities.
 use constant T_WARN  => 4;    # 0000 0100
 use constant T_ERROR => 8;    # 0000 1000
-
-#
-# Output flags for error processing
-use constant O_SOURCE  => 1;    # 0000 0001
-use constant O_CHARSET => 2;    # 0000 0010
-use constant O_DOCTYPE => 4;    # 0000 0100
-use constant O_NONE    => 8;    # 0000 1000
 
 use base qw(W3C::Validator::EventHandler);
 
