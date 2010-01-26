@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.763 2010-01-26 19:40:29 ville Exp $
+# $Id: check,v 1.764 2010-01-26 20:16:38 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.763 $;
+    $VERSION = q$Revision: 1.764 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -350,7 +350,6 @@ $File->{Opt}->{Prefill}        = $q->param('prefill') ? TRUE : FALSE;
 $File->{Opt}->{'Prefill Doctype'} = $q->param('prefill_doctype') || 'html401';
 $File->{Opt}->{Charset} = lc($q->param('charset') || '');
 $File->{Opt}->{DOCTYPE} = $q->param('doctype') || '';
-$File->{Opt}->{Output}  = $q->param('output')  || 'html';
 
 $File->{Opt}->{'User Agent'} =
     $q->param('user-agent') &&
@@ -2669,6 +2668,9 @@ sub prepCGI
     # Munge the URL to include commonly omitted prefix.
     my $u = $q->param('uri');
     $q->param('uri', "http://$u") if $u && $u =~ m(^www)i;
+
+    # Set output mode; needed in get_error_template if we end up there.
+    $File->{Opt}->{Output} = $q->param('output') || 'html';
 
     # Issue a redirect for uri=referer.
     if ($q->param('uri') and $q->param('uri') eq 'referer') {
