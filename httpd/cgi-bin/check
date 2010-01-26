@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.762 2010-01-26 18:45:41 ville Exp $
+# $Id: check,v 1.763 2010-01-26 19:40:29 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -197,7 +197,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.762 $;
+    $VERSION = q$Revision: 1.763 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -803,7 +803,7 @@ if (($File->{DOCTYPE} eq "HTML5") or ($File->{DOCTYPE} eq "XHTML5")) {
     }
     else {
         $File->{'Error Flagged'} = TRUE;
-        my $tmpl = &get_template($File, 'fatal-error.tmpl');
+        my $tmpl = &get_error_template($File);
         $tmpl->param(fatal_no_checker      => TRUE);
         $tmpl->param(fatal_missing_checker => 'HTML5 Validator');
     }
@@ -946,16 +946,6 @@ elsif ($File->{Opt}->{Output} eq 'soap12') {
         );
         $template = &get_template($File, 'soap_disabled.tmpl');
     }
-    elsif ($File->{'Error Flagged'}) {    # should send SOAP fault message
-        $template = &get_template($File, 'soap_fault.tmpl');
-
-        # we fill the soap fault template with the variables that had been
-        # passed to the HTML fatal error template
-        my $errtmpl = &get_template($File, 'fatal-error.tmpl');
-        foreach my $fparam ($errtmpl->param()) {
-            $template->param($fparam => $errtmpl->param($fparam));
-        }
-    }
     else {
         $template = &get_template($File, 'soap_output.tmpl');
     }
@@ -1019,6 +1009,16 @@ sub get_template ($$;@)
     return $File->{_Templates}->{$fname};
 }
 
+sub get_error_template ($;@)
+{
+    my ($File, @opts) = @_;
+    my $fname = 'fatal-error.tmpl';
+    if ($File->{Opt}->{Output} eq 'soap12') {
+        $fname = 'soap_fault.tmpl';
+    }
+    return &get_template($File, $fname, @opts);
+}
+
 # TODO: need to bring in fixes from html5_validate() here
 sub compoundxml_validate (\$)
 {
@@ -1075,7 +1075,7 @@ sub compoundxml_validate (\$)
     my $res = $ua->request($req);
     if (!$res->is_success()) {
         $File->{'Error Flagged'} = TRUE;
-        my $tmpl = &get_template($File, 'fatal-error.tmpl');
+        my $tmpl = &get_error_template($File);
         $tmpl->param(fatal_no_checker      => TRUE);
         $tmpl->param(fatal_missing_checker => 'HTML5 Validator');
         $tmpl->param(fatal_checker_error   => $res->status_line());
@@ -1097,7 +1097,7 @@ sub compoundxml_validate (\$)
         if ($@) {
             my $errmsg = $@;
             $File->{'Error Flagged'} = TRUE;
-            my $tmpl = &get_template($File, 'fatal-error.tmpl');
+            my $tmpl = &get_error_template($File);
             $tmpl->param(fatal_no_checker      => TRUE);
             $tmpl->param(fatal_missing_checker => 'HTML5 Validator');
             $tmpl->param(fatal_checker_error   => $errmsg);
@@ -1249,7 +1249,7 @@ sub html5_validate (\$)
     my $res = $ua->request($req);
     if (!$res->is_success()) {
         $File->{'Error Flagged'} = TRUE;
-        my $tmpl = &get_template($File, 'fatal-error.tmpl');
+        my $tmpl = &get_error_template($File);
         $tmpl->param(fatal_no_checker      => TRUE);
         $tmpl->param(fatal_missing_checker => 'HTML5 Validator');
         $tmpl->param(fatal_checker_error   => $res->status_line());
@@ -1271,7 +1271,7 @@ sub html5_validate (\$)
         if ($@) {
             my $errmsg = $@;
             $File->{'Error Flagged'} = TRUE;
-            my $tmpl = &get_template($File, 'fatal-error.tmpl');
+            my $tmpl = &get_error_template($File);
             $tmpl->param(fatal_no_checker      => TRUE);
             $tmpl->param(fatal_missing_checker => 'HTML5 Validator');
             $tmpl->param(fatal_checker_error   => $errmsg);
@@ -1730,7 +1730,7 @@ sub handle_uri
 
     unless ($ua->is_protocol_supported($uri)) {
         $File->{'Error Flagged'} = TRUE;
-        my $tmpl = &get_template($File, 'fatal-error.tmpl');
+        my $tmpl = &get_error_template($File);
 
         # If uri param is empty (also for empty direct or upload), it's been
         # set to TRUE in sub prepCGI()
@@ -1807,7 +1807,7 @@ sub handle_uri
                 $no200url = undef;
             }
 
-            my $tmpl = &get_template($File, 'fatal-error.tmpl');
+            my $tmpl = &get_error_template($File);
             $tmpl->param(fatal_http_error => TRUE);
             $tmpl->param(fatal_http_uri   => $uri->as_string);
             $tmpl->param(fatal_http_code  => $res->code);
@@ -1963,7 +1963,7 @@ sub parse_content_type
         }
         else {
             $File->{'Error Flagged'} = TRUE;
-            my $tmpl = &get_template($File, 'fatal-error.tmpl');
+            my $tmpl = &get_error_template($File);
             $tmpl->param(fatal_mime_error => TRUE);
             $tmpl->param(fatal_mime_ct    => $ct);
         }
@@ -1988,7 +1988,7 @@ sub get_content ($$)
         my $cenc = $res->header("Content-Encoding");
         my $uri  = $res->request->uri;
         $File->{'Error Flagged'} = TRUE;
-        my $tmpl = &get_template($File, 'fatal-error.tmpl');
+        my $tmpl = &get_error_template($File);
         $tmpl->param(fatal_decode_error  => TRUE);
         $tmpl->param(fatal_decode_errmsg => $errmsg);
         $tmpl->param(fatal_decode_cenc   => $cenc);
@@ -2688,8 +2688,7 @@ sub prepCGI
             # the browser didn't send a Referer header, or the request was
             # for /check?uri=referer but no Referer header was found.
             $File->{'Error Flagged'} = TRUE;
-            &get_template($File, 'fatal-error.tmpl')
-                ->param(fatal_referer_error => TRUE,);
+            &get_error_template($File)->param(fatal_referer_error => TRUE);
         }
     }
 
@@ -2719,7 +2718,7 @@ sub prepCGI
     # Flag an error if we didn't get a file to validate.
     unless ($q->param('uri')) {
         $File->{'Error Flagged'} = TRUE;
-        my $tmpl = &get_template($File, 'fatal-error.tmpl');
+        my $tmpl = &get_error_template($File);
         $tmpl->param(fatal_uri_error  => TRUE);
         $tmpl->param(fatal_uri_scheme => 'undefined');
     }
@@ -3001,7 +3000,7 @@ sub transcode
             # The encoding is not supported due to policy
 
             $File->{'Error Flagged'} = TRUE;
-            my $tmpl = &get_template($File, 'fatal-error.tmpl');
+            my $tmpl = &get_error_template($File);
             $tmpl->param(fatal_transcode_error   => TRUE);
             $tmpl->param(fatal_transcode_charset => $cs);
 
@@ -3033,7 +3032,7 @@ sub transcode
         # the character encoding; might need additional modules
 
         $File->{'Error Flagged'} = TRUE;
-        my $tmpl = &get_template($File, 'fatal-error.tmpl');
+        my $tmpl = &get_error_template($File);
         $tmpl->param(fatal_transcode_error   => TRUE);
         $tmpl->param(fatal_transcode_charset => $cs);
 
@@ -3066,7 +3065,7 @@ sub transcode
                 my $croak_message = $@;
                 $croak_message =~ s/ at .*//;
                 $File->{'Error Flagged'} = TRUE;
-                my $tmpl = &get_template($File, 'fatal-error.tmpl');
+                my $tmpl = &get_error_template($File);
                 $tmpl->param(fatal_byte_error     => TRUE);
                 $tmpl->param(fatal_byte_lines     => $line_num);
                 $tmpl->param(fatal_byte_charset   => $cs);
@@ -3173,29 +3172,14 @@ sub abort_if_error_flagged
     return unless $File->{'Error Flagged'};
     return if $File->{'Error Handled'};    # Previous error, keep going.
 
-    my $tmpl = &get_template($File, 'fatal-error.tmpl');
+    my $tmpl = &get_error_template($File);
     $tmpl->param(fatal_error => TRUE);
 
-    if ($File->{Opt}->{Output} eq 'html') {
-        &prep_template($File, $tmpl);
+    &prep_template($File, $tmpl);
 
-        # transcode output from perl's internal to utf-8 and output
-        print Encode::encode('UTF-8', $tmpl->output);
-        exit;
-    }
-    else {
-
-        #@@FIXME: This is borked after templatification.
-        # &add_warning($File, 'fatal', 'Fatal Error', <<".EOF.");
-        # A fatal error has occurred while processing the requested document. Processing
-        # has continued but any later output will be of dubious quality. Limitations of
-        # this output mode prevent the full error message from being returned; please
-        # retry this operation in interactive mode using the web interface to see the
-        # actual error message.
-        # .EOF.
-        #@@FIXME;
-        $File->{'Error Handled'} = TRUE;
-    }
+    # transcode output from perl's internal to utf-8 and output
+    print Encode::encode('UTF-8', $tmpl->output);
+    exit;
 }
 
 #
@@ -3494,8 +3478,7 @@ sub error
     # No or unknown FPI and a relative SI.
     if ($err->{msg} =~ m(cannot (open|find))) {
         $File->{'Error Flagged'} = TRUE;
-        my $tmpl = &W3C::Validator::MarkupValidator::get_template($File,
-            'fatal-error.tmpl');
+        my $tmpl = &W3C::Validator::MarkupValidator::get_error_template($File);
         $tmpl->param(fatal_parse_extid_error => TRUE);
         $tmpl->param(fatal_parse_extid_msg   => $err->{msg});
     }
@@ -3693,8 +3676,7 @@ sub uri_ok
     if ($iptype && $iptype ne 'PUBLIC') {
         my $File = $self->{'W3C::Validator::File'};
         $File->{'Error Flagged'} = 1;
-        my $tmpl = &W3C::Validator::MarkupValidator::get_template($File,
-            'fatal-error.tmpl');
+        my $tmpl = &W3C::Validator::MarkupValidator::get_error_template($File);
         $tmpl->param(fatal_ip_error    => 1);
         $tmpl->param(fatal_ip_host     => $uri->host() || 'undefined');
         $tmpl->param(fatal_ip_hostname => 1)
