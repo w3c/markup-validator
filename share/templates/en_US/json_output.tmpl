@@ -10,7 +10,7 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
     "messages": [
         <TMPL_LOOP NAME="file_errors">
           {
-              "lastLine": <TMPL_VAR NAME="line">,
+              <TMPL_IF NAME="line">"lastLine": <TMPL_VAR NAME="line">,</TMPL_IF>
               <TMPL_IF NAME="char">"lastColumn": <TMPL_VAR NAME="char">,</TMPL_IF>
               "message": <TMPL_VAR NAME="msg">,
               <TMPL_IF NAME="num">"messageid": "<TMPL_VAR NAME="num">",</TMPL_IF>
