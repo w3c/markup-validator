@@ -9,7 +9,10 @@ PERLCRITIC = perlcritic --profile misc/perlcriticrc
 
 VALIDATOR_URI = http://localhost/w3c-validator/check
 
-all:
+all: htdocs/docs/errors.html
+
+htdocs/docs/errors.html: misc/docs_errors.pl share/templates/en_US/error_messages.cfg share/templates/en_US/docs_errors.tmpl htdocs/config/validator.conf
+	env W3C_VALIDATOR_HOME=. W3C_VALIDATOR_CFG=htdocs/config/validator.conf misc/docs_errors.pl > $@
 
 test:
 	misc/testsuite/harness.py --validator_uri=$(VALIDATOR_URI) run
@@ -23,5 +26,5 @@ perltidy:
 		$(PERLTIDY) $$file ; \
 	done
 
-dist:
+dist: all
 	misc/mkrelease.sh $(VERSION)
