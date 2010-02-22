@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: errors.html,v 1.44 2007-10-21 19:26:41 ville Exp $"
---><!--#set var="date" value="\$Date: 2007-10-21 19:26:41 $"
+<!--#set var="revision" value="\$Id: errors.html,v 1.45 2010-02-22 18:04:43 ville Exp $"
+--><!--#set var="date" value="\$Date: 2010-02-22 18:04:43 $"
 --><!--#set var="title" value="Error Explanations for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -69,6 +69,18 @@
   </div>
 	<p>
 	  <a href="../feedback.html?errmsg_id=42#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt id="ve-47">47: end of document in prolog</dt>
+        <dd><div class="ve mid-47">
+  <p>
+      This error may appear when the validator receives an empty document. Please make sure that the document you are uploading is not empty, and <a href="./feedback.html">report</a> any discrepancy.
+  </p>
+</div>
+	<p>
+	  <a href="../feedback.html?errmsg_id=47#errormsg"
 	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
 	</p>
 	</dd>  
@@ -214,9 +226,10 @@
     <p>
       Another possibility is that you used an element which requires
       a child element that you did not include. Hence the parent element
-      is "not finished", not complete. For instance, in HTML the &lt;head&gt; element
-      must contain a &lt;title&gt; child element, lists (ul, ol, dl) require list items (li, 
-      or dt, dd), and so on. 
+      is "not finished", not complete. For instance, in HTML the &lt;head&gt;
+      element must contain a &lt;title&gt; child element, lists require
+      appropriate list items (&lt;ul&gt; and &lt;ol&gt; require &lt;li&gt;;
+      &lt;dl&gt; requires &lt;dt&gt; and &lt;dd&gt;), and so on.
     </p>
   </div>
 	<p>
@@ -664,6 +677,26 @@
   </div>
 	<p>
 	  <a href="../feedback.html?errmsg_id=248#errormsg"
+	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
+	</p>
+	</dd>  
+      
+        <dt id="ve-323">323: DTD did not contain element declaration for document type name</dt>
+        <dd><div class="ve mid-323">
+    <p>
+	A DOCTYPE declares the version of the language used, as well as what the root
+	(top) element of your document will be. For example, if the top element 
+	of your document is &lt;html&gt;, the DOCTYPE declaration 
+	will look like: "&lt;!DOCTYPE html".                                                                                                                  
+    </p>
+	<p>
+	In most cases, it is safer not to type or edit the DOCTYPE declaration at all,
+	and preferable to let a tool include it, or copy and paste it from a 
+	<a href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">trusted list of DTDs</a>.
+	</p>
+  </div>
+	<p>
+	  <a href="../feedback.html?errmsg_id=323#errormsg"
 	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
 	</p>
 	</dd>  
@@ -1136,12 +1169,6 @@
       
         <li id="ve-46"><p>46: character X not allowed in prolog
 	  <a href="../feedback.html?errmsg_id=46#errormsg"
-	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
-	</p>
-	</li>
-      
-        <li id="ve-47"><p>47: end of document in prolog
-	  <a href="../feedback.html?errmsg_id=47#errormsg"
 	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
 	</p>
 	</li>
@@ -2594,12 +2621,6 @@
       
         <li id="ve-322"><p>322: a NET-enabling start-tag cannot include a document type specification
 	  <a href="../feedback.html?errmsg_id=322#errormsg"
-	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
-	</p>
-	</li>
-      
-        <li id="ve-323"><p>323: DTD did not contain element declaration for document type name
-	  <a href="../feedback.html?errmsg_id=323#errormsg"
 	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
 	</p>
 	</li>
