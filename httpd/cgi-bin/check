@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.765 2010-01-26 20:29:42 ville Exp $
+# $Id: check,v 1.766 2010-03-02 19:27:19 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -190,7 +190,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.765 $;
+    $VERSION = q$Revision: 1.766 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -968,6 +968,13 @@ if ($File->{Opt}->{Output} eq 'json') {
         for my $msg (@$msgs) {
             for my $key (qw(msg expl)) {
                 $msg->{$key} = $json->encode($msg->{$key}) if $msg->{$key};
+            }
+
+            # Drop non-numeric char indicators from output, e.g.
+            # "> 80" for some XML parse error ones (see the non-structured
+            # XML::LibXML code branch in XML preparsing below).
+            if ($msg->{char} && $msg->{char} !~ /^\d+$/) {
+                delete($msg->{char});
             }
         }
     }
