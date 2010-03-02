@@ -1,3 +1,17 @@
+2010-01-14  ville
+
+	* README, lib/Bundle/W3C/Validator.pm: Update years in copyright
+	notices.
+
+2009-12-14  ville
+
+	* lib/Bundle/W3C/Validator.pm: Add minimum required XML::LibXML
+	version (best guess, not necessarily accurate)
+
+2009-12-02  ville
+
+	* lib/Bundle/W3C/Validator.pm: Preparing for 0.8.6.
+
 2009-11-24  ville
 
 	* lib/Bundle/W3C/Validator.pm: Fix perlcritic "Code before
