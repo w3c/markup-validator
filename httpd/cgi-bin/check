@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.766 2010-03-02 19:27:19 ville Exp $
+# $Id: check,v 1.767 2010-03-02 19:28:35 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -190,7 +190,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.766 $;
+    $VERSION = q$Revision: 1.767 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -639,7 +639,7 @@ if (&is_xml($File)) {
         if (ref($@)) {
 
             # handle a structured error (XML::LibXML::Error object)
-            # (lib XML::LibXML > 0.66, but will work MUCH better > 0.69 )
+            # (lib XML::LibXML > 1.66, but will work MUCH better with > 1.69)
 
             my $err_obj         = $@;
             my $num_xmlwf_error = 0;
