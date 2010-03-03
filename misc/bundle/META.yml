@@ -17,6 +17,7 @@ requires:
     Encode::JIS2K:                 0
     File::Spec::Functions:         0
     HTML::Encoding:                0.52
+    HTML::HeadParser:              3.6
     HTML::Parser:                  3.24
     HTML::Template:                2.6
     HTML::Tidy:                    0

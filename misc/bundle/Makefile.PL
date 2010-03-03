@@ -21,6 +21,7 @@ WriteMakefile(
         "Encode::HanExtra"      => 0,
         "File::Spec::Functions" => 0,
         "HTML::Encoding"        => 0.52,
+        "HTML::HeadParser"      => 3.60,
         "HTML::Parser"          => 3.24,
         "HTML::Template"        => 2.6,
         "HTTP::Headers::Auth"   => 0,

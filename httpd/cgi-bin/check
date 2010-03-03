@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.767 2010-03-02 19:28:35 ville Exp $
+# $Id: check,v 1.768 2010-03-03 19:13:29 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -50,17 +50,18 @@ use Encode::HanExtra qw();        # for some chinese character encodings,
                                   # e.g gb18030
 use File::Spec::Functions qw(catfile rel2abs tmpdir);
 use HTML::Encoding 0.52 qw();
-use HTML::Parser 3.24 qw();       # Need 3.24 for $p->parse($code_ref)
-use HTML::Template 2.6 qw();      # Need 2.6 for path param, other things.
+use HTML::HeadParser 3.60 qw();    # Needed for HTML5 meta charset workaround
+use HTML::Parser 3.24 qw();        # Need 3.24 for $p->parse($code_ref)
+use HTML::Template 2.6 qw();       # Need 2.6 for path param, other things.
 use HTTP::Headers::Util qw();
-use HTTP::Message 1.52 qw();      # Need 1.52 for decoded_content()
+use HTTP::Message 1.52 qw();       # Need 1.52 for decoded_content()
 use HTTP::Request qw();
-use HTTP::Headers::Auth qw();     # Needs to be imported after other HTTP::*.
+use HTTP::Headers::Auth qw();      # Needs to be imported after other HTTP::*.
 use JSON 2.00 qw();
 use SGML::Parser::OpenSP 0.991 qw();
 use URI qw();
 use URI::Escape qw(uri_escape);
-use XML::LibXML 1.56 qw();        # Need 1.56 for line_numbers()
+use XML::LibXML 1.56 qw();         # Need 1.56 for line_numbers()
 
 ###############################################################################
 #### Constant definitions. ####################################################
@@ -190,7 +191,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.767 $;
+    $VERSION = q$Revision: 1.768 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -3124,35 +3125,27 @@ sub find_encodings
         # HTML::Encoding doesn't support HTML5 <meta charset> as of 0.60,
         # check it ourselves.  HTML::HeadParser >= 3.60 is required for this.
 
-        if (eval {
-                local $SIG{__DIE__} = undef;
-                require HTML::HeadParser;
-                HTML::HeadParser->VERSION(3.60);
-            }
-            )
-        {
-            my $hp           = HTML::HeadParser->new();
-            my $seen_doctype = FALSE;
-            my $is_html5     = FALSE;
-            $hp->handler(
-                declaration => sub {
-                    my ($tag, $text) = @_;
-                    return if ($seen_doctype || uc($tag) ne '!DOCTYPE');
-                    $seen_doctype = TRUE;
-                    $is_html5     = TRUE
-                        if (
-                        $text =~ /<!DOCTYPE\s+html
+        my $hp           = HTML::HeadParser->new();
+        my $seen_doctype = FALSE;
+        my $is_html5     = FALSE;
+        $hp->handler(
+            declaration => sub {
+                my ($tag, $text) = @_;
+                return if ($seen_doctype || uc($tag) ne '!DOCTYPE');
+                $seen_doctype = TRUE;
+                $is_html5     = TRUE
+                    if (
+                    $text =~ /<!DOCTYPE\s+html
                                     (\s+SYSTEM\s+(['"])about:legacy-compat\2)?
                                     \s*>/six
-                        );
-                },
-                'tag,text'
-            );
-            $hp->parse($File->{Bytes});
-            if ($is_html5) {
-                my $cs = $hp->header('X-Meta-Charset');
-                $metah{lc($cs)}++ if (defined($cs) && length($cs));
-            }
+                    );
+            },
+            'tag,text'
+        );
+        $hp->parse($File->{Bytes});
+        if ($is_html5) {
+            my $cs = $hp->header('X-Meta-Charset');
+            $metah{lc($cs)}++ if (defined($cs) && length($cs));
         }
     }
 
