@@ -52,11 +52,12 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
 =head1 DESCRIPTION
 
 This bundle contains the prerequisite CPAN modules for running the
-W3C Markup Validator, E<lt>http://validator.w3.org/E<gt>.
+W3C Markup Validator, L<http://validator.w3.org/>.
 
 =head1 SEE ALSO
 
-E<lt>http://validator.w3.org/E<gt>
+L<http://validator.w3.org/>
+
 perl(1)
 
 =head1 AUTHOR
@@ -72,6 +73,6 @@ distributed under the W3C(R) Software License [1] in the hope that it
 will be useful, but WITHOUT ANY WARRANTY; without even the implied
 warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-[1] http://www.w3.org/Consortium/Legal/copyright-software
+[1] L<http://www.w3.org/Consortium/Legal/copyright-software>
 
 =cut
