@@ -37,7 +37,7 @@ WriteMakefile(
         "Socket"                => 0,
         "URI"                   => 0,
         "URI::Escape"           => 0,
-        "XML::LibXML"           => 1.56,
+        "XML::LibXML"           => 1.69,
 
         # Optional:
         "Encode::JIS2K" => 0,
