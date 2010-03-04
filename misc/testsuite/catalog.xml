@@ -855,23 +855,23 @@
 </collection>
 
 <collection id="invalid_bug">
-    <dc:title>Documents that are invalid, which the validator passes as OK</dc:title>
+    <dc:title>Documents that have an invalid/unknown FPI, which should get public/system identifier mismatch warnings (W26)</dc:title>
       
     <test>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi2.html</uri>
         	<html:p>bogus FPI #2: HTML 4.01 "Strict"</html:p>
       <expect>
-        <Validity>Fail</Validity>
+        <NumWarnings>yes</NumWarnings>
       </expect>
     </test>
     
-	<test>
-	  <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi3.html</uri>
-	  <html:p>bogus FPI #3: XHTML 1.1 "Strict"</html:p>
-	  <expect>
-        <Validity>Fail</Validity>
+    <test>
+      <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/bogus-fpi3.html</uri>
+      <html:p>bogus FPI #3: XHTML 1.1 "Strict"</html:p>
+      <expect>
+        <NumWarnings>yes</NumWarnings>
       </expect>
-	</test>
+    </test>
 </collection>
 </collection>
 
