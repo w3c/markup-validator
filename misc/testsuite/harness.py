@@ -43,7 +43,7 @@ Usage: harness.py [options] [run|sanity|doc]
             useful after using test cases or modifying code
         list: list the available test collections
         doc: generate an HTML index of the test cases
-        (to be saved in ../htdocs/dev/tests/index.html)
+        (to be saved in ../../htdocs/dev/tests/index.html)
 '''
 
 class Usage(Exception):
