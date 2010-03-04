@@ -933,6 +933,14 @@
 	</test>
 
 	<test>
+          <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/xhtml-windows-1250.xhtml</uri>
+          <html:p>Another windows-1250 encoded document (Valid XHTML)</html:p>
+  	  <expect>
+            <Validity>Pass</Validity>
+          </expect>
+	</test>
+
+	<test>
 	    <uri>http://www.w3.org/TR/ruby</uri>
 	    <html:p>utf-8 encoded document</html:p>
   	  <expect>
