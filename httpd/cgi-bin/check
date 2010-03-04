@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.769 2010-03-03 19:40:59 ville Exp $
+# $Id: check,v 1.770 2010-03-04 16:09:52 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -191,7 +191,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.769 $;
+    $VERSION = q$Revision: 1.770 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -620,7 +620,7 @@ if (&is_xml($File)) {
                (encoding${xmlws}*=${xmlws}*
                    (?:(["'])[A-Za-z][a-zA-Z0-9_-]+\3)
                )
-               ([^>].*\?>)
+               (.*?\?>)
            /$1encoding="UTF-8"$4/sox;
 
         # Is the document standalone?  Need to check with a regex because
