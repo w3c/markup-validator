@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.770 2010-03-04 16:09:52 ville Exp $
+# $Id: check,v 1.771 2010-03-06 11:00:48 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -191,7 +191,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.770 $;
+    $VERSION = q$Revision: 1.771 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -413,6 +413,11 @@ untie *STDIN;
 ###############################################################################
 #### Output validation results. ###############################################
 ###############################################################################
+
+if (!$File->{ContentType} && !$File->{'Direct Input'} && !$File->{'Is Upload'})
+{
+    &add_warning('W08', {});
+}
 
 $File = find_encodings($File);
 

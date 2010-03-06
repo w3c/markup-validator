@@ -176,9 +176,17 @@ to check these potential issues, and, if necessary, fix them and re-validate the
   </li>
 </TMPL_IF>
 <TMPL_IF NAME="W08">
-<!--
-  obsolete - now covered by W06
--->
+  <li class="msg_warn" id="W08"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">No <code>Content-Type</code> found!</span></p>
+    <p>
+      This document was served with an empty or missing
+      <code>Content-Type</code> header.  This is likely to confuse the validator
+      and other user agents.
+    </p>
+    <p>
+      HTTP messages <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec7.html#sec7.2.1">SHOULD</a>
+      contain the <code>Content-Type</code> HTTP header.
+    </p>
+  </li>
 </TMPL_IF>
 <TMPL_IF NAME="W09">
   <li class="msg_warn" id="W09"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">No <code>DOCTYPE</code> found! Checking with default <TMPL_VAR NAME="W09_dtd" ESCAPE="HTML"> Document Type.</span></p>
