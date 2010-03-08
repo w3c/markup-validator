@@ -43,6 +43,16 @@ WriteMakefile(
         "Encode::JIS2K" => 0,
         "HTML::Tidy"    => 0,
     },
+    META_MERGE => {
+        resources => {
+            homepage   => 'http://validator.w3.org/',
+            bugtracker => 'http://www.w3.org/Bugs/Public/',
+            repository => 'http://dev.w3.org/cvsweb/validator/',
+            MailingList =>
+                'http://lists.w3.org/Archives/Public/www-validator/',
+        },
+
+    },
     depend => {distdir  => 'ChangeLog'},
     dist   => {TARFLAGS => '--owner=0 --group=0 -cvf'},
     clean  => {
