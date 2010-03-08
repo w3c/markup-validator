@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: docs_errors.tmpl,v 1.5 2007-05-31 02:32:14 ot Exp $"
---><!--#set var="date" value="\$Date: 2007-05-31 02:32:14 $"
+<!--#set var="revision" value="\$Id: docs_errors.tmpl,v 1.6 2010-03-08 18:11:08 ville Exp $"
+--><!--#set var="date" value="\$Date: 2010-03-08 18:11:08 $"
 --><!--#set var="title" value="Error Explanations for The W3C Markup Validation Service"
 --><!--#set var="relroot" value="../"
 --><!--#include virtual="../header.html" -->
@@ -23,7 +23,7 @@
         <dt id="ve-<TMPL_VAR NAME="id">"><TMPL_VAR NAME="id">: <TMPL_VAR NAME="original"></dt>
         <dd><TMPL_VAR NAME="verbose">
 	<p>
-	  <a href="../feedback.html?errmsg_id=<TMPL_VAR NAME="id">#errormsg"
+	  <a href="<!--#echo var="relroot" -->feedback.html?errmsg_id=<TMPL_VAR NAME="id">#errormsg"
 	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
 	</p>
 	</dd>  
@@ -32,11 +32,11 @@
 
     <h3 id="noverbose">Errors without explanation</h3>
     <p>The following validation errors do not have an explanation yet. We invite you to use the 
-    <a href="../feedback.html#errormsg">feedback channels</a> to send your suggestions.</p>
+    <a href="<!--#echo var="relroot" -->feedback.html#errormsg">feedback channels</a> to send your suggestions.</p>
     <ul>
 	<TMPL_LOOP NAME="list_errors_noverbose">
         <li id="ve-<TMPL_VAR NAME="id">"><p><TMPL_VAR NAME="id">: <TMPL_VAR NAME="original">
-	  <a href="../feedback.html?errmsg_id=<TMPL_VAR NAME="id">#errormsg"
+	  <a href="<!--#echo var="relroot" -->feedback.html?errmsg_id=<TMPL_VAR NAME="id">#errormsg"
 	  title="Suggest improvements on this error message through our feedback channels">&#x2709;</a>
 	</p>
 	</li>
