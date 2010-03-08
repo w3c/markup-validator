@@ -45,7 +45,10 @@ WriteMakefile(
     },
     depend => {distdir  => 'ChangeLog'},
     dist   => {TARFLAGS => '--owner=0 --group=0 -cvf'},
-    clean  => {FILES    => 'ChangeLog.bak'},
+    clean  => {
+        FILES =>
+            'ChangeLog.bak Makefile.PL.bak lib/Bundle/W3C/Validator.pm.bak'
+    },
 );
 
 sub MY::postamble
