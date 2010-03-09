@@ -1,0 +1,1945 @@
+
+<!-- MathML 3.0 DTD  ....................................................... -->
+<!-- file: mathml3.dtd
+-->
+
+<!-- MathML 3.0 DTD
+
+     This is the Mathematical Markup Language (MathML) 3.0, an XML
+     application for describing mathematical notation and capturing
+     both its structure and content.
+
+     Copyright &#xa9; 1998-2009 W3C&#xae; (MIT, ERCIM, Keio), All Rights 
+     Reserved. W3C liability, trademark, document use and software
+     licensing rules apply. 
+
+     Permission to use, copy, modify and distribute the MathML 2.0 DTD and
+     its accompanying documentation for any purpose and without fee is
+     hereby granted in perpetuity, provided that the above copyright notice
+     and this paragraph appear in all copies.  The copyright holders make
+     no representation about the suitability of the DTD for any purpose.
+
+     It is provided "as is" without expressed or implied warranty.
+
+     This entity may be identified by the PUBLIC and SYSTEM identifiers:
+
+       PUBLIC "-//W3C//DTD MathML 3.0//EN"
+       SYSTEM "mathml3.dtd"
+
+     Revisions: editor and revision history at EOF
+-->
+<!-- Entity used to enable marked sections which enforces stricter		
+     checking of MathML syntax rules		
+-->
+<!ENTITY % MathMLstrict "IGNORE">		
+
+<!-- MathML Qualified Names module ............................... -->
+<!ENTITY % mathml-qname.module "INCLUDE" >
+<![%mathml-qname.module;[
+<!ENTITY % mathml-qname.mod
+     PUBLIC "-//W3C//ENTITIES MathML 3.0 Qualified Names 1.0//EN"
+            "mathml3-qname.mod" >
+%mathml-qname.mod;]]>
+
+<!-- if %NS.prefixed; is INCLUDE, include all NS attributes, 
+     otherwise just those associated with MathML
+-->
+<![%NS.prefixed;[
+  <!ENTITY % MATHML.NamespaceDecl.attrib 
+         "%NamespaceDecl.attrib;"
+>
+]]>
+<!ENTITY % MATHML.NamespaceDecl.attrib 
+     "%MATHML.xmlns.attrib;"
+>
+
+
+<!-- MathML Character Entities .............................................. -->
+<!ENTITY % mathml-charent.module "INCLUDE" >
+<![%mathml-charent.module;[
+
+
+<!ENTITY % isobox PUBLIC "-//W3C//ENTITIES Box and Line Drawing//EN" "isobox.ent">
+%isobox;
+<!ENTITY % isocyr1 PUBLIC "-//W3C//ENTITIES Russian Cyrillic//EN" "isocyr1.ent">
+%isocyr1;
+<!ENTITY % isocyr2 PUBLIC "-//W3C//ENTITIES Non-Russian Cyrillic//EN" "isocyr2.ent">
+%isocyr2;
+<!ENTITY % isodia PUBLIC "-//W3C//ENTITIES Diacritical Marks//EN" "isodia.ent">
+%isodia;
+<!ENTITY % isolat1 PUBLIC "-//W3C//ENTITIES Added Latin 1//EN" "isolat1.ent">
+%isolat1;
+<!ENTITY % isolat2 PUBLIC "-//W3C//ENTITIES Added Latin 2//EN" "isolat2.ent">
+%isolat2;
+<!ENTITY % isonum PUBLIC "-//W3C//ENTITIES Numeric and Special Graphic//EN" "isonum.ent">
+%isonum;
+<!ENTITY % isopub PUBLIC "-//W3C//ENTITIES Publishing//EN" "isopub.ent">
+%isopub;
+<!ENTITY % isoamsa PUBLIC "-//W3C//ENTITIES Added Math Symbols: Arrow Relations//EN" "isoamsa.ent">
+%isoamsa;
+<!ENTITY % isoamsb PUBLIC "-//W3C//ENTITIES Added Math Symbols: Binary Operators//EN" "isoamsb.ent">
+%isoamsb;
+<!ENTITY % isoamsc PUBLIC "-//W3C//ENTITIES Added Math Symbols: Delimiters//EN" "isoamsc.ent">
+%isoamsc;
+<!ENTITY % isoamsn PUBLIC "-//W3C//ENTITIES Added Math Symbols: Negated Relations//EN" "isoamsn.ent">
+%isoamsn;
+<!ENTITY % isoamso PUBLIC "-//W3C//ENTITIES Added Math Symbols: Ordinary//EN" "isoamso.ent">
+%isoamso;
+<!ENTITY % isoamsr PUBLIC "-//W3C//ENTITIES Added Math Symbols: Relations//EN" "isoamsr.ent">
+%isoamsr;
+<!ENTITY % isogrk3 PUBLIC "-//W3C//ENTITIES Greek Symbols//EN" "isogrk3.ent">
+%isogrk3;
+<!ENTITY % isomfrk PUBLIC "-//W3C//ENTITIES Math Alphabets: Fraktur//EN" "isomfrk.ent">
+%isomfrk;
+<!ENTITY % isomopf PUBLIC "-//W3C//ENTITIES Math Alphabets: Open Face//EN" "isomopf.ent">
+%isomopf;
+<!ENTITY % isomscr PUBLIC "-//W3C//ENTITIES Math Alphabets: Script//EN" "isomscr.ent">
+%isomscr;
+<!ENTITY % isotech PUBLIC "-//W3C//ENTITIES General Technical//EN" "isotech.ent">
+%isotech;
+<!ENTITY % mmlextra PUBLIC "-//W3C//ENTITIES Additional MathML Symbols//EN" "mmlextra.ent">
+%mmlextra;
+<!ENTITY % mmlalias PUBLIC "-//W3C//ENTITIES MathML Aliases//EN" "mmlalias.ent">
+%mmlalias;
+
+<!-- end of MathML Character Entity section -->]]>
+
+
+
+<!ENTITY % MalignExpression "ns1:%maligngroup.qname;
+                             |ns1:%malignmark.qname;">
+
+<!ENTITY % TokenExpression "ns1:%mi.qname;|ns1:%mn.qname;|ns1:%mo.qname;
+                            |ns1:%mtext.qname;|ns1:%mspace.qname;
+                            |ns1:%ms.qname;">
+
+<!ENTITY % PresentationExpression "%TokenExpression;|%MalignExpression;
+                                   |ns1:%mrow.qname;|ns1:%mfrac.qname;
+                                   |ns1:%msqrt.qname;|ns1:%mroot.qname;
+                                   |ns1:%mstyle.qname;|ns1:%merror.qname;
+                                   |ns1:%mpadded.qname;|ns1:%mphantom.qname;
+                                   |ns1:%mfenced.qname;|ns1:%menclose.qname;
+                                   |ns1:%msub.qname;|ns1:%msup.qname;
+                                   |ns1:%msubsup.qname;|ns1:%munder.qname;
+                                   |ns1:%mover.qname;|ns1:%munderover.qname;
+                                   |ns1:%mmultiscripts.qname;
+                                   |ns1:%mtable.qname;|ns1:%mstack.qname;
+                                   |ns1:%mlongdiv.qname;
+                                   |ns1:%maction.qname;">
+
+<!-- end of mathml3-strict-content.rng -->
+
+<!ENTITY % cn.content "(#PCDATA|ns1:%mglyph.qname;|ns1:%sep.qname;
+                        |%PresentationExpression;)*">
+
+<!-- start of mathml3-content.rng -->
+
+<!-- start of mathml3-strict-content.rng -->
+
+<!ELEMENT ns1:%cn.qname; %cn.content;>
+<!ATTLIST ns1:%cn.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ENTITY % ci.content "(#PCDATA|ns1:%mglyph.qname;
+                        |%PresentationExpression;)*">
+
+<!ELEMENT ns1:%ci.qname; %ci.content;>
+<!ATTLIST ns1:%ci.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ENTITY % csymbol.content "(#PCDATA|ns1:%mglyph.qname;
+                             |%PresentationExpression;)*">
+
+<!ELEMENT ns1:%csymbol.qname; %csymbol.content;>
+<!ATTLIST ns1:%csymbol.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ENTITY % SymbolName "#PCDATA">
+
+<!ENTITY % BvarQ "ns1:(%bvar.qname;)*">
+
+<!ENTITY % DomainQ "(ns1:%domainofapplication.qname;|ns1:%condition.qname;
+                     |(ns1:%lowlimit.qname;,ns1:%uplimit.qname;?))*">
+
+<!ENTITY % constant-arith.class "ns1:%exponentiale.qname;
+                                 |ns1:%imaginaryi.qname;
+                                 |ns1:%notanumber.qname;|ns1:%true.qname;
+                                 |ns1:%false.qname;|ns1:%pi.qname;
+                                 |ns1:%eulergamma.qname;
+                                 |ns1:%infinity.qname;">
+
+<!ENTITY % constant-set.class "ns1:%integers.qname;|ns1:%reals.qname;
+                               |ns1:%rationals.qname;
+                               |ns1:%naturalnumbers.qname;
+                               |ns1:%complexes.qname;|ns1:%primes.qname;
+                               |ns1:%emptyset.qname;">
+
+<!ENTITY % binary-linalg.class "ns1:%vectorproduct.qname;
+                                |ns1:%scalarproduct.qname;
+                                |ns1:%outerproduct.qname;">
+
+<!ENTITY % nary-linalg.class "ns1:%selector.qname;">
+
+<!ENTITY % unary-linalg.class "ns1:%determinant.qname;
+                               |ns1:%transpose.qname;">
+
+<!ENTITY % nary-constructor.class "ns1:%vector.qname;|ns1:%matrix.qname;
+                                   |ns1:%matrixrow.qname;">
+
+<!ENTITY % nary-stats.class "ns1:%mean.qname;|ns1:%sdev.qname;
+                             |ns1:%variance.qname;|ns1:%median.qname;
+                             |ns1:%mode.qname;">
+
+<!ENTITY % unary-elementary.class "ns1:%sin.qname;|ns1:%cos.qname;
+                                   |ns1:%tan.qname;|ns1:%sec.qname;
+                                   |ns1:%csc.qname;|ns1:%cot.qname;
+                                   |ns1:%sinh.qname;|ns1:%cosh.qname;
+                                   |ns1:%tanh.qname;|ns1:%sech.qname;
+                                   |ns1:%csch.qname;|ns1:%coth.qname;
+                                   |ns1:%arcsin.qname;|ns1:%arccos.qname;
+                                   |ns1:%arctan.qname;|ns1:%arccosh.qname;
+                                   |ns1:%arccot.qname;|ns1:%arccoth.qname;
+                                   |ns1:%arccsc.qname;|ns1:%arccsch.qname;
+                                   |ns1:%arcsec.qname;|ns1:%arcsech.qname;
+                                   |ns1:%arcsinh.qname;
+                                   |ns1:%arctanh.qname;">
+
+<!ENTITY % limit.class "ns1:%limit.qname;">
+
+<!ENTITY % product.class "ns1:%product.qname;">
+
+<!ENTITY % sum.class "ns1:%sum.qname;">
+
+<!ENTITY % unary-set.class "ns1:%card.qname;">
+
+<!ENTITY % nary-set-reln.class "ns1:%subset.qname;|ns1:%prsubset.qname;">
+
+<!ENTITY % binary-set.class "ns1:%in.qname;|ns1:%notin.qname;
+                             |ns1:%notsubset.qname;|ns1:%notprsubset.qname;
+                             |ns1:%setdiff.qname;">
+
+<!ENTITY % nary-set.class "ns1:%union.qname;|ns1:%intersect.qname;
+                           |ns1:%cartesianproduct.qname;">
+
+<!ENTITY % nary-setlist-constructor.class "ns1:%set.qname;
+                                           |ns1:%list.qname;">
+
+<!ENTITY % unary-veccalc.class "ns1:%divergence.qname;|ns1:%grad.qname;
+                                |ns1:%curl.qname;|ns1:%laplacian.qname;">
+
+<!ENTITY % partialdiff.class "ns1:%partialdiff.qname;">
+
+<!ENTITY % Differential-Operator.class "ns1:%diff.qname;">
+
+<!ENTITY % int.class "ns1:%int.qname;">
+
+<!ENTITY % binary-reln.class "ns1:%neq.qname;|ns1:%approx.qname;
+                              |ns1:%factorof.qname;|ns1:%tendsto.qname;">
+
+<!ENTITY % nary-reln.class "ns1:%eq.qname;|ns1:%gt.qname;|ns1:%lt.qname;
+                            |ns1:%geq.qname;|ns1:%leq.qname;">
+
+<!ENTITY % quantifier.class "ns1:%forall.qname;|ns1:%exists.qname;">
+
+<!ENTITY % binary-logical.class "ns1:%implies.qname;
+                                 |ns1:%equivalent.qname;">
+
+<!ENTITY % unary-logical.class "ns1:%not.qname;">
+
+<!ENTITY % nary-logical.class "ns1:%and.qname;|ns1:%or.qname;
+                               |ns1:%xor.qname;">
+
+<!ENTITY % nary-arith.class "ns1:%plus.qname;|ns1:%times.qname;
+                             |ns1:%gcd.qname;|ns1:%lcm.qname;">
+
+<!ENTITY % nary-minmax.class "ns1:%max.qname;|ns1:%min.qname;">
+
+<!ENTITY % unary-arith.class "ns1:%factorial.qname;|ns1:%abs.qname;
+                              |ns1:%conjugate.qname;|ns1:%arg.qname;
+                              |ns1:%real.qname;|ns1:%imaginary.qname;
+                              |ns1:%floor.qname;|ns1:%ceiling.qname;
+                              |ns1:%exp.qname;">
+
+<!ENTITY % binary-arith.class "ns1:%quotient.qname;|ns1:%divide.qname;
+                               |ns1:%minus.qname;|ns1:%power.qname;
+                               |ns1:%rem.qname;|ns1:%root.qname;">
+
+<!ENTITY % nary-functional.class "ns1:%compose.qname;">
+
+<!ENTITY % lambda.class "ns1:%lambda.qname;">
+
+<!ENTITY % unary-functional.class "ns1:%inverse.qname;|ns1:%ident.qname;
+                                   |ns1:%domain.qname;|ns1:%codomain.qname;
+                                   |ns1:%image.qname;|ns1:%ln.qname;
+                                   |ns1:%log.qname;|ns1:%moment.qname;">
+
+<!ENTITY % interval.class "ns1:%interval.qname;">
+
+<!ENTITY % DeprecatedContExp "ns1:%reln.qname;|ns1:%fn.qname;
+                              |ns1:%declare.qname;">
+
+<!ENTITY % CommonDeprecatedAtt "
+  other CDATA #IMPLIED">
+
+<!ENTITY % Qualifier "(%DomainQ;)|ns1:%degree.qname;|ns1:%momentabout.qname;
+                      |ns1:%logbase.qname;">
+
+<!ENTITY % ContExp "ns1:%piecewise.qname;|%DeprecatedContExp;
+                    |%interval.class;|%unary-functional.class;
+                    |%lambda.class;|%nary-functional.class;
+                    |%binary-arith.class;|%unary-arith.class;
+                    |%nary-minmax.class;|%nary-arith.class;
+                    |%nary-logical.class;|%unary-logical.class;
+                    |%binary-logical.class;|%quantifier.class;
+                    |%nary-reln.class;|%binary-reln.class;|%int.class;
+                    |%Differential-Operator.class;|%partialdiff.class;
+                    |%unary-veccalc.class;
+                    |%nary-setlist-constructor.class;|%nary-set.class;
+                    |%binary-set.class;|%nary-set-reln.class;
+                    |%unary-set.class;|%sum.class;|%product.class;
+                    |%limit.class;|%unary-elementary.class;
+                    |%nary-stats.class;|%nary-constructor.class;
+                    |%unary-linalg.class;|%nary-linalg.class;
+                    |%binary-linalg.class;|%constant-set.class;
+                    |%constant-arith.class;|ns1:%semantics.qname;
+                    |ns1:%cn.qname;|ns1:%ci.qname;|ns1:%csymbol.qname;
+                    |ns1:%apply.qname;|ns1:%bind.qname;|ns1:%share.qname;
+                    |ns1:%cerror.qname;|ns1:%cbytes.qname;">
+
+<!ENTITY % CommonAtt "
+%MATHML.NamespaceDecl.attrib;
+   %XLINK.prefix;:href   CDATA #IMPLIED	
+  %XLINK.prefix;:type   CDATA #IMPLIED
+  xml:lang   CDATA #IMPLIED
+  xml:space   (default|preserve) #IMPLIED
+  id CDATA #IMPLIED
+  xref CDATA #IMPLIED
+  class CDATA #IMPLIED
+  style CDATA #IMPLIED
+  href CDATA #IMPLIED
+  %CommonDeprecatedAtt;">
+
+<!ENTITY % apply.content "(%ContExp;),(%BvarQ;),(%Qualifier;)*,
+                          (%ContExp;)*">
+
+<!ELEMENT ns1:%apply.qname; (%apply.content;)>
+<!ATTLIST ns1:%apply.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;>
+
+<!ENTITY % bind.content "%apply.content;">
+
+<!ELEMENT ns1:%bind.qname; (%bind.content;)>
+<!ATTLIST ns1:%bind.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;>
+
+<!ENTITY % Share.class "ns1:%share.qname;">
+
+<!ENTITY % src "
+  src CDATA #IMPLIED">
+
+<!ELEMENT ns1:%share.qname; EMPTY>
+<!ATTLIST ns1:%share.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %src;>
+
+<!ENTITY % Error.class "ns1:%cerror.qname;">
+
+<!ELEMENT ns1:%cerror.qname; (ns1:%csymbol.qname;,(%ContExp;)*)>
+<!ATTLIST ns1:%cerror.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%cerror.qname;
+  %CommonAtt;>
+
+<!ENTITY % Cbytes.class "ns1:%cbytes.qname;">
+
+<!ELEMENT ns1:%cbytes.qname; (#PCDATA)>
+<!ATTLIST ns1:%cbytes.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ENTITY % base64 "CDATA">
+
+<!ENTITY % Cs.class "ns1:%cs.qname;">
+
+<!ELEMENT ns1:%cs.qname; (#PCDATA)>
+<!ATTLIST ns1:%cs.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ENTITY % DefEncAtt "
+  encoding CDATA #IMPLIED
+  definitionURL CDATA #IMPLIED">
+
+<!ATTLIST ns1:%cn.qname;
+  %CommonAtt;
+  %DefEncAtt;
+  type CDATA #IMPLIED
+  base CDATA #IMPLIED>
+
+<!ATTLIST ns1:%ci.qname;
+  %CommonAtt;
+  %DefEncAtt;
+  type CDATA #IMPLIED>
+
+<!ENTITY % ci.type "
+  type CDATA #REQUIRED">
+
+<!ATTLIST ns1:%csymbol.qname;
+  %CommonAtt;
+  %DefEncAtt;
+  type CDATA #IMPLIED
+  cd CDATA #IMPLIED>
+
+<!ELEMENT ns1:%bvar.qname; ((ns1:%degree.qname;,
+                           (ns1:%ci.qname;|ns1:%semantics.qname;))
+                          |((ns1:%ci.qname;|ns1:%semantics.qname;),
+                            ns1:(%degree.qname;)?))>
+<!ATTLIST ns1:%bvar.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%cbytes.qname;
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ATTLIST ns1:%cs.qname;
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ENTITY % base "
+  base CDATA #REQUIRED">
+
+<!ELEMENT ns1:%sep.qname; EMPTY>
+<!ATTLIST ns1:%sep.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ELEMENT ns1:%domainofapplication.qname; (%ContExp;)>
+<!ATTLIST ns1:%domainofapplication.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ELEMENT ns1:%condition.qname; (%ContExp;)>
+<!ATTLIST ns1:%condition.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ELEMENT ns1:%uplimit.qname; (%ContExp;)>
+<!ATTLIST ns1:%uplimit.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ELEMENT ns1:%lowlimit.qname; (%ContExp;)>
+<!ATTLIST ns1:%lowlimit.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ELEMENT ns1:%degree.qname; (%ContExp;)>
+<!ATTLIST ns1:%degree.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ELEMENT ns1:%momentabout.qname; (%ContExp;)>
+<!ATTLIST ns1:%momentabout.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ELEMENT ns1:%logbase.qname; (%ContExp;)>
+<!ATTLIST ns1:%logbase.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ENTITY % type "
+  type CDATA #REQUIRED">
+
+<!ENTITY % order "
+  order (numeric|lexicographic) #REQUIRED">
+
+<!ENTITY % closure "
+  closure CDATA #REQUIRED">
+
+<!ELEMENT ns1:%piecewise.qname; (ns1:%piece.qname;|ns1:%otherwise.qname;)*>
+<!ATTLIST ns1:%piecewise.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%piece.qname; ((%ContExp;),(%ContExp;))>
+<!ATTLIST ns1:%piece.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%otherwise.qname; (%ContExp;)>
+<!ATTLIST ns1:%otherwise.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%reln.qname; (%ContExp;)*>
+<!ATTLIST ns1:%reln.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ELEMENT ns1:%fn.qname; (%ContExp;)>
+<!ATTLIST ns1:%fn.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ELEMENT ns1:%declare.qname; (%ContExp;)+>
+<!ATTLIST ns1:%declare.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  type CDATA #IMPLIED
+  scope CDATA #IMPLIED
+  nargs CDATA #IMPLIED
+  occurrence (prefix|infix|function-model) #IMPLIED
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%interval.qname; ((%ContExp;),(%ContExp;))>
+<!ATTLIST ns1:%interval.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;
+  closure CDATA #IMPLIED>
+
+<!ELEMENT ns1:%inverse.qname; EMPTY>
+<!ATTLIST ns1:%inverse.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%ident.qname; EMPTY>
+<!ATTLIST ns1:%ident.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%domain.qname; EMPTY>
+<!ATTLIST ns1:%domain.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%codomain.qname; EMPTY>
+<!ATTLIST ns1:%codomain.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%image.qname; EMPTY>
+<!ATTLIST ns1:%image.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%ln.qname; EMPTY>
+<!ATTLIST ns1:%ln.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%log.qname; EMPTY>
+<!ATTLIST ns1:%log.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%moment.qname; EMPTY>
+<!ATTLIST ns1:%moment.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%lambda.qname; ((%BvarQ;),(%DomainQ;),(%ContExp;))>
+<!ATTLIST ns1:%lambda.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%compose.qname; EMPTY>
+<!ATTLIST ns1:%compose.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%quotient.qname; EMPTY>
+<!ATTLIST ns1:%quotient.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%divide.qname; EMPTY>
+<!ATTLIST ns1:%divide.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%minus.qname; EMPTY>
+<!ATTLIST ns1:%minus.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%power.qname; EMPTY>
+<!ATTLIST ns1:%power.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%rem.qname; EMPTY>
+<!ATTLIST ns1:%rem.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%root.qname; EMPTY>
+<!ATTLIST ns1:%root.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%factorial.qname; EMPTY>
+<!ATTLIST ns1:%factorial.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%abs.qname; EMPTY>
+<!ATTLIST ns1:%abs.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%conjugate.qname; EMPTY>
+<!ATTLIST ns1:%conjugate.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%arg.qname; EMPTY>
+<!ATTLIST ns1:%arg.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%real.qname; EMPTY>
+<!ATTLIST ns1:%real.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%imaginary.qname; EMPTY>
+<!ATTLIST ns1:%imaginary.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%floor.qname; EMPTY>
+<!ATTLIST ns1:%floor.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%ceiling.qname; EMPTY>
+<!ATTLIST ns1:%ceiling.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%exp.qname; EMPTY>
+<!ATTLIST ns1:%exp.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%max.qname; EMPTY>
+<!ATTLIST ns1:%max.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%min.qname; EMPTY>
+<!ATTLIST ns1:%min.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%plus.qname; EMPTY>
+<!ATTLIST ns1:%plus.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%times.qname; EMPTY>
+<!ATTLIST ns1:%times.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%gcd.qname; EMPTY>
+<!ATTLIST ns1:%gcd.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%lcm.qname; EMPTY>
+<!ATTLIST ns1:%lcm.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%and.qname; EMPTY>
+<!ATTLIST ns1:%and.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%or.qname; EMPTY>
+<!ATTLIST ns1:%or.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%xor.qname; EMPTY>
+<!ATTLIST ns1:%xor.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%not.qname; EMPTY>
+<!ATTLIST ns1:%not.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%implies.qname; EMPTY>
+<!ATTLIST ns1:%implies.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%equivalent.qname; EMPTY>
+<!ATTLIST ns1:%equivalent.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%forall.qname; EMPTY>
+<!ATTLIST ns1:%forall.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%exists.qname; EMPTY>
+<!ATTLIST ns1:%exists.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%eq.qname; EMPTY>
+<!ATTLIST ns1:%eq.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%gt.qname; EMPTY>
+<!ATTLIST ns1:%gt.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%lt.qname; EMPTY>
+<!ATTLIST ns1:%lt.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%geq.qname; EMPTY>
+<!ATTLIST ns1:%geq.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%leq.qname; EMPTY>
+<!ATTLIST ns1:%leq.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%neq.qname; EMPTY>
+<!ATTLIST ns1:%neq.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%approx.qname; EMPTY>
+<!ATTLIST ns1:%approx.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%factorof.qname; EMPTY>
+<!ATTLIST ns1:%factorof.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%tendsto.qname; EMPTY>
+<!ATTLIST ns1:%tendsto.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;
+  type CDATA #IMPLIED>
+
+<!ELEMENT ns1:%int.qname; EMPTY>
+<!ATTLIST ns1:%int.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%diff.qname; EMPTY>
+<!ATTLIST ns1:%diff.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%partialdiff.qname; EMPTY>
+<!ATTLIST ns1:%partialdiff.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%divergence.qname; EMPTY>
+<!ATTLIST ns1:%divergence.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%grad.qname; EMPTY>
+<!ATTLIST ns1:%grad.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%curl.qname; EMPTY>
+<!ATTLIST ns1:%curl.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%laplacian.qname; EMPTY>
+<!ATTLIST ns1:%laplacian.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%set.qname; ((%BvarQ;)*,(%DomainQ;)*,(%ContExp;)*)>
+<!ATTLIST ns1:%set.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;
+  type CDATA #IMPLIED>
+
+<!ELEMENT ns1:%list.qname; ((%BvarQ;)*,(%DomainQ;)*,(%ContExp;)*)>
+<!ATTLIST ns1:%list.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;
+  order (numeric|lexicographic) #IMPLIED>
+
+<!ELEMENT ns1:%union.qname; EMPTY>
+<!ATTLIST ns1:%union.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%intersect.qname; EMPTY>
+<!ATTLIST ns1:%intersect.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%cartesianproduct.qname; EMPTY>
+<!ATTLIST ns1:%cartesianproduct.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%in.qname; EMPTY>
+<!ATTLIST ns1:%in.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%notin.qname; EMPTY>
+<!ATTLIST ns1:%notin.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%notsubset.qname; EMPTY>
+<!ATTLIST ns1:%notsubset.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%notprsubset.qname; EMPTY>
+<!ATTLIST ns1:%notprsubset.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%setdiff.qname; EMPTY>
+<!ATTLIST ns1:%setdiff.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%subset.qname; EMPTY>
+<!ATTLIST ns1:%subset.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%prsubset.qname; EMPTY>
+<!ATTLIST ns1:%prsubset.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%card.qname; EMPTY>
+<!ATTLIST ns1:%card.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%sum.qname; EMPTY>
+<!ATTLIST ns1:%sum.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%product.qname; EMPTY>
+<!ATTLIST ns1:%product.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%limit.qname; EMPTY>
+<!ATTLIST ns1:%limit.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%sin.qname; EMPTY>
+<!ATTLIST ns1:%sin.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%cos.qname; EMPTY>
+<!ATTLIST ns1:%cos.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%tan.qname; EMPTY>
+<!ATTLIST ns1:%tan.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%sec.qname; EMPTY>
+<!ATTLIST ns1:%sec.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%csc.qname; EMPTY>
+<!ATTLIST ns1:%csc.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%cot.qname; EMPTY>
+<!ATTLIST ns1:%cot.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%sinh.qname; EMPTY>
+<!ATTLIST ns1:%sinh.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%cosh.qname; EMPTY>
+<!ATTLIST ns1:%cosh.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%tanh.qname; EMPTY>
+<!ATTLIST ns1:%tanh.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%sech.qname; EMPTY>
+<!ATTLIST ns1:%sech.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%csch.qname; EMPTY>
+<!ATTLIST ns1:%csch.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%coth.qname; EMPTY>
+<!ATTLIST ns1:%coth.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%arcsin.qname; EMPTY>
+<!ATTLIST ns1:%arcsin.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%arccos.qname; EMPTY>
+<!ATTLIST ns1:%arccos.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%arctan.qname; EMPTY>
+<!ATTLIST ns1:%arctan.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%arccosh.qname; EMPTY>
+<!ATTLIST ns1:%arccosh.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%arccot.qname; EMPTY>
+<!ATTLIST ns1:%arccot.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%arccoth.qname; EMPTY>
+<!ATTLIST ns1:%arccoth.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%arccsc.qname; EMPTY>
+<!ATTLIST ns1:%arccsc.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%arccsch.qname; EMPTY>
+<!ATTLIST ns1:%arccsch.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%arcsec.qname; EMPTY>
+<!ATTLIST ns1:%arcsec.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%arcsech.qname; EMPTY>
+<!ATTLIST ns1:%arcsech.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%arcsinh.qname; EMPTY>
+<!ATTLIST ns1:%arcsinh.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%arctanh.qname; EMPTY>
+<!ATTLIST ns1:%arctanh.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%mean.qname; EMPTY>
+<!ATTLIST ns1:%mean.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%sdev.qname; EMPTY>
+<!ATTLIST ns1:%sdev.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%variance.qname; EMPTY>
+<!ATTLIST ns1:%variance.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%median.qname; EMPTY>
+<!ATTLIST ns1:%median.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%mode.qname; EMPTY>
+<!ATTLIST ns1:%mode.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%vector.qname; ((%BvarQ;),(%DomainQ;),(%ContExp;)*)>
+<!ATTLIST ns1:%vector.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%matrix.qname; ((%BvarQ;),(%DomainQ;),(%ContExp;)*)>
+<!ATTLIST ns1:%matrix.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%matrixrow.qname; ((%BvarQ;),(%DomainQ;),(%ContExp;)*)>
+<!ATTLIST ns1:%matrixrow.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%determinant.qname; EMPTY>
+<!ATTLIST ns1:%determinant.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%transpose.qname; EMPTY>
+<!ATTLIST ns1:%transpose.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%selector.qname; EMPTY>
+<!ATTLIST ns1:%selector.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%vectorproduct.qname; EMPTY>
+<!ATTLIST ns1:%vectorproduct.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%scalarproduct.qname; EMPTY>
+<!ATTLIST ns1:%scalarproduct.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%outerproduct.qname; EMPTY>
+<!ATTLIST ns1:%outerproduct.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%integers.qname; EMPTY>
+<!ATTLIST ns1:%integers.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%reals.qname; EMPTY>
+<!ATTLIST ns1:%reals.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%rationals.qname; EMPTY>
+<!ATTLIST ns1:%rationals.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%naturalnumbers.qname; EMPTY>
+<!ATTLIST ns1:%naturalnumbers.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%complexes.qname; EMPTY>
+<!ATTLIST ns1:%complexes.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%primes.qname; EMPTY>
+<!ATTLIST ns1:%primes.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%emptyset.qname; EMPTY>
+<!ATTLIST ns1:%emptyset.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%exponentiale.qname; EMPTY>
+<!ATTLIST ns1:%exponentiale.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%imaginaryi.qname; EMPTY>
+<!ATTLIST ns1:%imaginaryi.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%notanumber.qname; EMPTY>
+<!ATTLIST ns1:%notanumber.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%true.qname; EMPTY>
+<!ATTLIST ns1:%true.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%false.qname; EMPTY>
+<!ATTLIST ns1:%false.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%pi.qname; EMPTY>
+<!ATTLIST ns1:%pi.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%eulergamma.qname; EMPTY>
+<!ATTLIST ns1:%eulergamma.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!ELEMENT ns1:%infinity.qname; EMPTY>
+<!ATTLIST ns1:%infinity.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %CommonAtt;
+  %DefEncAtt;>
+
+<!-- end of mathml3-common.rng -->
+
+<!ENTITY % MathExpression "%ContExp;|%PresentationExpression;">
+
+<!-- end of mathml3-content.rng -->
+
+<!-- start of mathml3-presentation.rng -->
+
+<!ENTITY % ImpliedMrow "(%MathExpression;)*">
+
+<!ENTITY % TableRowExpression "ns1:%mtr.qname;|ns1:%mlabeledtr.qname;">
+
+<!ENTITY % TableCellExpression "ns1:%mtd.qname;">
+
+<!ENTITY % MstackExpression "%MathExpression;|ns1:%mscarries.qname;
+                             |ns1:%msline.qname;|ns1:%msrow.qname;
+                             |ns1:%msgroup.qname;">
+
+<!ENTITY % MsrowExpression "%MathExpression;|ns1:%none.qname;">
+
+<!ENTITY % MultiScriptExpression "(%MathExpression;|ns1:%none.qname;),
+                                  (%MathExpression;|ns1:%none.qname;)">
+
+<!ENTITY % mpadded-length "CDATA">
+
+<!ENTITY % linestyle "none|solid|dashed">
+
+<!ENTITY % verticalalign "top|bottom|center|baseline|axis">
+
+<!ENTITY % columnalignstyle "left|center|right">
+
+<!ENTITY % notationstyle "longdiv|actuarial|radical|box|roundedbox
+                          |circle|left|right|top|bottom|updiagonalstrike
+                          |downdiagonalstrike|verticalstrike
+                          |horizontalstrike|madruwb">
+
+<!ENTITY % idref "#PCDATA">
+
+<!ENTITY % unsigned-integer "CDATA">
+
+<!ENTITY % integer "CDATA">
+
+<!ENTITY % number "CDATA">
+
+<!ENTITY % character "CDATA">
+
+<!ENTITY % color "CDATA">
+
+<!ENTITY % group-alignment "left|center|right|decimalpoint">
+
+<!ENTITY % group-alignment-list "#PCDATA">
+
+<!ENTITY % group-alignment-list-list "#PCDATA">
+
+<!ENTITY % positive-integer "CDATA">
+
+<!ENTITY % token.content "#PCDATA|ns1:%mglyph.qname;
+                          |ns1:%malignmark.qname;">
+
+<!ELEMENT ns1:%mi.qname; (%token.content;)*>
+<!ATTLIST ns1:%mi.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ENTITY % length "CDATA">
+
+<!ENTITY % DeprecatedTokenAtt "
+  fontfamily CDATA #IMPLIED
+  fontweight (normal|bold) #IMPLIED
+  fontstyle (normal|italic) #IMPLIED
+  fontsize %length; #IMPLIED
+  color %color; #IMPLIED
+  background CDATA #IMPLIED">
+
+<!ENTITY % TokenAtt "
+  mathvariant (normal|bold|italic|bold-italic|double-struck|bold-fraktur
+               |script|bold-script|fraktur|sans-serif|bold-sans-serif
+               |sans-serif-italic|sans-serif-bold-italic|monospace
+               |initial|tailed|looped|stretched) #IMPLIED
+  mathsize CDATA #IMPLIED
+  dir (ltr|rtl) #IMPLIED
+  %DeprecatedTokenAtt;">
+
+<!ENTITY % CommonPresAtt "
+  mathcolor %color; #IMPLIED
+  mathbackground CDATA #IMPLIED">
+
+<!ATTLIST ns1:%mi.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  %TokenAtt;>
+
+<!ELEMENT ns1:%mn.qname; (%token.content;)*>
+<!ATTLIST ns1:%mn.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%mn.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  %TokenAtt;>
+
+<!ELEMENT ns1:%mo.qname; (%token.content;)*>
+<!ATTLIST ns1:%mo.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%mo.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  %TokenAtt;
+  form (prefix|infix|postfix) #IMPLIED
+  fence (true|false) #IMPLIED
+  separator (true|false) #IMPLIED
+  lspace %length; #IMPLIED
+  rspace %length; #IMPLIED
+  stretchy (true|false) #IMPLIED
+  symmetric (true|false) #IMPLIED
+  maxsize CDATA #IMPLIED
+  minsize %length; #IMPLIED
+  largeop (true|false) #IMPLIED
+  movablelimits (true|false) #IMPLIED
+  accent (true|false) #IMPLIED
+  linebreak (auto|newline|nobreak|goodbreak|badbreak) #IMPLIED
+  lineleading %length; #IMPLIED
+  linebreakstyle (before|after|duplicate|infixlinebreakstyle) #IMPLIED
+  linebreakmultchar CDATA #IMPLIED
+  indentalign (left|center|right|auto|id) #IMPLIED
+  indentshift %length; #IMPLIED
+  indenttarget CDATA #IMPLIED
+  indentalignfirst (left|center|right|auto|id|indentalign) #IMPLIED
+  indentshiftfirst CDATA #IMPLIED
+  indentalignlast (left|center|right|auto|id|indentalign) #IMPLIED
+  indentshiftlast CDATA #IMPLIED>
+
+<!ELEMENT ns1:%mtext.qname; (%token.content;)*>
+<!ATTLIST ns1:%mtext.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%mtext.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  %TokenAtt;>
+
+<!ELEMENT ns1:%mspace.qname; EMPTY>
+<!ATTLIST ns1:%mspace.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%mspace.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  %TokenAtt;
+  width %length; #IMPLIED
+  height %length; #IMPLIED
+  depth %length; #IMPLIED
+  linebreak (auto|newline|nobreak|goodbreak|badbreak
+             |indentingnewline) #IMPLIED>
+
+<!ELEMENT ns1:%ms.qname; (%token.content;)*>
+<!ATTLIST ns1:%ms.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%ms.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  %TokenAtt;
+  lquote CDATA #IMPLIED
+  rquote CDATA #IMPLIED>
+
+<!ENTITY % mglyph.deprecatedattributes "
+  index %integer; #IMPLIED
+  mathvariant (normal|bold|italic|bold-italic|double-struck|bold-fraktur
+               |script|bold-script|fraktur|sans-serif|bold-sans-serif
+               |sans-serif-italic|sans-serif-bold-italic|monospace
+               |initial|tailed|looped|stretched) #IMPLIED
+  mathsize CDATA #IMPLIED
+  %DeprecatedTokenAtt;">
+
+<!ENTITY % mglyph.attributes "
+  %CommonAtt;
+  %CommonPresAtt;
+  src CDATA #IMPLIED
+  width %length; #IMPLIED
+  height %length; #IMPLIED
+  valign CDATA #IMPLIED
+  alt CDATA #IMPLIED">
+
+<!ELEMENT ns1:%mglyph.qname; EMPTY>
+<!ATTLIST ns1:%mglyph.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %mglyph.attributes;
+  %mglyph.deprecatedattributes;>
+
+<!ELEMENT ns1:%msline.qname; EMPTY>
+<!ATTLIST ns1:%msline.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%msline.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  position %integer; #IMPLIED
+  length %unsigned-integer; #IMPLIED
+  leftoverhang %length; #IMPLIED
+  rightoverhang %length; #IMPLIED
+  mslinethickness CDATA #IMPLIED>
+
+<!ELEMENT ns1:%none.qname; EMPTY>
+<!ATTLIST ns1:%none.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%none.qname;
+  %CommonAtt;
+  %CommonPresAtt;>
+
+<!ELEMENT ns1:%mprescripts.qname; EMPTY>
+<!ATTLIST ns1:%mprescripts.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%mprescripts.qname;
+  %CommonAtt;
+  %CommonPresAtt;>
+
+<!ELEMENT ns1:%malignmark.qname; EMPTY>
+<!ATTLIST ns1:%malignmark.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%malignmark.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  edge (left|right) #IMPLIED>
+
+<!ELEMENT ns1:%maligngroup.qname; EMPTY>
+<!ATTLIST ns1:%maligngroup.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%maligngroup.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  groupalign (left|center|right|decimalpoint) #IMPLIED>
+
+<!ELEMENT ns1:%mrow.qname; (%MathExpression;)*>
+<!ATTLIST ns1:%mrow.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%mrow.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  dir (ltr|rtl) #IMPLIED>
+
+<!ELEMENT ns1:%mfrac.qname; ((%MathExpression;),(%MathExpression;))>
+<!ATTLIST ns1:%mfrac.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%mfrac.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  linethickness CDATA #IMPLIED
+  numalign (left|center|right) #IMPLIED
+  denomalign (left|center|right) #IMPLIED
+  bevelled (true|false) #IMPLIED>
+
+<!ELEMENT ns1:%msqrt.qname; (%ImpliedMrow;)>
+<!ATTLIST ns1:%msqrt.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%msqrt.qname;
+  %CommonAtt;
+  %CommonPresAtt;>
+
+<!ELEMENT ns1:%mroot.qname; ((%MathExpression;),(%MathExpression;))>
+<!ATTLIST ns1:%mroot.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%mroot.qname;
+  %CommonAtt;
+  %CommonPresAtt;>
+
+<!ELEMENT ns1:%mstyle.qname; (%ImpliedMrow;)>
+<!ATTLIST ns1:%mstyle.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ENTITY % mstyle.deprecatedattributes "
+  %DeprecatedTokenAtt;
+  veryverythinmathspace %length; #IMPLIED
+  verythinmathspace %length; #IMPLIED
+  thinmathspace %length; #IMPLIED
+  mediummathspace %length; #IMPLIED
+  thickmathspace %length; #IMPLIED
+  verythickmathspace %length; #IMPLIED
+  veryverythickmathspace %length; #IMPLIED">
+
+<!ENTITY % mstyle.generalattributes "
+  accent (true|false) #IMPLIED
+  accentunder (true|false) #IMPLIED
+  align (left|right|center) #IMPLIED
+  alignmentscope CDATA #IMPLIED
+  bevelled (true|false) #IMPLIED
+  charalign (left|center|right) #IMPLIED
+  charspacing CDATA #IMPLIED
+  close CDATA #IMPLIED
+  columnalign CDATA #IMPLIED
+  columnlines CDATA #IMPLIED
+  columnspacing CDATA #IMPLIED
+  columnspan %positive-integer; #IMPLIED
+  columnwidth CDATA #IMPLIED
+  crossout CDATA #IMPLIED
+  denomalign (left|center|right) #IMPLIED
+  depth %length; #IMPLIED
+  dir (ltr|rtl) #IMPLIED
+  edge (left|right) #IMPLIED
+  equalcolumns (true|false) #IMPLIED
+  equalrows (true|false) #IMPLIED
+  fence (true|false) #IMPLIED
+  form (prefix|infix|postfix) #IMPLIED
+  frame (%linestyle;) #IMPLIED
+  framespacing CDATA #IMPLIED
+  groupalign CDATA #IMPLIED
+  height %length; #IMPLIED
+  indentalign (left|center|right|auto|id) #IMPLIED
+  indentalignfirst (left|center|right|auto|id|indentalign) #IMPLIED
+  indentalignlast (left|center|right|auto|id|indentalign) #IMPLIED
+  indentshift %length; #IMPLIED
+  indentshiftfirst CDATA #IMPLIED
+  indentshiftlast CDATA #IMPLIED
+  indenttarget CDATA #IMPLIED
+  largeop (true|false) #IMPLIED
+  leftoverhang %length; #IMPLIED
+  length %unsigned-integer; #IMPLIED
+  linebreak (auto|newline|nobreak|goodbreak|badbreak) #IMPLIED
+  linebreakmultchar CDATA #IMPLIED
+  linebreakstyle (before|after|duplicate|infixlinebreakstyle) #IMPLIED
+  lineleading %length; #IMPLIED
+  linethickness CDATA #IMPLIED
+  location (w|nw|n|ne|e|se|s|sw) #IMPLIED
+  longdivstyle CDATA #IMPLIED
+  lquote CDATA #IMPLIED
+  lspace %length; #IMPLIED
+  mathsize CDATA #IMPLIED
+  mathvariant (normal|bold|italic|bold-italic|double-struck|bold-fraktur
+               |script|bold-script|fraktur|sans-serif|bold-sans-serif
+               |sans-serif-italic|sans-serif-bold-italic|monospace
+               |initial|tailed|looped|stretched) #IMPLIED
+  maxsize CDATA #IMPLIED
+  minlabelspacing %length; #IMPLIED
+  minsize %length; #IMPLIED
+  movablelimits (true|false) #IMPLIED
+  mslinethickness CDATA #IMPLIED
+  notation CDATA #IMPLIED
+  numalign (left|center|right) #IMPLIED
+  open CDATA #IMPLIED
+  position %integer; #IMPLIED
+  rightoverhang %length; #IMPLIED
+  rowalign CDATA #IMPLIED
+  rowlines CDATA #IMPLIED
+  rowspacing CDATA #IMPLIED
+  rowspan %positive-integer; #IMPLIED
+  rquote CDATA #IMPLIED
+  rspace %length; #IMPLIED
+  selection %positive-integer; #IMPLIED
+  separator (true|false) #IMPLIED
+  separators CDATA #IMPLIED
+  shift %integer; #IMPLIED
+  side (left|right|leftoverlap|rightoverlap) #IMPLIED
+  stackalign (left|center|right|decimalpoint) #IMPLIED
+  stretchy (true|false) #IMPLIED
+  subscriptshift %length; #IMPLIED
+  superscriptshift %length; #IMPLIED
+  symmetric (true|false) #IMPLIED
+  valign CDATA #IMPLIED
+  width %length; #IMPLIED">
+
+<!ENTITY % mstyle.specificattributes "
+  scriptlevel %integer; #IMPLIED
+  displaystyle (true|false) #IMPLIED
+  scriptsizemultiplier %number; #IMPLIED
+  scriptminsize %length; #IMPLIED
+  infixlinebreakstyle (before|after|duplicate) #IMPLIED
+  decimalpoint %character; #IMPLIED">
+
+<!ATTLIST ns1:%mstyle.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  %mstyle.specificattributes;
+  %mstyle.generalattributes;
+  %mstyle.deprecatedattributes;>
+
+<!ELEMENT ns1:%merror.qname; (%ImpliedMrow;)>
+<!ATTLIST ns1:%merror.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%merror.qname;
+  %CommonAtt;
+  %CommonPresAtt;>
+
+<!ELEMENT ns1:%mpadded.qname; (%ImpliedMrow;)>
+<!ATTLIST ns1:%mpadded.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%mpadded.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  height %mpadded-length; #IMPLIED
+  depth %mpadded-length; #IMPLIED
+  width %mpadded-length; #IMPLIED
+  lspace %mpadded-length; #IMPLIED
+  voffset %mpadded-length; #IMPLIED>
+
+<!ELEMENT ns1:%mphantom.qname; (%ImpliedMrow;)>
+<!ATTLIST ns1:%mphantom.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%mphantom.qname;
+  %CommonAtt;
+  %CommonPresAtt;>
+
+<!ELEMENT ns1:%mfenced.qname; (%MathExpression;)*>
+<!ATTLIST ns1:%mfenced.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%mfenced.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  open CDATA #IMPLIED
+  close CDATA #IMPLIED
+  separators CDATA #IMPLIED>
+
+<!ELEMENT ns1:%menclose.qname; (%ImpliedMrow;)>
+<!ATTLIST ns1:%menclose.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%menclose.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  notation CDATA #IMPLIED>
+
+<!ELEMENT ns1:%msub.qname; ((%MathExpression;),(%MathExpression;))>
+<!ATTLIST ns1:%msub.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%msub.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  subscriptshift %length; #IMPLIED>
+
+<!ELEMENT ns1:%msup.qname; ((%MathExpression;),(%MathExpression;))>
+<!ATTLIST ns1:%msup.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%msup.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  superscriptshift %length; #IMPLIED>
+
+<!ENTITY % msubsup.attributes "
+  %CommonAtt;
+  %CommonPresAtt;
+  subscriptshift %length; #IMPLIED
+  superscriptshift %length; #IMPLIED">
+
+<!ELEMENT ns1:%msubsup.qname; ((%MathExpression;),(%MathExpression;),
+                             (%MathExpression;))>
+<!ATTLIST ns1:%msubsup.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %msubsup.attributes;>
+
+<!ELEMENT ns1:%munder.qname; ((%MathExpression;),(%MathExpression;))>
+<!ATTLIST ns1:%munder.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%munder.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  accentunder (true|false) #IMPLIED
+  align (left|right|center) #IMPLIED>
+
+<!ELEMENT ns1:%mover.qname; ((%MathExpression;),(%MathExpression;))>
+<!ATTLIST ns1:%mover.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%mover.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  accent (true|false) #IMPLIED
+  align (left|right|center) #IMPLIED>
+
+<!ELEMENT ns1:%munderover.qname; ((%MathExpression;),(%MathExpression;),
+                                (%MathExpression;))>
+<!ATTLIST ns1:%munderover.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%munderover.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  accent (true|false) #IMPLIED
+  accentunder (true|false) #IMPLIED
+  align (left|right|center) #IMPLIED>
+
+<!ELEMENT ns1:%mmultiscripts.qname; ((%MathExpression;),
+                                   (%MultiScriptExpression;)*,
+                                   (ns1:%mprescripts.qname;,
+                                    (%MultiScriptExpression;)*)?)>
+<!ATTLIST ns1:%mmultiscripts.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%mmultiscripts.qname;
+  %msubsup.attributes;>
+
+<!ELEMENT ns1:%mtable.qname; (%TableRowExpression;)*>
+<!ATTLIST ns1:%mtable.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%mtable.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  align CDATA #IMPLIED
+  rowalign CDATA #IMPLIED
+  columnalign CDATA #IMPLIED
+  groupalign CDATA #IMPLIED
+  alignmentscope CDATA #IMPLIED
+  columnwidth CDATA #IMPLIED
+  width CDATA #IMPLIED
+  rowspacing CDATA #IMPLIED
+  columnspacing CDATA #IMPLIED
+  rowlines CDATA #IMPLIED
+  columnlines CDATA #IMPLIED
+  frame (%linestyle;) #IMPLIED
+  framespacing CDATA #IMPLIED
+  equalrows (true|false) #IMPLIED
+  equalcolumns (true|false) #IMPLIED
+  displaystyle (true|false) #IMPLIED
+  side (left|right|leftoverlap|rightoverlap) #IMPLIED
+  minlabelspacing %length; #IMPLIED>
+
+<!ELEMENT ns1:%mlabeledtr.qname; (%TableCellExpression;)+>
+<!ATTLIST ns1:%mlabeledtr.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ENTITY % mtr.attributes "
+  %CommonAtt;
+  %CommonPresAtt;
+  rowalign (top|bottom|center|baseline|axis) #IMPLIED
+  columnalign CDATA #IMPLIED
+  groupalign CDATA #IMPLIED">
+
+<!ATTLIST ns1:%mlabeledtr.qname;
+  %mtr.attributes;>
+
+<!ELEMENT ns1:%mtr.qname; (%TableCellExpression;)*>
+<!ATTLIST ns1:%mtr.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %mtr.attributes;>
+
+<!ELEMENT ns1:%mtd.qname; (%ImpliedMrow;)>
+<!ATTLIST ns1:%mtd.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%mtd.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  rowspan %positive-integer; #IMPLIED
+  columnspan %positive-integer; #IMPLIED
+  rowalign (top|bottom|center|baseline|axis) #IMPLIED
+  columnalign (%columnalignstyle;) #IMPLIED
+  groupalign CDATA #IMPLIED>
+
+<!ELEMENT ns1:%mstack.qname; (%MstackExpression;)*>
+<!ATTLIST ns1:%mstack.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%mstack.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  align CDATA #IMPLIED
+  stackalign (left|center|right|decimalpoint) #IMPLIED
+  charalign (left|center|right) #IMPLIED
+  charspacing CDATA #IMPLIED>
+
+<!ELEMENT ns1:%mlongdiv.qname; ((%MstackExpression;),(%MstackExpression;),
+                              (%MstackExpression;)+)>
+<!ATTLIST ns1:%mlongdiv.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ENTITY % msgroup.attributes "
+  %CommonAtt;
+  %CommonPresAtt;
+  position %integer; #IMPLIED
+  shift %integer; #IMPLIED">
+
+<!ATTLIST ns1:%mlongdiv.qname;
+  %msgroup.attributes;
+  longdivstyle CDATA #IMPLIED>
+
+<!ELEMENT ns1:%msgroup.qname; (%MstackExpression;)*>
+<!ATTLIST ns1:%msgroup.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %msgroup.attributes;>
+
+<!ELEMENT ns1:%msrow.qname; (%MsrowExpression;)*>
+<!ATTLIST ns1:%msrow.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%msrow.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  position %integer; #IMPLIED>
+
+<!ELEMENT ns1:%mscarries.qname; (%MsrowExpression;|ns1:%mscarry.qname;)*>
+<!ATTLIST ns1:%mscarries.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%mscarries.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  position %integer; #IMPLIED
+  location (w|nw|n|ne|e|se|s|sw) #IMPLIED
+  crossout CDATA #IMPLIED
+  scriptsizemultiplier %number; #IMPLIED>
+
+<!ELEMENT ns1:%mscarry.qname; (%MsrowExpression;)*>
+<!ATTLIST ns1:%mscarry.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%mscarry.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  location (w|nw|n|ne|e|se|s|sw) #IMPLIED
+  crossout CDATA #IMPLIED>
+
+<!ELEMENT ns1:%maction.qname; (%MathExpression;)+>
+<!ATTLIST ns1:%maction.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%maction.qname;
+  %CommonAtt;
+  %CommonPresAtt;
+  actiontype CDATA #IMPLIED
+  selection %positive-integer; #IMPLIED>
+
+<!-- end of mathml3-presentation.rng -->
+
+<!-- start of mathml3-common.rng -->
+
+<!ELEMENT ns1:%math.qname; (%MathExpression;)*>
+<!ATTLIST ns1:%math.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ENTITY % NonMathMLAtt "">
+
+<!ENTITY % math.deprecatedattributes "
+  mode CDATA #IMPLIED
+  macros CDATA #IMPLIED">
+
+<!ATTLIST ns1:%math.qname;
+  %CommonAtt;
+  display (block|inline) #IMPLIED
+  maxwidth %length; #IMPLIED
+  overflow (linebreak|scroll|elide|truncate|scale) #IMPLIED
+  altimg CDATA #IMPLIED
+  altimg-width %length; #IMPLIED
+  altimg-height %length; #IMPLIED
+  altimg-valign CDATA #IMPLIED
+  alttext CDATA #IMPLIED
+  cdgroup CDATA #IMPLIED
+  %math.deprecatedattributes;
+  %CommonPresAtt;
+  %mstyle.specificattributes;
+  %mstyle.generalattributes;>
+
+<!ENTITY % name "
+  name CDATA #REQUIRED">
+
+<!ENTITY % cd "
+  cd CDATA #REQUIRED">
+
+<!ENTITY % annotation.attributes "
+  %CommonAtt;
+  cd CDATA #IMPLIED
+  name CDATA #IMPLIED
+  %DefEncAtt;
+  src CDATA #IMPLIED">
+
+<!ELEMENT ns1:%annotation.qname; (#PCDATA)>
+<!ATTLIST ns1:%annotation.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %annotation.attributes;>
+
+<!ENTITY % annotation-xml.model "(%MathExpression;)*">
+
+<!ENTITY % anyElement "">
+
+<!ELEMENT ns1:%annotation-xml.qname; (%annotation-xml.model;)>
+<!ATTLIST ns1:%annotation-xml.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'
+  %annotation.attributes;>
+
+<!ELEMENT ns1:%semantics.qname; ((%MathExpression;),
+                               (ns1:%annotation.qname;
+                                |ns1:%annotation-xml.qname;)*)>
+<!ATTLIST ns1:%semantics.qname;
+  xmlns:ns1 CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'>
+
+<!ATTLIST ns1:%semantics.qname;
+  %CommonAtt;
+  %DefEncAtt;
+  cd CDATA #IMPLIED
+  name CDATA #IMPLIED>

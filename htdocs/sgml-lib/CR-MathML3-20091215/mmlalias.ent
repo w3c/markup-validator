@@ -3,7 +3,7 @@
      File mmlalias.ent produced by the XSL script entities.xsl
      from input data in unicode.xml.
 
-     Copyright 1998 - 2009 W3C.
+     Copyright 1998 - 2010 W3C.
 
      Use and distribution of this code are permitted under the terms of the
      W3C Software Notice and License.
@@ -340,7 +340,7 @@
 <!ENTITY NotExists        "&#x02204;" ><!--THERE DOES NOT EXIST -->
 <!ENTITY NotGreater       "&#x0226F;" ><!--NOT GREATER-THAN -->
 <!ENTITY NotGreaterEqual  "&#x02271;" ><!--NEITHER GREATER-THAN NOR EQUAL TO -->
-<!ENTITY NotGreaterFullEqual "&#x02266;&#x00338;" ><!--LESS-THAN OVER EQUAL TO with slash -->
+<!ENTITY NotGreaterFullEqual "&#x02267;&#x00338;" ><!--GREATER-THAN OVER EQUAL TO with slash -->
 <!ENTITY NotGreaterGreater "&#x0226B;&#x00338;" ><!--MUCH GREATER THAN with slash -->
 <!ENTITY NotGreaterLess   "&#x02279;" ><!--NEITHER GREATER-THAN NOR LESS-THAN -->
 <!ENTITY NotGreaterSlantEqual "&#x02A7E;&#x00338;" ><!--GREATER-THAN OR SLANTED EQUAL TO with slash -->
