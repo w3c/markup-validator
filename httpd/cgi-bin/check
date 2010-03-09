@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.771 2010-03-06 11:00:48 ville Exp $
+# $Id: check,v 1.772 2010-03-09 19:50:56 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -191,7 +191,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.771 $;
+    $VERSION = q$Revision: 1.772 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -968,6 +968,7 @@ sub compoundxml_validate (\$)
         # I wish we could use XML::LibXML::Reader here. but SHAME on those
         # major unix distributions still shipping with libxml2 2.6.16… 4 years
         # after its release
+        # …and we could use now as we require libxml2 >= 2.6.21 anyway…
         my $xml_reader = XML::LibXML->new();
         $xml_reader->base_uri($res->base());
 
