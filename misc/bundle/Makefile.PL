@@ -21,7 +21,7 @@ WriteMakefile(
         "Encode::HanExtra"      => 0,
         "File::Spec::Functions" => 0,
         "HTML::Encoding"        => 0.52,
-        "HTML::HeadParser"      => 3.60,
+        "HTML::HeadParser"      => "3.60",
         "HTML::Parser"          => 3.24,
         "HTML::Template"        => 2.6,
         "HTTP::Headers::Auth"   => 0,
@@ -37,7 +37,7 @@ WriteMakefile(
         "Socket"                => 0,
         "URI"                   => 0,
         "URI::Escape"           => 0,
-        "XML::LibXML"           => 1.70,
+        "XML::LibXML"           => "1.70",
 
         # Optional:
         "Encode::JIS2K" => 0,
