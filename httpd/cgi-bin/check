@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.772 2010-03-09 19:50:56 ville Exp $
+# $Id: check,v 1.773 2010-03-10 20:51:38 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -61,7 +61,7 @@ use JSON 2.00 qw();
 use SGML::Parser::OpenSP 0.991 qw();
 use URI qw();
 use URI::Escape qw(uri_escape);
-use XML::LibXML 1.69 qw();         # Need 1.69 for (working) structured errors
+use XML::LibXML 1.70 qw();         # Need 1.70 for (working) structured errors
 
 ###############################################################################
 #### Constant definitions. ####################################################
@@ -191,7 +191,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.772 $;
+    $VERSION = q$Revision: 1.773 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -645,9 +645,7 @@ if (&is_xml($File)) {
             my $err;
             $err->{src} = '...';    # do this with show_open_entities()?
             $err->{line} = $err_obj->line();
-
-            # -> column() is available in XML::LibXML >= 1.69_2
-            $err->{char} = eval { $err_obj->column() };
+            $err->{char} = $err_obj->column();
             $err->{num}  = "libxml2-" . $err_obj->code();
             $err->{type} = "E";
             $err->{msg}  = $err_obj->message();
