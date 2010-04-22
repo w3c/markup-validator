@@ -1,6 +1,9 @@
 OVERRIDE YES
 SGMLDECL "xml.dcl"
 
+
+-- XMLSpec --
+
 PUBLIC "-//W3C//DTD Specification V2.0//EN"
        "Specification/xmlspec-v20.dtd"
 PUBLIC "-//W3C//DTD Specification V2.1//EN"
