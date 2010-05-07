@@ -1,5 +1,5 @@
-<!--#set var="revision" value="\$Id: whatsnew.html,v 1.101 2010-05-07 18:47:34 ville Exp $"
---><!--#set var="date" value="\$Date: 2010-05-07 18:47:34 $"
+<!--#set var="revision" value="\$Id: whatsnew.html,v 1.102 2010-05-07 18:53:53 ville Exp $"
+--><!--#set var="date" value="\$Date: 2010-05-07 18:53:53 $"
 --><!--#set var="title" value="What's New at The W3C Markup Validation Service"
 --><!--#set var="relroot" value="./"
 --><!--#set var="feeds" value="1"
@@ -28,7 +28,7 @@
     </div>
     <dl id="news">
 
-      <dt id="vxyz">201Y-MM-DD &mdash; X.Y.Z release:</dt>
+      <dt id="vDEV">201Y-MM-DD &mdash; X.Y.Z release:</dt>
       <dd>
         <p>
           The X.Y.Z release of the markup validator is a TBD release.
@@ -42,12 +42,23 @@
             passed document.
           </li>
           <li>
+            Enhancement: updates to validator's internal DTD library.
+          </li>
+          <li>
             Bug fix: doctype override could place a malformed comment
             in the modified document.
           </li>
           <li>
             Bug fix: error messages were not properly HTML escaped when
             "show source" was selected.
+          </li>
+          <li>
+            Dependency changes: new minimum required versions: HTML-Parser
+            3.60, XML-LibXML 1.70.
+          </li>
+          <li>
+            … and a whole slew of minor spelling, code cleanup, link and the
+            like fixes here and there.
           </li>
         </ul>
       </dd>
