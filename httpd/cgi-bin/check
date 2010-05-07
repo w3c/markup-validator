@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.775 2010-05-07 17:22:58 ville Exp $
+# $Id: check,v 1.776 2010-05-07 17:41:29 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -191,7 +191,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.775 $;
+    $VERSION = q$Revision: 1.776 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -1892,6 +1892,16 @@ sub check_recursion ($$)
 }
 
 #
+# Escape text to be included in markup comment.
+sub escape_comment
+{
+    local $_ = shift;
+    return '' unless defined;
+    s/--/- /g;
+    return $_;
+}
+
+#
 # Return $_[0] encoded for HTML entities (cribbed from merlyn).
 #
 # Note that this is used both for HTML and XML escaping.
@@ -2008,7 +2018,7 @@ sub override_doctype
             $HTML .= $text;    # Stash it as is...
         }
         else {
-            $HTML .= "$dtd<!-- $text -->";
+            $HTML .= "$dtd<!-- " . &escape_comment($text) . " -->";
         }
     };
 
@@ -2088,14 +2098,16 @@ sub override_charset ($$)
               (^<\?xml\b[^>]*?${ws}encoding${ws}*=${ws}*(["']))
               (${cs})
               (\3.*?\?>)
-          )/lc($4) eq lc($charset) ? "$1" : "$2$charset$5<!-- $1 -->"/esx;
+          )/lc($4) eq lc($charset) ?
+              "$1" : "$2$charset$5<!-- " . &escape_comment($1) ." -->"/esx;
 
     # <meta charset="charset">
     $content =~ s/(
               (<meta\b[^>]*?${ws}charset${ws}*=${ws}*["']?${ws}*)
               (${cs})
               (.*?>)
-          )/lc($3) eq lc($charset) ? "$1" : "$2$charset$4<!-- $1 -->"/esix;
+          )/lc($3) eq lc($charset) ?
+              "$1" : "$2$charset$4<!-- " . &escape_comment($1) . " -->"/esix;
 
     # <meta http-equiv="content-type" content="some/type; charset=charset">
     $content =~ s/(
@@ -2104,7 +2116,8 @@ sub override_charset ($$)
                   content${ws}*=${ws}*["']?[^"'>]+?;${ws}*charset${ws}*=${ws}*)
               (${cs})
               (.*?>)
-          )/lc($3) eq lc($charset) ? "$1" : "$2$charset$4<!-- $1 -->"/esix;
+          )/lc($3) eq lc($charset) ?
+              "$1" : "$2$charset$4<!-- " . &escape_comment($1) . " -->"/esix;
 
     # <meta content="some/type; charset=charset" http-equiv="content-type">
     $content =~ s/(
@@ -2112,7 +2125,8 @@ sub override_charset ($$)
                   content${ws}*=${ws}*["']?[^"'>]+?;${ws}*charset${ws}*=${ws}*)
               (${cs})
               ([^>]*?${ws}http-equiv${ws}*=${ws}*["']?${ws}*content-type\b.*?>)
-          )/lc($3) eq lc($charset) ? "$1" : "$2$charset$4<!-- $1 -->"/esix;
+          )/lc($3) eq lc($charset) ?
+              "$1" : "$2$charset$4<!-- " . &escape_comment($1) . " -->"/esix;
 
     $File->{Content} = [split /\n/, $content];
 }
