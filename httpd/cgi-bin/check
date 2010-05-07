@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.774 2010-05-07 09:18:53 ville Exp $
+# $Id: check,v 1.775 2010-05-07 17:22:58 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -191,7 +191,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.774 $;
+    $VERSION = q$Revision: 1.775 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -613,20 +613,12 @@ if (&is_xml($File)) {
         # [NOT] loading the XML catalog for entities resolution as it seems to
         # cause a lot of unnecessary DTD/entities fetching
         #$xmlparser->load_catalog(catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc'));
+
+        &override_charset($File, "UTF-8");
+
         my $xml_string = join "\n", @{$File->{Content}};
 
         my $xmlws = qr/[\x20\x09\x0D\x0A]/o;
-
-        # the XML parser will check the value of encoding attribute in XML
-        # declaration so we have to amend it to reflect transcoding.
-        # see Bug 4867
-        $xml_string =~ s/
-               (^<\?xml\b[^>]*${xmlws})
-               (encoding${xmlws}*=${xmlws}*
-                   (?:(["'])[A-Za-z][a-zA-Z0-9_-]+\3)
-               )
-               (.*?\?>)
-           /$1encoding="UTF-8"$4/sox;
 
         # Is the document standalone?  Need to check with a regex because
         # the parser may fail to return a document we could use for this.
@@ -1073,11 +1065,9 @@ sub html5_validate (\$)
     if ($File->{Opt}->{DOCTYPE} || $File->{Charset}->{Override}) {
 
         # Doctype or charset overridden, need to use $File->{Content} in UTF-8
-        # because $File->{Bytes} is not affected by the overrides.  This will
-        # most likely be a source of errors about internal/actual charset
-        # differences as long as our transcoding process does not "fix" the
-        # charset info in XML declaration, meta http-equiv/charset and/or BOM
-        # (any others?).
+        # because $File->{Bytes} is not affected by the overrides.
+
+        &override_charset($File, "UTF-8");
 
         $ct = $File->{ContentType} unless $File->{'Direct Input'};
         my @ct = ($ct => undef, charset => "UTF-8");
@@ -2030,7 +2020,7 @@ sub override_doctype
             $seen_root = TRUE;
             if ($seen_doctype) {
 
-                # doctype addition aldready done, we move on
+                # doctype addition already done, we move on
                 $HTML .= $_[0];
             }
             else {
@@ -2079,6 +2069,52 @@ sub override_doctype
     }
 
     return $File;
+}
+
+#
+# Override inline charset declarations, for use e.g. when passing
+# transcoded results to external parsers that use them.
+sub override_charset ($$)
+{
+    my ($File, $charset) = @_;
+
+    my $ws = qr/[\x20\x09\x0D\x0A]/o;
+    my $cs = qr/[A-Za-z][a-zA-Z0-9_-]+/o;
+
+    my $content = join("\n", @{$File->{Content}});
+
+    # <?xml encoding="charset"?>
+    $content =~ s/(
+              (^<\?xml\b[^>]*?${ws}encoding${ws}*=${ws}*(["']))
+              (${cs})
+              (\3.*?\?>)
+          )/lc($4) eq lc($charset) ? "$1" : "$2$charset$5<!-- $1 -->"/esx;
+
+    # <meta charset="charset">
+    $content =~ s/(
+              (<meta\b[^>]*?${ws}charset${ws}*=${ws}*["']?${ws}*)
+              (${cs})
+              (.*?>)
+          )/lc($3) eq lc($charset) ? "$1" : "$2$charset$4<!-- $1 -->"/esix;
+
+    # <meta http-equiv="content-type" content="some/type; charset=charset">
+    $content =~ s/(
+              (<meta\b[^>]*${ws}
+                  http-equiv${ws}*=${ws}*["']?${ws}*content-type\b[^>]*?${ws}
+                  content${ws}*=${ws}*["']?[^"'>]+?;${ws}*charset${ws}*=${ws}*)
+              (${cs})
+              (.*?>)
+          )/lc($3) eq lc($charset) ? "$1" : "$2$charset$4<!-- $1 -->"/esix;
+
+    # <meta content="some/type; charset=charset" http-equiv="content-type">
+    $content =~ s/(
+              (<meta\b[^>]*${ws}
+                  content${ws}*=${ws}*["']?[^"'>]+?;${ws}*charset${ws}*=${ws}*)
+              (${cs})
+              ([^>]*?${ws}http-equiv${ws}*=${ws}*["']?${ws}*content-type\b.*?>)
+          )/lc($3) eq lc($charset) ? "$1" : "$2$charset$4<!-- $1 -->"/esix;
+
+    $File->{Content} = [split /\n/, $content];
 }
 
 #
