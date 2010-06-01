@@ -1,95 +1,93 @@
 <TMPL_IF NAME="W01">
-  <warning><messageid>W01</messageid><message>Missing "charset" attribute for
-    "<TMPL_VAR NAME="W01_ct" ESCAPE="HTML">" document.</message></warning>
+	Missing "charset" attribute for "<TMPL_VAR NAME="W01_ct" ESCAPE="HTML">" document.
 </TMPL_IF>
 <TMPL_IF NAME="W02">
-  <warning><messageid>W02</messageid><message>No Character Encoding Found!</message></warning>
+	No Character Encoding Found!
 </TMPL_IF>
 <TMPL_IF NAME="W03">
-  <warning><messageid>W03</messageid><message>Character Encoding Override in effect!</message></warning>
+	Character Encoding Override in effect!
 </TMPL_IF>
 <TMPL_IF NAME="W04">
-  <warning><messageid>W04</messageid><message>No Character Encoding Found!
-    <TMPL_IF NAME="W04_override">
-      Using
-    <TMPL_ELSE>
-      Falling back to 
-    </TMPL_IF>
-    <TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF>.
-  </message></warning>
+	No Character Encoding Found!
+	<TMPL_IF NAME="W04_override">
+	Using
+	<TMPL_ELSE>
+	Falling back to 
+	</TMPL_IF>
+	<TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF>.
 </TMPL_IF>
 <TMPL_IF NAME="W05">
-  <warning><messageid>W05</messageid><message>DOCTYPE Override in effect!</message></warning>
+	DOCTYPE Override in effect!
 </TMPL_IF>
 <TMPL_IF NAME="W06">
-  <warning><messageid>W06</messageid><message>Unable to Determine Parse Mode!</message></warning>
+	Unable to Determine Parse Mode!
 </TMPL_IF>
 <TMPL_IF NAME="W07">
-  <warning><messageid>W07</messageid><message>Contradictory Parse Modes Detected!</message></warning>
+	Contradictory Parse Modes Detected!
 </TMPL_IF>
 <TMPL_IF NAME="W08">
-  <warning><messageid>W08</messageid><message>No Content-Type Found!</message></warning>
+	No Content-Type Found!
 </TMPL_IF>
 <TMPL_IF NAME="W09">
-  <warning><messageid>W09</messageid><message>No DOCTYPE found! Attempting validation with <TMPL_VAR NAME="W09_dtd" ESCAPE="HTML">.</message></warning>
+	No DOCTYPE found! Attempting validation with <TMPL_VAR NAME="W09_dtd" ESCAPE="HTML">.
 </TMPL_IF>
 <TMPL_IF NAME="W09xml">
-  <warning><messageid>W09xml</messageid><message>No DOCTYPE found! Checking XML syntax only.</message></warning>
+	xmlNo DOCTYPE found! Checking XML syntax only.
 </TMPL_IF>
 <TMPL_IF NAME="W10">
-  <warning><messageid>W10</messageid><message>Unknown Namespace Found</message></warning>
+	Unknown Namespace Found
 </TMPL_IF>
 <TMPL_IF NAME="W11">
-  <warning><messageid>W11</messageid><message>Namespace Found in non-XML Document</message></warning>
+	Namespace Found in non-XML Document
 </TMPL_IF>
 <TMPL_IF NAME="W12">
-  <warning><messageid>W12</messageid><message>No Namespace Found</message></warning>
+	No Namespace Found
 </TMPL_IF>
 <TMPL_IF NAME="W13">
-  <warning><messageid>W13</messageid><message>DOCTYPE Override in effect!</message></warning>
+	DOCTYPE Override in effect!
 </TMPL_IF>
 <TMPL_IF NAME="W14">
-  <warning><messageid>W14</messageid><message>No DOCTYPE Found!</message></warning>
+	No DOCTYPE Found!
 </TMPL_IF>
 <TMPL_IF NAME="W15">
-  <warning><messageid>W15</messageid><message>DOCTYPE Override in effect!</message></warning>
+	DOCTYPE Override in effect!
 </TMPL_IF>
 <TMPL_IF NAME="W16">
-  <warning><messageid>W16</messageid><message>No DOCTYPE Found! Falling Back to
-    <TMPL_VAR NAME="W16_dtd" ESCAPE="HTML">.</message></warning>
+	No DOCTYPE Found! Falling Back to
+	<TMPL_VAR NAME="W16_dtd" ESCAPE="HTML">.
 </TMPL_IF>
 <TMPL_IF NAME="W17">
-  <warning><messageid>W17</messageid><message>No Character Encoding detected!</message></warning>
+	No Character Encoding detected!
 </TMPL_IF>
 <TMPL_IF NAME="W18">
-  <warning><messageid>W18</messageid><message>Character Encoding mismatch!</message></warning>
+	Character Encoding mismatch!
 </TMPL_IF>
 <TMPL_IF NAME="W19">
-  <warning><messageid>W19</messageid><message>Character Encoding mismatch!</message></warning>
+	Character Encoding mismatch!
 </TMPL_IF>
 <TMPL_IF NAME="W20">
-  <warning><messageid>W20</messageid><message>Character Encoding mismatch!</message></warning>
+	Character Encoding mismatch!
 </TMPL_IF>
 <TMPL_IF NAME="W21">
-  <warning><messageid>W21</messageid><message>Byte-Order Mark found in UTF-8 File.</message></warning>
+	Byte-Order Mark found in UTF-8 File.
 </TMPL_IF>
 <TMPL_IF NAME="W22">
-<warning><messageid>W22</messageid><message>Character Encoding suggestion: use 
-<TMPL_VAR NAME="W22_suggested" ESCAPE="HTML"> instead of <TMPL_VAR NAME="W22_declared" ESCAPE="HTML"></warning></message>
+	Character Encoding suggestion: use 
+	<TMPL_VAR NAME="W22_suggested" ESCAPE="HTML"> instead of <TMPL_VAR NAME="W22_declared" ESCAPE="HTML"></warning></message>
 </TMPL_IF>
 <TMPL_IF NAME="W23">
-  <warning><messageid>W23</messageid><message>Conflict between Mime Type and Document Type</message></warning>
+	Conflict between Mime Type and Document Type
 </TMPL_IF>
 <TMPL_IF NAME="W24">
-  <warning><messageid>W24</messageid><message>Rare or unregistered Character Encoding detected</message></warning>
+	Rare or unregistered Character Encoding detected
 </TMPL_IF>
 <TMPL_IF NAME="W25">
-  <warning><messageid>W25</messageid><message><TMPL_VAR NAME="W25_dtd" ESCAPE="HTML"> document without DOCTYPE detected</message></warning>
+	<TMPL_VAR NAME="W25_dtd" ESCAPE="HTML"> document without DOCTYPE detected
 </TMPL_IF>
 <TMPL_IF NAME="W26">
-  <warning><messageid>W26</messageid><message>Mismatch between Public and System identifiers in the DOCTYPE declaration</message></warning>
+	Mismatch between Public and System identifiers in the DOCTYPE declaration
 </TMPL_IF>
 <TMPL_IF NAME="W@@">
-  <warning><messageid>W@@</messageid><message></message></warning>
+	W@@
 </TMPL_IF>
 
