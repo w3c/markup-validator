@@ -48,10 +48,10 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
 			</TMPL_IF>
 		</TMPL_IF>
 		<TMPL_IF NAME="badge_uri">
-			To show your readers that you have taken the care to create an
+			<p>To show your readers that you have taken the care to create an
 			interoperable Web page, you may display this icon on any page
 			that validates. Here is the HTML you could use to add this icon
-			to your Web page:
+			to your Web page:</p>
 			<img class="inline-badge" src="<TMPL_VAR NAME="badge_uri" ESCAPE="HTML">"
 				alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"
 				<TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF>
@@ -84,10 +84,10 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
 &lt;/p&gt;</code></pre>
 
 			</TMPL_IF>
-				A <a href="http://www.w3.org/QA/Tools/Icons">full list</a> of icons, with links to alternate formats and colors, is available: 
+				<p>A <a href="http://www.w3.org/QA/Tools/Icons">full list</a> of icons, with links to alternate formats and colors, is available: 
 				If you like, you can download a copy of the icons
 				to keep in your local web directory, and change the HTML fragment
-				above to reference your local image rather than the one on this server.
+				above to reference your local image rather than the one on this server.</p>
 		</TMPL_IF>
 		<TMPL_UNLESS NAME="is_upload">
 			<TMPL_UNLESS NAME="is_direct_input">
