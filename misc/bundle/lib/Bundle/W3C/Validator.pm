@@ -23,6 +23,7 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
 
  CGI 2.81
  CGI::Carp
+ Config
  Config::General 2.32
  Encode
  Encode::Alias
@@ -47,6 +48,7 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
  Socket
  URI
  URI::Escape
+ URI::file
  XML::LibXML 1.70
 
 =head1 DESCRIPTION

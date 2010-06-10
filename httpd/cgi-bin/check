@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.776 2010-05-07 17:41:29 ville Exp $
+# $Id: check,v 1.777 2010-06-10 22:15:47 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -43,6 +43,7 @@ package W3C::Validator::MarkupValidator;
 
 use CGI 2.81 qw(-newstyle_urls -private_tempfiles redirect);
 use CGI::Carp qw(carp croak fatalsToBrowser);
+use Config qw(%Config);
 use Config::General 2.32 qw();    # Need 2.32 for <msg 0>, rt.cpan.org#17852
 use Encode qw();
 use Encode::Alias qw();
@@ -61,7 +62,7 @@ use JSON 2.00 qw();
 use SGML::Parser::OpenSP 0.991 qw();
 use URI qw();
 use URI::Escape qw(uri_escape);
-use XML::LibXML 1.70 qw();         # Need 1.70 for (working) structured errors
+use URI::file;
 
 ###############################################################################
 #### Constant definitions. ####################################################
@@ -191,7 +192,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.776 $;
+    $VERSION = q$Revision: 1.777 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -206,6 +207,22 @@ EOF
         local $SIG{__DIE__} = undef;
         require Encode::JIS2K;    # for optional extra Japanese encodings
     };
+
+    # Tell libxml to load _only_ our XML catalog.  This is because our entity
+    # load jailing may trap the libxml internal default catalog (which is
+    # automatically loaded).  Preventing loading that from the input callback
+    # will cause libxml to not see the document content at all but to throw
+    # weird "Document is empty" errors, at least as of XML::LibXML 1.70 and
+    # libxml 2.7.7.  XML_CATALOG_FILES needs to be in effect at XML::LibXML
+    # load time which is why we're using "require" here instead of pulling it
+    # in with "use" as usual.  And finally, libxml should have support for
+    # SGML open catalogs but they don't seem to work (again as of 1.70 and
+    # 2.7.7); if we use xml.soc here, no entities seem to end up being resolved
+    # from it - so we use a (redundant) XML catalog which works.
+    local $ENV{XML_CATALOG_FILES} =
+        catfile($CFG->{Paths}->{SGML}->{Library}, 'catalog.xml');
+    require XML::LibXML;
+    XML::LibXML->VERSION(1.70);
 
 }    # end of BEGIN block.
 
@@ -606,13 +623,17 @@ if (&is_xml($File)) {
         my $xmlparser = XML::LibXML->new();
         $xmlparser->line_numbers(1);
         $xmlparser->validation(0);
-        $xmlparser->load_ext_dtd(0);
         $xmlparser->base_uri($File->{URI})
             unless ($File->{'Direct Input'} || $File->{'Is Upload'});
 
-        # [NOT] loading the XML catalog for entities resolution as it seems to
-        # cause a lot of unnecessary DTD/entities fetching
-        #$xmlparser->load_catalog(catfile($CFG->{Paths}->{SGML}->{Library}, 'xml.soc'));
+        # Restrict file reading similar to what SGML::Parser::OpenSP does.
+        # Note that all inputs go through the callback so if we were passing
+        # a URI/filename to the parser, it would be affected as well and would
+        # break fetching the initial document.  As long as we pass the doc as
+        # string, this should work.
+        my $cb = XML::LibXML::InputCallback->new();
+        $cb->register_callbacks([\&xml_jail_match, sub { }, sub { }, sub { }]);
+        $xmlparser->input_callbacks($cb);
 
         &override_charset($File, "UTF-8");
 
@@ -1889,6 +1910,36 @@ sub check_recursion ($$)
         # Increase recursion level in output.
         &get_template($File, 'result.tmpl')->param(depth => $lvl++);
     }
+}
+
+#
+# XML::LibXML::InputCallback matcher using our SGML search path jail.
+sub xml_jail_match
+{
+    my $arg = shift;
+
+    # Ensure we have a file:// URI if we get a file.
+    my $uri = URI->new($arg);
+    if (!$uri->scheme()) {
+        $uri = URI::file->new_abs($arg);
+    }
+    $uri = $uri->canonical();
+
+    # Do not trap non-file URIs.
+    return 0 unless ($uri->scheme() eq "file");
+
+    # Do not trap file URIs within our jail.
+    for my $dir ($CFG->{Paths}->{SGML}->{Library},
+        split(/\Q$Config{path_sep}\E/o, $ENV{SGML_SEARCH_PATH} || ''))
+    {
+        next unless $dir;
+        my $dir_uri = URI::file->new_abs($dir)->canonical()->as_string();
+        $dir_uri =~ s|/*$|/|;    # ensure it ends with a slash
+        return 0 if ($uri =~ /^\Q$dir_uri\E/);
+    }
+
+    # We have a match (a file outside the jail).
+    return 1;
 }
 
 #

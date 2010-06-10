@@ -15,6 +15,7 @@ WriteMakefile(
         # Hard dependencies:
         "CGI"                   => 2.81,
         "CGI::Carp"             => 0,
+        "Config"                => 0,
         "Config::General"       => 2.32,
         "Encode"                => 0,
         "Encode::Alias"         => 0,
@@ -37,6 +38,7 @@ WriteMakefile(
         "Socket"                => 0,
         "URI"                   => 0,
         "URI::Escape"           => 0,
+        "URI::file"             => 0,
         "XML::LibXML"           => "1.70",
 
         # Optional:
