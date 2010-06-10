@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.777 2010-06-10 22:15:47 ville Exp $
+# $Id: check,v 1.778 2010-06-10 22:19:55 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -192,7 +192,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.777 $;
+    $VERSION = q$Revision: 1.778 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -222,7 +222,7 @@ EOF
     local $ENV{XML_CATALOG_FILES} =
         catfile($CFG->{Paths}->{SGML}->{Library}, 'catalog.xml');
     require XML::LibXML;
-    XML::LibXML->VERSION(1.70);
+    XML::LibXML->VERSION(1.70);    # Need 1.70 for (working) structured errors
 
 }    # end of BEGIN block.
 
