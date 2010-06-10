@@ -1,40 +1,55 @@
 --- #YAML:1.0
-name:                Bundle-W3C-Validator
-version:             0.8.6
-abstract:            Bundle of modules required by the W3C Markup Validator
-license:             open_source
-author:              
+name:               Bundle-W3C-Validator
+version:            0.8.6
+abstract:           Bundle of modules required by the W3C Markup Validator
+author:
     - W3C QA-dev Team <public-qa-dev@w3.org>
-generated_by:        ExtUtils::MakeMaker version 6.42
-distribution_type:   module
-requires:     
-    CGI:                           2.81
-    CGI::Carp:                     0
-    Config::General:               2.32
-    Encode:                        0
-    Encode::Alias:                 0
-    Encode::HanExtra:              0
-    Encode::JIS2K:                 0
-    File::Spec::Functions:         0
-    HTML::Encoding:                0.52
-    HTML::HeadParser:              3.6
-    HTML::Parser:                  3.24
-    HTML::Template:                2.6
-    HTML::Tidy:                    0
-    HTTP::Headers::Auth:           0
-    HTTP::Headers::Util:           0
-    HTTP::Message:                 1.52
-    HTTP::Negotiate:               0
-    HTTP::Request:                 0
-    JSON:                          2
-    LWP::UserAgent:                2.032
-    Net::hostent:                  0
-    Net::IP:                       0
-    SGML::Parser::OpenSP:          0.991
-    Socket:                        0
-    URI:                           0
-    URI::Escape:                   0
-    XML::LibXML:                   1.69
+license:            open_source
+distribution_type:  module
+configure_requires:
+    ExtUtils::MakeMaker:  0
+build_requires:
+    ExtUtils::MakeMaker:  0
+requires:
+    CGI:                  2.81
+    CGI::Carp:            0
+    Config:               0
+    Config::General:      2.32
+    Encode:               0
+    Encode::Alias:        0
+    Encode::HanExtra:     0
+    Encode::JIS2K:        0
+    File::Spec::Functions:  0
+    HTML::Encoding:       0.52
+    HTML::HeadParser:     3.60
+    HTML::Parser:         3.24
+    HTML::Template:       2.6
+    HTML::Tidy:           0
+    HTTP::Headers::Auth:  0
+    HTTP::Headers::Util:  0
+    HTTP::Message:        1.52
+    HTTP::Negotiate:      0
+    HTTP::Request:        0
+    JSON:                 2
+    LWP::UserAgent:       2.032
+    Net::hostent:         0
+    Net::IP:              0
+    SGML::Parser::OpenSP:  0.991
+    Socket:               0
+    URI:                  0
+    URI::Escape:          0
+    URI::file:            0
+    XML::LibXML:          1.70
+resources:
+    bugtracker:   http://www.w3.org/Bugs/Public/
+    homepage:     http://validator.w3.org/
+    MailingList:  http://lists.w3.org/Archives/Public/www-validator/
+    repository:   http://dev.w3.org/cvsweb/validator/
+no_index:
+    directory:
+        - t
+        - inc
+generated_by:       ExtUtils::MakeMaker version 6.55_02
 meta-spec:
-    url:     http://module-build.sourceforge.net/META-spec-v1.3.html
-    version: 1.3
+    url:      http://module-build.sourceforge.net/META-spec-v1.4.html
+    version:  1.4
