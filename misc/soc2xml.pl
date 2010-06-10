@@ -20,6 +20,7 @@ my $soc = <STDIN>;
 
 print <<'EOF';
 <?xml version="1.0"?>
+<!-- Automatically generated from SGML Open Catalog - don't edit, regenerate -->
 <!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 EOF
