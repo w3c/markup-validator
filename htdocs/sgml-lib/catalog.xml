@@ -1,0 +1,250 @@
+<?xml version="1.0"?>
+<!-- Automatically generated from SGML Open Catalog - don't edit, regenerate -->
+<!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+  <public publicId="-//W3C//DTD Specification V2.0//EN" uri="Specification/xmlspec-v20.dtd" />
+  <public publicId="-//W3C//DTD Specification V2.1//EN" uri="Specification/xmlspec-v21.dtd" />
+  <public publicId="-//W3C//DTD Specification V2.10//EN" uri="Specification/xmlspec.dtd" />
+  <public publicId="-//W3C//DTD MathML 2.0//EN" uri="XX-MathML2-20031104/mathml2.dtd" />
+  <system systemId="http://www.w3.org/Math/DTD/mathml2/mathml2.dtd" uri="XX-MathML2-20031104/mathml2.dtd" />
+  <public publicId="-//W3C//ENTITIES MathML 2.0 Qualified Names 1.0//EN" uri="XX-MathML2-20031104/mathml2-qname-1.mod" />
+  <public publicId="-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN" uri="XX-MathML2-20031104/xhtml-math11-f.dtd" />
+  <system systemId="http://www.w3.org/Math/DTD/mathml2/xhtml-math11-f.dtd" uri="XX-MathML2-20031104/xhtml-math11-f.dtd" />
+  <public publicId="-//W3C//DTD MathML 3.0//EN" uri="CR-MathML3-20091215/mathml3.dtd" />
+  <public publicId="-//W3C//ENTITIES MathML 3.0 Qualified Names 1.0//EN" uri="CR-MathML3-20091215/mathml3-qname.mod" />
+  <public publicId="-//W3C//ENTITIES Box and Line Drawing//EN" uri="CR-MathML3-20091215/isobox.ent" />
+  <public publicId="-//W3C//ENTITIES Russian Cyrillic//EN" uri="CR-MathML3-20091215/isocyr1.ent" />
+  <public publicId="-//W3C//ENTITIES Non-Russian Cyrillic//EN" uri="CR-MathML3-20091215/isocyr2.ent" />
+  <public publicId="-//W3C//ENTITIES Diacritical Marks//EN" uri="CR-MathML3-20091215/isodia.ent" />
+  <public publicId="-//W3C//ENTITIES Added Latin 1//EN" uri="CR-MathML3-20091215/isolat1.ent" />
+  <public publicId="-//W3C//ENTITIES Added Latin 2//EN" uri="CR-MathML3-20091215/isolat2.ent" />
+  <public publicId="-//W3C//ENTITIES Numeric and Special Graphic//EN" uri="CR-MathML3-20091215/isonum.ent" />
+  <public publicId="-//W3C//ENTITIES Publishing//EN" uri="CR-MathML3-20091215/isopub.ent" />
+  <public publicId="-//W3C//ENTITIES Added Math Symbols: Arrow Relations//EN" uri="CR-MathML3-20091215/isoamsa.ent" />
+  <public publicId="-//W3C//ENTITIES Added Math Symbols: Binary Operators//EN" uri="CR-MathML3-20091215/isoamsb.ent" />
+  <public publicId="-//W3C//ENTITIES Added Math Symbols: Delimiters//EN" uri="CR-MathML3-20091215/isoamsc.ent" />
+  <public publicId="-//W3C//ENTITIES Added Math Symbols: Negated Relations//EN" uri="CR-MathML3-20091215/isoamsn.ent" />
+  <public publicId="-//W3C//ENTITIES Added Math Symbols: Ordinary//EN" uri="CR-MathML3-20091215/isoamso.ent" />
+  <public publicId="-//W3C//ENTITIES Added Math Symbols: Relations//EN" uri="CR-MathML3-20091215/isoamsr.ent" />
+  <public publicId="-//W3C//ENTITIES Greek Symbols//EN" uri="CR-MathML3-20091215/isogrk3.ent" />
+  <public publicId="-//W3C//ENTITIES Math Alphabets: Fraktur//EN" uri="CR-MathML3-20091215/isomfrk.ent" />
+  <public publicId="-//W3C//ENTITIES Math Alphabets: Open Face//EN" uri="CR-MathML3-20091215/isomopf.ent" />
+  <public publicId="-//W3C//ENTITIES Math Alphabets: Script//EN" uri="CR-MathML3-20091215/isomscr.ent" />
+  <public publicId="-//W3C//ENTITIES General Technical//EN" uri="CR-MathML3-20091215/isotech.ent" />
+  <public publicId="-//W3C//ENTITIES Additional MathML Symbols//EN" uri="CR-MathML3-20091215/mmlextra.ent" />
+  <public publicId="-//W3C//ENTITIES MathML Aliases//EN" uri="CR-MathML3-20091215/mmlalias.ent" />
+  <public publicId="-//W3C//DTD SVG 1.0//EN" uri="REC-SVG-20010904/svg10.dtd" />
+  <public publicId="-//W3C//DTD SVG 1.1//EN" uri="REC-SVG11-20030114/svg11.dtd" />
+  <public publicId="-//W3C//DTD SVG 1.1 Basic//EN" uri="REC-SVG11-20030114/svg11-basic.dtd" />
+  <public publicId="-//W3C//DTD SVG 1.1 Tiny//EN" uri="REC-SVG11-20030114/svg11-tiny.dtd" />
+  <public publicId="-//W3C//DTD SVG Basic 1.1//EN" uri="REC-SVG11-20030114/svg11-basic.dtd" />
+  <public publicId="-//W3C//DTD SVG Tiny 1.1//EN" uri="REC-SVG11-20030114/svg11-tiny.dtd" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Document Model//EN" uri="REC-SVG11-20030114/svg11-model.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Basic Document Model//EN" uri="REC-SVG11-20030114/svg11-basic-model.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Tiny Document Model//EN" uri="REC-SVG11-20030114/svg11-tiny-model.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Attribute Collection//EN" uri="REC-SVG11-20030114/svg11-attribs.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Basic Attribute Collection//EN" uri="REC-SVG11-20030114/svg11-basic-attribs.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Tiny Attribute Collection//EN" uri="REC-SVG11-20030114/svg11-tiny-attribs.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Animation//EN" uri="REC-SVG11-20030114/svg-animation.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Animation Events Attribute//EN" uri="REC-SVG11-20030114/svg-animevents-attrib.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Basic Clip//EN" uri="REC-SVG11-20030114/svg-basic-clip.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Basic Filter//EN" uri="REC-SVG11-20030114/svg-basic-filter.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Basic Font//EN" uri="REC-SVG11-20030114/svg-basic-font.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Basic Graphics Attribute//EN" uri="REC-SVG11-20030114/svg-basic-graphics-attrib.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Basic Paint Attribute//EN" uri="REC-SVG11-20030114/svg-basic-paint-attrib.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Basic Structure//EN" uri="REC-SVG11-20030114/svg-basic-structure.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Basic Text//EN" uri="REC-SVG11-20030114/svg-basic-text.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Clip//EN" uri="REC-SVG11-20030114/svg-clip.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Conditional Processing//EN" uri="REC-SVG11-20030114/svg-conditional.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Container Attribute//EN" uri="REC-SVG11-20030114/svg-container-attrib.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Core Attribute//EN" uri="REC-SVG11-20030114/svg-core-attrib.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Cursor//EN" uri="REC-SVG11-20030114/svg-cursor.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Datatypes//EN" uri="REC-SVG11-20030114/svg-datatypes.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Document Events Attribute//EN" uri="REC-SVG11-20030114/svg-docevents-attrib.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Extensibility//EN" uri="REC-SVG11-20030114/svg-extensibility.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 External Resources Attribute//EN" uri="REC-SVG11-20030114/svg-extresources-attrib.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Filter//EN" uri="REC-SVG11-20030114/svg-filter.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Font//EN" uri="REC-SVG11-20030114/svg-font.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Modular Framework//EN" uri="REC-SVG11-20030114/svg-framework.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Gradient//EN" uri="REC-SVG11-20030114/svg-gradient.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Graphical Element Events Attribute//EN" uri="REC-SVG11-20030114/svg-graphevents-attrib.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Graphics Attribute//EN" uri="REC-SVG11-20030114/svg-graphics-attrib.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Hyperlinking//EN" uri="REC-SVG11-20030114/svg-hyperlink.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Image//EN" uri="REC-SVG11-20030114/svg-image.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Marker//EN" uri="REC-SVG11-20030114/svg-marker.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Mask//EN" uri="REC-SVG11-20030114/svg-mask.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Paint Opacity Attribute//EN" uri="REC-SVG11-20030114/svg-opacity-attrib.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Paint Attribute//EN" uri="REC-SVG11-20030114/svg-paint-attrib.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Pattern//EN" uri="REC-SVG11-20030114/svg-pattern.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Color Profile//EN" uri="REC-SVG11-20030114/svg-profile.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Qualified Name//EN" uri="REC-SVG11-20030114/svg-qname.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Scripting//EN" uri="REC-SVG11-20030114/svg-script.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Shape//EN" uri="REC-SVG11-20030114/svg-shape.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Structure//EN" uri="REC-SVG11-20030114/svg-structure.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Style//EN" uri="REC-SVG11-20030114/svg-style.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Text//EN" uri="REC-SVG11-20030114/svg-text.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 View//EN" uri="REC-SVG11-20030114/svg-view.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Viewport Attribute//EN" uri="REC-SVG11-20030114/svg-viewport-attrib.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 XLink Attribute//EN" uri="REC-SVG11-20030114/svg-xlink-attrib.mod" />
+  <public publicId="-//W3C//DTD XHTML 1.0 Strict//EN" uri="REC-xhtml1-20020801/xhtml1-strict.dtd" />
+  <public publicId="-//W3C//DTD XHTML 1.0 Transitional//EN" uri="REC-xhtml1-20020801/xhtml1-transitional.dtd" />
+  <public publicId="-//W3C//DTD XHTML 1.0 Frameset//EN" uri="REC-xhtml1-20020801/xhtml1-frameset.dtd" />
+  <public publicId="-//W3C//DTD XHTML 1.1//EN" uri="XX-xhtml11-20090630/xhtml11.dtd" />
+  <public publicId="-//W3C//ENTITIES XHTML 1.1 Document Model 1.0//EN" uri="XX-xhtml11-20090630/xhtml11-model-1.mod" />
+  <public publicId="-//W3C//DTD XHTML Basic 1.0//EN" uri="REC-xhtml-basic-20001219/xhtml-basic10.dtd" />
+  <public publicId="-//W3C//ENTITIES XHTML Basic 1.0 Document Model 1.0//EN" uri="REC-xhtml-basic-20001219/xhtml-basic10-model-1.mod" />
+  <public publicId="-//W3C//DTD XHTML Basic 1.1//EN" uri="REC-xhtml-basic-20080729/xhtml-basic11.dtd" />
+  <public publicId="-//W3C//ENTITIES XHTML Basic 1.1 Document Model 1.0//EN" uri="REC-xhtml-basic-20080729/xhtml-basic11-model-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Inputmode 1.0//EN" uri="REC-xhtml-basic-20080729/xhtml-inputmode-1.mod" />
+  <public publicId="-//W3C//DTD XHTML-Print 1.0//EN" uri="REC-xhtml-print-20060920/xhtml-print10.dtd" />
+  <public publicId="-//W3C//ENTITIES XHTML-Print 1.0 Document Model 1.0//EN" uri="REC-xhtml-print-20060920/xhtml-print10-model-1.mod" />
+  <public publicId="-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN" uri="WD-XHTMLplusMathMLplusSVG-20020809/xhtml-math-svg.dtd" />
+  <public publicId="-//W3C//DTD XHTML Basic plus SVG Tiny//EN" uri="WD-XHTMLplusMathMLplusSVG-20020809/xhtml-basic-svg-tiny.dtd" />
+  <public publicId="-//W3C//DTD XHTML+RDFa 1.0//EN" uri="REC-rdfa-syntax-20081014/xhtml-rdfa-1.dtd" />
+  <public publicId="-//W3C//ENTITIES XHTML+RDFa Document Model 1.0//EN" uri="REC-rdfa-syntax-20081014/xhtml-rdfa-model-1.mod" />
+  <public publicId="-//W3C//ENTITIES XHTML MetaAttributes 1.0//EN" uri="REC-rdfa-syntax-20081014/xhtml-metaAttributes-1.mod" />
+  <public publicId="-//W3C//DTD SMIL 1.0//EN" uri="REC-smil-19980615/smil10.dtd" />
+  <public publicId="-//W3C//DTD SMIL 2.0//EN" uri="REC-smil20-20050107/SMIL20.dtd" />
+  <public publicId="-//W3C//DTD SMIL 2.0 Basic//EN" uri="REC-smil20-20050107/SMIL20Basic.dtd" />
+  <public publicId="-//W3C//ENTITIES SMIL 2.0 Modular Framework 1.0//EN" uri="REC-smil20-20050107/smil-framework-1.mod" />
+  <public publicId="-//W3C//ENTITIES SMIL 2.0 Datatypes 1.0//EN" uri="REC-smil20-20050107/smil-datatypes-1.mod" />
+  <public publicId="-//W3C//ENTITIES SMIL 2.0 Qualified Names 1.0//EN" uri="REC-smil20-20050107/smil-qname-1.mod" />
+  <public publicId="-//W3C//ENTITIES SMIL 2.0 Common Attributes 1.0//EN" uri="REC-smil20-20050107/smil-attribs-1.mod" />
+  <public publicId="-//W3C//ENTITIES SMIL 2.0 Document Model 1.0//EN" uri="REC-smil20-20050107/smil-model-1.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 2.0 Document Structure//EN" uri="REC-smil20-20050107/SMIL-struct.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 2.0 Animation//EN" uri="REC-smil20-20050107/SMIL-anim.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 2.0 Content Control//EN" uri="REC-smil20-20050107/SMIL-control.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 2.0 Document Metainformation//EN" uri="REC-smil20-20050107/SMIL-metainformation.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 2.0 Layout//EN" uri="REC-smil20-20050107/SMIL-layout.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 2.0 Linking//EN" uri="REC-smil20-20050107/SMIL-link.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 2.0 Media Objects//EN" uri="REC-smil20-20050107/SMIL-media.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 2.0 Timing//EN" uri="REC-smil20-20050107/SMIL-timing.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 2.0 Transition//EN" uri="REC-smil20-20050107/SMIL-transition.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 2.0 Integration//EN" uri="REC-smil20-20050107/SMIL-integrate.mod" />
+  <public publicId="-//W3C//DTD SMIL 2.1//EN" uri="REC-SMIL2-20051213/SMIL21.dtd" />
+  <public publicId="-//W3C//DTD SMIL 2.1 Extended Mobile//EN" uri="REC-SMIL2-20051213/SMIL21ExtendedMobile.dtd" />
+  <public publicId="-//W3C//DTD SMIL 2.1 Mobile//EN" uri="REC-SMIL2-20051213/SMIL21Mobile.dtd" />
+  <public publicId="-//W3C//ENTITIES SMIL 2.1 Language Profile Document Model 1.0//EN" uri="REC-SMIL2-20051213/smil-language-profile-model-1.mod" />
+  <public publicId="-//W3C//ENTITIES SMIL 2.1 Extended Mobile Profile Document Model 1.0//EN" uri="REC-SMIL2-20051213/smil-extended-mobile-profile-model-1.mod" />
+  <public publicId="-//W3C//ENTITIES SMIL 2.1 Mobile Profile Document Model 1.0//EN" uri="REC-SMIL2-20051213/smil-mobile-profile-model-1.mod" />
+  <public publicId="-//W3C//ENTITIES SMIL 2.1 Datatypes 1.0//EN" uri="REC-SMIL2-20051213/smil-datatypes-1.mod" />
+  <public publicId="-//W3C//ENTITIES SMIL 2.1 Common Attributes 1.0//EN" uri="REC-SMIL2-20051213/smil-attribs-1.mod" />
+  <public publicId="-//W3C//ENTITIES SMIL 2.1 Qualified Names 1.0//EN" uri="REC-SMIL2-20051213/smil-qname-1.mod" />
+  <public publicId="-//W3C//ENTITIES SMIL 2.1 Modular Framework 1.0//EN" uri="REC-SMIL2-20051213/smil-framework-1.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 2.1 Animation//EN" uri="REC-SMIL2-20051213/SMIL-anim.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 2.1 Content Control//EN" uri="REC-SMIL2-20051213/SMIL-control.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 2.1 Layout//EN" uri="REC-SMIL2-20051213/SMIL-layout.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 2.1 Linking//EN" uri="REC-SMIL2-20051213/SMIL-link.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 2.1 Media Objects//EN" uri="REC-SMIL2-20051213/SMIL-media.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 2.1 Document Metainformation//EN" uri="REC-SMIL2-20051213/SMIL-metainformation.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 2.1 Document Structure//EN" uri="REC-SMIL2-20051213/SMIL-struct.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 2.1 Timing//EN" uri="REC-SMIL2-20051213/SMIL-timing.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 2.1 Transition//EN" uri="REC-SMIL2-20051213/SMIL-transition.mod" />
+  <public publicId="-//W3C//DTD SMIL 3.0 Language//EN" uri="REC-SMIL3-20081201/SMIL30Language.dtd" />
+  <public publicId="-//W3C//DTD SMIL 3.0 Unified Mobile//EN" uri="REC-SMIL3-20081201/SMIL30UnifiedMobile.dtd" />
+  <public publicId="-//W3C//DTD SMIL 3.0 Daisy//EN" uri="REC-SMIL3-20081201/SMIL30Daisy.dtd" />
+  <public publicId="-//W3C//DTD SMIL 3.0 Tiny//EN" uri="REC-SMIL3-20081201/SMIL30Tiny.dtd" />
+  <public publicId="-//W3C//DTD SMIL 3.0 smilText//EN" uri="REC-SMIL3-20081201/SMIL30smilText.dtd" />
+  <public publicId="-//W3C//ENTITIES SMIL 3.0 Datatypes 1.0//EN" uri="REC-SMIL3-20081201/smil-datatypes-1.mod" />
+  <public publicId="-//W3C//ENTITIES SMIL 3.0 Modular Framework 1.0//EN" uri="REC-SMIL3-20081201/smil-framework-1.mod" />
+  <public publicId="-//W3C//ENTITIES SMIL 3.0 Document Model 1.0//EN" uri="REC-SMIL3-20081201/smil-profile-model-1.mod" />
+  <public publicId="-//W3C//ENTITIES SMIL 3.0 Qualified Names 1.0//EN" uri="REC-SMIL3-20081201/smil-qname-1.mod" />
+  <public publicId="-//W3C//ENTITIES SMIL 3.0 Common Attributes 1.0//EN" uri="REC-SMIL3-20081201/smil-attribs-1.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 3.0 Animation//EN" uri="REC-SMIL3-20081201/SMIL-anim.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 3.0 Content Control//EN" uri="REC-SMIL3-20081201/SMIL-control.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 3.0 Layout//EN" uri="REC-SMIL3-20081201/SMIL-layout.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 3.0 Linking//EN" uri="REC-SMIL3-20081201/SMIL-link.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 3.0 Media Objects//EN" uri="REC-SMIL3-20081201/SMIL-media.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 3.0 Document Metainformation//EN" uri="REC-SMIL3-20081201/SMIL-metainformation.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 3.0 SMILtext//EN" uri="REC-SMIL3-20081201/SMIL-smiltext.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 3.0 State//EN" uri="REC-SMIL3-20081201/SMIL-state.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 3.0 Document Structure//EN" uri="REC-SMIL3-20081201/SMIL-struct.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 3.0 Timesheet//EN" uri="REC-SMIL3-20081201/SMIL-timesheet.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 3.0 Timing//EN" uri="REC-SMIL3-20081201/SMIL-timing.mod" />
+  <public publicId="-//W3C//ELEMENTS SMIL 3.0 Transition//EN" uri="REC-SMIL3-20081201/SMIL-transition.mod" />
+  <public publicId="-//W3C//ENTITIES XHTML Modular Framework 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-framework-1.mod" />
+  <public publicId="-//W3C//NOTATIONS XHTML Notations 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-notations-1.mod" />
+  <public publicId="-//W3C//ENTITIES XHTML Datatypes 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-datatypes-1.mod" />
+  <public publicId="-//W3C//ENTITIES XHTML Qualified Names 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-qname-1.mod" />
+  <public publicId="-//W3C//ENTITIES XHTML Common Attributes 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-attribs-1.mod" />
+  <public publicId="-//W3C//ENTITIES XHTML Character Entities 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-charent-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Redeclarations 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-redecl-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Document Structure 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-struct-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Text 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-text-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Hypertext 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-hypertext-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Lists 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-list-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Inline Structural 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-inlstruct-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Inline Presentation 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-inlpres-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Inline Phrasal 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-inlphras-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Block Structural 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-blkstruct-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Block Presentation 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-blkpres-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Block Phrasal 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-blkphras-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Ruby 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-ruby-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Java Applets 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-applet-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Base Architecture 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-arch-1.mod" />
+  <public publicId="-//W3C//DTD XHTML Architecture 1.1//EN" uri="REC-xhtml-modularization-20081008/xhtml11-arch.dtd" />
+  <public publicId="-//W3C//ELEMENTS XHTML Param Element 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-param-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Presentation 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-pres-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Editing Elements 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-edit-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Editing Markup 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-edit-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML BDO Element 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-bdo-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML BIDI Override Element 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-bdo-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Basic Forms 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-basic-form-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Forms 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-form-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Basic Tables 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-basic-table-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Tables 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-table-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Images 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-image-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Client-side Image Maps 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-csismap-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Server-side Image Maps 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-ssismap-1.mod" />
+  <public publicId="-//W3C//ENTITIES XHTML Intrinsic Events 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-events-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Metainformation 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-meta-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Scripting 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-script-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Style Sheets 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-style-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Link Element 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-link-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Base Element 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-base-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Legacy Redeclarations 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-legacy-redecl-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Legacy Markup 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-legacy-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Embedded Object 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-object-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Frames 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-frames-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Target 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-target-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Inline Frame Element 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-iframe-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Inline Style 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-inlstyle-1.mod" />
+  <public publicId="-//W3C//ENTITIES XHTML Inline Style 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-inlstyle-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Name Identifier 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-nameident-1.mod" />
+  <public publicId="-//W3C//ENTITIES Latin 1 for XHTML//EN" uri="REC-xhtml-modularization-20081008/xhtml-lat1.ent" />
+  <public publicId="-//W3C//ENTITIES Special for XHTML//EN" uri="REC-xhtml-modularization-20081008/xhtml-special.ent" />
+  <public publicId="-//W3C//ENTITIES Symbols for XHTML//EN" uri="REC-xhtml-modularization-20081008/xhtml-symbol.ent" />
+  <public publicId="-//W3C//ENTITIES uppercase aliases for HTML//EN//XML" uri="REC-xml-entity-names-20100401/html5-uppercase.ent" />
+  <public publicId="-//W3C//ENTITIES HTML MathML Set//EN//XML" uri="REC-xml-entity-names-20100401/htmlmathml.ent" />
+  <system systemId="http://www.w3.org/2003/entities/2007/htmlmathml-f.ent" uri="REC-xml-entity-names-20100401/htmlmathml-f.ent" />
+  <public publicId="-//W3C//ENTITIES Added Math Symbols: Arrow Relations//EN//XML" uri="REC-xml-entity-names-20100401/isoamsa.ent" />
+  <public publicId="-//W3C//ENTITIES Added Math Symbols: Binary Operators//EN//XML" uri="REC-xml-entity-names-20100401/isoamsb.ent" />
+  <public publicId="-//W3C//ENTITIES Added Math Symbols: Delimiters//EN//XML" uri="REC-xml-entity-names-20100401/isoamsc.ent" />
+  <public publicId="-//W3C//ENTITIES Added Math Symbols: Negated Relations//EN//XML" uri="REC-xml-entity-names-20100401/isoamsn.ent" />
+  <public publicId="-//W3C//ENTITIES Added Math Symbols: Ordinary//EN//XML" uri="REC-xml-entity-names-20100401/isoamso.ent" />
+  <public publicId="-//W3C//ENTITIES Added Math Symbols: Relations//EN//XML" uri="REC-xml-entity-names-20100401/isoamsr.ent" />
+  <public publicId="-//W3C//ENTITIES Box and Line Drawing//EN//XML" uri="REC-xml-entity-names-20100401/isobox.ent" />
+  <public publicId="-//W3C//ENTITIES Russian Cyrillic//EN//XML" uri="REC-xml-entity-names-20100401/isocyr1.ent" />
+  <public publicId="-//W3C//ENTITIES Non-Russian Cyrillic//EN//XML" uri="REC-xml-entity-names-20100401/isocyr2.ent" />
+  <public publicId="-//W3C//ENTITIES Diacritical Marks//EN//XML" uri="REC-xml-entity-names-20100401/isodia.ent" />
+  <public publicId="-//W3C//ENTITIES Greek Letters//EN//XML" uri="REC-xml-entity-names-20100401/isogrk1.ent" />
+  <public publicId="-//W3C//ENTITIES Monotoniko Greek//EN//XML" uri="REC-xml-entity-names-20100401/isogrk2.ent" />
+  <public publicId="-//W3C//ENTITIES Greek Symbols//EN//XML" uri="REC-xml-entity-names-20100401/isogrk3.ent" />
+  <public publicId="-//W3C//ENTITIES Alternative Greek Symbols//EN//XML" uri="REC-xml-entity-names-20100401/isogrk4.ent" />
+  <public publicId="-//W3C//ENTITIES Added Latin 1//EN//XML" uri="REC-xml-entity-names-20100401/isolat1.ent" />
+  <public publicId="-//W3C//ENTITIES Added Latin 2//EN//XML" uri="REC-xml-entity-names-20100401/isolat2.ent" />
+  <public publicId="-//W3C//ENTITIES Math Alphabets: Fraktur//EN//XML" uri="REC-xml-entity-names-20100401/isomfrk.ent" />
+  <public publicId="-//W3C//ENTITIES Math Alphabets: Open Face//EN//XML" uri="REC-xml-entity-names-20100401/isomopf.ent" />
+  <public publicId="-//W3C//ENTITIES Math Alphabets: Script//EN//XML" uri="REC-xml-entity-names-20100401/isomscr.ent" />
+  <public publicId="-//W3C//ENTITIES Numeric and Special Graphic//EN//XML" uri="REC-xml-entity-names-20100401/isonum.ent" />
+  <public publicId="-//W3C//ENTITIES Publishing//EN//XML" uri="REC-xml-entity-names-20100401/isopub.ent" />
+  <public publicId="-//W3C//ENTITIES General Technical//EN//XML" uri="REC-xml-entity-names-20100401/isotech.ent" />
+  <public publicId="-//W3C//ENTITIES MathML Aliases//EN//XML" uri="REC-xml-entity-names-20100401/mmlalias.ent" />
+  <public publicId="-//W3C//ENTITIES Additional MathML Symbols//EN//XML" uri="REC-xml-entity-names-20100401/mmlextra.ent" />
+  <public publicId="-//W3C//ENTITIES Predefined XML//EN///XML" uri="REC-xml-entity-names-20100401/predefined.ent" />
+  <public publicId="-//W3C//ENTITIES Combined Set//EN//XML" uri="REC-xml-entity-names-20100401/w3centities.ent" />
+  <system systemId="http://www.w3.org/2003/entities/2007/w3centities-f.ent" uri="REC-xml-entity-names-20100401/w3centities-f.ent" />
+  <public publicId="-//W3C//ENTITIES Latin for HTML//EN//XML" uri="REC-xml-entity-names-20100401/xhtml1-lat1.ent" />
+  <public publicId="-//W3C//ENTITIES Special for HTML//EN//XML" uri="REC-xml-entity-names-20100401/xhtml1-special.ent" />
+  <public publicId="-//W3C//ENTITIES Symbol for HTML//EN//XML" uri="REC-xml-entity-names-20100401/xhtml1-symbol.ent" />
+</catalog>
