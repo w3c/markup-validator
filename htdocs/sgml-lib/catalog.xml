@@ -10,29 +10,29 @@
   <public publicId="-//W3C//ENTITIES MathML 2.0 Qualified Names 1.0//EN" uri="XX-MathML2-20031104/mathml2-qname-1.mod" />
   <public publicId="-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN" uri="XX-MathML2-20031104/xhtml-math11-f.dtd" />
   <system systemId="http://www.w3.org/Math/DTD/mathml2/xhtml-math11-f.dtd" uri="XX-MathML2-20031104/xhtml-math11-f.dtd" />
-  <public publicId="-//W3C//DTD MathML 3.0//EN" uri="CR-MathML3-20091215/mathml3.dtd" />
-  <public publicId="-//W3C//ENTITIES MathML 3.0 Qualified Names 1.0//EN" uri="CR-MathML3-20091215/mathml3-qname.mod" />
-  <public publicId="-//W3C//ENTITIES Box and Line Drawing//EN" uri="CR-MathML3-20091215/isobox.ent" />
-  <public publicId="-//W3C//ENTITIES Russian Cyrillic//EN" uri="CR-MathML3-20091215/isocyr1.ent" />
-  <public publicId="-//W3C//ENTITIES Non-Russian Cyrillic//EN" uri="CR-MathML3-20091215/isocyr2.ent" />
-  <public publicId="-//W3C//ENTITIES Diacritical Marks//EN" uri="CR-MathML3-20091215/isodia.ent" />
-  <public publicId="-//W3C//ENTITIES Added Latin 1//EN" uri="CR-MathML3-20091215/isolat1.ent" />
-  <public publicId="-//W3C//ENTITIES Added Latin 2//EN" uri="CR-MathML3-20091215/isolat2.ent" />
-  <public publicId="-//W3C//ENTITIES Numeric and Special Graphic//EN" uri="CR-MathML3-20091215/isonum.ent" />
-  <public publicId="-//W3C//ENTITIES Publishing//EN" uri="CR-MathML3-20091215/isopub.ent" />
-  <public publicId="-//W3C//ENTITIES Added Math Symbols: Arrow Relations//EN" uri="CR-MathML3-20091215/isoamsa.ent" />
-  <public publicId="-//W3C//ENTITIES Added Math Symbols: Binary Operators//EN" uri="CR-MathML3-20091215/isoamsb.ent" />
-  <public publicId="-//W3C//ENTITIES Added Math Symbols: Delimiters//EN" uri="CR-MathML3-20091215/isoamsc.ent" />
-  <public publicId="-//W3C//ENTITIES Added Math Symbols: Negated Relations//EN" uri="CR-MathML3-20091215/isoamsn.ent" />
-  <public publicId="-//W3C//ENTITIES Added Math Symbols: Ordinary//EN" uri="CR-MathML3-20091215/isoamso.ent" />
-  <public publicId="-//W3C//ENTITIES Added Math Symbols: Relations//EN" uri="CR-MathML3-20091215/isoamsr.ent" />
-  <public publicId="-//W3C//ENTITIES Greek Symbols//EN" uri="CR-MathML3-20091215/isogrk3.ent" />
-  <public publicId="-//W3C//ENTITIES Math Alphabets: Fraktur//EN" uri="CR-MathML3-20091215/isomfrk.ent" />
-  <public publicId="-//W3C//ENTITIES Math Alphabets: Open Face//EN" uri="CR-MathML3-20091215/isomopf.ent" />
-  <public publicId="-//W3C//ENTITIES Math Alphabets: Script//EN" uri="CR-MathML3-20091215/isomscr.ent" />
-  <public publicId="-//W3C//ENTITIES General Technical//EN" uri="CR-MathML3-20091215/isotech.ent" />
-  <public publicId="-//W3C//ENTITIES Additional MathML Symbols//EN" uri="CR-MathML3-20091215/mmlextra.ent" />
-  <public publicId="-//W3C//ENTITIES MathML Aliases//EN" uri="CR-MathML3-20091215/mmlalias.ent" />
+  <public publicId="-//W3C//DTD MathML 3.0//EN" uri="WD-MathML3-20100610/mathml3.dtd" />
+  <public publicId="-//W3C//ENTITIES MathML 3.0 Qualified Names 1.0//EN" uri="WD-MathML3-20100610/mathml3-qname.mod" />
+  <public publicId="-//W3C//ENTITIES Box and Line Drawing//EN" uri="WD-MathML3-20100610/isobox.ent" />
+  <public publicId="-//W3C//ENTITIES Russian Cyrillic//EN" uri="WD-MathML3-20100610/isocyr1.ent" />
+  <public publicId="-//W3C//ENTITIES Non-Russian Cyrillic//EN" uri="WD-MathML3-20100610/isocyr2.ent" />
+  <public publicId="-//W3C//ENTITIES Diacritical Marks//EN" uri="WD-MathML3-20100610/isodia.ent" />
+  <public publicId="-//W3C//ENTITIES Added Latin 1//EN" uri="WD-MathML3-20100610/isolat1.ent" />
+  <public publicId="-//W3C//ENTITIES Added Latin 2//EN" uri="WD-MathML3-20100610/isolat2.ent" />
+  <public publicId="-//W3C//ENTITIES Numeric and Special Graphic//EN" uri="WD-MathML3-20100610/isonum.ent" />
+  <public publicId="-//W3C//ENTITIES Publishing//EN" uri="WD-MathML3-20100610/isopub.ent" />
+  <public publicId="-//W3C//ENTITIES Added Math Symbols: Arrow Relations//EN" uri="WD-MathML3-20100610/isoamsa.ent" />
+  <public publicId="-//W3C//ENTITIES Added Math Symbols: Binary Operators//EN" uri="WD-MathML3-20100610/isoamsb.ent" />
+  <public publicId="-//W3C//ENTITIES Added Math Symbols: Delimiters//EN" uri="WD-MathML3-20100610/isoamsc.ent" />
+  <public publicId="-//W3C//ENTITIES Added Math Symbols: Negated Relations//EN" uri="WD-MathML3-20100610/isoamsn.ent" />
+  <public publicId="-//W3C//ENTITIES Added Math Symbols: Ordinary//EN" uri="WD-MathML3-20100610/isoamso.ent" />
+  <public publicId="-//W3C//ENTITIES Added Math Symbols: Relations//EN" uri="WD-MathML3-20100610/isoamsr.ent" />
+  <public publicId="-//W3C//ENTITIES Greek Symbols//EN" uri="WD-MathML3-20100610/isogrk3.ent" />
+  <public publicId="-//W3C//ENTITIES Math Alphabets: Fraktur//EN" uri="WD-MathML3-20100610/isomfrk.ent" />
+  <public publicId="-//W3C//ENTITIES Math Alphabets: Open Face//EN" uri="WD-MathML3-20100610/isomopf.ent" />
+  <public publicId="-//W3C//ENTITIES Math Alphabets: Script//EN" uri="WD-MathML3-20100610/isomscr.ent" />
+  <public publicId="-//W3C//ENTITIES General Technical//EN" uri="WD-MathML3-20100610/isotech.ent" />
+  <public publicId="-//W3C//ENTITIES Additional MathML Symbols//EN" uri="WD-MathML3-20100610/mmlextra.ent" />
+  <public publicId="-//W3C//ENTITIES MathML Aliases//EN" uri="WD-MathML3-20100610/mmlalias.ent" />
   <public publicId="-//W3C//DTD SVG 1.0//EN" uri="REC-SVG-20010904/svg10.dtd" />
   <public publicId="-//W3C//DTD SVG 1.1//EN" uri="REC-SVG11-20030114/svg11.dtd" />
   <public publicId="-//W3C//DTD SVG 1.1 Basic//EN" uri="REC-SVG11-20030114/svg11-basic.dtd" />
