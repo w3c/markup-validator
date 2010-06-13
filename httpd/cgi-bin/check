@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.778 2010-06-10 22:19:55 ville Exp $
+# $Id: check,v 1.779 2010-06-13 21:45:40 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -192,7 +192,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.778 $;
+    $VERSION = q$Revision: 1.779 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -652,35 +652,152 @@ if (&is_xml($File)) {
 
         eval { $xmlparser->parse_string($xml_string); };
         $xml_string = undef;
+        my $xml_parse_errors_line = undef;
+        my @xmlwf_error_list;
 
-        my $err_obj = $@;
-        while ($err_obj) {
-            my $err;
-            $err->{src} = '...';    # do this with show_open_entities()?
-            $err->{line} = $err_obj->line();
-            $err->{char} = $err_obj->column();
-            $err->{num}  = "libxml2-" . $err_obj->code();
-            $err->{type} = "E";
-            $err->{msg}  = $err_obj->message();
+        if (ref($@)) {
 
-            $err_obj = $err_obj->_prev();
+            # handle a structured error (XML::LibXML::Error object)
 
-            # The validator will sometimes fail to dereference entities
-            # files; we're filtering the resulting bogus error for
-            # non-standalone documents. @@@TODO: is this still needed?
-            if (!$standalone &&
-                $err->{msg} =~ /Entity '\w+' not defined/)
-            {
-                $err = undef;
-                next;
+            my $err_obj         = $@;
+            my $num_xmlwf_error = 0;
+            while ($err_obj) {
+                my $err;
+                $err->{src} = '...';    # do this with show_open_entities()?
+                $err->{line} = $err_obj->line();
+                $err->{char} = $err_obj->column();
+                $err->{num}  = "libxml2-" . $err_obj->code();
+                $err->{type} = "E";
+                $err->{msg}  = $err_obj->message();
+
+                $err_obj = $err_obj->_prev();
+
+                # The validator will sometimes fail to dereference entities
+                # files; we're filtering the resulting bogus error for
+                # non-standalone documents. @@@TODO: is this still needed?
+                if (!$standalone &&
+                    $err->{msg} =~ /Entity '\w+' not defined/)
+                {
+                    $err = undef;
+                    next;
+                }
+
+                unshift(@xmlwf_error_list, $err);
+                $num_xmlwf_error++;
             }
+        }
+        elsif ($@) {
+            my $xmlwf_errors      = $@;
+            my $xmlwf_error_line  = undef;
+            my $xmlwf_error_col   = undef;
+            my $xmlwf_error_msg   = undef;
+            my $got_error_message = undef;
+            my $got_quoted_line   = undef;
+            my $num_xmlwf_error   = 0;
+            foreach my $msg_line (split "\n", $xmlwf_errors) {
 
+                $msg_line =~ s{[^\x0d\x0a](:\d+:)}{\n$1}g;
+                $msg_line =~ s{[^\x0d\x0a]+[\x0d\x0a]$}{};
+
+                # first we get the actual error message
+                if (!$got_error_message &&
+                    $msg_line =~ /^(:\d+:)( parser error : .*)/)
+                {
+                    $xmlwf_error_line = $1;
+                    $xmlwf_error_msg  = $2;
+                    $xmlwf_error_line =~ s/:(\d+):/$1/;
+                    $xmlwf_error_msg =~ s/ parser error :/XML Parsing Error: /;
+                    $got_error_message = 1;
+                }
+
+                # then we skip the second line, which shows the context
+                # (we don't use that)
+                elsif ($got_error_message && !$got_quoted_line) {
+                    $got_quoted_line = 1;
+                }
+
+                # we now take the third line, with the pointer to the error's
+                # column
+                elsif (($msg_line =~ /(\s+)\^/) and
+                    $got_error_message and
+                    $got_quoted_line)
+                {
+                    $xmlwf_error_col = length($1);
+                }
+
+                #  cleanup for a number of bugs for the column number
+                if (defined($xmlwf_error_col)) {
+                    if ((   my $l =
+                            length($File->{Content}->[$xmlwf_error_line - 1])
+                        ) < $xmlwf_error_col
+                        )
+                    {
+
+                        # http://bugzilla.gnome.org/show_bug.cgi?id=434196
+                        #warn("Warning: reported error column larger than line length " .
+                        #     "($xmlwf_error_col > $l) in $File->{URI} line " .
+                        #     "$xmlwf_error_line, libxml2 bug? Resetting to line length.");
+                        $xmlwf_error_col = $l;
+                    }
+                    elsif ($xmlwf_error_col == 79) {
+
+                        # working around an apparent odd limitation of libxml
+                        # which only gives context for lines up to 80 chars
+                        # http://www.w3.org/Bugs/Public/show_bug.cgi?id=4420
+                        # http://bugzilla.gnome.org/show_bug.cgi?id=424017
+                        $xmlwf_error_col = "> 80";
+
+                        # non-int line number will trigger the proper behavior
+                        # in report_error
+                    }
+                }
+
+                # when we have all the info (one full error message), proceed
+                # and move on to the next error
+                if ((defined $xmlwf_error_line) and
+                    (defined $xmlwf_error_col) and
+                    (defined $xmlwf_error_msg))
+                {
+
+                    # Reinitializing for the next batch of 3 lines
+                    $got_error_message = undef;
+                    $got_quoted_line   = undef;
+
+                    # formatting the error message for output
+                    my $err;
+                    $err->{src} = '...';   # do this with show_open_entities()?
+                    $err->{line} = $xmlwf_error_line;
+                    $err->{char} = $xmlwf_error_col;
+                    $err->{num}  = 'xmlwf';
+                    $err->{type} = "E";
+                    $err->{msg}  = $xmlwf_error_msg;
+
+                    # The validator will sometimes fail to dereference entities
+                    # files; we're filtering the resulting bogus error for
+                    # non-standalone documents. @@@TODO: is this still needed?
+                    if (!$standalone &&
+                        $err->{msg} =~ /Entity '\w+' not defined/)
+                    {
+                        $xmlwf_error_line = undef;
+                        $xmlwf_error_col  = undef;
+                        $xmlwf_error_msg  = undef;
+                        next;
+                    }
+                    push(@xmlwf_error_list, $err);
+                    $xmlwf_error_line = undef;
+                    $xmlwf_error_col  = undef;
+                    $xmlwf_error_msg  = undef;
+                    $num_xmlwf_error++;
+
+                }
+            }
+        }
+        foreach my $errmsg (@xmlwf_error_list) {
             $File->{'Is Valid'} = FALSE;
-            unshift(@{$File->{WF_Errors}}, $err);
+            push @{$File->{WF_Errors}}, $errmsg;
         }
     }
 }
-
 if (($File->{DOCTYPE} eq "HTML5") or ($File->{DOCTYPE} eq "XHTML5")) {
     if ($CFG->{External}->{HTML5}) {
         $File = &html5_validate($File);
@@ -866,6 +983,13 @@ if ($File->{Opt}->{Output} eq 'json') {
         for my $msg (@$msgs) {
             for my $key (qw(msg expl)) {
                 $msg->{$key} = $json->encode($msg->{$key}) if $msg->{$key};
+            }
+
+            # Drop non-numeric char indicators from output, e.g.
+            # "> 80" for some XML parse error ones (see the non-structured
+            # XML::LibXML code branch in XML preparsing below).
+            if ($msg->{char} && $msg->{char} !~ /^\d+$/) {
+                delete($msg->{char});
             }
         }
     }
