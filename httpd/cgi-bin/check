@@ -14,7 +14,7 @@
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
 #
-# $Id: check,v 1.780 2010-06-13 21:47:08 ville Exp $
+# $Id: check,v 1.781 2010-06-13 21:49:10 ville Exp $
 
 #
 # We need Perl 5.8.0+.
@@ -192,7 +192,7 @@ EOF
 
     #
     # Strings
-    $VERSION = q$Revision: 1.780 $;
+    $VERSION = q$Revision: 1.781 $;
     $VERSION =~ s/Revision: ([\d\.]+) /$1/;
 
     # Read friendly error message file
@@ -652,7 +652,6 @@ if (&is_xml($File)) {
 
         eval { $xmlparser->parse_string($xml_string); };
         $xml_string = undef;
-        my $xml_parse_errors_line = undef;
         my @xmlwf_error_list;
 
         if (ref($@)) {
