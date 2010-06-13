@@ -1,6 +1,7 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 use strict;
+use warnings;
 
 # Crude script for converting SGML Open Catalogs to XML catalogs.
 # Usage: soc2xml.pl < catalog.soc > catalog.xml
@@ -15,8 +16,8 @@ sub esc
     $esc;
 }
 
-$/ = undef;
-my $soc = <STDIN>;
+local $/ = undef;
+my $soc = <>;
 
 print <<'EOF';
 <?xml version="1.0"?>
