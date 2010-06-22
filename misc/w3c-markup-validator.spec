@@ -1,5 +1,4 @@
 # RPM spec file for the W3C Markup Validator
-# $Id: w3c-markup-validator.spec,v 1.15 2010-06-14 06:33:12 ville Exp $
 
 %{expand: %%define tbver %(echo %{version} | tr . _)}
 

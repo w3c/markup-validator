@@ -4,8 +4,6 @@
 #         for use in the Validator, from an OpenSP ParserMessages.rc.
 #         (spmpp = "SP Message Pre-Processor")
 #
-# $Id: spmpp.pl,v 1.6 2009-11-25 22:11:21 ville Exp $
-#
 
 #
 # Require Perl 5.6.1

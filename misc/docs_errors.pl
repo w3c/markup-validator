@@ -2,7 +2,6 @@
 ##
 ## Generates HTML documentation of error messages and explanations
 ## for W3C Markup Validation Service
-## $Id: docs_errors.pl,v 1.17 2010-01-26 18:45:41 ville Exp $
 
 ## Pragmas.
 use strict;

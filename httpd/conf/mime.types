@@ -1,8 +1,6 @@
 #
 # mime.types for validator.w3.org
 #
-# $Id: mime.types,v 1.2 2004-05-09 15:56:54 link Exp $
-#
 
 # This file controls what MIME types are sent to the client for the
 # given file extensions.  Sending the correct MIME type to the client

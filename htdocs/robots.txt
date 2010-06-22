@@ -1,8 +1,6 @@
 #
 # robots.txt for validator.w3.org
 #
-# $Id: robots.txt,v 1.4 2009-02-26 14:50:04 ted Exp $
-#
 
 User-agent: *
 Disallow: /check

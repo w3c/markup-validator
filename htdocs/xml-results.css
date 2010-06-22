@@ -3,8 +3,6 @@
 
    Copyright 2002 Terje Bless <link@pobox.com>. All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
-
-   $Id: xml-results.css,v 1.6 2005-08-18 04:25:17 bjoern Exp $
 */
 
 result, meta, uri, modified, server, size, encoding, doctype, warnings, messages {display: block}

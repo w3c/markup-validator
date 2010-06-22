@@ -1,7 +1,6 @@
 #!/usr/bin/perl -T
 ##
 ## feedback generator for W3C Markup Validation Service
-# # $Id: sendfeedback.pl,v 1.22 2010-03-08 21:15:33 ville Exp $
 
 ## Pragmas.
 use strict;
