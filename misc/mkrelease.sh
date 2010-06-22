@@ -1,12 +1,9 @@
 #!/bin/bash
 
 # Typical usage:
-#   mkdir foo
-#   cd foo
-#   export CVSROOT=:pserver:anonymous@dev.w3.org:/sources/public
-#   cvs -z3 export -r validator-0_6_7-release validator
-#   cd validator
-#   misc/mkrelease.sh 0.6.7
+#   hg clone -b validator-1_0-release https://dvcs.w3.org/hg/markup-validator
+#   cd markup-validator
+#   misc/mkrelease.sh 1.0
 
 version="$1"
 if [ -z "$version" ] ; then
@@ -34,8 +31,7 @@ cp -pR $topdir/{htdocs,httpd,misc,share,README.cvs} $tmpdir/validator-$version
 
 cd $tmpdir
 
-find validator-$version -type d -name CVS | xargs -r rm -rf
-find validator-$version -name .cvsignore  | xargs -r rm -rf
+rm -rf validator-$version/.hg*
 find validator-$version -name "*~"        | xargs -r rm -rf
 find validator-$version -name ".#*"       | xargs -r rm -rf
 find validator-$version -name "*.py[co]"  | xargs -r rm -rf

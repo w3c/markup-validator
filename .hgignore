@@ -1,0 +1,14 @@
+syntax: glob
+
+*.pyc
+*.tar.gz
+httpd/cgi-bin/*.bak
+misc/*.bak
+misc/bundle/*.bak
+misc/bundle/*.tar.gz
+misc/bundle/blib
+misc/bundle/lib/Bundle/W3C/*.bak
+misc/bundle/Makefile
+misc/bundle/Makefile.old
+misc/bundle/pm_to_blib
+misc/testsuite/lib/*.py[co]

@@ -49,26 +49,12 @@ WriteMakefile(
         resources => {
             homepage   => 'http://validator.w3.org/',
             bugtracker => 'http://www.w3.org/Bugs/Public/',
-            repository => 'http://dev.w3.org/cvsweb/validator/',
+            repository => 'http://dvcs.w3.org/hg/',
             MailingList =>
                 'http://lists.w3.org/Archives/Public/www-validator/',
         },
 
     },
-    depend => {distdir  => 'ChangeLog'},
-    dist   => {TARFLAGS => '--owner=0 --group=0 -cvf'},
-    clean  => {
-        FILES =>
-            'ChangeLog.bak Makefile.PL.bak lib/Bundle/W3C/Validator.pm.bak'
-    },
+    dist  => {TARFLAGS => '--owner=0 --group=0 -cvf'},
+    clean => {FILES    => 'Makefile.PL.bak lib/Bundle/W3C/Validator.pm.bak'},
 );
-
-sub MY::postamble
-{
-    return <<'MAKE_FRAG';
-ChangeLog: README lib/Bundle/W3C/Validator.pm t/00load.t
-	cvs2cl --FSF --utc --prune \
-	  --ignore ChangeLog --ignore cvsignore --ignore SIGNATURE \
-	  --ignore Makefile.PL --ignore META.yml --ignore MANIFEST
-MAKE_FRAG
-}

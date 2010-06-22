@@ -17,7 +17,7 @@
           <li><a href="#suse">openSUSE/SUSE Linux RPM package</a></li>
 	<li><a href="#deb">Debian GNU/Linux package</a></li>
 	<li><a href="#mac">Mac OS X Application</a></li>
-	<li><a href="#CVS">CVS repository</a></li>
+	<li><a href="#CVS">Mercurial repository</a></li>
        </ul>
       </li>
       <li><a href="#using">Using the code</a></li>
@@ -33,7 +33,7 @@
 	Software License</a>. Source tarball of the latest production
       version is always available at
       &lt;<a href="http://validator.w3.org/validator.tar.gz">http://validator.w3.org/validator.tar.gz</a>&gt;.
-      Development code is only available from CVS.
+      Development code is only available from the Mercurial repository.
     </p>
 
           <h4><a id="browse" name="browse"></a>Browsing the code</h4>
@@ -41,15 +41,15 @@
   <p>
     If you just want to glance at the code, or see its revision
     history, you can
-    <a href="http://dev.w3.org/cvsweb/validator/">browse it on
+    <a href="http://dvcs.w3.org/hg/markup-validator/file/tip/">browse it on
     the web</a>.
   </p>
   <p>
     The most interesting files are currently
-    <a href="http://dev.w3.org/cvsweb/validator/httpd/cgi-bin/check">a
+    <a href="http://dvcs.w3.org/hg/markup-validator/file/tip/httpd/cgi-bin/check">a
     CGI script called "check"</a> that does pretty much everything,
     and possibly also <a
-    href="http://dev.w3.org/cvsweb/validator/httpd/conf/httpd.conf">the
+    href="http://dvcs.w3.org/hg/markup-validator/file/tip/httpd/conf/httpd.conf">the
     httpd.conf configuration file snippet for Apache</a>.
     Select the topmost revision numbers on these
     pages to see the most recent revision of each file.
@@ -128,19 +128,19 @@
           The Validator is also packaged as a standalone Mac OS X Application,
           called <a href="http://habilis.net/validator-sac/">Validator <abbr title="[Stand Alone Complex]">S.A.C.</abbr></a>, courtesy of <a href="http://habilis.net/chuck/" title="Chuck Houpt's Home Page">Chuck Houpt</a>.</p>
 
-        <h4><a id="CVS" name="CVS"></a>CVS repository</h4>
+        <h4><a id="CVS" name="CVS"></a>Mercurial repository</h4>
 
           <p>
             If you intend to actively mirror the code and/or contribute
             patches to the code, you should install and become familiar
-            with <a href="http://www.nongnu.org/cvs/">CVS</a>;
-            this is the tool we use for revision control and is generally
-            a good thing to <a href="http://ximbiot.com/cvs/manual/">get to
-            know</a>.
+            with <a href="http://mercurial.selenic.com/">Mercurial</a>;
+            this is the tool we use for revision control.
           </p>
-  <p>
-    For instructions on how to retrieve the code using CVS, 
-              see our <a href="http://dev.w3.org/cvsweb/validator/">web-based interface to the repository.</a>
+          <p>
+            For instructions on how to retrieve the code using Mercurial, 
+            see the "markup-validator" entry in our
+            <a href="http://dvcs.w3.org/hg/">web-based interface to the
+              repository.</a>
           </p>
             
   <h3><a id="using" name="using"></a>Using the code</h3>
