@@ -609,190 +609,6 @@ $File = &charset_conflicts($File);
 $File->{'Is Valid'} = TRUE;
 $File->{Errors} = [];
 
-# preparse with XML parser if necessary
-# we should really be using a SAX ErrorHandler, but I can't find
-# a way to make it work with XML::LibXML::SAX::Parser... ** FIXME **
-# ditto, we should try using W3C::Validator::EventHandler,
-# but it's badly linked to opensp at the moment
-if (&is_xml($File)) {
-    if ($File->{DOCTYPE} eq "HTML5") {
-
-        # $File->{DOCTYPE} = "XHTML5";
-        # $File->{Version} = "XHTML5";
-    }
-    else {
-        my $xmlparser = XML::LibXML->new();
-        $xmlparser->line_numbers(1);
-        $xmlparser->validation(0);
-        $xmlparser->base_uri($File->{URI})
-            unless ($File->{'Direct Input'} || $File->{'Is Upload'});
-
-        # Restrict file reading similar to what SGML::Parser::OpenSP does.
-        # Note that all inputs go through the callback so if we were passing
-        # a URI/filename to the parser, it would be affected as well and would
-        # break fetching the initial document.  As long as we pass the doc as
-        # string, this should work.
-        my $cb = XML::LibXML::InputCallback->new();
-        $cb->register_callbacks([\&xml_jail_match, sub { }, sub { }, sub { }]);
-        $xmlparser->input_callbacks($cb);
-
-        &override_charset($File, "UTF-8");
-
-        my $xml_string = join "\n", @{$File->{Content}};
-
-        my $xmlws = qr/[\x20\x09\x0D\x0A]/o;
-
-        # Is the document standalone?  Need to check with a regex because
-        # the parser may fail to return a document we could use for this.
-        my $standalone = (
-            $xml_string =~ /^<\?xml\b[^>]*${xmlws}
-                           standalone${xmlws}*=${xmlws}*
-                           (["'])yes\1
-                          /sox
-        );
-
-        eval { $xmlparser->parse_string($xml_string); };
-        $xml_string = undef;
-        my @xmlwf_error_list;
-
-        if (ref($@)) {
-
-            # handle a structured error (XML::LibXML::Error object)
-
-            my $err_obj = $@;
-            while ($err_obj) {
-                my $err;
-                $err->{src} = '...';    # do this with show_open_entities()?
-                $err->{line} = $err_obj->line();
-                $err->{char} = $err_obj->column();
-                $err->{num}  = "libxml2-" . $err_obj->code();
-                $err->{type} = "E";
-                $err->{msg}  = $err_obj->message();
-
-                $err_obj = $err_obj->_prev();
-
-                # The validator will sometimes fail to dereference entities
-                # files; we're filtering the resulting bogus error for
-                # non-standalone documents. @@@TODO: is this still needed?
-                if (!$standalone &&
-                    $err->{msg} =~ /Entity '\w+' not defined/)
-                {
-                    $err = undef;
-                    next;
-                }
-
-                unshift(@xmlwf_error_list, $err);
-            }
-        }
-        elsif ($@) {
-            my $xmlwf_errors      = $@;
-            my $xmlwf_error_line  = undef;
-            my $xmlwf_error_col   = undef;
-            my $xmlwf_error_msg   = undef;
-            my $got_error_message = undef;
-            my $got_quoted_line   = undef;
-            foreach my $msg_line (split "\n", $xmlwf_errors) {
-
-                $msg_line =~ s{[^\x0d\x0a](:\d+:)}{\n$1}g;
-                $msg_line =~ s{[^\x0d\x0a]+[\x0d\x0a]$}{};
-
-                # first we get the actual error message
-                if (!$got_error_message &&
-                    $msg_line =~ /^(:\d+:)( parser error : .*)/)
-                {
-                    $xmlwf_error_line = $1;
-                    $xmlwf_error_msg  = $2;
-                    $xmlwf_error_line =~ s/:(\d+):/$1/;
-                    $xmlwf_error_msg =~ s/ parser error :/XML Parsing Error: /;
-                    $got_error_message = 1;
-                }
-
-                # then we skip the second line, which shows the context
-                # (we don't use that)
-                elsif ($got_error_message && !$got_quoted_line) {
-                    $got_quoted_line = 1;
-                }
-
-                # we now take the third line, with the pointer to the error's
-                # column
-                elsif (($msg_line =~ /(\s+)\^/) and
-                    $got_error_message and
-                    $got_quoted_line)
-                {
-                    $xmlwf_error_col = length($1);
-                }
-
-                #  cleanup for a number of bugs for the column number
-                if (defined($xmlwf_error_col)) {
-                    if ((   my $l =
-                            length($File->{Content}->[$xmlwf_error_line - 1])
-                        ) < $xmlwf_error_col
-                        )
-                    {
-
-                        # http://bugzilla.gnome.org/show_bug.cgi?id=434196
-                        #warn("Warning: reported error column larger than line length " .
-                        #     "($xmlwf_error_col > $l) in $File->{URI} line " .
-                        #     "$xmlwf_error_line, libxml2 bug? Resetting to line length.");
-                        $xmlwf_error_col = $l;
-                    }
-                    elsif ($xmlwf_error_col == 79) {
-
-                        # working around an apparent odd limitation of libxml
-                        # which only gives context for lines up to 80 chars
-                        # http://www.w3.org/Bugs/Public/show_bug.cgi?id=4420
-                        # http://bugzilla.gnome.org/show_bug.cgi?id=424017
-                        $xmlwf_error_col = "> 80";
-
-                        # non-int line number will trigger the proper behavior
-                        # in report_error
-                    }
-                }
-
-                # when we have all the info (one full error message), proceed
-                # and move on to the next error
-                if ((defined $xmlwf_error_line) and
-                    (defined $xmlwf_error_col) and
-                    (defined $xmlwf_error_msg))
-                {
-
-                    # Reinitializing for the next batch of 3 lines
-                    $got_error_message = undef;
-                    $got_quoted_line   = undef;
-
-                    # formatting the error message for output
-                    my $err;
-                    $err->{src} = '...';   # do this with show_open_entities()?
-                    $err->{line} = $xmlwf_error_line;
-                    $err->{char} = $xmlwf_error_col;
-                    $err->{num}  = 'xmlwf';
-                    $err->{type} = "E";
-                    $err->{msg}  = $xmlwf_error_msg;
-
-                    # The validator will sometimes fail to dereference entities
-                    # files; we're filtering the resulting bogus error for
-                    # non-standalone documents. @@@TODO: is this still needed?
-                    if (!$standalone &&
-                        $err->{msg} =~ /Entity '\w+' not defined/)
-                    {
-                        $xmlwf_error_line = undef;
-                        $xmlwf_error_col  = undef;
-                        $xmlwf_error_msg  = undef;
-                        next;
-                    }
-                    push(@xmlwf_error_list, $err);
-                    $xmlwf_error_line = undef;
-                    $xmlwf_error_col  = undef;
-                    $xmlwf_error_msg  = undef;
-                }
-            }
-        }
-        foreach my $errmsg (@xmlwf_error_list) {
-            $File->{'Is Valid'} = FALSE;
-            push @{$File->{WF_Errors}}, $errmsg;
-        }
-    }
-}
 if (($File->{DOCTYPE} eq "HTML5") or ($File->{DOCTYPE} eq "XHTML5")) {
     if ($CFG->{External}->{HTML5}) {
         $File = &html5_validate($File);
@@ -830,6 +646,19 @@ else {
     $File = &dtd_validate($File);
 }
 &abort_if_error_flagged($File);
+if (&is_xml($File)) {
+    if ($File->{DOCTYPE} eq "HTML5") {
+
+        # $File->{DOCTYPE} = "XHTML5";
+        # $File->{Version} = "XHTML5";
+    }
+    else {
+        # XMLWF check can be slow, skip if we already know the doc can't pass.
+        # http://www.w3.org/Bugs/Public/show_bug.cgi?id=9899
+        $File = &xmlwf($File) if $File->{'Is Valid'};
+    }
+    &abort_if_error_flagged($File);
+}
 
 #
 # Force "XML" if type is an XML type and an FPI was not found.
@@ -1422,6 +1251,188 @@ sub dtd_validate (\$)
     #
     # Set Version to be the FPI initially.
     $File->{Version} = $File->{DOCTYPE};
+    return $File;
+}
+
+sub xmlwf (\$)
+{
+    # we should really be using a SAX ErrorHandler, but I can't find a way to
+    # make it work with XML::LibXML::SAX::Parser... ** FIXME **
+    # ditto, we should try using W3C::Validator::EventHandler, but it's badly
+    # linked to opensp at the moment
+
+    my $File      = shift;
+    my $xmlparser = XML::LibXML->new();
+    $xmlparser->line_numbers(1);
+    $xmlparser->validation(0);
+    $xmlparser->base_uri($File->{URI})
+        unless ($File->{'Direct Input'} || $File->{'Is Upload'});
+
+    # Restrict file reading similar to what SGML::Parser::OpenSP does.  Note
+    # that all inputs go through the callback so if we were passing a
+    # URI/filename to the parser, it would be affected as well and would break
+    # fetching the initial document.  As long as we pass the doc as string,
+    # this should work.
+    my $cb = XML::LibXML::InputCallback->new();
+    $cb->register_callbacks([\&xml_jail_match, sub { }, sub { }, sub { }]);
+    $xmlparser->input_callbacks($cb);
+
+    &override_charset($File, "UTF-8");
+
+    my $xml_string = join "\n", @{$File->{Content}};
+
+    my $xmlws = qr/[\x20\x09\x0D\x0A]/o;
+
+    # Is the document standalone?  Need to check with a regex because the
+    # parser may fail to return a document we could use for this.
+    my $standalone = (
+        $xml_string =~ /^<\?xml\b[^>]*${xmlws}
+                                      standalone${xmlws}*=${xmlws}*
+                                      (["'])yes\1
+                                     /sox
+    );
+
+    eval { $xmlparser->parse_string($xml_string); };
+    $xml_string = undef;
+    my @xmlwf_error_list;
+
+    if (ref($@)) {
+
+        # handle a structured error (XML::LibXML::Error object)
+
+        my $err_obj = $@;
+        while ($err_obj) {
+            my $err;
+            $err->{src} = '...';    # do this with show_open_entities()?
+            $err->{line} = $err_obj->line();
+            $err->{char} = $err_obj->column();
+            $err->{num}  = "libxml2-" . $err_obj->code();
+            $err->{type} = "E";
+            $err->{msg}  = $err_obj->message();
+
+            $err_obj = $err_obj->_prev();
+
+            # The validator will sometimes fail to dereference entities files;
+            # we're filtering the resulting bogus error for non-standalone
+            # documents. @@@TODO: is this still needed?
+            if (!$standalone &&
+                $err->{msg} =~ /Entity '\w+' not defined/)
+            {
+                $err = undef;
+                next;
+            }
+
+            unshift(@xmlwf_error_list, $err);
+        }
+    }
+    elsif ($@) {
+        my $xmlwf_errors      = $@;
+        my $xmlwf_error_line  = undef;
+        my $xmlwf_error_col   = undef;
+        my $xmlwf_error_msg   = undef;
+        my $got_error_message = undef;
+        my $got_quoted_line   = undef;
+        foreach my $msg_line (split "\n", $xmlwf_errors) {
+
+            $msg_line =~ s{[^\x0d\x0a](:\d+:)}{\n$1}g;
+            $msg_line =~ s{[^\x0d\x0a]+[\x0d\x0a]$}{};
+
+            # first we get the actual error message
+            if (!$got_error_message &&
+                $msg_line =~ /^(:\d+:)( parser error : .*)/)
+            {
+                $xmlwf_error_line = $1;
+                $xmlwf_error_msg  = $2;
+                $xmlwf_error_line =~ s/:(\d+):/$1/;
+                $xmlwf_error_msg  =~ s/ parser error :/XML Parsing Error: /;
+                $got_error_message = 1;
+            }
+
+            # then we skip the second line, which shows the context
+            # (we don't use that)
+            elsif ($got_error_message && !$got_quoted_line) {
+                $got_quoted_line = 1;
+            }
+
+            # we now take the third line, with the pointer to the error's
+            # column
+            elsif (($msg_line =~ /(\s+)\^/) and
+                $got_error_message and
+                $got_quoted_line)
+            {
+                $xmlwf_error_col = length($1);
+            }
+
+            #  cleanup for a number of bugs for the column number
+            if (defined($xmlwf_error_col)) {
+                if ((   my $l =
+                        length($File->{Content}->[$xmlwf_error_line - 1])
+                    ) < $xmlwf_error_col
+                    )
+                {
+
+                    # http://bugzilla.gnome.org/show_bug.cgi?id=434196
+                    #warn("Warning: reported error column larger than line length " .
+                    #     "($xmlwf_error_col > $l) in $File->{URI} line " .
+                    #     "$xmlwf_error_line, libxml2 bug? Resetting to line length.");
+                    $xmlwf_error_col = $l;
+                }
+                elsif ($xmlwf_error_col == 79) {
+
+                    # working around an apparent odd limitation of libxml which
+                    # only gives context for lines up to 80 chars
+                    # http://www.w3.org/Bugs/Public/show_bug.cgi?id=4420
+                    # http://bugzilla.gnome.org/show_bug.cgi?id=424017
+                    $xmlwf_error_col = "> 80";
+
+                    # non-int line number will trigger the proper behavior in
+                    # report_error
+                }
+            }
+
+            # when we have all the info (one full error message), proceed
+            # and move on to the next error
+            if ((defined $xmlwf_error_line) and
+                (defined $xmlwf_error_col) and
+                (defined $xmlwf_error_msg))
+            {
+
+                # Reinitializing for the next batch of 3 lines
+                $got_error_message = undef;
+                $got_quoted_line   = undef;
+
+                # formatting the error message for output
+                my $err;
+                $err->{src} = '...';    # do this with show_open_entities()?
+                $err->{line} = $xmlwf_error_line;
+                $err->{char} = $xmlwf_error_col;
+                $err->{num}  = 'xmlwf';
+                $err->{type} = "E";
+                $err->{msg}  = $xmlwf_error_msg;
+
+                # The validator will sometimes fail to dereference entities
+                # files; we're filtering the resulting bogus error for
+                # non-standalone documents. @@@TODO: is this still needed?
+                if (!$standalone &&
+                    $err->{msg} =~ /Entity '\w+' not defined/)
+                {
+                    $xmlwf_error_line = undef;
+                    $xmlwf_error_col  = undef;
+                    $xmlwf_error_msg  = undef;
+                    next;
+                }
+                push(@xmlwf_error_list, $err);
+                $xmlwf_error_line = undef;
+                $xmlwf_error_col  = undef;
+                $xmlwf_error_msg  = undef;
+            }
+        }
+    }
+    foreach my $errmsg (@xmlwf_error_list) {
+        $File->{'Is Valid'} = FALSE;
+        push @{$File->{WF_Errors}}, $errmsg;
+    }
+
     return $File;
 }
 
