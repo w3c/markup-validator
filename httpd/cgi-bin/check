@@ -325,6 +325,7 @@ $File->{Template_Defaults} = {
     die_on_bad_params => FALSE,
     loop_context_vars => TRUE,
     global_vars       => TRUE,
+    case_sensitive    => TRUE,
     path              => [catfile($CFG->{Paths}->{Templates}, $lang)],
     filter => sub { my $ref = shift; ${$ref} = Encode::decode_utf8(${$ref}); },
 };
