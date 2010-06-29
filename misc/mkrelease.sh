@@ -44,6 +44,10 @@ find . -type f | xargs -r chmod 644
 chmod 755 validator-$version/httpd/cgi-bin/check
 chmod 755 validator-$version/httpd/cgi-bin/sendfeedback.pl
 
+# Try to cheat HTML::Template into refreshing its possible caches (it doesn't
+# take options for new() into account when determining freshness as of 2.9).
+touch validator-$version/share/templates/*/*.tmpl
+
 # sgml-lib tarball
 tar zc --owner=0 --group=0 -f $topdir/sgml-lib-$tbversion.tar.gz \
   validator-$version/htdocs/sgml-lib
