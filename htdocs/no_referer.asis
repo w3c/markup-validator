@@ -16,7 +16,7 @@ Content-type: text/html
     <meta name="keywords" content="HTML, HyperText Markup Language, Validation,
       W3C Markup Validation Service" />
     <meta name="description" content="W3C's easy-to-use
-      HTML validation service, based on an SGML parser." />
+      markup validation service, based on SGML and XML parsers." />
   </head>
   <body>
     
