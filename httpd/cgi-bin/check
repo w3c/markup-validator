@@ -2083,15 +2083,21 @@ sub escape_comment
 #
 # Return $_[0] encoded for HTML entities (cribbed from merlyn).
 #
-# Note that this is used both for HTML and XML escaping.
+# Note that this is used both for HTML and XML escaping (so e.g. no &apos;).
 #
 sub ent
 {
-    local $_ = shift;
-    return '' unless defined;    # Eliminate warnings
+    my $str = shift;
+    return '' unless defined($str);    # Eliminate warnings
 
-    s(["<&>']){'&#' . ord($&) . ';'}ge;  # should switch to hex sooner or later
-    return $_;
+    # should switch to hex sooner or later
+    $str =~ s/&/&#38;/g;
+    $str =~ s/</&#60;/g;
+    $str =~ s/>/&#62;/g;
+    $str =~ s/"/&#34;/g;
+    $str =~ s/'/&#39;/g;
+
+    return $str;
 }
 
 #
