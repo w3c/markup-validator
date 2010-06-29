@@ -651,6 +651,7 @@ if (&is_xml($File)) {
         # $File->{Version} = "XHTML5";
     }
     else {
+
         # XMLWF check can be slow, skip if we already know the doc can't pass.
         # http://www.w3.org/Bugs/Public/show_bug.cgi?id=9899
         $File = &xmlwf($File) if $File->{'Is Valid'};
@@ -1254,6 +1255,7 @@ sub dtd_validate (\$)
 
 sub xmlwf (\$)
 {
+
     # we should really be using a SAX ErrorHandler, but I can't find a way to
     # make it work with XML::LibXML::SAX::Parser... ** FIXME **
     # ditto, we should try using W3C::Validator::EventHandler, but it's badly
@@ -2107,7 +2109,7 @@ sub truncate_line
 {
     my $line   = shift;
     my $col    = shift;
-    my $maxlen = 80;                     # max line length to truncate to
+    my $maxlen = 80;      # max line length to truncate to
 
     my $diff = length($line) - $maxlen;
 
