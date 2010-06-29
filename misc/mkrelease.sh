@@ -37,7 +37,8 @@ find validator-$version -name ".#*"       | xargs -r rm -rf
 find validator-$version -name "*.py[co]"  | xargs -r rm -rf
 rm -f validator-$version/misc/mkrelease.sh
 
-cp validator-$version/htdocs/images/no_w3c.png validator-$version/htdocs/images/w3c.png
+cp validator-$version/htdocs/images/no_w3c.png \
+  validator-$version/htdocs/images/w3c.png
 
 find . -type d | xargs -r chmod 755
 find . -type f | xargs -r chmod 644
