@@ -30,4 +30,10 @@ perltidy:
 	done
 
 dist: all
+	@for file in htdocs/footer.html htdocs/whatsnew.html \
+		httpd/cgi-bin/check share/templates/*/footer.tmpl ; do \
+		grep -qF "$(VERSION)" $$file || { \
+		echo "Validator version in $$file seems out of date." ; \
+		exit 1 ; } ; \
+	done
 	misc/mkrelease.sh $(VERSION)
