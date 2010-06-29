@@ -2090,8 +2090,7 @@ sub ent
     local $_ = shift;
     return '' unless defined;    # Eliminate warnings
 
-    # TODO: Err, why have " twice in the character class? ' maybe?
-    s(["<&>"]){'&#' . ord($&) . ';'}ge;  # should switch to hex sooner or later
+    s(["<&>']){'&#' . ord($&) . ';'}ge;  # should switch to hex sooner or later
     return $_;
 }
 
