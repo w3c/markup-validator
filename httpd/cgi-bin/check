@@ -946,10 +946,8 @@ sub compoundxml_validate (\$)
         my @message_nodes = $messages_node->childNodes;
         foreach my $message_node (@message_nodes) {
             my $message_type = $message_node->localname;
-            my $err;
-            my ($xml_error_line, $xml_error_col,
-                $xml_error_msg,  $xml_error_expl
-            );
+            my ($err, $xml_error_msg, $xml_error_expl);
+
             if ($message_type eq "error") {
                 $err->{type} = "E";
                 $File->{'Is Valid'} = FALSE;
@@ -971,10 +969,10 @@ sub compoundxml_validate (\$)
 
                     }
                     if ($attribute->name eq "last-column") {
-                        $xml_error_col = $attribute->getValue();
+                        $err->{char} = $attribute->getValue();
                     }
                     if ($attribute->name eq "last-line") {
-                        $xml_error_line = $attribute->getValue();
+                        $err->{line} = $attribute->getValue();
                     }
 
                 }
@@ -995,8 +993,6 @@ sub compoundxml_validate (\$)
 
             # formatting the error message for output
             $err->{src}  = '...';          # do this with show_open_entities()?
-            $err->{line} = $xml_error_line;
-            $err->{char} = $xml_error_col;
             $err->{num}  = 'validator.nu';
             $err->{msg}  = $xml_error_msg;
             $err->{expl} = $xml_error_expl;
@@ -1118,10 +1114,7 @@ sub html5_validate (\$)
         my @message_nodes = $messages_node->childNodes;
         foreach my $message_node (@message_nodes) {
             my $message_type = $message_node->localname;
-            my $err;
-            my ($html5_error_line, $html5_error_col,
-                $html5_error_msg,  $html5_error_expl
-            );
+            my ($err, $html5_error_msg, $html5_error_expl);
 
             # TODO: non-document errors should receive different/better
             # treatment, but this is better than hiding all problems for now
@@ -1149,10 +1142,10 @@ sub html5_validate (\$)
 
                     }
                     elsif ($attribute->name eq "last-column") {
-                        $html5_error_col = $attribute->getValue();
+                        $err->{char} = $attribute->getValue();
                     }
                     elsif ($attribute->name eq "last-line") {
-                        $html5_error_line = $attribute->getValue();
+                        $err->{line} = $attribute->getValue();
                     }
 
                 }
@@ -1171,11 +1164,9 @@ sub html5_validate (\$)
             }
 
             # formatting the error message for output
-            $err->{src} = '...';    # do this with show_open_entities()?
-            $err->{line} = $html5_error_line;
-            $err->{char} = $html5_error_col;
-            $err->{num}  = 'html5';
-            $err->{msg}  = $html5_error_msg;
+            $err->{src} = '...';           # do this with show_open_entities()?
+            $err->{num} = 'html5';
+            $err->{msg} = $html5_error_msg;
             $err->{expl} = $html5_error_expl;
             push @{$File->{Errors}}, $err;
 
