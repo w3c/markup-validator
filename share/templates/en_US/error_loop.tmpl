@@ -5,7 +5,6 @@
     <TMPL_IF NAME="line"><em>Line <TMPL_IF NAME="opt_show_source"><a href="#line-<TMPL_VAR NAME="line" ESCAPE="HTML">"></TMPL_IF><TMPL_VAR NAME="line" ESCAPE="HTML"><TMPL_IF NAME="opt_show_source"></a></TMPL_IF><TMPL_IF NAME="char">,
         Column <TMPL_VAR NAME="char" ESCAPE="HTML"></TMPL_IF></em>:</TMPL_IF>
     <span class="msg"><TMPL_VAR NAME="msg" ESCAPE="HTML"></span>
-    <TMPL_IF NAME="uri">(<a href="<TMPL_VAR NAME="uri" ESCAPE="HTML">">explain...</a>)</TMPL_IF>
     <TMPL_IF NAME="src"><pre><code class="input"><TMPL_VAR NAME="src"></code></pre></TMPL_IF>
     <TMPL_IF NAME="expl"><TMPL_VAR NAME="expl"></TMPL_IF>
   </li>
