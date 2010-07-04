@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Bundle-W3C-Validator
-version:            1.1
+version:            1.0
 abstract:           Bundle of modules required by the W3C Markup Validator
 author:
     - W3C QA-dev Team <public-qa-dev@w3.org>
