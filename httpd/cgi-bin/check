@@ -1144,7 +1144,9 @@ sub html5_validate (\$)
                     elsif ($attribute->name eq "last-line") {
                         $err->{line} = $attribute->getValue();
                     }
-
+                    elsif ($attribute->name eq "url") {
+                        $err->{uri} = $attribute->getValue();
+                    }
                 }
             }
             my @child_nodes = $message_node->childNodes;
@@ -1291,6 +1293,7 @@ sub xmlwf (\$)
         my $err_obj = $@;
         while ($err_obj) {
             my $err;
+            $err->{uri} = $err_obj->file();
             $err->{src} = '...';    # do this with show_open_entities()?
             $err->{line} = $err_obj->line();
             $err->{char} = $err_obj->column();
@@ -1391,6 +1394,7 @@ sub xmlwf (\$)
 
                 # formatting the error message for output
                 my $err;
+                # TODO: $err->{uri} (need test case)
                 $err->{src} = '...';    # do this with show_open_entities()?
                 $err->{line} = $xmlwf_error_line;
                 $err->{char} = $xmlwf_error_col;
@@ -2327,6 +2331,30 @@ sub report_errors ($)
         foreach my $err (@{$File->{Errors}}) {
             my $line;
             my $col = 0;
+
+            # We want errors in the doc that was validated to appear without
+            # $err->{uri}, and non-doc errors with it pointing to the external
+            # entity or the like where the error is.  This usually works as
+            # long as we're passing docs to parsers as strings, but S::P::O
+            # (at least as of 0.994) seems to give us "3" as the FileName in
+            # those cases so we try to filter out everything that doesn't look
+            # like a useful URI.
+            if ($err->{uri}) {
+                if ($err->{uri} !~ m|/|) {
+                    delete $err->{uri};
+                }
+                else {
+                    # Mask local file paths
+                    my $uri = URI->new($err->{uri});
+                    if (!$uri->scheme() || $uri->scheme() eq 'file') {
+                        $err->{uri_is_file} = TRUE;
+                        $err->{uri} = ($uri->path_segments())[-1];
+                    }
+                    else {
+                        $err->{uri} = $uri->canonical();
+                    }
+                }
+            }
 
             # avoid truncating lines that do not exist
             if (defined($err->{line}) && $File->{Content}->[$err->{line} - 1])
@@ -3430,6 +3458,7 @@ sub start_element
         # but not present
         my $err;
         my $location = $self->{_parser}->get_location();
+        $err->{uri} = $location->{FileName};
         $err->{src} = '...';    # do this with show_open_entities()?
         $err->{line} = $location->{LineNumber};
         $err->{char} = $location->{ColumnNumber};
@@ -3451,6 +3480,7 @@ sub start_element
         # whine if root xmlns element is not the one specificed by the spec
         my $err;
         my $location = $self->{_parser}->get_location();
+        $err->{uri} = $location->{FileName};
         $err->{src} = '...';    # do this with show_open_entities()?
         $err->{line} = $location->{LineNumber};
         $err->{char} = $location->{ColumnNumber};
@@ -3479,10 +3509,9 @@ sub error
     }
     my $File = $self->{_file};
 
-    # TODO: this does not filter out errors in DTDs.
-
     my $err;
 
+    $err->{uri} = $self->{_parser}->get_location()->{FileName};
     $err->{src} = '...';    # do this with show_open_entities()?
     $err->{line} = $mess->{primary_message}{LineNumber};
     $err->{char} = $mess->{primary_message}{ColumnNumber} + 1;

@@ -9,8 +9,9 @@
         <ul>
         <TMPL_LOOP NAME="instances">
                         <li>
-                          <em>Line <TMPL_IF NAME="opt_show_source"><a href="#line-<TMPL_VAR NAME="line" 
-                              ESCAPE="HTML">"></TMPL_IF><TMPL_VAR NAME="line" ESCAPE="HTML"><TMPL_IF NAME="opt_show_source"></a></TMPL_IF>,
+                          <TMPL_IF NAME="uri">(<TMPL_IF NAME="uri_is_file">Validator local file "<TMPL_VAR NAME="uri" ESCAPE="HTML">"<TMPL_ELSE><a href="<TMPL_VAR NAME="uri" ESCAPE="HTML">"><TMPL_VAR NAME="uri" ESCAPE="HTML"></a></TMPL_IF>)</TMPL_IF>
+                          <em>Line <TMPL_IF NAME="opt_show_source"><TMPL_UNLESS NAME="uri"><a href="#line-<TMPL_VAR NAME="line" 
+                              ESCAPE="HTML">"></TMPL_UNLESS></TMPL_IF><TMPL_VAR NAME="line" ESCAPE="HTML"><TMPL_IF NAME="opt_show_source"><TMPL_UNLESS NAME="uri"></a></TMPL_UNLESS></TMPL_IF>,
                               column <TMPL_VAR NAME="char" ESCAPE="HTML"></em>:
                               <span><TMPL_VAR NAME="msg" ESCAPE="HTML"></span> 
                               <TMPL_IF NAME="src"><pre><code class="input"><TMPL_VAR NAME="src"></code></pre></TMPL_IF>
