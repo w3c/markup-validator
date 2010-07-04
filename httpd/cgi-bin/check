@@ -989,7 +989,7 @@ sub compoundxml_validate (\$)
             }
 
             # formatting the error message for output
-            $err->{src}  = '...';          # do this with show_open_entities()?
+            $err->{src}  = "" if $err->{uri};    # TODO...
             $err->{num}  = 'validator.nu';
             $err->{msg}  = $xml_error_msg;
             $err->{expl} = $xml_error_expl;
@@ -1111,7 +1111,8 @@ sub html5_validate (\$)
         my @message_nodes = $messages_node->childNodes;
         foreach my $message_node (@message_nodes) {
             my $message_type = $message_node->localname;
-            my ($err, $html5_error_msg, $html5_error_expl);
+            my ($html5_error_msg, $html5_error_expl);
+            my $err = {};
 
             # TODO: non-document errors should receive different/better
             # treatment, but this is better than hiding all problems for now
@@ -1145,7 +1146,7 @@ sub html5_validate (\$)
                         $err->{line} = $attribute->getValue();
                     }
                     elsif ($attribute->name eq "url") {
-                        $err->{uri} = $attribute->getValue();
+                        &set_error_uri($err, $attribute->getValue());
                     }
                 }
             }
@@ -1163,9 +1164,15 @@ sub html5_validate (\$)
             }
 
             # formatting the error message for output
-            $err->{src} = '...';           # do this with show_open_entities()?
-            $err->{num} = 'html5';
-            $err->{msg} = $html5_error_msg;
+
+            # TODO: set $err->{src} from extract if we got an URI for the error:
+            # http://wiki.whatwg.org/wiki/Validator.nu_XML_Output#The_extract_Element
+            # For now, set it directly to empty to prevent report_errors() from
+            # trying to populate it from our doc.
+            $err->{src} = "" if $err->{uri};
+
+            $err->{num}  = 'html5';
+            $err->{msg}  = $html5_error_msg;
             $err->{expl} = $html5_error_expl;
             push @{$File->{Errors}}, $err;
 
@@ -1292,9 +1299,9 @@ sub xmlwf (\$)
 
         my $err_obj = $@;
         while ($err_obj) {
-            my $err;
-            $err->{uri} = $err_obj->file();
-            $err->{src} = '...';    # do this with show_open_entities()?
+            my $err = {};
+            &set_error_uri($err, $err_obj->file());
+            $err->{src}  = &ent($err_obj->context()) if $err->{uri};
             $err->{line} = $err_obj->line();
             $err->{char} = $err_obj->column();
             $err->{num}  = "libxml2-" . $err_obj->code();
@@ -1393,9 +1400,10 @@ sub xmlwf (\$)
                 $got_quoted_line   = undef;
 
                 # formatting the error message for output
-                my $err;
-                # TODO: $err->{uri} (need test case)
-                $err->{src} = '...';    # do this with show_open_entities()?
+                my $err = {};
+
+                # TODO: set_error_uri() (need test case)
+                $err->{src}  = "" if $err->{uri};    # TODO...
                 $err->{line} = $xmlwf_error_line;
                 $err->{char} = $xmlwf_error_col;
                 $err->{num}  = 'xmlwf';
@@ -2309,6 +2317,30 @@ sub override_charset ($$)
     $File->{Content} = [split /\n/, $content];
 }
 
+sub set_error_uri ($$)
+{
+    my ($err, $uri) = @_;
+
+    # We want errors in the doc that was validated to appear without
+    # $err->{uri}, and non-doc errors with it pointing to the external entity
+    # or the like where the error is.  This usually works as long as we're
+    # passing docs to parsers as strings, but S::P::O (at least as of 0.994)
+    # seems to give us "3" as the FileName in those cases so we try to filter
+    # out everything that doesn't look like a useful URI.
+    if ($uri && $uri =~ m|/|) {
+
+        # Mask local file paths
+        my $euri = URI->new($uri);
+        if (!$euri->scheme() || $euri->scheme() eq 'file') {
+            $err->{uri_is_file} = TRUE;
+            $err->{uri}         = ($euri->path_segments())[-1];
+        }
+        else {
+            $err->{uri} = $euri->canonical();
+        }
+    }
+}
+
 #
 # Generate a HTML report of detected errors.
 sub report_errors ($)
@@ -2329,56 +2361,41 @@ sub report_errors ($)
 
     if (scalar @{$File->{Errors}}) {
         foreach my $err (@{$File->{Errors}}) {
-            my $line;
             my $col = 0;
 
-            # We want errors in the doc that was validated to appear without
-            # $err->{uri}, and non-doc errors with it pointing to the external
-            # entity or the like where the error is.  This usually works as
-            # long as we're passing docs to parsers as strings, but S::P::O
-            # (at least as of 0.994) seems to give us "3" as the FileName in
-            # those cases so we try to filter out everything that doesn't look
-            # like a useful URI.
-            if ($err->{uri}) {
-                if ($err->{uri} !~ m|/|) {
-                    delete $err->{uri};
+            # Populate source/context for errors in our doc that don't have it
+            # already.  Checkers should always have populated $err->{src} with
+            # _something_ for non-doc errors.
+            if (!defined($err->{src})) {
+                my $line = undef;
+
+                # Avoid truncating lines that do not exist.
+                if (defined($err->{line}) &&
+                    $File->{Content}->[$err->{line} - 1])
+                {
+                    if (defined($err->{char}) && $err->{char} =~ /^[0-9]+$/) {
+                        ($line, $col) =
+                            &truncate_line(
+                            $File->{Content}->[$err->{line} - 1],
+                            $err->{char});
+                        $line = &mark_error($line, $col);
+                    }
+                    elsif (defined($err->{line})) {
+                        $col = length($File->{Content}->[$err->{line} - 1]);
+                        $col = 80 if ($col > 80);
+                        ($line, $col) =
+                            &truncate_line(
+                            $File->{Content}->[$err->{line} - 1], $col);
+                        $line = &ent($line);
+                        $col  = 0;
+                    }
                 }
                 else {
-                    # Mask local file paths
-                    my $uri = URI->new($err->{uri});
-                    if (!$uri->scheme() || $uri->scheme() eq 'file') {
-                        $err->{uri_is_file} = TRUE;
-                        $err->{uri} = ($uri->path_segments())[-1];
-                    }
-                    else {
-                        $err->{uri} = $uri->canonical();
-                    }
+                    $col = 0;
                 }
+                $err->{src} = $line;
             }
 
-            # avoid truncating lines that do not exist
-            if (defined($err->{line}) && $File->{Content}->[$err->{line} - 1])
-            {
-                if (defined($err->{char}) && $err->{char} =~ /^[0-9]+$/) {
-                    ($line, $col) =
-                        &truncate_line($File->{Content}->[$err->{line} - 1],
-                        $err->{char});
-                    $line = &mark_error($line, $col);
-                }
-                elsif (defined($err->{line})) {
-                    $col = length($File->{Content}->[$err->{line} - 1]);
-                    $col = 80 if ($col > 80);
-                    ($line, $col) =
-                        &truncate_line($File->{Content}->[$err->{line} - 1],
-                        $col);
-                    $line = &ent($line);
-                    $col  = 0;
-                }
-            }
-            else {
-                $col  = 0;
-                $line = "";
-            }
             my $explanation = "";
             if ($err->{expl}) {
 
@@ -2407,7 +2424,6 @@ sub report_errors ($)
                 $err->{expl} = $explanation;
             }
 
-            $err->{src} = $line;
             $err->{col} = ' ' x $col;
             if ($err->{type} eq 'I') {
                 $err->{class}         = 'msg_info';
@@ -3456,10 +3472,13 @@ sub start_element
 
         # whine if the root xmlns attribute is noted as required by spec,
         # but not present
-        my $err;
+        my $err      = {};
         my $location = $self->{_parser}->get_location();
-        $err->{uri} = $location->{FileName};
-        $err->{src} = '...';    # do this with show_open_entities()?
+        &W3C::Validator::MarkupValidator::set_error_uri($err,
+            $location->{FileName});
+
+        # S::P::O does not provide src context, set to empty for non-doc errors.
+        $err->{src}  = "" if $err->{uri};
         $err->{line} = $location->{LineNumber};
         $err->{char} = $location->{ColumnNumber};
         $err->{num}  = "no-xmlns";
@@ -3478,10 +3497,12 @@ sub start_element
     {
 
         # whine if root xmlns element is not the one specificed by the spec
-        my $err;
+        my $err      = {};
         my $location = $self->{_parser}->get_location();
-        $err->{uri} = $location->{FileName};
-        $err->{src} = '...';    # do this with show_open_entities()?
+        &W3C::Validator::MarkupValidator::set_error_uri($err,
+            $location->{FileName});
+
+        # S::P::O does not provide src context, set to empty for non-doc errors.
         $err->{line} = $location->{LineNumber};
         $err->{char} = $location->{ColumnNumber};
         $err->{num}  = "wrong-xmlns";
@@ -3509,10 +3530,12 @@ sub error
     }
     my $File = $self->{_file};
 
-    my $err;
+    my $err = {};
+    &W3C::Validator::MarkupValidator::set_error_uri($err,
+        $self->{_parser}->get_location()->{FileName});
 
-    $err->{uri} = $self->{_parser}->get_location()->{FileName};
-    $err->{src} = '...';    # do this with show_open_entities()?
+    # S::P::O does not provide src context, set to empty for non-doc errors.
+    $err->{src}  = "" if $err->{uri};
     $err->{line} = $mess->{primary_message}{LineNumber};
     $err->{char} = $mess->{primary_message}{ColumnNumber} + 1;
     $err->{num}  = $mess->{primary_message}{Number};
