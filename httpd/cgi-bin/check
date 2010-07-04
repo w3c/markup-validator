@@ -3542,8 +3542,6 @@ sub error
     $err->{type} = $mess->{primary_message}{Severity};
     $err->{msg}  = $mess->{primary_message}{Text};
 
-    $err->{msg} =~ s/"&"/"&amp;"/gsi;
-
     # our parser OpenSP is not quite XML-aware, or XML Namespaces Aware,
     # so we filter out a few errors for now
 
