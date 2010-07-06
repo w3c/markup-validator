@@ -39,6 +39,7 @@ WriteMakefile(
         "URI"                   => 0,
         "URI::Escape"           => 0,
         "URI::file"             => 0,
+        "URI::Heuristic"        => 0,
         "XML::LibXML"           => "1.70",
 
         # Optional:

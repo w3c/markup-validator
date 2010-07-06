@@ -62,6 +62,7 @@ use SGML::Parser::OpenSP 0.991 qw();
 use URI qw();
 use URI::Escape qw(uri_escape);
 use URI::file;
+use URI::Heuristic qw();
 
 ###############################################################################
 #### Constant definitions. ####################################################
@@ -1742,10 +1743,21 @@ sub handle_uri
     my $q    = shift;    # The CGI object.
     my $File = shift;    # The master datastructure.
 
+    my $ua = W3C::Validator::UserAgent->new($CFG, $File);
+
     my $uri = URI->new(ref $q ? $q->param('uri') : $q)->canonical();
     $uri->fragment(undef);
 
-    my $ua = W3C::Validator::UserAgent->new($CFG, $File);
+    if (!$uri->scheme()) {
+        local $ENV{URL_GUESS_PATTERN} = '';
+        my $guess = URI::Heuristic::uf_uri($uri);
+        if ($guess->scheme() && $ua->is_protocol_supported($guess)) {
+            $uri = $guess;
+        }
+        else {
+            $uri = URI->new("http://$uri");
+        }
+    }
 
     unless ($ua->is_protocol_supported($uri)) {
         $File->{'Error Flagged'} = TRUE;
@@ -2811,10 +2823,6 @@ sub prepCGI
     if ($q->param('url') and not $q->param('uri')) {
         $q->param('uri', $q->param('url'));
     }
-
-    # Munge the URL to include commonly omitted prefix.
-    my $u = $q->param('uri');
-    $q->param('uri', "http://$u") if $u && $u =~ m(^www)i;
 
     # Set output mode; needed in get_error_template if we end up there.
     $File->{Opt}->{Output} = $q->param('output') || 'html';

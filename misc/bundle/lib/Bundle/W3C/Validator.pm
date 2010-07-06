@@ -49,6 +49,7 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
  URI
  URI::Escape
  URI::file
+ URI::Heuristic
  XML::LibXML 1.70
 
 =head1 DESCRIPTION
