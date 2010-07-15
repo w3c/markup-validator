@@ -81,7 +81,7 @@ use constant T_ERROR => 8;    # 0000 1000
 #
 # Define global variables.
 use vars qw($DEBUG $CFG %RSRC $VERSION);
-$VERSION = '1.1';
+$VERSION = '1.2';
 
 use constant IS_MODPERL2 =>
     (exists($ENV{MOD_PERL_API_VERSION}) && $ENV{MOD_PERL_API_VERSION} >= 2);
