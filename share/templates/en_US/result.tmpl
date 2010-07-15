@@ -3,22 +3,11 @@
 <!-- valid/invalid header and revalidation table -->
 <TMPL_INCLUDE NAME="table.tmpl">
 
-                <TMPL_IF NAME="is_xml">
-<!--                  <p><strong>Note</strong>:
-                  The Validator XML support has
-                  <a href="http://openjade.sourceforge.net/doc/xml.htm"
-                  title="Limitations in Validator XML support">some limitations</a>.
-                  </p>
--->
-                </TMPL_IF>
-
-
                 <TMPL_IF NAME="VALID">
                   <TMPL_INCLUDE NAME="valid.tmpl">
                 <TMPL_ELSE>
                   <TMPL_INCLUDE NAME="invalid.tmpl">
                 </TMPL_IF>
-
 
       <TMPL_IF NAME="opt_show_source">
         <TMPL_INCLUDE NAME="opt_show_source.tmpl">
@@ -31,6 +20,5 @@
       <TMPL_IF NAME="opt_show_outline">
         <TMPL_INCLUDE NAME="opt_show_outline.tmpl">
       </TMPL_IF>
-
 
 <TMPL_INCLUDE NAME="footer.tmpl">
