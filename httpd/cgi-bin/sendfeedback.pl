@@ -44,6 +44,7 @@ BEGIN {
             -InterPolateVars       => TRUE,
             -AutoLaunder           => TRUE,
             -AutoTrue              => TRUE,
+            -CComments             => FALSE,
             -DefaultConfig         => {Paths => {Base => $base,},},
         );
         my %cfg = Config::General->new(%config_opts)->getall();

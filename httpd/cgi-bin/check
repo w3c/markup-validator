@@ -112,6 +112,7 @@ BEGIN {
             -InterPolateVars       => TRUE,
             -AutoLaunder           => TRUE,
             -AutoTrue              => TRUE,
+            -CComments             => FALSE,
             -DefaultConfig         => {
                 Protocols => {Allow => 'http,https'},
                 Paths     => {
