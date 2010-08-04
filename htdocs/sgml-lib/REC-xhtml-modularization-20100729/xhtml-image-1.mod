@@ -42,6 +42,7 @@
       src          %URI.datatype;           #REQUIRED
       alt          %Text.datatype;          #REQUIRED
       longdesc     %URI.datatype;           #IMPLIED
+      name         CDATA                    #IMPLIED
       height       %Length.datatype;        #IMPLIED
       width        %Length.datatype;        #IMPLIED
 >

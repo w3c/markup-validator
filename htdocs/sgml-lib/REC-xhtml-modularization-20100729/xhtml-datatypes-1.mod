@@ -97,4 +97,7 @@
 <!-- a space-separated list of Uniform Resource Identifiers, see [URI] -->
 <!ENTITY % URIs.datatype "CDATA" >
 
+<!-- a relative URI reference consisting of an initial '#' and a fragment ID -->
+<!ENTITY % URIREF.datatype "CDATA" >
+
 <!-- end of xhtml-datatypes-1.mod -->

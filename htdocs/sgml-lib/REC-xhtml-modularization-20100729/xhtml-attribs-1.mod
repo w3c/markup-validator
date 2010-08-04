@@ -40,12 +40,12 @@
 ]]>
 
 <!ENTITY % class.attrib
-     "class        NMTOKENS                 #IMPLIED"
+     "class        CDATA                 #IMPLIED"
 >
 
 <![%XHTML.global.attrs.prefixed;[
 <!ENTITY % XHTML.global.class.attrib
-     "%XHTML.prefix;:class        NMTOKENS                 #IMPLIED"
+     "%XHTML.prefix;:class        CDATA                 #IMPLIED"
 >
 ]]>
 

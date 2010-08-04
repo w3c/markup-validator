@@ -63,21 +63,21 @@
      to allow for client-side image maps
 -->
 <!ATTLIST %img.qname;
-      usemap       IDREF                    #IMPLIED
+      usemap       %URIREF.datatype;        #IMPLIED
 >
 
 <!-- modify form input attribute definition list
      to allow for client-side image maps
 -->
 <!ATTLIST %input.qname;
-      usemap       IDREF                    #IMPLIED
+      usemap       %URIREF.datatype;        #IMPLIED
 >
 
 <!-- modify object attribute definition list
      to allow for client-side image maps
 -->
 <!ATTLIST %object.qname;
-      usemap       IDREF                    #IMPLIED
+      usemap       %URIREF.datatype;        #IMPLIED
 >
 
 <!-- 'usemap' points to the 'id' attribute of a <map> element,
@@ -86,7 +86,7 @@
      eliminated in XHTML.
 
      It is considered an error for the element pointed to by
-     a usemap IDREF to occur in anything but a <map> element.
+     a usemap URIREF to occur in anything but a <map> element.
 -->
 
 <!ENTITY % map.element  "INCLUDE" >

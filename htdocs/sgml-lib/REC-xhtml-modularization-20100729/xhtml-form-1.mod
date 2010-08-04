@@ -1,29 +1,27 @@
 <!-- ...................................................................... -->
-<!-- XHTML Simplified Forms Module  ....................................... -->
-<!-- file: xhtml-basic-form-1.mod
+<!-- XHTML Forms Module  .................................................. -->
+<!-- file: xhtml-form-1.mod
 
-     This is XHTML Basic, a proper subset of XHTML.
+     This is XHTML, a reformulation of HTML as a modular XML application.
      Copyright 1998-2005 W3C (MIT, ERCIM, Keio), All Rights Reserved.
-     Revision: $Id: xhtml-basic-form-1.mod,v 4.1 2001/04/05 06:57:40 altheim Exp $ SMI
+     Revision: $Id: xhtml-form-1.mod,v 4.1 2001/04/10 09:42:30 altheim Exp $ SMI
 
      This DTD module is identified by the PUBLIC and SYSTEM identifiers:
 
-       PUBLIC "-//W3C//ELEMENTS XHTML Basic Forms 1.0//EN"  
-       SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-basic-form-1.mod"
+       PUBLIC "-//W3C//ELEMENTS XHTML Forms 1.0//EN"
+       SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-form-1.mod"
 
      Revisions:
      (none)
      ....................................................................... -->
 
-<!-- Basic Forms
+<!-- Forms
 
-     This forms module is based on the HTML 3.2 forms model, with
-     the WAI-requested addition of the label element. While this 
-     module essentially mimics the content model and attributes of 
-     HTML 3.2 forms, the element types declared herein also include
-     all HTML 4 common attributes.
+        form, label, input, select, optgroup, option,
+        textarea, fieldset, legend, button
 
-        form, label, input, select, option, textarea
+     This module declares markup to provide support for online
+     forms, based on the features found in HTML 4 forms.
 -->
 
 <!-- declare qualified element type names:
@@ -32,8 +30,12 @@
 <!ENTITY % label.qname  "label" >
 <!ENTITY % input.qname  "input" >
 <!ENTITY % select.qname  "select" >
+<!ENTITY % optgroup.qname  "optgroup" >
 <!ENTITY % option.qname  "option" >
 <!ENTITY % textarea.qname  "textarea" >
+<!ENTITY % fieldset.qname  "fieldset" >
+<!ENTITY % legend.qname  "legend" >
+<!ENTITY % button.qname  "button" >
 
 <!-- %BlkNoForm.mix; includes all non-form block elements,
      plus %Misc.class;
@@ -44,7 +46,7 @@
       | %BlkStruct.class;
       %BlkPhras.class;
       %BlkPres.class;
-      | %table.qname; 
+      %Table.class;
       %Block.extra;
       %Misc.class;"
 >
@@ -54,7 +56,8 @@
 <!ENTITY % form.element  "INCLUDE" >
 <![%form.element;[
 <!ENTITY % form.content
-     "( %BlkNoForm.mix; )+"
+     "( %BlkNoForm.mix;
+      | %fieldset.qname; )+"
 >
 <!ELEMENT %form.qname;  %form.content; >
 <!-- end of form.element -->]]>
@@ -65,24 +68,30 @@
       %Common.attrib;
       action       %URI.datatype;           #REQUIRED
       method       ( get | post )           'get'
+      name         CDATA                    #IMPLIED
       enctype      %ContentType.datatype;   'application/x-www-form-urlencoded'
+      accept-charset %Charsets.datatype;    #IMPLIED
+      accept       %ContentTypes.datatype;  #IMPLIED
 >
 <!-- end of form.attlist -->]]>
 
 <!-- label: Form Field Label Text ...................... -->
 
-<!ENTITY % label.element  "INCLUDE" >
-<![%label.element;[
 <!-- Each label must not contain more than ONE field
 -->
+
+<!ENTITY % label.element  "INCLUDE" >
+<![%label.element;[
 <!ENTITY % label.content
-     "( #PCDATA 
-      | %input.qname; | %select.qname; | %textarea.qname;
+     "( #PCDATA
+      | %input.qname; | %select.qname; | %textarea.qname; | %button.qname;
       | %InlStruct.class;
       %InlPhras.class;
       %I18n.class;
       %InlPres.class;
+      %Anchor.class;
       %InlSpecial.class;
+      %Inline.extra;
       %Misc.class; )*"
 >
 <!ELEMENT %label.qname;  %label.content; >
@@ -105,15 +114,13 @@
 <!ELEMENT %input.qname;  %input.content; >
 <!-- end of input.element -->]]>
 
-<!-- Basic Forms removes 'button', 'image' and 'file' input types.
--->
 <!ENTITY % input.attlist  "INCLUDE" >
 <![%input.attlist;[
 <!ENTITY % InputType.class
-     "( text | password | checkbox | radio 
-      | submit | reset | hidden )"
+     "( text | password | checkbox | radio | submit
+      | reset | file | hidden | image | button )"
 >
-<!-- attribute name required for all but submit & reset
+<!-- attribute 'name' required for all but submit & reset
 -->
 <!ATTLIST %input.qname;
       %Common.attrib;
@@ -121,11 +128,15 @@
       name         CDATA                    #IMPLIED
       value        CDATA                    #IMPLIED
       checked      ( checked )              #IMPLIED
+      disabled     ( disabled )             #IMPLIED
+      readonly     ( readonly )             #IMPLIED
       size         %Number.datatype;        #IMPLIED
       maxlength    %Number.datatype;        #IMPLIED
       src          %URI.datatype;           #IMPLIED
+      alt          %Text.datatype;          #IMPLIED
       tabindex     %Number.datatype;        #IMPLIED
       accesskey    %Character.datatype;     #IMPLIED
+      accept       %ContentTypes.datatype;  #IMPLIED
 >
 <!-- end of input.attlist -->]]>
 
@@ -133,7 +144,9 @@
 
 <!ENTITY % select.element  "INCLUDE" >
 <![%select.element;[
-<!ENTITY % select.content  "( %option.qname; )+" >
+<!ENTITY % select.content
+     "( %optgroup.qname; | %option.qname; )+"
+>
 <!ELEMENT %select.qname;  %select.content; >
 <!-- end of select.element -->]]>
 
@@ -144,9 +157,27 @@
       name         CDATA                    #IMPLIED
       size         %Number.datatype;        #IMPLIED
       multiple     ( multiple )             #IMPLIED
+      disabled     ( disabled )             #IMPLIED
       tabindex     %Number.datatype;        #IMPLIED
 >
 <!-- end of select.attlist -->]]>
+
+<!-- optgroup: Option Group ............................ -->
+
+<!ENTITY % optgroup.element  "INCLUDE" >
+<![%optgroup.element;[
+<!ENTITY % optgroup.content  "( %option.qname; )+" >
+<!ELEMENT %optgroup.qname;  %optgroup.content; >
+<!-- end of optgroup.element -->]]>
+
+<!ENTITY % optgroup.attlist  "INCLUDE" >
+<![%optgroup.attlist;[
+<!ATTLIST %optgroup.qname;
+      %Common.attrib;
+      disabled     ( disabled )             #IMPLIED
+      label        %Text.datatype;          #REQUIRED
+>
+<!-- end of optgroup.attlist -->]]>
 
 <!-- option: Selectable Choice ......................... -->
 
@@ -161,6 +192,8 @@
 <!ATTLIST %option.qname;
       %Common.attrib;
       selected     ( selected )             #IMPLIED
+      disabled     ( disabled )             #IMPLIED
+      label        %Text.datatype;          #IMPLIED
       value        CDATA                    #IMPLIED
 >
 <!-- end of option.attlist -->]]>
@@ -180,9 +213,80 @@
       name         CDATA                    #IMPLIED
       rows         %Number.datatype;        #REQUIRED
       cols         %Number.datatype;        #REQUIRED
+      disabled     ( disabled )             #IMPLIED
+      readonly     ( readonly )             #IMPLIED
       tabindex     %Number.datatype;        #IMPLIED
       accesskey    %Character.datatype;     #IMPLIED
 >
 <!-- end of textarea.attlist -->]]>
 
-<!-- end of xhtml-basic-form-1.mod -->
+<!-- fieldset: Form Control Group ...................... -->
+
+<!-- #PCDATA is to solve the mixed content problem,
+     per specification only whitespace is allowed
+-->
+
+<!ENTITY % fieldset.element  "INCLUDE" >
+<![%fieldset.element;[
+<!ENTITY % fieldset.content
+     "( #PCDATA | %legend.qname; | %Flow.mix; )*"
+>
+<!ELEMENT %fieldset.qname;  %fieldset.content; >
+<!-- end of fieldset.element -->]]>
+
+<!ENTITY % fieldset.attlist  "INCLUDE" >
+<![%fieldset.attlist;[
+<!ATTLIST %fieldset.qname;
+      %Common.attrib;
+>
+<!-- end of fieldset.attlist -->]]>
+
+<!-- legend: Fieldset Legend ........................... -->
+
+<!ENTITY % legend.element  "INCLUDE" >
+<![%legend.element;[
+<!ENTITY % legend.content
+     "( #PCDATA | %Inline.mix; )*"
+>
+<!ELEMENT %legend.qname;  %legend.content; >
+<!-- end of legend.element -->]]>
+
+<!ENTITY % legend.attlist  "INCLUDE" >
+<![%legend.attlist;[
+<!ATTLIST %legend.qname;
+      %Common.attrib;
+      accesskey    %Character.datatype;     #IMPLIED
+>
+<!-- end of legend.attlist -->]]>
+
+<!-- button: Push Button ............................... -->
+
+<!ENTITY % button.element  "INCLUDE" >
+<![%button.element;[
+<!ENTITY % button.content
+     "( #PCDATA
+      | %BlkNoForm.mix;
+      | %InlStruct.class;
+      %InlPhras.class;
+      %InlPres.class;
+      %I18n.class;
+      %InlSpecial.class;
+      %Inline.extra; )*"
+>
+<!ELEMENT %button.qname;  %button.content; >
+<!-- end of button.element -->]]>
+
+<!ENTITY % button.attlist  "INCLUDE" >
+<![%button.attlist;[
+<!ATTLIST %button.qname;
+      %Common.attrib;
+      name         CDATA                    #IMPLIED
+      value        CDATA                    #IMPLIED
+      type         ( button | submit | reset ) 'submit'
+      disabled     ( disabled )             #IMPLIED
+      tabindex     %Number.datatype;        #IMPLIED
+      accesskey    %Character.datatype;     #IMPLIED
+>
+<!-- end of button.attlist -->]]>
+
+<!-- end of xhtml-form-1.mod -->

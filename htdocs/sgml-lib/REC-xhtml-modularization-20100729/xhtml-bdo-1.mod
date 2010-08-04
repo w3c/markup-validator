@@ -39,7 +39,7 @@
 <![%bdo.attlist;[
 <!ATTLIST %bdo.qname;
       %Core.attrib;
-      xml:lang     %LanguageCode.datatype;  #IMPLIED
+	  %lang.attrib;
       dir          ( ltr | rtl )            #REQUIRED
 >
 ]]>

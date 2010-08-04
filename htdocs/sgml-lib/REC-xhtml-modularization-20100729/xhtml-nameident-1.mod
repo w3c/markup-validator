@@ -27,20 +27,6 @@
      This module should be instantiated following all modules it modifies.
 -->
 
-<!ENTITY % form.attlist  "IGNORE" >
-<![%form.attlist;[
-<!ATTLIST %form.qname;
-      name         CDATA                    #IMPLIED
->
-<!-- end of form.attlist -->]]>
-
-<!ENTITY % img.attlist  "IGNORE" >
-<![%img.attlist;[
-<!ATTLIST %img.qname;
-      name         CDATA                    #IMPLIED
->
-<!-- end of img.attlist -->]]>
-
 <!ENTITY % a.attlist  "IGNORE" >
 <![%a.attlist;[
 <!ATTLIST %a.qname;

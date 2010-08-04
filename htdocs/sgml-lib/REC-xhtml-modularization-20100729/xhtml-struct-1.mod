@@ -67,7 +67,7 @@
 <!-- reserved for future use with document profiles
 -->
 <!ENTITY % profile.attrib
-     "profile      %URI.datatype;           '%XHTML.profile;'"
+     "profile      %URIs.datatype;           #IMPLIED"
 >
 
 <!ATTLIST %head.qname;
@@ -118,7 +118,7 @@
 <!-- version attribute value defined in driver
 -->
 <!ENTITY % XHTML.version.attrib
-     "version      %FPI.datatype;           #FIXED '%XHTML.version;'"
+     "version      CDATA           #FIXED '%XHTML.version;'"
 >
 
 <!-- see the Qualified Names module for information

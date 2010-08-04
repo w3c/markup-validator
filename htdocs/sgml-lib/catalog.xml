@@ -162,58 +162,58 @@
   <public publicId="-//W3C//ELEMENTS SMIL 3.0 Timesheet//EN" uri="REC-SMIL3-20081201/SMIL-timesheet.mod" />
   <public publicId="-//W3C//ELEMENTS SMIL 3.0 Timing//EN" uri="REC-SMIL3-20081201/SMIL-timing.mod" />
   <public publicId="-//W3C//ELEMENTS SMIL 3.0 Transition//EN" uri="REC-SMIL3-20081201/SMIL-transition.mod" />
-  <public publicId="-//W3C//ENTITIES XHTML Modular Framework 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-framework-1.mod" />
-  <public publicId="-//W3C//NOTATIONS XHTML Notations 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-notations-1.mod" />
-  <public publicId="-//W3C//ENTITIES XHTML Datatypes 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-datatypes-1.mod" />
-  <public publicId="-//W3C//ENTITIES XHTML Qualified Names 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-qname-1.mod" />
-  <public publicId="-//W3C//ENTITIES XHTML Common Attributes 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-attribs-1.mod" />
-  <public publicId="-//W3C//ENTITIES XHTML Character Entities 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-charent-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Redeclarations 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-redecl-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Document Structure 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-struct-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Text 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-text-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Hypertext 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-hypertext-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Lists 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-list-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Inline Structural 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-inlstruct-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Inline Presentation 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-inlpres-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Inline Phrasal 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-inlphras-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Block Structural 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-blkstruct-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Block Presentation 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-blkpres-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Block Phrasal 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-blkphras-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Ruby 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-ruby-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Java Applets 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-applet-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Base Architecture 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-arch-1.mod" />
-  <public publicId="-//W3C//DTD XHTML Architecture 1.1//EN" uri="REC-xhtml-modularization-20081008/xhtml11-arch.dtd" />
-  <public publicId="-//W3C//ELEMENTS XHTML Param Element 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-param-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Presentation 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-pres-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Editing Elements 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-edit-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Editing Markup 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-edit-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML BDO Element 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-bdo-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML BIDI Override Element 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-bdo-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Basic Forms 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-basic-form-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Forms 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-form-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Basic Tables 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-basic-table-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Tables 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-table-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Images 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-image-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Client-side Image Maps 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-csismap-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Server-side Image Maps 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-ssismap-1.mod" />
-  <public publicId="-//W3C//ENTITIES XHTML Intrinsic Events 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-events-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Metainformation 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-meta-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Scripting 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-script-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Style Sheets 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-style-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Link Element 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-link-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Base Element 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-base-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Legacy Redeclarations 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-legacy-redecl-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Legacy Markup 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-legacy-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Embedded Object 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-object-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Frames 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-frames-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Target 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-target-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Inline Frame Element 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-iframe-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Inline Style 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-inlstyle-1.mod" />
-  <public publicId="-//W3C//ENTITIES XHTML Inline Style 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-inlstyle-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Name Identifier 1.0//EN" uri="REC-xhtml-modularization-20081008/xhtml-nameident-1.mod" />
-  <public publicId="-//W3C//ENTITIES Latin 1 for XHTML//EN" uri="REC-xhtml-modularization-20081008/xhtml-lat1.ent" />
-  <public publicId="-//W3C//ENTITIES Special for XHTML//EN" uri="REC-xhtml-modularization-20081008/xhtml-special.ent" />
-  <public publicId="-//W3C//ENTITIES Symbols for XHTML//EN" uri="REC-xhtml-modularization-20081008/xhtml-symbol.ent" />
+  <public publicId="-//W3C//ENTITIES XHTML Modular Framework 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-framework-1.mod" />
+  <public publicId="-//W3C//NOTATIONS XHTML Notations 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-notations-1.mod" />
+  <public publicId="-//W3C//ENTITIES XHTML Datatypes 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-datatypes-1.mod" />
+  <public publicId="-//W3C//ENTITIES XHTML Qualified Names 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-qname-1.mod" />
+  <public publicId="-//W3C//ENTITIES XHTML Common Attributes 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-attribs-1.mod" />
+  <public publicId="-//W3C//ENTITIES XHTML Character Entities 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-charent-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Redeclarations 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-redecl-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Document Structure 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-struct-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Text 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-text-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Hypertext 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-hypertext-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Lists 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-list-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Inline Structural 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-inlstruct-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Inline Presentation 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-inlpres-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Inline Phrasal 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-inlphras-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Block Structural 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-blkstruct-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Block Presentation 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-blkpres-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Block Phrasal 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-blkphras-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Ruby 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-ruby-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Java Applets 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-applet-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Base Architecture 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-arch-1.mod" />
+  <public publicId="-//W3C//DTD XHTML Architecture 1.1//EN" uri="REC-xhtml-modularization-20100729/xhtml11-arch.dtd" />
+  <public publicId="-//W3C//ELEMENTS XHTML Param Element 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-param-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Presentation 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-pres-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Editing Elements 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-edit-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Editing Markup 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-edit-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML BDO Element 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-bdo-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML BIDI Override Element 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-bdo-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Basic Forms 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-basic-form-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Forms 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-form-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Basic Tables 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-basic-table-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Tables 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-table-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Images 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-image-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Client-side Image Maps 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-csismap-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Server-side Image Maps 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-ssismap-1.mod" />
+  <public publicId="-//W3C//ENTITIES XHTML Intrinsic Events 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-events-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Metainformation 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-meta-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Scripting 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-script-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Style Sheets 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-style-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Link Element 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-link-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Base Element 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-base-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Legacy Redeclarations 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-legacy-redecl-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Legacy Markup 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-legacy-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Embedded Object 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-object-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Frames 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-frames-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Target 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-target-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Inline Frame Element 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-iframe-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Inline Style 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-inlstyle-1.mod" />
+  <public publicId="-//W3C//ENTITIES XHTML Inline Style 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-inlstyle-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Name Identifier 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-nameident-1.mod" />
+  <public publicId="-//W3C//ENTITIES Latin 1 for XHTML//EN" uri="REC-xhtml-modularization-20100729/xhtml-lat1.ent" />
+  <public publicId="-//W3C//ENTITIES Special for XHTML//EN" uri="REC-xhtml-modularization-20100729/xhtml-special.ent" />
+  <public publicId="-//W3C//ENTITIES Symbols for XHTML//EN" uri="REC-xhtml-modularization-20100729/xhtml-symbol.ent" />
   <public publicId="-//W3C//ENTITIES uppercase aliases for HTML//EN//XML" uri="REC-xml-entity-names-20100401/html5-uppercase.ent" />
   <public publicId="-//W3C//ENTITIES HTML MathML Set//EN//XML" uri="REC-xml-entity-names-20100401/htmlmathml.ent" />
   <system systemId="http://www.w3.org/2003/entities/2007/htmlmathml-f.ent" uri="REC-xml-entity-names-20100401/htmlmathml-f.ent" />
