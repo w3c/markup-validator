@@ -852,6 +852,9 @@ sub get_error_template ($;@)
     if ($File->{Opt}->{Output} eq 'soap12') {
         $fname = 'soap_fault.tmpl';
     }
+    elsif ($File->{Opt}->{Output} eq 'ucn') {
+        $fname = 'ucn_fault.tmpl';
+    }
     return &get_template($File, $fname, @opts);
 }
 
