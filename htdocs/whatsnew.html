@@ -26,7 +26,7 @@
     </div>
     <dl id="news">
 
-      <dt id="v12">201x-xx-xx &mdash; 1.2 release:</dt>
+      <dt id="v12">2010-08-20 &mdash; 1.2 release:</dt>
       <dd>
         <p>
           The 1.2 release of the markup validator is an enhancement and
@@ -34,12 +34,22 @@
         </p>
         <ul>
           <li>
+            Bug fix: fixes to validator's
+            <a href="http://validator.w3.org/unicorn/">Unicorn</a> output
+            templates.
+          </li>
+          <li>
             Enhancement: updated validator's internal copy of
             <a href="http://www.w3.org/TR/xhtml-modularization/">XHTML
               modularization</a> DTDs to version 1.1, second edition.
           </li>
           <li>
-            TBD…
+            Enhancement: undefined entity errors from libxml are no longer
+            suppressed as support for external entities is enabled in it since
+            validator version 1.0.
+          </li>
+          <li>
+            Enhancement: minor configuration parsing performance improvements.
           </li>
         </ul>
       </dd>
