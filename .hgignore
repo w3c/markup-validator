@@ -1,5 +1,6 @@
 syntax: glob
 
+.project
 *.pyc
 *.tar.gz
 httpd/cgi-bin/*.bak
