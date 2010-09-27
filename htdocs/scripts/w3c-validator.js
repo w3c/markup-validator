@@ -21,7 +21,7 @@ var W3C = {
 			var value = submit.value;
 			submit.setStyle('display', 'none');
 			var link = new Element('a', {'class': 'submit', 'href': '#'});
-			var span = new Element('span').setHTML(value).inject(link);
+			var span = new Element('span').set('text', value).inject(link);
 			link.injectAfter(submit).addEvent('click', function(event){
 				new Event(event).stop();
 				W3C.Forms[i].submit();
@@ -87,7 +87,7 @@ var W3C = {
 
 		W3C.Sections.each(function(section, i){
 			var fakeId = section.id.replace(/-/g, '_');
-			W3C.SectionFx[i] = new Fx.Style(section, 'opacity', {'wait': false, 'duration': 220});
+			W3C.SectionFx[i] = new Fx.Tween(section, {property:'opacity', link: 'cancel', duration: 220});
 			section.setStyle('display', 'none');
 			if (W3C.Location[0] && fakeId.contains(W3C.Location[0].replace(/-/g, '_'))){
 				W3C.displaySection(i, true);
