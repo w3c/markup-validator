@@ -1,5 +1,5 @@
 <TMPL_IF NAME="W00">
-	<message type="warning">
+	<message type="info">
 		<title>Using experimental feature: <TMPL_VAR NAME="W00_experimental_name" ESCAPE="HTML"></title>
     	<description>
     		<p>
@@ -561,7 +561,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W27">
-	<message type="warning">
+	<message type="info">
 		<title>No Character encoding declared at document level</title>
 		<description>
 		    <p>No character encoding information was found within the document, either in an HTML <code>meta</code> element or an XML declaration. It is often recommended to declare the character encoding in the document itself, especially if there is a chance that the document will be read from or saved to disk, CD, etc.</p>
@@ -570,7 +570,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W28">
-	<message type="warning">
+	<message type="info">
 		<title>Using Direct Input mode: UTF-8 character encoding assumed</title>
 		<description>
 		    <p>Unlike the “by URI” and “by File Upload” modes, the “Direct Input” mode of the validator provides validated content in the form of characters pasted or typed in the validator's form field. This will automatically make the data UTF-8, and therefore the validator does not need to determine the character encoding of your document, and will ignore any charset information specified.</p>
