@@ -65,14 +65,14 @@
 </TMPL_IF>
 <TMPL_IF NAME="W04">
 	<message type="warning">
-		<title>No Character Encoding Found! <TMPL_IF NAME="W04_override">Using<TMPL_ELSE>Falling back to <TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF>.</title>
+		<title>No Character Encoding Found! <TMPL_IF NAME="W04_override">Using<TMPL_ELSE>Falling back to</TMPL_IF> <TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF>.</title>
 		<description>
 			<TMPL_IF NAME="W04_override">
 			    <p>None of the standards sources gave any information on the character encoding labeling for this document. The character 
 			      encoding <code><TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF></code>,
 			      which you have chosen via the <code>Encoding</code> override option, will be used for tentative validation. 
 			    </p>
-			  <TMPL_ELSE>
+			<TMPL_ELSE>
 			    <p>
 			      None of the standards sources gave any information on the character encoding
 			      labeling for this document. Without encoding information
@@ -81,13 +81,13 @@
 			      encoding was used to read the content and attempt to perform the validation,
 			      but this is likely to fail for all non-trivial documents.
 			    </p>
-			   <TMPL_IF NAME="W04_also_tried">
+			    <TMPL_IF NAME="W04_also_tried">
 				<p>Before defaulting to <code><TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF></code>
 					the validator also tried to read the content with the following encoding(s), without success: 
 					<code><TMPL_VAR NAME="W04_also_tried" ESCAPE="HTML"></code>.</p>
-			   </TMPL_IF>
-			  </TMPL_IF>
-			  <TMPL_IF NAME="opt_verbose">
+			    </TMPL_IF>
+			 </TMPL_IF>
+			 <TMPL_IF NAME="opt_verbose">
 			    <p>The sources used to find encoding information include:</p>
 			    <ul>
 			      <li>The HTTP Content-Type header.</li>
@@ -123,10 +123,10 @@
 			      and "utf-8" (Universal, but not commonly used in legacy documents) are
 			      common encodings if you are not sure what encoding to choose.
 			    </p>
-			  <TMPL_ELSE>
+			<TMPL_ELSE>
 			    <p>Read the <a href="docs/help.html#faq-charset"><acronym title="Frequently Asked Questions">FAQ</acronym> 
 			    entry on character encoding</a> for more details and pointers on how to fix this problem with your document.</p>
-			  </TMPL_IF>
+			</TMPL_IF>
 		</description>
 	</message>
 </TMPL_IF>
