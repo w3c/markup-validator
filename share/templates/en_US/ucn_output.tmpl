@@ -102,13 +102,11 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
 </message>
 </TMPL_IF>
 
-<TMPL_LOOP NAME="file_errors">
-
 <TMPL_IF NAME="have_warnings">
-<message type="warning">
-	<title><TMPL_INCLUDE NAME="ucn_warnings.tmpl"></title>
-</message>
+	<TMPL_INCLUDE NAME="ucn_warnings.tmpl">
 </TMPL_IF>
+
+<TMPL_LOOP NAME="file_errors">
 
 <TMPL_IF NAME="err_type_err">
 <message type="error">
