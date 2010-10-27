@@ -1666,7 +1666,7 @@ sub add_warning ($$)
         have_warnings => TRUE,
         %$params,
     );
-    for my $tmpl (qw(result fatal-error soap_output)) {
+    for my $tmpl (qw(result fatal-error soap_output ucn_output)) {
         &get_template($File, "$tmpl.tmpl")->param(%tmplparams);
     }
 }
