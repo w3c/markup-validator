@@ -1,93 +1,601 @@
+<TMPL_IF NAME="W00">
+	<message type="warning">
+		<title>Using experimental feature: <TMPL_VAR NAME="W00_experimental_name" ESCAPE="HTML"></title>
+    	<description>
+    		<p>
+    		The validator checked your document with an experimental feature: 
+    		<em><TMPL_VAR NAME="W00_experimental_name" ESCAPE="HTML"></em>. This feature has been 
+        	made available for your convenience, but be aware that it may be unreliable, or not perfectly
+        	up to date with the latest development of some cutting-edge technologies. If you find any issues
+        	with this feature, please <a href="<TMPL_VAR NAME="W00_experimental_URI" ESCAPE="HTML">">report them</a>. Thank you.
+        	</p>
+        </description>
+	</message>
+</TMPL_IF>
 <TMPL_IF NAME="W01">
-	Missing "charset" attribute for "<TMPL_VAR NAME="W01_ct" ESCAPE="HTML">" document.
+	<message type="warning">
+		<title>Missing "charset" attribute for "<TMPL_VAR NAME="W01_ct" ESCAPE="HTML">" document.</title>
+		<description>
+		    <p>
+		      The HTTP <code>Content-Type</code> header
+		      (<code><TMPL_VAR NAME="W01_ct" ESCAPE="HTML"></code>) sent by your web
+		      <TMPL_IF NAME="W01_upload">browser<TMPL_ELSE>server</TMPL_IF>
+		      (<code><TMPL_VAR NAME="W01_agent" ESCAPE="HTML"></code>) did not contain
+		      a "<code>charset</code>" parameter, but the Content-Type was one of
+		      the XML <code>text/*</code> sub-types.
+		    </p>
+		    <p>
+		      The relevant specification
+		      (<a href="http://www.ietf.org/rfc/rfc3023.txt">RFC 3023</a>)
+		      specifies a strong default of "<code>us-ascii</code>" for
+		      such documents so we will use this value regardless of any encoding you
+		      may have indicated elsewhere.
+		    <p>
+		      If you would like to use a different encoding, you should arrange to have
+		      your <TMPL_IF NAME="W01_upload">browser<TMPL_ELSE>server</TMPL_IF> send
+		      this new encoding information.
+		    </p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W02">
-	No Character Encoding Found!
+	<message type="warning">
+		<title>No Character Encoding Found!</title>
+		<description>
+		    <p>
+		      Falling back to
+		      "<code><TMPL_VAR NAME="W02_charset" ESCAPE="HTML"></code>"
+		      (<a href="docs/users.html#option-fbc">explain...</a>).
+		    </p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W03">
-	Character Encoding Override in effect!
+	<message type="warning">
+		<title>Character Encoding Override in effect!</title>
+		<description>
+		    <p>
+		      The detected character encoding
+		      "<code><TMPL_VAR NAME="W03_use" ESCAPE="HTML"></code>"
+		      has been suppressed and
+		      "<code><TMPL_VAR NAME="W03_opt" ESCAPE="HTML"></code>" used instead.
+		    </p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W04">
-	No Character Encoding Found!
-	<TMPL_IF NAME="W04_override">
-	Using
-	<TMPL_ELSE>
-	Falling back to 
-	</TMPL_IF>
-	<TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF>.
+	<message type="warning">
+		<title>No Character Encoding Found! <TMPL_IF NAME="W04_override">Using<TMPL_ELSE>Falling back to <TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF>.</title>
+		<description>
+			<TMPL_IF NAME="W04_override">
+			    <p>None of the standards sources gave any information on the character encoding labeling for this document. The character 
+			      encoding <code><TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF></code>,
+			      which you have chosen via the <code>Encoding</code> override option, will be used for tentative validation. 
+			    </p>
+			  <TMPL_ELSE>
+			    <p>
+			      None of the standards sources gave any information on the character encoding
+			      labeling for this document. Without encoding information
+			      it is impossible to reliably validate the document. As a fallback
+			      solution, the "<code><TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF></code>" 
+			      encoding was used to read the content and attempt to perform the validation,
+			      but this is likely to fail for all non-trivial documents.
+			    </p>
+			   <TMPL_IF NAME="W04_also_tried">
+				<p>Before defaulting to <code><TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF></code>
+					the validator also tried to read the content with the following encoding(s), without success: 
+					<code><TMPL_VAR NAME="W04_also_tried" ESCAPE="HTML"></code>.</p>
+			   </TMPL_IF>
+			  </TMPL_IF>
+			  <TMPL_IF NAME="opt_verbose">
+			    <p>The sources used to find encoding information include:</p>
+			    <ul>
+			      <li>The HTTP Content-Type header.</li>
+			      <li>The XML Declaration.</li>
+			      <li>The HTML "META" element.</li>
+			    </ul>
+			    <p>
+			      The algorithm defined in
+			      <a href="http://www.w3.org/TR/REC-xml#sec-guessing">Appendix F of
+			        the XML 1.0 Recommendation</a> was also used, without success.
+			    </p>
+			    <p>
+			      Since none of these sources yielded any usable information, reliable
+			      validation of this document is not possible. Sorry. Please make sure you
+			      specify the character encoding in use.
+			    </p>
+			      <p>Specifying a character encoding is typically done by the web server
+				configuration, by the scripts that put together pages, or inside the
+				document itself. <a href="http://www.iana.org/"><abbr title="Internet Assigned Numbers Authority">IANA</abbr></a> 
+			    maintains the list of
+				<a href="http://www.iana.org/assignments/character-sets">official names for character
+				encodings</a> (called charsets in this context). You can choose from a number
+				of encodings, though we recommend UTF-8 as particularly useful.</p>
+			
+				<p>The W3C <abbr title="Internationalization">I18N</abbr> Activity has collected a 
+					<a href="http://www.w3.org/International/O-charset">few tips on
+				how to declare the encoding of a Web document</a>.</p>
+				<p>
+			      To quickly check whether the document would validate after addressing
+			      the missing character encoding information, you can use the "Encoding"
+			      form control earlier in the page to force an encoding
+			      override to take effect. "iso-8859-1" (Western Europe and North America)
+			      and "utf-8" (Universal, but not commonly used in legacy documents) are
+			      common encodings if you are not sure what encoding to choose.
+			    </p>
+			  <TMPL_ELSE>
+			    <p>Read the <a href="docs/help.html#faq-charset"><acronym title="Frequently Asked Questions">FAQ</acronym> 
+			    entry on character encoding</a> for more details and pointers on how to fix this problem with your document.</p>
+			  </TMPL_IF>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W05">
-	DOCTYPE Override in effect!
+	<message type="warning">
+		<title>DOCTYPE Override in effect!</title>
+		<description>
+		    <p>
+		      Any DOCTYPE Declaration in the document has been suppressed and the
+		      DOCTYPE for "<code><TMPL_VAR NAME="W05_dtd" ESCAPE="HTML"></code>"
+		      inserted instead. The document will not be Valid until you alter the
+		      source file to reflect this new DOCTYPE.
+		    </p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W06">
-	Unable to Determine Parse Mode!
+	<message type="warning">
+		<title>Unable to Determine Parse Mode!</title>
+		<description>
+		    <p>The validator can process documents either as XML (for document types such as XHTML, SVG, etc.) or SGML (for HTML 4.01 and prior versions). For this document, the information available was not sufficient to determine the parsing mode unambiguously, because:</p>
+		    <ul>
+		    	<TMPL_IF NAME="W06_mime"><li>
+		    	the MIME Media Type (<code><TMPL_VAR NAME="W06_mime" ESCAPE="HTML"></code>)  can be used for XML or SGML document types</li><TMPL_ELSE><li>in <em>Direct Input</em> mode, no MIME Media Type is served to the validator</li></TMPL_IF>
+		    	<TMPL_IF NAME="w06_doctype"><li>the Document Type (<code><TMPL_VAR NAME="w06_doctype" ESCAPE="HTML"></code>) is not in the validator's catalog</li><TMPL_ELSE><li>No known Document Type could be detected</li></TMPL_IF>
+		    	<li>No XML declaration (<abbr>e.g</abbr> <code>&lt;?xml version="1.0"?&gt;</code>) could be found at the beginning of the document.</li>
+		    	<li>No XML namespace (<abbr>e.g</abbr> <code>&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"&gt;</code>) could be found at the root of the document.</li>
+		    </ul>
+		    <p>As a default, the validator is falling back to SGML mode.</p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W07">
-	Contradictory Parse Modes Detected!
+	<message type="warning">
+		<title>Contradictory Parse Modes Detected!</title>
+		<description>
+			<p>The validator can process documents either as XML (for document types such as XHTML, SVG, etc.) or SGML (for HTML 4.01 and prior versions).</p>
+		    <p>
+		      This document was served with HTTP headers declaring it as MIME Media Type
+		      (<code><TMPL_VAR NAME="W07_mime" ESCAPE="HTML"></code>), for which the parsing
+		       mode should be <TMPL_VAR NAME="W07_ct" ESCAPE="HTML">. However, the document's
+		       <code>DOCTYPE</code> Declaration indicates
+		       <TMPL_VAR NAME="W07_dtd" ESCAPE="HTML"> mode.
+		    <p>
+		    <p>Following the rules of <a href="http://www.w3.org/TR/webarch/#metadata-inconsistencies" title="Architecture of the World Wide Web, Volume One - Inconsistencies between Representation Data and Metadata">Web Architecture</a>, validation proceeded using the <TMPL_VAR NAME="W07_ct" ESCAPE="HTML"> mode based on the <code>Content-Type</code> header.
+		    </p>
+		    <p>Fixing this conflict involves either <a href="http://www.w3.org/QA/2007/10/http-media-type.html" title="Setting media type headers on your Web site - W3C Q&amp;A Weblog">setting the Content-Type header</a>, <a
+		      href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">using a known document type</a> or adding an XML declaration (in the case of XML-based documents).</p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W08">
-	No Content-Type Found!
+	<message type="warning">
+		<title>No Content-Type Found!</title>
+		<description>
+		    <p>
+		      This document was served with an empty or missing
+		      <code>Content-Type</code> header.  This is likely to confuse the validator
+		      and other user agents.
+		    </p>
+		    <p>
+		      HTTP messages <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec7.html#sec7.2.1">SHOULD</a>
+		      contain the <code>Content-Type</code> HTTP header.
+		    </p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W09">
-	No DOCTYPE found! Attempting validation with <TMPL_VAR NAME="W09_dtd" ESCAPE="HTML">.
+	<message type="warning">
+		<title>No DOCTYPE found! Attempting validation with <TMPL_VAR NAME="W09_dtd" ESCAPE="HTML">.</title>
+		<description>
+		    <p>
+		      No DOCTYPE Declaration could be found or recognized in this document. This
+		      generally means that the document is not declaring its Document Type at the top. 
+		      It can also mean that the DOCTYPE declaration contains a spelling error, 
+		      or that it is not using the correct syntax.
+		    </p>
+		    <p> 
+		      The document was checked using a default "fallback" Document Type Definition
+		      that closely resembles “<TMPL_VAR NAME="W09_dtd" ESCAPE="HTML">”.
+		    </p>
+		    <TMPL_IF NAME="opt_verbose">
+		    <p>
+		      It is recommended to use a DOCTYPE declaration as the very first thing in your
+		      HTML document, to identify the precise language being used. For example, for a typical <a
+		      href="http://www.w3.org/TR/xhtml1/">XHTML 1.0</a> document:
+		    </p>
+		    <pre>
+		      &lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+		        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
+		      &lt;html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"&gt;
+		        &lt;head&gt;
+		          &lt;title&gt;Title&lt;/title&gt;
+		        &lt;/head&gt;
+		
+		        &lt;body&gt;
+		          &lt;!-- ... body of document ... --&gt;
+		        &lt;/body&gt;
+		      &lt;/html&gt;
+		    </pre>
+		    <p>
+		      For XML documents, you may also wish to include an "XML Declaration"
+		      even before the DOCTYPE Declaration, but this is not well supported
+		      in older browsers. More information about this can be found in the
+		      <a href="http://www.w3.org/TR/xhtml1/">XHTML 1.0</a> Recommendation.
+		    </p>
+		      <p>
+		        The W3C QA Activity maintains a <a
+		          href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">List of
+		            Valid Doctypes</a> that you can choose from, and the <acronym
+		          title="Web Design Group">WDG</acronym> maintains a document on
+		        "<a href="http://htmlhelp.com/tools/validator/doctype.html">Choosing
+		           a DOCTYPE</a>".
+		      </p>
+		  <TMPL_ELSE>
+		    <p>Learn <a href="docs/help.html#faq-doctype">how to add a doctype to your document</a> 
+		    from our <acronym title="Frequently Asked Questions">FAQ</acronym>.</p>
+		  </TMPL_IF>
+		</description>
+	</message>
+</TMPL_IF>
+<TMPL_IF NAME="W09nohtml">
+	<message type="warning">
+		<title>No DOCTYPE found, and unknown root element. Aborting validation.</title>
+		<description>
+		    <p>
+		      The DOCTYPE Declaration was not recognized or is missing. This
+		      probably means that the Formal Public Identifier contains a spelling
+		      error, or that the Declaration is not using correct syntax, or that 
+		      your document is not using a DOCTYPE Declaration.
+		    </p>
+		    <p>
+		      Without a DOCTYPE Declaration it is not possible to check the validity of your document. Since the document does not start with the root &lt;html&gt; element, automatic fallback to an HTML document type was not performed, and most of the validation process was aborted: only basic markup syntax was checked.
+		    </p>
+		    <p>Learn <a href="docs/help.html#faq-doctype">how to add a doctype to your document</a> 
+		    from our <acronym title="Frequently Asked Questions">FAQ</acronym>, or use the validator's
+		    <code>Document Type</code> option to validate your document against a specific Document Type.</p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W09xml">
-	xmlNo DOCTYPE found! Checking XML syntax only.
+	<message type="warning">
+		<title>No DOCTYPE found! Checking XML syntax only.</title>
+		<description>
+			<p>
+		      The DOCTYPE Declaration was not recognized or is missing. This
+		      probably means that the Formal Public Identifier contains a spelling
+		      error, or that the Declaration is not using correct syntax, or that 
+		      your XML document is not using a DOCTYPE Declaration.
+		    </p>
+		    <p>
+		      Validation of the document has been skipped, and a simple check of the well-formedness
+		      of the XML syntax has been performed instead.
+		    </p>
+		    <p>Learn <a href="docs/help.html#faq-doctype">how to add a doctype to your document</a> 
+		    from our <acronym title="Frequently Asked Questions">FAQ</acronym>, or use the validator's
+		    option to validate your XML document against a specific Document Type</p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W10">
-	Unknown Namespace Found
+	<message type="warning">
+		<title>Unknown Namespace Found</title>
+		<description>
+		    <p>
+		      Unknown namespace "<code><TMPL_VAR NAME="W10_ns" ESCAPE="HTML"></code>"
+		      for <TMPL_VAR NAME="W10_type" ESCAPE="HTML"> document!
+		    </p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W11">
-	Namespace Found in non-XML Document
+	<message type="warning">
+		<title>Namespace Found in non-XML Document</title>
+		<description>
+		    <p>
+		      Namespace "<code><TMPL_VAR NAME="W11_ns" ESCAPE="HTML"></code>" found,
+		      but the <TMPL_IF NAME="w11_doctype"><code><TMPL_VAR NAME="w11_doctype" ESCAPE="HTML"></code></TMPL_IF> document type is not an XML document type!
+		    </p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W12">
-	No Namespace Found
+	<message type="warning">
+		<title>No Namespace Found</title>
+		<description>
+		    <p>
+		      No Namespace was found, but document type requires one to be present!
+		    </p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W13">
-	DOCTYPE Override in effect!
+	<message type="warning">
+		<title>DOCTYPE Override in effect!</title>
+		<description>
+		    <p>
+		      The detected DOCTYPE Declaration
+		      "<code><TMPL_VAR NAME="W13_org"></code>" has been
+		      suppressed and the DOCTYPE for
+		      "<code><TMPL_VAR NAME="W13_new" ESCAPE="HTML"></code>" inserted instead,
+		      but even if no errors are shown below the document will not be Valid
+		      until you update it to reflect this new DOCTYPE.
+		    </p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W14">
-	No DOCTYPE Found!
+	<message type="warning">
+		<title>No DOCTYPE Found!</title>
+		<description>
+		    <p>
+		      Falling back to HTML 4.01 Transitional.
+		      (<a href="docs/users.html#option-fbd">explain...</a>)
+		    </p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W15">
-	DOCTYPE Override in effect!
+	<message type="warning">
+		<title>DOCTYPE Override in effect!</title>
+		<description>
+		    <p>
+		      The DOCTYPE Declaration for "<TMPL_VAR NAME="W15_dtd" ESCAPE="HTML">"
+		      has been inserted at the start of the document, but even if no errors
+		      are shown below the document will not be Valid until you add the new
+		      DOCTYPE Declaration.
+		    </p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W16">
-	No DOCTYPE Found! Falling Back to
-	<TMPL_VAR NAME="W16_dtd" ESCAPE="HTML">.
+	<message type="warning">
+		<title>No DOCTYPE Found! Falling Back to <TMPL_VAR NAME="W16_dtd" ESCAPE="HTML">.</title>
+		<description>
+			    <p>
+			      A DOCTYPE Declaration is mandatory for most current markup languages
+			      and without one it is impossible to reliably validate this document.
+			      I am falling back to "<TMPL_VAR NAME="W16_dtd" ESCAPE="HTML">" and will
+			      attempt to validate the document anyway, but this is very likely to
+			      produce spurious error messages for most non-trivial documents.
+			    </p>
+			  <TMPL_IF NAME="opt_verbose">
+			    <TMPL_INCLUDE NAME="doctype_spiel.tmpl">
+			    <p>
+			      The W3C QA Activity maintains a <a
+			        href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">List of
+			          Valid Doctypes</a> that you can choose from, and the <acronym
+			        title="Web Design Group">WDG</acronym> maintains a document on
+			      "<a href="http://htmlhelp.com/tools/validator/doctype.html">Choosing
+			         a DOCTYPE</a>".
+			    </p>
+			  <TMPL_ELSE>
+			    <p>
+			      So what should I do?
+			      <a href="docs/help.html#faq-doctype">Tell me more...</a>
+			    </p>
+			  </TMPL_IF>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W17">
-	No Character Encoding detected!
+	<message type="warning">
+		<title>No Character Encoding detected!</title>
+		<description>
+		    <p>
+		      To ensure correct validation, processing, and display, it is important
+		      that the character encoding is properly labeled.
+		      <a href="http://www.w3.org/International/O-charset.html">More
+		      information...</a>
+		    </p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W18">
-	Character Encoding mismatch!
+	<message type="warning">
+		<title>Character Encoding mismatch!</title>
+		<description>
+		    <p>
+		      The character encoding specified in the HTTP header
+		        (<code><TMPL_VAR NAME="W18_http" ESCAPE="HTML"></code>)
+		      is different from the value in the XML declaration
+		        (<code><TMPL_VAR NAME="W18_xml" ESCAPE="HTML"></code>).
+		      I will use the value from the HTTP header
+		        (<code><TMPL_VAR NAME="W18_use" ESCAPE="HTML"></code>).
+		    </p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W19">
-	Character Encoding mismatch!
+	<message type="warning">
+		<title>Character Encoding mismatch!</title>
+		<description>
+		    <p>
+		      The character encoding specified in the HTTP header
+		        (<code><TMPL_VAR NAME="W19_http" ESCAPE="HTML"></code>)
+		      is different from the value in the <code>&lt;meta&gt;</code> element
+		      (<code><TMPL_VAR NAME="W19_meta" ESCAPE="HTML"></code>). I will use the
+		      value from the HTTP header
+		      (<code><TMPL_VAR NAME="W19_use" ESCAPE="HTML"></code>) for this
+		      validation.
+		    </p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W20">
-	Character Encoding mismatch!
+	<message type="warning">
+		<title>Character Encoding mismatch!</title>
+		<description>
+		    <p>
+		      The character encoding specified in the XML declaration
+		      (<code><TMPL_VAR NAME="W20_xml" ESCAPE="HTML"></code>)
+		      is different from the value in the <code>&lt;meta&gt;</code> element
+		      (<code><TMPL_VAR NAME="W20_meta" ESCAPE="HTML"></code>). I will use the
+		      value from the XML declaration
+		      (<code><TMPL_VAR NAME="W20_xml" ESCAPE="HTML"></code>) for this
+		      validation.
+		    </p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W21">
-	Byte-Order Mark found in UTF-8 File.
+	<message type="warning">
+		<title>Byte-Order Mark found in UTF-8 File.</title>
+		<description>
+		    <p>
+		      The Unicode Byte-Order Mark (BOM) in UTF-8 encoded files is known to
+		      cause problems for some text editors and older browsers. You may want
+		      to consider avoiding its use until it is better supported.
+		    </p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W22">
-	Character Encoding suggestion: use 
-	<TMPL_VAR NAME="W22_suggested" ESCAPE="HTML"> instead of <TMPL_VAR NAME="W22_declared" ESCAPE="HTML"></warning></message>
+	<message type="warning">
+		<title>Character Encoding suggestion: use <TMPL_VAR NAME="W22_suggested" ESCAPE="HTML"> instead of <TMPL_VAR NAME="W22_declared" ESCAPE="HTML"></title>
+		<description>
+		    <p>
+		      The character encoding declared for this document 
+		      (<code><TMPL_VAR NAME="W22_declared" ESCAPE="HTML"></code>) may not be widely supported.
+		      This encoding is equivalent to <code><TMPL_VAR NAME="W22_suggested" ESCAPE="HTML"></code>
+		      which may be better supported across platforms.
+		    </p> 
+		    <p>
+		      More information on <a href="http://www.w3.org/International/O-charset.html">declaring a character encoding on your Web server or in your document</a> can be found on the W3C Internationalization site.
+		    </p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W23">
-	Conflict between Mime Type and Document Type
+	<message type="warning">
+		<title>Conflict between Mime Type and Document Type</title>
+		<description>
+		   <p>The document is being served with the  <code><TMPL_VAR NAME="W23_type" ESCAPE="HTML"></code> Mime Type
+		      which is not a registered media type for the 
+		      <code><TMPL_VAR NAME="W23_doctype" ESCAPE="HTML"></code> Document Type. The recommended media type 
+		      for this document is: <code><TMPL_VAR NAME="W23_type_pref" ESCAPE="HTML"></code></p>
+		           
+		   <p>Using a wrong media type for a certain document type may
+		      confuse the validator and other user agents with respect to the 
+		      nature of the document, and you may get some erroneous validation
+		      errors. How to fix this problem? One of the following techniques should help:</p>
+		   <ul>     
+		     <li>
+		        If you are serving a static file on a Web server, changing its extension should help. 
+		        Use e.g <code>.xhtml</code> for XHTML or <code>.mml</code> for MathML.
+		     </li>
+		     <li>You may need to reconfigure your Web server. This <a  href="http://www.developershome.com/wap/wapServerSetup/tutorial.asp?page=settingUpMIME">Setting up MIME Types tutorial</a> has instructions for Apache, Tomcat and IIS.</li>
+		     <li>If the document is generated dynamically, the scripting language should allow you to set up the mime type: 
+		         this <a href="http://juicystudio.com/article/content-negotiation.php">article on MIME Types and Content Negotiation</a> has examples in PHP, Perl, and ASP.</li>
+		   </ul>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W24">
-	Rare or unregistered Character Encoding detected
+	<message type="warning">
+		<title>Rare or unregistered Character Encoding detected</title>
+		<description>
+		    <p>
+		      The character encoding declared for this document 
+		      (<code><TMPL_VAR NAME="W24_declared" ESCAPE="HTML"></code>) 
+		      is supported by the validator, but may not be widely supported across platforms.
+		      For the sake of interoperability, it is best to use a unicode character encoding 
+		      such as <code>UTF-8</code>, or one of the 
+		      <a href="http://www.iana.org/assignments/character-sets">registered character
+		  	encodings</a>.
+		    </p> 
+		    <p>
+		      More information on <a href="http://www.w3.org/International/O-charset.html">declaring a character encoding on your Web server or in your document</a> can be found on the W3C Internationalization site.
+		    </p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W25">
-	<TMPL_VAR NAME="W25_dtd" ESCAPE="HTML"> document without DOCTYPE detected
+	<message type="warning">
+		<title><TMPL_VAR NAME="W25_dtd" ESCAPE="HTML"> document without DOCTYPE detected</title>
+		<description>
+		    <p>This document does not declare any DOCTYPE. A Doctype declaration is generally 
+		       needed for validation, but the checked document uses markup specific to <TMPL_VAR NAME="W25_dtd" ESCAPE="HTML">, which may be used without DOCTYPE. </p>
+		    <p>Validation was performed as if the DOCTYPE for <TMPL_VAR NAME="W25_dtd" ESCAPE="HTML"> was present. If this automatic detection is not correct, <a href="http://www.w3.org/QA/2002/04/valid-dtd-list.html" title="W3C QA - Recommended list of DTDs you can use in your Web document">adding a DOCTYPE declaration</a> will help validate without ambiguity.</p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W26">
-	Mismatch between Public and System identifiers in the DOCTYPE declaration
+	<message type="warning">
+		<title>Mismatch between Public and System identifiers in the DOCTYPE declaration</title>
+		<description>
+		    <p>This document uses an inconsistent DOCTYPE declaration. 
+		    <TMPL_IF NAME="W26_dtd_sys_recommend">
+		    The Public Identifier  
+			<code><TMPL_VAR NAME="W26_dtd_pub" ESCAPE="HTML"></code> declares the 
+			<code><TMPL_VAR NAME="W26_dtd_pub_display" ESCAPE="HTML"></code> document type, but the associated System Identifier
+			<code><TMPL_VAR NAME="W26_dtd_sys" ESCAPE="HTML"></code> does not match this document type.</p>
+			<p>The recommended System Identifier 
+			for <code><TMPL_VAR NAME="W26_dtd_pub_display" ESCAPE="HTML"></code> is <code><TMPL_VAR NAME="W26_dtd_sys_recommend" ESCAPE="HTML"></code>.
+		    </TMPL_IF>
+		    <TMPL_IF NAME="W26_dtd_pub_recommend">
+		    The System Identifier  
+			<code><TMPL_VAR NAME="W26_dtd_sys" ESCAPE="HTML"></code> declares the 
+			<code><TMPL_VAR NAME="W26_dtd_pub_display" ESCAPE="HTML"></code> document type, but the associated Public Identifier
+			<code><TMPL_VAR NAME="W26_dtd_pub" ESCAPE="HTML"></code> does not match this document type.</p>
+			<p>The recommended Public Identifier 
+			for <code><TMPL_VAR NAME="W26_dtd_sys" ESCAPE="HTML"></code> is <code><TMPL_VAR NAME="W26_dtd_pub_recommend" ESCAPE="HTML"></code>.
+		    </TMPL_IF>	
+			
+			</p>
+			<p>The safest way to use a correct DOCTYPE declaration is to copy and paste one from the 
+			<a href="http://www.w3.org/QA/2002/04/valid-dtd-list.html" 
+			title="W3C QA - Recommended list of DTDs you can use in your Web document">recommended list</a> 
+			and avoid editing that part of your markup by hand.</p>
+		</description>
+	</message>
+</TMPL_IF>
+<TMPL_IF NAME="W27">
+	<message type="warning">
+		<title>No Character encoding declared at document level</title>
+		<description>
+		    <p>No character encoding information was found within the document, either in an HTML <code>meta</code> element or an XML declaration. It is often recommended to declare the character encoding in the document itself, especially if there is a chance that the document will be read from or saved to disk, CD, etc.</p>
+		    <p>See <a href="http://www.w3.org/International/tutorials/tutorial-char-enc/#Slide0250">this tutorial on character encoding</a> for techniques and explanations.</p>
+		</description>
+	</message>
+</TMPL_IF>
+<TMPL_IF NAME="W28">
+	<message type="warning">
+		<title>Using Direct Input mode: UTF-8 character encoding assumed</title>
+		<description>
+		    <p>Unlike the “by URI” and “by File Upload” modes, the “Direct Input” mode of the validator provides validated content in the form of characters pasted or typed in the validator's form field. This will automatically make the data UTF-8, and therefore the validator does not need to determine the character encoding of your document, and will ignore any charset information specified.</p>
+		    <p>If you notice a discrepancy in detected character encoding between the “Direct Input” mode and other validator modes, this is likely to be the reason. It is neither a bug in the validator, nor in your document.</p>
+		</description>
+	</message>
+</TMPL_IF>
+<TMPL_IF NAME="W29">
+	<message type="warning">
+		<title>Error cleaning up markup with HTML Tidy.</title>
+		<description>
+		    <p>
+		      An error occurred while cleaning up markup with HTML Tidy.  The reported
+		      error was:<br />
+		      <TMPL_VAR NAME="W29_msg" ESCAPE="HTML">
+		    </p>
+		    <p>
+		      It is unlikely that this is a problem with the checked document, but
+		      rather a software or configuration issue with the validator.
+		    </p>
+		</description>
+	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W@@">
-	W@@
+	<message type="warning">
+		<title>W@@</title>
+	</message>
 </TMPL_IF>
-
