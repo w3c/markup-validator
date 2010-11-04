@@ -96,8 +96,6 @@ sub list_errors_hasverbose
                 $single_error{original} = $original;
                 $single_error{id}       = $error_id;
                 $single_error{verbose}  = $rsrc->{msg}->{$error_id}->{verbose};
-                $single_error{verbose} =~
-                    s/<!--CFG_HOME_PAGE-->/$CFG->{'Home Page'}/g;
 
                 push @{$errors}, \%single_error;
 

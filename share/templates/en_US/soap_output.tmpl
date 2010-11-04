@@ -13,7 +13,7 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
     <TMPL_LOOP NAME="debug"><m:debug name="<TMPL_VAR NAME="name" ESCAPE="HTML">"><TMPL_VAR NAME="value" ESCAPE="HTML" DEFAULT="(undefined)"></m:debug>
     </TMPL_LOOP></TMPL_IF>
     <m:uri><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></m:uri>
-    <m:checkedby><TMPL_VAR NAME="cfg_home_page" ESCAPE="HTML"></m:checkedby>
+    <m:checkedby><TMPL_VAR NAME="env_home_page" ESCAPE="HTML"></m:checkedby>
     <m:doctype><TMPL_VAR NAME="file_doctype" ESCAPE="HTML"></m:doctype>
     <m:charset><TMPL_VAR NAME="file_charset" ESCAPE="HTML"></m:charset>
     <m:validity><TMPL_IF NAME="VALID">true<TMPL_ELSE>false</TMPL_IF></m:validity>

@@ -13,13 +13,13 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num" ESCAPE="NONE"></TM
   xmlns:ptr="http://www.w3.org/2009/pointers#"
   xmlns="http://www.w3.org/ns/earl#">
 
-  <Software rdf:about="<TMPL_VAR NAME="cfg_home_page">about.html">
+  <Software rdf:about="<TMPL_VAR NAME="env_home_page">about.html">
     <dct:title xml:lang="en">W3C Markup Validation Service</dct:title>
     <dct:description xml:lang="en">
       The W3C Markup Validation Service is a free service by W3C that helps
       check the validity of Web documents.
     </dct:description>
-    <foaf:homepage><TMPL_VAR NAME="cfg_home_page"></foaf:homepage>
+    <foaf:homepage><TMPL_VAR NAME="env_home_page"></foaf:homepage>
     <dct:hasVersion><TMPL_VAR NAME="validator_version"></dct:hasVersion>
   </Software>
 
@@ -29,7 +29,7 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num" ESCAPE="NONE"></TM
 
 <TMPL_IF NAME="VALID">
   <Assertion>
-    <assertedBy rdf:resource="<TMPL_VAR NAME="cfg_home_page">about.html"/>
+    <assertedBy rdf:resource="<TMPL_VAR NAME="env_home_page">about.html"/>
     <test rdf:resource="http://www.w3.org/Markup/"/>
     <subject rdf:resource="<TMPL_VAR NAME="file_uri">"/>
     <mode rdf:resource="http://www.w3.org/ns/earl#automatic"/>
@@ -38,7 +38,7 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num" ESCAPE="NONE"></TM
 <TMPL_ELSE>
 <TMPL_LOOP NAME="file_errors">
   <Assertion rdf:ID="assert<TMPL_VAR NAME="__counter__">">
-    <assertedBy rdf:resource="<TMPL_VAR NAME="cfg_home_page">about.html"/>
+    <assertedBy rdf:resource="<TMPL_VAR NAME="env_home_page">about.html"/>
     <subject rdf:resource="<TMPL_VAR NAME="file_uri">"/>
     <mode rdf:resource="http://www.w3.org/ns/earl#automatic"/>
     <test rdf:resource="http://www.w3.org/Markup/"/>

@@ -43,8 +43,7 @@ mv validator-%{version}/htdocs/sgml-lib .
 %{__perl} -pi -e \
   's|^(\s*Library\s*=\s*).*|${1}%{_datadir}/sgml/%{name}| ;
    s|^(\s*TidyConf\s*=\s*).*|${1}%{_sysconfdir}/w3c/tidy.conf| ;
-   s|\bwww-validator\@w3\.org\b|root\@localhost| ;
-   s|/validator\.w3\.org/|/localhost/w3c-validator/|' \
+   s|\bwww-validator\@w3\.org\b|root\@localhost|' \
   htdocs/config/validator.conf
 
 # Move config out of the way

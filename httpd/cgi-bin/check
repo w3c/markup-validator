@@ -838,7 +838,7 @@ sub get_template ($$;@)
             filename => $fname,
             @opts
         );
-        $tmpl->param(cfg_home_page     => $CFG->{'Home Page'});
+        $tmpl->param(env_home_page     => $File->{Env}->{'Home Page'});
         $tmpl->param(validator_version => $VERSION);
         $File->{_Templates}->{$fname} = $tmpl;
     }
@@ -1427,7 +1427,7 @@ sub prep_template ($$)
 
     #
     # The URI...
-    $T->param(file_uri       => $File->{URI});
+    $T->param(file_uri => $File->{URI});
 
     #
     # Set URL for page title.
@@ -2013,7 +2013,7 @@ sub check_recursion ($$)
     return unless $lvl =~ m/^\d+$/;    # Non-digit, i.e. garbage, ignore.
 
     if ($lvl >= $CFG->{'Max Recursion'}) {
-        print redirect $CFG->{'Home Page'};
+        print redirect $File->{Env}->{'Home Page'};
     }
     else {
 
@@ -2396,10 +2396,10 @@ sub report_errors ($)
                         my $escaped_uri = uri_escape($File->{URI});
                         $_msg =~ s/<!--URI-->/$escaped_uri/g;
                     }
-                    $explanation =
-                        "    $_msg\n$explanation";    # The send feedback plea.
-                    $explanation =~
-                        s/<!--CFG_HOME_PAGE-->/$CFG->{'Home Page'}/g;
+
+                    # The send feedback plea.
+                    $explanation = "    $_msg\n$explanation";
+                    $explanation =~ s/<!--#echo\s+var="relroot"\s*-->//g;
                 }
                 $err->{expl} = $explanation;
             }
@@ -2786,6 +2786,9 @@ sub prepCGI
         }
         exit;
     }
+
+    $File->{Env}->{'Home Page'} =
+        URI->new_abs(".", $File->{Env}->{'Self URI'});
 
     # Use "url" unless a "uri" was also given.
     if ($q->param('url') and not $q->param('uri')) {
