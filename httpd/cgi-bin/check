@@ -1428,7 +1428,6 @@ sub prep_template ($$)
     #
     # The URI...
     $T->param(file_uri       => $File->{URI});
-    $T->param(file_uri_param => uri_escape($File->{URI}));
 
     #
     # Set URL for page title.
