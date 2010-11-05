@@ -515,12 +515,12 @@ of WDG's excellent
       <p><strong>How to fix</strong>:</p>
       <ul>
 	<li>Check that it is indeed the <code>Referer</code> issue. The validator should have redirected you to
-	<code>http://validator.w3.org/check?uri=</code>. Otherwise, check the address you have given the validator.</li>
+	<code>http://validator.w3.org/check?uri=<em>your_url_here</em></code>. Otherwise, check the address you have given the validator.</li>
 	<li>The validator can not fix this issue. You will have to (ask your administrator to) reconfigure
 	whichever zealous software is stripping this referrer info.</li>
 	<li>If you have a link on your page using the "/check?uri=referer" feature, you could replace them with the
-	a link to the validator without this feature, e.g. <code>http://validator.w3.org/check?uri=http://www.example.com</code></li>
-	<li>If you have no control over the page or annoying software, simply append the address of the page you wanted validated
+	a link to the validator without this feature, e.g. <code>http://validator.w3.org/check?uri=http%3A%2F%2Fwww.example.com</code></li>
+	<li>If you have no control over the page or annoying software, simply append the address of the page you wanted validated (URI encoded)
 	to the <code>http://validator.w3.org/check?uri=</code> address.</li>
      </ul>
   <h4 id="faq-batchvalidation">Can the validator check all the pages in my site in one batch?</h4>
