@@ -89,8 +89,8 @@
       &lt;<a href="http://validator.w3.org/check">http://validator.w3.org/check</a>&gt;.
     </p>
     <p>
-      If you call the CGI program with extra path info matching "/referer"
-      (i.e. &lt;<a href="http://validator.w3.org/check/referer">http://validator.w3.org/check/referer</a>&gt;)
+      If you call the CGI program with the "uri=referer" query string parameter
+      (i.e. &lt;<a href="http://validator.w3.org/check?uri=referer">http://validator.w3.org/check?uri=referer</a>&gt;)
       it will fetch the referring document and validate that. This means that
       if you embed a link to that URL in your pages, following on that link
       will send you the validation results for that page.
