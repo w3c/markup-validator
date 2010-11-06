@@ -35,7 +35,12 @@ SOAP 1.2 validation interface documentation</h2>
 
 <h3 id="requestformat">Validation Request Format</h3>
 
-<p>Below is a table of the parameter you can use to send a query to the W3C Markup Validator.</p>
+<p>
+  Below is a table of the parameter you can use to send a query to the W3C
+  Markup Validator. All parameter values except data in
+  <code>uploaded_file</code> are expected to be encoded in the UTF-8 character
+  encoding.
+</p>
 <p>If you want to use W3C's public validation server, use the parameters below
  in conjunction with the following base URI:<br />
 <kbd>http://validator.w3.org/check</kbd> <br />
@@ -64,8 +69,7 @@ is appreciated. thanks.</p>
 </tr>
 <tr>
   <th>fragment</th>
-  <td>The source of the document to validate. Full documents only. 
-  At the moment, will only work if data is sent with the UTF-8 encoding.</td>
+  <td>The source of the document to validate. Full documents only.</td>
   <td>None, but either this parameter, or <code>uri</code>,
   or <code>uploaded_file</code> must be given.</td>
 </tr>
