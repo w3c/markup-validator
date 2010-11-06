@@ -67,6 +67,7 @@ mailing-list.</p>
 	  <ol>
 	    <li><a href="#icon-usage">My document is valid, can I use your "valid" icon?</a></li>
 	    <li><a href="#icon-list">Is there a list of all available icons somewhere?</a></li>
+	    <li><a href="#icon-https">Why do I see warnings about "insecure items" when viewing my page after including the icon?</a></li>
 	    <li><a href="#icon-license">License and Guidelines for usage of the "valid" icons</a></li>
 	    <li><a href="#icon-deriv">Can I modify the existing icons to create my own?</a></li>
 	    <li><a href="#icon-invalidpage">I saw the "valid" icon displayed on a site but the page is invalid. What should I do?</a></li>
@@ -353,6 +354,19 @@ mailing-list.</p>
   <h5 id="icon-list">Is there a list of all available icons somewhere?</h5>
   <p>The <a href="http://www.w3.org/QA/Tools/Icons">full list of "valid" icons</a> is available on the W3C website.</p>
 
+  <h5 id="icon-https">Why do I see warnings about "insecure items" when viewing my page after including the icon?</h5>
+  <p>
+    Many browsers display this warning when viewing documents transferred over
+    a secure protocol such as HTTPS if the documents contain items that are
+    transferred over a non-secure protocol such as unencrypted HTTP. As W3C
+    does not currently provide the "valid" icons over HTTPS, you may want to
+    copy and serve the icons from a HTTPS enabled server elsewhere and link to
+    those copies instead of the W3C originals in your documents that are
+    transferred over a secure protocol to avoid this warning. See also HTTPS
+    related documentation in the <a href="#faq-referer">"/check?uri=referer"
+      FAQ entry</a>.
+  </p>
+
   <h5 id="icon-license">License and Guidelines for usage of the "valid" icons</h5>
   <p>Web content providers are granted the right to use the "W3C valid" logo
   on pages that pass validation (through the use of the 
@@ -512,6 +526,17 @@ of WDG's excellent
       find what the URL of the document to validate is, and gives the same error message as when it is
       given a type of URL it does not understand.</p>
 
+      <p>
+        Also, requests to non-secure HTTP resources from links in documents
+        transferred with a secure protocol such as HTTPS should not include
+        referrer information
+        <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec15.html#sec15.1.3">per the HTTP/1.1 specification</a>.
+        As the validator at validator.w3.org is currently not available over
+        HTTPS, this referrer feature will not work reliably for documents
+        transferred over secure protocols (usually <code>https</code> URLs)
+        with it.
+      </p>
+
       <p><strong>How to fix</strong>:</p>
       <ul>
 	<li>Check that it is indeed the <code>Referer</code> issue. The validator should have redirected you to
@@ -520,7 +545,7 @@ of WDG's excellent
 	whichever zealous software is stripping this referrer info.</li>
 	<li>If you have a link on your page using the "/check?uri=referer" feature, you could replace them with the
 	a link to the validator without this feature, e.g. <code>http://validator.w3.org/check?uri=http%3A%2F%2Fwww.example.com</code></li>
-	<li>If you have no control over the page or annoying software, simply append the address of the page you wanted validated (URI encoded)
+	<li>If you have no control over the page or annoying software, or your page's URL is a <code>https</code> one, simply append the address of the page you wanted validated (URI encoded)
 	to the <code>http://validator.w3.org/check?uri=</code> address.</li>
      </ul>
   <h4 id="faq-batchvalidation">Can the validator check all the pages in my site in one batch?</h4>
