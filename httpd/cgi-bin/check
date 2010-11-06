@@ -2741,11 +2741,17 @@ sub prepCGI
         $path_info = $q->path_info();
     }
 
-    # Avoid CGI.pm's "exists but undef" behaviour.
+    # Avoid CGI.pm's "exists but undef" behaviour, decode values.
     if (scalar $q->param) {
         foreach my $param ($q->param) {
-            next if $param eq 'uploaded_file'; # 'uploaded_file' contains data.
-            next if $param eq 'fragment';      # Ditto 'fragment'.
+
+            # 'uploaded_file' and 'fragment' contain data we treat as is.
+            next if ($param eq 'uploaded_file' || $param eq 'fragment');
+
+            # Decode all other defined values as UTF-8.
+            my $value = $q->param($param);
+            $q->param($param, Encode::decode_utf8($value)) if defined($value);
+
             next
                 if $param eq 'accept'
             ;    # Original checking had a specific Accept: header sent.
