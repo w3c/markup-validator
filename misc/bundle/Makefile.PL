@@ -36,7 +36,7 @@ WriteMakefile(
         "Net::IP"               => 0,
         "SGML::Parser::OpenSP"  => 0.991,
         "Socket"                => 0,
-        "URI"                   => 0,
+        "URI"                   => 1.53,
         "URI::Escape"           => 0,
         "URI::file"             => 0,
         "URI::Heuristic"        => 0,

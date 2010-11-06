@@ -59,7 +59,7 @@ use HTTP::Request qw();
 use HTTP::Headers::Auth qw();      # Needs to be imported after other HTTP::*.
 use JSON 2.00 qw();
 use SGML::Parser::OpenSP 0.991 qw();
-use URI qw();
+use URI 1.53 qw();                 # Need 1.53 for secure()
 use URI::Escape qw(uri_escape);
 use URI::file;
 use URI::Heuristic qw();
@@ -1428,6 +1428,12 @@ sub prep_template ($$)
     #
     # The URI...
     $T->param(file_uri => $File->{URI});
+
+    #
+    # HTTPS note?
+    $T->param(file_https_note => $File->{'Is Upload'} ||
+            $File->{'Direct Input'} ||
+            URI->new($File->{URI})->secure());
 
     #
     # Set URL for page title.

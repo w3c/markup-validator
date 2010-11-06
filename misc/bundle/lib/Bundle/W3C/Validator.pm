@@ -46,7 +46,7 @@ C<perl -MCPAN -e "install Bundle::W3C::Validator">
  Net::hostent
  SGML::Parser::OpenSP 0.991
  Socket
- URI
+ URI 1.53
  URI::Escape
  URI::file
  URI::Heuristic

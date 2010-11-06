@@ -95,6 +95,11 @@
     If you like, you can download a copy of the icons
     to keep in your local web directory, and change the HTML fragment
     above to reference your local image rather than the one on this server.
+  <TMPL_IF NAME="file_https_note">
+    See also our help items related to documents transferred over secure
+    protocols for these <a href="docs/help.html#icon-https">icons</a> and
+    the <a href="docs/help.html#faq-referer">"uri=referer" feature</a>.
+  </TMPL_IF>
   </p>
 </TMPL_IF>
 <TMPL_UNLESS NAME="is_upload">
