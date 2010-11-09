@@ -276,6 +276,7 @@ $File->{XMLWF_ONLY} = FALSE;
 # Listrefs.
 $File->{Warnings}   = [];    # Warnings...
 $File->{Namespaces} = [];    # Other (non-root) Namespaces.
+$File->{Parsers}    = [];    # Parsers used {name, link, options}
 
 # By default, doctype-less documents can not be valid
 $File->{"DOCTYPEless OK"}             = FALSE;
@@ -864,8 +865,13 @@ sub compoundxml_validate (\$)
     my $File = shift;
     my $ua = W3C::Validator::UserAgent->new($CFG, $File);
 
-    $File->{ParserName} = "validator.nu";
-    $File->{ParserOpts} = "";
+    push(
+        @{$File->{Parsers}},
+        {   name    => "Compound XML",
+            link    => "http://qa-dev.w3.org/",    # TODO?
+            options => ""
+        }
+    );
 
     my $url = URI->new($CFG->{External}->{CompoundXML});
     $url->query("out=xml");
@@ -1019,8 +1025,13 @@ sub html5_validate (\$)
     my $File = shift;
     my $ua = W3C::Validator::UserAgent->new($CFG, $File);
 
-    $File->{ParserName} = "validator.nu";
-    $File->{ParserOpts} = "";
+    push(
+        @{$File->{Parsers}},
+        {   name    => "validator.nu",
+            link    => "http://validator.nu/",
+            options => ""
+        }
+    );
 
     my $url = URI->new($CFG->{External}->{HTML5});
     $url->query("out=xml");
@@ -1189,9 +1200,8 @@ sub html5_validate (\$)
 
 sub dtd_validate (\$)
 {
-    my $File        = shift;
-    my $opensp      = SGML::Parser::OpenSP->new();
-    my $parser_name = "SGML::Parser::OpenSP";
+    my $File   = shift;
+    my $opensp = SGML::Parser::OpenSP->new();
 
     #
     # By default, use SGML catalog file and SGML Declaration.
@@ -1212,8 +1222,13 @@ sub dtd_validate (\$)
         push(@spopt, 'min-tag');
     }
 
-    $File->{ParserName} = $parser_name;
-    $File->{ParserOpts} = join(" ", @spopt);
+    push(
+        @{$File->{Parsers}},
+        {   name    => "OpenSP",
+            link    => "http://openjade.sourceforge.net/",
+            options => join(" ", @spopt)
+        }
+    );
 
     #
     # Parser configuration
@@ -1269,6 +1284,11 @@ sub xmlwf (\$)
     $xmlparser->validation(0);
     $xmlparser->base_uri($File->{URI})
         unless ($File->{'Direct Input'} || $File->{'Is Upload'});
+
+    push(
+        @{$File->{Parsers}},
+        {name => "libxml2", link => "http://xmlsoft.org/", options => ""}
+    );
 
     # Restrict file reading similar to what SGML::Parser::OpenSP does.  Note
     # that all inputs go through the callback so if we were passing a
@@ -1515,22 +1535,28 @@ sub fin_template ($$)
     my $T    = shift;
 
     #
-    # Set debug info for HTML report.
-    $T->param(opt_debug => $DEBUG);
-    $T->param(
-        debug => [
-            map({name => $_, value => $ENV{$_}},
-                qw(no_proxy http_proxy https_proxy ftp_proxy FTP_PASSIVE)),
-            {name => 'Content-Encoding',  value => $File->{ContentEnc}},
-            {name => 'Content-Language',  value => $File->{ContentLang}},
-            {name => 'Content-Location',  value => $File->{ContentLoc}},
-            {name => 'Transfer-Encoding', value => $File->{TransferEnc}},
-            {name => 'Parse Mode',        value => $File->{Mode}},
-            {name => 'Parse Mode Factor', value => $File->{ModeChoice}},
-            {name => 'Parser',            value => $File->{ParserName}},
-            {name => 'Parser Options',    value => $File->{ParserOpts}},
-        ],
-    );
+    # Set debug info for HTML and SOAP reports.
+    if ($DEBUG) {
+        my @parsers;
+        for my $parser (@{$File->{Parsers}}) {
+            my $p = $parser->{name};
+            $p .= " (" . $parser->{options} . ")" if $parser->{options};
+            push(@parsers, $p);
+        }
+        $T->param(
+            debug => [
+                map({name => $_, value => $ENV{$_}},
+                    qw(no_proxy http_proxy https_proxy ftp_proxy FTP_PASSIVE)),
+                {name => 'Content-Encoding',  value => $File->{ContentEnc}},
+                {name => 'Content-Language',  value => $File->{ContentLang}},
+                {name => 'Content-Location',  value => $File->{ContentLoc}},
+                {name => 'Transfer-Encoding', value => $File->{TransferEnc}},
+                {name => 'Parse Mode',        value => $File->{Mode}},
+                {name => 'Parse Mode Factor', value => $File->{ModeChoice}},
+                {name => 'Parsers Used',      value => join(", ", @parsers)},
+            ],
+        );
+    }
 
     if (!$File->{Doctype} &&
         (!$File->{Version} ||

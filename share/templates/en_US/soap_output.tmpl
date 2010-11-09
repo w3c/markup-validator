@@ -9,9 +9,8 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
 <env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
 <env:Body>
 <m:markupvalidationresponse env:encodingStyle="http://www.w3.org/2003/05/soap-encoding" xmlns:m="http://www.w3.org/2005/10/markup-validator">
-    <TMPL_IF NAME="opt_debug">
     <TMPL_LOOP NAME="debug"><m:debug name="<TMPL_VAR NAME="name" ESCAPE="HTML">"><TMPL_VAR NAME="value" ESCAPE="HTML" DEFAULT="(undefined)"></m:debug>
-    </TMPL_LOOP></TMPL_IF>
+    </TMPL_LOOP>
     <m:uri><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></m:uri>
     <m:checkedby><TMPL_VAR NAME="env_home_page" ESCAPE="HTML"></m:checkedby>
     <m:doctype><TMPL_VAR NAME="file_doctype" ESCAPE="HTML"></m:doctype>
