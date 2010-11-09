@@ -2741,33 +2741,31 @@ sub prepCGI
         $path_info = $q->path_info();
     }
 
-    # Avoid CGI.pm's "exists but undef" behaviour, decode values.
-    if (scalar $q->param) {
-        foreach my $param ($q->param) {
+    # Decode parameter values, set booleans the way we expect them.
+    foreach my $param ($q->param()) {
 
-            # 'uploaded_file' and 'fragment' contain data we treat as is.
-            next if ($param eq 'uploaded_file' || $param eq 'fragment');
+        # 'uploaded_file' and 'fragment' contain data we treat as is.
+        next if ($param eq 'uploaded_file' || $param eq 'fragment');
 
-            # Decode all other defined values as UTF-8.
-            my @values = map { Encode::decode_utf8($_) } $q->param($param);
-            $q->param($param, @values);
+        # Decode all other defined values as UTF-8.
+        my @values = map { Encode::decode_utf8($_) } $q->param($param);
+        $q->param($param, @values);
 
-            next
-                if $param eq 'accept'
-            ;    # Original checking had a specific Accept: header sent.
-            next if $param eq 'accept-language';    # Ditto Accept-Language:.
-            next if $param eq 'accept-charset';     # Ditto Accept-Charset:.
-            next if $q->param($param) eq '0';    # Keep false-but-set params.
+        # Original checking had a specific Accept: header sent.
+        next if $param eq 'accept';
 
-            #
-            # Parameters that are given to us without specifying a value get
-            # set to "1" (the "TRUE" constant). This is so we can test for the
-            # boolean value of a parameter instead of first checking whether
-            # the param was given and then testing its value. Needed because
-            # CGI.pm sets ";param" and ";param=" to a boolean false value
-            # (undef() or a null string, respectively).
-            $q->param($param, TRUE) unless $q->param($param);
-        }
+        # Ditto Accept-Language:.
+        next if $param eq 'accept-language';
+
+        # Ditto Accept-Charset:.
+        next if $param eq 'accept-charset';
+
+        # Keep false-but-set params.
+        next if $q->param($param) eq '0';
+
+        # Parameters that are given to us without specifying a value get set
+        # to a true value.
+        $q->param($param, TRUE) unless $q->param($param);
     }
 
     # IIS reportedly does not provide the $path_info we expect - hack around it.
