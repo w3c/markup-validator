@@ -2749,8 +2749,8 @@ sub prepCGI
             next if ($param eq 'uploaded_file' || $param eq 'fragment');
 
             # Decode all other defined values as UTF-8.
-            my $value = $q->param($param);
-            $q->param($param, Encode::decode_utf8($value)) if defined($value);
+            my @values = map { Encode::decode_utf8($_) } $q->param($param);
+            $q->param($param, @values);
 
             next
                 if $param eq 'accept'
