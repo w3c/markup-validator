@@ -276,7 +276,7 @@ $File->{XMLWF_ONLY} = FALSE;
 # Listrefs.
 $File->{Warnings}   = [];    # Warnings...
 $File->{Namespaces} = [];    # Other (non-root) Namespaces.
-$File->{Parsers}    = [];    # Parsers used {name, link, options}
+$File->{Parsers}    = [];    # Parsers used {name, link, type, options}
 
 # By default, doctype-less documents can not be valid
 $File->{"DOCTYPEless OK"}             = FALSE;
@@ -869,6 +869,7 @@ sub compoundxml_validate (\$)
         @{$File->{Parsers}},
         {   name    => "Compound XML",
             link    => "http://qa-dev.w3.org/",    # TODO?
+            type    => "",
             options => ""
         }
     );
@@ -1029,6 +1030,7 @@ sub html5_validate (\$)
         @{$File->{Parsers}},
         {   name    => "validator.nu",
             link    => "http://validator.nu/",
+            type    => "HTML5",
             options => ""
         }
     );
@@ -1226,6 +1228,7 @@ sub dtd_validate (\$)
         @{$File->{Parsers}},
         {   name    => "OpenSP",
             link    => "http://openjade.sourceforge.net/",
+            type    => "SGML/XML",
             options => join(" ", @spopt)
         }
     );
@@ -1287,7 +1290,11 @@ sub xmlwf (\$)
 
     push(
         @{$File->{Parsers}},
-        {name => "libxml2", link => "http://xmlsoft.org/", options => ""}
+        {   name    => "libxml2",
+            link    => "http://xmlsoft.org/",
+            type    => "XML",
+            options => ""
+        }
     );
 
     # Restrict file reading similar to what SGML::Parser::OpenSP does.  Note
@@ -1557,6 +1564,8 @@ sub fin_template ($$)
             ],
         );
     }
+
+    $T->param(parsers => $File->{Parsers});
 
     if (!$File->{Doctype} &&
         (!$File->{Version} ||
