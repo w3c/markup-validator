@@ -103,6 +103,9 @@
   <public publicId="-//W3C//DTD XHTML+RDFa 1.0//EN" uri="REC-rdfa-syntax-20081014/xhtml-rdfa-1.dtd" />
   <public publicId="-//W3C//ENTITIES XHTML+RDFa Document Model 1.0//EN" uri="REC-rdfa-syntax-20081014/xhtml-rdfa-model-1.mod" />
   <public publicId="-//W3C//ENTITIES XHTML MetaAttributes 1.0//EN" uri="REC-rdfa-syntax-20081014/xhtml-metaAttributes-1.mod" />
+  <public publicId="-//W3C//DTD XHTML+RDFa 1.1//EN" uri="WD-xhtml-rdfa-20101109/xhtml-rdfa-2.dtd" />
+  <public publicId="-//W3C//ENTITIES XHTML+RDFa Document Model 1.1//EN" uri="WD-xhtml-rdfa-20101109/xhtml-rdfa-model-2.mod" />
+  <public publicId="-//W3C//ENTITIES XHTML MetaAttributes 1.1//EN" uri="WD-xhtml-rdfa-20101109/xhtml-metaAttributes-2.mod" />
   <public publicId="-//W3C//DTD SMIL 1.0//EN" uri="REC-smil-19980615/smil10.dtd" />
   <public publicId="-//W3C//DTD SMIL 2.0//EN" uri="REC-smil20-20050107/SMIL20.dtd" />
   <public publicId="-//W3C//DTD SMIL 2.0 Basic//EN" uri="REC-smil20-20050107/SMIL20Basic.dtd" />

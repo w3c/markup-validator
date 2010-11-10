@@ -245,7 +245,7 @@ PUBLIC "-//W3C//DTD XHTML Basic plus SVG Tiny//EN"
        "WD-XHTMLplusMathMLplusSVG-20020809/xhtml-basic-svg-tiny.dtd"
 
 
--- XHTML + RDFa --
+-- XHTML + RDFa 1.0 --
 
 PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
        "REC-rdfa-syntax-20081014/xhtml-rdfa-1.dtd"
@@ -253,6 +253,16 @@ PUBLIC "-//W3C//ENTITIES XHTML+RDFa Document Model 1.0//EN"
        "REC-rdfa-syntax-20081014/xhtml-rdfa-model-1.mod"
 PUBLIC "-//W3C//ENTITIES XHTML MetaAttributes 1.0//EN"
        "REC-rdfa-syntax-20081014/xhtml-metaAttributes-1.mod"
+
+
+-- XHTML + RDFa 1.1 --
+
+PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN"
+       "WD-xhtml-rdfa-20101109/xhtml-rdfa-2.dtd"
+PUBLIC "-//W3C//ENTITIES XHTML+RDFa Document Model 1.1//EN"
+       "WD-xhtml-rdfa-20101109/xhtml-rdfa-model-2.mod"
+PUBLIC "-//W3C//ENTITIES XHTML MetaAttributes 1.1//EN"
+       "WD-xhtml-rdfa-20101109/xhtml-metaAttributes-2.mod"
 
 
 -- SMIL 1.0 --
