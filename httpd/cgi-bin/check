@@ -40,7 +40,8 @@ package W3C::Validator::MarkupValidator;
 # polluting our namespace.
 #
 
-use CGI 2.81 qw(-newstyle_urls -private_tempfiles redirect);
+# Need 3.40 for query string and path info fixes, #4365
+use CGI 3.40 qw(-newstyle_urls -private_tempfiles redirect);
 use CGI::Carp qw(carp croak fatalsToBrowser);
 use Config qw(%Config);
 use Config::General 2.32 qw();    # Need 2.32 for <msg 0>, rt.cpan.org#17852
@@ -2757,24 +2758,8 @@ sub prepCGI
     my $File = shift;
     my $q    = shift;
 
-    my $path_info;
-    {
-
-        # @@@HACK:
-        # CGI.pm's _name_and_path_from_env has query string related issues;
-        # just trump the query string for the duration of calling methods we
-        # know we don't need it for and which have been affected in the past.
-        # More info: http://www.w3.org/Bugs/Public/show_bug.cgi?id=4365
-        # ->url() reportedly fixed in CGI.pm 3.34, ->path_info() in 3.40.
-
-        local $ENV{REQUEST_URI} = URI->new($ENV{REQUEST_URI})->path()
-            if $ENV{REQUEST_URI};
-
-        # The URL to this CGI script.
-        $File->{Env}->{'Self URI'} = $q->url();
-
-        $path_info = $q->path_info();
-    }
+    # The URL to this CGI script.
+    $File->{Env}->{'Self URI'} = $q->url();
 
     # Decode parameter values, set booleans the way we expect them.
     foreach my $param ($q->param()) {
@@ -2802,6 +2787,8 @@ sub prepCGI
         # to a true value.
         $q->param($param, TRUE) unless $q->param($param);
     }
+
+    my $path_info = $q->path_info();
 
     # IIS reportedly does not provide the $path_info we expect - hack around it.
     $path_info =~ s|(.*)/check\.pl(.*)$|$2|

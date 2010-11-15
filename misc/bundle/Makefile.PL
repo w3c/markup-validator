@@ -13,7 +13,7 @@ WriteMakefile(
     PREREQ_PM     => {
 
         # Hard dependencies:
-        "CGI"                   => 2.81,
+        "CGI"                   => "3.40",
         "CGI::Carp"             => 0,
         "Config"                => 0,
         "Config::General"       => 2.32,
