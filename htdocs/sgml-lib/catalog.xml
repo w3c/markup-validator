@@ -93,9 +93,9 @@
   <public publicId="-//W3C//ENTITIES XHTML 1.1 Document Model 1.0//EN" uri="XX-xhtml11-20090630/xhtml11-model-1.mod" />
   <public publicId="-//W3C//DTD XHTML Basic 1.0//EN" uri="REC-xhtml-basic-20001219/xhtml-basic10.dtd" />
   <public publicId="-//W3C//ENTITIES XHTML Basic 1.0 Document Model 1.0//EN" uri="REC-xhtml-basic-20001219/xhtml-basic10-model-1.mod" />
-  <public publicId="-//W3C//DTD XHTML Basic 1.1//EN" uri="REC-xhtml-basic-20080729/xhtml-basic11.dtd" />
-  <public publicId="-//W3C//ENTITIES XHTML Basic 1.1 Document Model 1.0//EN" uri="REC-xhtml-basic-20080729/xhtml-basic11-model-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Inputmode 1.0//EN" uri="REC-xhtml-basic-20080729/xhtml-inputmode-1.mod" />
+  <public publicId="-//W3C//DTD XHTML Basic 1.1//EN" uri="REC-xhtml-basic-20101123/xhtml-basic11.dtd" />
+  <public publicId="-//W3C//ENTITIES XHTML Basic 1.1 Document Model 1.0//EN" uri="REC-xhtml-basic-20101123/xhtml-basic11-model-1.mod" />
+  <public publicId="-//W3C//ELEMENTS XHTML Inputmode 1.0//EN" uri="REC-xhtml-basic-20101123/xhtml-inputmode-1.mod" />
   <public publicId="-//W3C//DTD XHTML-Print 1.0//EN" uri="REC-xhtml-print-20060920/xhtml-print10.dtd" />
   <public publicId="-//W3C//ENTITIES XHTML-Print 1.0 Document Model 1.0//EN" uri="REC-xhtml-print-20060920/xhtml-print10-model-1.mod" />
   <public publicId="-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN" uri="WD-XHTMLplusMathMLplusSVG-20020809/xhtml-math-svg.dtd" />

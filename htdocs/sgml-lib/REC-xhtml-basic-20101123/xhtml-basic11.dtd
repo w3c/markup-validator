@@ -22,7 +22,7 @@
         Editors:    Murray M. Altheim <mailto:altheim@eng.sun.com>
                     Peter Stark       <mailto:Peter.Stark@ecs.ericsson.se>
 					Shane McCarron    <mailto:shane@aptest.com>
-        Revision:   $Id: xhtml-basic11.dtd,v 1.1.2.7 2007/07/13 14:29:02 ahby Exp $
+        Revision:   $Id: xhtml-basic11.dtd,v 1.1.2.8 2009/11/18 19:13:49 ahby Exp $
 
 -->
 <!-- This is the driver file for version 1.1 of the XHTML Basic DTD.
@@ -90,6 +90,20 @@
 <!ENTITY % xhtml-model.mod
      PUBLIC "-//W3C//ENTITIES XHTML Basic 1.1 Document Model 1.0//EN"
             "http://www.w3.org/MarkUp/DTD/xhtml-basic11-model-1.mod" >
+
+<!-- adding the lang attribute into the I18N collection -->
+
+<!ENTITY % xhtml-datatypes.module "INCLUDE" >
+<![%xhtml-datatypes.module;[
+<!ENTITY % xhtml-datatypes.mod
+     PUBLIC "-//W3C//ENTITIES XHTML Datatypes 1.0//EN"
+            "xhtml-datatypes-1.mod" >
+%xhtml-datatypes.mod;]]>
+
+<!ENTITY % lang.attrib
+     "xml:lang     %LanguageCode.datatype;  #IMPLIED
+      lang         %LanguageCode.datatype;  #IMPLIED"
+>
 
 <!ENTITY % xhtml-framework.mod
      PUBLIC "-//W3C//ENTITIES XHTML Modular Framework 1.0//EN"
