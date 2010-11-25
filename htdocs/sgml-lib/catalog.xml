@@ -89,8 +89,8 @@
   <public publicId="-//W3C//DTD XHTML 1.0 Strict//EN" uri="REC-xhtml1-20020801/xhtml1-strict.dtd" />
   <public publicId="-//W3C//DTD XHTML 1.0 Transitional//EN" uri="REC-xhtml1-20020801/xhtml1-transitional.dtd" />
   <public publicId="-//W3C//DTD XHTML 1.0 Frameset//EN" uri="REC-xhtml1-20020801/xhtml1-frameset.dtd" />
-  <public publicId="-//W3C//DTD XHTML 1.1//EN" uri="XX-xhtml11-20090630/xhtml11.dtd" />
-  <public publicId="-//W3C//ENTITIES XHTML 1.1 Document Model 1.0//EN" uri="XX-xhtml11-20090630/xhtml11-model-1.mod" />
+  <public publicId="-//W3C//DTD XHTML 1.1//EN" uri="REC-xhtml11-20101123/xhtml11.dtd" />
+  <public publicId="-//W3C//ENTITIES XHTML 1.1 Document Model 1.0//EN" uri="REC-xhtml11-20101123/xhtml11-model-1.mod" />
   <public publicId="-//W3C//DTD XHTML Basic 1.0//EN" uri="REC-xhtml-basic-20001219/xhtml-basic10.dtd" />
   <public publicId="-//W3C//ENTITIES XHTML Basic 1.0 Document Model 1.0//EN" uri="REC-xhtml-basic-20001219/xhtml-basic10-model-1.mod" />
   <public publicId="-//W3C//DTD XHTML Basic 1.1//EN" uri="REC-xhtml-basic-20101123/xhtml-basic11.dtd" />

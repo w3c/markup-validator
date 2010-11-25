@@ -206,9 +206,9 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"
 -- XHTML 1.1 --
 
 PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-       "XX-xhtml11-20090630/xhtml11.dtd"
+       "REC-xhtml11-20101123/xhtml11.dtd"
 PUBLIC "-//W3C//ENTITIES XHTML 1.1 Document Model 1.0//EN"
-       "XX-xhtml11-20090630/xhtml11-model-1.mod"
+       "REC-xhtml11-20101123/xhtml11-model-1.mod"
 
 
 -- XHTML Basic 1.0 --
