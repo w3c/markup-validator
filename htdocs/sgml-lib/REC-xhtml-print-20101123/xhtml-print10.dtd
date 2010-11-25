@@ -32,7 +32,7 @@
      This DTD is identified by the PUBLIC and SYSTEM identifiers:
 
         PUBLIC "-//W3C//DTD XHTML-Print 1.0//EN"
-        SYSTEM "http://www.w3c.org/MarkUp/DTD/xhtml-print10.dtd"
+        SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-print10.dtd"
 -->
 <!ENTITY % XHTML.version "-//W3C//DTD XHTML-Print 1.0//EN" >
 

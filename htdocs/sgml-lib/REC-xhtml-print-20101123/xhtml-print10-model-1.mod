@@ -9,7 +9,7 @@
      This DTD module is identified by the PUBLIC and SYSTEM identifiers:
 
         PUBLIC "-//W3C//ENTITIES XHTML-Print 1.0 Document Model 1.0//EN"
-        SYSTEM "http://www.w3c.org/MarkUp/DTD/xhtml-print10-model-1.mod
+        SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-print10-model-1.mod"
 
      ....................................................................... -->
 
