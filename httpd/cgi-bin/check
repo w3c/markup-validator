@@ -1903,8 +1903,17 @@ sub handle_file
     my $q    = shift;    # The CGI object.
     my $File = shift;    # The master datastructure.
 
+    my $p = $q->param('uploaded_file');
     my $f = $q->upload('uploaded_file');
-    my $h = $q->uploadInfo($q->param('uploaded_file'));
+    if (!defined($f)) {
+
+        # Probably not an uploaded file as far as CGI is concerned,
+        # treat as a fragment.
+        $q->param('fragment', $p);
+        return &handle_frag($q, $File);
+    }
+
+    my $h = $q->uploadInfo($p);
 
     local $/ = undef;    # set line delimiter so that <> reads rest of file
     my $file = <$f>;
@@ -1919,7 +1928,7 @@ sub handle_file
     $File->{Modified}        = $q->http('Last-Modified');
     $File->{Server}          = $q->http('User-Agent');   # Fake a "server". :-)
     $File->{Size}           = $q->http('Content-Length');
-    $File->{URI}            = "$f";
+    $File->{URI}            = "$p";
     $File->{'Is Upload'}    = TRUE;
     $File->{'Direct Input'} = FALSE;
 
