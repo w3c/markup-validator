@@ -1903,12 +1903,11 @@ sub handle_file
     my $q    = shift;    # The CGI object.
     my $File = shift;    # The master datastructure.
 
-    my $f = $q->param('uploaded_file');
-    my $h = $q->uploadInfo($f);
-    my $file;
+    my $f = $q->upload('uploaded_file');
+    my $h = $q->uploadInfo($q->param('uploaded_file'));
 
     local $/ = undef;    # set line delimiter so that <> reads rest of file
-    $file = <$f>;
+    my $file = <$f>;
 
     my ($mode, $ct, $charset) =
         &parse_content_type($File, $h->{'Content-Type'});
