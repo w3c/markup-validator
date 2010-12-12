@@ -10,7 +10,7 @@ Content-type: text/html
 		<title>Validation Results - W3C Markup Validator</title>
     <link rev="made" href="mailto:www-validator@w3.org" />
     <link rev="start" href="./" title="Home Page" />
-    <style type="text/css" media="all">@import "/style/base";
+    <style type="text/css" media="all">@import "./style/base";
             @import "./style/results";</style>
 
     <meta name="keywords" content="HTML, HyperText Markup Language, Validation,
