@@ -2,7 +2,7 @@ syntax: glob
 
 .project
 *.pyc
-*.tar.gz
+*.gz
 httpd/cgi-bin/*.bak
 misc/*.bak
 misc/bundle/*.bak
