@@ -26,7 +26,7 @@
     </div>
     <dl id="news">
 
-      <dt id="v12">2010-08-20 &mdash; 1.2 release:</dt>
+      <dt id="v12">2010-12-12 &mdash; 1.2 release:</dt>
       <dd>
         <p>
           The 1.2 release of the markup validator is an enhancement and
@@ -35,13 +35,18 @@
         <ul>
           <li>
             Bug fix: fixes to validator's
-            <a href="http://validator.w3.org/unicorn/">Unicorn</a> output
-            templates.
+            <a href="http://validator.w3.org/unicorn/">Unicorn</a> and
+            <a href="docs/api.html">SOAP</a> output templates.
           </li>
           <li>
-            Enhancement: updated validator's internal copy of
+            Enhancement: several updates to validator's internal DTD library
+            and catalog, including
             <a href="http://www.w3.org/TR/xhtml-modularization/">XHTML
-              modularization</a> DTDs to version 1.1, second edition.
+              modularization</a> 1.1 second edition,
+            <a href="http://www.w3.org/TR/xhtml-basic/">XHTML Basic</a> 1.1
+            second edition, and
+            <a href="http://www.w3.org/TR/xhtml-rdfa/">XHTML + RDFa</a> 1.1
+            20101109 working draft.
           </li>
           <li>
             Enhancement: undefined entity errors from libxml are no longer
@@ -50,6 +55,25 @@
           </li>
           <li>
             Enhancement: minor configuration parsing performance improvements.
+          </li>
+          <li>
+            Enhancement: <a href="http://mootools.net/">MooTools</a> JavaScript
+            library updated to version 1.2.5 + MooTools more 1.2.5.1.
+          </li>
+          <li>
+            Enhancement: the "Home Page" configuration parameter is no longer
+            required or used.
+          </li>
+          <li>
+            Enhancement: list of the parsers actually used for a validation
+            is now included in valid results.
+          </li>
+          <li>
+            Enhancement: documentation improvements, code cleanups.
+          </li>
+          <li>
+            Dependency changes: new minimum required versions: CGI 3.40,
+            URI 1.53.
           </li>
         </ul>
       </dd>
