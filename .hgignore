@@ -1,15 +1,10 @@
 syntax: glob
 
 .project
-*.pyc
+*.bak
 *.gz
-httpd/cgi-bin/*.bak
-misc/*.bak
-misc/bundle/*.bak
-misc/bundle/*.tar.gz
+*.py[co]
 misc/bundle/blib
-misc/bundle/lib/Bundle/W3C/*.bak
 misc/bundle/Makefile
 misc/bundle/Makefile.old
 misc/bundle/pm_to_blib
-misc/testsuite/lib/*.py[co]
