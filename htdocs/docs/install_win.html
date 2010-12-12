@@ -164,6 +164,13 @@ NameVirtualHost 127.0.0.2:80
 
     &lt;Directory &quot;C:/www/validator/htdocs&quot;&gt;
         Options ExecCGI Includes Indexes MultiViews
+        AddEncoding x-gzip .gz
+        &lt;Files *.js.gz&gt;
+            ForceType application/javascript
+        &lt;/Files&gt;
+        &lt;Files *.css.gz&gt;
+            ForceType text/css
+        &lt;/Files&gt;
         AllowOverride None
         Order deny,allow
         Allow from localhost
