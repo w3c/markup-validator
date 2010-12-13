@@ -1,15 +1,17 @@
 VERSION = $(shell perl -ne '/^\$$VERSION\b.*?([\d.]+)/ && print $$1' httpd/cgi-bin/check)
 
 CSS_FILES = $(wildcard htdocs/*.css htdocs/style/*.css)
-JS_FILES = $(wildcard htdocs/scripts/*.js)
+JS_SOURCES = htdocs/scripts/mootools-1.2.5-core-nc.js \
+	htdocs/scripts/mootools-1.2.5.1-more.js	htdocs/scripts/w3c-validator.js
 PERL_FILES = httpd/cgi-bin/check httpd/cgi-bin/sendfeedback.pl \
 	misc/soc2xml.pl misc/spmpp.pl misc/docs_errors.pl \
 	misc/bundle/Makefile.PL misc/bundle/lib/Bundle/W3C/Validator.pm
-GZIP_FILES = $(addsuffix .gz,$(CSS_FILES) $(JS_FILES))
+GZIP_FILES = $(addsuffix .gz,$(CSS_FILES)) htdocs/scripts/combined.js.gz
 
 PERLTIDY = perltidy --profile=misc/perltidyrc --backup-and-modify-in-place
 PERLCRITIC = perlcritic --profile misc/perlcriticrc
 
+YUICOMPRESSOR = java -jar /usr/share/java/yuicompressor-2.4.2.jar
 GZIP = gzip -9n
 
 VALIDATOR_URI = http://localhost/w3c-validator/check
@@ -24,6 +26,13 @@ htdocs/docs/errors.html: misc/docs_errors.pl share/templates/en_US/error_message
 
 htdocs/sgml-lib/catalog.xml: misc/soc2xml.pl htdocs/sgml-lib/xml.soc
 	misc/soc2xml.pl < htdocs/sgml-lib/xml.soc > $@
+
+htdocs/scripts/combined.js: $(JS_SOURCES)
+	rm -f $@
+	@for src in $(JS_SOURCES) ; do \
+		echo "$(YUICOMPRESSOR) $$src >> $@" ; \
+		$(YUICOMPRESSOR) $$src >> $@ ; \
+	done
 
 .css.css.gz .js.js.gz:
 	$(GZIP) -c $< > $@ && touch -r $< $@
