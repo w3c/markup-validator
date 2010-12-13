@@ -4,6 +4,7 @@ syntax: glob
 *.bak
 *.gz
 *.py[co]
+config.mk
 misc/bundle/blib
 misc/bundle/Makefile
 misc/bundle/Makefile.old

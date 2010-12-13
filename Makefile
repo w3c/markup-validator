@@ -14,6 +14,9 @@ GZIP = gzip -9n
 
 VALIDATOR_URI = http://localhost/w3c-validator/check
 
+# Override the above variables in config.mk if needed.
+-include config.mk
+
 all: htdocs/docs/errors.html htdocs/sgml-lib/catalog.xml $(GZIP_FILES)
 
 htdocs/docs/errors.html: misc/docs_errors.pl share/templates/en_US/error_messages.cfg share/templates/en_US/docs_errors.tmpl htdocs/config/validator.conf
