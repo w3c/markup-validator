@@ -1,3 +1,10 @@
+/*!
+   JavaScript for the W3C Markup Validation Service.
+
+   Copyright 2007-2010 W3C (MIT, INRIA, Keio). All Rights Reserved.
+   See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
+*/
+
 var W3C = {
 
 	start: function(){

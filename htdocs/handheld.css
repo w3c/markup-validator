@@ -1,3 +1,10 @@
+/*!
+   Handheld Style Sheet for the W3C Markup Validation Service.
+
+   Copyright 2005 W3C (MIT, INRIA, Keio). All Rights Reserved.
+   See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
+*/
+
 @media handheld { 
 /* should not be necessary to wrap this way, but safer is better */
 

@@ -1,4 +1,9 @@
-/* style sheet for the validator's results page          */
+/*!
+   Results Style Sheet for the W3C Markup Validation Service.
+
+   Copyright 1999-2010 W3C (MIT, INRIA, Keio). All Rights Reserved.
+   See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
+*/
 
 div#results_container {
   margin: 2em;
