@@ -1496,16 +1496,12 @@ sub prep_template ($$)
 
     # Namespaces...
     $T->param(file_namespace => $File->{Namespace});
+
+    # Non-root ones; unique, preserving occurrence order
     my %seen_ns = ();
-    my @bulk_ns = @{$File->{Namespaces}};
-    $File->{Namespaces} = [];    # reinitialize the list of non-root namespaces
-                                 # ... and then get a uniq version of it
-    foreach my $single_namespace (@bulk_ns) {
-        push(@{$File->{Namespaces}}, $single_namespace)
-            unless (($single_namespace eq $File->{Namespace}) or
-            $seen_ns{$single_namespace}++);
-    }
-    my @nss = map({uri => $_}, @{$File->{Namespaces}});
+    $seen_ns{$File->{Namespace}}++ if defined($File->{Namespace});
+    my @nss =
+        map { $seen_ns{$_}++ == 0 ? {uri => $_} : () } @{$File->{Namespaces}};
     $T->param(file_namespaces => \@nss) if @nss;
 
     if ($File->{Opt}->{DOCTYPE}) {
