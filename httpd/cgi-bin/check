@@ -3234,6 +3234,7 @@ sub transcode
                 $tmpl->param(fatal_byte_lines     => $line_num);
                 $tmpl->param(fatal_byte_charset   => $cs);
                 $tmpl->param(fatal_byte_error_msg => $croak_message);
+                last;
             }
         }
         return $File;
