@@ -558,7 +558,7 @@ if ($File->{ContentType} eq 'text/html' && $File->{Charset}->{Default}) {
 
 #
 # Add a warning if doc is UTF-8 and contains a BOM.
-if ($File->{Charset}->{Use} eq 'utf-8' &&
+if ($File->{Charset}->{Use} eq 'utf-8' && @{$File->{Content}} &&
     $File->{Content}->[0] =~ m(^\x{FEFF}))
 {
     &add_warning('W21', {});
