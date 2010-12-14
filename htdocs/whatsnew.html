@@ -182,7 +182,8 @@
           <li>
             Enhancement: improved error handling and diagnostics for problems
             occurred when decoding Content-Encodings, when cleaning up
-            markup with Tidy, and when interfacing with the HTML5 validator.
+            markup with HTML-Tidy, and when interfacing with the HTML5
+            validator.
           </li>
           <li>
             Enhancement: recognition of more (non-recommended) aliases for
@@ -259,8 +260,8 @@
           <li>
             Bug fix:
             <a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=7592">"wide
-              characters"</a> in Tidy's output caused an error which prevented
-            the whole Tidy output from being displayed.
+              characters"</a> in HTML-Tidy's output caused an error which
+            prevented the whole tidied output from being displayed.
           </li>
           <li>
             Bug fix: there were
@@ -279,8 +280,8 @@
           </li>
           <li>
             Bug fix: the state of the "validate error pages", verbosity,
-            error grouping, and "clean up with Tidy" options were not always
-            preserved.
+            error grouping, and "clean up with HTML-Tidy" options were not
+            always preserved.
           </li>
           <li>
             Bug fix: several issues in error message locators in shown
@@ -510,7 +511,7 @@
         </p>
         <ul>
           <li>
-            Bug Fix: processing of documents through HTML Tidy would be
+            Bug Fix: processing of documents through HTML-Tidy would be
             triggered even when not requested. The fix should provide a
             noticeable performance boost.
           </li>
@@ -673,7 +674,7 @@
             Improved interface for better usability, accessibility.
           </li>
           <li>
-            New feature: automatic cleanup of markup (with Tidy).
+            New feature: automatic cleanup of markup (with HTML-Tidy).
           </li>
           <li>
             New feature: additional XML-Well-Formedness check, for more

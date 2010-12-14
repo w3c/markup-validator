@@ -326,8 +326,19 @@ mailing-list.</p>
       </p>
 
     <h4 id="cleanup">I don't want error messages, I want you to clean up my page!</h4>
-       <p>The Markup Validator can not do this for you. You may want to have a look
-	at tools such as <a href="http://tidy.sourceforge.net">HTML Tidy</a>.</p>
+      <p>
+        Have a look at tools such as
+        <a href="http://tidy.sourceforge.net/">HTML Tidy</a> and
+        <a href="http://www.tidyp.com/">tidyp</a>. When selected, the
+        "Clean up Markup with HTML-Tidy" option will output a "cleaned"
+        version of the input document in case it was not valid, done with
+        <a href="http://search.cpan.org/dist/HTML-Tidy/">HTML-Tidy</a>, using
+        the Markup Validator's default HTML-Tidy configuration. Note that there
+        are no guarantees about the validity or other aspects of that output,
+        and there are many options to configure in these tools that may result
+        in better clean up than the Validator's default options for your
+        document, so you may want to try out them locally.
+      </p>
 
     <h4 id="icon">"valid" icons</h4>
   <h5 id="icon-usage">My document is valid, can I use your "valid" icon?</h5>
