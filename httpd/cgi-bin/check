@@ -3222,9 +3222,9 @@ sub transcode
         # Transcoding failed - do it again line by line to find out exactly
         # where
         my $line_num = 0;
-        foreach my $input_line (split /\r\n|\n|\r/, $input) {
+        while ($input =~ /(.*?)(?:\r\n|\n|\r)/g) {
             $line_num++;
-            eval { $enc->decode($input_line, Encode::FB_CROAK); };
+            eval { $enc->decode($1, Encode::FB_CROAK); };
             if ($@) {
                 my $croak_message = $@;
                 $croak_message =~ s/ at .*//;
