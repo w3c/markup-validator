@@ -1314,7 +1314,6 @@ sub xmlwf (\$)
     &override_charset($File, "UTF-8");
 
     eval { $xmlparser->parse_string(join("\n", @{$File->{Content}})); };
-    my @xmlwf_error_list;
 
     if (ref($@)) {
 
@@ -1333,7 +1332,7 @@ sub xmlwf (\$)
 
             $err_obj = $err_obj->_prev();
 
-            unshift(@xmlwf_error_list, $err);
+            unshift(@{$File->{WF_Errors}}, $err);
         }
     }
     elsif ($@) {
@@ -1423,18 +1422,15 @@ sub xmlwf (\$)
                 $err->{type} = "E";
                 $err->{msg}  = $xmlwf_error_msg;
 
-                push(@xmlwf_error_list, $err);
+                push(@{$File->{WF_Errors}}, $err);
                 $xmlwf_error_line = undef;
                 $xmlwf_error_col  = undef;
                 $xmlwf_error_msg  = undef;
             }
         }
     }
-    foreach my $errmsg (@xmlwf_error_list) {
-        $File->{'Is Valid'} = FALSE;
-        push @{$File->{WF_Errors}}, $errmsg;
-    }
 
+    $File->{'Is Valid'} = FALSE if @{$File->{WF_Errors}};
     return $File;
 }
 
@@ -2385,9 +2381,7 @@ sub report_errors ($)
     # for the sake of readability, at least until the xmlwf errors have
     # explanations, we push the errors from the XML parser at the END of the
     # error list.
-    foreach my $errmsg (@{$File->{WF_Errors}}) {
-        push @{$File->{Errors}}, $errmsg;
-    }
+    push @{$File->{Errors}}, @{$File->{WF_Errors}};
 
     if (scalar @{$File->{Errors}}) {
         foreach my $err (@{$File->{Errors}}) {
