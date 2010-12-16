@@ -461,7 +461,10 @@ elsif ($File->{ContentType} =~ m(^text/([-.a-zA-Z0-9]\+)?xml$)) {
 elsif ($File->{Charset}->{XML}) {
     $File->{Charset}->{Use} = $File->{Charset}->{XML};
 }
-elsif ($File->{Charset}->{Auto} =~ /^utf-16[bl]e$/ && $File->{BOM} == 2) {
+elsif ($File->{BOM} &&
+    $File->{BOM} == 2 &&
+    $File->{Charset}->{Auto} =~ /^utf-16[bl]e$/)
+{
     $File->{Charset}->{Use} = 'utf-16';
 }
 elsif ($File->{ContentType} =~ m(^application/([-.a-zA-Z0-9]+\+)?xml$)) {
