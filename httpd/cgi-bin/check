@@ -610,8 +610,8 @@ $File = &charset_conflicts($File);
 
 # before we start the parsing, clean slate
 $File->{'Is Valid'} = TRUE;
-$File->{Errors} = [];
-$File->{WF_Errors} = [];
+$File->{Errors}     = [];
+$File->{WF_Errors}  = [];
 
 if (($File->{DOCTYPE} eq "HTML5") or ($File->{DOCTYPE} eq "XHTML5")) {
     if ($CFG->{External}->{HTML5}) {
