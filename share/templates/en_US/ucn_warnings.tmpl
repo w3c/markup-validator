@@ -1,5 +1,5 @@
 <TMPL_IF NAME="W00">
-	<message type="info">
+	<message type="info" id="W00">
 		<title>Using experimental feature: <TMPL_VAR NAME="W00_experimental_name" ESCAPE="HTML"></title>
     	<description>
     		<p>
@@ -13,7 +13,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W01">
-	<message type="warning">
+	<message type="warning" id="W01">
 		<title>Missing "charset" attribute for "<TMPL_VAR NAME="W01_ct" ESCAPE="HTML">" document.</title>
 		<description>
 		    <p>
@@ -39,7 +39,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W02">
-	<message type="warning">
+	<message type="warning" id="W02">
 		<title>No Character Encoding Found!</title>
 		<description>
 		    <p>
@@ -51,7 +51,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W03">
-	<message type="warning">
+	<message type="warning" id="W03">
 		<title>Character Encoding Override in effect!</title>
 		<description>
 		    <p>
@@ -64,7 +64,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W04">
-	<message type="warning">
+	<message type="warning" id="W04">
 		<title>No Character Encoding Found! <TMPL_IF NAME="W04_override">Using<TMPL_ELSE>Falling back to</TMPL_IF> <TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF>.</title>
 		<description>
 			<TMPL_IF NAME="W04_override">
@@ -131,7 +131,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W05">
-	<message type="warning">
+	<message type="warning" id="W05">
 		<title>DOCTYPE Override in effect!</title>
 		<description>
 		    <p>
@@ -144,7 +144,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W06">
-	<message type="warning">
+	<message type="warning" id="W06">
 		<title>Unable to Determine Parse Mode!</title>
 		<description>
 		    <p>The validator can process documents either as XML (for document types such as XHTML, SVG, etc.) or SGML (for HTML 4.01 and prior versions). For this document, the information available was not sufficient to determine the parsing mode unambiguously, because:</p>
@@ -160,7 +160,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W07">
-	<message type="warning">
+	<message type="warning" id="W07">
 		<title>Contradictory Parse Modes Detected!</title>
 		<description>
 			<p>The validator can process documents either as XML (for document types such as XHTML, SVG, etc.) or SGML (for HTML 4.01 and prior versions).</p>
@@ -179,7 +179,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W08">
-	<message type="warning">
+	<message type="warning" id="W08">
 		<title>No Content-Type Found!</title>
 		<description>
 		    <p>
@@ -195,7 +195,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W09">
-	<message type="warning">
+	<message type="warning" id="W09">
 		<title>No DOCTYPE found! Attempting validation with <TMPL_VAR NAME="W09_dtd" ESCAPE="HTML">.</title>
 		<description>
 		    <p>
@@ -249,7 +249,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W09nohtml">
-	<message type="warning">
+	<message type="warning" id="W09nohtml">
 		<title>No DOCTYPE found, and unknown root element. Aborting validation.</title>
 		<description>
 		    <p>
@@ -268,7 +268,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W09xml">
-	<message type="warning">
+	<message type="warning" id="W09xml">
 		<title>No DOCTYPE found! Checking XML syntax only.</title>
 		<description>
 			<p>
@@ -288,7 +288,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W10">
-	<message type="warning">
+	<message type="warning" id="W10">
 		<title>Unknown Namespace Found</title>
 		<description>
 		    <p>
@@ -299,7 +299,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W11">
-	<message type="warning">
+	<message type="warning" id="W11">
 		<title>Namespace Found in non-XML Document</title>
 		<description>
 		    <p>
@@ -310,7 +310,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W12">
-	<message type="warning">
+	<message type="warning" id="W12">
 		<title>No Namespace Found</title>
 		<description>
 		    <p>
@@ -320,7 +320,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W13">
-	<message type="warning">
+	<message type="warning" id="W13">
 		<title>DOCTYPE Override in effect!</title>
 		<description>
 		    <p>
@@ -335,7 +335,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W14">
-	<message type="warning">
+	<message type="warning" id="W14">
 		<title>No DOCTYPE Found!</title>
 		<description>
 		    <p>
@@ -346,7 +346,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W15">
-	<message type="warning">
+	<message type="warning" id="W15">
 		<title>DOCTYPE Override in effect!</title>
 		<description>
 		    <p>
@@ -359,7 +359,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W16">
-	<message type="warning">
+	<message type="warning" id="W16">
 		<title>No DOCTYPE Found! Falling Back to <TMPL_VAR NAME="W16_dtd" ESCAPE="HTML">.</title>
 		<description>
 			    <p>
@@ -389,7 +389,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W17">
-	<message type="warning">
+	<message type="warning" id="W17">
 		<title>No Character Encoding detected!</title>
 		<description>
 		    <p>
@@ -402,7 +402,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W18">
-	<message type="warning">
+	<message type="warning" id="W18">
 		<title>Character Encoding mismatch!</title>
 		<description>
 		    <p>
@@ -417,7 +417,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W19">
-	<message type="warning">
+	<message type="warning" id="W19">
 		<title>Character Encoding mismatch!</title>
 		<description>
 		    <p>
@@ -433,7 +433,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W20">
-	<message type="warning">
+	<message type="warning" id="W20">
 		<title>Character Encoding mismatch!</title>
 		<description>
 		    <p>
@@ -449,7 +449,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W21">
-	<message type="warning">
+	<message type="warning" id="W21">
 		<title>Byte-Order Mark found in UTF-8 File.</title>
 		<description>
 		    <p>
@@ -461,7 +461,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W22">
-	<message type="warning">
+	<message type="warning" id="W22">
 		<title>Character Encoding suggestion: use <TMPL_VAR NAME="W22_suggested" ESCAPE="HTML"> instead of <TMPL_VAR NAME="W22_declared" ESCAPE="HTML"></title>
 		<description>
 		    <p>
@@ -477,7 +477,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W23">
-	<message type="warning">
+	<message type="warning" id="W23">
 		<title>Conflict between Mime Type and Document Type</title>
 		<description>
 		   <p>The document is being served with the  <code><TMPL_VAR NAME="W23_type" ESCAPE="HTML"></code> Mime Type
@@ -502,7 +502,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W24">
-	<message type="warning">
+	<message type="warning" id="W24">
 		<title>Rare or unregistered Character Encoding detected</title>
 		<description>
 		    <p>
@@ -521,7 +521,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W25">
-	<message type="warning">
+	<message type="warning" id="W25">
 		<title><TMPL_VAR NAME="W25_dtd" ESCAPE="HTML"> document without DOCTYPE detected</title>
 		<description>
 		    <p>This document does not declare any DOCTYPE. A Doctype declaration is generally 
@@ -531,7 +531,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W26">
-	<message type="warning">
+	<message type="warning" id="W26">
 		<title>Mismatch between Public and System identifiers in the DOCTYPE declaration</title>
 		<description>
 		    <p>This document uses an inconsistent DOCTYPE declaration. 
@@ -561,7 +561,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W27">
-	<message type="info">
+	<message type="info" id="W27">
 		<title>No Character encoding declared at document level</title>
 		<description>
 		    <p>No character encoding information was found within the document, either in an HTML <code>meta</code> element or an XML declaration. It is often recommended to declare the character encoding in the document itself, especially if there is a chance that the document will be read from or saved to disk, CD, etc.</p>
@@ -570,7 +570,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W28">
-	<message type="info">
+	<message type="info" id="W28">
 		<title>Using Direct Input mode: UTF-8 character encoding assumed</title>
 		<description>
 		    <p>Unlike the “by URI” and “by File Upload” modes, the “Direct Input” mode of the validator provides validated content in the form of characters pasted or typed in the validator's form field. This will automatically make the data UTF-8, and therefore the validator does not need to determine the character encoding of your document, and will ignore any charset information specified.</p>
@@ -579,7 +579,7 @@
 	</message>
 </TMPL_IF>
 <TMPL_IF NAME="W29">
-	<message type="warning">
+	<message type="warning" id="W29">
 		<title>Error cleaning up markup with HTML-Tidy.</title>
 		<description>
 		    <p>
