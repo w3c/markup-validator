@@ -12,6 +12,19 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
 <status value="failed"/>
 
 <message type="error">
+
+  <TMPL_IF NAME="fatal_no_checker">
+    <title>External Checker not available</title>
+    <description>
+	  Checking the Document Type of this document requires the help of an external tool which was either not enabled
+      in this validator, or is currently unavailable. Check in the validator's system configuration 
+      that <TMPL_IF NAME="fatal_missing_checker"><TMPL_VAR NAME="fatal_missing_checker"> is enabled and functional
+      <TMPL_ELSE>all external checkers are enabled, and test if they are responsive</TMPL_IF>.
+      The error encountered was:
+      <code><TMPL_VAR NAME="fatal_checker_error" ESCAPE="HTML"></code>
+    </description>
+  </TMPL_IF>
+
   <TMPL_IF NAME="fatal_transcode_error">
     <title>Transcode Error</title>
     <description>
