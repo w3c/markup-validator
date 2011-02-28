@@ -11,6 +11,10 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
 
 <status value="failed"/>
 
+  <TMPL_IF NAME="have_warnings">
+    <TMPL_INCLUDE NAME="ucn_warnings.tmpl">
+  </TMPL_IF>
+
 <message type="error">
 
   <TMPL_IF NAME="fatal_no_checker">
