@@ -35,6 +35,7 @@ rm -rf validator-$version/.hg*
 find validator-$version -name "*~"        | xargs -r rm -rf
 find validator-$version -name ".#*"       | xargs -r rm -rf
 find validator-$version -name "*.py[co]"  | xargs -r rm -rf
+find validator-$version -name "*.bak"     | xargs -r rm -rf
 rm -f validator-$version/misc/mkrelease.sh
 
 cp validator-$version/htdocs/images/no_w3c.png \
