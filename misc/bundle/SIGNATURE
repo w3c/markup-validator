@@ -1,5 +1,5 @@
 This file contains message digests of all files listed in MANIFEST,
-signed via the Module::Signature module, version 0.61.
+signed via the Module::Signature module, version 0.64.
 
 To verify the content in this distribution, first make sure you have
 Module::Signature installed, then type:
@@ -15,19 +15,19 @@ not run its Makefile.PL or Build.PL.
 Hash: SHA1
 
 SHA1 645692d934e05bf18bec1417377bb63db46f813c MANIFEST
-SHA1 0fc89574ed143b7ac5a57fca196ffbe0fdbe7db7 META.yml
+SHA1 f0fa8aa32916bd4a8a34fb7cc561b0e07288254f META.yml
 SHA1 0307313614755e7bb4ed80e5ef05f36d2132e890 Makefile.PL
-SHA1 b5ff6c7c2f6154d0859a7126aef54e658de169e7 README
-SHA1 0d3f2a0c3b46409026d5fc9340e2730d94e37a86 lib/Bundle/W3C/Validator.pm
+SHA1 856bc75b71d6ec00b01e99b967c2c750ee55a584 README
+SHA1 19e89cb73d2c59cb035506968c26810bc17c7d8c lib/Bundle/W3C/Validator.pm
 SHA1 77da198169b0682e4d5d7a4e620d80b49501c7c2 t/00load.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.11 (GNU/Linux)
 
-iQEVAwUBTQSfGYd580Rxl2NsAQI+nwf+JdcZ0bUeIXigRwfpBqwUwJkZ6ybTfC6S
-QbLTUxKkaxedvBSj+kEqOa0wQHHj/pWLA2Is42TFE0JH7qAzns/ZjufBh+2kg2Le
-Yz65HUo3uMNPUV5MrYbo1gEikhPKjd4O6yoo0VChlJbzrAA490HVKnuF/jaDiG51
-ZeOV3nqcWmbcgr1tpuy/vWlN9fWF/qZy+GDkbqPtwLfPJWN51RaPuMvBxD3KrRbH
-WYrFGNjm5+R7PMC4Qjz8wlmDttkt979CzJt8UOWpxl1DEBJuGb1xIGEN2EmzwhsU
-Kro+Z9Sq3WOAlQFhsyUdRBF+Hg/Q898eh2mSbqMw6D4pCLzbvufgSw==
-=FaeA
+iQEVAwUBTXfcm4d580Rxl2NsAQIP+ggA0Nuw2v/ItvChndG08X4CxSpu4bie1OIJ
+sGc32/Otnq5o/MgjkLxaiJ6vNXd24ZQweB5TdswZtEOJ+LHMwnZoOKQVV422adru
+rWU+VDjj4jpJxKjZ7hNK2vApSdt5BD2eosx2MNvahhiji5WA86kr/VVnlbKfcvr9
+jzLPjKJCBZfU/IrE4sFJoT1Kqy97QNFIghBvTrGMl8GNq+aQ4tprMCYc4IaoQ7fy
+52vhfArY2zLfHUOdiPvaXj1ZnlJWYvE+MMjeNVFGjQuDbD02xmDwuNiJE4dqn5VS
+69hbwq/7QV5dSmFYjRY6zlCOgMe21VBh1M74ychTOLLLMNFTA63OHA==
+=qz+q
 -----END PGP SIGNATURE-----
