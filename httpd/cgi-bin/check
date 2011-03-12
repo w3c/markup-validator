@@ -1878,7 +1878,7 @@ sub handle_uri
     $File->{ContentLang}     = $res->content_language;
     $File->{ContentLoc}      = $res->header('Content-Location');
     $File->{TransferEnc}     = $res->header('Client-Transfer-Encoding');
-    $File->{Charset}->{HTTP} = lc $charset;
+    $File->{Charset}->{HTTP} = lc $charset if defined $charset;
     $File->{Modified}        = $res->header('Last-Modified');
     $File->{Server}          = scalar $res->server;
 
@@ -1921,7 +1921,7 @@ sub handle_file
     $File->{Bytes}           = $file;
     $File->{Mode}            = $mode;
     $File->{ContentType}     = $ct;
-    $File->{Charset}->{HTTP} = lc $charset;
+    $File->{Charset}->{HTTP} = lc $charset if defined $charset;
     $File->{Modified}        = $q->http('Last-Modified');
     $File->{Server}          = $q->http('User-Agent');   # Fake a "server". :-)
     $File->{Size}           = $q->http('Content-Length');
