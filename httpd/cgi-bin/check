@@ -2815,7 +2815,7 @@ sub prepCGI
                 if ($q->http('Accept-Language'));
             $q->param('accept-charset', $q->http('Accept-Charset'))
                 if ($q->http('Accept-Charset'));
-            print redirect &self_url_q($q, $File);
+            print redirect(-uri => &self_url_q($q, $File), -vary => 'Referer');
             exit;
         }
         else {
