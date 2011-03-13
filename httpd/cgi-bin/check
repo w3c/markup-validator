@@ -2778,14 +2778,8 @@ sub prepCGI
         my @values = map { Encode::decode_utf8($_) } $q->param($param);
         $q->param($param, @values);
 
-        # Original checking had a specific Accept: header sent.
-        next if $param eq 'accept';
-
-        # Ditto Accept-Language:.
-        next if $param eq 'accept-language';
-
-        # Ditto Accept-Charset:.
-        next if $param eq 'accept-charset';
+        # Skip parameters that should not be treated as booleans.
+        next if $param =~ /^(?:accept(?:-(?:language|charset))?|ur[il])$/;
 
         # Keep false-but-set params.
         next if $q->param($param) eq '0';
