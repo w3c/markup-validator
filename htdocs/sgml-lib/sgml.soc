@@ -104,6 +104,12 @@ PUBLIC "-//W3C//ENTITIES Symbols//EN//HTML"
        "REC-html401-19991224/HTMLsymbol.ent"
 
 
+-- HTML+ARIA 1.0 --
+
+PUBLIC "-//W3C//DTD HTML+ARIA 1.0//EN"
+       "CR-wai-aria-20110118/html4-aria-1.dtd"
+
+
 -- ISO-HTML --
 
 PUBLIC "ISO/IEC 15445:2000//DTD HyperText Markup Language//EN"

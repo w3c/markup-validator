@@ -265,6 +265,14 @@ PUBLIC "-//W3C//ENTITIES XHTML MetaAttributes 1.1//EN"
        "WD-xhtml-rdfa-20101109/xhtml-metaAttributes-2.mod"
 
 
+-- XHTML + ARIA 1.0 --
+
+PUBLIC "-//W3C//DTD XHTML+ARIA 1.0//EN"
+       "CR-wai-aria-20110118/xhtml-aria-1.dtd"
+PUBLIC "-//W3C//ENTITIES XHTML ARIA Attributes 1.0//EN"
+       "CR-wai-aria-20110118/aria-attributes-1.mod"
+
+
 -- SMIL 1.0 --
 
 PUBLIC "-//W3C//DTD SMIL 1.0//EN"
