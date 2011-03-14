@@ -273,6 +273,15 @@ PUBLIC "-//W3C//ENTITIES XHTML ARIA Attributes 1.0//EN"
        "CR-wai-aria-20110118/aria-attributes-1.mod"
 
 
+-- XHTML Role --
+
+PUBLIC "-//W3C//ENTITIES XHTML Role Attribute Qnames 1.0//EN"
+       "NOTE-xhtml-role-20101216/xhtml-role-qname-1.mod"
+-- Incorrect public ID in CR-wai-aria-20110118/xhtml-aria-1.dtd --
+PUBLIC "-//W3C//ENTITIES XHTML Role Attribute 1.0//EN"
+       "NOTE-xhtml-role-20101216/xhtml-role-qname-1.mod"
+
+
 -- SMIL 1.0 --
 
 PUBLIC "-//W3C//DTD SMIL 1.0//EN"

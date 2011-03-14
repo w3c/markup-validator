@@ -108,6 +108,8 @@
   <public publicId="-//W3C//ENTITIES XHTML MetaAttributes 1.1//EN" uri="WD-xhtml-rdfa-20101109/xhtml-metaAttributes-2.mod" />
   <public publicId="-//W3C//DTD XHTML+ARIA 1.0//EN" uri="CR-wai-aria-20110118/xhtml-aria-1.dtd" />
   <public publicId="-//W3C//ENTITIES XHTML ARIA Attributes 1.0//EN" uri="CR-wai-aria-20110118/aria-attributes-1.mod" />
+  <public publicId="-//W3C//ENTITIES XHTML Role Attribute Qnames 1.0//EN" uri="NOTE-xhtml-role-20101216/xhtml-role-qname-1.mod" />
+  <public publicId="-//W3C//ENTITIES XHTML Role Attribute 1.0//EN" uri="NOTE-xhtml-role-20101216/xhtml-role-qname-1.mod" />
   <public publicId="-//W3C//DTD SMIL 1.0//EN" uri="REC-smil-19980615/smil10.dtd" />
   <public publicId="-//W3C//DTD SMIL 2.0//EN" uri="REC-smil20-20050107/SMIL20.dtd" />
   <public publicId="-//W3C//DTD SMIL 2.0 Basic//EN" uri="REC-smil20-20050107/SMIL20Basic.dtd" />
