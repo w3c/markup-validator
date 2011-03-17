@@ -45,7 +45,7 @@ resources:
     bugtracker:   http://www.w3.org/Bugs/Public/
     homepage:     http://validator.w3.org/
     MailingList:  http://lists.w3.org/Archives/Public/www-validator/
-    repository:   http://dvcs.w3.org/hg/
+    repository:   http://dvcs.w3.org/hg/markup-validator/
 no_index:
     directory:
         - t

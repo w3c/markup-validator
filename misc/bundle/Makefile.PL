@@ -50,7 +50,7 @@ WriteMakefile(
         resources => {
             homepage   => 'http://validator.w3.org/',
             bugtracker => 'http://www.w3.org/Bugs/Public/',
-            repository => 'http://dvcs.w3.org/hg/',
+            repository => 'http://dvcs.w3.org/hg/markup-validator/',
             MailingList =>
                 'http://lists.w3.org/Archives/Public/www-validator/',
         },
