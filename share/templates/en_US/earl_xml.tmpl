@@ -9,18 +9,20 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num" ESCAPE="NONE"></TM
 <rdf:RDF
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xmlns:dct="http://purl.org/dc/terms/"
-  xmlns:foaf="http://xmlns.com/foaf/spec/#"
+  xmlns:doap="http://usefulinc.com/ns/doap#"
   xmlns:ptr="http://www.w3.org/2009/pointers#"
   xmlns="http://www.w3.org/ns/earl#">
 
   <Software rdf:about="<TMPL_VAR NAME="env_home_page">about.html">
-    <dct:title xml:lang="en">W3C Markup Validation Service</dct:title>
-    <dct:description xml:lang="en">
+    <doap:name xml:lang="en">W3C Markup Validation Service</doap:name>
+    <doap:description xml:lang="en">
       The W3C Markup Validation Service is a free service by W3C that helps
       check the validity of Web documents.
-    </dct:description>
-    <foaf:homepage><TMPL_VAR NAME="env_home_page"></foaf:homepage>
-    <dct:hasVersion><TMPL_VAR NAME="validator_version"></dct:hasVersion>
+    </doap:description>
+    <doap:homepage><TMPL_VAR NAME="env_home_page"></doap:homepage>
+    <doap:release>
+      <doap:revision><TMPL_VAR NAME="validator_version"></doap:revision>
+    </doap:release>
   </Software>
 
   <TestRequirement rdf:about="http://www.w3.org/Markup/">
