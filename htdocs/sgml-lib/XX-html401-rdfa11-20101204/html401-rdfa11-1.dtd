@@ -146,17 +146,17 @@
 
 <!ENTITY % HTMLlat1 PUBLIC
    "-//W3C//ENTITIES Latin1//EN//HTML"
-   "HTMLlat1.ent">
+   "http://www.w3.org/TR/html401/HTMLlat1.ent">
 %HTMLlat1;
 
 <!ENTITY % HTMLsymbol PUBLIC
    "-//W3C//ENTITIES Symbols//EN//HTML"
-   "HTMLsymbol.ent">
+   "http://www.w3.org/TR/html401/HTMLsymbol.ent">
 %HTMLsymbol;
 
 <!ENTITY % HTMLspecial PUBLIC
    "-//W3C//ENTITIES Special//EN//HTML"
-   "HTMLspecial.ent">
+   "http://www.w3.org/TR/html401/HTMLspecial.ent">
 %HTMLspecial;
 <!--=================== Generic Attributes ===============================-->
 
