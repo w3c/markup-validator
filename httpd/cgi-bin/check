@@ -1505,12 +1505,6 @@ sub prep_template ($$)
     $T->param(opt_group_errors => $File->{Opt}->{'Group Errors'});
     $T->param(opt_no200        => $File->{Opt}->{No200});
 
-    #
-    # Tip of the Day...
-    my $tip = &get_tip();
-    $T->param(tip_uri  => $tip->[0]);
-    $T->param(tip_slug => $tip->[1]);
-
     # Root Element
     $T->param(root_element => $File->{Root});
 
@@ -3361,17 +3355,6 @@ sub self_url_q
 
     $thispage =~ s/[\?;]$//;
     return $thispage;
-}
-
-#
-# Return random tip and its URL.
-sub get_tip
-{
-    my @tipAddrs = keys %{$CFG->{Tips}};
-    my $tipAddr  = $tipAddrs[rand scalar @tipAddrs];
-    my $tipSlug  = $CFG->{Tips}->{$tipAddr};
-
-    return [$tipAddr, $tipSlug];
 }
 
 #

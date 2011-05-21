@@ -7,7 +7,6 @@
 
 @import url("results"); /* CSS for validation results. */
 @import url("navbar");  /* CSS for navigation menu. */
-@import url("tips");    /* CSS for Quality Tips. */
 @import url("docs");    /* CSS for the Documentation. */
 @import url("print") print;
 @import url("handheld") handheld;
