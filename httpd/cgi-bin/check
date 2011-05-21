@@ -1695,6 +1695,7 @@ sub report_valid
             $T->param(badge_rdfa          => $cfg->{Badge}->{RDFa});
             $T->param(badge_h             => $cfg->{Badge}->{Height});
             $T->param(badge_w             => $cfg->{Badge}->{Width});
+            $T->param(badge_onclick       => $cfg->{Badge}->{OnClick});
             $T->param(badge_tagc => $cfg->{'Parse Mode'} eq 'XML' ? ' /' : '');
         }
     }
