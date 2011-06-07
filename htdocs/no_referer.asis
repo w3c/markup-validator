@@ -9,9 +9,9 @@ Content-type: text/html
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 		<title>Validation Results - W3C Markup Validator</title>
     <link rev="made" href="mailto:www-validator@w3.org" />
-    <link rev="start" href="./" title="Home Page" />
-    <style type="text/css" media="all">@import "./style/base";
-            @import "./style/results";</style>
+    <link rev="start" href="/" title="Home Page" />
+    <style type="text/css" media="all">@import "/style/base";
+            @import "/style/results";</style>
 
     <meta name="keywords" content="HTML, HyperText Markup Language, Validation,
       W3C Markup Validation Service" />
@@ -22,8 +22,8 @@ Content-type: text/html
     
     <div id="banner">
      <h1 id="title">
-       <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="./images/no_w3c.png" /></a>
- 			<a href="./"><span>Markup Validation Service</span></a>
+       <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="/images/w3c.png" /></a>
+ 			<a href="/"><span>Markup Validation Service</span></a>
 
        </h1>
        <p id="tagline">Check the markup (HTML, XHTML) of Web documents</p>
