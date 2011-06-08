@@ -3200,7 +3200,7 @@ sub transcode
         # Transcoding failed - do it again line by line to find out exactly
         # where
         my $line_num = 0;
-        while ($input =~ /(.*?)(?:\r\n|\n|\r)/g) {
+        while ($input =~ /(.*?)(?:\r\n|\n|\r|\z)/g) {
             $line_num++;
             eval { $enc->decode($1, Encode::FB_CROAK); };
             if ($@) {
