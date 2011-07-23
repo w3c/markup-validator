@@ -220,7 +220,7 @@ EOF
     local $ENV{XML_CATALOG_FILES} =
         catfile($CFG->{Paths}->{SGML}->{Library}, 'catalog.xml');
     require XML::LibXML;
-    XML::LibXML->VERSION(1.70);    # Need 1.70 for (working) structured errors
+    XML::LibXML->VERSION(1.73);    # Need 1.73 for rt.cpan.org #66642
 
 }    # end of BEGIN block.
 
@@ -1330,25 +1330,6 @@ sub xmlwf (\$)
             $err->{num}  = "libxml2-" . $err_obj->code();
             $err->{type} = "E";
             $err->{msg}  = $err_obj->message();
-
-            # Ugly workaround for XML::LibXML reporting column 80 when the
-            # error occurs beyond that:
-            # http://rt.cpan.org/Public/Bug/Display.html?id=66642
-            if ($err->{char} && $err->{char} == 80 &&
-                # This workaround does not apply to non-document errors, i.e.
-                # ones that have $err->{uri}.
-                !$err->{uri} && $err->{line})
-            {
-                # Get context reported by XML::LibXML, ...
-                my $ctx = $err_obj->context();
-                if ($ctx && length($ctx) == $err->{char}) {
-                    # ... try to locate it in our original source line, ...
-                    my $line = $File->{Content}->[$err->{line}-1] || '';
-                    my $ix = index($line, $ctx);
-                    # ... and adjust column offset accordingly.
-                    $err->{char} += $ix if $ix > 0;
-                }
-            }
 
             $err_obj = $err_obj->_prev();
 
