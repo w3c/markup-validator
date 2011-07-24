@@ -4,7 +4,7 @@
 
      This is XHTML+RDFa.
      Copyright 1998-2010 W3C (MIT, ERCIM, Keio), All Rights Reserved.
-     Revision: $Id: xhtml-rdfa-model-2.mod,v 1.1 2010/11/09 13:52:46 bertails Exp $ SMI
+     Revision: $Id: xhtml-rdfa-model-2.mod,v 1.1 2011/03/31 13:40:05 bertails Exp $ SMI
 
      This DTD module is identified by the PUBLIC and SYSTEM identifiers:
 

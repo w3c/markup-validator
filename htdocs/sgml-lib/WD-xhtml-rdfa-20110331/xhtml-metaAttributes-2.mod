@@ -4,7 +4,7 @@
 
      This is XHTML-RDFa, modules to annotate XHTML family documents.
      Copyright 2007-2008 W3C (MIT, ERCIM, Keio), All Rights Reserved.
-     Revision: $Id: xhtml-metaAttributes-2.mod,v 1.1 2010/11/09 13:52:46 bertails Exp $
+     Revision: $Id: xhtml-metaAttributes-2.mod,v 1.1 2011/03/31 13:40:05 bertails Exp $
 
      This DTD module is identified by the PUBLIC and SYSTEM identifiers:
 
