@@ -34,58 +34,58 @@
   <public publicId="-//W3C//ENTITIES Additional MathML Symbols//EN" uri="REC-MathML3-20101021/mmlextra.ent" />
   <public publicId="-//W3C//ENTITIES MathML Aliases//EN" uri="REC-MathML3-20101021/mmlalias.ent" />
   <public publicId="-//W3C//DTD SVG 1.0//EN" uri="REC-SVG-20010904/svg10.dtd" />
-  <public publicId="-//W3C//DTD SVG 1.1//EN" uri="REC-SVG11-20030114/svg11.dtd" />
-  <public publicId="-//W3C//DTD SVG 1.1 Basic//EN" uri="REC-SVG11-20030114/svg11-basic.dtd" />
-  <public publicId="-//W3C//DTD SVG 1.1 Tiny//EN" uri="REC-SVG11-20030114/svg11-tiny.dtd" />
-  <public publicId="-//W3C//DTD SVG Basic 1.1//EN" uri="REC-SVG11-20030114/svg11-basic.dtd" />
-  <public publicId="-//W3C//DTD SVG Tiny 1.1//EN" uri="REC-SVG11-20030114/svg11-tiny.dtd" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Document Model//EN" uri="REC-SVG11-20030114/svg11-model.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Basic Document Model//EN" uri="REC-SVG11-20030114/svg11-basic-model.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Tiny Document Model//EN" uri="REC-SVG11-20030114/svg11-tiny-model.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Attribute Collection//EN" uri="REC-SVG11-20030114/svg11-attribs.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Basic Attribute Collection//EN" uri="REC-SVG11-20030114/svg11-basic-attribs.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Tiny Attribute Collection//EN" uri="REC-SVG11-20030114/svg11-tiny-attribs.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Animation//EN" uri="REC-SVG11-20030114/svg-animation.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Animation Events Attribute//EN" uri="REC-SVG11-20030114/svg-animevents-attrib.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Basic Clip//EN" uri="REC-SVG11-20030114/svg-basic-clip.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Basic Filter//EN" uri="REC-SVG11-20030114/svg-basic-filter.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Basic Font//EN" uri="REC-SVG11-20030114/svg-basic-font.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Basic Graphics Attribute//EN" uri="REC-SVG11-20030114/svg-basic-graphics-attrib.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Basic Paint Attribute//EN" uri="REC-SVG11-20030114/svg-basic-paint-attrib.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Basic Structure//EN" uri="REC-SVG11-20030114/svg-basic-structure.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Basic Text//EN" uri="REC-SVG11-20030114/svg-basic-text.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Clip//EN" uri="REC-SVG11-20030114/svg-clip.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Conditional Processing//EN" uri="REC-SVG11-20030114/svg-conditional.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Container Attribute//EN" uri="REC-SVG11-20030114/svg-container-attrib.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Core Attribute//EN" uri="REC-SVG11-20030114/svg-core-attrib.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Cursor//EN" uri="REC-SVG11-20030114/svg-cursor.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Datatypes//EN" uri="REC-SVG11-20030114/svg-datatypes.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Document Events Attribute//EN" uri="REC-SVG11-20030114/svg-docevents-attrib.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Extensibility//EN" uri="REC-SVG11-20030114/svg-extensibility.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 External Resources Attribute//EN" uri="REC-SVG11-20030114/svg-extresources-attrib.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Filter//EN" uri="REC-SVG11-20030114/svg-filter.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Font//EN" uri="REC-SVG11-20030114/svg-font.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Modular Framework//EN" uri="REC-SVG11-20030114/svg-framework.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Gradient//EN" uri="REC-SVG11-20030114/svg-gradient.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Graphical Element Events Attribute//EN" uri="REC-SVG11-20030114/svg-graphevents-attrib.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Graphics Attribute//EN" uri="REC-SVG11-20030114/svg-graphics-attrib.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Hyperlinking//EN" uri="REC-SVG11-20030114/svg-hyperlink.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Image//EN" uri="REC-SVG11-20030114/svg-image.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Marker//EN" uri="REC-SVG11-20030114/svg-marker.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Mask//EN" uri="REC-SVG11-20030114/svg-mask.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Paint Opacity Attribute//EN" uri="REC-SVG11-20030114/svg-opacity-attrib.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Paint Attribute//EN" uri="REC-SVG11-20030114/svg-paint-attrib.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Pattern//EN" uri="REC-SVG11-20030114/svg-pattern.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Color Profile//EN" uri="REC-SVG11-20030114/svg-profile.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Qualified Name//EN" uri="REC-SVG11-20030114/svg-qname.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Scripting//EN" uri="REC-SVG11-20030114/svg-script.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Shape//EN" uri="REC-SVG11-20030114/svg-shape.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Structure//EN" uri="REC-SVG11-20030114/svg-structure.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Style//EN" uri="REC-SVG11-20030114/svg-style.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 Text//EN" uri="REC-SVG11-20030114/svg-text.mod" />
-  <public publicId="-//W3C//ELEMENTS SVG 1.1 View//EN" uri="REC-SVG11-20030114/svg-view.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 Viewport Attribute//EN" uri="REC-SVG11-20030114/svg-viewport-attrib.mod" />
-  <public publicId="-//W3C//ENTITIES SVG 1.1 XLink Attribute//EN" uri="REC-SVG11-20030114/svg-xlink-attrib.mod" />
+  <public publicId="-//W3C//DTD SVG 1.1//EN" uri="REC-SVG11-20110816/svg11.dtd" />
+  <public publicId="-//W3C//DTD SVG 1.1 Basic//EN" uri="REC-SVG11-20110816/svg11-basic.dtd" />
+  <public publicId="-//W3C//DTD SVG 1.1 Tiny//EN" uri="REC-SVG11-20110816/svg11-tiny.dtd" />
+  <public publicId="-//W3C//DTD SVG Basic 1.1//EN" uri="REC-SVG11-20110816/svg11-basic.dtd" />
+  <public publicId="-//W3C//DTD SVG Tiny 1.1//EN" uri="REC-SVG11-20110816/svg11-tiny.dtd" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Document Model//EN" uri="REC-SVG11-20110816/svg11-model.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Basic Document Model//EN" uri="REC-SVG11-20110816/svg11-basic-model.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Tiny Document Model//EN" uri="REC-SVG11-20110816/svg11-tiny-model.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Attribute Collection//EN" uri="REC-SVG11-20110816/svg11-attribs.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Basic Attribute Collection//EN" uri="REC-SVG11-20110816/svg11-basic-attribs.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Tiny Attribute Collection//EN" uri="REC-SVG11-20110816/svg11-tiny-attribs.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Animation//EN" uri="REC-SVG11-20110816/svg-animation.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Animation Events Attribute//EN" uri="REC-SVG11-20110816/svg-animevents-attrib.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Basic Clip//EN" uri="REC-SVG11-20110816/svg-basic-clip.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Basic Filter//EN" uri="REC-SVG11-20110816/svg-basic-filter.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Basic Font//EN" uri="REC-SVG11-20110816/svg-basic-font.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Basic Graphics Attribute//EN" uri="REC-SVG11-20110816/svg-basic-graphics-attrib.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Basic Paint Attribute//EN" uri="REC-SVG11-20110816/svg-basic-paint-attrib.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Basic Structure//EN" uri="REC-SVG11-20110816/svg-basic-structure.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Basic Text//EN" uri="REC-SVG11-20110816/svg-basic-text.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Clip//EN" uri="REC-SVG11-20110816/svg-clip.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Conditional Processing//EN" uri="REC-SVG11-20110816/svg-conditional.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Container Attribute//EN" uri="REC-SVG11-20110816/svg-container-attrib.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Core Attribute//EN" uri="REC-SVG11-20110816/svg-core-attrib.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Cursor//EN" uri="REC-SVG11-20110816/svg-cursor.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Datatypes//EN" uri="REC-SVG11-20110816/svg-datatypes.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Document Events Attribute//EN" uri="REC-SVG11-20110816/svg-docevents-attrib.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Extensibility//EN" uri="REC-SVG11-20110816/svg-extensibility.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 External Resources Attribute//EN" uri="REC-SVG11-20110816/svg-extresources-attrib.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Filter//EN" uri="REC-SVG11-20110816/svg-filter.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Font//EN" uri="REC-SVG11-20110816/svg-font.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Modular Framework//EN" uri="REC-SVG11-20110816/svg-framework.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Gradient//EN" uri="REC-SVG11-20110816/svg-gradient.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Graphical Element Events Attribute//EN" uri="REC-SVG11-20110816/svg-graphevents-attrib.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Graphics Attribute//EN" uri="REC-SVG11-20110816/svg-graphics-attrib.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Hyperlinking//EN" uri="REC-SVG11-20110816/svg-hyperlink.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Image//EN" uri="REC-SVG11-20110816/svg-image.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Marker//EN" uri="REC-SVG11-20110816/svg-marker.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Mask//EN" uri="REC-SVG11-20110816/svg-mask.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Paint Opacity Attribute//EN" uri="REC-SVG11-20110816/svg-opacity-attrib.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Paint Attribute//EN" uri="REC-SVG11-20110816/svg-paint-attrib.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Pattern//EN" uri="REC-SVG11-20110816/svg-pattern.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Color Profile//EN" uri="REC-SVG11-20110816/svg-profile.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Qualified Name//EN" uri="REC-SVG11-20110816/svg-qname.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Scripting//EN" uri="REC-SVG11-20110816/svg-script.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Shape//EN" uri="REC-SVG11-20110816/svg-shape.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Structure//EN" uri="REC-SVG11-20110816/svg-structure.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Style//EN" uri="REC-SVG11-20110816/svg-style.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 Text//EN" uri="REC-SVG11-20110816/svg-text.mod" />
+  <public publicId="-//W3C//ELEMENTS SVG 1.1 View//EN" uri="REC-SVG11-20110816/svg-view.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 Viewport Attribute//EN" uri="REC-SVG11-20110816/svg-viewport-attrib.mod" />
+  <public publicId="-//W3C//ENTITIES SVG 1.1 XLink Attribute//EN" uri="REC-SVG11-20110816/svg-xlink-attrib.mod" />
   <public publicId="-//W3C//DTD XHTML 1.0 Strict//EN" uri="REC-xhtml1-20020801/xhtml1-strict.dtd" />
   <public publicId="-//W3C//DTD XHTML 1.0 Transitional//EN" uri="REC-xhtml1-20020801/xhtml1-transitional.dtd" />
   <public publicId="-//W3C//DTD XHTML 1.0 Frameset//EN" uri="REC-xhtml1-20020801/xhtml1-frameset.dtd" />
