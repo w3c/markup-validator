@@ -2895,7 +2895,9 @@ sub set_parse_mode
     );
 
     my $parseModeFromNamespace = 'TBD';
-    if ($File->{Namespace}) { $parseModeFromNamespace = 'XML' }
+    # http://www.w3.org/Bugs/Public/show_bug.cgi?id=9967
+    $parseModeFromNamespace = 'XML'
+        if ($File->{Namespace} && $parseModeFromDoctype ne 'HTML5');
 
     if (($parseModeFromMimeType eq 'TBD') and
         ($parseModeFromXMLDecl   eq 'TBD') and
