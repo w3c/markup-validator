@@ -262,7 +262,7 @@
     </test>
     
     <test>
-      <dc:title>SVG 1.0 Document Type support test</dc:title>
+      <dc:title>SVG 1.1 Document Type support test</dc:title>
       <uri>http://qa-dev.w3.org/wmvs/HEAD/dev/tests/svg11.svg</uri>
       <expect>
         <Validity>Pass</Validity>
