@@ -726,7 +726,7 @@ if ($File->{Namespace}) {
             );
         }
     }
-    else {
+    elsif ($File->{DOCTYPE} ne 'HTML5') {
         &add_warning(
             'W11',
             {   W11_ns      => $File->{Namespace},
