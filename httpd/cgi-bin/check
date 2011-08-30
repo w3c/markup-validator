@@ -53,7 +53,9 @@ use File::Spec::Functions qw(catfile rel2abs tmpdir);
 use HTML::Encoding 0.52 qw();
 use HTML::HeadParser 3.60 qw();    # Needed for HTML5 meta charset workaround
 use HTML::Parser 3.24 qw();        # Need 3.24 for $p->parse($code_ref)
-use HTML::Template 2.6 qw();       # Need 2.6 for path param, other things.
+use HTML::Template qw();           # Need 2.6 for path param, other things.
+                                   # Specifying 2.6 would break with 2.10,
+                                   # rt.cpan.org#70190
 use HTTP::Headers::Util qw();
 use HTTP::Message 1.52 qw();       # Need 1.52 for decoded_content()
 use HTTP::Request qw();

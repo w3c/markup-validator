@@ -10,7 +10,7 @@ use warnings;
 
 use CGI qw();
 use File::Spec::Functions qw(catfile);
-use HTML::Template 2.6 qw();
+use HTML::Template qw();          # Need 2.6 but can't say, rt.cpan.org#70190
 use Config::General 2.32 qw();    # Need 2.32 for <msg 0>, rt.cpan.org#17852
 
 use vars qw($DEBUG $CFG %RSRC $VERSION);
