@@ -32,7 +32,7 @@ Content-type: text/html
 
 <div id="results_container">
 	  <div id="result">
-	    <h2 id="results" class="invalid">Sorry! This document can not be checked.</h2>
+	    <h2 id="results" class="invalid">Sorry! This document cannot be checked.</h2>
 
 
         <h2><strong>No Referer header found!</strong></h2>

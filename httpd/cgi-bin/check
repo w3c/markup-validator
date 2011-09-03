@@ -281,7 +281,7 @@ $File->{Warnings}   = [];    # Warnings...
 $File->{Namespaces} = [];    # Other (non-root) Namespaces.
 $File->{Parsers}    = [];    # Parsers used {name, link, type, options}
 
-# By default, doctype-less documents can not be valid
+# By default, doctype-less documents cannot be valid
 $File->{"DOCTYPEless OK"}             = FALSE;
 $File->{"Default DOCTYPE"}->{"HTML"}  = 'HTML 4.01 Transitional';
 $File->{"Default DOCTYPE"}->{"XHTML"} = 'XHTML 1.0 Transitional';
