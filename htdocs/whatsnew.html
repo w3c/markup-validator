@@ -26,6 +26,60 @@
     </div>
     <dl id="news">
 
+      <dt id="v13">2011-xx-xx &mdash; 1.3 release:</dt>
+      <dd>
+        <p>
+          The 1.3 release of the markup validator is an enhancement and
+          bug fix release. Changes include:
+        </p>
+        <ul>
+          <li>
+            Enhancement: several updates to validator's internal DTD library
+            and catalog, including
+            <a href="http://www.w3.org/TR/SVG/">SVG</a> 1.1 second edition,
+            <a href="http://www.w3.org/TR/wai-aria/">WAI-ARIA</a> 1.0
+            20110118 candidate recommendation,
+            <a href="http://www.w3.org/TR/rdfa-in-html/">HTML+RDFa</a> 1.1
+            20110525 working draft, and
+            <a href="http://www.w3.org/TR/xhtml-rdfa/">XHTML+RDFa</a> 1.1
+            20110331 working draft.
+          </li>
+          <li>
+            Enhancement: update
+            <a href="http://www.w3.org/TR/EARL10-Schema/">EARL/RDF</a>
+            <a href="docs/users.html#output-earl">output</a> to 1.0 20110510
+            working draft.
+          </li>
+          <li>
+            Enhancement: removed internal support for the deprecated
+            /check/referer path, implement it and some uri=referer cases in
+            httpd.conf instead for better efficiency.
+          </li>
+          <li>
+            Enhancement: work around HTML::Template 2.10
+            <a href="https://rt.cpan.org/Public/Bug/Display.html?id=70190">versioning issue</a>.
+          </li>
+          <li>
+            Enhancement: documentation improvements, code and server error log
+            warning cleanups.
+          </li>
+          <li>
+            Enhancement: the sample "badge" code for applicable document types
+            now includes a JavaScript onclick handler that avoids the need for
+            uri=referer redirects in many usual scenarios.
+          </li>
+          <li>
+            Bug fix: fix transcode error parsing for single-line documents.
+          </li>
+          <li>
+            Bug fix: better treatment of HTML5 documents that contain xmlns.
+          </li>
+          <li>
+            Dependency changes: new minimum required versions: XML-LibXML 1.73.
+          </li>
+        </ul>
+      </dd>
+
       <dt id="v12">2010-12-12 &mdash; 1.2 release:</dt>
       <dd>
         <p>
