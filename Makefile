@@ -11,7 +11,7 @@ GZIP_FILES = $(addsuffix .gz,$(CSS_FILES)) htdocs/scripts/combined.js.gz
 PERLTIDY = perltidy --profile=misc/perltidyrc --backup-and-modify-in-place
 PERLCRITIC = perlcritic --profile misc/perlcriticrc
 
-YUICOMPRESSOR = java -jar /usr/share/java/yuicompressor-2.4.2.jar
+YUICOMPRESSOR = java -jar $(wildcard /usr/share/java/yuicompressor*.jar)
 GZIP = gzip -9n
 
 VALIDATOR_URI = http://localhost/w3c-validator/check
