@@ -254,4 +254,6 @@
   <public publicId="-//W3C//ENTITIES Latin for HTML//EN//XML" uri="REC-xml-entity-names-20100401/xhtml1-lat1.ent" />
   <public publicId="-//W3C//ENTITIES Special for HTML//EN//XML" uri="REC-xml-entity-names-20100401/xhtml1-special.ent" />
   <public publicId="-//W3C//ENTITIES Symbol for HTML//EN//XML" uri="REC-xml-entity-names-20100401/xhtml1-symbol.ent" />
+  <public publicId="-//W3C//DTD VOICEXML 2.0//EN" uri="REC-voicexml20-20040316/vxml.dtd" />
+  <public publicId="-//W3C//DTD VOICEXML 2.1//EN" uri="REC-voicexml21-20070619/vxml.dtd" />
 </catalog>

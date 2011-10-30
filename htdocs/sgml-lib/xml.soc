@@ -608,6 +608,18 @@ PUBLIC "-//W3C//ENTITIES Symbol for HTML//EN//XML"
        "REC-xml-entity-names-20100401/xhtml1-symbol.ent"
 
 
+-- VoiceXML 2.0 --
+
+PUBLIC "-//W3C//DTD VOICEXML 2.0//EN"
+       "REC-voicexml20-20040316/vxml.dtd"
+
+
+-- VoiceXML 2.1 --
+
+PUBLIC "-//W3C//DTD VOICEXML 2.1//EN"
+       "REC-voicexml21-20070619/vxml.dtd"
+
+
 -- Do not prefer document type name over a SYSTEM Identifier. --
 
 OVERRIDE NO
