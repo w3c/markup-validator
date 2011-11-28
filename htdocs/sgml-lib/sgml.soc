@@ -20,50 +20,50 @@ PUBLIC "ISO 8879-1986//ENTITIES Added Latin 1//EN"
 -- Ways to refer to Level 2: most general to most specific --
 
 PUBLIC "HTML"
-       "IETF/HTML-2_0.dtd"
+       "IETF/html.dtd"
 PUBLIC "-//IETF//DTD HTML//EN"
-       "IETF/HTML-2_0.dtd"
+       "IETF/html.dtd"
 PUBLIC "-//IETF//DTD HTML//EN//2.0"
-       "IETF/HTML-2_0.dtd"
+       "IETF/html.dtd"
 PUBLIC "-//IETF//DTD HTML 2.0//EN"
-       "IETF/HTML-2_0.dtd"
+       "IETF/html.dtd"
 PUBLIC "-//IETF//DTD HTML Level 2//EN"
-       "IETF/HTML-2_0.dtd"
+       "IETF/html.dtd"
 PUBLIC "-//IETF//DTD HTML Level 2//EN//2.0"
-       "IETF/HTML-2_0.dtd"
+       "IETF/html.dtd"
 PUBLIC "-//IETF//DTD HTML 2.0 Level 2//EN"
-       "IETF/HTML-2_0.dtd"
+       "IETF/html.dtd"
 
 -- Ways to refer to Level 1: most general to most specific --
 
 PUBLIC "-//IETF//DTD HTML Level 1//EN"
-       "IETF/HTML-2_0-Level_1.dtd"
+       "IETF/html-1.dtd"
 PUBLIC "-//IETF//DTD HTML 2.0 Level 1//EN"
-       "IETF/HTML-2_0-Level_1.dtd"
+       "IETF/html-1.dtd"
 
 -- Ways to refer to Strict Level 2: most general to most specific --
 
 PUBLIC "-//IETF//DTD HTML Strict//EN"
-       "IETF/HTML-2_0-Strict.dtd"
+       "IETF/html-s.dtd"
 PUBLIC "-//IETF//DTD HTML 2.0 Strict//EN"
-       "IETF/HTML-2_0-Strict.dtd"
+       "IETF/html-s.dtd"
 PUBLIC "-//IETF//DTD HTML Strict Level 2//EN"
-       "IETF/HTML-2_0-Strict.dtd"
+       "IETF/html-s.dtd"
 PUBLIC "-//IETF//DTD HTML 2.0 Strict Level 2//EN"
-       "IETF/HTML-2_0-Strict.dtd"
+       "IETF/html-s.dtd"
 
 -- Ways to refer to Strict Level 1: most general to most specific --
 
 PUBLIC "-//IETF//DTD HTML Strict Level 1//EN"
-       "IETF/HTML-2_0-Strict-Level_1.dtd"
+       "IETF/html-1s.dtd"
 PUBLIC "-//IETF//DTD HTML 2.0 Strict Level 1//EN"
-       "IETF/HTML-2_0-Strict-Level_1.dtd"
+       "IETF/html-1s.dtd"
 
 
 -- HTML i18n --
 
 PUBLIC "-//IETF//DTD HTML i18n//EN"
-       "IETF/HTML-i18n.dtd"
+       "IETF/html2070.dtd"
 
 
 -- HTML 3.2 --
