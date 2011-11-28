@@ -167,17 +167,17 @@ EOF
 
     {    # Make types config indexed by FPI.
         my $types = {};
-        $types->{$CFG->{Types}->{$_}->{PubID}} = $CFG->{Types}->{$_}
-            for keys(%{$CFG->{Types}});
+        while (my ($key, $value) = each %{$CFG->{Types}}) {
+            $types->{$CFG->{Types}->{$key}->{PubID}} = $value;
+        }
         $CFG->{Types} = $types;
     }
 
     #
     # Change strings to internal constants in MIME type mapping.
-    for (keys %{$CFG->{MIME}}) {
-        $CFG->{MIME}->{$_} = 'TBD'
-            unless $CFG->{MIME}->{$_} eq 'SGML' or
-                $CFG->{MIME}->{$_} eq 'XML';
+    while (my ($key, $value) = each %{$CFG->{MIME}}) {
+        $CFG->{MIME}->{$key} = 'TBD'
+            unless ($value eq 'SGML' || $value eq 'XML');
     }
 
     #
@@ -1713,13 +1713,13 @@ sub authenticate
     my $realm = $resource;
     $realm =~ s([^\w\d.-]*){}g;
 
-    for my $scheme (keys(%$authHeader)) {
-        my $origrealm = $authHeader->{$scheme}->{realm};
-        if (not defined $origrealm or lc($scheme) !~ /^(?:basic|digest)$/) {
+    while (my ($scheme, $header) = each %$authHeader) {
+        my $origrealm = $header->{realm};
+        if (not defined $origrealm or $scheme !~ /^(?:basic|digest)$/i) {
             delete($authHeader->{$scheme});
             next;
         }
-        $authHeader->{$scheme}->{realm} = "$realm-$origrealm";
+        $header->{realm} = "$realm-$origrealm";
     }
 
     my $headers = HTTP::Headers->new(Connection => 'close');
@@ -2509,12 +2509,8 @@ sub report_errors ($)
             }
         }
     }
-    if ($File->{Opt}->{'Group Errors'}) {
-        $Errors = [];
-        for my $err_num (keys %Errors_bytype) {
-            push @{$Errors}, $Errors_bytype{$err_num};
-        }
-    }
+
+    @$Errors = values(%Errors_bytype) if $File->{Opt}->{'Group Errors'};
 
     # we are not sorting errors by line, as it would break the position
     # of auxiliary messages such as "start tag was here". We'll have to live
@@ -2592,19 +2588,16 @@ sub match_DTD_FPI_SI
         }
     }
     else {    # FPI not known, checking if the SI is
-        foreach my $proper_FPI (keys %{$CFG->{Types}}) {
-            if ($CFG->{Types}->{$proper_FPI}->{SysID}) {
-                if ($CFG->{Types}->{$proper_FPI}->{SysID} eq $SI) {
-                    &add_warning(
-                        'W26',
-                        {   W26_dtd_pub => $FPI,
-                            W26_dtd_pub_display =>
-                                $CFG->{Types}->{$proper_FPI}->{Display},
-                            W26_dtd_sys           => $SI,
-                            W26_dtd_pub_recommend => $proper_FPI
-                        }
-                    );
-                }
+        while (my ($proper_FPI, $value) = each %{$CFG->{Types}}) {
+            if ($value->{SysID} && $value->{SysID} eq $SI) {
+                &add_warning(
+                    'W26',
+                    {   W26_dtd_pub           => $FPI,
+                        W26_dtd_pub_display   => $value->{Display},
+                        W26_dtd_sys           => $SI,
+                        W26_dtd_pub_recommend => $proper_FPI
+                    }
+                );
             }
         }
     }
