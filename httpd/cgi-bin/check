@@ -446,7 +446,7 @@ $File = find_encodings($File);
 if ($File->{Charset}->{HTTP}) {    # HTTP, if given, is authoritative.
     $File->{Charset}->{Use} = $File->{Charset}->{HTTP};
 }
-elsif ($File->{ContentType} =~ m(^text/([-.a-zA-Z0-9]\+)?xml$)) {
+elsif ($File->{ContentType} =~ m(^text/(?:[-.a-zA-Z0-9]\+)?xml$)) {
 
     # Act as if $http_charset was 'us-ascii'. (MIME rules)
     $File->{Charset}->{Use} = 'us-ascii';
@@ -469,7 +469,7 @@ elsif ($File->{BOM} &&
 {
     $File->{Charset}->{Use} = 'utf-16';
 }
-elsif ($File->{ContentType} =~ m(^application/([-.a-zA-Z0-9]+\+)?xml$)) {
+elsif ($File->{ContentType} =~ m(^application/(?:[-.a-zA-Z0-9]+\+)?xml$)) {
     $File->{Charset}->{Use} = "utf-8";
 }
 elsif (&is_xml($File) and not $File->{ContentType} =~ m(^text/)) {
@@ -586,7 +586,7 @@ if ($File->{Charset}->{Use} eq 'utf-8' &&
 #
 # Override DOCTYPE if user asked for it.
 if ($File->{Opt}->{DOCTYPE}) {
-    if ($File->{Opt}->{DOCTYPE} !~ /(Inline|detect)/i) {
+    if ($File->{Opt}->{DOCTYPE} !~ /(?:Inline|detect)/i) {
         $File = &override_doctype($File);
     }
     else {
@@ -3326,7 +3326,7 @@ sub self_url_q
 
     # Others
     if ($q->param('doctype') and
-        not $q->param('doctype') =~ /(Inline|detect)/i)
+        not $q->param('doctype') =~ /(?:Inline|detect)/i)
     {
         $thispage .= 'doctype=' . uri_escape($q->param('doctype')) . ';';
     }
@@ -3579,7 +3579,7 @@ sub error
     #  }
 
     # No or unknown FPI and a relative SI.
-    if ($err->{msg} =~ m(cannot (open|find))) {
+    if ($err->{msg} =~ m(cannot (?:open|find))) {
         $File->{'Error Flagged'} = TRUE;
         my $tmpl = &W3C::Validator::MarkupValidator::get_error_template($File);
         $tmpl->param(fatal_parse_extid_error => TRUE);
