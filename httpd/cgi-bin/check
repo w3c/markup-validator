@@ -1982,7 +1982,7 @@ sub parse_content_type
 
     $charset = HTML::Encoding::encoding_from_content_type($Content_Type);
 
-    if ($mode =~ m(/)) {   # a "/" means it's unknown or we'd have a mode here.
+    if (index($mode, '/') != -1) {   # a "/" means it's unknown or we'd have a mode here.
         if ($ct eq 'text/css' and defined $url) {
             print redirect
                 'http://jigsaw.w3.org/css-validator/validator?uri=' .
@@ -2346,7 +2346,7 @@ sub set_error_uri ($$)
     # passing docs to parsers as strings, but S::P::O (at least as of 0.994)
     # seems to give us "3" as the FileName in those cases so we try to filter
     # out everything that doesn't look like a useful URI.
-    if ($uri && $uri =~ m|/|) {
+    if ($uri && index($uri, '/') != -1) {
 
         # Mask local file paths
         my $euri = URI->new($uri);
@@ -3006,8 +3006,8 @@ sub set_parse_mode
         if ($File->{Mode} eq "") {
             $File->{Mode} = "DTD+" . $parseModeFromXMLDecl;
         }
-        elsif ($File->{Mode} =~ /\+/) {
-            $File->{Mode} =~ s/\+.*/\+$parseModeFromXMLDecl/;
+        elsif ((my $ix = index($File->{Mode}, '+')) != -1) {
+            substr($File->{Mode}, $ix + 1) = $parseModeFromXMLDecl;
         }
         else {
             $File->{Mode} = $File->{Mode} . "+" . $parseModeFromXMLDecl;
@@ -3022,8 +3022,8 @@ sub set_parse_mode
     if ($File->{Mode} eq "") {
         $File->{Mode} = "DTD+" . $parseModeFromNamespace;
     }
-    elsif ($File->{Mode} =~ /\+/) {
-        $File->{Mode} =~ s/\+.*/\+$parseModeFromNamespace/;
+    elsif ((my $ix = index($File->{Mode}, '+')) != -1) {
+        substr($File->{Mode}, $ix + 1) = $parseModeFromNamespace;
     }
     else {
         $File->{Mode} = $File->{Mode} . "+" . $parseModeFromNamespace;
@@ -3033,7 +3033,10 @@ sub set_parse_mode
 
 #
 # Utility sub to tell if mode "is" XML.
-sub is_xml { shift->{Mode} =~ /XML/ }
+sub is_xml
+{
+    index(shift->{Mode}, 'XML') != -1;
+}
 
 #
 # Check charset conflicts and add any warnings necessary.
@@ -3117,7 +3120,7 @@ sub transcode
     my $cs = $exact_charset;
 
     if ($CFG->{Charsets}->{$cs}) {
-        if ($CFG->{Charsets}->{$cs} =~ /ERR /) {
+        if (index($CFG->{Charsets}->{$cs}, 'ERR ') != -1) {
 
             # The encoding is not supported due to policy
 
@@ -3131,7 +3134,7 @@ sub transcode
                     'This encoding is not supported by the validator.');
             return $File;
         }
-        elsif ($CFG->{Charsets}->{$cs} =~ /X /) {
+        elsif (index($CFG->{Charsets}->{$cs}, 'X ') != -1) {
 
             # possibly problematic, we recommend another alias
             my $recommended_charset = $CFG->{Charsets}->{$cs};
@@ -3534,7 +3537,7 @@ sub error
         # will be #344
     }
 
-    if (($err->{num} eq '113') and ($err->{msg} =~ /xml:space/)) {
+    if (($err->{num} eq '113') and index($err->{msg}, 'xml:space') != -1) {
 
         # FIXME
         # this is a problem with some of the "flattened" W3C DTDs, filtering
@@ -3585,7 +3588,7 @@ sub error
     }
 
     # No DOCTYPE found! We are falling back to vanilla DTD
-    if ($err->{msg} =~ m(prolog can\'t be omitted)) {
+    if (index($err->{msg}, "prolog can't be omitted") != -1) {
         if (lc($File->{Root}) eq 'html') {
             my $dtd = $File->{"Default DOCTYPE"}->{$is_xml ? "XHTML" : "HTML"};
             W3C::Validator::MarkupValidator::add_warning('W09',
