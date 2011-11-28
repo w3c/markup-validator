@@ -1056,7 +1056,6 @@ sub html5_validate (\$)
         my @ct = ($ct => undef, charset => "UTF-8");
         $ct = HTTP::Headers::Util::join_header_words(@ct);
 
-        $req->content_type($ct);
         $req->content(Encode::encode_utf8(join("\n", @{$File->{Content}})));
     }
     else {
@@ -1076,9 +1075,9 @@ sub html5_validate (\$)
             $ct = HTTP::Headers::Util::join_header_words(@ct);
         }
 
-        $req->content_type($ct);
         $req->content_ref(\$File->{Bytes});
     }
+    $req->content_type($ct);
 
     $req->content_language($File->{ContentLang}) if $File->{ContentLang};
 
@@ -3325,12 +3324,11 @@ sub self_url_q
     }
 
     # Others
-    if ($q->param('doctype') and
-        not $q->param('doctype') =~ /(?:Inline|detect)/i)
+    if ($q->param('doctype') and $q->param('doctype') !~ /(?:Inline|detect)/i)
     {
         $thispage .= 'doctype=' . uri_escape($q->param('doctype')) . ';';
     }
-    if ($q->param('charset') and not $q->param('charset') =~ /detect/i) {
+    if ($q->param('charset') and $q->param('charset') !~ /detect/i) {
         $thispage .= 'charset=' . uri_escape($q->param('charset')) . ';';
     }
 
