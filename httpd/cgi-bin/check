@@ -219,6 +219,9 @@ EOF
     # SGML open catalogs but they don't seem to work (again as of 1.70 and
     # 2.7.7); if we use xml.soc here, no entities seem to end up being resolved
     # from it - so we use a (redundant) XML catalog which works.
+    # Note that setting XML_CATALOG_FILES here does not seem to work with
+    # mod_perl (it doesn't end up being used by XML::LibXML), therefore we do
+    # it in the mod_perl/startup.pl startup file for it too.
     local $ENV{XML_CATALOG_FILES} =
         catfile($CFG->{Paths}->{SGML}->{Library}, 'catalog.xml');
     require XML::LibXML;
