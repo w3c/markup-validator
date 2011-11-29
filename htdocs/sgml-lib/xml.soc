@@ -6,9 +6,17 @@ SGMLDECL "xml.dcl"
 
 PUBLIC "-//W3C//DTD Specification V2.0//EN"
        "Specification/xmlspec-v20.dtd"
+SYSTEM "http://www.w3.org/XML/1998/06/xmlspec-v20.dtd"
+       "Specification/xmlspec-v20.dtd"
+
 PUBLIC "-//W3C//DTD Specification V2.1//EN"
        "Specification/xmlspec-v21.dtd"
+SYSTEM "http://www.w3.org/XML/1998/06/xmlspec-v21.dtd"
+       "Specification/xmlspec-v21.dtd"
+
 PUBLIC "-//W3C//DTD Specification V2.10//EN"
+       "Specification/xmlspec.dtd"
+SYSTEM "http://www.w3.org/2002/xmlspec/dtd/2.10/xmlspec.dtd"
        "Specification/xmlspec.dtd"
 
 
@@ -18,11 +26,17 @@ PUBLIC "-//W3C//DTD MathML 2.0//EN"
        "XX-MathML2-20031104/mathml2.dtd"
 SYSTEM "http://www.w3.org/Math/DTD/mathml2/mathml2.dtd"
        "XX-MathML2-20031104/mathml2.dtd"
+
 PUBLIC "-//W3C//ENTITIES MathML 2.0 Qualified Names 1.0//EN"
        "XX-MathML2-20031104/mathml2-qname-1.mod"
+SYSTEM "http://www.w3.org/Math/DTD/mathml2/mathml2-qname-1.mod"
+       "XX-MathML2-20031104/mathml2-qname-1.mod"
+
 PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN"
        "XX-MathML2-20031104/xhtml-math11-f.dtd"
 SYSTEM "http://www.w3.org/Math/DTD/mathml2/xhtml-math11-f.dtd"
+       "XX-MathML2-20031104/xhtml-math11-f.dtd"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-math11-f.dtd"
        "XX-MathML2-20031104/xhtml-math11-f.dtd"
 
 
@@ -30,50 +44,119 @@ SYSTEM "http://www.w3.org/Math/DTD/mathml2/xhtml-math11-f.dtd"
 
 PUBLIC "-//W3C//DTD MathML 3.0//EN"
        "REC-MathML3-20101021/mathml3.dtd"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/mathml3.dtd"
+       "REC-MathML3-20101021/mathml3.dtd"
+
 PUBLIC "-//W3C//ENTITIES MathML 3.0 Qualified Names 1.0//EN"
        "REC-MathML3-20101021/mathml3-qname.mod"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/mathml3-qname.mod"
+       "REC-MathML3-20101021/mathml3-qname.mod"
+
 -- Entities --
+
 PUBLIC "-//W3C//ENTITIES Box and Line Drawing//EN"
        "REC-MathML3-20101021/isobox.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/isobox.ent"
+       "REC-MathML3-20101021/isobox.ent"
+
 PUBLIC "-//W3C//ENTITIES Russian Cyrillic//EN"
        "REC-MathML3-20101021/isocyr1.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/isocyr1.ent"
+       "REC-MathML3-20101021/isocyr1.ent"
+
 PUBLIC "-//W3C//ENTITIES Non-Russian Cyrillic//EN"
        "REC-MathML3-20101021/isocyr2.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/isocyr2.ent"
+       "REC-MathML3-20101021/isocyr2.ent"
+
 PUBLIC "-//W3C//ENTITIES Diacritical Marks//EN"
        "REC-MathML3-20101021/isodia.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/isodia.ent"
+       "REC-MathML3-20101021/isodia.ent"
+
 PUBLIC "-//W3C//ENTITIES Added Latin 1//EN"
        "REC-MathML3-20101021/isolat1.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/isolat1.ent"
+       "REC-MathML3-20101021/isolat1.ent"
+
 PUBLIC "-//W3C//ENTITIES Added Latin 2//EN"
        "REC-MathML3-20101021/isolat2.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/isolat2.ent"
+       "REC-MathML3-20101021/isolat2.ent"
+
 PUBLIC "-//W3C//ENTITIES Numeric and Special Graphic//EN"
        "REC-MathML3-20101021/isonum.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/isonum.ent"
+       "REC-MathML3-20101021/isonum.ent"
+
 PUBLIC "-//W3C//ENTITIES Publishing//EN"
        "REC-MathML3-20101021/isopub.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/isopub.ent"
+       "REC-MathML3-20101021/isopub.ent"
+
 PUBLIC "-//W3C//ENTITIES Added Math Symbols: Arrow Relations//EN"
        "REC-MathML3-20101021/isoamsa.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/isoamsa.ent"
+       "REC-MathML3-20101021/isoamsa.ent"
+
 PUBLIC "-//W3C//ENTITIES Added Math Symbols: Binary Operators//EN"
        "REC-MathML3-20101021/isoamsb.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/isoamsb.ent"
+       "REC-MathML3-20101021/isoamsb.ent"
+
 PUBLIC "-//W3C//ENTITIES Added Math Symbols: Delimiters//EN"
        "REC-MathML3-20101021/isoamsc.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/isoamsc.ent"
+       "REC-MathML3-20101021/isoamsc.ent"
+
 PUBLIC "-//W3C//ENTITIES Added Math Symbols: Negated Relations//EN"
        "REC-MathML3-20101021/isoamsn.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/isoamsn.ent"
+       "REC-MathML3-20101021/isoamsn.ent"
+
 PUBLIC "-//W3C//ENTITIES Added Math Symbols: Ordinary//EN"
        "REC-MathML3-20101021/isoamso.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/isoamso.ent"
+       "REC-MathML3-20101021/isoamso.ent"
+
 PUBLIC "-//W3C//ENTITIES Added Math Symbols: Relations//EN"
        "REC-MathML3-20101021/isoamsr.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/isoamsr.ent"
+       "REC-MathML3-20101021/isoamsr.ent"
+
 PUBLIC "-//W3C//ENTITIES Greek Symbols//EN"
        "REC-MathML3-20101021/isogrk3.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/isogrk3.ent"
+       "REC-MathML3-20101021/isogrk3.ent"
+
 PUBLIC "-//W3C//ENTITIES Math Alphabets: Fraktur//EN"
        "REC-MathML3-20101021/isomfrk.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/isomfrk.ent"
+       "REC-MathML3-20101021/isomfrk.ent"
+
 PUBLIC "-//W3C//ENTITIES Math Alphabets: Open Face//EN"
        "REC-MathML3-20101021/isomopf.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/isomopf.ent"
+       "REC-MathML3-20101021/isomopf.ent"
+
 PUBLIC "-//W3C//ENTITIES Math Alphabets: Script//EN"
        "REC-MathML3-20101021/isomscr.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/isomscr.ent"
+       "REC-MathML3-20101021/isomscr.ent"
+
 PUBLIC "-//W3C//ENTITIES General Technical//EN"
        "REC-MathML3-20101021/isotech.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/isotech.ent"
+       "REC-MathML3-20101021/isotech.ent"
+
 PUBLIC "-//W3C//ENTITIES Additional MathML Symbols//EN"
        "REC-MathML3-20101021/mmlextra.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/mmlextra.ent"
+       "REC-MathML3-20101021/mmlextra.ent"
+
 PUBLIC "-//W3C//ENTITIES MathML Aliases//EN"
+       "REC-MathML3-20101021/mmlalias.ent"
+SYSTEM "http://www.w3.org/Math/DTD/mathml3/mmlalias.ent"
        "REC-MathML3-20101021/mmlalias.ent"
 
 
@@ -81,115 +164,268 @@ PUBLIC "-//W3C//ENTITIES MathML Aliases//EN"
 
 PUBLIC "-//W3C//DTD SVG 1.0//EN"
        "REC-SVG-20010904/svg10.dtd"
+SYSTEM "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd"
+       "REC-SVG-20010904/svg10.dtd"
 
 
 -- SVG 1.1 --
 
 PUBLIC "-//W3C//DTD SVG 1.1//EN"
        "REC-SVG11-20110816/svg11.dtd"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"
+       "REC-SVG11-20110816/svg11.dtd"
+
 PUBLIC "-//W3C//DTD SVG 1.1 Basic//EN"
        "REC-SVG11-20110816/svg11-basic.dtd"
-PUBLIC "-//W3C//DTD SVG 1.1 Tiny//EN"
-       "REC-SVG11-20110816/svg11-tiny.dtd"
 PUBLIC "-//W3C//DTD SVG Basic 1.1//EN"
        "REC-SVG11-20110816/svg11-basic.dtd"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-basic.dtd"
+       "REC-SVG11-20110816/svg11-basic.dtd"
+
+PUBLIC "-//W3C//DTD SVG 1.1 Tiny//EN"
+       "REC-SVG11-20110816/svg11-tiny.dtd"
 PUBLIC "-//W3C//DTD SVG Tiny 1.1//EN"
        "REC-SVG11-20110816/svg11-tiny.dtd"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-tiny.dtd"
+       "REC-SVG11-20110816/svg11-tiny.dtd"
+
 -- Document models --
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Document Model//EN"
        "REC-SVG11-20110816/svg11-model.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-model.mod"
+       "REC-SVG11-20110816/svg11-model.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Basic Document Model//EN"
        "REC-SVG11-20110816/svg11-basic-model.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-basic-model.mod"
+       "REC-SVG11-20110816/svg11-basic-model.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Tiny Document Model//EN"
        "REC-SVG11-20110816/svg11-tiny-model.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-tiny-model.mod"
+       "REC-SVG11-20110816/svg11-tiny-model.mod"
+
 -- Other modules --
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Attribute Collection//EN"
        "REC-SVG11-20110816/svg11-attribs.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-attribs.mod"
+       "REC-SVG11-20110816/svg11-attribs.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Basic Attribute Collection//EN"
        "REC-SVG11-20110816/svg11-basic-attribs.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-basic-attribs.mod"
+       "REC-SVG11-20110816/svg11-basic-attribs.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Tiny Attribute Collection//EN"
        "REC-SVG11-20110816/svg11-tiny-attribs.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-tiny-attribs.mod"
+       "REC-SVG11-20110816/svg11-tiny-attribs.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Animation//EN"
        "REC-SVG11-20110816/svg-animation.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-animation.mod"
+       "REC-SVG11-20110816/svg-animation.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Animation Events Attribute//EN"
        "REC-SVG11-20110816/svg-animevents-attrib.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-animevents-attrib.mod"
+       "REC-SVG11-20110816/svg-animevents-attrib.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Basic Clip//EN"
        "REC-SVG11-20110816/svg-basic-clip.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-basic-clip.mod"
+       "REC-SVG11-20110816/svg-basic-clip.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Basic Filter//EN"
        "REC-SVG11-20110816/svg-basic-filter.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-basic-filter.mod"
+       "REC-SVG11-20110816/svg-basic-filter.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Basic Font//EN"
        "REC-SVG11-20110816/svg-basic-font.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-basic-font.mod"
+       "REC-SVG11-20110816/svg-basic-font.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Basic Graphics Attribute//EN"
        "REC-SVG11-20110816/svg-basic-graphics-attrib.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-basic-graphics-attrib.mod"
+       "REC-SVG11-20110816/svg-basic-graphics-attrib.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Basic Paint Attribute//EN"
        "REC-SVG11-20110816/svg-basic-paint-attrib.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-basic-paint-attrib.mod"
+       "REC-SVG11-20110816/svg-basic-paint-attrib.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Basic Structure//EN"
        "REC-SVG11-20110816/svg-basic-structure.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-basic-structure.mod"
+       "REC-SVG11-20110816/svg-basic-structure.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Basic Text//EN"
        "REC-SVG11-20110816/svg-basic-text.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-basic-text.mod"
+       "REC-SVG11-20110816/svg-basic-text.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Clip//EN"
        "REC-SVG11-20110816/svg-clip.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-clip.mod"
+       "REC-SVG11-20110816/svg-clip.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Conditional Processing//EN"
        "REC-SVG11-20110816/svg-conditional.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-conditional.mod"
+       "REC-SVG11-20110816/svg-conditional.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Container Attribute//EN"
        "REC-SVG11-20110816/svg-container-attrib.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-container-attrib.mod"
+       "REC-SVG11-20110816/svg-container-attrib.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Core Attribute//EN"
        "REC-SVG11-20110816/svg-core-attrib.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-core-attrib.mod"
+       "REC-SVG11-20110816/svg-core-attrib.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Cursor//EN"
        "REC-SVG11-20110816/svg-cursor.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-cursor.mod"
+       "REC-SVG11-20110816/svg-cursor.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Datatypes//EN"
        "REC-SVG11-20110816/svg-datatypes.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-datatypes.mod"
+       "REC-SVG11-20110816/svg-datatypes.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Document Events Attribute//EN"
        "REC-SVG11-20110816/svg-docevents-attrib.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-docevents-attrib.mod"
+       "REC-SVG11-20110816/svg-docevents-attrib.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Extensibility//EN"
        "REC-SVG11-20110816/svg-extensibility.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-extensibility.mod"
+       "REC-SVG11-20110816/svg-extensibility.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 External Resources Attribute//EN"
        "REC-SVG11-20110816/svg-extresources-attrib.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-extresources-attrib.mod"
+       "REC-SVG11-20110816/svg-extresources-attrib.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Filter//EN"
        "REC-SVG11-20110816/svg-filter.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-filter.mod"
+       "REC-SVG11-20110816/svg-filter.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Font//EN"
        "REC-SVG11-20110816/svg-font.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-font.mod"
+       "REC-SVG11-20110816/svg-font.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Modular Framework//EN"
        "REC-SVG11-20110816/svg-framework.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-framework.mod"
+       "REC-SVG11-20110816/svg-framework.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Gradient//EN"
        "REC-SVG11-20110816/svg-gradient.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-gradient.mod"
+       "REC-SVG11-20110816/svg-gradient.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Graphical Element Events Attribute//EN"
        "REC-SVG11-20110816/svg-graphevents-attrib.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-graphevents-attrib.mod"
+       "REC-SVG11-20110816/svg-graphevents-attrib.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Graphics Attribute//EN"
        "REC-SVG11-20110816/svg-graphics-attrib.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-graphics-attrib.mod"
+       "REC-SVG11-20110816/svg-graphics-attrib.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Hyperlinking//EN"
        "REC-SVG11-20110816/svg-hyperlink.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-hyperlink.mod"
+       "REC-SVG11-20110816/svg-hyperlink.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Image//EN"
        "REC-SVG11-20110816/svg-image.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-image.mod"
+       "REC-SVG11-20110816/svg-image.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Marker//EN"
        "REC-SVG11-20110816/svg-marker.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-marker.mod"
+       "REC-SVG11-20110816/svg-marker.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Mask//EN"
        "REC-SVG11-20110816/svg-mask.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-mask.mod"
+       "REC-SVG11-20110816/svg-mask.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Paint Opacity Attribute//EN"
        "REC-SVG11-20110816/svg-opacity-attrib.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-opacity-attrib.mod"
+       "REC-SVG11-20110816/svg-opacity-attrib.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Paint Attribute//EN"
        "REC-SVG11-20110816/svg-paint-attrib.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-paint-attrib.mod"
+       "REC-SVG11-20110816/svg-paint-attrib.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Pattern//EN"
        "REC-SVG11-20110816/svg-pattern.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-pattern.mod"
+       "REC-SVG11-20110816/svg-pattern.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Color Profile//EN"
        "REC-SVG11-20110816/svg-profile.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-profile.mod"
+       "REC-SVG11-20110816/svg-profile.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Qualified Name//EN"
        "REC-SVG11-20110816/svg-qname.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-qname.mod"
+       "REC-SVG11-20110816/svg-qname.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Scripting//EN"
        "REC-SVG11-20110816/svg-script.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-script.mod"
+       "REC-SVG11-20110816/svg-script.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Shape//EN"
        "REC-SVG11-20110816/svg-shape.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-shape.mod"
+       "REC-SVG11-20110816/svg-shape.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Structure//EN"
        "REC-SVG11-20110816/svg-structure.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-structure.mod"
+       "REC-SVG11-20110816/svg-structure.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Style//EN"
        "REC-SVG11-20110816/svg-style.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-style.mod"
+       "REC-SVG11-20110816/svg-style.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 Text//EN"
        "REC-SVG11-20110816/svg-text.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-text.mod"
+       "REC-SVG11-20110816/svg-text.mod"
+
 PUBLIC "-//W3C//ELEMENTS SVG 1.1 View//EN"
        "REC-SVG11-20110816/svg-view.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-view.mod"
+       "REC-SVG11-20110816/svg-view.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 Viewport Attribute//EN"
        "REC-SVG11-20110816/svg-viewport-attrib.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-viewport-attrib.mod"
+       "REC-SVG11-20110816/svg-viewport-attrib.mod"
+
 PUBLIC "-//W3C//ENTITIES SVG 1.1 XLink Attribute//EN"
+       "REC-SVG11-20110816/svg-xlink-attrib.mod"
+SYSTEM "http://www.w3.org/Graphics/SVG/1.1/DTD/svg-xlink-attrib.mod"
        "REC-SVG11-20110816/svg-xlink-attrib.mod"
 
 
@@ -197,9 +433,23 @@ PUBLIC "-//W3C//ENTITIES SVG 1.1 XLink Attribute//EN"
 
 PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
        "REC-xhtml1-20020801/xhtml1-strict.dtd"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml1-strict.dtd"
+       "REC-xhtml1-20020801/xhtml1-strict.dtd"
+SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
+       "REC-xhtml1-20020801/xhtml1-strict.dtd"
+
 PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
        "REC-xhtml1-20020801/xhtml1-transitional.dtd"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml1-transitional.dtd"
+       "REC-xhtml1-20020801/xhtml1-transitional.dtd"
+SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+       "REC-xhtml1-20020801/xhtml1-transitional.dtd"
+
 PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"
+       "REC-xhtml1-20020801/xhtml1-frameset.dtd"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml1-frameset.dtd"
+       "REC-xhtml1-20020801/xhtml1-frameset.dtd"
+SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd"
        "REC-xhtml1-20020801/xhtml1-frameset.dtd"
 
 
@@ -207,7 +457,16 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"
 
 PUBLIC "-//W3C//DTD XHTML 1.1//EN"
        "REC-xhtml11-20101123/xhtml11.dtd"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml11.dtd"
+       "REC-xhtml11-20101123/xhtml11.dtd"
+SYSTEM "http://www.w3.org/TR/xhtml11/xhtml11.dtd"
+       "REC-xhtml11-20101123/xhtml11.dtd"
+
 PUBLIC "-//W3C//ENTITIES XHTML 1.1 Document Model 1.0//EN"
+       "REC-xhtml11-20101123/xhtml11-model-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml11-model-1.mod"
+       "REC-xhtml11-20101123/xhtml11-model-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml11/xhtml11-model-1.mod"
        "REC-xhtml11-20101123/xhtml11-model-1.mod"
 
 
@@ -215,7 +474,16 @@ PUBLIC "-//W3C//ENTITIES XHTML 1.1 Document Model 1.0//EN"
 
 PUBLIC "-//W3C//DTD XHTML Basic 1.0//EN"
        "REC-xhtml-basic-20001219/xhtml-basic10.dtd"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-basic10.dtd"
+       "REC-xhtml-basic-20001219/xhtml-basic10.dtd"
+SYSTEM "http://www.w3.org/TR/2000/REC-xhtml-basic-20001219/xhtml-basic10.dtd"
+       "REC-xhtml-basic-20001219/xhtml-basic10.dtd"
+
 PUBLIC "-//W3C//ENTITIES XHTML Basic 1.0 Document Model 1.0//EN"
+       "REC-xhtml-basic-20001219/xhtml-basic10-model-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-basic10-model-1.mod"
+       "REC-xhtml-basic-20001219/xhtml-basic10-model-1.mod"
+SYSTEM "http://www.w3.org/TR/2000/REC-xhtml-basic-20001219/xhtml-basic10-model-1.mod"
        "REC-xhtml-basic-20001219/xhtml-basic10-model-1.mod"
 
 
@@ -223,9 +491,23 @@ PUBLIC "-//W3C//ENTITIES XHTML Basic 1.0 Document Model 1.0//EN"
 
 PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN"
        "REC-xhtml-basic-20101123/xhtml-basic11.dtd"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-basic11.dtd"
+       "REC-xhtml-basic-20101123/xhtml-basic11.dtd"
+SYSTEM "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd"
+       "REC-xhtml-basic-20101123/xhtml-basic11.dtd"
+
 PUBLIC "-//W3C//ENTITIES XHTML Basic 1.1 Document Model 1.0//EN"
        "REC-xhtml-basic-20101123/xhtml-basic11-model-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-basic11-model-1.mod"
+       "REC-xhtml-basic-20101123/xhtml-basic11-model-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-basic/xhtml-basic11-model-1.mod"
+       "REC-xhtml-basic-20101123/xhtml-basic11-model-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Inputmode 1.0//EN"
+       "REC-xhtml-basic-20101123/xhtml-inputmode-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-inputmode-1.mod"
+       "REC-xhtml-basic-20101123/xhtml-inputmode-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-basic/xhtml-inputmode-1.mod"
        "REC-xhtml-basic-20101123/xhtml-inputmode-1.mod"
 
 
@@ -233,7 +515,12 @@ PUBLIC "-//W3C//ELEMENTS XHTML Inputmode 1.0//EN"
 
 PUBLIC "-//W3C//DTD XHTML-Print 1.0//EN"
        "REC-xhtml-print-20101123/xhtml-print10.dtd"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-print10.dtd"
+       "REC-xhtml-print-20101123/xhtml-print10.dtd"
+
 PUBLIC "-//W3C//ENTITIES XHTML-Print 1.0 Document Model 1.0//EN"
+       "REC-xhtml-print-20101123/xhtml-print10-model-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-print10-model-1.mod"
        "REC-xhtml-print-20101123/xhtml-print10-model-1.mod"
 
 
@@ -241,7 +528,16 @@ PUBLIC "-//W3C//ENTITIES XHTML-Print 1.0 Document Model 1.0//EN"
 
 PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
        "WD-XHTMLplusMathMLplusSVG-20020809/xhtml-math-svg.dtd"
+SYSTEM "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd"
+       "WD-XHTMLplusMathMLplusSVG-20020809/xhtml-math-svg.dtd"
+SYSTEM "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg-20020809.dtd"
+       "WD-XHTMLplusMathMLplusSVG-20020809/xhtml-math-svg.dtd"
+
 PUBLIC "-//W3C//DTD XHTML Basic plus SVG Tiny//EN"
+       "WD-XHTMLplusMathMLplusSVG-20020809/xhtml-basic-svg-tiny.dtd"
+SYSTEM "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-basic-svg-tiny.dtd"
+       "WD-XHTMLplusMathMLplusSVG-20020809/xhtml-basic-svg-tiny.dtd"
+SYSTEM "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-basic-svg-tiny-20020809.dtd"
        "WD-XHTMLplusMathMLplusSVG-20020809/xhtml-basic-svg-tiny.dtd"
 
 
@@ -249,9 +545,23 @@ PUBLIC "-//W3C//DTD XHTML Basic plus SVG Tiny//EN"
 
 PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
        "REC-rdfa-syntax-20081014/xhtml-rdfa-1.dtd"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"
+       "REC-rdfa-syntax-20081014/xhtml-rdfa-1.dtd"
+SYSTEM "http://www.w3.org/TR/rdfa-syntax/DTD/xhtml-rdfa-1.dtd"
+       "REC-rdfa-syntax-20081014/xhtml-rdfa-1.dtd"
+
 PUBLIC "-//W3C//ENTITIES XHTML+RDFa Document Model 1.0//EN"
        "REC-rdfa-syntax-20081014/xhtml-rdfa-model-1.mod"
+SYSTEM "http://www.w3.org/TR/rdfa-syntax/DTD/xhtml-rdfa-model-1.mod"
+       "REC-rdfa-syntax-20081014/xhtml-rdfa-model-1.mod"
+SYSTEM "http://www.w3.org/TR/rdfa-syntax/DTD/xhtml-rdfa-model-1.mod"
+       "REC-rdfa-syntax-20081014/xhtml-rdfa-model-1.mod"
+
 PUBLIC "-//W3C//ENTITIES XHTML MetaAttributes 1.0//EN"
+       "REC-rdfa-syntax-20081014/xhtml-metaAttributes-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-metaAttributes-1.mod"
+       "REC-rdfa-syntax-20081014/xhtml-metaAttributes-1.mod"
+SYSTEM "http://www.w3.org/TR/rdfa-syntax/DTD/xhtml-metaAttributes-1.mod"
        "REC-rdfa-syntax-20081014/xhtml-metaAttributes-1.mod"
 
 
@@ -259,9 +569,23 @@ PUBLIC "-//W3C//ENTITIES XHTML MetaAttributes 1.0//EN"
 
 PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN"
        "WD-xhtml-rdfa-20110331/xhtml-rdfa-2.dtd"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd"
+       "WD-xhtml-rdfa-20110331/xhtml-rdfa-2.dtd"
+SYSTEM "http://www.w3.org/TR/xhtml-rdfa/DTD/xhtml-rdfa-2.dtd"
+       "WD-xhtml-rdfa-20110331/xhtml-rdfa-2.dtd"
+
 PUBLIC "-//W3C//ENTITIES XHTML+RDFa Document Model 1.1//EN"
        "WD-xhtml-rdfa-20110331/xhtml-rdfa-model-2.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-model-2.mod"
+       "WD-xhtml-rdfa-20110331/xhtml-rdfa-model-2.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-rdfa/DTD/xhtml-rdfa-model-2.mod"
+       "WD-xhtml-rdfa-20110331/xhtml-rdfa-model-2.mod"
+
 PUBLIC "-//W3C//ENTITIES XHTML MetaAttributes 1.1//EN"
+       "WD-xhtml-rdfa-20110331/xhtml-metaAttributes-2.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-metaAttributes-2.mod"
+       "WD-xhtml-rdfa-20110331/xhtml-metaAttributes-2.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-rdfa/DTD/xhtml-metaAttributes-2.mod"
        "WD-xhtml-rdfa-20110331/xhtml-metaAttributes-2.mod"
 
 
@@ -269,7 +593,14 @@ PUBLIC "-//W3C//ENTITIES XHTML MetaAttributes 1.1//EN"
 
 PUBLIC "-//W3C//DTD XHTML+ARIA 1.0//EN"
        "CR-wai-aria-20110118/xhtml-aria-1.dtd"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-aria-1.dtd"
+       "CR-wai-aria-20110118/xhtml-aria-1.dtd"
+SYSTEM "http://www.w3.org/WAI/ARIA/schemata/xhtml-aria-1.dtd"
+       "CR-wai-aria-20110118/xhtml-aria-1.dtd"
+
 PUBLIC "-//W3C//ENTITIES XHTML ARIA Attributes 1.0//EN"
+       "CR-wai-aria-20110118/aria-attributes-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/aria-attributes-1.mod"
        "CR-wai-aria-20110118/aria-attributes-1.mod"
 
 
@@ -280,11 +611,15 @@ PUBLIC "-//W3C//ENTITIES XHTML Role Attribute Qnames 1.0//EN"
 -- Incorrect public ID in CR-wai-aria-20110118/xhtml-aria-1.dtd --
 PUBLIC "-//W3C//ENTITIES XHTML Role Attribute 1.0//EN"
        "NOTE-xhtml-role-20101216/xhtml-role-qname-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-role-qname-1.mod"
+       "NOTE-xhtml-role-20101216/xhtml-role-qname-1.mod"
 
 
 -- SMIL 1.0 --
 
 PUBLIC "-//W3C//DTD SMIL 1.0//EN"
+       "REC-smil-19980615/smil10.dtd"
+SYSTEM "http://www.w3.org/TR/REC-smil/SMIL10.dtd"
        "REC-smil-19980615/smil10.dtd"
 
 
@@ -292,35 +627,77 @@ PUBLIC "-//W3C//DTD SMIL 1.0//EN"
 
 PUBLIC "-//W3C//DTD SMIL 2.0//EN"
        "REC-smil20-20050107/SMIL20.dtd"
+SYSTEM "http://www.w3.org/2001/SMIL20/SMIL20.dtd"
+       "REC-smil20-20050107/SMIL20.dtd"
 
 PUBLIC "-//W3C//ENTITIES SMIL 2.0 Modular Framework 1.0//EN"
        "REC-smil20-20050107/smil-framework-1.mod"
+SYSTEM "http://www.w3.org/2001/SMIL20/smil-framework-1.mod"
+       "REC-smil20-20050107/smil-framework-1.mod"
+
 PUBLIC "-//W3C//ENTITIES SMIL 2.0 Datatypes 1.0//EN"
        "REC-smil20-20050107/smil-datatypes-1.mod"
+SYSTEM "http://www.w3.org/2001/SMIL20/smil-datatypes-1.mod"
+       "REC-smil20-20050107/smil-datatypes-1.mod"
+
 PUBLIC "-//W3C//ENTITIES SMIL 2.0 Qualified Names 1.0//EN"
        "REC-smil20-20050107/smil-qname-1.mod"
+SYSTEM "http://www.w3.org/2001/SMIL20/smil-qname-1.mod"
+       "REC-smil20-20050107/smil-qname-1.mod"
+
 PUBLIC "-//W3C//ENTITIES SMIL 2.0 Common Attributes 1.0//EN"
        "REC-smil20-20050107/smil-attribs-1.mod"
+SYSTEM "http://www.w3.org/2001/SMIL20/smil-attribs-1.mod"
+       "REC-smil20-20050107/smil-attribs-1.mod"
+
 PUBLIC "-//W3C//ENTITIES SMIL 2.0 Document Model 1.0//EN"
+       "REC-smil20-20050107/smil-model-1.mod"
+SYSTEM "http://www.w3.org/2001/SMIL20/smil-model-1.mod"
        "REC-smil20-20050107/smil-model-1.mod"
 
 PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Document Structure//EN"
        "REC-smil20-20050107/SMIL-struct.mod"
+SYSTEM "http://www.w3.org/2001/SMIL20/SMIL-struct.mod"
+       "REC-smil20-20050107/SMIL-struct.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Animation//EN"
        "REC-smil20-20050107/SMIL-anim.mod"
+SYSTEM "http://www.w3.org/2001/SMIL20/SMIL-anim.mod"
+       "REC-smil20-20050107/SMIL-anim.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Content Control//EN"
        "REC-smil20-20050107/SMIL-control.mod"
+SYSTEM "http://www.w3.org/2001/SMIL20/SMIL-control.mod"
+       "REC-smil20-20050107/SMIL-control.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Document Metainformation//EN"
        "REC-smil20-20050107/SMIL-metainformation.mod"
+SYSTEM "http://www.w3.org/2001/SMIL20/SMIL-metainformation.mod"
+       "REC-smil20-20050107/SMIL-metainformation.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Layout//EN"
        "REC-smil20-20050107/SMIL-layout.mod"
+SYSTEM "http://www.w3.org/2001/SMIL20/SMIL-layout.mod"
+       "REC-smil20-20050107/SMIL-layout.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Linking//EN"
        "REC-smil20-20050107/SMIL-link.mod"
+SYSTEM "http://www.w3.org/2001/SMIL20/SMIL-link.mod"
+       "REC-smil20-20050107/SMIL-link.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Media Objects//EN"
        "REC-smil20-20050107/SMIL-media.mod"
+SYSTEM "http://www.w3.org/2001/SMIL20/SMIL-media.mod"
+       "REC-smil20-20050107/SMIL-media.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Timing//EN"
        "REC-smil20-20050107/SMIL-timing.mod"
+SYSTEM "http://www.w3.org/2001/SMIL20/SMIL-timing.mod"
+       "REC-smil20-20050107/SMIL-timing.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Transition//EN"
+       "REC-smil20-20050107/SMIL-transition.mod"
+SYSTEM "http://www.w3.org/2001/SMIL20/SMIL-transition.mod"
        "REC-smil20-20050107/SMIL-transition.mod"
 
 
@@ -328,43 +705,97 @@ PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Transition//EN"
 
 PUBLIC "-//W3C//DTD SMIL 2.1//EN"
        "REC-SMIL2-20051213/SMIL21.dtd"
+SYSTEM "http://www.w3.org/2005/SMIL21/SMIL21.dtd"
+       "REC-SMIL2-20051213/SMIL21.dtd"
+
 PUBLIC "-//W3C//DTD SMIL 2.1 Extended Mobile//EN"
        "REC-SMIL2-20051213/SMIL21ExtendedMobile.dtd"
+SYSTEM "http://www.w3.org/2005/SMIL21/SMIL21ExtendedMobile.dtd"
+       "REC-SMIL2-20051213/SMIL21ExtendedMobile.dtd"
+
 PUBLIC "-//W3C//DTD SMIL 2.1 Mobile//EN"
+       "REC-SMIL2-20051213/SMIL21Mobile.dtd"
+SYSTEM "http://www.w3.org/2005/SMIL21/SMIL21Mobile.dtd"
        "REC-SMIL2-20051213/SMIL21Mobile.dtd"
 
 PUBLIC "-//W3C//ENTITIES SMIL 2.1 Language Profile Document Model 1.0//EN"
        "REC-SMIL2-20051213/smil-language-profile-model-1.mod"
+SYSTEM "http://www.w3.org/2005/SMIL21/smil-language-profile-model-1.mod"
+       "REC-SMIL2-20051213/smil-language-profile-model-1.mod"
+
 PUBLIC "-//W3C//ENTITIES SMIL 2.1 Extended Mobile Profile Document Model 1.0//EN"
        "REC-SMIL2-20051213/smil-extended-mobile-profile-model-1.mod"
+SYSTEM "http://www.w3.org/2005/SMIL21/smil-extended-mobile-profile-model-1.mod"
+       "REC-SMIL2-20051213/smil-extended-mobile-profile-model-1.mod"
+
 PUBLIC "-//W3C//ENTITIES SMIL 2.1 Mobile Profile Document Model 1.0//EN"
        "REC-SMIL2-20051213/smil-mobile-profile-model-1.mod"
+SYSTEM "http://www.w3.org/2005/SMIL21/smil-mobile-profile-model-1.mod"
+       "REC-SMIL2-20051213/smil-mobile-profile-model-1.mod"
+
 PUBLIC "-//W3C//ENTITIES SMIL 2.1 Datatypes 1.0//EN"
        "REC-SMIL2-20051213/smil-datatypes-1.mod"
+SYSTEM "http://www.w3.org/2005/SMIL21/smil-datatypes-1.mod"
+       "REC-SMIL2-20051213/smil-datatypes-1.mod"
+
 PUBLIC "-//W3C//ENTITIES SMIL 2.1 Common Attributes 1.0//EN"
        "REC-SMIL2-20051213/smil-attribs-1.mod"
+SYSTEM "http://www.w3.org/2005/SMIL21/smil-attribs-1.mod"
+       "REC-SMIL2-20051213/smil-attribs-1.mod"
+
 PUBLIC "-//W3C//ENTITIES SMIL 2.1 Qualified Names 1.0//EN"
        "REC-SMIL2-20051213/smil-qname-1.mod"
+SYSTEM "http://www.w3.org/2005/SMIL21/smil-qname-1.mod"
+       "REC-SMIL2-20051213/smil-qname-1.mod"
+
 PUBLIC "-//W3C//ENTITIES SMIL 2.1 Modular Framework 1.0//EN"
+       "REC-SMIL2-20051213/smil-framework-1.mod"
+SYSTEM "http://www.w3.org/2005/SMIL21/smil-framework-1.mod"
        "REC-SMIL2-20051213/smil-framework-1.mod"
 
 PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Animation//EN"
        "REC-SMIL2-20051213/SMIL-anim.mod"
+SYSTEM "http://www.w3.org/2005/SMIL21/SMIL-anim.mod"
+       "REC-SMIL2-20051213/SMIL-anim.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Content Control//EN"
        "REC-SMIL2-20051213/SMIL-control.mod"
+SYSTEM "http://www.w3.org/2005/SMIL21/SMIL-control.mod"
+       "REC-SMIL2-20051213/SMIL-control.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Layout//EN"
        "REC-SMIL2-20051213/SMIL-layout.mod"
+SYSTEM "http://www.w3.org/2005/SMIL21/SMIL-layout.mod"
+       "REC-SMIL2-20051213/SMIL-layout.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Linking//EN"
        "REC-SMIL2-20051213/SMIL-link.mod"
+SYSTEM "http://www.w3.org/2005/SMIL21/SMIL-link.mod"
+       "REC-SMIL2-20051213/SMIL-link.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Media Objects//EN"
        "REC-SMIL2-20051213/SMIL-media.mod"
+SYSTEM "http://www.w3.org/2005/SMIL21/SMIL-media.mod"
+       "REC-SMIL2-20051213/SMIL-media.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Document Metainformation//EN"
        "REC-SMIL2-20051213/SMIL-metainformation.mod"
+SYSTEM "http://www.w3.org/2005/SMIL21/SMIL-metainformation.mod"
+       "REC-SMIL2-20051213/SMIL-metainformation.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Document Structure//EN"
        "REC-SMIL2-20051213/SMIL-struct.mod"
+SYSTEM "http://www.w3.org/2005/SMIL21/SMIL-struct.mod"
+       "REC-SMIL2-20051213/SMIL-struct.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Timing//EN"
        "REC-SMIL2-20051213/SMIL-timing.mod"
+SYSTEM "http://www.w3.org/2005/SMIL21/SMIL-timing.mod"
+       "REC-SMIL2-20051213/SMIL-timing.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Transition//EN"
+       "REC-SMIL2-20051213/SMIL-transition.mod"
+SYSTEM "http://www.w3.org/2005/SMIL21/SMIL-transition.mod"
        "REC-SMIL2-20051213/SMIL-transition.mod"
 
 
@@ -372,161 +803,465 @@ PUBLIC "-//W3C//ELEMENTS SMIL 2.1 Transition//EN"
 
 PUBLIC "-//W3C//DTD SMIL 3.0 Language//EN"
        "REC-SMIL3-20081201/SMIL30Language.dtd"
+SYSTEM "http://www.w3.org/2008/SMIL30/SMIL30Language.dtd"
+       "REC-SMIL3-20081201/SMIL30Language.dtd"
+
 PUBLIC "-//W3C//DTD SMIL 3.0 Unified Mobile//EN"
        "REC-SMIL3-20081201/SMIL30UnifiedMobile.dtd"
+SYSTEM "http://www.w3.org/2008/SMIL30/SMIL30UnifiedMobile.dtd"
+       "REC-SMIL3-20081201/SMIL30UnifiedMobile.dtd"
+
 PUBLIC "-//W3C//DTD SMIL 3.0 Daisy//EN"
        "REC-SMIL3-20081201/SMIL30Daisy.dtd"
+SYSTEM "http://www.w3.org/2008/SMIL30/SMIL30Daisy.dtd"
+       "REC-SMIL3-20081201/SMIL30Daisy.dtd"
+
 PUBLIC "-//W3C//DTD SMIL 3.0 Tiny//EN"
        "REC-SMIL3-20081201/SMIL30Tiny.dtd"
+SYSTEM "http://www.w3.org/2008/SMIL30/SMIL30Tiny.dtd"
+       "REC-SMIL3-20081201/SMIL30Tiny.dtd"
+
 PUBLIC "-//W3C//DTD SMIL 3.0 smilText//EN"
+       "REC-SMIL3-20081201/SMIL30smilText.dtd"
+SYSTEM "http://www.w3.org/2008/SMIL30/SMIL30smilText.dtd"
        "REC-SMIL3-20081201/SMIL30smilText.dtd"
 
 PUBLIC "-//W3C//ENTITIES SMIL 3.0 Datatypes 1.0//EN"
        "REC-SMIL3-20081201/smil-datatypes-1.mod"
+SYSTEM "http://www.w3.org/2008/SMIL30/smil-datatypes-1.mod"
+       "REC-SMIL3-20081201/smil-datatypes-1.mod"
+
 PUBLIC "-//W3C//ENTITIES SMIL 3.0 Modular Framework 1.0//EN"
        "REC-SMIL3-20081201/smil-framework-1.mod"
+SYSTEM "http://www.w3.org/2008/SMIL30/smil-framework-1.mod"
+       "REC-SMIL3-20081201/smil-framework-1.mod"
+
 PUBLIC "-//W3C//ENTITIES SMIL 3.0 Document Model 1.0//EN"
        "REC-SMIL3-20081201/smil-profile-model-1.mod"
+SYSTEM "http://www.w3.org/2008/SMIL30/smil-profile-model-1.mod"
+       "REC-SMIL3-20081201/smil-profile-model-1.mod"
+
 PUBLIC "-//W3C//ENTITIES SMIL 3.0 Qualified Names 1.0//EN"
        "REC-SMIL3-20081201/smil-qname-1.mod"
+SYSTEM "http://www.w3.org/2008/SMIL30/smil-qname-1.mod"
+       "REC-SMIL3-20081201/smil-qname-1.mod"
+
 PUBLIC "-//W3C//ENTITIES SMIL 3.0 Common Attributes 1.0//EN"
+       "REC-SMIL3-20081201/smil-attribs-1.mod"
+SYSTEM "http://www.w3.org/2008/SMIL30/smil-attribs-1.mod"
        "REC-SMIL3-20081201/smil-attribs-1.mod"
 
 PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Animation//EN"
        "REC-SMIL3-20081201/SMIL-anim.mod"
+SYSTEM "http://www.w3.org/2008/SMIL30/SMIL-anim.mod"
+       "REC-SMIL3-20081201/SMIL-anim.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Content Control//EN"
        "REC-SMIL3-20081201/SMIL-control.mod"
+SYSTEM "http://www.w3.org/2008/SMIL30/SMIL-control.mod"
+       "REC-SMIL3-20081201/SMIL-control.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Layout//EN"
        "REC-SMIL3-20081201/SMIL-layout.mod"
+SYSTEM "http://www.w3.org/2008/SMIL30/SMIL-layout.mod"
+       "REC-SMIL3-20081201/SMIL-layout.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Linking//EN"
        "REC-SMIL3-20081201/SMIL-link.mod"
+SYSTEM "http://www.w3.org/2008/SMIL30/SMIL-link.mod"
+       "REC-SMIL3-20081201/SMIL-link.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Media Objects//EN"
        "REC-SMIL3-20081201/SMIL-media.mod"
+SYSTEM "http://www.w3.org/2008/SMIL30/SMIL-media.mod"
+       "REC-SMIL3-20081201/SMIL-media.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Document Metainformation//EN"
        "REC-SMIL3-20081201/SMIL-metainformation.mod"
+SYSTEM "http://www.w3.org/2008/SMIL30/SMIL-metainformation.mod"
+       "REC-SMIL3-20081201/SMIL-metainformation.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 3.0 SMILtext//EN"
        "REC-SMIL3-20081201/SMIL-smiltext.mod"
+SYSTEM "http://www.w3.org/2008/SMIL30/SMIL-smiltext.mod"
+       "REC-SMIL3-20081201/SMIL-smiltext.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 3.0 State//EN"
        "REC-SMIL3-20081201/SMIL-state.mod"
+SYSTEM "http://www.w3.org/2008/SMIL30/SMIL-state.mod"
+       "REC-SMIL3-20081201/SMIL-state.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Document Structure//EN"
        "REC-SMIL3-20081201/SMIL-struct.mod"
+SYSTEM "http://www.w3.org/2008/SMIL30/SMIL-struct.mod"
+       "REC-SMIL3-20081201/SMIL-struct.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Timesheet//EN"
        "REC-SMIL3-20081201/SMIL-timesheet.mod"
+SYSTEM "http://www.w3.org/2008/SMIL30/SMIL-timesheet.mod"
+       "REC-SMIL3-20081201/SMIL-timesheet.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Timing//EN"
        "REC-SMIL3-20081201/SMIL-timing.mod"
+SYSTEM "http://www.w3.org/2008/SMIL30/SMIL-timing.mod"
+       "REC-SMIL3-20081201/SMIL-timing.mod"
+
 PUBLIC "-//W3C//ELEMENTS SMIL 3.0 Transition//EN"
+       "REC-SMIL3-20081201/SMIL-transition.mod"
+SYSTEM "http://www.w3.org/2008/SMIL30/SMIL-transition.mod"
        "REC-SMIL3-20081201/SMIL-transition.mod"
 
 
 -- XHTML Modularization --
 
 -- XHTML framework modules --
+
 PUBLIC "-//W3C//ENTITIES XHTML Modular Framework 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-framework-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-framework-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-framework-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-framework-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-framework-1.mod"
+
 PUBLIC "-//W3C//NOTATIONS XHTML Notations 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-notations-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-notations-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-notations-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-notations-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-notations-1.mod"
+
 PUBLIC "-//W3C//ENTITIES XHTML Datatypes 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-datatypes-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-datatypes-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-datatypes-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-datatypes-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-datatypes-1.mod"
+
 PUBLIC "-//W3C//ENTITIES XHTML Qualified Names 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-qname-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-qname-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-qname-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-qname-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-qname-1.mod"
+
 PUBLIC "-//W3C//ENTITIES XHTML Common Attributes 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-attribs-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-attribs-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-attribs-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-attribs-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-attribs-1.mod"
+
 PUBLIC "-//W3C//ENTITIES XHTML Character Entities 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-charent-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-charent-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-charent-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-charent-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-charent-1.mod"
+
 -- XHTML modules --
+
 PUBLIC "-//W3C//ELEMENTS XHTML Document Structure 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-struct-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-struct-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-struct-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-struct-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-struct-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Text 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-text-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-text-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-text-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-text-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-text-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Hypertext 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-hypertext-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-hypertext-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-hypertext-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-hypertext-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-hypertext-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Lists 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-list-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-list-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-list-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-list-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-list-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Inline Structural 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-inlstruct-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-inlstruct-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-inlstruct-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-inlstruct-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-inlstruct-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Inline Presentation 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-inlpres-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-inlpres-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-inlpres-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-inlpres-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-inlpres-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Inline Phrasal 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-inlphras-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-inlphras-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-inlphras-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-inlphras-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-inlphras-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Block Structural 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-blkstruct-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-blkstruct-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-blkstruct-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-blkstruct-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-blkstruct-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Block Presentation 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-blkpres-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-blkpres-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-blkpres-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-blkpres-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-blkpres-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Block Phrasal 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-blkphras-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-blkphras-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-blkphras-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-blkphras-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-blkphras-1.mod"
+
 -- Not included in REC-xhtml-modularization-20100729 tarball, only xhtml.cat,
    fetched 2010-08-04 from http://www.w3.org/MarkUp/DTD/xhtml-ruby-1.mod --
+
 PUBLIC "-//W3C//ELEMENTS XHTML Ruby 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-ruby-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-ruby-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-ruby-1.mod"
+SYSTEM "http://www.w3.org/TR/ruby/xhtml-ruby-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-ruby-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Java Applets 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-applet-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-applet-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-applet-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-applet-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-applet-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Base Architecture 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-arch-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-arch-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-arch-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-arch-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-arch-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Param Element 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-param-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-param-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-param-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-param-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-param-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Presentation 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-pres-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-pres-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-pres-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-pres-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-pres-1.mod"
+
 -- xhtml-edit-1: both "Editing Elements" and "Editing Markup" in the wild --
+
 PUBLIC "-//W3C//ELEMENTS XHTML Editing Elements 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-edit-1.mod"
 PUBLIC "-//W3C//ELEMENTS XHTML Editing Markup 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-edit-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-edit-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-edit-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-edit-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-edit-1.mod"
+
 -- xhtml-bdo-1: both "BDO Element" and "BIDI Override Element" in the wild --
+
 PUBLIC "-//W3C//ELEMENTS XHTML BDO Element 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-bdo-1.mod"
 PUBLIC "-//W3C//ELEMENTS XHTML BIDI Override Element 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-bdo-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-bdo-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-bdo-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-bdo-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-bdo-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Basic Forms 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-basic-form-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-basic-form-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-basic-form-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-basic-form-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-basic-form-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Forms 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-form-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-form-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-form-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-form-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-form-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Basic Tables 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-basic-table-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-basic-table-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-basic-table-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-basic-table-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-basic-table-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Tables 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-table-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-table-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-table-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-table-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-table-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Images 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-image-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-image-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-image-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-image-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-image-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Client-side Image Maps 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-csismap-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-csismap-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-csismap-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-csismap-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-csismap-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Server-side Image Maps 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-ssismap-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-ssismap-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-ssismap-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-ssismap-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-ssismap-1.mod"
+
 PUBLIC "-//W3C//ENTITIES XHTML Intrinsic Events 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-events-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-events-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-events-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-events-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-events-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Metainformation 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-meta-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-meta-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-meta-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-meta-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-meta-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Scripting 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-script-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-script-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-script-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-script-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-script-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Style Sheets 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-style-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-style-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-style-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-style-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-style-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Link Element 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-link-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-link-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-link-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-link-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-link-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Base Element 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-base-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-base-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-base-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-base-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-base-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Legacy Redeclarations 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-legacy-redecl-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-legacy-redecl-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-legacy-redecl-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-legacy-redecl-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-legacy-redecl-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Legacy Markup 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-legacy-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-legacy-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-legacy-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-legacy-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-legacy-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Embedded Object 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-object-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-object-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-object-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-object-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-object-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Frames 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-frames-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-frames-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-frames-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-frames-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-frames-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Target 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-target-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-target-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-target-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-target-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-target-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Inline Frame Element 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-iframe-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-iframe-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-iframe-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-iframe-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-iframe-1.mod"
+
 -- xhtml-inlstyle-1: both "ELEMENTS" and "ENTITIES" in the wild --
+
 PUBLIC "-//W3C//ELEMENTS XHTML Inline Style 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-inlstyle-1.mod"
 PUBLIC "-//W3C//ENTITIES XHTML Inline Style 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-inlstyle-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-inlstyle-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-inlstyle-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-inlstyle-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-inlstyle-1.mod"
+
 PUBLIC "-//W3C//ELEMENTS XHTML Name Identifier 1.0//EN"
        "REC-xhtml-modularization-20100729/xhtml-nameident-1.mod"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-nameident-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-nameident-1.mod"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-nameident-1.mod"
+       "REC-xhtml-modularization-20100729/xhtml-nameident-1.mod"
+
 -- XHTML entity sets --
+
 PUBLIC "-//W3C//ENTITIES Latin 1 for XHTML//EN"
        "REC-xhtml-modularization-20100729/xhtml-lat1.ent"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-lat1.ent"
+       "REC-xhtml-modularization-20100729/xhtml-lat1.ent"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-lat1.ent"
+       "REC-xhtml-modularization-20100729/xhtml-lat1.ent"
+
 PUBLIC "-//W3C//ENTITIES Special for XHTML//EN"
        "REC-xhtml-modularization-20100729/xhtml-special.ent"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-special.ent"
+       "REC-xhtml-modularization-20100729/xhtml-special.ent"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-special.ent"
+       "REC-xhtml-modularization-20100729/xhtml-special.ent"
+
 PUBLIC "-//W3C//ENTITIES Symbols for XHTML//EN"
+       "REC-xhtml-modularization-20100729/xhtml-symbol.ent"
+SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-symbol.ent"
+       "REC-xhtml-modularization-20100729/xhtml-symbol.ent"
+SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-symbol.ent"
        "REC-xhtml-modularization-20100729/xhtml-symbol.ent"
 
 
@@ -534,69 +1269,164 @@ PUBLIC "-//W3C//ENTITIES Symbols for XHTML//EN"
 
 PUBLIC "-//W3C//ENTITIES uppercase aliases for HTML//EN//XML"
        "REC-xml-entity-names-20100401/html5-uppercase.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/html5-uppercase.ent"
+       "REC-xml-entity-names-20100401/html5-uppercase.ent"
+
 PUBLIC "-//W3C//ENTITIES HTML MathML Set//EN//XML"
        "REC-xml-entity-names-20100401/htmlmathml.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/htmlmathml.ent"
+       "REC-xml-entity-names-20100401/htmlmathml.ent"
+
 SYSTEM "http://www.w3.org/2003/entities/2007/htmlmathml-f.ent"
        "REC-xml-entity-names-20100401/htmlmathml-f.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/htmlmathml-f.ent"
+       "REC-xml-entity-names-20100401/htmlmathml-f.ent"
+
 PUBLIC "-//W3C//ENTITIES Added Math Symbols: Arrow Relations//EN//XML"
        "REC-xml-entity-names-20100401/isoamsa.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isoamsa.ent"
+       "REC-xml-entity-names-20100401/isoamsa.ent"
+
 PUBLIC "-//W3C//ENTITIES Added Math Symbols: Binary Operators//EN//XML"
        "REC-xml-entity-names-20100401/isoamsb.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isoamsb.ent"
+       "REC-xml-entity-names-20100401/isoamsb.ent"
+
 PUBLIC "-//W3C//ENTITIES Added Math Symbols: Delimiters//EN//XML"
        "REC-xml-entity-names-20100401/isoamsc.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isoamsc.ent"
+       "REC-xml-entity-names-20100401/isoamsc.ent"
+
 PUBLIC "-//W3C//ENTITIES Added Math Symbols: Negated Relations//EN//XML"
        "REC-xml-entity-names-20100401/isoamsn.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isoamsn.ent"
+       "REC-xml-entity-names-20100401/isoamsn.ent"
+
 PUBLIC "-//W3C//ENTITIES Added Math Symbols: Ordinary//EN//XML"
        "REC-xml-entity-names-20100401/isoamso.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isoamso.ent"
+       "REC-xml-entity-names-20100401/isoamso.ent"
+
 PUBLIC "-//W3C//ENTITIES Added Math Symbols: Relations//EN//XML"
        "REC-xml-entity-names-20100401/isoamsr.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isoamsr.ent"
+       "REC-xml-entity-names-20100401/isoamsr.ent"
+
 PUBLIC "-//W3C//ENTITIES Box and Line Drawing//EN//XML"
        "REC-xml-entity-names-20100401/isobox.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isobox.ent"
+       "REC-xml-entity-names-20100401/isobox.ent"
+
 PUBLIC "-//W3C//ENTITIES Russian Cyrillic//EN//XML"
        "REC-xml-entity-names-20100401/isocyr1.ent"       
+SYSTEM "http://www.w3.org/2003/entities/2007/isocyr1.ent"
+       "REC-xml-entity-names-20100401/isocyr1.ent"       
+
 PUBLIC "-//W3C//ENTITIES Non-Russian Cyrillic//EN//XML"
        "REC-xml-entity-names-20100401/isocyr2.ent"       
+SYSTEM "http://www.w3.org/2003/entities/2007/isocyr2.ent"
+       "REC-xml-entity-names-20100401/isocyr2.ent"       
+
 PUBLIC "-//W3C//ENTITIES Diacritical Marks//EN//XML"
        "REC-xml-entity-names-20100401/isodia.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isodia.ent"
+       "REC-xml-entity-names-20100401/isodia.ent"
+
 PUBLIC "-//W3C//ENTITIES Greek Letters//EN//XML"
        "REC-xml-entity-names-20100401/isogrk1.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isogrk1.ent"
+       "REC-xml-entity-names-20100401/isogrk1.ent"
+
 PUBLIC "-//W3C//ENTITIES Monotoniko Greek//EN//XML"
        "REC-xml-entity-names-20100401/isogrk2.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isogrk2.ent"
+       "REC-xml-entity-names-20100401/isogrk2.ent"
+
 PUBLIC "-//W3C//ENTITIES Greek Symbols//EN//XML"
        "REC-xml-entity-names-20100401/isogrk3.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isogrk3.ent"
+       "REC-xml-entity-names-20100401/isogrk3.ent"
+
 PUBLIC "-//W3C//ENTITIES Alternative Greek Symbols//EN//XML"
        "REC-xml-entity-names-20100401/isogrk4.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isogrk4.ent"
+       "REC-xml-entity-names-20100401/isogrk4.ent"
+
 PUBLIC "-//W3C//ENTITIES Added Latin 1//EN//XML"
        "REC-xml-entity-names-20100401/isolat1.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isolat1.ent"
+       "REC-xml-entity-names-20100401/isolat1.ent"
+
 PUBLIC "-//W3C//ENTITIES Added Latin 2//EN//XML"
        "REC-xml-entity-names-20100401/isolat2.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isolat2.ent"
+       "REC-xml-entity-names-20100401/isolat2.ent"
+
 PUBLIC "-//W3C//ENTITIES Math Alphabets: Fraktur//EN//XML"
        "REC-xml-entity-names-20100401/isomfrk.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isomfrk.ent"
+       "REC-xml-entity-names-20100401/isomfrk.ent"
+
 PUBLIC "-//W3C//ENTITIES Math Alphabets: Open Face//EN//XML"
        "REC-xml-entity-names-20100401/isomopf.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isomopf.ent"
+       "REC-xml-entity-names-20100401/isomopf.ent"
+
 PUBLIC "-//W3C//ENTITIES Math Alphabets: Script//EN//XML"
        "REC-xml-entity-names-20100401/isomscr.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isomscr.ent"
+       "REC-xml-entity-names-20100401/isomscr.ent"
+
 PUBLIC "-//W3C//ENTITIES Numeric and Special Graphic//EN//XML"
        "REC-xml-entity-names-20100401/isonum.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isonum.ent"
+       "REC-xml-entity-names-20100401/isonum.ent"
+
 PUBLIC "-//W3C//ENTITIES Publishing//EN//XML"
        "REC-xml-entity-names-20100401/isopub.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isopub.ent"
+       "REC-xml-entity-names-20100401/isopub.ent"
+
 PUBLIC "-//W3C//ENTITIES General Technical//EN//XML"
        "REC-xml-entity-names-20100401/isotech.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/isotech.ent"
+       "REC-xml-entity-names-20100401/isotech.ent"
+
 PUBLIC "-//W3C//ENTITIES MathML Aliases//EN//XML"
        "REC-xml-entity-names-20100401/mmlalias.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/mmlalias.ent"
+       "REC-xml-entity-names-20100401/mmlalias.ent"
+
 PUBLIC "-//W3C//ENTITIES Additional MathML Symbols//EN//XML"
        "REC-xml-entity-names-20100401/mmlextra.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/mmlextra.ent"
+       "REC-xml-entity-names-20100401/mmlextra.ent"
+
 PUBLIC "-//W3C//ENTITIES Predefined XML//EN///XML"
        "REC-xml-entity-names-20100401/predefined.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/predefined.ent"
+       "REC-xml-entity-names-20100401/predefined.ent"
+
 PUBLIC "-//W3C//ENTITIES Combined Set//EN//XML"
+       "REC-xml-entity-names-20100401/w3centities.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/w3centities.ent"
        "REC-xml-entity-names-20100401/w3centities.ent"
 SYSTEM "http://www.w3.org/2003/entities/2007/w3centities-f.ent"
        "REC-xml-entity-names-20100401/w3centities-f.ent"
+
 PUBLIC "-//W3C//ENTITIES Latin for HTML//EN//XML"
        "REC-xml-entity-names-20100401/xhtml1-lat1.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/xhtml1-lat1.ent"
+       "REC-xml-entity-names-20100401/xhtml1-lat1.ent"
+
 PUBLIC "-//W3C//ENTITIES Special for HTML//EN//XML"
        "REC-xml-entity-names-20100401/xhtml1-special.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/xhtml1-special.ent"
+       "REC-xml-entity-names-20100401/xhtml1-special.ent"
+
 PUBLIC "-//W3C//ENTITIES Symbol for HTML//EN//XML"
+       "REC-xml-entity-names-20100401/xhtml1-symbol.ent"
+SYSTEM "http://www.w3.org/2003/entities/2007/xhtml1-symbol.ent"
        "REC-xml-entity-names-20100401/xhtml1-symbol.ent"
 
 
@@ -604,11 +1434,17 @@ PUBLIC "-//W3C//ENTITIES Symbol for HTML//EN//XML"
 
 PUBLIC "-//W3C//DTD VOICEXML 2.0//EN"
        "REC-voicexml20-20040316/vxml.dtd"
+SYSTEM "http://www.w3.org/TR/voicexml20/vxml.dtd"
+       "REC-voicexml20-20040316/vxml.dtd"
 
 
 -- VoiceXML 2.1 --
 
 PUBLIC "-//W3C//DTD VOICEXML 2.1//EN"
+       "REC-voicexml21-20070619/vxml.dtd"
+SYSTEM "http://www.w3.org/TR/voicexml21/vxml.dtd"
+       "REC-voicexml21-20070619/vxml.dtd"
+SYSTEM "http://www.w3.org/TR/2007/REC-voicexml21-20070619/vxml.dtd"
        "REC-voicexml21-20070619/vxml.dtd"
 
 

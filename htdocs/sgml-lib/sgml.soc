@@ -13,6 +13,8 @@ PUBLIC "ISO 8879-1986//ENTITIES Added Latin 1//EN//HTML"
        "IETF/ISOlat1.ent"
 PUBLIC "ISO 8879-1986//ENTITIES Added Latin 1//EN"
        "IETF/ISOlat1.ent"
+SYSTEM "http://www.w3.org/MarkUp/html-spec/ISOlat1.sgml"
+       "IETF/ISOlat1.ent"
 
 
 -- HTML 2 --
@@ -33,12 +35,16 @@ PUBLIC "-//IETF//DTD HTML Level 2//EN//2.0"
        "IETF/html.dtd"
 PUBLIC "-//IETF//DTD HTML 2.0 Level 2//EN"
        "IETF/html.dtd"
+SYSTEM "http://www.w3.org/MarkUp/html-spec/html.dtd"
+       "IETF/html.dtd"
 
 -- Ways to refer to Level 1: most general to most specific --
 
 PUBLIC "-//IETF//DTD HTML Level 1//EN"
        "IETF/html-1.dtd"
 PUBLIC "-//IETF//DTD HTML 2.0 Level 1//EN"
+       "IETF/html-1.dtd"
+SYSTEM "http://www.w3.org/MarkUp/html-spec/html-1.dtd"
        "IETF/html-1.dtd"
 
 -- Ways to refer to Strict Level 2: most general to most specific --
@@ -51,6 +57,8 @@ PUBLIC "-//IETF//DTD HTML Strict Level 2//EN"
        "IETF/html-s.dtd"
 PUBLIC "-//IETF//DTD HTML 2.0 Strict Level 2//EN"
        "IETF/html-s.dtd"
+SYSTEM "http://www.w3.org/MarkUp/html-spec/html-s.dtd"
+       "IETF/html-s.dtd"
 
 -- Ways to refer to Strict Level 1: most general to most specific --
 
@@ -58,11 +66,14 @@ PUBLIC "-//IETF//DTD HTML Strict Level 1//EN"
        "IETF/html-1s.dtd"
 PUBLIC "-//IETF//DTD HTML 2.0 Strict Level 1//EN"
        "IETF/html-1s.dtd"
-
+SYSTEM "http://www.w3.org/MarkUp/html-spec/html-1s.dtd"
+       "IETF/html-1s.dtd"
 
 -- HTML i18n --
 
 PUBLIC "-//IETF//DTD HTML i18n//EN"
+       "IETF/html2070.dtd"
+SYSTEM "http://www.iana.org/assignments/xml-registry/publicid/html2070.dtd"
        "IETF/html2070.dtd"
 
 
@@ -74,15 +85,31 @@ PUBLIC "-//W3C//DTD HTML 3.2 Final//EN"
        "REC-html32-19970114/HTML32.dtd"
 PUBLIC "-//W3C//DTD HTML 3.2 Draft//EN"
        "REC-html32-19970114/HTML32.dtd"
+SYSTEM "http://www.w3.org/MarkUp/Wilbur/HTML32.dtd"
+       "REC-html32-19970114/HTML32.dtd"
 
 
 -- HTML 4.0 --
 
 PUBLIC "-//W3C//DTD HTML 4.0//EN"
        "REC-html40-19980424/strict.dtd"
+SYSTEM "http://www.w3.org/TR/REC-html40/strict.dtd"
+       "REC-html40-19980424/strict.dtd"
+SYSTEM "http://www.w3.org/TR/1998/REC-html40-19980424/strict.dtd"
+       "REC-html40-19980424/strict.dtd"
+
 PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
        "REC-html40-19980424/loose.dtd"
+SYSTEM "http://www.w3.org/TR/REC-html40/loose.dtd"
+       "REC-html40-19980424/loose.dtd"
+SYSTEM "http://www.w3.org/TR/1998/REC-html40-19980424/loose.dtd"
+       "REC-html40-19980424/loose.dtd"
+
 PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"
+       "REC-html40-19980424/frameset.dtd"
+SYSTEM "http://www.w3.org/TR/REC-html40/frameset.dtd"
+       "REC-html40-19980424/frameset.dtd"
+SYSTEM "http://www.w3.org/TR/1998/REC-html40-19980424/frameset.dtd"
        "REC-html40-19980424/frameset.dtd"
 
 
@@ -90,17 +117,58 @@ PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"
 
 PUBLIC "-//W3C//DTD HTML 4.01//EN"
        "REC-html401-19991224/strict.dtd"
+SYSTEM "http://www.w3.org/TR/html4/strict.dtd"
+       "REC-html401-19991224/strict.dtd"
+SYSTEM "http://www.w3.org/TR/html401/strict.dtd"
+       "REC-html401-19991224/strict.dtd"
+SYSTEM "http://www.w3.org/TR/1999/REC-html401-19991224/strict.dtd"
+       "REC-html401-19991224/strict.dtd"
+
 PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
        "REC-html401-19991224/loose.dtd"
+SYSTEM "http://www.w3.org/TR/html4/loose.dtd"
+       "REC-html401-19991224/loose.dtd"
+SYSTEM "http://www.w3.org/TR/html401/loose.dtd"
+       "REC-html401-19991224/loose.dtd"
+SYSTEM "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd"
+       "REC-html401-19991224/loose.dtd"
+
 PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"
        "REC-html401-19991224/frameset.dtd"
+SYSTEM "http://www.w3.org/TR/html4/frameset.dtd"
+       "REC-html401-19991224/frameset.dtd"
+SYSTEM "http://www.w3.org/TR/html401/frameset.dtd"
+       "REC-html401-19991224/frameset.dtd"
+SYSTEM "http://www.w3.org/TR/1999/REC-html401-19991224/frameset.dtd"
+       "REC-html401-19991224/frameset.dtd"
+
 PUBLIC "-//W3C//ENTITIES Latin 1//EN//HTML"
        "REC-html401-19991224/HTMLlat1.ent"
 PUBLIC "-//W3C//ENTITIES Latin1//EN//HTML"
        "REC-html401-19991224/HTMLlat1.ent"
+SYSTEM "http://www.w3.org/TR/html4/HTMLlat1.ent"
+       "REC-html401-19991224/HTMLlat1.ent"
+SYSTEM "http://www.w3.org/TR/html401/HTMLlat1.ent"
+       "REC-html401-19991224/HTMLlat1.ent"
+SYSTEM "http://www.w3.org/TR/1999/REC-html401-19991224/HTMLlat1.ent"
+       "REC-html401-19991224/HTMLlat1.ent"
+
 PUBLIC "-//W3C//ENTITIES Special//EN//HTML"
        "REC-html401-19991224/HTMLspecial.ent"
+SYSTEM "http://www.w3.org/TR/html4/HTMLspecial.ent"
+       "REC-html401-19991224/HTMLspecial.ent"
+SYSTEM "http://www.w3.org/TR/html401/HTMLspecial.ent"
+       "REC-html401-19991224/HTMLspecial.ent"
+SYSTEM "http://www.w3.org/TR/1999/REC-html401-19991224/HTMLspecial.ent"
+       "REC-html401-19991224/HTMLspecial.ent"
+
 PUBLIC "-//W3C//ENTITIES Symbols//EN//HTML"
+       "REC-html401-19991224/HTMLsymbol.ent"
+SYSTEM "http://www.w3.org/TR/html4/HTMLsymbol.ent"
+       "REC-html401-19991224/HTMLsymbol.ent"
+SYSTEM "http://www.w3.org/TR/html401/HTMLsymbol.ent"
+       "REC-html401-19991224/HTMLsymbol.ent"
+SYSTEM "http://www.w3.org/TR/1999/REC-html401-19991224/HTMLsymbol.ent"
        "REC-html401-19991224/HTMLsymbol.ent"
 
 
@@ -108,11 +176,17 @@ PUBLIC "-//W3C//ENTITIES Symbols//EN//HTML"
 
 PUBLIC "-//W3C//DTD HTML 4.01+RDFa 1.1//EN"
        "WD-rdfa-in-html-20110525/html401-rdfa11-1.dtd"
+SYSTEM "http://www.w3.org/MarkUp/DTD/html401-rdfa11-1.dtd"
+       "WD-rdfa-in-html-20110525/html401-rdfa11-1.dtd"
+SYSTEM "http://www.w3.org/TR/rdfa-in-html/DTD/html401-rdfa11-1.dtd"
+       "WD-rdfa-in-html-20110525/html401-rdfa11-1.dtd"
 
 
 -- HTML+ARIA 1.0 --
 
 PUBLIC "-//W3C//DTD HTML+ARIA 1.0//EN"
+       "CR-wai-aria-20110118/html4-aria-1.dtd"
+SYSTEM "http://www.w3.org/WAI/ARIA/schemata/html4-aria-1.dtd"
        "CR-wai-aria-20110118/html4-aria-1.dtd"
 
 
@@ -122,6 +196,11 @@ PUBLIC "ISO/IEC 15445:2000//DTD HyperText Markup Language//EN"
        "ISO-HTML/15445.dtd"
 PUBLIC "ISO/IEC 15445:2000//DTD HTML//EN"
        "ISO-HTML/15445.dtd"
+SYSTEM "http://www.cs.tcd.ie/15445.dtd"
+       "ISO-HTML/15445.dtd"
+SYSTEM "http://www.scss.tcd.ie/misc/15445/15445.dtd"
+       "ISO-HTML/15445.dtd"
+
 PUBLIC "-//W3C//ENTITIES Full Latin 1//EN//HTML"
        "REC-html401-19991224/HTMLlat1.ent"
 PUBLIC "-//W3C//ENTITIES Symbolic//EN//HTML"
