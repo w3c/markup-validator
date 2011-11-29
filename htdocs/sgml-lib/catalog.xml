@@ -112,7 +112,6 @@
   <public publicId="-//W3C//ENTITIES XHTML Role Attribute 1.0//EN" uri="NOTE-xhtml-role-20101216/xhtml-role-qname-1.mod" />
   <public publicId="-//W3C//DTD SMIL 1.0//EN" uri="REC-smil-19980615/smil10.dtd" />
   <public publicId="-//W3C//DTD SMIL 2.0//EN" uri="REC-smil20-20050107/SMIL20.dtd" />
-  <public publicId="-//W3C//DTD SMIL 2.0 Basic//EN" uri="REC-smil20-20050107/SMIL20Basic.dtd" />
   <public publicId="-//W3C//ENTITIES SMIL 2.0 Modular Framework 1.0//EN" uri="REC-smil20-20050107/smil-framework-1.mod" />
   <public publicId="-//W3C//ENTITIES SMIL 2.0 Datatypes 1.0//EN" uri="REC-smil20-20050107/smil-datatypes-1.mod" />
   <public publicId="-//W3C//ENTITIES SMIL 2.0 Qualified Names 1.0//EN" uri="REC-smil20-20050107/smil-qname-1.mod" />
@@ -127,7 +126,6 @@
   <public publicId="-//W3C//ELEMENTS SMIL 2.0 Media Objects//EN" uri="REC-smil20-20050107/SMIL-media.mod" />
   <public publicId="-//W3C//ELEMENTS SMIL 2.0 Timing//EN" uri="REC-smil20-20050107/SMIL-timing.mod" />
   <public publicId="-//W3C//ELEMENTS SMIL 2.0 Transition//EN" uri="REC-smil20-20050107/SMIL-transition.mod" />
-  <public publicId="-//W3C//ELEMENTS SMIL 2.0 Integration//EN" uri="REC-smil20-20050107/SMIL-integrate.mod" />
   <public publicId="-//W3C//DTD SMIL 2.1//EN" uri="REC-SMIL2-20051213/SMIL21.dtd" />
   <public publicId="-//W3C//DTD SMIL 2.1 Extended Mobile//EN" uri="REC-SMIL2-20051213/SMIL21ExtendedMobile.dtd" />
   <public publicId="-//W3C//DTD SMIL 2.1 Mobile//EN" uri="REC-SMIL2-20051213/SMIL21Mobile.dtd" />
@@ -175,7 +173,6 @@
   <public publicId="-//W3C//ENTITIES XHTML Qualified Names 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-qname-1.mod" />
   <public publicId="-//W3C//ENTITIES XHTML Common Attributes 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-attribs-1.mod" />
   <public publicId="-//W3C//ENTITIES XHTML Character Entities 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-charent-1.mod" />
-  <public publicId="-//W3C//ELEMENTS XHTML Redeclarations 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-redecl-1.mod" />
   <public publicId="-//W3C//ELEMENTS XHTML Document Structure 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-struct-1.mod" />
   <public publicId="-//W3C//ELEMENTS XHTML Text 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-text-1.mod" />
   <public publicId="-//W3C//ELEMENTS XHTML Hypertext 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-hypertext-1.mod" />
@@ -189,7 +186,6 @@
   <public publicId="-//W3C//ELEMENTS XHTML Ruby 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-ruby-1.mod" />
   <public publicId="-//W3C//ELEMENTS XHTML Java Applets 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-applet-1.mod" />
   <public publicId="-//W3C//ELEMENTS XHTML Base Architecture 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-arch-1.mod" />
-  <public publicId="-//W3C//DTD XHTML Architecture 1.1//EN" uri="REC-xhtml-modularization-20100729/xhtml11-arch.dtd" />
   <public publicId="-//W3C//ELEMENTS XHTML Param Element 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-param-1.mod" />
   <public publicId="-//W3C//ELEMENTS XHTML Presentation 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-pres-1.mod" />
   <public publicId="-//W3C//ELEMENTS XHTML Editing Elements 1.0//EN" uri="REC-xhtml-modularization-20100729/xhtml-edit-1.mod" />
