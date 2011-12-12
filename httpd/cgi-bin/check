@@ -2301,13 +2301,22 @@ sub override_charset ($$)
 
     my $content = join("\n", @{$File->{Content}});
 
+    # Flatten newlines (so that we don't end up changing line numbers while
+    # overriding) and comment-escape a string.
+    sub escape_original ($)
+    {
+        my $str = shift;
+        $str =~ tr/\r\n/ /;
+        return &escape_comment($str);
+    }
+
     # <?xml encoding="charset"?>
     $content =~ s/(
               (^<\?xml\b[^>]*?${ws}encoding${ws}*=${ws}*(["']))
               (${cs})
               (\3.*?\?>)
           )/lc($4) eq lc($charset) ?
-              "$1" : "$2$charset$5<!-- " . &escape_comment($1) ." -->"/esx;
+              "$1" : "$2$charset$5<!-- " . &escape_original($1) . " -->"/esx;
 
     # <meta charset="charset">
     $content =~ s/(
@@ -2315,7 +2324,7 @@ sub override_charset ($$)
               (${cs})
               (.*?>)
           )/lc($3) eq lc($charset) ?
-              "$1" : "$2$charset$4<!-- " . &escape_comment($1) . " -->"/esix;
+              "$1" : "$2$charset$4<!-- " . &escape_original($1) . " -->"/esix;
 
     # <meta http-equiv="content-type" content="some/type; charset=charset">
     $content =~ s/(
@@ -2325,7 +2334,7 @@ sub override_charset ($$)
               (${cs})
               (.*?>)
           )/lc($3) eq lc($charset) ?
-              "$1" : "$2$charset$4<!-- " . &escape_comment($1) . " -->"/esix;
+              "$1" : "$2$charset$4<!-- " . &escape_original($1) . " -->"/esix;
 
     # <meta content="some/type; charset=charset" http-equiv="content-type">
     $content =~ s/(
@@ -2334,7 +2343,7 @@ sub override_charset ($$)
               (${cs})
               ([^>]*?${ws}http-equiv${ws}*=${ws}*["']?${ws}*content-type\b.*?>)
           )/lc($3) eq lc($charset) ?
-              "$1" : "$2$charset$4<!-- " . &escape_comment($1) . " -->"/esix;
+              "$1" : "$2$charset$4<!-- " . &escape_original($1) . " -->"/esix;
 
     $File->{Content} = [split /\n/, $content];
 }
