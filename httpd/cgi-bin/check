@@ -1048,10 +1048,13 @@ sub html5_validate (\$)
     my $req = HTTP::Request->new(POST => $url);
     my $ct = &is_xml($File) ? "application/xhtml+xml" : "text/html";
 
-    if ($File->{Opt}->{DOCTYPE} || $File->{Charset}->{Override}) {
+    if ($File->{Opt}->{DOCTYPE} || $File->{Charset}->{Override} ||
+        $File->{'Direct Input'})
+    {
 
         # Doctype or charset overridden, need to use $File->{Content} in UTF-8
-        # because $File->{Bytes} is not affected by the overrides.
+        # because $File->{Bytes} is not affected by the  overrides.  Note that
+        # direct input is always considered an override here.
 
         &override_charset($File, "UTF-8");
 
@@ -1068,15 +1071,10 @@ sub html5_validate (\$)
         # is the same later when displaying error contexts (regardless of EOL
         # chars used in the document).
 
-        if ($File->{'Direct Input'}) {
-            $ct .= "; charset=UTF-8";
-        }
-        else {
-            my @ct = ($File->{ContentType} => undef);
-            push(@ct, charset => $File->{Charset}->{HTTP})
-                if $File->{Charset}->{HTTP};
-            $ct = HTTP::Headers::Util::join_header_words(@ct);
-        }
+        my @ct = ($File->{ContentType} => undef);
+        push(@ct, charset => $File->{Charset}->{HTTP})
+            if $File->{Charset}->{HTTP};
+        $ct = HTTP::Headers::Util::join_header_words(@ct);
 
         $req->content_ref(\$File->{Bytes});
     }
