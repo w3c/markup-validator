@@ -2195,7 +2195,6 @@ sub override_doctype
     my $org_dtd      = '';
     my $HTML         = '';
     my $seen_doctype = FALSE;
-    my $seen_root    = FALSE;
 
     my $declaration = sub {
         my ($tag, $text) = @_;
@@ -2231,29 +2230,18 @@ sub override_doctype
     };
 
     my $start_element = sub {
-        if ($seen_root) {
-            $HTML .= $_[0];    # Stash it as is... moving on
-        }
-        else {
-            $seen_root = TRUE;
-            if ($seen_doctype) {
-
-                # doctype addition already done, we move on
-                $HTML .= $_[0];
-            }
-            else {
-
-                # no original doctype present, hence none replaced already
-                # => we sneak the chosen doctype before the root elt
-                $HTML .= "$dtd$_[0]";
-            }
-        }
+        my $p = shift;
+        # Sneak chosen doctype before the root elt if none replaced thus far.
+        $HTML .= $dtd unless $seen_doctype;
+        $HTML .= shift;
+        # We're done with this handler.
+        $p->handler(start => undef);
     };
 
     HTML::Parser->new(
         default_h => [sub { $HTML .= shift }, 'text'],
         declaration_h => [$declaration,   'tag,text'],
-        start_h       => [$start_element, 'text']
+        start_h       => [$start_element, 'self,text']
     )->parse(join "\n", @{$File->{Content}})->eof();
 
     $File->{Content} = [split /\n/, $HTML];
