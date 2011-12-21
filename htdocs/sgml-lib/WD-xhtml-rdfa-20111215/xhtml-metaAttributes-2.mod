@@ -4,7 +4,7 @@
 
      This is XHTML-RDFa, modules to annotate XHTML family documents.
      Copyright 2007-2008 W3C (MIT, ERCIM, Keio), All Rights Reserved.
-     Revision: $Id: xhtml-metaAttributes-2.mod,v 1.1 2011/03/31 13:40:05 bertails Exp $
+     Revision: $Id: xhtml-metaAttributes-2.mod,v 1.1 2011/12/15 18:37:49 denis Exp $
 
      This DTD module is identified by the PUBLIC and SYSTEM identifiers:
 
@@ -20,13 +20,15 @@
 <!-- Placeholder Compact URI-related types -->
 <!ENTITY % CURIE.datatype "CDATA" >
 <!ENTITY % CURIEs.datatype "CDATA" >
-<!ENTITY % CURIEorURI.datatype "CDATA" >
-<!ENTITY % CURIEorURIs.datatype "CDATA" >
+<!ENTITY % CURIEorIRI.datatype "CDATA" >
+<!ENTITY % CURIEorIRIs.datatype "CDATA" >
+<!ENTITY % IRI.datatype "CDATA" >
+<!ENTITY % IRIs.datatype "CDATA" >
 <!ENTITY % PREFIX.datatype "CDATA" >
-<!ENTITY % SafeCURIEorCURIEorURI.datatype "CDATA" >
-<!ENTITY % SafeCURIEorCURIEorURIs.datatype "CDATA" >
-<!ENTITY % TERMorCURIEorAbsURI.datatype "CDATA" >
-<!ENTITY % TERMorCURIEorAbsURIs.datatype "CDATA" >
+<!ENTITY % SafeCURIEorCURIEorIRI.datatype "CDATA" >
+<!ENTITY % SafeCURIEorCURIEorIRIs.datatype "CDATA" >
+<!ENTITY % TERMorCURIEorAbsIRI.datatype "CDATA" >
+<!ENTITY % TERMorCURIEorAbsIRIs.datatype "CDATA" >
 
 
 <!-- Common Attributes
@@ -42,42 +44,42 @@
 -->
 
 <!ENTITY % about.attrib
-     "about        %SafeCURIEorCURIEorURI.datatype;             #IMPLIED"
+     "about        %SafeCURIEorCURIEorIRI.datatype;             #IMPLIED"
 >
 
 <![%XHTML.global.attrs.prefixed;[
 <!ENTITY % XHTML.global.about.attrib
-     "%XHTML.prefix;:about   %SafeCURIEorCURIEorURI.datatype;    #IMPLIED"
+     "%XHTML.prefix;:about   %SafeCURIEorCURIEorIRI.datatype;    #IMPLIED"
 >
 ]]>
 
 <!ENTITY % typeof.attrib
-     "typeof        %TERMorCURIEorAbsURIs.datatype;             #IMPLIED"
+     "typeof        %TERMorCURIEorAbsIRIs.datatype;             #IMPLIED"
 >
 
 <![%XHTML.global.attrs.prefixed;[
 <!ENTITY % XHTML.global.typeof.attrib
-     "%XHTML.prefix;:typeof           %TERMorCURIEorAbsURIs.datatype;        #IMPLIED"
+     "%XHTML.prefix;:typeof           %TERMorCURIEorAbsIRIs.datatype;        #IMPLIED"
 >
 ]]>
 
 <!ENTITY % property.attrib
-     "property        %TERMorCURIEorAbsURIs.datatype;             #IMPLIED"
+     "property        %TERMorCURIEorAbsIRIs.datatype;             #IMPLIED"
 >
 
 <![%XHTML.global.attrs.prefixed;[
 <!ENTITY % XHTML.global.property.attrib
-     "%XHTML.prefix;:property           %TERMorCURIEorAbsURIs.datatype;        #IMPLIED"
+     "%XHTML.prefix;:property           %TERMorCURIEorAbsIRIs.datatype;        #IMPLIED"
 >
 ]]>
 
 <!ENTITY % resource.attrib
-     "resource        %SafeCURIEorCURIEorURI.datatype;             #IMPLIED"
+     "resource        %SafeCURIEorCURIEorIRI.datatype;             #IMPLIED"
 >
 
 <![%XHTML.global.attrs.prefixed;[
 <!ENTITY % XHTML.global.resource.attrib
-     "%XHTML.prefix;:resource           %SafeCURIEorCURIEorURI.datatype;        #IMPLIED"
+     "%XHTML.prefix;:resource           %SafeCURIEorCURIEorIRI.datatype;        #IMPLIED"
 >
 ]]>
 
@@ -92,32 +94,32 @@
 ]]>
 
 <!ENTITY % datatype.attrib
-     "datatype        %TERMorCURIEorAbsURI.datatype;             #IMPLIED"
+     "datatype        %TERMorCURIEorAbsIRI.datatype;             #IMPLIED"
 >
 
 <![%XHTML.global.attrs.prefixed;[
 <!ENTITY % XHTML.global.datatype.attrib
-     "%XHTML.prefix;:datatype           %TERMorCURIEorAbsURI.datatype;        #IMPLIED"
+     "%XHTML.prefix;:datatype           %TERMorCURIEorAbsIRI.datatype;        #IMPLIED"
 >
 ]]>
 
 <!ENTITY % rel.attrib
-     "rel        %TERMorCURIEorAbsURIs.datatype;             #IMPLIED"
+     "rel        %TERMorCURIEorAbsIRIs.datatype;             #IMPLIED"
 >
 
 <![%XHTML.global.attrs.prefixed;[
 <!ENTITY % XHTML.global.rel.attrib
-     "%XHTML.prefix;:rel           %TERMorCURIEorAbsURIs.datatype;        #IMPLIED"
+     "%XHTML.prefix;:rel           %TERMorCURIEorAbsIRIs.datatype;        #IMPLIED"
 >
 ]]>
 
 <!ENTITY % rev.attrib
-     "rev        %TERMorCURIEorAbsURIs.datatype;             #IMPLIED"
+     "rev        %TERMorCURIEorAbsIRIs.datatype;             #IMPLIED"
 >
 
 <![%XHTML.global.attrs.prefixed;[
 <!ENTITY % XHTML.global.rev.attrib
-     "%XHTML.prefix;:rev           %TERMorCURIEorAbsURIs.datatype;        #IMPLIED"
+     "%XHTML.prefix;:rev           %TERMorCURIEorAbsIRIs.datatype;        #IMPLIED"
 >
 ]]>
 
@@ -132,12 +134,12 @@
 ]]>
 
 <!ENTITY % vocab.attrib
-     "vocab        %URI.datatype;             #IMPLIED"
+     "vocab        %IRI.datatype;             #IMPLIED"
 >
 
 <![%XHTML.global.attrs.prefixed;[
 <!ENTITY % XHTML.global.vocab.attrib
-     "%XHTML.prefix;:vocab           %URI.datatype;        #IMPLIED"
+     "%XHTML.prefix;:vocab           %IRI.datatype;        #IMPLIED"
 >
 ]]>
 

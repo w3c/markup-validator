@@ -117,7 +117,6 @@
 
 <!ENTITY % Common.extra.attrib
    "href         %URI.datatype;           #IMPLIED
-    profile      %URIs.datatype;          #IMPLIED
     %Metainformation.attrib;"
 >
 <!-- adding the lang attribute into the I18N collection -->
@@ -283,7 +282,6 @@
       %XHTML.xmlns.attrib;
 	  %id.attrib;
       %Metainformation.attrib;
-      profile      %URIs.datatype;          #IMPLIED
       href         %URI.datatype;           #IMPLIED
       xml:space    ( preserve )             #FIXED 'preserve'
       charset      %Charset.datatype;       #IMPLIED
@@ -306,7 +304,6 @@
       %title.attrib;
       %I18n.attrib;
       %Metainformation.attrib;
-      profile      %URIs.datatype;          #IMPLIED
       href         %URI.datatype;           #IMPLIED
       xml:space    ( preserve )             #FIXED 'preserve'
       type         %ContentType.datatype;   #REQUIRED
@@ -362,7 +359,6 @@
       %XHTML.xmlns.attrib;
       %id.attrib;
       %Metainformation.attrib;
-      profile      %URIs.datatype;          #IMPLIED
       href         %URI.datatype;           #IMPLIED
       name         CDATA                    #REQUIRED
       value        CDATA                    #IMPLIED

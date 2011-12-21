@@ -214,15 +214,15 @@
   <public publicId="-//W3C//ENTITIES XHTML MetaAttributes 1.0//EN" uri="REC-rdfa-syntax-20081014/xhtml-metaAttributes-1.mod" />
   <system systemId="http://www.w3.org/MarkUp/DTD/xhtml-metaAttributes-1.mod" uri="REC-rdfa-syntax-20081014/xhtml-metaAttributes-1.mod" />
   <system systemId="http://www.w3.org/TR/rdfa-syntax/DTD/xhtml-metaAttributes-1.mod" uri="REC-rdfa-syntax-20081014/xhtml-metaAttributes-1.mod" />
-  <public publicId="-//W3C//DTD XHTML+RDFa 1.1//EN" uri="WD-xhtml-rdfa-20110331/xhtml-rdfa-2.dtd" />
-  <system systemId="http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd" uri="WD-xhtml-rdfa-20110331/xhtml-rdfa-2.dtd" />
-  <system systemId="http://www.w3.org/TR/xhtml-rdfa/DTD/xhtml-rdfa-2.dtd" uri="WD-xhtml-rdfa-20110331/xhtml-rdfa-2.dtd" />
-  <public publicId="-//W3C//ENTITIES XHTML+RDFa Document Model 1.1//EN" uri="WD-xhtml-rdfa-20110331/xhtml-rdfa-model-2.mod" />
-  <system systemId="http://www.w3.org/MarkUp/DTD/xhtml-rdfa-model-2.mod" uri="WD-xhtml-rdfa-20110331/xhtml-rdfa-model-2.mod" />
-  <system systemId="http://www.w3.org/TR/xhtml-rdfa/DTD/xhtml-rdfa-model-2.mod" uri="WD-xhtml-rdfa-20110331/xhtml-rdfa-model-2.mod" />
-  <public publicId="-//W3C//ENTITIES XHTML MetaAttributes 1.1//EN" uri="WD-xhtml-rdfa-20110331/xhtml-metaAttributes-2.mod" />
-  <system systemId="http://www.w3.org/MarkUp/DTD/xhtml-metaAttributes-2.mod" uri="WD-xhtml-rdfa-20110331/xhtml-metaAttributes-2.mod" />
-  <system systemId="http://www.w3.org/TR/xhtml-rdfa/DTD/xhtml-metaAttributes-2.mod" uri="WD-xhtml-rdfa-20110331/xhtml-metaAttributes-2.mod" />
+  <public publicId="-//W3C//DTD XHTML+RDFa 1.1//EN" uri="WD-xhtml-rdfa-20111215/xhtml-rdfa-2.dtd" />
+  <system systemId="http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd" uri="WD-xhtml-rdfa-20111215/xhtml-rdfa-2.dtd" />
+  <system systemId="http://www.w3.org/TR/xhtml-rdfa/DTD/xhtml-rdfa-2.dtd" uri="WD-xhtml-rdfa-20111215/xhtml-rdfa-2.dtd" />
+  <public publicId="-//W3C//ENTITIES XHTML+RDFa Document Model 1.1//EN" uri="WD-xhtml-rdfa-20111215/xhtml-rdfa-model-2.mod" />
+  <system systemId="http://www.w3.org/MarkUp/DTD/xhtml-rdfa-model-2.mod" uri="WD-xhtml-rdfa-20111215/xhtml-rdfa-model-2.mod" />
+  <system systemId="http://www.w3.org/TR/xhtml-rdfa/DTD/xhtml-rdfa-model-2.mod" uri="WD-xhtml-rdfa-20111215/xhtml-rdfa-model-2.mod" />
+  <public publicId="-//W3C//ENTITIES XHTML MetaAttributes 1.1//EN" uri="WD-xhtml-rdfa-20111215/xhtml-metaAttributes-2.mod" />
+  <system systemId="http://www.w3.org/MarkUp/DTD/xhtml-metaAttributes-2.mod" uri="WD-xhtml-rdfa-20111215/xhtml-metaAttributes-2.mod" />
+  <system systemId="http://www.w3.org/TR/xhtml-rdfa/DTD/xhtml-metaAttributes-2.mod" uri="WD-xhtml-rdfa-20111215/xhtml-metaAttributes-2.mod" />
   <public publicId="-//W3C//DTD XHTML+ARIA 1.0//EN" uri="CR-wai-aria-20110118/xhtml-aria-1.dtd" />
   <system systemId="http://www.w3.org/MarkUp/DTD/xhtml-aria-1.dtd" uri="CR-wai-aria-20110118/xhtml-aria-1.dtd" />
   <system systemId="http://www.w3.org/WAI/ARIA/schemata/xhtml-aria-1.dtd" uri="CR-wai-aria-20110118/xhtml-aria-1.dtd" />
