@@ -17,9 +17,9 @@ code page</a>.
 
 <p>Note that the latest development code may be broken at any time. If you want a working version,
 you should get the latest release version from the tar balls available from the <a href="http://validator.w3.org/source/">source code availability</a> page at validator.w3.org.
-Alternatively, you can get the latest released version, v1.2, via Mercurial:</p>
+Alternatively, you can get the latest released version, v1.3, via Mercurial:</p>
 
           <pre>
-    bash$ <kbd>hg clone -b validator-1_2-release https://dvcs.w3.org/hg/markup-validator</kbd>
+    bash$ <kbd>hg clone -b validator-1_3-release https://dvcs.w3.org/hg/markup-validator</kbd>
           </pre>
 
