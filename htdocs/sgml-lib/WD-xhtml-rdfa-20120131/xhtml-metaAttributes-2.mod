@@ -4,7 +4,7 @@
 
      This is XHTML-RDFa, modules to annotate XHTML family documents.
      Copyright 2007-2008 W3C (MIT, ERCIM, Keio), All Rights Reserved.
-     Revision: $Id: xhtml-metaAttributes-2.mod,v 1.2 2012/01/31 15:04:04 denis Exp $
+     Revision: $Id: xhtml-metaAttributes-2.mod,v 1.7 2012/05/31 22:55:01 smccarro Exp $
 
      This DTD module is identified by the PUBLIC and SYSTEM identifiers:
 
@@ -103,6 +103,16 @@
 >
 ]]>
 
+<!ENTITY % inlist.attrib
+     "inlist        CDATA             #IMPLIED"
+>
+
+<![%XHTML.global.attrs.prefixed;[
+<!ENTITY % XHTML.global.inlist.attrib
+     "%XHTML.prefix;:inlist           CDATA        #IMPLIED"
+>
+]]>
+
 <!ENTITY % rel.attrib
      "rel        %TERMorCURIEorAbsIRIs.datatype;             #IMPLIED"
 >
@@ -149,6 +159,7 @@
      "%about.attrib;
       %content.attrib;
       %datatype.attrib;
+	  %inlist.attrib;
       %typeof.attrib;
       %prefix.attrib;
       %property.attrib;
@@ -167,6 +178,7 @@
      "%XHTML.global.about.attrib;
       %XHTML.global.content.attrib;
       %XHTML.global.datatype.attrib;
+      %XHTML.global.inlist.attrib;
       %XHTML.global.typeof.attrib;
       %XHTML.global.prefix.attrib;
       %XHTML.global.property.attrib;
