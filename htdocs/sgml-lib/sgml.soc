@@ -175,11 +175,18 @@ SYSTEM "http://www.w3.org/TR/1999/REC-html401-19991224/HTMLsymbol.ent"
 -- HTML 4.01+RDFa 1.1 --
 
 PUBLIC "-//W3C//DTD HTML 4.01+RDFa 1.1//EN"
-       "WD-rdfa-in-html-20110525/html401-rdfa11-1.dtd"
+       "WD-rdfa-in-html-20120329/html401-rdfa11-1.dtd"
 SYSTEM "http://www.w3.org/MarkUp/DTD/html401-rdfa11-1.dtd"
-       "WD-rdfa-in-html-20110525/html401-rdfa11-1.dtd"
+       "WD-rdfa-in-html-20120329/html401-rdfa11-1.dtd"
 SYSTEM "http://www.w3.org/TR/rdfa-in-html/DTD/html401-rdfa11-1.dtd"
-       "WD-rdfa-in-html-20110525/html401-rdfa11-1.dtd"
+       "WD-rdfa-in-html-20120329/html401-rdfa11-1.dtd"
+
+PUBLIC "-//W3C//DTD HTML 4.01+RDFa Lite 1.1//EN"
+       "WD-rdfa-in-html-20120329/html401-rdfalite11-1.dtd"
+SYSTEM "http://www.w3.org/MarkUp/DTD/html401-rdfalite11-1.dtd"
+       "WD-rdfa-in-html-20120329/html401-rdfalite11-1.dtd"
+SYSTEM "http://www.w3.org/TR/rdfa-in-html/DTD/html401-rdfalite11-1.dtd"
+       "WD-rdfa-in-html-20120329/html401-rdfalite11-1.dtd"
 
 
 -- HTML+ARIA 1.0 --

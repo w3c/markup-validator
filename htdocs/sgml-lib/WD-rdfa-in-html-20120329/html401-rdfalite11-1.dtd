@@ -10,7 +10,7 @@
     direction text, and enhancements to forms for improved
     accessibility for people with disabilities.
 
-          Draft: $Date: 2011/05/25 13:26:18 $
+          Draft: $Date: 2012/03/29 14:21:47 $
 
           Editors:
               Shane McCarron <shane@aptest.com>
@@ -197,16 +197,10 @@
 
 <!ENTITY % metainformation
  "about       %SafeCURIEorCURIEorURI;   #IMPLIED
-  content     CDATA                     #IMPLIED
-  datatype    %TERMorCURIEorAbsURI;     #IMPLIED
   typeof      %TERMorCURIEorAbsURIs;    #IMPLIED
   prefix      CDATA                     #IMPLIED
-  profile     %URIs;                    #IMPLIED
   property    %TERMorCURIEorAbsURIs;    #IMPLIED
   href        %URI;                     #IMPLIED
-  rel         %TERMorCURIEorAbsURIs;    #IMPLIED
-  rev         %TERMorCURIEorAbsURIs;    #IMPLIED
-  resource    %SafeCURIEorCURIEorURI;   #IMPLIED
   vocab       %URI;                     #IMPLIED"
   >
 
