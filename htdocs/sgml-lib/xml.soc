@@ -568,25 +568,25 @@ SYSTEM "http://www.w3.org/TR/rdfa-syntax/DTD/xhtml-metaAttributes-1.mod"
 -- XHTML + RDFa 1.1 --
 
 PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN"
-       "PR-xhtml-rdfa-20120508/xhtml-rdfa-2.dtd"
+       "REC-xhtml-rdfa-20120607/xhtml-rdfa-2.dtd"
 SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd"
-       "PR-xhtml-rdfa-20120508/xhtml-rdfa-2.dtd"
+       "REC-xhtml-rdfa-20120607/xhtml-rdfa-2.dtd"
 SYSTEM "http://www.w3.org/TR/xhtml-rdfa/DTD/xhtml-rdfa-2.dtd"
-       "PR-xhtml-rdfa-20120508/xhtml-rdfa-2.dtd"
+       "REC-xhtml-rdfa-20120607/xhtml-rdfa-2.dtd"
 
 PUBLIC "-//W3C//ENTITIES XHTML+RDFa Document Model 1.1//EN"
-       "PR-xhtml-rdfa-20120508/xhtml-rdfa-model-2.mod"
+       "REC-xhtml-rdfa-20120607/xhtml-rdfa-model-2.mod"
 SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-model-2.mod"
-       "PR-xhtml-rdfa-20120508/xhtml-rdfa-model-2.mod"
+       "REC-xhtml-rdfa-20120607/xhtml-rdfa-model-2.mod"
 SYSTEM "http://www.w3.org/TR/xhtml-rdfa/DTD/xhtml-rdfa-model-2.mod"
-       "PR-xhtml-rdfa-20120508/xhtml-rdfa-model-2.mod"
+       "REC-xhtml-rdfa-20120607/xhtml-rdfa-model-2.mod"
 
 PUBLIC "-//W3C//ENTITIES XHTML MetaAttributes 1.1//EN"
-       "PR-xhtml-rdfa-20120508/xhtml-metaAttributes-2.mod"
+       "REC-xhtml-rdfa-20120607/xhtml-metaAttributes-2.mod"
 SYSTEM "http://www.w3.org/MarkUp/DTD/xhtml-metaAttributes-2.mod"
-       "PR-xhtml-rdfa-20120508/xhtml-metaAttributes-2.mod"
+       "REC-xhtml-rdfa-20120607/xhtml-metaAttributes-2.mod"
 SYSTEM "http://www.w3.org/TR/xhtml-rdfa/DTD/xhtml-metaAttributes-2.mod"
-       "PR-xhtml-rdfa-20120508/xhtml-metaAttributes-2.mod"
+       "REC-xhtml-rdfa-20120607/xhtml-metaAttributes-2.mod"
 
 
 -- XHTML + ARIA 1.0 --

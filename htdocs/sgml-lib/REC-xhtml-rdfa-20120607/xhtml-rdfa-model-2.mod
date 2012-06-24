@@ -4,7 +4,7 @@
 
      This is XHTML+RDFa.
      Copyright 1998-2010 W3C (MIT, ERCIM, Keio), All Rights Reserved.
-     Revision: $Id: xhtml-rdfa-model-2.mod,v 1.1 2012/05/07 12:58:39 denis Exp $ SMI
+     Revision: $Id: xhtml-rdfa-model-2.mod,v 1.1 2012/06/04 17:24:40 denis Exp $ SMI
 
      This DTD module is identified by the PUBLIC and SYSTEM identifiers:
 

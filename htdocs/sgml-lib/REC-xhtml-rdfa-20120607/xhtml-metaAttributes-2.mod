@@ -4,7 +4,7 @@
 
      This is XHTML-RDFa, modules to annotate XHTML family documents.
      Copyright 2007-2008 W3C (MIT, ERCIM, Keio), All Rights Reserved.
-     Revision: $Id: xhtml-metaAttributes-2.mod,v 1.7 2012/05/31 22:55:01 smccarro Exp $
+     Revision: $Id: xhtml-metaAttributes-2.mod,v 1.1 2012/06/04 17:24:40 denis Exp $
 
      This DTD module is identified by the PUBLIC and SYSTEM identifiers:
 
