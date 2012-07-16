@@ -9,7 +9,8 @@ PERL_FILES = httpd/cgi-bin/check httpd/cgi-bin/sendfeedback.pl \
 	misc/bundle/lib/Bundle/W3C/Validator.pm
 GZIP_FILES = $(addsuffix .gz,$(CSS_FILES)) htdocs/scripts/combined.js.gz
 
-PERLTIDY = perltidy --profile=misc/perltidyrc --backup-and-modify-in-place
+PERLTIDY = perltidy --profile=misc/perltidyrc --backup-and-modify-in-place \
+	--backup-file-extension=/
 PERLCRITIC = perlcritic --profile misc/perlcriticrc
 
 YUICOMPRESSOR = java -jar $(wildcard /usr/share/java/yuicompressor*.jar)
