@@ -1,3 +1,6 @@
+<TMPL_IF NAME="W00">
+  <m:warning><m:messageid>W00</m:messageid><m:message>Using experimental feature: <TMPL_VAR NAME="W00_experimental_name" ESCAPE="HTML">.</m:message></m:warning>
+</TMPL_IF>
 <TMPL_IF NAME="W01">
   <m:warning><m:messageid>W01</m:messageid><m:message>Missing "charset" attribute for
     "<TMPL_VAR NAME="W01_ct" ESCAPE="HTML">" document.</m:message></m:warning>

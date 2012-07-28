@@ -17,6 +17,22 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
         <env:Value>m:Exception</env:Value>
        </env:Subcode>
      </env:Code>
+<TMPL_IF NAME="fatal_no_checker">
+     <env:Reason>
+	<env:Text xml:lang="en-US">External Checker not available</env:Text>
+     </env:Reason>
+    <env:Detail>
+     <m:messageid>fatal_no_checker</m:messageid>
+     <m:errordetail xml:lang="en-US">
+      Checking the Document Type of this document requires the help of an external tool which was either not enabled
+      in this validator, or is currently unavailable. Check in the validator's system configuration
+      that <TMPL_IF NAME="fatal_missing_checker"><TMPL_VAR NAME="fatal_missing_checker"> is enabled and functional<TMPL_ELSE>all external checkers are enabled, and test if they are responsive</TMPL_IF>.
+      <TMPL_IF NAME="fatal_checker_error">
+      The error encountered was: <TMPL_VAR NAME="fatal_checker_error" ESCAPE="HTML">
+      </TMPL_IF>
+     </m:errordetail>
+    </env:Detail>
+</TMPL_IF>
 
 <TMPL_IF NAME="fatal_transcode_error">
      <env:Reason>
@@ -132,6 +148,12 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
     warnings reported by the validator's HTTP (and other protocol) client
     library:
     <TMPL_VAR NAME="fatal_http_warn" ESCAPE="HTML">
+  </TMPL_IF>
+  <TMPL_IF NAME="fatal_http_no200">
+    You can choose to validate the received error document
+    (<TMPL_VAR NAME="fatal_http_no200" ESCAPE="HTML">)
+    for example if the URL intentionally points to one
+    (there is also a "Validate error pages" option in the options view for this purpose).
   </TMPL_IF>
        </m:errordetail>
      </env:Detail>
