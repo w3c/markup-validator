@@ -3081,8 +3081,8 @@ sub charset_conflicts
     {
         &add_warning(
             'W20',
-            {   W20_http => $File->{Charset}->{XML},
-                W20_xml  => $File->{Charset}->{META},
+            {   W20_xml  => $File->{Charset}->{XML},
+                W20_meta => $File->{Charset}->{META},
             }
         );
         $File->{Tentative} |= T_WARN;
