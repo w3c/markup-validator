@@ -1,7 +1,7 @@
 /*!
    JavaScript for the W3C Markup Validation Service.
 
-   Copyright 2007-2012 W3C (MIT, INRIA, Keio). All Rights Reserved.
+   Copyright 2007-2013 W3C (MIT, INRIA, Keio). All Rights Reserved.
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 */
 
