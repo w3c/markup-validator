@@ -370,7 +370,7 @@ $File->{Opt}->{DOCTYPE} = $q->param('doctype') || '';
 $File->{Opt}->{'User Agent'} =
     $q->param('user-agent') &&
     $q->param('user-agent') ne "1" ? $q->param('user-agent') :
-                                     "W3C_Validator/$VERSION";
+                                     "W3C_Validator/$VERSION " . $CFG->{'User Agent Info'};
 $File->{Opt}->{'User Agent'} =~ tr/\x00-\x09\x0b\x0c-\x1f//d;
 
 if ($File->{Opt}->{'User Agent'} eq 'mobileok') {
