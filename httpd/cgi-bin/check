@@ -3771,6 +3771,24 @@ sub uri_ok
             if ($addr and $uri->host() ne $addr);
         return 0;
     }
+
+    my $port = $uri->port();
+    if ($port !~ m/^(8[0-9]|443)$/ && $port < 1024) {
+        my $File = $self->{'W3C::Validator::File'};
+        $File->{'Error Flagged'} = 1;
+        my $tmpl = &W3C::Validator::MarkupValidator::get_error_template($File);
+        $tmpl->param(fatal_port_error    => 1);
+        return 0;
+    }
+    my $scheme = $uri->scheme();
+
+    if ($scheme !~ m/^(http|https|ftp|urn)$/ ) {
+        my $File = $self->{'W3C::Validator::File'};
+        $File->{'Error Flagged'} = 1;
+        my $tmpl = &W3C::Validator::MarkupValidator::get_error_template($File);
+        $tmpl->param(fatal_port_error    => 1);
+        return 0;
+    }
     return 1;
 }
 
