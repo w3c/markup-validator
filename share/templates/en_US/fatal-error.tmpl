@@ -128,6 +128,15 @@
 </li>
 </TMPL_IF>
 
+<TMPL_IF NAME="fatal_port_error">
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
+      <p>
+        For security reasons, validating resources located at most reserved ports &lt; 1024  
+        has been disabled in this service.
+      </p>
+</li>
+</TMPL_IF>
+
 
 <TMPL_IF NAME="fatal_http_error">
 <li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
