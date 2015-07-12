@@ -487,3 +487,16 @@ pre.outline {
     line-height: 160%;
     padding-left: 1.5em;
 }
+
+.html5_warning {
+    text-align: center;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 6px;
+    background-color: #FFFFCC;
+}
+
+.html5_warning a {
+    font-weight: bold;
+    background-color: #FFFFCC;
+}
