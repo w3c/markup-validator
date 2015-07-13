@@ -1608,6 +1608,9 @@ sub fin_template ($$)
     }
     else {
         $T->param(file_version => $File->{Version});
+        if ($File->{Version} eq "HTML5") {
+                $T->param(is_html5 => TRUE);
+        }
     }
     my ($num_errors, $num_warnings, $num_info, $reported_errors) =
         &report_errors($File);
