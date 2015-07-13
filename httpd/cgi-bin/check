@@ -1097,6 +1097,45 @@ sub html5_validate (\$)
         $req->header('Accept-Encoding', 'identity');
     }
 
+    if ($File->{'Direct Input'}) {
+        print "Content-type: text/html\n\n";
+        print "<!doctype html>";
+        print "<style>.hide { display: none }</style>";
+        print "<script>setTimeout('document.vnupost.submit()',0)</script>";
+        print "<form name=vnupost method=post enctype=multipart/form-data action=https://validator.w3.org/nu/>";
+        # for direct input, must always send vnu the showsource=yes option
+        print "<input type=hidden name=showsource value=yes>";
+        if ($File->{Opt}->{Outline}) {
+            print "<input type=hidden name=showoutline value=yes>";
+        }
+        if ($File->{Opt}->{Output} eq 'json') {
+            print "<input type=hidden name=out value=json>";
+        }
+        print "<textarea id=doc name=content>";
+        print $req->content;
+        print "</textarea>";
+        print "<input type=submit>";
+        print "</form>";
+        print "<script>document.vnupost.className = 'hide'</script>";
+        exit;
+    } elsif (!$File->{'Is Upload'}) {
+        my $uri = $File->{'URI'};
+        my $source_option = "";
+        my $outline_option = "";
+        my $output_option = "";
+        if ($File->{Opt}->{'Show Source'}) {
+            $source_option = "&showsource=yes";
+        }
+        if ($File->{Opt}->{Outline}) {
+            $outline_option = "&showoutline=yes";
+        }
+        if ($File->{Opt}->{Output} eq 'json') {
+            $output_option = "&out=json";
+        }
+        print redirect
+            'https://validator.w3.org/nu/?doc=' . uri_escape($uri) .
+            $source_option . $outline_option . $output_option;
+    }
     my $res = $ua->request($req);
     if (!$res->is_success()) {
         $File->{'Error Flagged'} = TRUE;
