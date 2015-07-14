@@ -1098,11 +1098,13 @@ sub html5_validate (\$)
     }
 
     if ($File->{'Direct Input'}) {
+        my $enctype="enctype=multipart/form-data";
+        my $action="action=https://validator.w3.org/nu/";
         print "Content-type: text/html\n\n";
         print "<!doctype html>";
         print "<style>.hide { display: none }</style>";
         print "<script>setTimeout('document.vnupost.submit()',0)</script>";
-        print "<form name=vnupost method=post enctype=multipart/form-data action=https://validator.w3.org/nu/>";
+        print "<form name=vnupost method=post $enctype $action>";
         # for direct input, must always send vnu the showsource=yes option
         print "<input type=hidden name=showsource value=yes>";
         if ($File->{Opt}->{Outline}) {
