@@ -1098,6 +1098,8 @@ sub html5_validate (\$)
     }
 
     if ($File->{'Direct Input'}) {
+        # if $req isn't actually encoded, this decode() call does nothing
+        $req->decode("gzip");
         print "Content-type: text/html\n\n";
         print "<!doctype html>";
         print "<style>.hide { display: none }</style>";
