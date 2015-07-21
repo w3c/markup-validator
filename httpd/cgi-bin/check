@@ -1098,21 +1098,20 @@ sub html5_validate (\$)
         $req->header('Accept-Encoding', 'identity');
     }
 
+    my $htmlchecker_url = 'https://validator.w3.org/nu/';
+    if ($File->{'Direct Input'} || $File->{'Is Upload'}) {
+        my $hash = $File->{'Direct Input'} ? "#textarea" : "#file";
+        print redirect(
+            -uri => $htmlchecker_url . $hash,
+            -status => '307 Temporary Redirect');
+    }
     my $source_option = $File->{Opt}->{'Show Source'} ? "&showsource=yes" : "";
     my $outline_option = $File->{Opt}->{Outline} ? "&showoutline=yes" : "";
     my $output_option = $File->{Opt}->{Output} eq 'json' ? "&out=json" : "";
-    my $uri = uri_escape($File->{'URI'});
-    if ($File->{'Direct Input'}) {
-        # if $req isn't actually encoded, this decode() call does nothing
-        $req->decode("gzip");
-        $uri = "data:text/html;charset=utf-8;base64," .
-            uri_escape(MIME::Base64::encode_base64($req->content));
-    }
-    if (!$File->{'Is Upload'}) {
-        print redirect
-            'https://validator.w3.org/nu/?doc=' . $uri .
-            $source_option . $outline_option . $output_option;
-    }
+    print redirect
+        $htmlchecker_url . '?doc=' . uri_escape($File->{'URI'}) .
+        $source_option . $outline_option . $output_option;
+
     my $res = $ua->request($req);
     if (!$res->is_success()) {
         $File->{'Error Flagged'} = TRUE;
