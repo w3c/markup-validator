@@ -28,7 +28,6 @@ use 5.008;
 use strict;
 use warnings;
 use utf8;
-use MIME::Base64 ();
 
 package W3C::Validator::MarkupValidator;
 
@@ -622,12 +621,6 @@ $File->{WF_Errors}  = [];
 if (($File->{DOCTYPE} eq "HTML5") or ($File->{DOCTYPE} eq "XHTML5")) {
     if ($CFG->{External}->{HTML5}) {
         $File = &html5_validate($File);
-        &add_warning(
-            'W00',
-            {   W00_experimental_name => "HTML5 Conformance Checker",
-                W00_experimental_URI  => "feedback.html"
-            }
-        );
     }
     else {
         $File->{'Error Flagged'} = TRUE;
@@ -644,12 +637,6 @@ elsif (($File->{DOCTYPE} eq '') and
     # namespaces found, to a different engine. WARNING this is experimental.
     if ($CFG->{External}->{CompoundXML}) {
         $File = &compoundxml_validate($File);
-        &add_warning(
-            'W00',
-            {   W00_experimental_name => "validator.nu Conformance Checker",
-                W00_experimental_URI  => "feedback.html"
-            }
-        );
     }
 }
 else {
@@ -1098,21 +1085,8 @@ sub html5_validate (\$)
         $req->header('Accept-Encoding', 'identity');
     }
 
-    my $source_option = $File->{Opt}->{'Show Source'} ? "&showsource=yes" : "";
-    my $outline_option = $File->{Opt}->{Outline} ? "&showoutline=yes" : "";
-    my $output_option = $File->{Opt}->{Output} eq 'json' ? "&out=json" : "";
-    my $uri = uri_escape($File->{'URI'});
-    if ($File->{'Direct Input'}) {
-        # if $req isn't actually encoded, this decode() call does nothing
-        $req->decode("gzip");
-        $uri = "data:text/html;charset=utf-8;base64," .
-            uri_escape(MIME::Base64::encode_base64($req->content));
-    }
-    if (!$File->{'Is Upload'}) {
-        print redirect
-            'https://validator.w3.org/nu/?doc=' . $uri .
-            $source_option . $outline_option . $output_option;
-    }
+    redirect_html5_requests();
+
     my $res = $ua->request($req);
     if (!$res->is_success()) {
         $File->{'Error Flagged'} = TRUE;
@@ -1457,6 +1431,10 @@ sub prep_template ($$)
     my $T    = shift;
 
     #
+    # URL for Nu Html Checker
+    $T->param(htmlchecker_url => $CFG->{External}->{HTML5});
+
+    #
     # XML mode...
     $T->param(is_xml => &is_xml($File));
 
@@ -1591,6 +1569,9 @@ sub fin_template ($$)
     }
     my ($num_errors, $num_warnings, $num_info, $reported_errors) =
         &report_errors($File);
+    if ($File->{Version} eq "HTML5") {
+        $num_warnings++;
+    }
     if ($num_errors + $num_warnings > 0) {
         $T->param(has_errors => 1);
     }
@@ -3376,6 +3357,25 @@ sub self_url_file
         if $File->{Opt}->{'Accept-Charset Header'};
 
     return $thispage;
+}
+
+sub redirect_html5_requests
+{
+    return if ($File->{Opt}->{Output} eq 'soap12');
+    return if ($File->{Opt}->{Output} eq 'ucn');
+    return if not($CFG->{External}->{HTML5});
+    if ($File->{'Direct Input'} || $File->{'Is Upload'}) {
+        my $hash = $File->{'Direct Input'} ? "#textarea" : "#file";
+        print redirect(
+            -uri => $CFG->{External}->{HTML5} . $hash,
+            -status => '307 Temporary Redirect');
+    }
+    my $source_option = $File->{Opt}->{'Show Source'} ? "&showsource=yes" : "";
+    my $outline_option = $File->{Opt}->{Outline} ? "&showoutline=yes" : "";
+    my $output_option = $File->{Opt}->{Output} eq 'json' ? "&out=json" : "";
+    print redirect
+        $CFG->{External}->{HTML5} . '?doc=' . uri_escape($File->{'URI'}) .
+        $source_option . $outline_option . $output_option;
 }
 
 #####
