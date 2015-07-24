@@ -10,12 +10,11 @@
       <li><a href="#getting">Retrieving and browsing the Code</a>
        <ul>	
 	<li><a href="#browse">Browsing the code</a></li>
-	<li><a href="#tarball">Download tarballs</a></li>
 	<li><a href="#rpm">Fedora/Red Hat RPM package</a></li>
           <li><a href="#suse">openSUSE/SUSE Linux RPM package</a></li>
 	<li><a href="#deb">Debian GNU/Linux package</a></li>
 	<li><a href="#mac">Mac OS X Application</a></li>
-	<li><a href="#CVS">Mercurial repository</a></li>
+	<li><a href="#gh">Github repository</a></li>
        </ul>
       </li>
       <li><a href="#using">Using the code</a></li>
@@ -28,10 +27,7 @@
     The source code for the <a href="../"><acronym title="World Wide Web Consortium">W3C</acronym>
     Markup Validation Service</a> is available under the terms of the
     <a href="http://www.w3.org/Consortium/Legal/copyright-software"><acronym title="World Wide Web Consortium">W3C</acronym>
-	Software License</a>. Source tarball of the latest production
-      version is always available at
-      &lt;<a href="http://validator.w3.org/validator.tar.gz">http://validator.w3.org/validator.tar.gz</a>&gt;.
-      Development code is only available from the Mercurial repository.
+	Software License</a>. 
     </p>
 
           <h4><a id="browse" name="browse"></a>Browsing the code</h4>
@@ -39,28 +35,19 @@
   <p>
     If you just want to glance at the code, or see its revision
     history, you can
-    <a href="http://dvcs.w3.org/hg/markup-validator/file/tip/">browse it on
-    the web</a>.
+    <a href="https://github.com/w3c/markup-validator/">browse it
+    directly in Github</a>.
   </p>
   <p>
     The most interesting files are currently
-    <a href="http://dvcs.w3.org/hg/markup-validator/file/tip/httpd/cgi-bin/check">a
+    <a href="https://github.com/w3c/markup-validator/blob/master/httpd/cgi-bin/check">a
     CGI script called "check"</a> that does pretty much everything,
     and possibly also <a
-    href="http://dvcs.w3.org/hg/markup-validator/file/tip/httpd/conf/httpd.conf">the
+    href="https://github.com/w3c/markup-validator/blob/master/httpd/conf/httpd.conf">the
     httpd.conf configuration file snippet for Apache</a>.
     Select the topmost revision numbers on these
     pages to see the most recent revision of each file.
     </p>
-  
-          <h4><a id="tarball" name="tarball"></a>Download the code in tarballs</h4>
-
-	   <p>
-            If you want a copy of all the files that make up the service, you
-            can download a tarball of <a href="http://validator.w3.org/validator.tar.gz">the code</a>
-	    (~300kB) and <a href="http://validator.w3.org/sgml-lib.tar.gz">the <acronym
-              title="Document Type Definitions">DTDs</acronym></a> (~500kB).
-          </p>
   
         <h4><a id="rpm" name="rpm"></a>Fedora/Red Hat RPM package</h4>
 
@@ -94,18 +81,13 @@
           <p>
     Additionally, you can also get these and other needed packages
     from the openSUSE Software Repository at
-    &lt;<a href="http://download.opensuse.org/repositories/validators/">http://download.opensuse.org/repositories/validators/</a>&gt;
-    or from one of its mirrors, or (except needed Perl packages)
-    from sierkbornemann.de,
-    &lt;<a href="http://sierkbornemann.de/pub/tools/w3c-markup-validator/">http://sierkbornemann.de/pub/tools/w3c-markup-validator/</a>&gt;.
-    Needed Perl packages are provided through the openSUSE Software Repository at
-    &lt;<a href="http://download.opensuse.org/repositories/devel:/languages:/perl/">http://download.opensuse.org/repositories/devel:/languages:/perl/</a>&gt;.
+    &lt;<a href="http://software.opensuse.org/package/w3c-markup-validator">http://software.opensuse.org/package/w3c-markup-validator</a>&gt;
           </p>
   
         <h4><a name="deb" id="deb"></a>Debian GNU/Linux package</h4>
 
           <p>
-            A Debian package is available, courtesy of Fr&eacute;d&eacute;ric
+            <a href="https://packages.debian.org/search?keywords=w3c-markup-validator">A Debian package is available</a>, courtesy of Fr&eacute;d&eacute;ric
             Sch&uuml;tz. 
           </p>
           <p>
@@ -114,28 +96,17 @@
             can be installed by running the command <kbd>apt-get install
             w3c-markup-validator</kbd> as root.
           </p>
-          <p>
-            Debian 4.0 ("Etch") includes version 0.7.4 of the validator; the
-            Debian Testing and Unstable distributions usually include the latest
-            version.
-          </p>
-
+  
         <h4 id="mac">Mac OS X Application</h4>
         <p>
           The Validator is also packaged as a standalone Mac OS X Application,
           called <a href="http://habilis.net/validator-sac/">Validator <abbr title="[Stand Alone Complex]">S.A.C.</abbr></a>, courtesy of <a href="http://habilis.net/chuck/" title="Chuck Houpt's Home Page">Chuck Houpt</a>.</p>
 
-        <h4><a id="CVS" name="CVS"></a>Mercurial repository</h4>
+        <h4><a id="gh" name="gh"></a>Github repository</h4>
 
-          <p>
-            If you intend to actively mirror the code and/or contribute
-            patches to the code, you should install and become familiar
-            with <a href="http://mercurial.selenic.com/">Mercurial</a>;
-            this is the tool we use for revision control.
-          </p>
-          <p>
-            For instructions on how to retrieve the code using Mercurial, 
-            see our <a href="http://dvcs.w3.org/hg/markup-validator/">web-based
+	<p>
+            For instructions on how to retrieve the code using Github, 
+            see our <a href="https://github.com/w3c/markup-validator/">web-based
               interface to the repository</a>.
           </p>
             
