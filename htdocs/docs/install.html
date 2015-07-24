@@ -210,35 +210,22 @@ install Bundle::W3C::Validator
       </dl>
 
     <h4 id="install-download">Step 3: Download the validator and DTDs</h4>
-        <p>Download the <a href="http://validator.w3.org/validator.tar.gz">Validator's Tar Ball</a>
-        and the sgml-lib <a href="http://validator.w3.org/sgml-lib.tar.gz">DTD library</a> from our site.</p>
-        <p>Alternatively, if you want to work on the latest development version, you can download 
-        both from our Mercurial repository, but you should be aware that this version may not work at all.</p>
-        <p>(<a href="../source/">Read more</a> about retrieving the source)</p>
-
+        <p>Download the Validator code, configuration and DTD library
+	from the <a
+	href="https://github.com/w3c/markup-validator/">Github
+	repository</a> master branch.</p>
 
     <h4 id="install-components">Step 4: Unpack the validator</h4>
         <ol>                
             <li><p>Create a directory for the validator's installation. On Unix-based systems, 
-            we suggest to use the default folder <code>/usr/local/validator</code>. This
+            we suggest to use the default folder <code>/usr/local/markup-validator</code>. This
             directory will be referred to as <code>[validatorpath]</code>
             throughout this guide.</p></li>
      
             <li>
-              <p>
-                Unpack the two archives of the validator and sgml-lib into a
-                temporary directory, and copy the directories
-                <code>htdocs</code>, <code>httpd/cgi-bin</code>, and
-                <code>share</code> from <code>validator-<em>X.Y</em></code>
-                into <code>[validatorpath]</code>.
+              <p><code>cd /usr/local ; git clone https://github.com/w3c/markup-validator.git
+	      </code>.
               </p>
-<pre>
-# tar zxvf validator.tar.gz 
-# tar zxvf sgml-lib.tar.gz 
-# mkdir /usr/local/validator
-# cd validator-<em>X.Y</em>
-# mv htdocs share httpd/cgi-bin /usr/local/validator
-</pre>
               <p>
                 The <code>[validatorpath]</code> directory should now have
                 subdirectories named <code>cgi-bin</code>, <code>htdocs</code>,
