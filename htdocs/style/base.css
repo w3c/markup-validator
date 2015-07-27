@@ -574,11 +574,8 @@ div.doc ul li {
 }
 
 /* documentation - table of contents */
-#toc { /* making the toc a bit more compact and standing out */
-    font-size: .85em;
-    font-weight: bold;
-    margin-bottom: 2em;
-    margin-left: 3em;
+#toc {
+    margin-left: 40px;
 }
 
 div.doc div#toc ol, div.doc ol {
@@ -739,6 +736,20 @@ div.intro p { margin-bottom: .5em;}
 #test_warning img {
     width: 1.3em;
     vertical-align: middle;
+}
+
+.html5_logo_32 {
+    float: left;
+    padding-top: 8px;
+    padding-right: 20px;
+    padding-left: 28px;
+}
+
+.html5_logo_128 {
+    float: left;
+    padding-top: 9px;
+    padding-right: 20px;
+    padding-left: 18px;
 }
 
 /* donation and sponsorship program */
