@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>W3C Validation Services</title>
+    <link rev="made" href="mailto:www-validator@w3.org" />
+    <link rel="shortcut icon" href="//www.w3.org/2008/site/images/favicon.ico" type="image/x-icon" />
+    <link rev="start" href="/" title="Home Page" />
+    <style type="text/css" media="all">
+      @import "./style/base";
+    </style>
+    <meta name="keywords" content="HTML, HyperText Markup Language, Validation,
+      W3C Markup Validation Service, Validator.nu, Feed, Internationalization, i18n, Validator Suite, CSS Validator, Unicorn, Link Checker, MobileOK Checker" />
+  </head>
+
+  <body>
+   <div id="banner">
+    <h1 id="title">
+      <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="/images/w3c.png" /></a>
+			<a href="/services"><span>W3C Validation Services</span></a>
+      </h1>
+      <p id="tagline">Providing standards conformance checking services to the Web community</p>
+   </div>
+
+
+
+<div class="doc">
+    <div id="skip">
+      <h2>W3C Validation Services</h2>
+      <h3 id="TableOfContents">Table of contents</h3>
+      <div id="toc">
+        <ol>
+          <li><a href="#about">About</a></li>
+          <li><a href="#misuse">Misuse</a></li>
+	  <li><a href="#blocking">Blocking</a></li>
+          <li><a href="#list">Validation Services</a></li>
+        </ol>
+      </div>
+      
+      <h3 id="about">About W3C Validation services</h3>
+      <p>
+        W3C provides various free validation services 
+        that help check the conformance of Web sites against open standards.
+      </p>
+
+      <p>You are most likely here because this address appeared in
+      logs for your website.  This means someone used one of our
+      services to assess content on your site.</p>
+
+      <h3 id="misuse">Misuse</h3>
+
+      <p>While these services were created for the purpose of helping
+      Web developers and designers there is potential like many online
+      services for use other than intended.</p>
+      
+      <p>Modest traffic from these services does not consitute abuse
+      against your website.  Third parties using this service to
+      review content you make publicly available is not substantially
+      different from browsing your site.  Web designers frequently
+      evaluate techniques of other websites as a means to learn.</p>
+
+      <h3 id="blocking">Blocking W3C Validators</h3>
+
+      <p>Before considering blocking W3C Validator services you should
+      ensure that nobody in your organization or perhaps contracted
+      by them is requesting our services to make the assessments.</p>
+
+      <p>Should you wish to block all or some W3C Validation services
+      from assessing your site you may do so based on our IP addresses
+      or user-agent header string.  How to do so varies based on
+      specific operating systems, firewalls and webserver
+      software.</p>
+
+      <h4 id="user-agent">Blocking on User-Agent</h4>
+
+      <p>As these services commonly include the
+      link <a href="/services">http://validator.w3.org/services</a>
+      in their user-agent you can filter them all based on presence of
+      that string in user-agent header.  You can instead opt to block
+      specific Validators based on the unique portion of their
+      user-agents. If you wish to block them individually it would be
+      best not to include the version numbers as those are subject to
+      change.</p>
+
+      <h4 id="ip-address">Blocking on IP Address</h4>
+
+      <p>Traffic from W3C Validator services will be coming from
+      <code>128.30.52.0/24</code> subnet and you may firewall or block
+      that in your web server configuration.  You should only firewall
+      incoming port 80 and 443 from this subnet so as not to block
+      your users from assessing W3C website or ability to participate
+      in mailing lists.</p>
+
+      <h3 id="list">W3C Validation Services</h3>
+      <p>Below is a listing of W3C's various Validation services,
+      links to the services themselves, the user-agent header being
+      sent and how to find out more information on each.</p>
+      <ul>
+	<li><h4 id="markup">Markup Validator</h4>
+	  <ul>
+	    <li><a href="/">Service</a></li>
+	    <li>User-Agent: <code>W3C_Validator/1.3</code></li>
+	    <li><a href="/about">About</a></li>
+	  </ul>
+	</li>
+	<li><h4 id="validator.nu">Validator.nu</h4>
+	  <ul>
+	    <li><a href="/nu/">Service</a></li>
+	    <li>User-Agent: <code>Validator.nu/LV</code></li>
+	    <li><a href="/nu/about.html">About</a></li>
+	  </ul>
+	</li>
+	<li><h4 id="link">Link checker</h4>
+	  <ul>
+	    <li><a href="/checklink">Service</a></li>
+	    <li>User-Agent: <code>W3C-checklink</code></li>
+	    <li><a href="/docs/checklink">About</a></li>
+	    <li><em>* as a crawling service this honors robots.txt directives</em></li>
+	  </ul>
+	</li>
+	<li><h4 id="mobileok">Mobile OK Checker</h4>
+	  <ul>
+	    <li><a href="/mobile/">Service</a></li>
+	    <li>User-Agent: <code>W3C-mobileOK/DDC-1.0</code></li>
+	    <li><a href="http://www.w3.org/2006/07/mobileok-ddc">About</a></li>
+	  </ul>
+	</li>
+	<li><h4 id="i18n">Internationalization Checker</h4>
+	  <ul>
+	    <li><a href="/i18n-checker/">Service</a></li>
+	    <li>User-Agent: <code>W3C_I18n-Checker/1.0</code></li>
+	    <li><a href="/i18n-checker/about">About</a></li>
+	  </ul>
+	</li>
+	<li><h4 id="suite">Validator Suite</h4>
+	  <ul>
+	    <li><a href="https://validator-suite.w3.org/">Service</a></li>
+	    <li>User-Agent: <code>NING/1.0</code></li>
+	    <li><a href="https://validator-suite.w3.org/">About</a></li>
+	    <li><em>* this service invokes other W3C Validators</em></li>
+	    <li><em>* as a crawling service this honors user supplied directives</em></li>
+	  </ul>
+	</li>
+	<li><h4 id="feed">Feed Validation</h4>
+	  <ul>
+	    <li><a href="/feed/">Service</a></li>
+	    <li>User-Agent: <code>FeedValidator/1.3</code></li>
+	    <li><a href="/feed/about.html">About</a></li>
+	  </ul>
+	</li>
+	<li><h4 id="css-validator">CSS Validator</h4>
+	  <ul>
+	    <li><a href="http://jigsaw.w3.org/css-validator/">Service</a></li>
+	    <li>User-Agent: <code>Jigsaw/2.3.0 W3C_CSS_Validator_JFouffa/2.0</code></li>
+	    <li><a href="http://jigsaw.w3.org/css-validator/about.html">About</a></li>
+	  </ul>
+	</li>
+	<li><h4 id="unicorn">Unicorn</h4>
+	  <ul>
+	    <li><a href="/unicorn/">Service</a></li>
+	    <li>User-Agent: <code>W3C_Unicorn/1.0</code></li>
+	    <li><a href="http://code.w3.org/unicorn">About</a></li>
+	    <li><em>* this service invokes other W3C Validators</em></li>
+	  </ul>
+	</li>
+      </ul>
+  </div>
+</div>
+
+<hr />
+<div id="footer">
+		<p id="activity_logos">
+      <a href="http://www.w3.org/Status" title="W3C's Open Source, bringing you free Web quality tools and more"><img src="//www.w3.org/Icons/WWW/w3c_home_nb" alt="W3C" width="72" height="47" /><img src="/images/opensource-55x48.png" alt="Open-Source" title="We are building certified Open Source/Free Software. - see www.opensource.org" width="55" height="48" /></a>
+         </p>
+
+		<p id="support_logo">
+			<a href="http://www.w3.org/QA/Tools/Donate">
+			<img src="//www.w3.org/QA/Tools/I_heart_validator" alt="I heart Validator logo" title=" Validators Donation Program" width="80" height="15" />
+			</a>
+		</p>
+
+		<p class="copyright">
+			<a rel="Copyright" href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> &copy; 1994-2013
+			<a href="http://www.w3.org/"><acronym title="World Wide Web Consortium">W3C</acronym></a>&reg;
+
+			(<a href="http://www.csail.mit.edu/"><acronym title="Massachusetts Institute of Technology">MIT</acronym></a>,
+			<a href="http://www.ercim.eu/"><acronym title="European Research Consortium for Informatics and Mathematics">ERCIM</acronym></a>,
+			<a href="http://www.keio.ac.jp/">Keio</a>), <a href="http://ev.buaa.edu.cn/">Beihang</a>
+			All Rights Reserved.
+			W3C <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>,
+			<a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a>,
+			<a rel="Copyright" href="http://www.w3.org/Consortium/Legal/copyright-documents">document use</a>
+
+			and <a rel="Copyright" href="http://www.w3.org/Consortium/Legal/copyright-software">software licensing</a>
+
+			rules apply. Your interactions with this site are in accordance
+			with our <a href="http://www.w3.org/Consortium/Legal/privacy-statement#Public">public</a> and
+			<a href="http://www.w3.org/Consortium/Legal/privacy-statement#Members">Member</a> privacy
+			statements.
+		</p>
+</div>
+
+  </body>
+</html>
