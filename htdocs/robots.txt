@@ -5,3 +5,11 @@
 User-agent: *
 Disallow: /check
 Disallow: /feed/check
+Disallow: /checklink
+Disallow: /mobile/check
+Disallow: /mobile/alpha
+Disallow: /css-validator
+Disallow: /unicorn/check
+Disallow: /http-checker
+Disallow: /i18n-checker/check
+Disallow: /nu
