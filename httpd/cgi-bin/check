@@ -26,7 +26,8 @@ use 5.008;
 #
 # Pragmas.
 use strict;
-use warnings;
+# enable warnings when not using in production
+#use warnings;
 use utf8;
 
 package W3C::Validator::MarkupValidator;
