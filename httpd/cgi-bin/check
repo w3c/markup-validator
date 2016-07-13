@@ -2778,11 +2778,11 @@ sub prepCGI
 
     # Use "url" unless a "uri" was also given.
     if ($q->param('url') and not $q->param('uri')) {
-        $q->param('uri', $q->param('url'));
+        $q->param('uri', scalar $q->param('url'));
     }
 
     # Set output mode; needed in get_error_template if we end up there.
-    $File->{Opt}->{Output} = $q->param('output') || 'html';
+    $File->{Opt}->{Output} = scalar $q->param('output') || 'html';
 
     # Issue a redirect for uri=referer.
     if ($q->param('uri') and $q->param('uri') eq 'referer') {
@@ -2806,7 +2806,7 @@ sub prepCGI
 
     # Supersede URL with an uploaded file.
     if ($q->param('uploaded_file')) {
-        $q->param('uri', 'upload://' . $q->param('uploaded_file'));
+        $q->param('uri', 'upload://' . scalar $q->param('uploaded_file'));
         $File->{'Is Upload'} = TRUE;    # Tag it for later use.
     }
 
