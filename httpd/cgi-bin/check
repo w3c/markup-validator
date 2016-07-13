@@ -1746,7 +1746,7 @@ sub handle_uri
 
     my $ua = W3C::Validator::UserAgent->new($CFG, $File);
 
-    my $uri = URI->new(ref $q ? $q->param('uri') : $q)->canonical();
+    my $uri = URI->new(ref $q ? scalar $q->param('uri') : $q)->canonical();
     $uri->fragment(undef);
 
     if (!$uri->scheme()) {
@@ -2759,7 +2759,7 @@ sub prepCGI
         next if ($param eq 'uploaded_file' || $param eq 'fragment');
 
         # Decode all other defined values as UTF-8.
-        my @values = map { Encode::decode_utf8($_) } $q->param($param);
+        my @values = map { Encode::decode_utf8($_) } $q->multi_param($param);
         $q->param($param, @values);
 
         # Skip parameters that should not be treated as booleans.
@@ -3309,22 +3309,22 @@ sub self_url_q
 
     # Pass-through parameters
     for my $param (qw(uri accept accept-language accept-charset)) {
-        $thispage .= "$param=" . uri_escape($q->param($param)) . ';'
+        $thispage .= "$param=" . uri_escape(scalar $q->param($param)) . ';'
             if $q->param($param);
     }
 
     # Boolean parameters
     for my $param (qw(ss outline No200 verbose group)) {
-        $thispage .= "$param=1;" if $q->param($param);
+        $thispage .= "$param=1;" if scalar $q->param($param);
     }
 
     # Others
     if ($q->param('doctype') and $q->param('doctype') !~ /(?:Inline|detect)/i)
     {
-        $thispage .= 'doctype=' . uri_escape($q->param('doctype')) . ';';
+        $thispage .= 'doctype=' . uri_escape(scalar $q->param('doctype')) . ';';
     }
     if ($q->param('charset') and $q->param('charset') !~ /detect/i) {
-        $thispage .= 'charset=' . uri_escape($q->param('charset')) . ';';
+        $thispage .= 'charset=' . uri_escape(scalar $q->param('charset')) . ';';
     }
 
     $thispage =~ s/[\?;]$//;
