@@ -3362,8 +3362,6 @@ sub self_url_file
 
 sub redirect_html5_requests
 {
-    return if ($File->{Opt}->{Output} eq 'soap12');
-    return if ($File->{Opt}->{Output} eq 'ucn');
     return if not($CFG->{External}->{HTML5});
     if ($File->{'Direct Input'} || $File->{'Is Upload'}) {
         my $hash = $File->{'Direct Input'} ? "#textarea" : "#file";
