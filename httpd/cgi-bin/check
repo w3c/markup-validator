@@ -3369,12 +3369,13 @@ sub redirect_html5_requests
             -uri => $CFG->{External}->{HTML5} . $hash,
             -status => '307 Temporary Redirect');
     }
+    my $checkerrorpages_option= $File->{Opt}->{No200} ? "&checkerrorpages=yes" : "";
     my $source_option = $File->{Opt}->{'Show Source'} ? "&showsource=yes" : "";
     my $outline_option = $File->{Opt}->{Outline} ? "&showoutline=yes" : "";
     my $output_option = $File->{Opt}->{Output} eq 'json' ? "&out=json" : "";
     print redirect
         $CFG->{External}->{HTML5} . '?doc=' . uri_escape($File->{'URI'}) .
-        $source_option . $outline_option . $output_option;
+        $checkerrorpages_option . $source_option . $outline_option . $output_option;
 }
 
 #####
