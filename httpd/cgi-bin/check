@@ -800,7 +800,7 @@ if ($File->{Opt}->{Output} eq 'json') {
     $json->allow_nonref(TRUE);
     if (my $msgs = $template->param("file_errors")) {
         for my $msg (@$msgs) {
-            for my $key (qw(msg expl)) {
+            for my $key (qw(msg expl src)) {
                 $msg->{$key} = $json->encode($msg->{$key}) if $msg->{$key};
             }
 
@@ -2394,7 +2394,10 @@ sub report_errors ($)
                             &truncate_line(
                             $File->{Content}->[$err->{line} - 1],
                             $err->{char});
-                        $line = &mark_error($line, $col);
+                        # Skip &mark_error for JSON to make JSON output Nu Html Checker compatible.
+                        if ($File->{Opt}->{Output} ne 'json') {
+                            $line = &mark_error($line, $col);
+                        }
                     }
                     elsif (defined($err->{line})) {
                         $col = length($File->{Content}->[$err->{line} - 1]);

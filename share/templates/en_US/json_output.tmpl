@@ -15,6 +15,7 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
               "message": <TMPL_VAR NAME="msg">,
               <TMPL_IF NAME="num">"messageid": "<TMPL_VAR NAME="num">",</TMPL_IF>
               <TMPL_IF NAME="expl">"explanation": <TMPL_VAR NAME="expl">,</TMPL_IF>
+              <TMPL_IF NAME="src">"extract": <TMPL_VAR NAME="src">,</TMPL_IF>
               "type": <TMPL_IF NAME="err_type_err">"error"<TMPL_ELSE>"info"<TMPL_IF NAME="err_type_warn">,
               "subtype": "warning"</TMPL_IF></TMPL_IF>
           }<TMPL_UNLESS NAME="__last__">,</TMPL_UNLESS>
