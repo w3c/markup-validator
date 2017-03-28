@@ -812,6 +812,30 @@ if ($File->{Opt}->{Output} eq 'json') {
             }
         }
     }
+
+    # Escape params used in json_fault.tmpl
+    for my $key (qw(
+        fatal_missing_checker
+        fatal_checker_error
+        fatal_transcode_charset
+        fatal_transcode_errmsg
+        fatal_decode_uri
+        fatal_decode_cenc
+        fatal_decode_errmsg
+        fatal_byte_lines
+        fatal_byte_charset
+        fatal_uri_scheme
+        fatal_ip_host
+        fatal_http_code
+        fatal_http_msg
+        fatal_http_uri
+        fatal_http_warn
+        fatal_http_no200
+        fatal_mime_ct
+        fatal_parse_extid_msg
+    )) {
+        $template->param($key) = $json->encode($template->param($key)) if $template->param($key);
+    }
 }
 
 # transcode output from perl's internal to utf-8 and output
