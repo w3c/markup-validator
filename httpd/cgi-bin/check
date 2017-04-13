@@ -800,7 +800,7 @@ if ($File->{Opt}->{Output} eq 'json') {
     $json->allow_nonref(TRUE);
     if (my $msgs = $template->param("file_errors")) {
         for my $msg (@$msgs) {
-            for my $key (qw(msg expl)) {
+            for my $key (qw(msg expl src)) {
                 $msg->{$key} = $json->encode($msg->{$key}) if $msg->{$key};
             }
 
@@ -811,6 +811,30 @@ if ($File->{Opt}->{Output} eq 'json') {
                 delete($msg->{char});
             }
         }
+    }
+
+    # Escape params used in json_fault.tmpl
+    for my $key (qw(
+        fatal_missing_checker
+        fatal_checker_error
+        fatal_transcode_charset
+        fatal_transcode_errmsg
+        fatal_decode_uri
+        fatal_decode_cenc
+        fatal_decode_errmsg
+        fatal_byte_lines
+        fatal_byte_charset
+        fatal_uri_scheme
+        fatal_ip_host
+        fatal_http_code
+        fatal_http_msg
+        fatal_http_uri
+        fatal_http_warn
+        fatal_http_no200
+        fatal_mime_ct
+        fatal_parse_extid_msg
+    )) {
+        $template->param($key) = $json->encode($template->param($key)) if $template->param($key);
     }
 }
 
@@ -2394,7 +2418,10 @@ sub report_errors ($)
                             &truncate_line(
                             $File->{Content}->[$err->{line} - 1],
                             $err->{char});
-                        $line = &mark_error($line, $col);
+                        # Skip &mark_error for JSON to make JSON output Nu Html Checker compatible.
+                        if ($File->{Opt}->{Output} ne 'json') {
+                            $line = &mark_error($line, $col);
+                        }
                     }
                     elsif (defined($err->{line})) {
                         $col = length($File->{Content}->[$err->{line} - 1]);
