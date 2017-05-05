@@ -7,8 +7,28 @@
 
 /* @group Reset */
 
-html, body, form, fieldset, p, a, ul, ol, li, div, legend, label,
-br, input, button, textarea, h1, h2, h3, h4, h5, strong {
+html,
+body,
+form,
+fieldset,
+p,
+a,
+ul,
+ol,
+li,
+div,
+legend,
+label,
+br,
+input,
+button,
+textarea,
+h1,
+h2,
+h3,
+h4,
+h5,
+strong {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -27,106 +47,115 @@ a img {
 	border: 0;
 }
 
-a:link, a:visited {
+a:link,
+a:visited {
 	text-decoration: underline;
-	color: #365D95;
+	color: #365d95;
 }
 
-a:hover, a:active {
+a:hover,
+a:active {
 	text-decoration: underline;
 	color: #1f2126;
 }
 
-ul, ol {
+ul,
+ol {
 	list-style: none;
 }
 
-abbr[title], acronym[title], span[title], strong[title] {
+abbr[title],
+acronym[title],
+span[title],
+strong[title] {
 	border-bottom: thin dotted;
 	cursor: help;
 }
 
-acronym:hover, abbr:hover {
+acronym:hover,
+abbr:hover {
 	cursor: help;
 }
-
 /* @end */
 
 /* @group Basics */
 
 body {
 	padding-bottom: 6em;
-	min-width: 40em; /* for the tabs, mostly */
+	min-width: 40em;	/* for the tabs, mostly */
 }
 
 p {
-  line-height: 130%;   
+	line-height: 130%;
 }
 
-strong { 
-  font-weight: bold;
+strong {
+	font-weight: bold;
 }
 
-h2 { 
-    color: #690;
-    font-family:Verdana,Arial,sans-serif;
-    background-color: white;
-    font-size: 1.3em;
-    margin-bottom: 1em;    
+h2 {
+	color: #690;
+	font-family: Verdana, Arial, sans-serif;
+	background-color: white;
+	font-size: 1.3em;
+	margin-bottom: 1em;
 }
 
 h3 {
-    font-family:Verdana,Arial,sans-serif;
-    color: #690;
-    background-color: white;
-    font-size: 1.1em;
-    border-bottom: 1px dotted #aaaa77;
-    text-decoration: none;
-    margin-top: 1em;
-    margin-bottom: 1em;
-} 
-
-h4 {
-    font-family:Verdana,Arial,sans-serif;
-    color: #690;
-    font-style: italic;
-    text-decoration: none;
-    font-size: .9em;
-    font-weight:600;
-    margin-top: 1.5em;
-    margin-bottom: .5em;
+	font-family: Verdana, Arial, sans-serif;
+	color: #690;
+	background-color: white;
+	font-size: 1.1em;
+	border-bottom: 1px dotted #aaaa77;
+	text-decoration: none;
+	margin-top: 1em;
+	margin-bottom: 1em;
 }
 
-h5,h6 {
-    font-family:Verdana,Arial,sans-serif;
-    color: #690;
-    background-color: white;
-    font-weight: normal;
-    font-size: small;
-    margin-top: 1em;
-    margin-left: 1em;
-    margin-bottom: .7em;
-    }
+h4 {
+	font-family: Verdana, Arial, sans-serif;
+	color: #690;
+	font-style: italic;
+	text-decoration: none;
+	font-size: .9em;
+	font-weight: 600;
+	margin-top: 1.5em;
+	margin-bottom: .5em;
+}
 
-    /* tables in the documentation */
+h5,
+h6 {
+	font-family: Verdana, Arial, sans-serif;
+	color: #690;
+	background-color: white;
+	font-weight: normal;
+	font-size: small;
+	margin-top: 1em;
+	margin-left: 1em;
+	margin-bottom: .7em;
+}
 
-    table {
-    }
-    td, th{
-    	padding: 6px;
-    }
-    
+/* tables in the documentation */
+
+th {
+	padding: 6px;
+}
 /* @end */
 
 
 /* @group Inputs */
 
 div#frontforms input {
-    /* default for radio and checkbox. Others will be handled directly */
-    background-color: #EAEBEE;
+	/* default for radio and checkbox. Others will be handled directly */
+	background-color: #eaebee;
 }
 
-input#uri, input#file, input#uploaded_file, input#keywords, input#short_desc, textarea {
+input#uri,
+input#file,
+input#uploaded_file,
+input#keywords,
+input#short_desc,
+textarea {
 	font-family: Monaco, "Courier New", Monospace;
 	font-size: 0.9em;
 	border: 1px solid #bbb;
@@ -138,24 +167,30 @@ input#uri, input#file, input#uploaded_file, input#keywords, input#short_desc, te
 	font-variant: normal;
 }
 
-input#uri, input#file, input#uploaded_file {
+input#uri,
+input#file,
+input#uploaded_file {
 	width: 85%;
 	margin: 0.3em 0 0 1em;
 }
 
-input#file, input#uploaded_file {
+input#file,
+input#uploaded_file {
 	width: 30em;
 }
 
-input#mailsearch, input#bugsearch {
-    background-color: #EAEBEE;
-    color: #365D95;
-    padding: .3em 1em;
-    border: 1px outset #ccc;
-  }
-  input#mailsearch:active, input#bugsearch:active {
-    border-style: inset !important;
-  }
+input#mailsearch,
+input#bugsearch {
+	background-color: #eaebee;
+	color: #365d95;
+	padding: .3em 1em;
+	border: 1px outset #ccc;
+}
+
+input#mailsearch:active,
+input#bugsearch:active {
+	border-style: inset !important;
+}
 a.submit {
 	display: block;
 	width: 10em;
@@ -177,10 +212,8 @@ textarea {
 
 p.submit_button input {
 	overflow: visible;
-	width: auto;
-	background: #fff;
-  color: #365D95;
-  padding: 0.3em 0.4em 0.1em 0.3em;
+	color: #365d95;
+	padding: 0.3em 0.4em 0.1em 0.3em;
 	font-size: 1.2em;
 	width: 12em;
 	text-align: center;
@@ -193,7 +226,7 @@ p.submit_button input {
 }
 
 p.submit_button input:active {
-  color: #1f2126;
+	color: #1f2126;
 	border-bottom: 1px solid #aaa;
 	border-right: 1px solid #aaa;
 	border-top: 2px solid #444;
@@ -215,7 +248,11 @@ div.options label {
 }
 
 
-div.options table, div.options tbody, div.options td, div.options th, div.options tr {
+div.options table,
+div.options tbody,
+div.options td,
+div.options th,
+div.options tr {
 	margin: 0;
 	padding: 0;
 }
@@ -224,11 +261,13 @@ div.options table {
 	border-collapse: collapse;
 }
 
-div.options th, div.options th label {
+div.options th,
+div.options th label {
 	font-weight: bold;
 }
 
-div.options td, div.options th {
+div.options td,
+div.options th {
 	padding: 0.5em 1.1em 0.5em 0;
 	text-align: left;
 }
@@ -242,14 +281,15 @@ div.options select {
 }
 
 div.options table tr.subchoice th {
-    padding-left: 3em;
+	padding-left: 3em;
 }
 tr.subchoice th label {
-  padding-left: 0;
+	padding-left: 0;
 }
-tr.subchoice th, tr.subchoice th label {
-  font-size: 1em;
-  font-weight: normal;
+tr.subchoice th,
+tr.subchoice th label {
+	font-size: 1em;
+	font-weight: normal;
 }
 /* @end */
 
@@ -257,14 +297,15 @@ tr.subchoice th, tr.subchoice th label {
 
 h1#title {
 	font-family: "Myriad Web", "Myriad Pro", "Gill Sans", Helvetica, Arial, Sans-Serif;
-	background-color: #365D95;
+	background-color: #365d95;
 	color: #fdfdfd;
 	font-size: 1.6em;
 	background: url(../images/head-bl.png) bottom left no-repeat;
 	padding-bottom: 0.430em;
 }
-h1#title a, h1#title a img {
-background-color: #365D95;
+h1#title a,
+h1#title a img {
+	background-color: #365d95;
 }
 
 h1 span {
@@ -272,9 +313,12 @@ h1 span {
 	border-color: #4e6f9e;
 }
 
-h1#title a:link, h1#title a:hover, h1#title a:visited, h1#title a:active {
-  color: #fdfdfd !important;
-  text-decoration: none;
+h1#title a:link,
+h1#title a:hover,
+h1#title a:visited,
+h1#title a:active {
+	color: #fdfdfd !important;
+	text-decoration: none;
 }
 
 h1#title img {
@@ -283,7 +327,7 @@ h1#title img {
 }
 
 div#banner {
-	background: #365D95 url(../images/head-br.png) bottom right no-repeat;
+	background: #365d95 url(../images/head-br.png) bottom right no-repeat;
 	margin: 1.5em 2em;
 }
 
@@ -293,7 +337,7 @@ p#tagline {
 	padding-bottom: 1em;
 	letter-spacing: 0.1em;
 	line-height: 100% !important;
-	color: #D0DCEE;
+	color: #d0dcee;
 	background-color: transparent;
 }
 
@@ -306,11 +350,13 @@ ul#lang_choice {
 	margin-right: 3.3em;
 }
 
-ul#lang_choice a:link, ul#lang_choice a:visited {
+ul#lang_choice a:link,
+ul#lang_choice a:visited {
 	text-decoration: none;
 }
 
-ul#lang_choice a:hover, ul#lang_choice a:active {
+ul#lang_choice a:hover,
+ul#lang_choice a:active {
 	text-decoration: underline;
 }
 
@@ -318,7 +364,6 @@ ul#lang_choice li {
 	display: inline;
 	padding-left: 0.5em;
 }
-
 /* @end */
 
 /* @group Tabs */
@@ -331,18 +376,19 @@ ul#tabset_tabs li {
 	cursor: pointer;
 	float: left;
 	margin-right: 0.245em;
-	background: #DADDE3 url(../images/tab-tl.png) no-repeat top left;
+	background: #dadde3 url(../images/tab-tl.png) no-repeat top left;
 	border-bottom: 1px solid #CBD0DB;
 }
 
 ul#tabset_tabs li.selected {
-	background: #EAEBEE url(../images/round-tl.png) no-repeat top left;
-	border-bottom: 1px solid #EAEBEE;
+	background: #eaebee url(../images/round-tl.png) no-repeat top left;
+	border-bottom: 1px solid #eaebee;
 }
 
-ul#tabset_tabs li.selected a:link, ul#tabset_tabs li.selected a:visited {
+ul#tabset_tabs li.selected a:link,
+ul#tabset_tabs li.selected a:visited {
 	color: #1f2126;
-	background: #EAEBEE url(../images/round-tr.png) no-repeat top right;
+	background: #eaebee url(../images/round-tr.png) no-repeat top right;
 }
 
 ul#tabset_tabs li span {
@@ -353,29 +399,31 @@ body ul#tabset_tabs li.selected a span {
 	color: #3d424f;
 }
 
-ul#tabset_tabs li a:link, ul#tabset_tabs li a:visited {
-	color: #365D95;
+ul#tabset_tabs li a:link,
+ul#tabset_tabs li a:visited {
+	color: #365d95;
 	display: block;
 	padding: 0.515em 1.3em 0.215em 0.8em;
-	background: #DADDE3 url(../images/tab-tr.png) no-repeat top right;
+	background: #dadde3 url(../images/tab-tr.png) no-repeat top right;
 	margin-left: 0.5em;
 	font-size: 0.9em;
 	font-weight: bold;
 	text-decoration: none;
 }
 
-ul#tabset_tabs li a:hover, ul#tabset_tabs li a:active {
+ul#tabset_tabs li a:hover,
+ul#tabset_tabs li a:active {
 	color: #1f2126;
 }
 
-ul#tabset_tabs li a:hover span, ul#tabset_tabs li a:active span {
+ul#tabset_tabs li a:hover span,
+ul#tabset_tabs li a:active span {
 	color: #3d424f;
 }
 
 ul#tabset_tabs li.selected span {
 	color: #5d6371;
 }
-
 /* @end */
 
 /* @group Contents */
@@ -387,17 +435,25 @@ div#frontforms {
 
 div#fields {
 	clear: both;
-	background: #EAEBEE url(../images/round-tr.png) no-repeat top right;
+	background: #eaebee url(../images/round-tr.png) no-repeat top right;
 	padding: 0.5em 1.3em;
-	border-bottom: 1px solid #DCDDE0;
+	border-bottom: 1px solid #dcdde0;
 }
 
-div#fields legend, div#fields p, div#fields p strong, div#fields p a, div#fields fieldset, div#fields form,div#fields form fieldset legend a, div#fields form p label, div#fields tr label   {
-  background-color: #EAEBEE;
+div#fields legend,
+div#fields p,
+div#fields p strong,
+div#fields p a,
+div#fields fieldset,
+div#fields form,
+div#fields form fieldset legend a,
+div#fields form p label,
+div#fields tr label {
+	background-color: #eaebee;
 }
 
 fieldset {
-	background: #EAEBEE;
+	background: #eaebee;
 }
 
 legend {
@@ -406,7 +462,10 @@ legend {
 	letter-spacing: 0.06em;
 }
 
-legend a:link, legend a:visited, legend a:hover, legend a:active {
+legend a:link,
+legend a:visited,
+legend a:hover,
+legend a:active {
 	text-decoration: none;
 }
 
@@ -415,22 +474,22 @@ legend.toggletext {
 	padding-left: 0.2em;
 }
 legend.toggletext img {
-    padding-bottom: 2px;
-    
+	padding-bottom: 2px;
 }
-img.toggled { 
-padding-bottom: 4px;    
+
+img.toggled {
+	padding-bottom: 4px;
 }
 
 p.instructions {
-	color: #4D525E;
+	color: #4d525e;
 	font-size: 0.80em;
 	padding-bottom: 1em;
 	padding-top: 0.5em;
 }
 
 p.instructions label {
-	color: #4D525E;
+	color: #4d525e;
 	padding: 0;
 	margin: 0;
 	font-size: 1em;
@@ -440,9 +499,12 @@ div.options {
 	padding: 0.7em 0 0.5em 1em;
 }
 
-div.options, p.submit_button, p.instructions, p#note {
+div.options,
+p.submit_button,
+p.instructions,
+p#note {
 	border-top: 1px solid #cbcdd5;
-	background: #EAEBEE url(../images/double.png) left top repeat-x;
+	background: #eaebee url(../images/double.png) left top repeat-x;
 }
 
 p.submit_button {
@@ -451,37 +513,38 @@ p.submit_button {
 	text-align: center;
 }
 
-
 p#note {
 	clear: both;
-	color: #4D525E;
+	color: #4d525e;
 	font-size: 0.9em;
 	padding: 0.5em 0 0.1em;
 }
-
 /* @end */
+
 
 /* @group Menu */
 
 ul#menu {
 	text-align: center;
 	margin: 1em 2em;
-	background: #EAEBEE url(../images/round-br.png) no-repeat bottom right;
+	background: #eaebee url(../images/round-br.png) no-repeat bottom right;
 	padding: 0.5em 0 0.3em;
-	border-top: 1px solid #DCDDE0;
+	border-top: 1px solid #dcdde0;
 }
 
 ul#menu span {
 	display: none;
 }
 
-ul#menu a:link, ul#menu a:visited {
-	background: #EAEBEE;
-	color: #365D95;
+ul#menu a:link,
+ul#menu a:visited {
+	background: #eaebee;
+	color: #365d95;
 	text-decoration: none;
 }
 
-ul#menu a:hover, ul#menu a:active {
+ul#menu a:hover,
+ul#menu a:active {
 	color: #1f2126;
 	text-decoration: underline;
 }
@@ -490,9 +553,6 @@ ul#menu li {
 	display: inline;
 	margin-right: 0.8em;
 }
-
-
-
 /* @end */
 
 /* @group Footer */
@@ -514,7 +574,7 @@ p#support_logo {
 	padding-left: 2em;
 	padding-top: 1.8em;
 	width: 90px;
-    height: 100px;
+	height: 100px;
 }
 
 p.copyright {
@@ -524,135 +584,144 @@ p.copyright {
 	line-height: 1.4;
 }
 
-p.copyright, p.copyright a {
+p.copyright,
+p.copyright a {
 	text-decoration: none;
-	color: #7C8395;
+	color: #7c8395;
 }
 
-p.copyright a:link, p.copyright a:visited {
-	color: #A3756E;
+p.copyright a:link,
+p.copyright a:visited {
+	color: #a3756e;
 }
 
-p.copyright a:hover, p.copyright a:active {
-	color: #7D4A42;
+p.copyright a:hover,
+p.copyright a:active {
+	color: #7d4a42;
 }
 
 p#version_info {
-    font-size:      small;
-    text-align: center;
-    color: #888;
-    background-color: white;
+	font-size: small;
+	text-align: center;
+	color: #888;
+	background-color: white;
 }
-
 /* @end */
+
 
 /* @group Docs */
 
 div.doc {
-  margin: 1em 2em;
-	padding: 0.5em 0 0.3em;	  
+	margin: 1em 2em;
+	padding: 0.5em 0 0.3em;
 }
-
 
 /* Set line height to 1.4x (from 1.3x on general site) to allow for various inline decoration. */
-div.doc p, div.doc li {
-  line-height: 150% !important; 
+div.doc p,
+div.doc li {
+	line-height: 150% !important;
 }
 div.doc p {
-  margin-bottom: .7em;
-  margin-top: .5em;
+	margin-bottom: .7em;
+	margin-top: .5em;
 }
 
-div.doc p, div.doc dt, div.doc ul, div.doc ol {
-    margin-left: 1.5em;
-    margin-right: 1.5em;
+div.doc p,
+div.doc dt,
+div.doc ul,
+div.doc ol {
+	margin-left: 1.5em;
+	margin-right: 1.5em;
 }
 
 div.doc ul li {
-  list-style-type: disc;
-  margin-left: 1em;
+	list-style-type: disc;
+	margin-left: 1em;
 }
 
 /* documentation - table of contents */
 #toc {
-    margin-left: 40px;
+	margin-left: 40px;
 }
 
-div.doc div#toc ol, div.doc ol {
-   list-style-type: decimal;
+div.doc div#toc ol,
+div.doc ol {
+	list-style-type: decimal;
 }
 div.doc div#toc ol li {
-  line-height: 130%;
-  font-weight: bold;
+	line-height: 130%;
+	font-weight: bold;
 }
 div.doc div#toc ol li ol {
-   list-style-type: lower-alpha;
-   font-weight: normal;
-   margin-left: 1em;
+	list-style-type: lower-alpha;
+	font-weight: normal;
+	margin-left: 1em;
 }
-div.doc div#toc ol li ol li ol{
-   list-style-type: lower-roman;
+div.doc div#toc ol li ol li ol {
+	list-style-type: lower-roman;
 }
 
 
 /* documentation - error explanations */
-dl#expl dt code { /* headings for an error */
-  white-space: normal;
-  font-weight: bold;
+dl#expl dt code {
+	/* headings for an error */
+	white-space: normal;
+	font-weight: bold;
 }
 
 dl#expl dt {
-  border-top: 1px dashed black;
-  margin-top: 2em;
-  margin-bottom: 1em;
+	border-top: 1px dashed black;
+	margin-top: 2em;
+	margin-bottom: 1em;
 }
 
 div.doc dt {
-  margin-top: 1.2em;
-  margin-bottom: .2em;
+	margin-top: 1.2em;
+	margin-bottom: .2em;
 }
-div.doc dt, div.doc dt a {
-  font-style: italic;
+div.doc dt,
+div.doc dt a {
+	font-style: italic;
 }
 div.doc dd {
-  margin-right: 0; /* no need for the extra margin if we nicely put the text of the dd in a paragraph */
+	margin-right: 0;	/* no need for the extra margin if we nicely put the text of the dd in a paragraph */
 }
-div.doc var { /* headings for an error */
-  color: #006;
+div.doc var {
+	/* headings for an error */
+	color: #006;
 }
 
 /* A snippet of code used inline. */
 div.doc code {
-  white-space: normal;
-  display: inline;
-  padding-left: .2em;
-  padding-right: .2em;
-  color:      black;
-  font-family: Monaco, "Courier New", monospace;
-  border: 1px dotted #ccc;
+	white-space: normal;
+	display: inline;
+	padding-left: .2em;
+	padding-right: .2em;
+	color: black;
+	font-family: Monaco, "Courier New", monospace;
+	border: 1px dotted #ccc;
 }
 
 div.doc code.block {
-  display: block;
-  padding: 1em;
-  white-space: pre;
-  margin-top: 1em;
-  margin-bottom: 1em;
-  margin-right:  3em;
+	display: block;
+	padding: 1em;
+	white-space: pre;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	margin-right: 3em;
 }
 
 div.doc pre {
-    margin-left: 5em;
-    padding-left: 2em;
-    line-height: 150%;
-    border-left: 1px solid #690;
-    
+	margin-left: 5em;
+	padding-left: 2em;
+	line-height: 150%;
+	border-left: 1px solid #690;
 }
 
 div.doc code samp {
-  font-weight: normal;
-  color: black;
-  font-style: italic;
+	font-weight: normal;
+	color: black;
+	font-style: italic;
 }
 
 /* reference tables */
@@ -661,8 +730,9 @@ div.doc table {
 	border-collapse: collapse;
 	border-right: 1px solid #ccc;
 }
-div.doc table td, .doc table th{
-	border-top: 0px solid #ddd;
+div.doc table td,
+.doc table th {
+	border-top: 0 solid #ddd;
 	border-bottom: 1px solid #ccc;
 	border-left: 1px solid #eee;
 	padding: 6px;
@@ -670,90 +740,87 @@ div.doc table td, .doc table th{
 }
 div.doc table th {
 	background-color: #eee;
-	color: #11111A;
+	color: #11111a;
 	border-right: 1px solid #ccc;
 }
 
 div.doc table {
-  margin-top: 1em;
-  margin-bottom: .5em;
- 	border-collapse: collapse;
-	border-right: 1px solid #ccc; 
-}
-
-div.doc td, div.doc th {
-	border-top: 0px solid #ddd;
-	border-bottom: 1px solid #ccc;
-	border-left: 1px solid #eee;
+	margin-top: 1em;
+	margin-bottom: .5em;
 	border-collapse: collapse;
-  
-}
-div.doc th {
-	background-color: #eee;
-	color: #11111A;
 	border-right: 1px solid #ccc;
 }
 
+div.doc td,
+div.doc th {
+	border-top: 0 solid #ddd;
+	border-bottom: 1px solid #ccc;
+	border-left: 1px solid #eee;
+	border-collapse: collapse;
+}
+div.doc th {
+	background-color: #eee;
+	color: #11111a;
+	border-right: 1px solid #ccc;
+}
 /* @end */
 
 
 /* @group home page, news text */
 
 div.intro {
-  margin: 1em 2em;
-	padding: 0.5em 0 0.3em;	
+	margin: 1em 2em;
+	padding: 0.5em 0 0.3em;
 }
 
-div.intro p { margin-bottom: .5em;}
+div.intro p {
+	margin-bottom: .5em;
+}
 
 #news dt {
-    font-weight: bold;
-     margin-top: 1.5em;
-     margin-bottom: .3em;
-   }
+	font-weight: bold;
+	margin-top: 1.5em;
+	margin-bottom: .3em;
+}
 
 #news dd {
-       margin-left: 2.5em;
-       margin-right: 1.5em;
-   }
+	margin-left: 2.5em;
+	margin-right: 1.5em;
+}
 
 
 /* warning on the home page for test instances */
 #test_warning {
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    line-height: 160%;
-    text-align: center;
-    margin-top: 2em;
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	line-height: 160%;
+	text-align: center;
+	margin-top: 2em;
 	margin-left: 12%;
 	margin-right: 12%;
 	padding-left: 1.5em;
-   padding-right: 1.5em;
+	padding-right: 1.5em;
 	color: black;
 	background-color: white;
 }
 
 #test_warning img {
-    width: 1.3em;
-    vertical-align: middle;
+	width: 1.3em;
+	vertical-align: middle;
 }
 
 .html5_logo_32 {
-    float: left;
-    padding-top: 8px;
-    padding-right: 20px;
-    padding-left: 28px;
+	float: left;
+	padding-top: 8px;
+	padding-right: 20px;
+	padding-left: 28px;
 }
 
 .html5_logo_128 {
-    float: left;
-    padding-top: 9px;
-    padding-right: 20px;
-    padding-left: 18px;
+	float: left;
+	padding-top: 9px;
+	padding-right: 20px;
+	padding-left: 18px;
 }
-
-/* donation and sponsorship program */
-
-#w3c-include {}
 
 /* @end */

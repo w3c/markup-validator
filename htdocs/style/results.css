@@ -6,21 +6,21 @@
 */
 
 div#results_container {
-  margin: 2em;
+	margin: 2em;
 }
 div#results_container ul li {
-  list-style-type: disc;
-  margin-left: 1em;
+	list-style-type: disc;
+	margin-left: 1em;
 }
 div#results_container ul {
-    margin-left: 1.5em;
-    margin-right: 1.5em;
+	margin-left: 1.5em;
+	margin-right: 1.5em;
 }
 
 
 div#results_container ul.navbar {
-  border-top: 1px solid #DCDDE0;
-  border-bottom: 1px solid #DCDDE0;
+	border-top: 1px solid #dcdde0;
+	border-bottom: 1px solid #dcdde0;
 	text-align: center;
 	margin: 0 0 2em 0;
 	padding: .5em;
@@ -29,14 +29,16 @@ div#results_container ul.navbar span {
 	display: none;
 }
 
-div#results_container ul.navbar a:link, div#results_container ul.navbar a:visited {
+div#results_container ul.navbar a:link,
+div#results_container ul.navbar a:visited {
 	color: #365D95;
 	text-decoration: none;
 	margin-right: 1em;
 	margin-left: 1em;
 }
 
-div#results_container ul.navbar a:hover, div#results_container ul.navbar a:active {
+div#results_container ul.navbar a:hover,
+div#results_container ul.navbar a:active {
 	color: #1f2126;
 	text-decoration: underline;
 	margin-right: 1em;
@@ -48,10 +50,10 @@ div#results_container ul.navbar li {
 }
 
 .input {
-  color: black;
-  background-color: #EAEBEE;
-  font-family: "Bitstream Vera Sans Mono", monospace;
-  font-size: small;
+	color: black;
+	background-color: #eaebee;
+	font-family: "Bitstream Vera Sans Mono", monospace;
+	font-size: small;
 }
 
 /* Various Bits of the Table Header */
@@ -59,120 +61,123 @@ div#results_container ul.navbar li {
 */
 
 p.revalidate_instructions {
-  font-size: small; 
-  font-style: italic; 
-  margin: .5em .5em 0 1em;
+	font-size: small;
+	font-style: italic;
+	margin: .5em .5em 0 1em;
 }
 
 fieldset#revalidate_opts {
-        margin: 0;
-        padding:0;
-        border: 1px solid #ccc;
-        padding-bottom: 1em;
-        padding-left: .5em;
-        margin-top: 1em;
-        clear: left;
+	margin: 0;
+	padding: 0;
+	border: 1px solid #ccc;
+	padding-bottom: 1em;
+	padding-left: .5em;
+	margin-top: 1em;
+	clear: left;
 }
 
-fieldset#revalidate_opts, 
+fieldset#revalidate_opts,
 fieldset#revalidate_opts label,
 fieldset#revalidate_opts p,
 fieldset#revalidate_opts div,
 fieldset#revalidate_opts a {
-    background-color: #fcfcfc;
-    
+	background-color: #fcfcfc;
 }
 
 fieldset#revalidate_opts legend {
-/*    margin-top: 1.8em;
-*/    background-color: #eaebee;
-    padding: .5em;
-    border: 1px solid #ccc;
+	/*margin-top: 1.8em;*/
+	background-color: #eaebee;
+	padding: .5em;
+	border: 1px solid #ccc;
 }
 
 fieldset#revalidate_opts p.moreinfo {
-  padding: 10px;
-  margin-top: .3em;
-  float: left;
-  width: 20em;
-  font-size: x-small;
-  margin-bottom: 0;
+	padding: 10px;
+	margin-top: .3em;
+	float: left;
+	width: 20em;
+	font-size: x-small;
+	margin-bottom: 0;
 }
 
 div#revalidate_button {
-        float: right; width: 6em;
-        padding-right: 3.5em !important;
+	float: right;
+	width: 6em;
+	padding-right: 3.5em !important;
 }
 
 table.header {
-  clear: both;
-  width: 100%;
-  margin-top: 0;
-  padding-top: 0;
+	clear: both;
+	width: 100%;
+	margin-top: 0;
+	padding-top: 0;
 }
 
 div#results_container table {
 	border-collapse: collapse;
 	border-right: 1px solid #ccc;
 }
-div#results_container table td, div#results_container table th{
-	border-top: 0px solid #ddd;
+div#results_container table td,
+div#results_container table th {
+	border-top: 0 solid #ddd;
 	border-bottom: 1px solid #ccc;
-	border-left: 1px solid #EAEBEE;
+	border-left: 1px solid #eaebee;
 	padding: .4em;
 	text-indent: .5em;
 	border-collapse: collapse;
 }
 div#results_container table th {
-	background-color: #EAEBEE;
-	color: #11111A;
+	background-color: #eaebee;
+	color: #11111a;
 	border-right: 1px solid #ccc;
 	font-weight: bold;
 	font-size: 1em;
 }
 
 div#results_container table th label {
-	background-color: #EAEBEE;
-	color: #11111A;
+	background-color: #eaebee;
+	color: #11111a;
 	font-weight: bold;
 	font-size: 1em;
 }
 
 div#results_container table {
-  margin-bottom: .5em;
- 	border-collapse: collapse;
-	border-right: 1px solid #ccc; 
+	margin-bottom: .5em;
+	border-collapse: collapse;
+	border-right: 1px solid #ccc;
 }
 
-div#results_container td, div#results_container th {
-	border-top: 0px solid #ddd;
+div#results_container td,
+div#results_container th {
+	border-top: 0 solid #ddd;
 	border-bottom: 1px solid #ccc;
-	border-left: 1px solid #EAEBEE;
+	border-left: 1px solid #eaebee;
 	border-collapse: collapse;
-  
 }
 div#results_container th {
-	background-color: #EAEBEE;
-	color: #11111A;
+	background-color: #eaebee;
+	color: #11111a;
 	border-right: 1px solid #ccc;
 }
 
 
 fieldset#revalidate_opts table.header {
-        margin-top: .5em;
+	margin-top: .5em;
 }
 
-fieldset#revalidate_opts table.header, fieldset#revalidate_opts table.header td, fieldset#revalidate_opts table.header tr {
-        border: 0;
+fieldset#revalidate_opts table.header,
+fieldset#revalidate_opts table.header td,
+fieldset#revalidate_opts table.header tr {
+	border: 0;
 }
 fieldset#revalidate_opts div#revalidate_button input {
-  background-color: #EAEBEE;
-  color: #365D95;
-  padding: .3em 1em;
-  border: 1px outset #ccc;
+	background-color: #eaebee;
+	color: #365d95;
+	padding: .3em 1em;
+	border: 1px outset #ccc;
 }
 fieldset#revalidate_opts div#revalidate_button input:active {
-  border-style: inset !important;
+	border-style: inset !important;
 }
 
 /* Error Messages Display */
@@ -181,159 +186,172 @@ fieldset#revalidate_opts div#revalidate_button input:active {
 
 /* "Fatal" warnings... */
 
-ol#warnings, ol#error_loop, ol#fatal-errors {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+ol#warnings,
+ol#error_loop,
+ol#fatal-errors {
+	margin-left: 0 !important;
+	margin-right: 0 !important;
 }
 
-ol li.msg_info, ol li.msg_warn, ol li.msg_err {
-  border: 1px solid #EAEBEE;
-  border-top: 0;
-  list-style-position: inside;
-  padding: 1em;
-  padding-bottom: 2em;
-  clear: both;
+ol li.msg_info,
+ol li.msg_warn,
+ol li.msg_err {
+	border: 1px solid #eaebee;
+	border-top: 0;
+	list-style-position: inside;
+	padding: 1em;
+	padding-bottom: 2em;
+	clear: both;
 }
 
-ol li.msg_info:hover, ol li.msg_warn:hover, ol li.msg_err:hover,
-ol li.msg_info:hover *, ol li.msg_warn:hover *, ol li.msg_err:hover * {
-  background-color: #fcfcfc;
-  
+ol li.msg_info:hover,
+ol li.msg_warn:hover,
+ol li.msg_err:hover,
+ol li.msg_info:hover *,
+ol li.msg_warn:hover *,
+ol li.msg_err:hover * {
+	background-color: #fcfcfc;
 }
 
-ol#warnings, ol#error_loop, ol#fatal-errors  {
-        padding:0;
-        border-top: 1px solid #EAEBEE;
+ol#warnings,
+ol#error_loop,
+ol#fatal-errors {
+	padding: 0;
+	border-top: 1px solid #eaebee;
 }
 
-ol#warnings li ul li, ol#error_loop ul li, ol#error_loop p, ol#warnings p {
-        line-height: 135%;
-        margin-bottom: .65em;
-        /*margin-right: 2em;*/
-} 
+ol#warnings li ul li,
+ol#error_loop ul li,
+ol#error_loop p,
+ol#warnings p {
+	line-height: 135%;
+	margin-bottom: .65em;
+	/*margin-right: 2em;*/
+}
 
 li span.err_type img {
-    width: 1.2em;
-    height: 1.2em;
-    padding-bottom: .2em;
-    vertical-align: middle;
+	width: 1.2em;
+	height: 1.2em;
+	padding-bottom: .2em;
+	vertical-align: middle;
 }
 
 /*
 li.msg_info span.err_type{
-  background-color: #888;
-  padding: .1em .5em;
-  color: white;
-  font-size: smaller;
+	background-color: #888;
+	padding: .1em .5em;
+	color: white;
+	font-size: smaller;
 }
 
 li.msg_warn span.err_type{
-  padding: .1em .5em;
-  background-color: #FA9084;
-  color: #333;
-  font-size: smaller;
+	padding: .1em .5em;
+	background-color: #fa9084;
+	color: #333;
+	font-size: smaller;
 }
 
 li.msg_err span.err_type{
-  padding: .1em .5em;
-  background-color: #D23D24;
-  color:white;
-  font-size: smaller;
+	padding: .1em .5em;
+	background-color: #d23d24;
+	color:white;
+	font-size: smaller;
 }
 */
 .msg {
-  font-weight: bold;
-  line-height: 130%;
+	font-weight: bold;
+	line-height: 130%;
 }
-
-li.msg_info span.msg { /* these messages are not errors */
-  font-weight: normal !important;  
+li.msg_info span.msg {
+	/* these messages are not errors */
+	font-weight: normal !important;
 }
 
 .ve {
-  font-size: smaller;
-  padding: 0;
-  width: 100%;
+	font-size: smaller;
+	padding: 0;
+	width: 100%;
 }
 
 .ve p {
-  line-height: 110%;
-  margin: 1ex 5em 1ex 1em;
-  text-align: justify;
+	line-height: 110%;
+	margin: 1ex 5em 1ex 1em;
+	text-align: justify;
 }
 
 /* no Helpwanted, hence giving it a bit of space instead */
 li.msg_info {
-  padding-bottom: 2em;
+	padding-bottom: 2em;
 }
 
 p.helpwanted {
-  padding: 0;
-  margin: 0;
-  margin-top: 0em;
-  color:        #888;
-  text-align:       left;
-  float: right;
-  width: 20px;
-  font-weight: bold;
-  position: relative;
-  left: 0; 
-  top: -3em;
+	padding: 0;
+	margin: 0;
+	margin-top: 0;
+	color: #888;
+	text-align: left;
+	float: right;
+	width: 20px;
+	font-weight: bold;
+	position: relative;
+	left: 0;
+	top: -3em;
 }
 
 li.grouped p.helpwanted {
-  top: -1em;       
+	top: -1em;
 }
 
 p.helpwanted a {
-  color: #88f;
-  text-decoration: none;
+	color: #88f;
+	text-decoration: none;
 }
 
 code.input {
-  margin-bottom: 2ex;
+	margin-bottom: 2ex;
 }
 
 code.input strong {
-  color: red;
-  padding-left: .5ex;
-  padding-right: .5ex;
-  font-weight: bolder;
+	color: red;
+	padding-left: .5ex;
+	padding-right: .5ex;
+	font-weight: bolder;
 }
 
 
 /* Source Code Display */
 /*
 */
+
 #source ol {
-  font-family: "Bitstream Vera Sans Mono", monospace;
-  font-size: smaller;
-  background: #EAEBEE;
-  border: 1px solid black;
-  margin-top: 1em;
-  list-style-position: inside;
-  list-style-type: decimal;
+	font-family: "Bitstream Vera Sans Mono", monospace;
+	font-size: smaller;
+	background: #eaebee;
+	border: 1px solid black;
+	margin-top: 1em;
+	list-style-position: inside;
+	list-style-type: decimal;
 }
 #source ol li {
-  margin: .5em 1em;
-  background-color: #EAEBEE;
-  line-height: 150%;  
+	margin: .5em 1em;
+	background-color: #eaebee;
+	line-height: 150%;
 }
 
 #source ol li a {
-  color: inherit;
-  background-color: transparent;
-  text-decoration: none;
+	color: inherit;
+	background-color: transparent;
+	text-decoration: none;
 }
 
 pre.source {
-  font-family: "Bitstream Vera Sans Mono", monospace;      
-  border: 1px solid black;
-  background: #EAEBEE;
-  margin: 1em;
-  padding: 1em;
-  overflow: scroll;
-  font-size: smaller;
+	font-family: "Bitstream Vera Sans Mono", monospace;
+	border: 1px solid black;
+	background: #eaebee;
+	margin: 1em;
+	padding: 1em;
+	overflow: scroll;
+	font-size: smaller;
 }
 
 /* Style for non-parser warnings. */
@@ -341,149 +359,160 @@ pre.source {
 */
 
 ul#warnings {
-  padding: 0;
+	padding: 0;
 }
-
 
 
 th {
-  padding-right: .5em;
-  text-align: right;
-  vertical-align: middle;
-  white-space: nowrap;
+	padding-right: .5em;
+	text-align: right;
+	vertical-align: middle;
+	white-space: nowrap;
 }
 
 td {
-  text-align: left;
-  padding-left: .5em;
+	text-align: left;
+	padding-left: .5em;
 }
 
 .info {
-  color: black;
-  background: white;
-  border-color: gray;
+	color: black;
+	background: white;
+	border-color: gray;
 }
 
 .warning {
-  color: black;
-  background: silver;
-  border-color: gray;
+	color: black;
+	background: silver;
+	border-color: gray;
 }
 
 .error {
-  color: black;
-  background: yellow;
-  border-color: black;
+	color: black;
+	background: yellow;
+	border-color: black;
 }
 
 .fatal h2 {
-  color: black;
-  background: red;
-  border: solid black 1px;
+	color: black;
+	background: red;
+	border: solid black 1px;
 }
 
 div#result {
-  clear: left;
-  padding-top: 1em;
+	clear: left;
+	padding-top: 1em;
 }
 
-form { margin:0 !important; padding: 0 !important; }
-
-h2.valid, h2.invalid, h2.tentative_valid {
-    text-align: center;
-    margin: 0;
-  font-family: "Bitstream Vera Sans", sans-serif;
-  font-size:		1.3em;
-  font-weight:		500;
-  font-style:		normal;
-  text-decoration:	none;
-  word-spacing:		normal;
-  letter-spacing:	normal;
-  text-transform:	none;
-  border-color:		black;
-  padding-top:		.2em;
-  padding-bottom: 	.2em;
+form {
+	margin: 0 !important;
+	padding: 0 !important;
 }
-/* the default color of the headings is green now, 
+
+h2.valid,
+h2.invalid,
+h2.tentative_valid {
+	text-align: center;
+	margin: 0;
+	font-family: "Bitstream Vera Sans", sans-serif;
+	font-size: 1.3em;
+	font-weight: 500;
+	font-style: normal;
+	text-decoration: none;
+	word-spacing: normal;
+	letter-spacing: normal;
+	text-transform: none;
+	border-color: black;
+	padding-top: .2em;
+	padding-bottom: .2em;
+}
+/* the default color of the headings is green now,
 but we want to use it only for "congratulations"
 and stick to a neutral color for other headings */
 
-h3, h4 {
-    color: #777 !important; 
+h3,
+h4 {
+	color: #777 !important;
 }
 
 h3#congrats {
-    color: #690 !important;
+	color: #690 !important;
 }
 
-.valid, .valid strong {
-  background-color:	#55B05A;
-  color:		white;
+.valid,
+.valid strong {
+	background-color: #55b05a;
+	color: white;
 }
 
-.tentative_valid, .tentative_valid strong {
-/* we could use a different color than for "valid" */
-/*  background-color:	#888; */
-/* ... or simply use the same */
-  background:           #55B05A;
-  color:		white;
+.tentative_valid,
+.tentative_valid strong {
+	/* we could use a different color than for "valid" */
+	/*  background-color: #888; */
+	/* ... or simply use the same */
+	background: #55b05a;
+	color: white;
 }
 
-.invalid, .invalid strong {
-  background-color:	#D23D24 !important;
-  color:		white !important;
+.invalid,
+.invalid strong {
+	background-color: #d23d24 !important;
+	color: white !important;
 }
 
 td.valid {
-  background-color:		white;
-  color:           #55B05A;
+	background-color: white;
+	color: #55b05a;
 }
 
 strong.has_warnings {
-  font-weight:bold;
-	color:#CFAC08;
+	font-weight: bold;
+	color: #cfac08;
 	background-color: white;
 }
-td.invalid, h3.invalid 
-{
-  color:	#D23D24 !important;
-  background-color:	white !important;
+td.invalid,
+h3.invalid {
+	color: #d23d24 !important;
+	background-color: white !important;
 }
 
 img.inline-badge {
-  float: left;
-  padding: 10px;
-  margin-left: 3em;
+	float: left;
+	padding: 10px;
+	margin-left: 3em;
 }
 
 pre.badgeSnippet {
-  margin-left: 108px !important; /* give room to the image */
-  padding-left: 3em;
-  font-size: x-small;
-  color: #777;
-  margin-bottom: 2em;
+	margin-left: 108px !important;  /* give room to the image */
+	padding-left: 3em;
+	font-size: x-small;
+	color: #777;
+	margin-bottom: 2em;
 }
 
 p.backtop {
-        color: #bbc;
-        font-size: x-small;
-        padding-right: 0 !important;
-        margin: 1em 0 !important;
-        text-transform: uppercase;
-        font-weight: bold;
-        padding-top: .3em;
-        text-align: right;
-        border-top: 1px solid #eef;
-        clear: both;
+	color: #bbc;
+	font-size: x-small;
+	padding-right: 0 !important;
+	margin: 1em 0 !important;
+	text-transform: uppercase;
+	font-weight: bold;
+	padding-top: .3em;
+	text-align: right;
+	border-top: 1px solid #eef;
+	clear: both;
 }
 
-p.backtop a:link, p.backtop a:hover, p.backtop a:visited {
-        color: #bbc;
-        text-decoration: none;
+p.backtop a:link,
+p.backtop a:hover,
+p.backtop a:visited {
+	color: #bbc;
+	text-decoration: none;
 }
 
 /* document outline */
+
 pre.outline {
-    line-height: 160%;
-    padding-left: 1.5em;
+	line-height: 160%;
+	padding-left: 1.5em;
 }
