@@ -48,7 +48,7 @@ WriteMakefile(
     },
     META_MERGE => {
         resources => {
-            homepage   => 'http://validator.w3.org/',
+            homepage   => 'https://validator.w3.org/',
             bugtracker => 'http://www.w3.org/Bugs/Public/',
             repository => 'http://dvcs.w3.org/hg/markup-validator/',
             MailingList =>

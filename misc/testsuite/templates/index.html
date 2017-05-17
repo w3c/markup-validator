@@ -36,7 +36,7 @@
     <h{{collection.level +3}}>{{case.title|e}}</h{{collection.level +3}}>
     <p>
 	<a href="../../check?uri={{case.docURI|replace(':','%3A')|replace('/','%2F')|replace(';','%3B')|replace('&','%26')|e}};ss">validate</a> -
-	<a href="http://validator.w3.org/check?uri={{case.docURI|replace(':','%3A')|replace('/','%2F')|replace(';','%3B')|replace('&','%26')|e}};ss">with v.w.o</a> -
+	<a href="https://validator.w3.org/check?uri={{case.docURI|replace(':','%3A')|replace('/','%2F')|replace(';','%3B')|replace('&','%26')|e}};ss">with v.w.o</a> -
 	<a href="{{case.docURI|e}}">view</a>:
     {{case.description|e}}</p>
     
@@ -51,91 +51,91 @@
       "validate" links use this instance, with validator.w3.org links added for reference comparison</p>
 <ul>
 	<li><a href="../../check?uri=file%3A%2F%2F%2Fetc%2Fpasswd">validate</a> -
-	    <a href="http://validator.w3.org/check?uri=file%3A%2F%2F%2Fetc%2Fpasswd">with v.w.o</a> - 
+	    <a href="https://validator.w3.org/check?uri=file%3A%2F%2F%2Fetc%2Fpasswd">with v.w.o</a> - 
 	    a file: URL </li>
 	<li>
 	  <a href="../../check/referer">validate</a> - 
-	  <a href="http://validator.w3.org/check/referer">with v.w.o</a> - 
+	  <a href="https://validator.w3.org/check/referer">with v.w.o</a> - 
 	  /check/referer (deprecated)
 	</li>
 	<li>
 	  <a href="../../check/referer;verbose=1">validate</a> - 
-	  <a href="http://validator.w3.org/check/referer;verbose=1">with v.w.o</a> - 
+	  <a href="https://validator.w3.org/check/referer;verbose=1">with v.w.o</a> - 
 	  /check/referer;verbose=1 (unsupported)
 	</li>
 	<li>
 	  <a href="../../check/referer;verbose=1;No200=1">validate</a> - 
-	  <a href="http://validator.w3.org/check/referer;verbose=1;No200=1">with v.w.o</a> -
+	  <a href="https://validator.w3.org/check/referer;verbose=1;No200=1">with v.w.o</a> -
 	  /check/referer;verbose=1;No200=1 (unsupported)
 	</li>
 	<li>
 	  <a href="../../check?uri=referer">validate</a> - 
-	  <a href="http://validator.w3.org/check?uri=referer">with v.w.o</a> -
+	  <a href="https://validator.w3.org/check?uri=referer">with v.w.o</a> -
 	  /check?uri=referer (supported, should validate this test collection)
 	</li>
 	<li>
 	  <a href="../../check?uri=referer;verbose=1">validate</a> - 
-	  <a href="http://validator.w3.org/check?uri=referer;verbose=1">with v.w.o</a> - 
+	  <a href="https://validator.w3.org/check?uri=referer;verbose=1">with v.w.o</a> - 
 	  /check?uri=referer;verbose=1 (supported, should validate this test collection)
 	</li>
 	<li>
 	  <a href="../../check?uri=referer&amp;verbose=1">validate</a> - 
-	  <a href="http://validator.w3.org/check?uri=referer&amp;verbose=1">with v.w.o</a> - 
+	  <a href="https://validator.w3.org/check?uri=referer&amp;verbose=1">with v.w.o</a> - 
 	  /check?uri=referer&amp;verbose=1 (supported, should validate this test collection)
 	</li>
 	<li>
 	  <a href="../../check?uri=referer;verbose=1;No200=1">validate</a> - 
-	  <a href="http://validator.w3.org/check?uri=referer;verbose=1;No200=1">with v.w.o</a> - 
+	  <a href="https://validator.w3.org/check?uri=referer;verbose=1;No200=1">with v.w.o</a> - 
 	  /check?uri=referer;verbose=1;No200=1 (supported, should validate this test collection)
 	</li>
 	<li>
 	  <a href="../../check?uri=http%3A%2F%2Fwww.w3.org%2FMarkUp">validate</a> - 
-	  <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fwww.w3.org%2FMarkUp">with v.w.o</a> - 
+	  <a href="https://validator.w3.org/check?uri=http%3A%2F%2Fwww.w3.org%2FMarkUp">with v.w.o</a> - 
 	  Directory Redirect (should mention the redirect and validate the redirection target
 	</li>
 	<li>
 	  <a href="../../check">validate</a> - 
-	  <a href="http://validator.w3.org/check">with v.w.o</a> - 
+	  <a href="https://validator.w3.org/check">with v.w.o</a> - 
 	  script invoked with no parameters (gives an error)
 	</li>
 	<li>
 	  <a href="../../check?uri=">validate</a> - 
-	  <a href="http://validator.w3.org/check?uri=">with v.w.o</a> - 
+	  <a href="https://validator.w3.org/check?uri=">with v.w.o</a> - 
 	  uri parameter is empty
 	</li>
 	<li>
 	  <a href="../../check?uri=www.w3.org%2F">validate</a> - 
-	  <a href="http://validator.w3.org/check?uri=www.w3.org%2F">with v.w.o</a> - 
+	  <a href="https://validator.w3.org/check?uri=www.w3.org%2F">with v.w.o</a> - 
 	  uri is missing http:// (silent fix)
 	</li>
 	<li>
 	  <a href="../../check?uri=http%3A%2F%2Fwww.w3.org%2Fbogus">validate</a> - 
-	  <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fwww.w3.org%2Fbogus">with v.w.o</a> - 
+	  <a href="https://validator.w3.org/check?uri=http%3A%2F%2Fwww.w3.org%2Fbogus">with v.w.o</a> - 
 	  404 not found
 	</li>
 	<li>
 	  <a href="../../check?uri=http%3A%2F%2Fwww.w3.org%2Fbogus;No200=1">validate</a> - 
-	  <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fwww.w3.org%2Fbogus;no200=1">with v.w.o</a> - 
+	  <a href="https://validator.w3.org/check?uri=http%3A%2F%2Fwww.w3.org%2Fbogus;no200=1">with v.w.o</a> - 
 	  404 not found, with "validate error pages" ON 
 	</li>
 	<li>
-	  <a href="../../check?uri=http%3A%2F%2Fvalidator.w3.org%2Fsgml-lib%2Fsgml.soc">validate</a> - 
-	  <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fvalidator.w3.org%2Fsgml-lib%2Fsgml.soc">with v.w.o</a> - 
+	  <a href="../../check?uri=https%3A%2F%2Fvalidator.w3.org%2Fsgml-lib%2Fsgml.soc">validate</a> - 
+	  <a href="https://validator.w3.org/check?uri=https%3A%2F%2Fvalidator.w3.org%2Fsgml-lib%2Fsgml.soc">with v.w.o</a> - 
 	  text/plain resource (refuses to validate)
 	</li>
 	<li>
-	  <a href="../../check?uri=http%3A%2F%2Fvalidator.w3.org%3A8000%2F">validate</a> - 
-	  <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fvalidator.w3.org%3A8000%2F">with v.w.o</a> - 
+	  <a href="../../check?uri=https%3A%2F%2Fvalidator.w3.org%3A8000%2F">validate</a> - 
+	  <a href="https://validator.w3.org/check?uri=https%3A%2F%2Fvalidator.w3.org%3A8000%2F">with v.w.o</a> - 
 	  httpd on a non-standard port (should be working transparently if :8000 server is running)
 	</li>
 	<li>
 	  <a href="../../check?uri=http%3A%2F%2Fidenti.ca%2Fapi%2Fstatuses%2Fuser_timeline%2Fw3c.atom">validate</a> -
-	  <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fidenti.ca%2Fapi%2Fstatuses%2Fuser_timeline%2Fw3c.atom">with v.w.o</a> -
+	  <a href="https://validator.w3.org/check?uri=http%3A%2F%2Fidenti.ca%2Fapi%2Fstatuses%2Fuser_timeline%2Fw3c.atom">with v.w.o</a> -
 	  a resource served as application/atom+xml, should be passed on to the Feed Validator.
 	</li>
 	<li>
 	  <a href="../../check?uri=http%3A%2F%2Fwww.w3.org%2FStyleSheets%2FCore%2FSwiss">validate</a> -
-	  <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fwww.w3.org%2FStyleSheets%2FCore%2FSwiss">with v.w.o</a> -
+	  <a href="https://validator.w3.org/check?uri=http%3A%2F%2Fwww.w3.org%2FStyleSheets%2FCore%2FSwiss">with v.w.o</a> -
 	  a resource served as text/css, should be passed on to the CSS Validator.
 	</li>
 </ul>
@@ -150,7 +150,7 @@
 	<li><a href="../../check?uri=http%3A%2F%2Fqa-dev.w3.org%2Fwmvs%2FHEAD%2Fdev%2Ftests%2Fcolons.html">Undeclared namespace prefixes</a> (colons ":" in element names (trips up parsing of onsgmls output))</li>
 	<li>
 	  <a href="../../check?uri=http%3A%2F%2Fqa-dev.w3.org%2Fwmvs%2FHEAD%2Fdev%2Ftests%2F857-svg_nodoctype.svg;doctype=SVG+1.1;ss=1">validate</a> - 
-	  <a href="http://validator.w3.org/check?uri=http%3Aqa-dev.w3.org%2Fwmvs%2FHEAD%2Fdev%2Ftests%2F857-svg_nodoctype.svg;doctype=SVG+1.1;ss=1">with v.w.o</a> - <a href="857-svg_nodoctype.svg">view</a>:
+	  <a href="https://validator.w3.org/check?uri=http%3Aqa-dev.w3.org%2Fwmvs%2FHEAD%2Fdev%2Ftests%2F857-svg_nodoctype.svg;doctype=SVG+1.1;ss=1">with v.w.o</a> - <a href="857-svg_nodoctype.svg">view</a>:
 	  Test of doctype override for SVG document with no doctype, but an XML decl. The doctype should sneak between
 	  the XML decl and the root svg start tag. (<a href="http://www.w3.org/Bugs/Public/show_bug.cgi?id=857" title="Bug 857 - DOCTYPE Override should take XML Decl into account."> 857 - DOCTYPE Override</a>)
 	</li>

@@ -31,7 +31,7 @@ Usage: harness.py [options] [run|sanity|doc]
         -v, --verbose: verbose output
         -q, --quiet: suppress all output except errors
         --validator_uri: use a specific validator instance
-          e.g http://validator.w3.org/check
+          e.g https://validator.w3.org/check
         --id=collection_id: run a single collection from the test suite
           In run mode only, this filters the test suite and uses only
           a collection identified with id="..." 

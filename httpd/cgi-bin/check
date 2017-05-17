@@ -10,7 +10,7 @@
 # Originally written by Gerald Oskoboiny <gerald@w3.org>
 # for additional contributors, see
 # http://dvcs.w3.org/hg/markup-validator/shortlog/tip and
-# http://validator.w3.org/about.html#credits
+# https://validator.w3.org/about.html#credits
 #
 # This source code is available under the license at:
 #     http://www.w3.org/Consortium/Legal/copyright-software
@@ -2020,7 +2020,7 @@ sub parse_content_type
             exit;
         }
         elsif ($ct eq 'application/atom+xml' and defined $url) {
-            print redirect 'http://validator.w3.org/feed/check.cgi?url=' .
+            print redirect 'https://validator.w3.org/feed/check.cgi?url=' .
                 uri_escape $url;
             exit;
         }
@@ -3609,7 +3609,7 @@ sub error
 
     # Workaround for onsgmls as of 1.5 sometimes allegedly reporting errors
     # beyond EOL.  If you see this warning in your web server logs, please
-    # let the validator developers know, see http://validator.w3.org/feedback.html
+    # let the validator developers know, see https://validator.w3.org/feedback.html
     # As long as $err may be from somewhere else than the document (such as
     # from a DTD) and we have no way of identifying these cases, this
     # produces bogus results and error log spewage, so commented out for now.

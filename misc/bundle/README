@@ -2,7 +2,7 @@ Bundle-W3C-Validator
 ====================
 
 This bundle contains the prerequisite CPAN perl modules for running
-the W3C Markup Validator, <http://validator.w3.org/>.
+the W3C Markup Validator, <https://validator.w3.org/>.
 
 For more information, consult the embedded documentation in the
 Bundle::W3C::Validator module, typically (in the directory where you
