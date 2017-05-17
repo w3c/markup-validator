@@ -43,7 +43,7 @@ requires:
     XML::LibXML:          1.73
 resources:
     bugtracker:   http://www.w3.org/Bugs/Public/
-    homepage:     http://validator.w3.org/
+    homepage:     https://validator.w3.org/
     MailingList:  http://lists.w3.org/Archives/Public/www-validator/
     repository:   http://dvcs.w3.org/hg/markup-validator/
 no_index:

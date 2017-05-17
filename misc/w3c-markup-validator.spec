@@ -9,9 +9,9 @@ Summary:        W3C Markup Validator
 
 Group:          Applications/Internet
 License:        W3C Software License
-URL:            http://validator.w3.org/
-Source0:        http://validator.w3.org/dist/validator-%{tbver}.tar.gz
-Source1:        http://validator.w3.org/dist/sgml-lib-%{tbver}.tar.gz
+URL:            https://validator.w3.org/
+Source0:        https://validator.w3.org/dist/validator-%{tbver}.tar.gz
+Source1:        https://validator.w3.org/dist/sgml-lib-%{tbver}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch

@@ -67,7 +67,7 @@ class W3CValidatorHTTP_test(unittest.TestCase):
 
     def test_contact_vwo(self):
         """Test Contacting the main W3C validator instance"""
-        default_checker = W3CValidatorHTTP("http://validator.w3.org/check?uri=%(URI)s")
+        default_checker = W3CValidatorHTTP("https://validator.w3.org/check?uri=%(URI)s")
         (res, err) = default_checker.call_check("http://www.w3.org")
         self.assertEqual(err, None)
         self.assertNotEqual(res, None)

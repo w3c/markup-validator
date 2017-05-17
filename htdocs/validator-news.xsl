@@ -9,9 +9,9 @@
   media-type="application/atom+xml"/>
 
 <xsl:param name="host" select="'validator.w3.org'"/>
-<xsl:param name="self" select="concat('http://', $host, '/whatsnew.atom')"/>
+<xsl:param name="self" select="concat('https://', $host, '/whatsnew.atom')"/>
 <xsl:param name="validator" 
-    select="concat('http://', $host, '/whatsnew.html')"/>
+    select="concat('https://', $host, '/whatsnew.html')"/>
 <!-- number of entries to be displayed in the feed -->
 <xsl:param name="limit" select="10"/>
 <xsl:param name="author" select="'The W3C Validator Team'"/>

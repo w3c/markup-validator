@@ -1,7 +1,7 @@
 <p>
-This is the automated test suite for the <a href="http://validator.w3.org/">W3C
+This is the automated test suite for the <a href="https://validator.w3.org/">W3C
 markup validation service</a>, a python-based framework checking the markup validator
-against its <a href="http://validator.w3.org/dev/tests/">support and regression tests</a>.
+against its <a href="https://validator.w3.org/dev/tests/">support and regression tests</a>.
 </p>
 <p>
 Requires: Python 2.6
