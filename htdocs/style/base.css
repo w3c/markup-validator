@@ -158,13 +158,17 @@ input#short_desc,
 textarea {
 	font-family: Monaco, "Courier New", Monospace;
 	font-size: 0.9em;
-	border: 1px solid #bbb;
 	border-top: 1px solid #777;
+	border-right: 1px solid #bbb;
 	border-bottom: 1px solid #ddd;
-	background: #fefefe url(../images/textbg.png) no-repeat top left;
+	border-left: 1px solid #bbb;
 	padding: 0.2em 0.2em;
 	max-width: 1000px;
 	font-variant: normal;
+	background-color: #fff !important;
+	-webkit-box-shadow: inset 1px 0 2px 0 #c0c0c0;
+	-moz-box-shadow: inset 1px 0 2px 0 #c0c0c0;
+	box-shadow: inset 1px 0 2px 0 #c0c0c0;
 }
 
 input#uri,
@@ -191,46 +195,38 @@ input#mailsearch:active,
 input#bugsearch:active {
 	border-style: inset !important;
 }
-a.submit {
+a.submit,
+p.submit_button input {
 	display: block;
-	width: 10em;
+	width: 8em;
 	text-align: center;
-	margin: 0 auto;
-	background: url(../images/button-left.png) no-repeat center left;
+	margin: 10px auto;
+	padding: 0 12px;
+	-webkit-border-radius: 28px;
+	-moz-border-radius: 28px;
+	border-radius: 28px;
+	-webkit-box-shadow: 0 0 2px #86888e;
+	-moz-box-shadow: 0 0 2px #86888e;
+	box-shadow: 0 0 2px #86888e;
+	color: #365d95;
+	font-size: 16px;
+	background-color: #e0e0e2;
+	border: solid #86888e 1px;
 	text-decoration: none;
+	line-height: 32px;
+	cursor: pointer;
 }
 
-a.submit span {
-	display: block;
-	padding: 1.2em 2em;
-	background: url(../images/button-right.png) no-repeat center right;
+a.submit:active,
+a.submit:hover,
+p.submit_button input:active,
+p.submit_button input:hover {
+	color: #1f2126;
+	text-decoration: none;
 }
 
 textarea {
 	width: 98.5%;
-}
-
-p.submit_button input {
-	overflow: visible;
-	color: #365d95;
-	padding: 0.3em 0.4em 0.1em 0.3em;
-	font-size: 1.2em;
-	width: 12em;
-	text-align: center;
-	border-bottom: 2px solid #444;
-	border-right: 2px solid #444;
-	border-top: 1px solid #aaa;
-	border-left: 1px solid #aaa;
-	background: #eee url(../images/grad.png) repeat-x top left;
-	cursor: pointer;
-}
-
-p.submit_button input:active {
-	color: #1f2126;
-	border-bottom: 1px solid #aaa;
-	border-right: 1px solid #aaa;
-	border-top: 2px solid #444;
-	border-left: 2px solid #444;
 }
 
 label {
@@ -297,15 +293,20 @@ tr.subchoice th label {
 
 h1#title {
 	font-family: "Myriad Web", "Myriad Pro", "Gill Sans", Helvetica, Arial, Sans-Serif;
-	background-color: #365d95;
+	background-color: inherit;
 	color: #fdfdfd;
 	font-size: 1.6em;
-	background: url(../images/head-bl.png) bottom left no-repeat;
 	padding-bottom: 0.430em;
+	-webkit-border-bottom-right-radius: 6px;
+	-moz-border-bottom-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+	-webkit-border-bottom-left-radius: 6px;
+	-moz-border-bottom-left-radius: 6px;
+	border-bottom-left-radius: 6px;
 }
 h1#title a,
 h1#title a img {
-	background-color: #365d95;
+	background-color: inherit;
 }
 
 h1 span {
@@ -327,8 +328,14 @@ h1#title img {
 }
 
 div#banner {
-	background: #365d95 url(../images/head-br.png) bottom right no-repeat;
+	background-color: #365d95;
 	margin: 1.5em 2em;
+	-webkit-border-bottom-right-radius: 6px;
+	-moz-border-bottom-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+	-webkit-border-bottom-left-radius: 6px;
+	-moz-border-bottom-left-radius: 6px;
+	border-bottom-left-radius: 6px;
 }
 
 p#tagline {
@@ -376,19 +383,25 @@ ul#tabset_tabs li {
 	cursor: pointer;
 	float: left;
 	margin-right: 0.245em;
-	background: #dadde3 url(../images/tab-tl.png) no-repeat top left;
-	border-bottom: 1px solid #CBD0DB;
+	background-color: #dadde3;
+	border-bottom: 1px solid #cbd0db;
+	-webkit-border-top-left-radius: 6px;
+	-moz-border-top-left-radius: 6px;
+	border-top-left-radius: 6px;
+	-webkit-border-top-right-radius: 6px;
+	-moz-border-top-right-radius: 6px;
+	border-top-right-radius: 6px;
 }
 
 ul#tabset_tabs li.selected {
-	background: #eaebee url(../images/round-tl.png) no-repeat top left;
+	background-color: #eaebee;
 	border-bottom: 1px solid #eaebee;
 }
 
 ul#tabset_tabs li.selected a:link,
 ul#tabset_tabs li.selected a:visited {
 	color: #1f2126;
-	background: #eaebee url(../images/round-tr.png) no-repeat top right;
+	background-color: #eaebee;
 }
 
 ul#tabset_tabs li span {
@@ -404,11 +417,17 @@ ul#tabset_tabs li a:visited {
 	color: #365d95;
 	display: block;
 	padding: 0.515em 1.3em 0.215em 0.8em;
-	background: #dadde3 url(../images/tab-tr.png) no-repeat top right;
+	background-color: #dadde3;
 	margin-left: 0.5em;
 	font-size: 0.9em;
 	font-weight: bold;
 	text-decoration: none;
+	-webkit-border-top-left-radius: 6px;
+	-moz-border-top-left-radius: 6px;
+	border-top-left-radius: 6px;
+	-webkit-border-top-right-radius: 6px;
+	-moz-border-top-right-radius: 6px;
+	border-top-right-radius: 6px;
 }
 
 ul#tabset_tabs li a:hover,
@@ -435,9 +454,12 @@ div#frontforms {
 
 div#fields {
 	clear: both;
-	background: #eaebee url(../images/round-tr.png) no-repeat top right;
+	background-color: #eaebee;
 	padding: 0.5em 1.3em;
 	border-bottom: 1px solid #dcdde0;
+	-webkit-border-top-right-radius: 6px;
+	-moz-border-top-right-radius: 6px;
+	border-top-right-radius: 6px;
 }
 
 div#fields legend,
@@ -469,15 +491,32 @@ legend a:active {
 	text-decoration: none;
 }
 
-legend.toggletext {
+.toggletext {
 	cursor: pointer;
 	padding-left: 0.2em;
 }
-legend.toggletext img {
+.toggletext > a {
 	padding-bottom: 2px;
 }
 
-img.toggled {
+.toggletext > a:before {
+	display: inline-block;
+	content: '';
+	border-top: 6px solid transparent;
+	border-bottom: 6px solid transparent;
+	border-left: 6px solid black;
+	margin-right: 6px;
+
+}
+.toggletext.toggled > a:before {
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+
+.toggletext.toggled {
 	padding-bottom: 4px;
 }
 
@@ -504,7 +543,7 @@ p.submit_button,
 p.instructions,
 p#note {
 	border-top: 1px solid #cbcdd5;
-	background: #eaebee url(../images/double.png) left top repeat-x;
+	background: #eaebee url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAAAAADRSSBWAAAAC0lEQVR4AWP4+hUAAuIB6zPTZB8AAAAASUVORK5CYII=') left top repeat-x;
 }
 
 p.submit_button {
@@ -527,9 +566,12 @@ p#note {
 ul#menu {
 	text-align: center;
 	margin: 1em 2em;
-	background: #eaebee url(../images/round-br.png) no-repeat bottom right;
+	background-color: #eaebee;
 	padding: 0.5em 0 0.3em;
 	border-top: 1px solid #dcdde0;
+	-webkit-border-bottom-right-radius: 6px;
+	-moz-border-bottom-right-radius: 6px;
+	border-bottom-right-radius: 6px;
 }
 
 ul#menu span {
