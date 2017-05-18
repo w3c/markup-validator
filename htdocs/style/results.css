@@ -5,47 +5,47 @@
    See http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright
 */
 
-div#results_container {
+#results_container {
 	margin: 2em;
 }
-div#results_container ul li {
+#results_container ul li {
 	list-style-type: disc;
 	margin-left: 1em;
 }
-div#results_container ul {
+#results_container ul {
 	margin-left: 1.5em;
 	margin-right: 1.5em;
 }
 
 
-div#results_container ul.navbar {
+#results_container ul.navbar {
 	border-top: 1px solid #dcdde0;
 	border-bottom: 1px solid #dcdde0;
 	text-align: center;
 	margin: 0 0 2em 0;
 	padding: .5em;
 }
-div#results_container ul.navbar span {
+#results_container ul.navbar span {
 	display: none;
 }
 
-div#results_container ul.navbar a:link,
-div#results_container ul.navbar a:visited {
+#results_container ul.navbar a:link,
+#results_container ul.navbar a:visited {
 	color: #365D95;
 	text-decoration: none;
 	margin-right: 1em;
 	margin-left: 1em;
 }
 
-div#results_container ul.navbar a:hover,
-div#results_container ul.navbar a:active {
+#results_container ul.navbar a:hover,
+#results_container ul.navbar a:active {
 	color: #1f2126;
 	text-decoration: underline;
 	margin-right: 1em;
 	margin-left: 1em;
 }
 
-div#results_container ul.navbar li {
+#results_container ul.navbar li {
 	display: inline;
 }
 
@@ -66,7 +66,7 @@ p.revalidate_instructions {
 	margin: .5em .5em 0 1em;
 }
 
-fieldset#revalidate_opts {
+#revalidate_opts {
 	margin: 0;
 	padding: 0;
 	border: 1px solid #ccc;
@@ -76,22 +76,22 @@ fieldset#revalidate_opts {
 	clear: left;
 }
 
-fieldset#revalidate_opts,
-fieldset#revalidate_opts label,
-fieldset#revalidate_opts p,
-fieldset#revalidate_opts div,
-fieldset#revalidate_opts a {
+#revalidate_opts,
+#revalidate_opts label,
+#revalidate_opts p,
+#revalidate_opts div,
+#revalidate_opts a {
 	background-color: #fcfcfc;
 }
 
-fieldset#revalidate_opts legend {
+#revalidate_opts legend {
 	/*margin-top: 1.8em;*/
 	background-color: #eaebee;
 	padding: .5em;
 	border: 1px solid #ccc;
 }
 
-fieldset#revalidate_opts p.moreinfo {
+#revalidate_opts p.moreinfo {
 	padding: 10px;
 	margin-top: .3em;
 	float: left;
@@ -100,7 +100,7 @@ fieldset#revalidate_opts p.moreinfo {
 	margin-bottom: 0;
 }
 
-div#revalidate_button {
+#revalidate_button {
 	float: right;
 	width: 6em;
 	padding-right: 3.5em !important;
@@ -113,12 +113,12 @@ table.header {
 	padding-top: 0;
 }
 
-div#results_container table {
+#results_container table {
 	border-collapse: collapse;
 	border-right: 1px solid #ccc;
 }
-div#results_container table td,
-div#results_container table th {
+#results_container table td,
+#results_container table th {
 	border-top: 0 solid #ddd;
 	border-bottom: 1px solid #ccc;
 	border-left: 1px solid #eaebee;
@@ -126,7 +126,7 @@ div#results_container table th {
 	text-indent: .5em;
 	border-collapse: collapse;
 }
-div#results_container table th {
+#results_container table th {
 	background-color: #eaebee;
 	color: #11111a;
 	border-right: 1px solid #ccc;
@@ -134,49 +134,49 @@ div#results_container table th {
 	font-size: 1em;
 }
 
-div#results_container table th label {
+#results_container table th label {
 	background-color: #eaebee;
 	color: #11111a;
 	font-weight: bold;
 	font-size: 1em;
 }
 
-div#results_container table {
+#results_container table {
 	margin-bottom: .5em;
 	border-collapse: collapse;
 	border-right: 1px solid #ccc;
 }
 
-div#results_container td,
-div#results_container th {
+#results_container td,
+#results_container th {
 	border-top: 0 solid #ddd;
 	border-bottom: 1px solid #ccc;
 	border-left: 1px solid #eaebee;
 	border-collapse: collapse;
 }
-div#results_container th {
+#results_container th {
 	background-color: #eaebee;
 	color: #11111a;
 	border-right: 1px solid #ccc;
 }
 
 
-fieldset#revalidate_opts table.header {
+#revalidate_opts table.header {
 	margin-top: .5em;
 }
 
-fieldset#revalidate_opts table.header,
-fieldset#revalidate_opts table.header td,
-fieldset#revalidate_opts table.header tr {
+#revalidate_opts table.header,
+#revalidate_opts table.header td,
+#revalidate_opts table.header tr {
 	border: 0;
 }
-fieldset#revalidate_opts div#revalidate_button input {
+#revalidate_opts #revalidate_button input {
 	background-color: #eaebee;
 	color: #365d95;
 	padding: .3em 1em;
 	border: 1px outset #ccc;
 }
-fieldset#revalidate_opts div#revalidate_button input:active {
+#revalidate_opts #revalidate_button input:active {
 	border-style: inset !important;
 }
 
@@ -186,9 +186,9 @@ fieldset#revalidate_opts div#revalidate_button input:active {
 
 /* "Fatal" warnings... */
 
-ol#warnings,
-ol#error_loop,
-ol#fatal-errors {
+#warnings,
+#error_loop,
+#fatal-errors {
 	margin-left: 0 !important;
 	margin-right: 0 !important;
 }
@@ -213,17 +213,17 @@ ol li.msg_err:hover * {
 	background-color: #fcfcfc;
 }
 
-ol#warnings,
-ol#error_loop,
-ol#fatal-errors {
+#warnings,
+#error_loop,
+#fatal-errors {
 	padding: 0;
 	border-top: 1px solid #eaebee;
 }
 
-ol#warnings li ul li,
-ol#error_loop ul li,
-ol#error_loop p,
-ol#warnings p {
+#warnings li ul li,
+#error_loop ul li,
+#error_loop p,
+#warnings p {
 	line-height: 135%;
 	margin-bottom: .65em;
 	/*margin-right: 2em;*/
@@ -358,7 +358,7 @@ pre.source {
 /*
 */
 
-ul#warnings {
+#warnings {
 	padding: 0;
 }
 
@@ -399,7 +399,7 @@ td {
 	border: solid black 1px;
 }
 
-div#result {
+#result {
 	clear: left;
 	padding-top: 1em;
 }
@@ -435,7 +435,7 @@ h4 {
 	color: #777 !important;
 }
 
-h3#congrats {
+#congrats {
 	color: #690 !important;
 }
 
