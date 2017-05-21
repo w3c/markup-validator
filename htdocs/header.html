@@ -10,13 +10,6 @@
     <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
     <link rev="start" href="<!--#echo var="relroot" -->" title="Home Page" />
     <link rel="stylesheet" href="<!--#echo var="relroot" -->style/base" type="text/css" media="all" />
-    <!--#if expr="$includeJS = 1" --><!--#if expr="$debug = 1" -->
-    <script type="text/javascript" src="scripts/mootools-1.2.5-core-nc.js"></script>
-    <script type="text/javascript" src="scripts/mootools-1.2.5.1-more.js"></script>
-    <script type="text/javascript" src="scripts/w3c-validator.js"></script>
-    <!--#else -->
-    <script type="text/javascript" src="scripts/combined"></script>
-    <!--#endif --><!--#endif -->
     <meta name="keywords" content="HTML, HyperText Markup Language, Validation,
       W3C Markup Validation Service" />
     <meta name="description" content="W3C's easy-to-use
@@ -27,12 +20,13 @@
   </head>
 
   <body>
-   <div id="banner">
-    <h1 id="title">
-      <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="<!--#echo var="relroot" -->images/no_w3c.png" /></a>
-			<a href="<!--#echo var="relroot" -->"><span>Markup Validation Service</span></a>
+    <div id="banner">
+      <h1 id="title">
+        <a href="http://www.w3.org/">
+          <img alt="W3C Logo" width="110" height="61" id="logo" src="<!--#echo var="relroot" -->images/no_w3c.png" />
+        </a>
+        <a href="<!--#echo var="relroot" -->"><span>Markup Validation Service</span></a>
       </h1>
       <p id="tagline">Check the markup (HTML, XHTML, …) of Web documents</p>
-   </div>
-
+    </div>
 
