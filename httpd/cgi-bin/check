@@ -620,7 +620,18 @@ $File->{'Is Valid'} = TRUE;
 $File->{Errors}     = [];
 $File->{WF_Errors}  = [];
 
-if (($File->{DOCTYPE} eq "HTML5") or ($File->{DOCTYPE} eq "XHTML5")) {
+if (($File->{DOCTYPE} eq '') and
+    (($File->{Root} eq "svg") or @{$File->{Namespaces}} > 1))
+{
+
+    # we send doctypeless SVG, or any doctypeless XML document with multiple
+    # namespaces found, to a different engine. WARNING this is experimental.
+    if ($CFG->{External}->{CompoundXML}) {
+        $File = &compoundxml_validate($File);
+    }
+}
+elsif (($File->{DOCTYPE} eq "HTML5") or ($File->{DOCTYPE} eq "XHTML5")
+        or ($File->{DOCTYPE} eq '')) {
     if ($CFG->{External}->{HTML5}) {
         $File = &html5_validate($File);
     }
@@ -629,16 +640,6 @@ if (($File->{DOCTYPE} eq "HTML5") or ($File->{DOCTYPE} eq "XHTML5")) {
         my $tmpl = &get_error_template($File);
         $tmpl->param(fatal_no_checker      => TRUE);
         $tmpl->param(fatal_missing_checker => 'HTML5 Validator');
-    }
-}
-elsif (($File->{DOCTYPE} eq '') and
-    (($File->{Root} eq "svg") or @{$File->{Namespaces}} > 1))
-{
-
-    # we send doctypeless SVG, or any doctypeless XML document with multiple
-    # namespaces found, to a different engine. WARNING this is experimental.
-    if ($CFG->{External}->{CompoundXML}) {
-        $File = &compoundxml_validate($File);
     }
 }
 else {
