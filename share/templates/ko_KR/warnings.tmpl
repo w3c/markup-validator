@@ -1,0 +1,569 @@
+<h3 id="preparse_warnings">주의 사항과 가능한 이슈</h3>
+<p>다음 주의 사항은 검증기는 검증 전에 어떠한 추측성 작업을 한 결과에 의해서 누락 또는 충돌 정보를 강조 표시 했거나, 다른 이유에 의해 영향을 받은 것일 수 있습니다. 만약 추측 또는 대안이 맞지 않다면, 검사 결과는 완전히 모순된 것입니다. 이 가능한 이슈들을 검사하는 것은 <em>아주 권장하는</em> 작업이며, 필요하다면, 문서를 재검사 하여 수정을 할 필요가 있습니다.</p>
+<ol id="warnings">
+
+<TMPL_IF NAME="W00">
+  <li class="msg_warn" id="W00">
+      <p><span class="err_type"><img src="images/info_icons/info.png" alt="Info" title="Info" /></span> <span class="msg"> 개발 중인 기능 사용:
+          <em><TMPL_VAR NAME="W00_experimental_name" ESCAPE="HTML"></em>.</span></p>
+    <p>개발 중인 기능을 이용하여 당신의 문서를 검사 합니다:
+        <em><TMPL_VAR NAME="W00_experimental_name" ESCAPE="HTML"></em>.
+	</p>
+	<p>
+		이 기능은 사용자의 편의를 위하여 제공 하고 있습니다. 하지만 사용한 첨단 기술의 최종 업데이트가 아니기 때문에
+		완전한 보장을 하지는 못합니다.
+		이 기능에 문제가 있을 경우 <a href="<TMPL_VAR NAME="W00_experimental_URI" ESCAPE="HTML">">기능 담당자</a>에게
+		보고를 해 주십시오. 감사합니다.
+    </p>
+	<p>
+		HTML5 Confomance Checker를 이용할 경우, <a href="http://validator.w3.org">W3C Validator</a>의 결과 화면이 다르게 출력이 됩니다. 이는 HTML5를 처리하기 위한 외부 검사기의 결과를 어떻게 출력을 하느냐의 차이일 뿐 동일한 외부 검사기를 사용하기 때문에 결과는 거의 동일하며, 외부 검사기의 버전 차이에 따른 결과의 상이함은 있을 수 있습니다. (KLDP와 W3C 모두 Vlidator.nu의 검사기를 local에서 직접 운영하기 때문 입니다. 현재 KLDP의 NU는 2016.02.05 버전 입니다.)
+	</p>
+  </li>
+</TMPL_IF>
+
+<TMPL_IF NAME="W01">
+  <li class="msg_warn" id="W01"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Missing "<code>charset</code>" attribute for
+    "<code><TMPL_VAR NAME="W01_ct" ESCAPE="HTML"></code>" document.</span></p>
+    <p>
+      The HTTP <code>Content-Type</code> header
+      (<code><TMPL_VAR NAME="W01_ct" ESCAPE="HTML"></code>) sent by your web
+      <TMPL_IF NAME="W01_upload">browser<TMPL_ELSE>server</TMPL_IF>
+      (<code><TMPL_VAR NAME="W01_agent" ESCAPE="HTML"></code>) did not contain
+      a "<code>charset</code>" parameter, but the Content-Type was one of
+      the XML <code>text/*</code> sub-types.
+    </p>
+    <p>
+      The relevant specification
+      (<a href="http://www.ietf.org/rfc/rfc3023.txt">RFC 3023</a>)
+      specifies a strong default of "<code>us-ascii</code>" for
+      such documents so we will use this value regardless of any encoding you
+      may have indicated elsewhere.
+    <p>
+      If you would like to use a different encoding, you should arrange to have
+      your <TMPL_IF NAME="W01_upload">browser<TMPL_ELSE>server</TMPL_IF> send
+      this new encoding information.
+    </p>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W02">
+  <li class="msg_warn" id="W02"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">문자셋 설정이 없음!</span></p>
+  
+    <p>
+      Falling back to
+      "<code><TMPL_VAR NAME="W02_charset" ESCAPE="HTML"></code>"
+      (<a href="docs/users.html#option-fbc">explain...</a>).
+    </p>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W03">
+  <li class="msg_warn" id="W03"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Character Encoding Override in effect!</span></p>
+  
+    <p>
+      The detected character encoding
+      "<code><TMPL_VAR NAME="W03_use" ESCAPE="HTML"></code>"
+      has been suppressed and
+      "<code><TMPL_VAR NAME="W03_opt" ESCAPE="HTML"></code>" used instead.
+    </p>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W04">
+  <li class="msg_warn" id="W04"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">문자셋 설정이 없음!
+    <TMPL_IF NAME="W04_override">
+      을 사용.
+    <TMPL_ELSE>
+      로 대체.
+    </TMPL_IF>
+    <code><TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF></code>.</span></p>
+  
+  
+  <TMPL_IF NAME="W04_override">
+    <p>이 정보에 대하여 유효한 소스의 어느 부분에서도 문자셋 정보를 얻을 수
+      없습니다. 그러므로 제한적인 검사를 위하여, 선택한 operride 옵션의 문자셋
+      값 <code><TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF></code>을
+      사용할 것 입니다.
+    </p>
+  <TMPL_ELSE>
+    <p>
+      이 정보에 대하여 유효한 소스의 어느 부분에서도 문자셋 정보를 얻을 수
+      없습니다. 문자셋 정보가 없이는 문서의 정확한 검사가 불가능 합니다.
+      validator 는
+      "<code><TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF></code>"
+      문자셋을 대체하여 사용하여 검사를 수행할 것이며, 이 의미는 모든 문서에
+      대하여 성공을 할 수 있지는 않습니다.
+    </p>
+  <TMPL_IF NAME="W04_also_tried">
+  <p>Before defaulting to <code><TMPL_IF NAME="W04_charset"><TMPL_VAR NAME="W04_charset" ESCAPE="HTML"><TMPL_ELSE>UTF-8</TMPL_IF></code>
+      the validator also tried to read the content with the following encoding(s), without success: 
+      <code><TMPL_VAR NAME="W04_also_tried" ESCAPE="HTML"></code>.</p>
+  </TMPL_IF>
+  </TMPL_IF>
+  <TMPL_IF NAME="opt_verbose">
+    <p>The sources used to find encoding information include:</p>
+    <ul>
+      <li>The HTTP Content-Type header.</li>
+      <li>The XML Declaration.</li>
+      <li>The HTML "META" element.</li>
+    </ul>
+    <p>
+      The algorithm defined in
+      <a href="http://www.w3.org/TR/REC-xml#sec-guessing">Appendix F of
+        the XML 1.0 Recommendation</a> was also used, without success.
+    </p>
+    <p>
+      Since none of these sources yielded any usable information, reliable
+      validation of this document is not possible. Sorry. Please make sure you
+      specify the character encoding in use.
+    </p>
+      <p>Specifying a character encoding is typically done by the web server
+	configuration, by the scripts that put together pages, or inside the
+	document itself. <a href="http://www.iana.org/"><abbr title="Internet Assigned Numbers Authority">IANA</abbr></a> 
+    maintains the list of
+	<a href="http://www.iana.org/assignments/character-sets">official names for character
+	encodings</a> (called charsets in this context). You can choose from a number
+	of encodings, though we recommend UTF-8 as particularly useful.</p>
+
+	<p>The W3C <abbr title="Internationalization">I18N</abbr> Activity has collected a 
+		<a href="http://www.w3.org/International/O-charset">few tips on
+	how to declare the encoding of a Web document</a>.</p>
+	<p>
+      To quickly check whether the document would validate after addressing
+      the missing character encoding information, you can use the "Encoding"
+      form control earlier in the page to force an encoding
+      override to take effect. "iso-8859-1" (Western Europe and North America)
+      and "utf-8" (Universal, but not commonly used in legacy documents) are
+      common encodings if you are not sure what encoding to choose.
+    </p>
+  <TMPL_ELSE>
+    <p>이에 대한 더 많은 내용과 수정해야할 사항에 대해서는 <a href="docs/help.html#faq-charset"><abbr
+       title="잦은 질문과 답변">FAQ</abbr>의 문자셋 항목</a> 를 읽어 보십시오.</p>
+  </TMPL_IF>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W05">
+  <li class="msg_warn" id="W05"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg"><code>DOCTYPE</code> Override in effect!</span></p>
+  
+    <p>
+      Any DOCTYPE Declaration in the document has been suppressed and the
+      DOCTYPE for "<code><TMPL_VAR NAME="W05_dtd" ESCAPE="HTML"></code>"
+      inserted instead. The document will not be Valid until you alter the
+      source file to reflect this new DOCTYPE.
+    </p>
+  </li>
+</TMPL_IF>
+
+<TMPL_IF NAME="W06">
+  <li class="msg_warn" id="W06"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">분석할 방법을 결정할 수 없습니다!</span></p>
+  <p>validator는 XML (XHTML, SVG등과 같은 문서형식) 또는 SGML (HTML 4.01과 그 이전 버전)과 같은 문서들에 대하여 진행을 할 수 있습니다. 이 문서에 대해서는, 분명한 분석 모드를 결정하기에 정보가 충분하지 못합니다. 그래서:</p>
+  <ul>
+    <TMPL_IF NAME="W06_mime"><li>
+    MIME 미디어 형식(<code><TMPL_VAR NAME="W06_mime" ESCAPE="HTML"></code>)은 XML 또는 SGML 문서 형식에 사용되어 집니다.</li><TMPL_ELSE><li><em>직접 입력</em> 모드에서, validator 에 MIME 미디어 형식이 제공되지 않았습니다.</li></TMPL_IF>
+    <TMPL_IF NAME="w06_doctype"><li>문서 형식(<code><TMPL_VAR NAME="w06_doctype" ESCAPE="HTML"></code>)이 validator의 카타로그에 없습니다.</li><TMPL_ELSE><li>알려진 문서 형식을 감지할 수 없습니다.</li></TMPL_IF>
+    <li>XML 선언(<abbr>e.g</abbr> <code>&lt;?xml version="1.0"?&gt;</code>)을 문서의 첫부분에서 찾을 수 없습니다.</li>
+    <li>문서 최 상단에서 XML namespace (<abbr>예를 들어</abbr>, <code>&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"&gt;</code>) 를 찾을 수 없습니다.</li>
+    </ul>
+    <p>기본으로, validator는 SGML 모드로 검사를 합니다.</p></li>
+</TMPL_IF>
+<TMPL_IF NAME="W07">
+  <li class="msg_warn" id="W07"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Contradictory Parse Modes Detected!</span></p>
+    <p>The validator can process documents either as XML (for document types such as XHTML, SVG, etc.) or SGML (for HTML 4.01 and prior versions).</p>
+  
+    <p>
+      This document was served with HTTP headers declaring it as MIME Media Type
+      (<code><TMPL_VAR NAME="W07_mime" ESCAPE="HTML"></code>), for which the parsing
+       mode should be <TMPL_VAR NAME="W07_ct" ESCAPE="HTML">. However, the document's
+       <code>DOCTYPE</code> Declaration indicates
+       <TMPL_VAR NAME="W07_dtd" ESCAPE="HTML"> mode.
+    <p>
+    <p>Following the rules of <a href="http://www.w3.org/TR/webarch/#metadata-inconsistencies" title="Architecture of the World Wide Web, Volume One - Inconsistencies between Representation Data and Metadata">Web Architecture</a>, validation proceeded using the <TMPL_VAR NAME="W07_ct" ESCAPE="HTML"> mode based on the <code>Content-Type</code> header.
+    </p>
+    <p>Fixing this conflict involves either <a href="http://www.w3.org/QA/2007/10/http-media-type.html" title="Setting media type headers on your Web site - W3C Q&amp;A Weblog">setting the Content-Type header</a>, <a
+      href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">using a known document type</a> or adding an XML declaration (in the case of XML-based documents).</p>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W08">
+  <li class="msg_warn" id="W08"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg"><code>Content-Type</code> 이 없음!</span></p>
+    <p>
+      이 문서는 <code>Content-Type</code> 헤더가 비었거나 또는 누락된
+      채로 서비스 되고 있습니다.  이 경우, 검증기나 다른 user agent에게
+      혼란을 야기할 수 있습니다.
+    </p>
+    <p>
+      HTTP 메시지는 <code>Content-Type</code> HTTP 헤더를
+      <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec7.html#sec7.2.1">반드시</a> 포함해야 합니다.
+    </p>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W09">
+  <li class="msg_warn" id="W09"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">No <code>DOCTYPE</code> found! Checking with default <TMPL_VAR NAME="W09_dtd" ESCAPE="HTML"> Document Type.</span></p>
+  
+    <p>
+      DOCTYPE 선언을 인식할 수 없거나, 또는 누락이 되어 있습니다. 이는 일반적으로
+      문서의 상단에 DOCTYPE이 선언되어 있지 않음을 의미합니다. 또한 DOCTYPE 선언에
+      오타가 존재하거나 또는 정확한 문법을 사용하지 않았을 수 있습니다.
+    </p>
+    <p> 
+      문서는 “<TMPL_VAR NAME="W09_dtd" ESCAPE="HTML">”와 완전히 유사한 기본
+      "fallback" 문서 형식 정의를 사용해서 검사되어져야 합니다.
+    </p>
+    <TMPL_IF NAME="opt_verbose">
+    <p>
+      HTML 문서 작성 시에 가장 먼저 해야 할 일은 DOCTYPE 선언을 하는 것입니다.
+      전형적인 <ahref="http://www.w3.org/TR/xhtml1/">XHTML 1.0</a> 문서의 예는
+      다음과 같습니다:
+    </p>
+    <pre>
+      &lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
+      &lt;html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"&gt;
+        &lt;head&gt;
+          &lt;title&gt;제목&lt;/title&gt;
+        &lt;/head&gt;
+
+        &lt;body&gt;
+          &lt;!-- ... 문서 본문 ... --&gt;
+        &lt;/body&gt;
+      &lt;/html&gt;
+    </pre>
+    <p>
+      XML 문서에서는, DOCTYPE 선언 전에 "XML 선언" 을 추가해 주기를 희망하는 경우가
+      있습니다만, 오래된 브라우저에서는 이것을 제대로 지원하지를 못합니다. 이에
+      대한 더 많은 정보에 대해서는 <a href="http://www.w3.org/TR/xhtml1/">XHTML 1.0</a>
+      권장안 문서에서 확인 하실 수 있습니다.
+    </p>
+      <p>
+        The W3C QA Activity maintains a <a
+          href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">List of
+            Valid Doctypes</a> that you can choose from, and the <abbr
+          title="Web Design Group">WDG</abbr> maintains a document on
+        "<a href="http://htmlhelp.com/tools/validator/doctype.html">Choosing
+           a DOCTYPE</a>".
+      </p>
+  <TMPL_ELSE>
+    <p>이 사이트의 <abbr title="잦은 질문과 답변">FAQ</abbr>에서
+    <a href="docs/help.html#faq-doctype">문서에 DOCTYPE 을 추가하는 방법</a>을
+    확인할 수 있습니다.</p>
+  </TMPL_IF>
+
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W09nohtml">
+  <li class="msg_warn" id="W09nohtml"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">No <code>DOCTYPE</code> found, and unknown root element. Aborting validation.</span></p>
+  
+    <p>
+      The DOCTYPE Declaration was not recognized or is missing. This
+      probably means that the Formal Public Identifier contains a spelling
+      error, or that the Declaration is not using correct syntax, or that 
+      your document is not using a DOCTYPE Declaration.
+    </p>
+    <p>
+      Without a DOCTYPE Declaration it is not possible to check the validity of your document. Since the document does not start with the root &lt;html&gt; element, automatic fallback to an HTML document type was not performed, and most of the validation process was aborted: only basic markup syntax was checked.
+    </p>
+    <p>Learn <a href="docs/help.html#faq-doctype">how to add a doctype to your document</a> 
+    from our <abbr title="Frequently Asked Questions">FAQ</abbr>, or use the validator's
+    <code>Document Type</code> option to validate your document against a specific Document Type.</p>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W09xml">
+  <li class="msg_warn" id="W09xml"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">No <code>DOCTYPE</code> found! Checking XML syntax only.</span></p>
+  
+    <p>
+      The DOCTYPE Declaration was not recognized or is missing. This
+      probably means that the Formal Public Identifier contains a spelling
+      error, or that the Declaration is not using correct syntax, or that 
+      your XML document is not using a DOCTYPE Declaration.
+    </p>
+    <p>
+      Validation of the document has been skipped, and a simple check of the well-formedness
+      of the XML syntax has been performed instead.
+    </p>
+    <p>Learn <a href="docs/help.html#faq-doctype">how to add a doctype to your document</a> 
+    from our <abbr title="Frequently Asked Questions">FAQ</abbr>, or use the validator's
+    option to validate your XML document against a specific Document Type</p>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W10">
+  <li class="msg_warn" id="W10"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">알수 없는 Namespace를 발견했습니다.</span></p>
+  
+    <p>
+      <TMPL_VAR NAME="W10_type" ESCAPE="HTML"> 문서에 알수 없는
+      "<code><TMPL_VAR NAME="W10_ns" ESCAPE="HTML"></code>" namespace 를
+      발견했습니다.
+    </p>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W11">
+  <li class="msg_warn" id="W11"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Namespace Found in non-XML Document</span></p>
+  
+    <p>
+      Namespace "<code><TMPL_VAR NAME="W11_ns" ESCAPE="HTML"></code>" found,
+      but the <TMPL_IF NAME="w11_doctype"><code><TMPL_VAR NAME="w11_doctype" ESCAPE="HTML"></code></TMPL_IF> document type is not an XML document type!
+    </p>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W12">
+<li class="msg_warn" id="W12"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">No Namespace Found</span></p>
+  
+    <p>
+      No Namespace was found, but document type requires one to be present!
+    </p>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W13">
+  <li class="msg_warn" id="W13"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg"><code>DOCTYPE</code> 사실상 무시됩니다!</span></p>
+  
+    <p>
+      이 문서는 "<code><TMPL_VAR NAME="W13_org"></code>" DOCTYPE 선언을 사용하는
+      것으로 분석이 되었으나, 검사 기준에 새로운 DOCTYPE 선언
+      "<code><TMPL_VAR NAME="W13_new"></code>"을 지정하여 검출된 DOCTYPE 선언을
+      무시합니다. 검사 결과에 에러가 존재하지 않더라도, 이 지정된 DOCTYPE 이 문서에
+      반영이 되기 전까지는 문서는 유효하지 않습니다.
+    </p>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W14">
+  <li class="msg_warn" id="W14"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg"><code>DOCTYPE</code>을 찾을 수 없습니다!</span></p>
+  
+    <p>
+      HTML 4.01 Transitional 을 대신 사용합니다.
+      (<a href="docs/users.html#option-fbd">설명...</a>)
+    </p>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W15">
+  <li class="msg_warn" id="W15"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg"><code>DOCTYPE</code>이 사실상 무시됩니다!</span></p>
+  
+    <p>
+      "<TMPL_VAR NAME="W15_dtd" ESCAPE="HTML">" 에 대한 DOCTYPE 선언은 문서의
+      시작에 추가 되어 있어야 합니다. 비록 검사 결과에 에러가 없다고 나오더라도
+      새로운 DOCTYPE 을 선언하기 전까지 이 문서는 규약을 준수하지 않는 것입니다.
+    </p>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W16">
+  <li class="msg_warn" id="W16"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">DOCTYPE 을 찾을 수 없습니다! Falling Back to
+    <TMPL_VAR NAME="W16_dtd" ESCAPE="HTML">.</span></p>
+  
+    <p>
+      A DOCTYPE Declaration is mandatory for most current markup languages
+      and without one it is impossible to reliably validate this document.
+      I am falling back to "<TMPL_VAR NAME="W16_dtd" ESCAPE="HTML">" and will
+      attempt to validate the document anyway, but this is very likely to
+      produce spurious error messages for most non-trivial documents.
+    </p>
+  <TMPL_IF NAME="opt_verbose">
+    <TMPL_INCLUDE NAME="doctype_spiel.tmpl">
+    <p>
+      The W3C QA Activity maintains a <a
+        href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">List of
+          Valid Doctypes</a> that you can choose from, and the <abbr
+        title="Web Design Group">WDG</abbr> maintains a document on
+      "<a href="http://htmlhelp.com/tools/validator/doctype.html">Choosing
+         a DOCTYPE</a>".
+    </p>
+  <TMPL_ELSE>
+    <p>
+      So what should I do?
+      <a href="docs/help.html#faq-doctype">Tell me more...</a>
+    </p>
+  </TMPL_IF>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W17">
+  <li class="msg_warn" id="W17"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">No Character Encoding detected!</span></p>
+  
+    <p>
+      To ensure correct validation, processing, and display, it is important
+      that the character encoding is properly labeled.
+      <a href="http://www.w3.org/International/O-charset.html">More
+      information...</a>
+    </p>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W18">
+  <li class="msg_warn" id="W18"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">문자셋 설정이 맞지 않음!</span></p>
+  
+    <p>
+      The character encoding specified in the HTTP header
+        (<code><TMPL_VAR NAME="W18_http" ESCAPE="HTML"></code>)
+      is different from the value in the XML declaration
+        (<code><TMPL_VAR NAME="W18_xml" ESCAPE="HTML"></code>).
+      I will use the value from the HTTP header
+        (<code><TMPL_VAR NAME="W18_use" ESCAPE="HTML"></code>).
+    </p>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W19">
+  <li class="msg_warn" id="W19"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">문자셋 설정이 맞지 않음!</span></p>
+  
+    <p>
+      The character encoding specified in the HTTP header
+        (<code><TMPL_VAR NAME="W19_http" ESCAPE="HTML"></code>)
+      is different from the value in the <code>&lt;meta&gt;</code> element
+      (<code><TMPL_VAR NAME="W19_meta" ESCAPE="HTML"></code>). I will use the
+      value from the HTTP header
+      (<code><TMPL_VAR NAME="W19_use" ESCAPE="HTML"></code>) for this
+      validation.
+    </p>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W20">
+  <li class="msg_warn" id="W20"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">문자셋 설정이 맞지 않음!</span></p>
+  
+    <p>
+      The character encoding specified in the XML declaration
+      (<code><TMPL_VAR NAME="W20_xml" ESCAPE="HTML"></code>)
+      is different from the value in the <code>&lt;meta&gt;</code> element
+      (<code><TMPL_VAR NAME="W20_meta" ESCAPE="HTML"></code>). I will use the
+      value from the XML declaration
+      (<code><TMPL_VAR NAME="W20_xml" ESCAPE="HTML"></code>) for this
+      validation.
+    </p>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W21">
+  <li class="msg_warn" id="W21"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">UTF-8 파일의 Byte-Order 표시가 발견되었습니다.</span></p>
+  
+    <p>
+      UTF-8 로 인코딩 되어 있드는 파일들의 유니코드 Byte-Order 표시(BOM)는
+      몇몇의 텍스트 에디터와 오래된 브라우저에서 문제을 야기한다고 알려지고
+      있습니다. 그러므로 접근성을 용이하게 하기 위해서는 BOM code 를 남기지
+      않도록 하는 것이 좋습니다.
+    </p>
+  </li>
+</TMPL_IF>
+<TMPL_IF NAME="W22">
+  <li class="msg_warn" id="W22"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Character Encoding suggestion: use 
+  <code><TMPL_VAR NAME="W22_suggested" ESCAPE="HTML"></code> instead of <code><TMPL_VAR NAME="W22_declared" ESCAPE="HTML"></code></span></p>
+  
+    <p>
+      The character encoding declared for this document 
+      (<code><TMPL_VAR NAME="W22_declared" ESCAPE="HTML"></code>) may not be widely supported.
+      This encoding is equivalent to <code><TMPL_VAR NAME="W22_suggested" ESCAPE="HTML"></code>
+      which may be better supported across platforms.
+    </p> 
+    <p>
+      More information on <a href="http://www.w3.org/International/O-charset.html">declaring a character encoding on your Web server or in your document</a> can be found on the W3C Internationalization site.
+    </p>
+  </li>
+</TMPL_IF>
+
+
+<TMPL_IF NAME="W23">
+  <li class="msg_warn" id="W23"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Conflict between Mime Type and Document Type</span></p>
+  
+    <p>The document is being served with the  <code><TMPL_VAR NAME="W23_type" ESCAPE="HTML"></code> Mime Type
+      which is not a registered media type for the 
+      <code><TMPL_VAR NAME="W23_doctype" ESCAPE="HTML"></code> Document Type. The recommended media type 
+      for this document is: <code><TMPL_VAR NAME="W23_type_pref" ESCAPE="HTML"></code></p>
+           
+   <p>Using a wrong media type for a certain document type may
+      confuse the validator and other user agents with respect to the 
+      nature of the document, and you may get some erroneous validation
+      errors. How to fix this problem? One of the following techniques should help:</p>
+   <ul>     
+      <li>If you are serving a static file on a Web server, changing its extension should help. 
+        Use e.g <code>.xhtml</code> for XHTML or <code>.mathml</code> for MathML.              
+     </li>
+     <li>You may need to reconfigure your Web server. This <a  href="http://www.developershome.com/wap/wapServerSetup/tutorial.asp?page=settingUpMIME">Setting up MIME Types tutorial</a> has instructions for Apache, Tomcat and IIS.
+</li>
+     <li>If the document is generated dynamically, the scripting language should allow you to set up the mime type: 
+             this <a href="http://juicystudio.com/article/content-negotiation.php">article on MIME Types and Content Negotiation</a> has examples in PHP, Perl, and ASP.</li>
+    </ul>
+  </li>
+</TMPL_IF>
+
+
+<TMPL_IF NAME="W24">
+  <li class="msg_warn" id="W24"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Rare or unregistered character encoding detected</span></p>
+  
+    <p>
+      The character encoding declared for this document 
+      (<code><TMPL_VAR NAME="W24_declared" ESCAPE="HTML"></code>) 
+      is supported by the validator, but may not be widely supported across platforms.
+      For the sake of interoperability, it is best to use a unicode character encoding 
+      such as <code>UTF-8</code>, or one of the 
+      <a href="http://www.iana.org/assignments/character-sets">registered character
+  	encodings</a>.
+    </p> 
+    <p>
+      More information on <a href="http://www.w3.org/International/O-charset.html">declaring a character encoding on your Web server or in your document</a> can be found on the W3C Internationalization site.
+    </p>
+  </li>
+</TMPL_IF>
+
+<TMPL_IF NAME="W25">
+  <li class="msg_warn" id="W25"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg"><TMPL_VAR NAME="W25_dtd" ESCAPE="HTML"> document without DOCTYPE detected.</span></p>
+  
+    <p>This document does not declare any DOCTYPE. A Doctype declaration is generally 
+      needed for validation, but the checked document uses markup specific to <TMPL_VAR NAME="W25_dtd" ESCAPE="HTML">, which may be used without DOCTYPE. </p>
+    <p>Validation was performed as if the DOCTYPE for <TMPL_VAR NAME="W25_dtd" ESCAPE="HTML"> was present. If this automatic detection is not correct, <a href="http://www.w3.org/QA/2002/04/valid-dtd-list.html" title="W3C QA - Recommended list of DTDs you can use in your Web document">adding a DOCTYPE declaration</a> will help validate without ambiguity.</p>
+  </li>
+</TMPL_IF>
+
+<TMPL_IF NAME="W26">
+<li class="msg_warn" id="W26"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">Mismatch between Public and System identifiers in the DOCTYPE declaration</span></p>
+    <p>This document uses an inconsistent DOCTYPE declaration. 
+    <TMPL_IF NAME="W26_dtd_sys_recommend">
+    The Public Identifier  
+   <code><TMPL_VAR NAME="W26_dtd_pub" ESCAPE="HTML"></code> declares the 
+   <code><TMPL_VAR NAME="W26_dtd_pub_display" ESCAPE="HTML"></code> document type, but the associated System Identifier
+   <code><TMPL_VAR NAME="W26_dtd_sys" ESCAPE="HTML"></code> does not match this document type.</p>
+   <p>The recommended System Identifier 
+   for <code><TMPL_VAR NAME="W26_dtd_pub_display" ESCAPE="HTML"></code> is <code><TMPL_VAR NAME="W26_dtd_sys_recommend" ESCAPE="HTML"></code>.
+    </TMPL_IF>
+    <TMPL_IF NAME="W26_dtd_pub_recommend">
+    The System Identifier  
+   <code><TMPL_VAR NAME="W26_dtd_sys" ESCAPE="HTML"></code> declares the 
+   <code><TMPL_VAR NAME="W26_dtd_pub_display" ESCAPE="HTML"></code> document type, but the associated Public Identifier
+   <code><TMPL_VAR NAME="W26_dtd_pub" ESCAPE="HTML"></code> does not match this document type.</p>
+   <p>The recommended Public Identifier 
+   for <code><TMPL_VAR NAME="W26_dtd_sys" ESCAPE="HTML"></code> is <code><TMPL_VAR NAME="W26_dtd_pub_recommend" ESCAPE="HTML"></code>.
+    </TMPL_IF> 
+   
+   </p>
+   <p>The safest way to use a correct DOCTYPE declaration is to copy and paste one from the 
+   <a href="http://www.w3.org/QA/2002/04/valid-dtd-list.html" 
+   title="W3C QA - Recommended list of DTDs you can use in your Web document">recommended list</a> 
+   and avoid editing that part of your markup by hand.</p>
+  </li>
+</TMPL_IF>
+
+<TMPL_IF NAME="W27">
+  <li class="msg_info" id="W27"><p><span class="err_type"><img src="images/info_icons/info.png" alt="Info" title="Info" /></span> <span class="msg">문서 레벨에 문자셋 정의가 없음</span></p>
+  
+    <p>문서의 HTML <code>meta</code> 요소나 XML 정의 어느 부분에서도 문자셋 인코딩 정보를 발견하지 못했습니다. 특별하게 disk나 CD 등에서 읽혀지거나 저장될 수 있으므로, 문서 자체의 문자셋 인코딩을 정의 하는 것은 자주 권장되는 사항 입니다.</p>
+    <p>기술적인 내용과 더 자세한 사항은 <a href="http://www.w3.org/International/tutorials/tutorial-char-enc/#Slide0250">this tutorial on character encoding</a> 문서를 참조 하십시오.</p>
+  </li>
+</TMPL_IF>
+
+<TMPL_IF NAME="W28">
+  <li class="msg_info" id="W28"><p><span class="err_type"><img src="images/info_icons/info.png" alt="Info" title="Info" /></span> <span class="msg">직접 입력 방식의 검사를 하시는 경우, UTF-8 문자셋을 사용한 것으로 간주 합니다.</span></p>
+  
+    <p>“URI 입력” 또는 “파일 업로드” 검사와는 달리, “직접 입력” 방식의 검사는 검사기의 양식 필드에 붙여넣기 또는 입력한 내용을 검사하게 됩니다. 이 경우, 데이터는 자동으로 UTF-8 문자셋으로 변환이 되고, validator는 당신의 문서의 캐릭터 인코딩를 결정할 필요가 없어 집니다. 그러므로 당신이 문서에 지정한 문자셋 정보는 무시되어 집니다.</p>
+    <p>“직접 입력” 검사와 다른 검사 모드에서 문자셋 인코딩 탐지가 다르게 나온다면, 위의 이유가 원인 입니다. 이것은 validator의 버그도 아니고, 당신의 문서에 문제가 있는 것도 아닙니다.</p>
+  </li>
+</TMPL_IF>
+
+<TMPL_IF NAME="W29">
+  <li class="msg_warn" id="W29"><p><span class="err_type"><img src="images/info_icons/warning.png" alt="Warning" title="Warning" /></span> <span class="msg">HTML-Tidy로 markup 정리 중 에러 발생</span></p>
+    <p>
+      HTML-Tidy로 markup을 정리 하던 중 에러가 발생했습니다. 보고된 에러는 다음과
+      같습니다:<br />
+      <TMPL_VAR NAME="W29_msg" ESCAPE="HTML">
+    </p>
+    <p>
+      It is unlikely that this is a problem with the checked document, but
+      rather a software or configuration issue with the validator.
+    </p>
+  </li>
+</TMPL_IF>
+
+<TMPL_IF NAME="W@@">
+  <li class="msg_warn" id="W@@">
+  
+    <p>
+    </p>
+  </li>
+</TMPL_IF>
+
+</ol><!-- End of "warnings". -->

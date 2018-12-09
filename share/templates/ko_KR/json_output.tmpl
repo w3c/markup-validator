@@ -1,0 +1,29 @@
+Content-Type: application/json; charset=UTF-8
+X-W3C-Validator-Recursion: <TMPL_VAR NAME="depth" DEFAULT="1"><TMPL_IF NAME="fatal_error">
+X-W3C-Validator-Status: 중지<TMPL_ELSE><TMPL_IF NAME="valid_status">
+X-W3C-Validator-Status: <TMPL_VAR NAME="valid_status"></TMPL_IF>
+X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num">
+X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
+
+{
+    "url": "<TMPL_VAR NAME="file_uri">",
+    "메시지": [
+        <TMPL_LOOP NAME="file_errors">
+          {
+              <TMPL_IF NAME="line">"마지막 라인": <TMPL_VAR NAME="line">,</TMPL_IF>
+              <TMPL_IF NAME="char">"마지막 칼럼": <TMPL_VAR NAME="char">,</TMPL_IF>
+              "메시지": <TMPL_VAR NAME="msg">,
+              <TMPL_IF NAME="num">"메시지id": "<TMPL_VAR NAME="num">",</TMPL_IF>
+              <TMPL_IF NAME="expl">"설명": <TMPL_VAR NAME="expl">,</TMPL_IF>
+              <TMPL_IF NAME="src">"추출": <TMPL_VAR NAME="src">,</TMPL_IF>
+              "형식": <TMPL_IF NAME="err_type_err">"에러"<TMPL_ELSE>"경고"<TMPL_IF NAME="err_type_warn">,
+              "부형식": "경고",
+              "부형식": "경고"</TMPL_IF></TMPL_IF>
+          }<TMPL_UNLESS NAME="__last__">,</TMPL_UNLESS>
+        </TMPL_LOOP>
+        ],
+    "소스": {
+        "인코딩": "<TMPL_VAR NAME="file_charset">",
+        "형식": "<TMPL_VAR NAME="file_contenttype">"
+    }
+}

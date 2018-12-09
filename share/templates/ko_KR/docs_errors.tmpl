@@ -1,0 +1,48 @@
+<!--#set var="title" value="Error Explanations for The W3C Markup Validation Service"
+--><!--#set var="relroot" value="../"
+--><!--#include virtual="../header.html" -->
+<div class="doc">
+<h2 id="skip">Explanation of the error messages<br /> for the W3C Markup Validator</h2>
+
+<h3 id="TableOfContents">목차</h3>
+  <div id="toc">
+    <ul>
+	<li><a href="#hasverbose">설명이 있는 에러 메시지</a></li>
+	<li><a href="#noverbose">설명이 없는 에러 메시지</a></li>
+    </ul>
+  </div>
+
+  <div>
+    <h3 id="hasverbose">Validator 에러 리스트와 설명</h3>
+    <p>아래의 모든 validator 의 에러 메시지들은 "설명"을 가지고 있는 메시지들 입니다.</p>
+
+      <dl>
+      <TMPL_LOOP NAME="list_errors_hasverbose">
+        <dt id="ve-<TMPL_VAR NAME="id">"><TMPL_VAR NAME="id">: <TMPL_VAR NAME="original"></dt>
+        <dd><TMPL_VAR NAME="verbose">
+	<p>
+	  <a href="<!--#echo var="relroot" -->feedback.html?errmsg_id=<TMPL_VAR NAME="id">#errormsg"
+	  title="피드백 채널을 통한 에러 메시지 향상 제안">&#x2709;</a>
+	</p>
+	</dd>  
+      </TMPL_LOOP>
+      </dl>
+
+    <h3 id="noverbose">설명이 없는 에러들</h3>
+    <p>다음의 validation 에러들은 설명이 아직 없습니다. <a href="<!--#echo var="relroot" -->feedback.html#errormsg">피드백
+     채널</a>을 통하여 의견을 보내주시면 감사 하겠습니다.</p>
+    <ul>
+	<TMPL_LOOP NAME="list_errors_noverbose">
+        <li id="ve-<TMPL_VAR NAME="id">"><p><TMPL_VAR NAME="id">: <TMPL_VAR NAME="original">
+	  <a href="<!--#echo var="relroot" -->feedback.html?errmsg_id=<TMPL_VAR NAME="id">#errormsg"
+	  title="피드백 채널을 통한 에러 메시지 향상 제안">&#x2709;</a>
+	</p>
+	</li>
+      </TMPL_LOOP>
+    </ul>
+  </div>
+</div><!-- doc -->
+<!--#include virtual="../footer.html" -->
+  </body>
+</html>
+

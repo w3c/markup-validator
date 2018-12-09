@@ -1,0 +1,26 @@
+
+
+        <ul class="navbar" id="jumpbar">
+                <li><strong>Jump To:</strong></li>
+                <TMPL_IF NAME="have_warnings">
+                        <li><a href="#preparse_warnings">주의와 중요한 경고</a></li>
+                </TMPL_IF>
+                <TMPL_IF NAME="has_errors">
+          <li><a title="Result of Validation" href="#result">검사 결과</a></li>
+          </TMPL_IF>
+          <TMPL_IF NAME="VALID">
+                  <li><a title="Information on validation, Icons" href="#congrats">축하 &middot; 아이콘</a></li>
+</TMPL_IF>
+<TMPL_IF NAME="fatal_error">
+                  <li><a href="#fatal-errors">에러로 인하여 검사가 중단됨</a></li>
+</TMPL_IF>
+  <TMPL_IF NAME="opt_show_source">
+          <li><a title="Listing of Source Input" href="#source">소스 리스트</a></li>
+  </TMPL_IF>
+  <TMPL_IF NAME="opt_show_tidy"><TMPL_IF NAME="tidy_output">
+          <li><a title="Listing of cleaned-up Source Input" href="#tidy">Tidy 소스</a></li>
+  </TMPL_IF></TMPL_IF>
+  <TMPL_IF NAME="opt_show_outline">
+          <li><a title="Document Outline" href="#outlineresult">개요</a></li>
+  </TMPL_IF>
+        </ul>
