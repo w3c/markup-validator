@@ -64,7 +64,36 @@ EOF
 delete $ENV{PATH};
 
 our $q    = CGI->new();
-our $lang = 'en_US';      # @@@ TODO: conneg
+our $lang = $q->param('lang') || '';
+my @localizations;
+my @accept_languages = split(/,/, $q->http('Accept-Language'));
+foreach my $aclang (@accept_languages) {
+    if ($lang eq $aclang) {
+
+        # Requested language (from parameters) is available, just use it
+        undef @localizations;
+        last;
+    }
+
+    my $tmp_lang = $aclang;
+    $tmp_lang =~ s/;q=.*//g if ($aclang =~ /;q=/);
+    $tmp_lang =~ s/-/_/g;
+    push @localizations, $tmp_lang;
+}
+push @localizations, 'en_US' if (@localizations);
+
+# looking for template directory with accept-language order
+my $loop_limit = 20;
+while (! -f "$CFG->{Paths}->{Templates}/${lang}/header.tmpl") {
+    foreach my $nego (@localizations) {
+        if (-f "$CFG->{Paths}->{Templates}/${nego}/header.tmpl") {
+            $lang = $nego;
+            last;
+        }
+    }
+    $loop_limit--;
+    last if ($loop_limit == 0);
+}
 
 # Read error message + explanations file
 %RSRC = Config::General->new(

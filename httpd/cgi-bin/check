@@ -301,31 +301,33 @@ $File->{"Default DOCTYPE"}->{"XHTML"} = 'XHTML 1.0 Transitional';
 # 3) English by default
 my $lang = $q->param('lang') || '';
 my @localizations;
-foreach my $lang_available (@{$CFG->{Languages}}) {
-    if ($lang eq $lang_available) {
+my @accept_languages = split(/,/, $q->http('Accept-Language'));
+foreach my $aclang (@accept_languages) {
+    if ($lang eq $aclang) {
 
         # Requested language (from parameters) is available, just use it
         undef @localizations;
         last;
     }
-    push @localizations,
-        [
-        $lang_available, 1,               'text/html', undef,
-        'utf-8',         $lang_available, undef
-        ];
+
+    my $tmp_lang = $aclang;
+    $tmp_lang =~ s/;q=.*//g if ($aclang =~ /;q=/);
+    $tmp_lang =~ s/-/_/g;
+    push @localizations, $tmp_lang;
 }
+push @localizations, 'en_US' if (@localizations);
 
-# If language is not chosen yet, use HTTP-based negotiation
-if (@localizations) {
-    require HTTP::Negotiate;
-    $lang = HTTP::Negotiate::choose(\@localizations);
-}
-
-# HTTP::Negotiate::choose may return undef e.g if sent Accept-Language: en;q=0
-$lang ||= 'en_US';
-
-if ($lang eq "en") {
-    $lang = 'en_US';    # legacy
+# looking for template directory with accept-language order
+my $loop_limit = 20;
+while (! -f "$CFG->{Paths}->{Templates}/${lang}/header.tmpl") {
+    foreach my $nego (@localizations) {
+        if (-f "$CFG->{Paths}->{Templates}/${nego}/header.tmpl") {
+            $lang = $nego;
+            last;
+        }
+    }
+    $loop_limit--;
+    last if ($loop_limit == 0);
 }
 
 $File->{Template_Defaults} = {
