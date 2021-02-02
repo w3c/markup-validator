@@ -20,6 +20,7 @@ import xml.etree.cElementTree as ET
 class ValidatorTestCase(unittest.TestCase):
     """Atomic Test Case for validator test suite"""
     def __init__(self, title=None, description=None, docURI=None, expectResults=None, checker=None):
+        super(ValidatorTestCase, self).__init()
         if docURI:
             self.docURI = docURI
         else: 
