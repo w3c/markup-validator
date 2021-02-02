@@ -134,47 +134,21 @@
 
 <h3 id="bugreport">Bug reports</h3>
     <p>
-      The W3C maintains a public bug tracking database known as <a
-        href="http://www.w3.org/Bugs/Public/">Bugzilla</a> where developers
+      W3C tracks bug reports on the validator through the GitHub repositories
+      where the code is maintained. Developers
       and other technical users can log bug reports and feature suggestions
-      directly. If you are not familiar with issue tracking systems in general
-      or the Bugzilla bug tracker, send your feedback to the <a href="#mailinglist">mailing list</a>
+      directly. If you are not familiar with issue tracking systems in general,
+      send your feedback to the <a href="#mailinglist">mailing list</a>
       and someone on the W3C Validator Team will take care of logging your
       issue as appropriate.
     </p>
+    <p>There are two distinct repositories where issues can be filed; if you're not sure which to use, pick the first one and we will take care of transferring it if necessary:</p>
+    <ol>
+    <li>the <a href="https://github.com/w3c/markup-validator">(X)HTML validator</a> which is used to validate HTML4 and XHTML documents, and provides the shared front-end for markup validation;</li>
+    <li>the <a href="https://github.com/validator/validator/">NU validator</a> which is the most actively maintained project, used to validate HTML5 / HTML LS documents.</li>
+    </ol>
 
-    <p>Before you enter a new bug in this database, we strongly encourage you to check that it is not yet in the list of opened issues. Here are a few links that you can use:</p>
-
-    <ul>
-      <li><a href="http://www.w3.org/Bugs/">W3C issue tracking system homepage</a></li>
-      <li><a href="http://www.w3.org/Bugs/Public/buglist.cgi?product=Validator;bug_status=NEW;bug_status=ASSIGNED;bug_status=REOPENED;order=bugs.bug_id">All open Markup Validator issues</a></li>
-      <li><a href="http://www.w3.org/Bugs/Public/buglist.cgi?product=Validator;order=bugs.bug_id">All Markup Validator issues</a></li>
-      <li><a href="http://www.w3.org/Bugs/Public/query.cgi?product=Validator">Search Markup Validator issues</a></li>
-      <li><a href="http://www.w3.org/Bugs/Public/enter_bug.cgi?product=Validator">New Markup Validator issue</a></li>
-    </ul>
-
-    <form method="get" action="http://www.w3.org/Bugs/Public/buglist.cgi">
-      <p>You may also search the bug database directly:<br />
-      <input name="short_desc_type" type="hidden" value="allwordssubstr" />
-      <input name="product" type="hidden" value="Validator" />
-      <input name="short_desc" id="short_desc" type="text" size="40" maxlength="100" value="" />
-      <input type="submit" name="search" id="bugsearch" value="Search Bug database" />
-      </p>      
-    </form>
-
-    <p>
-      If you encounter an HTML 5 related issue in the W3C validator, before
-      reporting it in the W3C Bugzilla, see if you can reproduce it also with
-      <a href="http://validator.nu/">Validator.nu</a>.  If you can, report
-      it according to the
-      <a href="http://about.validator.nu/#reporting-bugs">Validator.nu
-        bug reporting instructions</a> instead.  This inconvenience is because
-      the W3C validator uses the Validator.nu engine which is developed and
-      maintained by a different team than the W3C validator to validate HTML 5
-      documents, and addressing bug reports directly to the team working on the
-      system in question is likely to result in better and more timely
-      responses.
-    </p>
+    <p>Before you enter a new bug, we strongly encourage you to check that it is not yet in the list of opened issues.</p>
 
 </div>
 
