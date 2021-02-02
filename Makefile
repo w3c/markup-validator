@@ -13,7 +13,7 @@ PERLTIDY = perltidy --profile=misc/perltidyrc --backup-and-modify-in-place \
 	--backup-file-extension=/
 PERLCRITIC = perlcritic --profile misc/perlcriticrc
 
-YUICOMPRESSOR = java -jar $(wildcard /usr/share/java/yuicompressor*.jar)
+YUICOMPRESSOR = java -jar /usr/share/yui-compressor/yui-compressor.jar
 GZIP = gzip -9n
 
 VALIDATOR_URI = http://localhost/w3c-validator/check
