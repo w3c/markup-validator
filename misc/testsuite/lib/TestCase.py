@@ -86,7 +86,7 @@ class ValidatorTestSuite:
         try:
             tree = ET.parse(test_file_handle)
             ts_node = tree.getroot()
-        except SyntaxError, v:
+        except SyntaxError as v:
             raise v
         return ts_node
 
@@ -97,12 +97,12 @@ class ValidatorTestSuite:
             level = 0
         testcollection = ValidatorTestCollection()
         testcollection.level = level
-        if collection_node.attrib.has_key("id"):
+        if "id" in collection_node.attrib:
             testcollection.collection_id = collection_node.attrib["id"]
         else:
             testcollection.collection_id = self.randomId()
         
-        for child_node in collection_node.getchildren():
+        for child_node in list(collection_node):
             if child_node.tag == "{http://purl.org/dc/elements/1.1/}title":
                 testcollection.title = child_node.text
             if child_node.tag == "test":
@@ -114,7 +114,7 @@ class ValidatorTestSuite:
                     testcollection.addTest(testcase)
         if collection_node.tag == "collection":
             self.collections.append(testcollection)
-        for child_node in collection_node.getchildren():
+        for child_node in list(collection_node):
             if child_node.tag == "collection":
                 self.readTestCollection(child_node, level=level+1)
 
@@ -133,7 +133,7 @@ class ValidatorTestSuite:
         test_uri = testcase_node.findtext(".//uri")
         expect_elt = testcase_node.find(".//expect")
         expected = dict()
-        for child_expect in expect_elt.getchildren():
+        for child_expect in list(expect_elt):
             expected[child_expect.tag] = child_expect.text
         case = ValidatorTestCase(title=title, description=descr, docURI=test_uri, expectResults=expected, checker=self.checker)
         return case
