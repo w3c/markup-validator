@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # encoding: utf-8
 """
 W3CLikCheckerClient.py
@@ -13,7 +13,7 @@ import sys
 import os
 import re
 import unittest
-import urllib, urllib2
+import urllib
 import xml.etree.cElementTree as ET
 
 class W3CValidatorHTTP:
@@ -30,8 +30,9 @@ class W3CValidatorHTTP:
         data = urllib.quote(TC_uri, "")
         final_checker_URI = self.check_URI % {"URI": data }
         try:
-            response = urllib2.urlopen(final_checker_URI)
-        except (urllib2.HTTPError, urllib2.URLError) as exc:
+            from urllib.request import urlopen
+            response = urlopen(final_checker_URI)
+        except (urllib.HTTPError, urllib.URLError) as exc:
             return (None, str(exc) + ": " + final_checker_URI)
         return (response, None)
 
