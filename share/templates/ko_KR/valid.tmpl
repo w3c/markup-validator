@@ -1,0 +1,136 @@
+<div id="result">
+
+        <TMPL_IF NAME="have_warnings">
+          <TMPL_INCLUDE NAME="warnings.tmpl">
+        </TMPL_IF>
+
+<TMPL_IF NAME="has_errors">
+<h3 id="warning_loop">검사 출력<TMPL_IF NAME="number_of_warnings_is_1">: 1 경고</TMPL_IF><TMPL_IF NAME="number_of_warnings_is_plural">: <TMPL_VAR NAME="valid_warnings_num" ESCAPE="HTML"> 경고</TMPL_IF>
+        </h3>
+    <p>
+      하단은 문서를 검사할 때 발생한 경고 메시지 리스트 입니다.
+    </p>
+    <TMPL_IF NAME="opt_group_errors">
+        <TMPL_INCLUDE NAME="error_loop_grouped.tmpl">
+    <TMPL_ELSE>
+        <TMPL_INCLUDE NAME="error_loop.tmpl">
+    </TMPL_IF>
+</TMPL_IF>
+
+<h3 id="congrats">축하합니다.</h3>
+  <p>
+<TMPL_IF NAME="is_upload">
+    업로드된 문서 "<TMPL_VAR NAME="file_uri" ESCAPE="HTML">" 는(은)
+<TMPL_ELSE>
+  <TMPL_IF NAME="is_direct_input">
+    업로드된 문서는
+  <TMPL_ELSE>
+    &lt;<a href="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">"><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></a>&gt;
+    문서는 
+  </TMPL_IF>
+</TMPL_IF>
+<TMPL_IF NAME="is_tentative">
+    <em>제한적으로</em> <TMPL_VAR NAME="file_version" ESCAPE="HTML"> 을 준수합니다.
+    이 의미는 fallback 또는 override 매커니즘으로,
+    형식적인 검사를 수행하여 성공했음을 의미합니다. 다시 말해, validator 가 상단의
+    내용과 같은 자동을 처리한 부분을 처리해 주지 않는다면, 이 페이지는
+    <TMPL_VAR NAME="file_version" ESCAPE="HTML"> 를 준수한 다고 할 수는 없습니다.
+    <strong>그러므로, 위의 사항을 반영하시기 바랍니다.</strong>
+<TMPL_ELSE>
+    <TMPL_VAR NAME="file_version" ESCAPE="HTML">을 준수하는 것으로 검사 되었습니다.
+
+    <TMPL_IF NAME="xmlwf_only">이 의미는 정확한 문서 형식이 결정이 되지 않았음을 의미
+    합니다. 하지만 문서는 문법 체크에서 XML 의 형식을 잘 지키고 있는 것으로 보입니다.
+    문서의 형식을 정확하게 체크하고 싶다면, validator 의 "문서 형식:" 옵션을 사용하십시오.
+    <TMPL_ELSE>
+    이 의미는 검사를 수행한 페이지가 "<TMPL_VAR NAME="file_version" ESCAPE="HTML">" 의
+    조건에 충족을 하며, validation을 성공적으로 수행을 했음을 의미합니다.
+    </TMPL_IF>
+</TMPL_IF>
+    파서는 다음의 기술을 기반으로 검사를 하도록 구현 되었습니다:<br />
+    <TMPL_LOOP NAME="parsers">
+    <TMPL_UNLESS NAME="__first__"><TMPL_IF NAME="__last__">and </TMPL_IF></TMPL_UNLESS>
+    <a href="<TMPL_VAR NAME="link" ESCAPE="HTML">"><TMPL_VAR NAME="name" ESCAPE="HTML"></a><TMPL_IF NAME="type"> (<TMPL_VAR NAME="type" ESCAPE="HTML">)</TMPL_IF><TMPL_IF NAME="__inner__">,</TMPL_IF><TMPL_IF NAME="__last__">.</TMPL_IF>
+    </TMPL_LOOP>
+  </p>
+<TMPL_IF NAME="badge_uri">
+<h4>당신의 웹 페이지에 "valid" Icon을 달수 있습니다.</h4>
+  <p>
+    방문자들에게 당신의 웹페이지가 표준을 준수함을 보여주고 싶다면, 당신의
+    웹페이지에 이 icon 을 사용할 수 있습니다. 아래의 코드를 당신의 웹페이지에
+    삽입을 하여 이 아이콘을 보여 주도록 하십시오:
+  </p>
+  <img
+    class="inline-badge" src="<TMPL_IF NAME="local_badge_uri"><TMPL_VAR NAME="local_badge_uri" ESCAPE="HTML"><TMPL_ELSE><TMPL_VAR NAME="badge_uri" ESCAPE="HTML"></TMPL_IF>"
+    alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"
+    <TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF>
+    <TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF>
+     /> <pre class="badgeSnippet">
+  &lt;p<TMPL_IF NAME="badge_rdfa"> about=""
+     resource="<TMPL_VAR NAME="badge_rdfa">"
+     rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"</TMPL_IF>&gt;
+    &lt;a href="<TMPL_VAR NAME="env_home_page" ESCAPE="HTML">check?uri=referer"<TMPL_IF NAME="badge_onclick">
+      <TMPL_VAR NAME="badge_onclick">="this.href=this.href.replace(/referer$/,encodeURIComponent(document.URL))"</TMPL_IF>&gt;&lt;img
+      src="<TMPL_VAR NAME="badge_uri" ESCAPE="HTML">"<TMPL_IF NAME="badge_alt"> alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"</TMPL_IF><TMPL_IF NAME="badge_h"> height="<TMPL_VAR NAME="badge_h">"</TMPL_IF><TMPL_IF NAME="badge_w"> width="<TMPL_VAR NAME="badge_w">"</TMPL_IF><TMPL_VAR NAME="badge_tagc">&gt;&lt;/a&gt;
+  &lt;/p&gt;
+  </pre>
+  <TMPL_IF NAME="badge_alt_uri">
+  <img
+    class="inline-badge" src="<TMPL_IF NAME="local_alt_badge_uri"><TMPL_VAR NAME="local_alt_badge_uri" ESCAPE="HTML"><TMPL_ELSE><TMPL_VAR NAME="badge_alt_uri" ESCAPE="HTML"></TMPL_IF>"
+    alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"
+    <TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF>
+    <TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF>
+     /> <pre class="badgeSnippet">
+  &lt;p<TMPL_IF NAME="badge_rdfa"> about=""
+     resource="<TMPL_VAR NAME="badge_rdfa">"
+     rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"</TMPL_IF>&gt;
+&lt;a href="<TMPL_VAR NAME="env_home_page" ESCAPE="HTML">check?uri=referer"<TMPL_IF NAME="badge_onclick">
++      <TMPL_VAR NAME="badge_onclick">="this.href=this.href.replace(/referer$/,encodeURIComponent(document.URL))"</TMPL_IF><&gt;&lt;img
++      src="<TMPL_VAR NAME="badge_alt_uri" ESCAPE="HTML">"<TMPL_IF NAME="badge_alt"> alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"</TMPL_IF><TMPL_IF NAME="badge_h"> height="<TMPL_VAR NAME="badge_h">"</TMPL_IF><TMPL_IF NAME="badge_w"> width="<TMPL_VAR NAME="badge_w">"</TMPL_IF><TMPL_VAR NAME="badge_tagc">&gt;&lt;/a&gt;
+  &lt;/p&gt;
+  </pre>
+  </TMPL_IF>
+  <p>
+    이 <a href="<TMPL_VAR NAME="badge_uri" ESCAPE="HTML">">PNG 형식의 파일</a>을
+    다운로드 받을 수 있다면, 로컬 웹 디렉토리에 저장을 한 후에, 상단의 HTML 코드를
+    이 서버가 아닌 로컬 이미지 경로로 변경하여 링크를 하십시오. KLDP Validator Service 에서는
+    여러가지 색상의 Banner 를 제공합니다. <a href="//validator.kldp.org/w3cimgs/">http://validator.kldp.org/w3cimgs/</a> 를 방문해 보십시오.
+  <TMPL_IF NAME="file_https_note">
+    이 <a href="docs/help.html#icon-https">icon</a>과
+    <a href="docs/help.html#faq-referer">"uri=referer" 기능</a>에 대한
+    보안 프로토콜을 통한 문서 전송과 관련된 우리의 도움말 항목을 참고하십시오.
+  </TMPL_IF>
+  </p>
+</TMPL_IF>
+<TMPL_UNLESS NAME="is_upload">
+  <TMPL_UNLESS NAME="is_direct_input">
+<h4>이 결과를 연결</h4>
+  <p>
+    만약 <em>이 페이지</em>에 대한 링크를 생성하고 싶거나 (예를 들어, 이
+    유효성 검사의 결과), 또는 추후에 검사를 쉽게 하려면
+    &lt;<a href="<TMPL_VAR NAME="file_thispage" ESCAPE="HTML">"><TMPL_VAR NAME="file_thispage" ESCAPE="HTML"></a>&gt;
+    를 사용하거나 또는 이 페이지를 북마킹 하는 방법이 있습니다.
+  </p>
+  </TMPL_UNLESS>
+</TMPL_UNLESS>
+<h4>CSS 스타일 시트 검사</h4>
+  <p>
+    만약 문서에 <a href="http://www.w3.org/Style/CSS/">CSS</a> 를 사용한다면, 또한
+    W3c 의 <a href="http://css-validator.kldp.org/">CSS Validation 서비스</a> 를
+    이용하여
+<TMPL_IF NAME="is_upload">
+    검사
+<TMPL_ELSE>
+  <TMPL_IF NAME="is_direct_input">
+  <TMPL_ELSE>
+    <a title="KLDP (W3C) CSS Validator 에서 CSS 검사"
+    href="http://css-validator.kldp.org/validator?uri=<TMPL_VAR NAME="file_uri" ESCAPE="URL">">CSS
+    유효성 검사</a>
+  </TMPL_IF>
+</TMPL_IF>
+    검사를 할 수 있습니다.
+  </p>
+
+<TMPL_INCLUDE NAME="backtop.tmpl">
+
+</div><!-- end of "result" -->

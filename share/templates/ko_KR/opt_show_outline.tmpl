@@ -1,0 +1,20 @@
+  <div id="outlineresult">
+    <h3>문서 개요</h3>
+    <p>
+      아래는 이 문서의 개요를 보여 줍니다. 개요는 자동으로 heading tag
+      (<code>&lt;h1&gt;</code> 부터 <code>&lt;h6&gt;</code>) 를 분석하여
+      출력을 합니다.
+    </p>
+<pre class="outline">
+<TMPL_VAR NAME="file_outline" ESCAPE="HTML"></pre>
+    <p>
+      개요가 제대로 보이지 않는다면, heading tag 가 적당하게 사용되지 못하고
+      있는 것 같습니다. (표제는 문서의 논리적인 구조를 반영해야 합니다.;
+      단순히 폰트 크기를 변경하기 위해서 heading tag 를 사용하지는 마십시오.)
+    </p>
+    <p>개요를 보기 전에 문서의 의미 구조를 시험해 보기를 원한다면,
+      <a href="http://www.w3.org/2003/12/semantic-extractor.html">Semantic data extractor</a>를
+      시도해 보십시오.
+    </p>
+  </div>
+  <TMPL_INCLUDE NAME="backtop.tmpl">

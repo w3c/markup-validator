@@ -1,0 +1,159 @@
+Content-Type: application/xml; charset=UTF-8
+X-W3C-Validator-Recursion: <TMPL_VAR NAME="depth" DEFAULT="1"><TMPL_IF NAME="fatal_error">
+X-W3C-Validator-Status: Abort<TMPL_ELSE><TMPL_IF NAME="valid_status">
+X-W3C-Validator-Status: <TMPL_VAR NAME="valid_status"></TMPL_IF>
+X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num">
+X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<observationresponse xmlns="http://www.w3.org/2009/10/unicorn/observationresponse" ref="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">" xml:lang="en">
+
+<TMPL_IF NAME="is_html5"><TMPL_ELSE><TMPL_IF NAME="VALID">
+<status value="passed"/>
+
+<message type="info" id="valid">
+	<title>This Page Is Valid <TMPL_VAR NAME="file_version" ESCAPE="HTML">!</title>
+	<description>
+		<TMPL_IF NAME="is_upload">
+			The uploaded document "<TMPL_VAR NAME="file_uri" ESCAPE="HTML">"
+		<TMPL_ELSE>
+			<TMPL_IF NAME="is_direct_input">
+				The uploaded document
+			<TMPL_ELSE>
+				The document located at &lt;<a href="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">"><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></a>&gt;
+			</TMPL_IF>  
+		</TMPL_IF>
+		<TMPL_IF NAME="is_tentative">
+			was <em>tentatively</em> checked as <TMPL_VAR NAME="file_version" ESCAPE="HTML">.
+			This means that with the use of some fallback or override mechanism, 
+			we successfully performed a formal validation of it.
+			In other words, the document would validate as 
+			<TMPL_VAR NAME="file_version" ESCAPE="HTML"> if you changed the markup
+			to match the changes we have performed automatically, but 
+			<em>it will not be valid until you make these changes</em>.
+		<TMPL_ELSE>
+			was successfully checked as 
+			<TMPL_IF NAME="xmlwf_only">well-formed</TMPL_IF>
+			<TMPL_VAR NAME="file_version" ESCAPE="HTML">.  
+			<TMPL_IF NAME="xmlwf_only">
+				This means that we were not able to determine 
+				the exact document type, but that the document passed the XML well-formedness
+				syntax check. If you wish to wish to perform formal validation of the document,
+				you can use the "Document Type:" option of the validator.
+			<TMPL_ELSE>
+				This means that the resource in question identified itself as
+				"<TMPL_VAR NAME="file_version" ESCAPE="HTML">" and that we successfully
+				performed a formal validation of it.
+			</TMPL_IF>
+		</TMPL_IF>
+			The parser implementations we used for this check are based on
+			<TMPL_LOOP NAME="parsers">
+			<TMPL_UNLESS NAME="__first__"><TMPL_IF NAME="__last__">and </TMPL_IF></TMPL_UNLESS>
+			<a href="<TMPL_VAR NAME="link" ESCAPE="HTML">"><TMPL_VAR NAME="name" ESCAPE="HTML"></a><TMPL_IF NAME="type"> (<TMPL_VAR NAME="type" ESCAPE="HTML">)</TMPL_IF><TMPL_IF NAME="__inner__">,</TMPL_IF><TMPL_IF NAME="__last__">.</TMPL_IF>
+			</TMPL_LOOP>
+		<TMPL_IF NAME="badge_uri">
+			<p>To show your readers that you have taken the care to create an
+			interoperable Web page, you may display this icon on any page
+			that validates. Here is the HTML you could use to add this icon
+			to your Web page:</p>
+			<img class="inline-badge" src="<TMPL_VAR NAME="badge_uri" ESCAPE="HTML">"
+				alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"
+				<TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF>
+				<TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF>
+			/>
+<pre><code>&lt;p<TMPL_IF NAME="badge_rdfa"> about="" 
+	resource="<TMPL_VAR NAME="badge_rdfa">" 
+	rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"</TMPL_IF>&gt;
+	&lt;a href="<TMPL_VAR NAME="env_home_page" ESCAPE="HTML">check?uri=referer"<TMPL_IF NAME="badge_onclick">
+		<TMPL_VAR NAME="badge_onclick">="this.href=this.href.replace(/referer$/,encodeURIComponent(document.URL))"</TMPL_IF>&gt;&lt;img
+		src="<TMPL_VAR NAME="badge_uri" ESCAPE="HTML">"<TMPL_IF NAME="badge_alt"> alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"</TMPL_IF> style="border: 0<TMPL_IF NAME="badge_h">; height: <TMPL_VAR NAME="badge_h">px</TMPL_IF><TMPL_IF NAME="badge_w">; width: <TMPL_VAR NAME="badge_w">px</TMPL_IF>"<TMPL_VAR NAME="badge_tagc">&gt;
+	&lt;/a&gt;
+&lt;/p&gt;</code></pre>
+
+			<TMPL_IF NAME="badge_alt_uri">
+				<img class="inline-badge" src="<TMPL_VAR NAME="badge_alt_uri" ESCAPE="HTML">"
+				alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"
+				<TMPL_IF NAME="badge_h">height="<TMPL_VAR NAME="badge_h">"</TMPL_IF>
+				<TMPL_IF NAME="badge_w">width="<TMPL_VAR NAME="badge_w">"</TMPL_IF>
+				/>
+<pre><code>&lt;p<TMPL_IF NAME="badge_rdfa"> about="" 
+	resource="<TMPL_VAR NAME="badge_rdfa">" 
+	rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/"</TMPL_IF>&gt;
+	&lt;a href="<TMPL_VAR NAME="env_home_page" ESCAPE="HTML">check?uri=referer"<TMPL_IF NAME="badge_onclick">
+		<TMPL_VAR NAME="badge_onclick">="this.href=this.href.replace(/referer$/,encodeURIComponent(document.URL))"</TMPL_IF>&gt;&lt;img
+		src="<TMPL_VAR NAME="badge_alt_uri" ESCAPE="HTML">"<TMPL_IF NAME="badge_alt"> alt="<TMPL_VAR NAME="badge_alt" ESCAPE="HTML">"</TMPL_IF> style="border: 0<TMPL_IF NAME="badge_h">; height: <TMPL_VAR NAME="badge_h">px</TMPL_IF><TMPL_IF NAME="badge_w">; width: <TMPL_VAR NAME="badge_w">px</TMPL_IF>"<TMPL_VAR NAME="badge_tagc">&gt;
+	&lt;/a&gt;
+&lt;/p&gt;</code></pre>
+
+			</TMPL_IF>
+				<p>A <a href="http://www.w3.org/QA/Tools/Icons">full list</a> of icons, with links to alternate formats and colors, is available: 
+				If you like, you can download a copy of the icons
+				to keep in your local web directory, and change the HTML fragment
+				above to reference your local image rather than the one on this server.</p>
+		</TMPL_IF>
+		<TMPL_UNLESS NAME="is_upload">
+			<TMPL_UNLESS NAME="is_direct_input">
+				If you would like to create a link to <em>this</em> page (i.e., this
+				validation result) to make it easier to revalidate this page in the
+				future or to allow others to validate your page, the URI is
+				&lt;<a href="<TMPL_VAR NAME="file_thispage" ESCAPE="HTML">"><TMPL_VAR NAME="file_thispage" ESCAPE="HTML"></a>&gt;
+				(or you can just add the current page to your bookmarks or hotlist).
+			</TMPL_UNLESS>
+		</TMPL_UNLESS>
+	</description>
+</message>
+</TMPL_IF></TMPL_IF>
+
+<TMPL_IF NAME="is_html5"><message type="warning" id="obsolete-interface">
+	<context/>
+	<title>This interface to HTML5 document checking is obsolete. Use an interface to <TMPL_VAR NAME="htmlchecker_url"> instead.</title>
+	<description>
+		<p>
+			The method you used to check this document relies on an obsolete interface
+			that will become permanently unavailable in the near future.
+			The currently-supported method is to instead use the W3C Nu Html Checker at
+			<a href="<TMPL_VAR NAME='htmlchecker_url'>"><TMPL_VAR NAME="htmlchecker_url"></a>.
+			See the documentation on the W3C Nu Html Checker's
+			<a href="https://github.com/validator/validator/wiki/Service-»-Input-»-GET">GET interface</a>,
+			<a href="https://github.com/validator/validator/wiki/Service-»-Input-»-POST-body">POST interface</a>,
+			and
+			<a href="https://github.com/validator/validator/wiki/Service-»-Common-params">the parameters</a>
+			that both interfaces provide, such as the
+			<a href="https://github.com/validator/validator/wiki/Output-»-JSON">out=json</a>,
+			<a href="https://github.com/validator/validator/wiki/Output-»-XML">out=xml</a>,
+			and
+			<a href="https://github.com/validator/validator/wiki/Output-»-GNU">out=gnu</a>
+			parameters/output-formats.
+		</p>
+		<p>
+			For comments or questions about this message, send mail to
+			<a href="mailto:www-validator@w3.org">www-validator@w3.org</a>
+			or to
+			<a href="https://twitter.com/w3c">@w3c</a> on twitter.
+		</p>
+	</description>
+</message></TMPL_IF>
+
+<TMPL_IF NAME="have_warnings">
+	<TMPL_INCLUDE NAME="ucn_warnings.tmpl">
+</TMPL_IF>
+
+<TMPL_LOOP NAME="file_errors">
+
+<TMPL_IF NAME="err_type_err">
+<message type="error" id="<TMPL_VAR NAME="num">">
+	<context <TMPL_IF NAME="line">line="<TMPL_VAR NAME="line">"</TMPL_IF> <TMPL_IF NAME="char">column="<TMPL_VAR NAME="char">"</TMPL_IF>><TMPL_VAR NAME="src"></context>
+	<title><TMPL_VAR NAME="msg" ESCAPE="HTML"></title>
+</message>
+</TMPL_IF>
+
+<TMPL_IF NAME="err_type_warn">
+<message type="warning" id="<TMPL_VAR NAME="num">">
+	<context <TMPL_IF NAME="line">line="<TMPL_VAR NAME="line">"</TMPL_IF> <TMPL_IF NAME="char">column="<TMPL_VAR NAME="char">"</TMPL_IF>><TMPL_VAR NAME="src"></context>
+	<title><TMPL_VAR NAME="msg" ESCAPE="HTML"></title>
+</message>
+</TMPL_IF>
+
+</TMPL_LOOP>
+
+</observationresponse>

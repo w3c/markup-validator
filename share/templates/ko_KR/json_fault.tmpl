@@ -1,0 +1,81 @@
+Content-Type: application/json; charset=UTF-8
+<TMPL_IF NAME="fatal_referer_error">Vary: Referer
+</TMPL_IF>X-W3C-Validator-Recursion: <TMPL_VAR NAME="depth" DEFAULT="1"><TMPL_IF NAME="fatal_error">
+X-W3C-Validator-Status: Abort<TMPL_ELSE><TMPL_IF NAME="valid_status">
+X-W3C-Validator-Status: <TMPL_VAR NAME="valid_status"></TMPL_IF>
+X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num">
+X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
+
+{
+    "messages": [{
+    "type": "error",
+    "subType": "fatal",
+
+<TMPL_IF NAME="fatal_no_checker">
+    "message": "External Checker not available",
+    "messageid": "fatal_no_checker",
+    "errordetail": "Checking the Document Type of this document requires the help of an external tool which was either not enabled in this validator, or is currently unavailable. Check in the validator's system configuration that <TMPL_IF NAME='fatal_missing_checker'><TMPL_VAR NAME='fatal_missing_checker'> is enabled and functional<TMPL_ELSE>all external checkers are enabled, and test if they are responsive</TMPL_IF>. <TMPL_IF NAME='fatal_checker_error'>The error encountered was: <TMPL_VAR NAME='fatal_checker_error'></TMPL_IF>"
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_transcode_error">
+    "message": "Transcode Error",
+    "messageid": "fatal_transcode_error",
+    "errordetail": "A fatal error occurred when attempting to transcode the character encoding of the document. Either we do not support this character encoding (\"<TMPL_VAR NAME='fatal_transcode_charset'>\") yet, or you have specified a non-existent character encoding (often a misspelling). The error was: \"<TMPL_VAR NAME='fatal_transcode_errmsg'>\"."
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_decode_error">
+    "message": "Decode Error",
+    "messageid": "fatal_decode_error",
+    "errordetail": "A fatal error occurred when attempting to decode response body from <TMPL_VAR NAME='fatal_decode_uri'>. Either we do not support the content encoding specified (\"<TMPL_VAR NAME='fatal_decode_cenc'>\"), or an error occurred while decoding it. The error was: \"<TMPL_VAR NAME='fatal_decode_errmsg'>\"."
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_byte_error">
+    "message": "Incorrect Bytes detected",
+    "messageid": "fatal_byte_error",
+    "errordetail": "Sorry, I am unable to validate this document because on line <TMPL_VAR NAME='fatal_byte_lines'>. it contained one or more bytes that I cannot interpret as <TMPL_VAR NAME='fatal_byte_charset'> (in other words, the bytes found are not valid values in the specified Character Encoding). Please check both the content of the file and the character encoding indication."
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_uri_error">
+    "message": "URL scheme not supported",
+    "messageid": "fatal_uri_error",
+    "errordetail": "Sorry, this type of URL scheme (<TMPL_VAR NAME='fatal_uri_scheme'>) is not supported by this service. Please check that you entered the URL correctly."
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_no_content">
+    "message": "No Content to validate",
+    "messageid": "fatal_no_content",
+    "errordetail": "Sorry, I could not find any content to validate. It is probable that you clicked on the \"check\" button without choosing a URL, a file or entering the content of the document you would like to validate."
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_ip_error">
+    "message": "IP not public",
+    "messageid": "fatal_ip_error",
+    "errordetail": "Sorry, the IP address <TMPL_IF NAME='fatal_ip_hostname'>of </TMPL_IF><TMPL_VAR NAME='fatal_ip_host'> is not public. For security reasons, validating resources located at non-public IP addresses has been disabled in this service."
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_http_error">
+    "message": "HTTP Error",
+    "messageid": "fatal_http_error",
+    "errordetail": "Unexpected HTTP response <TMPL_VAR NAME='fatal_http_code'> <TMPL_VAR NAME='fatal_http_msg'> while trying to retrieve <TMPL_VAR NAME='fatal_http_uri'>. <TMPL_IF NAME='fatal_http_dns'>If you made recent changes to your domain name (DNS) configuration, you may also want to <a href="http://www.squish.net/dnscheck/">check that your domain records are correct</a>, or ask your hosting company to do so. </TMPL_IF><TMPL_IF NAME='fatal_http_warn'>More information about why this is happening may be available from warnings reported by the validator's HTTP (and other protocol) client library:<TMPL_VAR NAME='fatal_http_warn'></TMPL_IF><TMPL_IF NAME='fatal_http_no200'>You can choose to validate the received error document (<TMPL_VAR NAME='fatal_http_no200'>) for example if the URL intentionally points to one (there is also a \"Validate error pages\" option in the options view for this purpose).</TMPL_IF>"
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_mime_error">
+    "message": "unsupported or unrecognized Content Type",
+    "messageid": "fatal_mime_error",
+    "errordetail": "Sorry, I am unable to validate this document because its content type is <TMPL_VAR NAME='fatal_mime_ct'>, which is not currently supported by this service."
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_parse_extid_error">
+    "message": "Fatal Error: <TMPL_VAR NAME='fatal_parse_extid_msg'>",
+    "messageid": "fatal_parse_extid_error",
+    "errordetail": "I could not parse this document, because it makes reference to a system-specific file instead of using a well-known public identifier to specify the type of markup being used."
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_referer_error">
+    "message": "No Referer header found!",
+    "messageid": "fatal_referer_error",
+    "errordetail": "You have requested we check the referring page, but your browser did not send the HTTP \"Referer\" header field. This can be for several reasons, but most commonly it is because your browser does not know about this header, has been configured not to send one, transferred the referring document over a secure protocol such as https but is accessing the validator over ordinary non-secure http, or is behind a proxy or firewall that strips it out of the request before it reaches us."
+</TMPL_IF>
+
+    }]
+}

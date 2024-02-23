@@ -1,0 +1,171 @@
+<TMPL_IF NAME="VALID">
+  <TMPL_IF NAME="is_tentative">
+    <h2 class="tentative_valid">이 문서는 <em>모호하게</em>
+    <TMPL_VAR NAME="file_version" ESCAPE="HTML">로 판단 되었습니다.</h2>
+  <TMPL_ELSE>
+    <h2 class="valid">이 문서는 <TMPL_VAR NAME="file_version" ESCAPE="HTML">
+    <TMPL_IF NAME="xmlwf_only">을 준수<TMPL_ELSE>규약을 준수</TMPL_IF> 합니다!</h2>
+  </TMPL_IF>
+<TMPL_ELSE>
+  <TMPL_IF NAME="fatal_error">
+  <h2 id="results" class="invalid">죄송합니다! 이 문서를 체크할 수 없습니다.</h2>
+  <TMPL_ELSE>  
+  <h2 id="results" class="invalid"><TMPL_VAR NAME="file_version" ESCAPE="HTML">로 문서를 검사하는 중에 에러가 발견 되었습니다!</h2>
+  </TMPL_IF>  
+</TMPL_IF>  
+
+
+<TMPL_IF NAME="file_uri">
+<TMPL_IF NAME="is_upload">  
+<form id="form" method="post" enctype="multipart/form-data" action="check">
+<TMPL_ELSE>
+  <TMPL_IF NAME="is_direct_input">
+    <form id="form" method="post" enctype="multipart/form-data" action="check">
+  <TMPL_ELSE>
+    <form id="form" method="get" action="check">
+  </TMPL_IF>
+</TMPL_IF>
+  <table class="header">
+    <tr>
+    <th>결과:</th>
+    <TMPL_IF NAME="VALID">
+    <td colspan="2" class="valid">
+      <TMPL_IF NAME="is_tentative">
+        제한적으로 통과<TMPL_IF Name="valid_warnings_num">, <strong class="has_warnings"><TMPL_VAR NAME="valid_warnings_num"> 경고</strong></TMPL_IF>
+      <TMPL_ELSE>
+        통과<TMPL_IF Name="valid_warnings_num">, <strong class="has_warnings"><TMPL_VAR NAME="valid_warnings_num"> 경고</strong></TMPL_IF>
+      </TMPL_IF>
+    <TMPL_ELSE>
+    <td colspan="2" class="invalid">
+      <TMPL_IF NAME="number_of_errors_is_1">1 에러</TMPL_IF><TMPL_IF NAME="number_of_errors_is_plural"><TMPL_VAR NAME="valid_errors_num" ESCAPE="HTML"> 에러</TMPL_IF><TMPL_IF NAME="valid_warnings_num">, <TMPL_VAR NAME="valid_warnings_num"> 경고</TMPL_IF>
+      <TMPL_IF NAME="number_of_errors_is_0">Invalid<!-- this case where validation fails but no error is listed should never happen --></TMPL_IF>
+    </TMPL_IF>
+    </td>
+    </tr>
+    <tr>
+<TMPL_IF NAME="is_upload">
+  <th><label title="업로드 하여 검사할 로컬 파일 선택" for="uploaded_file">파일</label>:</th>
+  <td colspan="2">
+    
+    <input type="file" id="uploaded_file" name="uploaded_file" size="30" />
+    <p class="revalidate_instructions">업로드 파일을 재검사하기를 원하면 상단의 파일 선택 박스를 이용하십시오. <TMPL_VAR NAME="file_uri" ESCAPE="HTML"></p>
+  </td>
+
+<TMPL_ELSE>
+  <TMPL_IF NAME="is_direct_input">
+          <th><label title="문서의 소스를 업로드" for="fragment">소스</label>:</th><td colspan="2"><textarea id="fragment" name="fragment" rows="12" cols="80"><TMPL_LOOP NAME="file_source"><TMPL_VAR NAME="file_source_line" ESCAPE="HTML">
+</TMPL_LOOP></textarea></td>
+  <TMPL_ELSE>
+      <th><label title="Validate 페이지 주소" for="uri">주소</label>:</th>
+      <td colspan="2"><input type="text" id="uri" name="uri" value="<TMPL_VAR NAME="file_uri" ESCAPE="HTML">" size="50" /></td>
+  </TMPL_IF>
+</TMPL_IF>
+    </tr>
+<TMPL_IF NAME="opt_verbose">
+    <tr><th>마지막 변경:</th><td colspan="2"><TMPL_VAR NAME="file_modified" ESCAPE="HTML" DEFAULT="(undefined)"></td></tr>
+    <tr><th>서버 태그:</th><td colspan="2"><TMPL_VAR NAME="file_server" ESCAPE="HTML" DEFAULT="(undefined)"></td></tr>
+    <tr><th>문서 크기:</th><td colspan="2"><TMPL_VAR NAME="file_size" ESCAPE="HTML" DEFAULT="(undefined)"></td></tr>
+    <tr><th>문서 형식:</th><td colspan="2"><TMPL_VAR NAME="file_contenttype" ESCAPE="HTML" DEFAULT="(undefined)"></td></tr>
+</TMPL_IF>
+  <TMPL_LOOP NAME="debug">
+    <tr><th><TMPL_VAR NAME="name" ESCAPE="HTML">:</th><td colspan="2"><TMPL_VAR NAME="value" ESCAPE="HTML" DEFAULT="(undefined)"></td></tr>
+  </TMPL_LOOP>
+<TMPL_IF NAME="file_charset">
+  <tr>
+    <th><label title="문자셋" for="charset">문자셋</label>:</th>
+    <td><TMPL_VAR NAME="file_charset" ESCAPE="HTML"></td><td><TMPL_INCLUDE NAME="popup_charset.tmpl"></td>
+  </tr>
+<TMPL_ELSE>
+  <tr><th>문자셋:</th><td colspan="2"><TMPL_INCLUDE NAME="popup_charset.tmpl"></td></tr>
+</TMPL_IF>
+<TMPL_IF NAME="file_version">
+  <tr>
+    <th><label for="doctype" title="문서형식">문서형식</label>:</th>
+    <td><TMPL_VAR NAME="file_version" ESCAPE="HTML"></td><td><TMPL_INCLUDE NAME="popup_doctype.tmpl"></td>
+  </tr>
+<TMPL_ELSE>
+  <tr><th>문서형식:</th><td colspan="2"><TMPL_INCLUDE NAME="popup_doctype.tmpl"></td></tr>
+</TMPL_IF>
+<TMPL_IF NAME="root_element">
+  <tr>
+    <th>루트 요소:</th>
+    <td colspan="2"><TMPL_VAR NAME="root_element" ESCAPE="HTML"></td>
+  </tr>
+</TMPL_IF>
+<TMPL_IF NAME="file_namespace">
+    <tr>
+      <th>루트 네임스페이스:</th>
+      <td colspan="2"><a href="<TMPL_VAR NAME="file_namespace" ESCAPE="HTML">"><TMPL_VAR NAME="file_namespace" ESCAPE="HTML"></a></td>
+    </tr>
+</TMPL_IF>
+<TMPL_IF NAME="file_namespaces">
+    <tr>
+      <th>다른 네임스페이스</th>
+      <td colspan="2">
+        <ul>
+          <TMPL_LOOP NAME="file_namespaces"><li><a href="<TMPL_VAR NAME="uri" ESCAPE="HTML">"><TMPL_VAR NAME="uri" ESCAPE="HTML"></a></li></TMPL_LOOP>
+        </ul>
+      </td>
+    </tr>
+</TMPL_IF>
+  </table>
+
+<div id="w3c-include">
+    <script src="//www.w3.org/QA/Tools/w3c-include.js"></script>
+</div>
+
+        <fieldset id="revalidate_opts">
+                 <legend>옵션</legend>
+    <table class="header">
+      <tr>
+        <td><input type="checkbox" value="1" id="ss" name="ss"
+<TMPL_IF NAME="opt_show_source">
+	checked="checked"
+</TMPL_IF>
+       /><label title="Show Page Source" for="ss">소스&nbsp;보기</label></td>
+              <td><input type="checkbox" value="1" id="outline" name="outline"
+<TMPL_IF NAME="opt_show_outline">
+	checked="checked"
+</TMPL_IF>
+       /><label title="Show an Outline of the document" for="outline">개요&nbsp;보기</label></td>
+                <td><input type="radio" name="group" id="group_no" value="0" 
+                        <TMPL_UNLESS NAME="opt_group_errors">
+                           checked="checked"
+                        </TMPL_UNLESS>
+                        /><label for="group_no">연속된 메시지 리스트</label> 
+                        <input type="radio" name="group" id="group_yes" value="1"
+                                <TMPL_IF NAME="opt_group_errors">
+                                   checked="checked"
+                                </TMPL_IF>
+                                 /><label for="group_yes">타입별로 에러 메시지 묶음</label></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" value="1" id="No200" name="No200"
+<TMPL_IF NAME="opt_no200">
+	checked="checked"
+</TMPL_IF>
+       /><label title="Validate also pages for which the HTTP status code indicates an error" for="No200">에러&nbsp;페이지&nbsp;검사</label></td>
+              <td><input type="checkbox" value="1" id="verbose" name="verbose"
+<TMPL_IF NAME="opt_verbose">
+	checked="checked"
+</TMPL_IF>
+       /><label title="Show Verbose Output" for="verbose">상세한&nbsp;출력</label></td>
+           <td><input id="st" name="st" type="checkbox" value="1"
+                        <TMPL_IF NAME="opt_show_tidy">
+                           checked="checked"
+                        </TMPL_IF>
+                    /><label for="st">HTML-Tidy 로 마크업 수정</label></td>
+            </tr>
+
+    </table>
+        <p class="moreinfo">
+          사용 가능한 옵션에 대한 <a href="docs/users.html#Options">도움말</a> 을 이용
+          할 수 있습니다.
+        </p>
+    <div id="revalidate_button" class="submit_button">
+ <TMPL_IF NAME="accept"><input type="hidden" value="<TMPL_VAR NAME="accept" ESCAPE=HTML>" id="accept" name="accept" /></TMPL_IF><TMPL_IF NAME="accept-language"><input type="hidden" value="<TMPL_VAR NAME="accept-language" ESCAPE=HTML>" id="accept-language" name="accept-language" /></TMPL_IF><TMPL_IF NAME="accept-charset"><input type="hidden" value="<TMPL_VAR NAME="accept-charset" ESCAPE=HTML>" id="accept-charset" name="accept-charset" /></TMPL_IF><TMPL_IF NAME="user-agent"><input type="hidden" value="<TMPL_VAR NAME="user-agent" ESCAPE=HTML>" id="user-agent" name="user-agent" /></TMPL_IF>
+      <input type="submit" value="재 검사" title="이 문서 재 검사" />
+    </div>
+  </fieldset>
+</form>
+</TMPL_IF>

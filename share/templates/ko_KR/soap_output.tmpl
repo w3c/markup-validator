@@ -1,0 +1,89 @@
+Content-Type: application/soap+xml; charset=UTF-8
+X-W3C-Validator-Recursion: <TMPL_VAR NAME="depth" DEFAULT="1"><TMPL_IF NAME="fatal_error">
+X-W3C-Validator-Status: Abort<TMPL_ELSE><TMPL_IF NAME="valid_status">
+X-W3C-Validator-Status: <TMPL_VAR NAME="valid_status"></TMPL_IF>
+X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num">
+X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+<env:Body>
+<m:markupvalidationresponse env:encodingStyle="http://www.w3.org/2003/05/soap-encoding" xmlns:m="http://www.w3.org/2005/10/markup-validator">
+    <TMPL_LOOP NAME="debug"><m:debug name="<TMPL_VAR NAME="name" ESCAPE="HTML">"><TMPL_VAR NAME="value" ESCAPE="HTML" DEFAULT="(undefined)"></m:debug>
+    </TMPL_LOOP>
+    <m:uri><TMPL_VAR NAME="file_uri" ESCAPE="HTML"></m:uri>
+    <m:checkedby><TMPL_VAR NAME="env_home_page" ESCAPE="HTML"></m:checkedby>
+    <m:doctype><TMPL_VAR NAME="file_doctype" ESCAPE="HTML"></m:doctype>
+    <m:charset><TMPL_VAR NAME="file_charset" ESCAPE="HTML"></m:charset>
+    <m:validity><TMPL_IF NAME="VALID">true<TMPL_ELSE>false</TMPL_IF></m:validity>
+    <m:warnings>
+        <m:warningcount><TMPL_VAR NAME="valid_warnings_num"></m:warningcount>
+        <m:warninglist>
+           <TMPL_IF NAME="is_html5">  <m:warning>
+                <m:message>This interface to HTML5 document checking is obsolete. Use an interface to <TMPL_VAR NAME="htmlchecker_url"> instead.</m:message>
+                <m:messageid>obsolete-interface</m:messageid>
+                <m:explanation>  <![CDATA[<TMPL_VAR NAME="expl">
+                    <div class="ve obsolete-interface">
+                      <p>
+                        The method you used to check this document relies on an obsolete interface
+                        that will become permanently unavailable in the near future.
+                        The currently-supported method is to instead use the W3C Nu Html Checker at
+                        <a href="<TMPL_VAR NAME='htmlchecker_url'>"><TMPL_VAR NAME="htmlchecker_url"></a>.
+                        See the documentation on the W3C Nu Html Checker's
+                        <a href="https://github.com/validator/validator/wiki/Service-»-Input-»-GET">GET interface</a>,
+                        <a href="https://github.com/validator/validator/wiki/Service-»-Input-»-POST-body">POST interface</a>,
+                        and
+                        <a href="https://github.com/validator/validator/wiki/Service-»-Common-params">the parameters</a>
+                        that both interfaces provide, such as the
+                        <a href="https://github.com/validator/validator/wiki/Output-»-JSON">out=json</a>,
+                        <a href="https://github.com/validator/validator/wiki/Output-»-XML">out=xml</a>,
+                        and
+                        <a href="https://github.com/validator/validator/wiki/Output-»-GNU">out=gnu</a>
+                        parameters/output-formats.
+                      </p>
+                      <p>
+                        For comments or questions about this message, send mail to
+                        <a href="mailto:www-validator@w3.org">www-validator@w3.org</a>
+                        or to
+                        <a href="https://twitter.com/w3c">@w3c</a> on twitter.
+                      </p>
+                    </div>
+                  ]]>
+                </m:explanation>
+                <m:source></m:source>
+            </m:warning></TMPL_IF><TMPL_IF NAME="have_warnings"><TMPL_INCLUDE NAME="soap_warnings.tmpl"></TMPL_IF>
+        <TMPL_LOOP NAME="file_errors"><TMPL_IF NAME="err_type_warn">
+            <m:warning>
+                <m:line><TMPL_VAR NAME="line"></m:line>
+                <m:col><TMPL_VAR NAME="char" ESCAPE="HTML"></m:col>
+                <m:message><TMPL_VAR NAME="msg" ESCAPE="HTML"></m:message>
+                  <m:messageid><TMPL_VAR NAME="num" ESCAPE="HTML"></m:messageid>
+                  <m:explanation>  <![CDATA[
+                    <TMPL_VAR NAME="expl">
+                    ]]>
+                  </m:explanation>
+                  <m:source><![CDATA[<TMPL_VAR NAME="src">]]></m:source>
+            </m:warning>
+        </TMPL_IF></TMPL_LOOP></m:warninglist>
+    </m:warnings>
+    <m:errors>
+        <m:errorcount><TMPL_VAR NAME="valid_errors_num"></m:errorcount>
+        <m:errorlist>
+<TMPL_LOOP NAME="file_errors"><TMPL_IF NAME="err_type_err">
+            <m:error>
+                <m:line><TMPL_VAR NAME="line"></m:line>
+                <m:col><TMPL_VAR NAME="char" ESCAPE="HTML"></m:col>
+                <m:message><TMPL_VAR NAME="msg" ESCAPE="HTML"></m:message>
+                <m:messageid><TMPL_VAR NAME="num" ESCAPE="HTML"></m:messageid>
+                <m:explanation>  <![CDATA[
+                  <TMPL_VAR NAME="expl">
+                  ]]>
+                </m:explanation>
+                <m:source><![CDATA[<TMPL_VAR NAME="src">]]></m:source>
+            </m:error>
+           </TMPL_IF></TMPL_LOOP>
+        </m:errorlist>
+    </m:errors>
+</m:markupvalidationresponse>
+</env:Body>
+</env:Envelope>

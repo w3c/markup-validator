@@ -1,0 +1,12 @@
+  <div id="source">
+    <h3>소스 보기</h3>
+
+    <p>아래는 이 검사에 대한 입력된 소스입니다:</p>
+    <ol class="source">
+<TMPL_LOOP NAME="file_source">
+      <li id="line-<TMPL_VAR NAME="__counter__">"><TMPL_VAR NAME="file_source_line" ESCAPE="HTML"></li>
+</TMPL_LOOP> 
+    </ol>
+    <TMPL_INCLUDE NAME="backtop.tmpl">
+
+  </div>
