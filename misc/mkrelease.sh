@@ -47,7 +47,6 @@ cp validator-$version/htdocs/images/no_w3c.png \
 find . -type d | xargs -r chmod 755
 find . -type f | xargs -r chmod 644
 chmod 755 validator-$version/httpd/cgi-bin/check
-chmod 755 validator-$version/httpd/cgi-bin/sendfeedback.pl
 
 # Try to cheat HTML::Template into refreshing its possible caches (it doesn't
 # take options for new() into account when determining freshness as of 2.9).

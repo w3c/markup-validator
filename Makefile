@@ -3,7 +3,7 @@ VERSION = $(shell perl -ne '/^\$$VERSION\b.*?([\d.]+)/ && print $$1' httpd/cgi-b
 CSS_FILES = htdocs/style/base.css htdocs/style/results.css
 JS_SOURCES = htdocs/scripts/mootools-1.2.5-core-nc.js \
 	htdocs/scripts/mootools-1.2.5.1-more.js	htdocs/scripts/w3c-validator.js
-PERL_FILES = httpd/cgi-bin/check httpd/cgi-bin/sendfeedback.pl \
+PERL_FILES = httpd/cgi-bin/check \
 	httpd/mod_perl/startup.pl misc/soc2xml.pl misc/spmpp.pl \
 	misc/docs_errors.pl misc/bundle/Makefile.PL \
 	misc/bundle/lib/Bundle/W3C/Validator.pm
