@@ -1,5 +1,3 @@
-syntax: glob
-
 .project
 *.bak
 *.gz
@@ -9,3 +7,4 @@ misc/bundle/blib
 misc/bundle/Makefile
 misc/bundle/Makefile.old
 misc/bundle/pm_to_blib
+misc/testsuite/lib/__pycache__
