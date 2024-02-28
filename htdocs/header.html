@@ -22,7 +22,7 @@
     <div id="banner">
       <h1 id="title">
         <a href="https://www.w3.org/">
-          <img alt="W3C Logo" width="110" height="61" id="logo" src="<!--#echo var="relroot" -->images/w3c.png" />
+          <img alt="W3C Logo" width="110" height="61" id="logo" src="<!--#echo var="relroot" -->images/<!--#if expr="$ENV != 'w3.org'" -->no_<!--#endif -->w3c.png" />
         </a>
         <a href="<!--#echo var="relroot" -->"><span>Markup Validation Service</span></a>
       </h1>

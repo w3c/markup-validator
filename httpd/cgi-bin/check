@@ -1460,6 +1460,10 @@ sub prep_template ($$)
     my $T    = shift;
 
     #
+    # Environment
+    $T->param(ENV => $ENV{ENV});
+
+    #
     # URL for Nu Html Checker
     $T->param(htmlchecker_url => $CFG->{External}->{HTML5});
 
