@@ -63,9 +63,4 @@ dist: all
 	done
 	misc/mkrelease.sh $(VERSION)
 
-w3c:
-	perl -pi -e 'undef $$/; s/\n\n<p id="test_warning".+//s' htdocs/intro.html
-	perl -pi -e 's/no_w3c.png/w3c.png/' htdocs/header.html
-	perl -pi -e 's/no_w3c.png/w3c.png/' share/templates/en_US/header.tmpl
-
 .SUFFIXES: .css .css.gz .js .js.gz
