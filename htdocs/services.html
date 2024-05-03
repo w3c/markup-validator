@@ -44,15 +44,14 @@
 
       <p>You are most likely here because this address appeared in
       logs for your website.  This means someone used one of our
-      services to assess content on your site.</p>
+      services to evaluate content on your site.</p>
 
       <h3 id="misuse">Misuse</h3>
 
-      <p>While these services were created for the purpose of helping
-      Web developers and designers there is potential like many online
-      services for use other than intended.</p>
+      <p>While these services are intended to help web developers, it is
+      possible they may be abused.</p>
       
-      <p>Modest traffic from these services does not consitute abuse
+      <p>Modest traffic from these services does not constitute abuse
       against your website.  Third parties using this service to
       review content you make publicly available is not substantially
       different from browsing your site.  Web designers frequently
@@ -60,38 +59,40 @@
 
       <h3 id="blocking">Blocking W3C Validators</h3>
 
-      <p>Before considering blocking W3C Validator services you should
-      ensure that nobody in your organization or perhaps contracted
-      by them is requesting our services to make the assessments.</p>
+      <p>Before considering blocking requests from W3C's validator services
+      you should ensure that nobody in your organization is using them to
+      review your site.</p>
 
-      <p>Should you wish to block all or some W3C Validation services
-      from assessing your site you may do so based on our IP addresses
+      <p>Should you wish to block W3C's validation services
+      from accessing your site you may do so based on our IP addresses
       or user-agent header string.  How to do so varies based on
       specific operating systems, firewalls and webserver
       software.</p>
 
       <h4 id="user-agent">Blocking on User-Agent</h4>
 
-      <p>As these services commonly include the
-      link <a href="/services">https://validator.w3.org/services</a>
-      in their user-agent you can filter them all based on presence of
-      that string in user-agent header.  You can instead opt to block
-      specific Validators based on the unique portion of their
+      <p>As these services commonly include <code>
+      https://validator.w3.org/services</code>
+      in their user-agent header you can filter them based on presence of
+      that string.  You can instead opt to block
+      specific validators based on the unique portion of their
       user-agents. If you wish to block them individually it would be
       best not to include the version numbers as those are subject to
       change.</p>
 
       <h4 id="ip-address">Blocking on IP Address</h4>
 
-      <p>Traffic from W3C Validator services will be coming from
-      <code>128.30.52.0/24</code> subnet and you may firewall or block
-      that in your web server configuration.  You should only firewall
-      incoming port 80 and 443 from this subnet so as not to block
-      your users from assessing W3C website or ability to participate
-      in mailing lists.</p>
+      <p>Traffic from W3C validators and our other services will be coming
+      from <code>52.22.66.203</code> (IPv4) or
+      <code>2600:1f18:7d7a:2700::/56</code> (IPv6). To avoid receiving
+      requests from these services you can update your firewall or web
+      server configuration to block traffic from those addresses. You
+      should only block incoming requests on port 80 and 443, so as not to
+      block your users from accessing the W3C website or participating in
+      W3C mailing lists.</p>
 
       <h3 id="list">W3C Validation Services</h3>
-      <p>Below is a listing of W3C's various Validation services,
+      <p>Below is a listing of W3C's various validation services,
       links to the services themselves, the user-agent header being
       sent and how to find out more information on each.</p>
       <ul>
