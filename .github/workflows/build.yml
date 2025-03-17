@@ -14,7 +14,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: Set up Perl
         uses: shogo82148/actions-setup-perl@v1
-      - run: sudo sed -i 's/# deb-src/deb-src/' /etc/apt/sources.list
+      - run: |
+          sudo sed -i 's/^Types: deb$/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources
       - run: sudo apt-get update
       - run: sudo apt-get build-dep --yes w3c-markup-validator
       - run: make && make test
