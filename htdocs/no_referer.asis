@@ -22,7 +22,7 @@ Content-type: text/html
     
     <div id="banner">
      <h1 id="title">
-       <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="/images/w3c.png" /></a>
+       <a href="http://www.w3.org/"><img alt="W3C" id="logo" src="https://www.w3.org/assets/logos/w3c-2025/svg/w3c-letters.svg" /></a>
  			<a href="/"><span>Markup Validation Service</span></a>
 
        </h1>
