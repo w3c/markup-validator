@@ -15,7 +15,7 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF></TMPL_U
     <title>
             <TMPL_IF NAME="valid_status">[<TMPL_VAR NAME="valid_status">]</TMPL_IF>
             <TMPL_IF NAME="page_title_url">Markup Validation of <TMPL_VAR NAME="page_title_url" ESCAPE="HTML"><TMPL_ELSE><TMPL_IF NAME="page_title"><TMPL_VAR NAME="page_title" ESCAPE="HTML"><TMPL_ELSE>Validation Results</TMPL_IF></TMPL_IF> - W3C Markup Validator</title>
-        <TMPL_IF NAME="is_feedback"><link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" /><TMPL_ELSE><link rel="icon" href="<TMPL_IF NAME="VALID">data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%10%00%00%00%10%08%02%00%00%00%90%91h6%00%00%00%19IDAT(%91c%0C%DD%10%C5%40%0A%60%22I%F5%A8%86Q%0DCJ%03%00dy%01%7F%0C%9F0%7D%00%00%00%00IEND%AEB%60%82<TMPL_ELSE>data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%10%00%00%00%10%08%02%00%00%00%90%91h6%00%00%00%19IDAT(%91c%BCd%AB%C2%40%0A%60%22I%F5%A8%86Q%0DCJ%03%00%DE%B5%01S%07%88%8FG%00%00%00%00IEND%AEB%60%82</TMPL_IF>" type="image/png" /></TMPL_IF>
+        <TMPL_IF NAME="is_feedback"><link rel="shortcut icon" href="https://www.w3.org/favicon.ico" type="image/x-icon" /><TMPL_ELSE><link rel="icon" href="<TMPL_IF NAME="VALID">data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%10%00%00%00%10%08%02%00%00%00%90%91h6%00%00%00%19IDAT(%91c%0C%DD%10%C5%40%0A%60%22I%F5%A8%86Q%0DCJ%03%00dy%01%7F%0C%9F0%7D%00%00%00%00IEND%AEB%60%82<TMPL_ELSE>data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%10%00%00%00%10%08%02%00%00%00%90%91h6%00%00%00%19IDAT(%91c%BCd%AB%C2%40%0A%60%22I%F5%A8%86Q%0DCJ%03%00%DE%B5%01S%07%88%8FG%00%00%00%00IEND%AEB%60%82</TMPL_IF>" type="image/png" /></TMPL_IF>
     <link rev="made" href="mailto:www-validator@w3.org" />
     <link rev="start" href="./" title="Home Page" />
     <link rel="stylesheet" href="./style/base" type="text/css" media="all" />
@@ -29,7 +29,7 @@ X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF></TMPL_U
     
     <div id="banner">
      <h1 id="title">
-       <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="./images/<TMPL_UNLESS NAME=ENV>no_</TMPL_UNLESS>w3c.png" /></a>
+       <a href="https://www.w3.org/"><img alt="W3C" id="logo" src="<TMPL_IF NAME=ENV>https://www.w3.org/assets/logos/w3c-2025/svg/w3c-letters.svg<TMPL_ELSE>./images/no_w3c.png</TMPL_IF>" /></a>
  			<a href="./"><span>Markup Validation Service</span></a>
        </h1>
        <p id="tagline">Check the markup (HTML, XHTML, …) of Web documents</p>

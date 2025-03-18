@@ -309,6 +309,15 @@ tr.subchoice th label {
 	background-color: inherit;
 }
 
+#logo {
+  background-color: white !important;
+  border-radius: 20px;
+  width: 80px;
+  padding: 10px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
 h1 span {
 	border-bottom: 1px solid #6383b1;
 	border-color: #4e6f9e;
