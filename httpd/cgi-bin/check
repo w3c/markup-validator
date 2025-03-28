@@ -1694,9 +1694,7 @@ sub report_valid
         if (exists $CFG->{Types}->{$File->{DOCTYPE}}->{Badge}) {
             my $cfg = $CFG->{Types}->{$File->{DOCTYPE}};
             $T->param(badge_uri           => $cfg->{Badge}->{URI});
-            $T->param(local_badge_uri     => $cfg->{Badge}->{'Local URI'});
             $T->param(badge_alt_uri       => $cfg->{Badge}->{'Alt URI'});
-            $T->param(local_alt_badge_uri => $cfg->{Badge}->{'Local ALT URI'});
             $T->param(badge_alt           => $cfg->{Badge}->{Alt});
             $T->param(badge_rdfa          => $cfg->{Badge}->{RDFa});
             $T->param(badge_h             => $cfg->{Badge}->{Height});
