@@ -310,12 +310,11 @@ tr.subchoice th label {
 }
 
 #logo {
-  background-color: white !important;
-  border-radius: 20px;
-  width: 80px;
-  padding: 10px;
+  border-radius: 10px;
+  height: 100px;
+  margin-left: 20px;
   margin-top: 10px;
-  margin-left: 10px;
+  width: 100px;
 }
 
 h1 span {
@@ -349,7 +348,7 @@ h1 span {
 
 #tagline {
 	font-size: 0.7em;
-	margin: -2em 0 0 12.1em;
+	margin: -4em 0 0 13em;
 	padding-bottom: 1em;
 	letter-spacing: 0.1em;
 	line-height: 100% !important;
