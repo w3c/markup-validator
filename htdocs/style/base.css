@@ -348,7 +348,7 @@ h1 span {
 
 #tagline {
 	font-size: 0.7em;
-	margin: -4em 0 0 13em;
+	margin: -4em 0 4em 13em;
 	padding-bottom: 1em;
 	letter-spacing: 0.1em;
 	line-height: 100% !important;
