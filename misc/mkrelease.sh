@@ -41,9 +41,6 @@ rm -f validator-$version/misc/mkrelease.sh
 rm -f validator-$version/htdocs/no_referer.asis
 rm -rf validator-$version/misc/bundle
 
-cp validator-$version/htdocs/images/no_w3c.png \
-  validator-$version/htdocs/images/w3c.png
-
 find . -type d | xargs -r chmod 755
 find . -type f | xargs -r chmod 644
 chmod 755 validator-$version/httpd/cgi-bin/check
