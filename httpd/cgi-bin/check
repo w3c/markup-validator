@@ -3372,6 +3372,8 @@ sub self_url_file
     my $File = shift;
 
     my $thispage    = $File->{Env}->{'Self URI'};
+    # Remove any “markup” path component that might have been added by proxy/rewrite rules
+    $thispage =~ s|/markup(?=/check)|/|;
     my $escaped_uri = uri_escape($File->{URI});
     $thispage .= qq(?uri=$escaped_uri);
     $thispage .= ';ss=1' if $File->{Opt}->{'Show Source'};
