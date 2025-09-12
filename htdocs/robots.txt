@@ -5,7 +5,7 @@
 User-agent: *
 Disallow: /check
 Disallow: /feed/check
-Disallow: /checklink
+Disallow: /checklink?
 Disallow: /mobile/check
 Disallow: /mobile/alpha
 Disallow: /css-validator
