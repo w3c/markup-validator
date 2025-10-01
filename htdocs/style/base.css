@@ -309,9 +309,18 @@ tr.subchoice th label {
 	background-color: inherit;
 }
 
+#logo {
+  border-radius: 10px;
+  height: 80px;
+  margin-left: 20px;
+  margin-top: 10px;
+  width: 80px;
+}
+
 h1 span {
 	border-bottom: 1px solid #6383b1;
 	border-color: #4e6f9e;
+	vertical-align: 10px;
 }
 
 #title a:link,
@@ -340,7 +349,7 @@ h1 span {
 
 #tagline {
 	font-size: 0.7em;
-	margin: -2em 0 0 12.1em;
+	margin: -3em 0 0 11.5em;
 	padding-bottom: 1em;
 	letter-spacing: 0.1em;
 	line-height: 100% !important;
