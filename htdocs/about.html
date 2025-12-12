@@ -2,120 +2,119 @@
 --><!--#set var="relroot" value="./"
 --><!--#include virtual="header.html" -->
 
-<div class="doc">
-    <div><a id="skip" name="skip"></a>
-      <h2>About The W3C Markup Validation Service</h2>
-      <h3 id="TableOfContents">Table of contents</h3>
-      <div id="toc">
-        <ol>
-          <li><a href="#about">About this service</a></li>
-          <li><a href="#others">Other resources</a></li>
-          <li><a href="#credits">Credits</a></li>
-        </ol>
+    <div class="doc">
+      <div>
+        <a id="skip" name="skip"></a>
+        <h2>About The W3C Markup Validation Service</h2>
+        <h3 id="TableOfContents">Table of contents</h3>
+        <div id="toc">
+          <ol>
+            <li><a href="#about">About this service</a></li>
+            <li><a href="#others">Other resources</a></li>
+            <li><a href="#credits">Credits</a></li>
+          </ol>
+        </div>
+
+        <h3 id="about">About this service</h3>
+        <p>
+          The <a href="./">Markup Validator</a> is a free service by
+          <abbr title="World Wide Web Consortium">W3C</abbr>
+          that helps check the validity of Web documents.
+        </p>
+        <p>
+          Most Web documents are written using <em>markup languages</em>, such as
+          <abbr title="HyperText Markup Language">HTML</abbr> or
+          <abbr title="eXtensible HyperText Markup Language">XHTML</abbr>.
+          These languages are defined by <em>technical specifications</em>, which
+          usually include a machine-readable <em>formal grammar</em> (and vocabulary). The act of checking
+          a document against these constraints is called <a href="docs/help.html#validation_basics"
+          title="Introducing and defining the concept of Markup Validation">validation</a>, and this
+          is what the Markup Validator does.
+        </p>
+        <p>
+          Validating Web documents is an important step which can dramatically help improving
+          and ensuring their quality, and it can save a lot of time and money (read more on
+          <a href="docs/why.html" title="Why validate? A document answering questions on the importance of validation." >why validating matters</a>).
+          Validation is, however, neither a full <a href="docs/help.html#validandquality">quality
+          check</a>, nor is it strictly equivalent to <a href="docs/help.html#validandconform"
+          title="Read more about the difference between validation and conformance checking"><em>checking for conformance</em></a> to the specification.
+        </p>
+        <p>
+          This validator can process documents written in most markup languages.
+          Supported document types include the <abbr title="HyperText Markup Language">HTML</abbr>
+          (through <abbr title="HyperText Markup Language">HTML</abbr> 4.01) and
+          <abbr title="eXtensible HyperText Markup Language">XHTML</abbr> (1.0 and 1.1) family,
+          MathML, SMIL and <abbr title="Scalable Vector Graphics">SVG</abbr>
+          (1.0 and 1.1, including the mobile profiles). The Markup Validator can
+          also validate Web documents written with an <a href="docs/sgml.html"
+          title="introduction to the concepts of SGML and DTDs"><abbr title="Standard Generalized
+          Markup Language">SGML</abbr> or <abbr title="eXtensible Markup Language">XML</abbr>
+          <abbr title="Document Type Definition">DTD</abbr></a>, provided they use a proper
+          document type declaration.
+        </p>
+        <p>
+          This validator is also <q cite="https://www.cs.tcd.ie/15445/15445.HTML#SYSVALID">An HTML validating system conforming to International Standard ISO/IEC 15445—HyperText Markup Language, and International Standard ISO 8879—Standard Generalized Markup Language (SGML)</q> – which basically means that in addition to W3C recommendations, it can validate according to these ISO standards.</p>
+        <p>
+          Related resources include:
+        </p>
+        <ul>
+          <li>The <a href="docs/">Documentation</a> for the Markup validation
+            contains a lot of information on usage, installation, and development. Notably,
+            the <a href="docs/help.html">Help and <abbr title="Frequently Asked Questions">FAQ</abbr></a>
+            document contains a lot of information, and is a recommended reading.</li>
+          <li>The <a title="Source Code for The W3C Markup Validation Service"
+            href="source/">Source code availability</a> information page .</li>
+          <li><a href="todo.html">The development roadmap</a> for this service.</li>
+          <li><a href="feedback.html">How to provide feedback on The
+            <abbr title="World Wide Web Consortium">W3C</abbr>
+            Markup Validation Service</a>.</li>
+        </ul>
       </div>
-
-      <h3 id="about">About this service</h3>
-      <p>
-        The <a href="./">Markup Validator</a> is a free service by
-        <abbr title="World Wide Web Consortium">W3C</abbr>
-        that helps check the validity of Web documents.
-      </p>
-
-      <p>
-        Most Web documents are written using <em>markup languages</em>, such as
-        <abbr title="HyperText Markup Language">HTML</abbr> or
-        <abbr title="eXtensible HyperText Markup Language">XHTML</abbr>.
-        These languages are defined by <em>technical specifications</em>, which
-        usually include a machine-readable <em>formal grammar</em> (and vocabulary). The act of checking
-        a document against these constraints is called <a href="docs/help.html#validation_basics"
-        title="Introducing and defining the concept of Markup Validation">validation</a>, and this
-        is what the Markup Validator does.
-      </p>
-
-      <p>
-        Validating Web documents is an important step which can dramatically help improving
-        and ensuring their quality, and it can save a lot of time and money (read more on
-        <a href="docs/why.html" title="Why validate? A document answering questions on the importance of validation." >why validating matters</a>).
-        Validation is, however, neither a full <a href="docs/help.html#validandquality">quality
-        check</a>, nor is it strictly equivalent to <a href="docs/help.html#validandconform"
-        title="Read more about the difference between validation and conformance checking"><em>checking for conformance</em></a> to the specification.
-      </p>
-      <p>
-        This validator can process documents written in most markup languages.
-        Supported document types include the <abbr title="HyperText Markup Language">HTML</abbr>
-        (through <abbr title="HyperText Markup Language">HTML</abbr> 4.01) and
-        <abbr title="eXtensible HyperText Markup Language">XHTML</abbr> (1.0 and 1.1) family,
-        MathML, SMIL and <abbr title="Scalable Vector Graphics">SVG</abbr>
-        (1.0 and 1.1, including the mobile profiles). The Markup Validator can
-        also validate Web documents written with an <a href="docs/sgml.html"
-        title="introduction to the concepts of SGML and DTDs"><abbr title="Standard Generalized
-        Markup Language">SGML</abbr> or <abbr title="eXtensible Markup Language">XML</abbr>
-        <abbr title="Document Type Definition">DTD</abbr></a>, provided they use a proper
-        document type declaration.
-      </p>
-      <p>This validator is also <q cite="https://www.cs.tcd.ie/15445/15445.HTML#SYSVALID">An HTML validating system conforming to International Standard ISO/IEC 15445—HyperText Markup Language, and International Standard ISO 8879—Standard Generalized Markup Language (SGML)</q> – which basically means that in addition to W3C recommendations, it can validate according to these ISO standards.</p>
-      <p>
-      Related resources include:
-      </p>
-      <ul>
-        <li>The <a href="docs/">Documentation</a> for the Markup validation
-        contains a lot of information on usage, installation, and development. Notably,
-        the <a href="docs/help.html">Help and <abbr title="Frequently Asked Questions">FAQ</abbr></a>
-        document contains a lot of information, and is a recommended reading.</li>
-        <li>The <a title="Source Code for The W3C Markup Validation Service"
-          href="source/">Source code availability</a> information page .</li>
-        <li><a href="todo.html">The development roadmap</a> for this service.</li>
-        <li><a href="feedback.html">How to provide feedback on The
-        	<abbr title="World Wide Web Consortium">W3C</abbr>
-        	Markup Validation Service</a>.</li>
-      </ul>
-    </div>
 
       <h3 id="others">Other resources</h3>
       <div>
         <h4>Documentation &amp; Specifications</h4>
         <ul>
           <li><a href="http://www.w3.org/MarkUp/"><abbr
-          			title="World Wide Web Consortium">W3C</abbr>'s
-          		<abbr title="HyperText Markup Language">HTML</abbr>
-          		home page</a>.</li>
+            title="World Wide Web Consortium">W3C</abbr>'s
+            <abbr title="HyperText Markup Language">HTML</abbr>
+            home page</a>.</li>
           <li><a href="http://www.w3.org/TR/html401/">The <abbr
-          			title="HyperText Markup Language">HTML</abbr> 4.01
-          		specification</a>.</li>
+            title="HyperText Markup Language">HTML</abbr> 4.01
+            specification</a>.</li>
           <li><a href="http://www.w3.org/TR/xhtml1/"><abbr
-          	title="eXtensible HyperText Markup Language">XHTML</abbr> 1.0:
+            title="eXtensible HyperText Markup Language">XHTML</abbr> 1.0:
             The Extensible HyperText Markup Language</a>.</li>
           <li><a href="http://www.w3.org/TR/xhtml11/"><abbr
-          	title="eXtensible HyperText Markup Language">XHTML</abbr> 1.1:
+            title="eXtensible HyperText Markup Language">XHTML</abbr> 1.1:
             Module-based <abbr
-            	title="eXtensible HyperText Markup Language">XHTML</abbr></a>.</li>
+            title="eXtensible HyperText Markup Language">XHTML</abbr></a>.</li>
         </ul>
       </div>
       <div>
         <h4>Online Tools &amp; Other Validators</h4>
-	<p>In addition to this validator, the W3C is offering a number of other tools
+        <p>In addition to this validator, the W3C is offering a number of other tools
         to help you check other types of documents (CSS, RDF, P3P, ...), find broken links
         in your Web pages, and so on. All these tools are listed on the W3C's
-	<a href="http://www.w3.org/QA/Tools/"><abbr title="Quality Assurance">QA</abbr>
-	Toolbox</a>.</p>
-
-	<p>There are also many excellent tools developed outside W3C to help
-	improve the quality of Web pages:</p>
+        <a href="http://www.w3.org/QA/Tools/"><abbr title="Quality Assurance">QA</abbr>
+        Toolbox</a>.</p>
+        <p>There are also many excellent tools developed outside W3C to help
+        improve the quality of Web pages:</p>
         <ul>
          <li><a href="http://tidy.sourceforge.net/"><abbr
          title="HyperText Markup Language">HTML</abbr> tidy</a>, originally developed at
-	 W3C, is a program that can help automatically clean up HTML pages.
+   W3C, is a program that can help automatically clean up HTML pages.
             </li>
           <li>The <a
               href="http://www.htmlhelp.com/tools/validator/"><abbr
-              	title="Web Design Group">WDG</abbr>
-              	<abbr title="HyperText Markup Language">HTML</abbr>
-              	validator</a> is another excellent online validation service.</li>
+                title="Web Design Group">WDG</abbr>
+                <abbr title="HyperText Markup Language">HTML</abbr>
+                validator</a> is another excellent online validation service.</li>
           <li><a href="http://arealvalidator.com/">A Real Validator</a>
             is a shareware <abbr
-            	title="HyperText Markup Language">HTML</abbr> syntax checker
-            	for Windows systems, from the author of the <abbr
-            	title="Web Design Group">WDG</abbr> validator.</li>
+              title="HyperText Markup Language">HTML</abbr> syntax checker
+              for Windows systems, from the author of the <abbr
+              title="Web Design Group">WDG</abbr> validator.</li>
           <li><a href="http://valet.webthing.com/">Site Valet</a> by Nick Kew
             is a comprehensive set of Quality Assurance tools for checking and
             monitoring your web sites.</li>
@@ -131,7 +130,7 @@
         The
         <a href="http://lists.w3.org/Archives/Public/www-html/1994Jul/0015">first
         online <abbr title="HyperText Markup Language">HTML</abbr> validation
-      	service</a> was created by
+        service</a> was created by
         <a href="http://www.w3.org/People/Connolly/">Dan Connolly</a> and
         <a href="http://www.markgaither.com/">Mark Gaither</a>.
       </p>
@@ -144,16 +143,16 @@
         <abbr title="HyperText Markup Language">HTML</abbr> Validator"
         ("Kinder, Gentler" than Dan and Mark's original),
         but has since found a new home at <abbr
-	title="the World Wide Web Consortium">W3C</abbr>, and is now maintained
-	under the auspices of the <a href="http://www.w3.org/QA/">Quality Assurance</a>
+  title="the World Wide Web Consortium">W3C</abbr>, and is now maintained
+  under the auspices of the <a href="http://www.w3.org/QA/">Quality Assurance</a>
         Activity.
       </p>
       <p>
         This service uses:
       </p>
       <ul>
-	    <li><a href="http://www.perl.org/">Perl</a> and many excellent open source
-		Perl modules (see list in <a href="docs/install.html#install-prereq">installation documentation</a>)</li>
+      <li><a href="http://www.perl.org/">Perl</a> and many excellent open source
+    Perl modules (see list in <a href="docs/install.html#install-prereq">installation documentation</a>)</li>
         <li>
           A derivative version of <a href="http://www.jclark.com/">James
           Clark</a>'s excellent <a href="http://www.jclark.com/sp/"><abbr
@@ -170,17 +169,17 @@
         <li>Interface and design refinements by Valerio Proietti (and powered by <a href="http://mootools.net/">Mootools</a>)</li>
         <li>
           <p>Patches, documentation and ideas from:
-						<a href="http://www.aaronsw.com/">Aaron Swartz</a>,
+            <a href="http://www.aaronsw.com/">Aaron Swartz</a>,
             <a href="http://bjoern.hoehrmann.de/">Bj&ouml;rn H&ouml;hrmann</a>,
             Brett Bieber,
             Chris Lilley,
             Christian Smith,
             Christoph Päper,
             <a href="http://www.w3.org/People/Connolly/">Dan Connolly</a>,
-						<a href="http://dorward.me.uk/">David Dorward</a>,
-	    			<a href="http://www.tibbe-online.de/">David Tibbe</a>,
-	    			Etienne Miret,
-						Frank Ellermann,
+            <a href="http://dorward.me.uk/">David Dorward</a>,
+            <a href="http://www.tibbe-online.de/">David Tibbe</a>,
+            Etienne Miret,
+            Frank Ellermann,
             <a href="http://www.w3.org/People/Hugo/">Hugo Haas</a>,
             Henri Sivonen,
             Ian Hickson,
@@ -194,9 +193,9 @@
             <a href="http://www.webthing.com/~nick/">Nick Kew</a>,
             <a href="http://www.w3.org/People/olivier/">Olivier Thereaux</a>,
             Patrick H. Lauke,
-						Roland W. Crowl,
-						Scott Bigham,
-						<a href="http://sierkbornemann.de/">Sierk Bornemann</a>,
+            Roland W. Crowl,
+            Scott Bigham,
+            <a href="http://sierkbornemann.de/">Sierk Bornemann</a>,
             <a href="http://www.webstandards.org/about/members/steph/">Steph Troeth</a>,
             <a href="http://inamidst.com/sbp/">Sean B. Palmer</a>,
             Shane McCarron,
@@ -204,10 +203,10 @@
             Ville Skytt&auml;,
             <a href="http://lists.w3.org/Archives/Public/www-validator/">...and
             the great user community on www-validator@w3.org.</a>
-					</p>
+          </p>
         </li>
       </ul>
-</div>
+    </div>
 <!--#include virtual="footer.html" -->
   </body>
 </html>
