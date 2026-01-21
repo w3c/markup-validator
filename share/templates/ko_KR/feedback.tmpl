@@ -1,0 +1,192 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+
+<div id="main">
+<div class="doc"><a id="skip" name="skip"></a>
+<h2>How to Provide Feedback For the W3C Markup Validator</h2>
+
+<div id="toc">
+<p>Markup Validator 에 대한 피드백 또는 의견을 보내는 방법은 다음과 같습니다:</p>
+<ol>
+  <li><a href="#needhelp">validation 또는 웹 저작에 대한 도움</a>이 필요할 경우</li>
+  <li><a href="#errormsg">validation 에러 메시지에 대한 제안을 보내기</a>를 원할 경우</li>
+  <li><a href="#mailinglist">도움, 참가 또는 논의</a>를 원한 경우</li>
+  <li><a href="#bugreport">버그 탐색 또는 리포트 </a>를 원할 경우</li>
+</ol>
+</div>
+
+<h3 id="needhelp">validation 과 웹 저작에 대한 도움 찾기</h3>
+    <p>페이지가 유효하지 못하고 또, 왜 그런지 모르겠거나, <abbr
+     title="HyperText Markup Language">HTML</abbr>, CSS 또는 validation 에 대한 문의가
+    있다면?</p>
+
+    <p>
+      <strong>먼저 <a href="http://www.htmlhelp.com/faq/">웹 저작
+      <abbr title="Frequently Asked Questions">FAQ</abbr></a>와
+      함께 우리의 <a href="docs/help.html">도움말과
+      <abbr title="Frequently Asked Questions">FAQ</abbr> 문서</a>에서 문의에 대한
+      답변이 있는지 먼저 확인해 보십시오</strong>.
+    </p>
+
+    <p>
+      가장 일반적인 문제 두가지는 다음과 같습니다:
+    </p>
+    <ul>
+      <li><abbr
+        title="Universal Resource Locators">URLs</abbr>
+      에 &amp; 가 포함되어 있는 validating 페이지:
+      <a
+      href="http://www.htmlhelp.com/tools/validator/problems.html#amp">Ampersands
+      (&amp;'s) in <abbr
+        title="Universal Resource Identifiers">URLs</abbr></a> 참조</li>
+
+      <li>JavaScript 가 포함되어 있는 validating 페이지:
+          <a
+        href="http://www.htmlhelp.com/tools/validator/problems.html#script">Writing
+        <abbr title="HyperText Markup Language">HTML</abbr>
+        in a <code>SCRIPT</code> Element</a> 참조</li>
+    </ul>
+  <p>
+    만약 위의 리소스에서 문제를 해결할 수 없다면, 다음의 포중 중에 한 곳으로 증상을
+    투고해 보십시오.
+  </p>
+
+  <ul>
+    <li>유즈넷 뉴스그룹: <code><a href="news:comp.infosystems.www.authoring.html">comp.infosystems.www.authoring.html</a></code></li>
+    <li><a href="http://www.hwg.org/"><abbr
+        title="HyperText Markup Language">HTML</abbr> Writers Guild</a>
+        <a title="HTML Writers Guild Mailing Lists"
+            href="http://www.hwg.org/lists/">메일링 리스트</a></li>
+  </ul>
+
+  <p>
+    각 포럼들은 <abbr title="HyperText Markup Language">HTML</abbr> 경험이 풍부한
+    전문가들이 공유를 하고 있습니다. 특정 페이지에 대하며 멘트를 남겨 놓으려면, 질문에
+    대한 <abbr title="Universal Resource Locator">URL</abbr> 을 남겨 주세요.
+  </p>
+
+
+<h3 id="errormsg">에러 메시지 피드백</h3>
+    <p>Markup Validator 의 결과 페이지의 에러 메시지 품질을 향상 시키거나, 이해하기
+    힘든 메시지가 있다면, 우리의 메일링 리스트로 질문과 제안을 보내십시오.</p>
+
+    <p>페이지의 유효성 검사를 하는 중 나오는 오류에 대해 이해가 안되거나 또는
+    검사에 대한 도움이 필요한 경우, 메일링 리스트로 투고 하기 전에 <strong>FAQ</strong> 또는
+    도움말(<a href="#needhelp">검사에 대한 도움말 찾기</a> 섹션을 참조)을 읽어보고,
+    원하는 이슈가 <strong>기존 메일 스레드에 존재하는지 검색</strong>을 해 보십시오.</p>
+
+  <TMPL_IF NAME="errmsg_id">
+    <p>Judging from the link you followed, you probably want to send feedback on error message [<TMPL_VAR NAME="errmsg_id" ESCAPE="HTML">]: "<TMPL_VAR NAME="explanation" ESCAPE="HTML">".</p> 
+  </TMPL_IF>    
+
+    <p>에러 메시지에 대한 어떤 의견 또는 질문을 보내기 전에, 해당 이슈가 이미 투고가
+    되었거나 또는 이미 답변이 있는지 검색을 먼저 해 보십시오.</p>
+
+  <TMPL_IF NAME="errmsg_id">
+     <p>Below is a pre-filled search box that you can use. Or you can just <a href="http://www.w3.org/Search/Mail/Public/search?type-index=www-validator&amp;index-type=t&amp;keywords=%5BVE%5D%5B<TMPL_VAR NAME="errmsg_id" ESCAPE="URL">%5D&amp;search=Search">follow this link</a>.</p>
+  </TMPL_IF>
+
+      <form method="get" action="http://www.w3.org/Search/Mail/Public/search">
+      <p>www-validator 메일링 리스트 저장소 검색: <br />
+        <input id="type-index" name="type-index" type="hidden" value="www-validator" />
+        <input id="index-type" name="index-type" type="hidden" value="t" />
+  <TMPL_IF NAME="errmsg_id">
+        <input id="keywords" name="keywords" type="text" size="33" maxlength="100" value="[VE][<TMPL_VAR NAME="errmsg_id" ESCAPE="HTML">]" />
+  <TMPL_ELSE>
+        <input id="keywords" name="keywords" type="text" size="33" maxlength="100" value="" />
+  </TMPL_IF>
+        <input type="submit" id="mailsearch" name="search" value="메일 저장소 검색" />
+      </p>
+      </form>
+
+  <p>이미 투고된 내용이 없는 것을 확인 한 후에 메시지를 보내 주십시오. 효과적인 메시지를 보내기
+  위해서는 다음과 같이 작성하십시오:</p>
+  <ul>
+    <li><strong>제목라인을 명확하게</strong>: 피드백 내용을 요약하여 적어 주십시오.;</li>
+    <li>[VE][<TMPL_IF NAME="errmsg_id"><TMPL_VAR NAME="errmsg_id" ESCAPE="HTML"><TMPL_ELSE>XX</TMPL_IF>]와
+    같이 메일 제목 앞에 말머리를 붙여 주십시오. 그렇지 않으면 피드백을 보내더라도, 에러 메시지와
+    함께 반송이 될 것입니다;</li>
+    <li>가능 하다면 <strong>URL 을 적어 주십시오</strong>: 피드백이 당신의 validating page
+    경험에서 오는 것이라면, 문제점을 빨리 진단하고 수정하는데 도움이 됩니다.</li>
+    <li><strong>당신의 피드백은 무엇입니까?</strong>명확하고 유익한 방법으로 제안이나 질문을 설명해 주십시오.</li>
+  </ul>
+    
+  <p>위의 정책을 모두 확인 했다면,
+    <a href="mailto:www-validator@w3.org?Subject=<TMPL_IF NAME="errmsg_id">%5BVE%5D%5B<TMPL_VAR NAME="errmsg_id" ESCAPE="URL">%5D</TMPL_IF>%20Add%20Subject%20Here&amp;body=%0D%0A<TMPL_IF NAME="uri">Validating%20<TMPL_VAR NAME="uri" ESCAPE="URL">%0D%0A</TMPL_IF><TMPL_IF NAME="errmsg_id">Error%20%5B<TMPL_VAR NAME="errmsg_id" ESCAPE="URL">%5D%3A%20%22<TMPL_VAR NAME="explanation" ESCAPE="URL">%22</TMPL_IF>%0D%0A<TMPL_UNLESS NAME="uri">NOTE%3A%20Whenever%20possible%2C%20give%20the%20address%20of%20the%20document%20you%20were%20checking.</TMPL_UNLESS>">www-validator public mailing-list</a>로 메시지를 보내주십시오.
+   </p>
+   
+<h3 id="mailinglist">논의와 참여</h3>
+
+    <p>
+      이 서비스를 향상 시키기 위한 아이디어 제공이나 코드 기부에 관심이 있다면,
+      메일링 리스트로 메일을 보내 주십시오.
+    </p>
+
+    <p>
+      <a href="http://lists.w3.org/Archives/Public/www-validator/"><code>www-validator</code></a> 메일링
+      리스트에 Markup Validator, Link checker 및 기타 도구에 관한 논의를 투고할 수 있습니다.
+    </p>
+
+    <p>메일링 리스트에 <a title="Send a message to the www-validator-request subscription handler"
+      href="mailto:www-validator-request@w3.org?Subject=subscribe">가입</a> 또는
+      <a title="Send a message to the www-validator-request subscription handler"
+      href="mailto:www-validator-request@w3.org?Subject=unsubscribe">구독 취소</a>를 할 수 있습니다.
+      메일링 리스트에 참여하지 않고, 단지 작은 패치나 아이디어만 보내고 싶다면, 편하게 <a
+      title="Send a message to the www-validator mailing list"
+      href="mailto:www-validator@w3.org">메일링 리스트에 부담없이 보내 주십시오</a>. 하지만 무엇을 하든지, <strong>항상</strong>
+      주어진 주제에 대한 기존 메시지를 확인하기 위하여 <strong><a
+      href="http://www.w3.org/Search/Mail/Public/search?index-type=t;type-index=www-validator">메일
+      검색</a>을 먼저 해 주십시오</strong>.
+    </p>
+
+    <p>
+      Validator 의 개발자와 사용자들과 비공식적인 토론을 하고 싶다면, <a     
+       href="http://freenode.net/using_the_network.shtml">freenode</a> 네트워크(irc.freenode.net)의
+      #validator IRC 채널로 접속 하십시오. 단, <em>지원을 위한 채널</em>은 아니라는 것을 명심 하셔야 합니다.
+    </p>
+
+<h3 id="bugreport">버그 리포트</h3>
+    <p>
+      W3C 는 <a href="http://www.w3.org/Bugs/Public/">Bugzilla</a> 를 이용하여
+      버그 트랙킹 디비를 운영하고 있습니다. 버그 트래커에 직접 버그 리포트 또는
+      제안을 등록할 수 있습니다. 트래킹 시스템이나 Bugzilla 버그 트래커가 익숙하지
+      않다면 <a href="#mailinglist">mailing list</a> 로 피드백을 보내십시오. 그러면
+      W3C Validator Team 의 누군가가 해당 이슈를 담당하게 될 것 입니다.
+    </p>
+
+    <p>데이터베이스에 새로운 버그를 등록하기 전, 중복된 이슈가 있는 검색을 한 후에
+    등록하십시오. 다음의 몇 가지 링크를 이용하여 확인을 할 수 있습니다.</p>
+
+    <ul>
+      <li><a href="http://www.w3.org/Bugs/">W3C issue tracking system homepage</a></li>
+      <li><a href="http://www.w3.org/Bugs/Public/buglist.cgi?product=Validator;bug_status=NEW;bug_status=ASSIGNED;bug_status=REOPENED;order=bugs.bug_id">All open Markup Validator issues</a></li>
+      <li><a href="http://www.w3.org/Bugs/Public/buglist.cgi?product=Validator;order=bugs.bug_id">All Markup Validator issues</a></li>
+      <li><a href="http://www.w3.org/Bugs/Public/query.cgi?product=Validator">Search Markup Validator issues</a></li>
+      <li><a href="http://www.w3.org/Bugs/Public/enter_bug.cgi?product=Validator">New Markup Validator issue</a></li>
+    </ul>
+
+    <form method="get" action="http://www.w3.org/Bugs/Public/buglist.cgi">
+      <p>버그 데이터베이스를 직접 검색해 볼 수 있습니다:<br />
+      <input name="short_desc_type" type="hidden" value="allwordssubstr" />
+      <input name="product" type="hidden" value="Validator" />
+      <input name="short_desc" id="short_desc" type="text" size="40" maxlength="100" value="" />
+      <input type="submit" name="search" id="bugsearch" value="버그 데이터베이스 검색" />
+      </p>      
+    </form>
+
+    <p>
+      이 검사기에서 HTML 5 관련된 이슈가 발생 한다면, W3C bugzilla에 보고를 하지 말고,
+      <a href="http://validator.nu/">Validator.nu</a>에 보고해 주십시오.
+      <a href="http://about.validator.nu/#reporting-bugs">Validator.nu
+        bug reporting instructions</a>를 참고 하십시오. 이런 불편함을
+      감수해야 하는 이유는, W3C 검사기는 HTML 5 문서 검사를 할 때, 자체
+      검사기가 아닌 Validator.nu 의 엔진을 이용하기 때문 입니다. 그러므로
+      W3C에 문의를 해도 좋은 도움을 받기가 어렵습니다.
+    </p>
+
+</div>
+
+
+
+    </div><!-- end of "main" -->
+
+<TMPL_INCLUDE NAME="footer.tmpl">

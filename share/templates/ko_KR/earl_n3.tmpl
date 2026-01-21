@@ -1,0 +1,49 @@
+Content-Type: text/plain; charset=UTF-8
+X-W3C-Validator-Recursion: <TMPL_VAR NAME="depth" DEFAULT="1"><TMPL_IF NAME="fatal_error">
+X-W3C-Validator-Status: Abort<TMPL_ELSE><TMPL_IF NAME="valid_status">
+X-W3C-Validator-Status: <TMPL_VAR NAME="valid_status"></TMPL_IF>
+X-W3C-Validator-Errors: <TMPL_VAR NAME="valid_errors_num">
+X-W3C-Validator-Warnings: <TMPL_VAR NAME="valid_warnings_num"></TMPL_IF>
+
+@prefix earl: <http://www.w3.org/2001/03/earl/1.0-test#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix val: <https://validator.w3.org/this_will_change/do_not_rely_on_it!> .
+
+<https://validator.w3.org/> a earl:Assertor;
+  earl:name "W3 Validator";
+  earl:asserts
+<TMPL_IF NAME="VALID">
+    [
+      earl:testMode earl:Auto;
+      rdf:predicate earl:passes;
+      rdf:subject   [earl:testSubject <<TMPL_VAR NAME="file_uri">>];
+      rdf:object    [
+                      earl:id <http://www.w3.org/HTML/>;
+                      earl:note "Valid"
+                    ]
+    ]
+<TMPL_ELSE>
+<TMPL_LOOP NAME="file_errors">
+    [
+      earl:testMode earl:Auto;
+      rdf:predicate earl:fails;
+      rdf:subject [
+                    val:column "<TMPL_VAR NAME="char">";
+                    val:line   "<TMPL_VAR NAME="line">";
+                    earl:testSubject <<TMPL_VAR NAME="file_uri">>
+                  ];
+      rdf:object [
+                   earl:id <http://www.w3.org/HTML/>;
+                   earl:note """<TMPL_VAR NAME="msg">"""
+                 ]
+<TMPL_IF __last__>
+    ]
+<TMPL_ELSE>
+    ],
+</TMPL_IF>
+</TMPL_LOOP>
+</TMPL_IF>
+
+.
+
+# EOF

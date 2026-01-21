@@ -1,0 +1,43 @@
+<select name="charset" id="charset">
+  <option value="(detect automatically)">(자동 감지)</option>
+  <option value="utf-8" <TMPL_IF NAME="override charset utf-8">selected="selected"</TMPL_IF>>utf-8 (유니코드, worldwide)</option>
+  <option value="utf-16" <TMPL_IF NAME="override charset utf-16">selected="selected"</TMPL_IF>>utf-16 (유니코드, worldwide)</option>
+  <option value="iso-8859-1" <TMPL_IF NAME="override charset iso-8859-1">selected="selected"</TMPL_IF>>iso-8859-1 (서유럽어)</option>
+  <option value="iso-8859-2" <TMPL_IF NAME="override charset iso-8859-2">selected="selected"</TMPL_IF>>iso-8859-2 (중앙유럽어)</option>
+  <option value="iso-8859-3" <TMPL_IF NAME="override charset iso-8859-3">selected="selected"</TMPL_IF>>iso-8859-3 (남유럽어)</option>
+  <option value="iso-8859-4" <TMPL_IF NAME="override charset iso-8859-4">selected="selected"</TMPL_IF>>iso-8859-4 (북유럽어)</option>
+  <option value="iso-8859-5" <TMPL_IF NAME="override charset iso-8859-5">selected="selected"</TMPL_IF>>iso-8859-5 (키릴자모)</option>
+  <option value="iso-8859-6-i" <TMPL_IF NAME="override charset iso-8859-6-i">selected="selected"</TMPL_IF>>iso-8859-6-i (아라비아어)</option>
+  <option value="iso-8859-7" <TMPL_IF NAME="override charset iso-8859-7">selected="selected"</TMPL_IF>>iso-8859-7 (그리스어)</option>
+  <option value="iso-8859-8" <TMPL_IF NAME="override charset iso-8859-8">selected="selected"</TMPL_IF>>iso-8859-8 (히브리어, visual)</option>
+  <option value="iso-8859-8-i" <TMPL_IF NAME="override charset iso-8859-8-i">selected="selected"</TMPL_IF>>iso-8859-8-i (히브리어, logical)</option>
+  <option value="iso-8859-9" <TMPL_IF NAME="override charset iso-8859-9">selected="selected"</TMPL_IF>>iso-8859-9 (터기어)</option>
+  <option value="iso-8859-10" <TMPL_IF NAME="override charset iso-8859-10">selected="selected"</TMPL_IF>>iso-8859-10 (Latin 6)</option>
+  <option value="iso-8859-11" <TMPL_IF NAME="override charset iso-8859-11">selected="selected"</TMPL_IF>>iso-8859-11 (Latin/Thai)</option>
+  <option value="iso-8859-13" <TMPL_IF NAME="override charset iso-8859-13">selected="selected"</TMPL_IF>>iso-8859-13 (Latin 7, Baltic Rim)</option>
+  <option value="iso-8859-14" <TMPL_IF NAME="override charset iso-8859-14">selected="selected"</TMPL_IF>>iso-8859-14 (Latin 8, Celtic)</option>
+  <option value="iso-8859-15" <TMPL_IF NAME="override charset iso-8859-15">selected="selected"</TMPL_IF>>iso-8859-15 (Latin 9)</option>
+  <option value="iso-8859-16" <TMPL_IF NAME="override charset iso-8859-16">selected="selected"</TMPL_IF>>iso-8859-16 (Latin 10)</option>
+  <option value="us-ascii" <TMPL_IF NAME="override charset us-ascii">selected="selected"</TMPL_IF>>us-ascii (기본 영어)</option>
+  <option value="euc-jp" <TMPL_IF NAME="override charset euc-jp">selected="selected"</TMPL_IF>>euc-jp (일본어, Unix)</option>
+  <option value="shift_jis" <TMPL_IF NAME="override charset shift_jis">selected="selected"</TMPL_IF>>shift_jis (일본어, Win/Mac)</option>
+  <option value="iso-2022-jp" <TMPL_IF NAME="override charset iso-2022-jp">selected="selected"</TMPL_IF>>iso-2022-jp (일본어, email)</option>
+  <option value="euc-kr" <TMPL_IF NAME="override charset euc-kr">selected="selected"</TMPL_IF>>euc-kr (한국어)</option>
+  <option value="gb2312" <TMPL_IF NAME="override charset gb2312">selected="selected"</TMPL_IF>>gb2312 (중국어, 간체)</option>
+  <option value="gb18030" <TMPL_IF NAME="override charset gb18030">selected="selected"</TMPL_IF>>gb18030 (중국어, 간체)</option>
+  <option value="big5" <TMPL_IF NAME="override charset big5">selected="selected"</TMPL_IF>>big5 (중국어, 번체)</option>
+  <option value="big5-HKSCS" <TMPL_IF NAME="override charset big5-HKSCS">selected="selected"</TMPL_IF>>Big5-HKSCS (Chinese, Hong Kong)</option>
+  <option value="tis-620" <TMPL_IF NAME="override charset tis-620">selected="selected"</TMPL_IF>>tis-620 (타이어)</option>
+  <option value="koi8-r" <TMPL_IF NAME="override charset koi8-r">selected="selected"</TMPL_IF>>koi8-r (러시아어)</option>
+  <option value="koi8-u" <TMPL_IF NAME="override charset koi8-u">selected="selected"</TMPL_IF>>koi8-u (우크라이나어)</option>
+  <option value="iso-ir-111" <TMPL_IF NAME="override charset iso-ir-111">selected="selected"</TMPL_IF>>iso-ir-111 (키릴자모 KOI-8)</option>  
+  <option value="macintosh" <TMPL_IF NAME="override charset macintosh">selected="selected"</TMPL_IF>>macintosh (MacRoman)</option>
+  <option value="windows-1250" <TMPL_IF NAME="override charset windows-1250">selected="selected"</TMPL_IF>>windows-1250 (중앙 유럽)</option>
+  <option value="windows-1251" <TMPL_IF NAME="override charset windows-1251">selected="selected"</TMPL_IF>>windows-1251 (키릴자모)</option>
+  <option value="windows-1252" <TMPL_IF NAME="override charset windows-1252">selected="selected"</TMPL_IF>>windows-1252 (서 유럽)</option>
+  <option value="windows-1253" <TMPL_IF NAME="override charset windows-1253">selected="selected"</TMPL_IF>>windows-1253 (그리스어)</option>
+  <option value="windows-1254" <TMPL_IF NAME="override charset windows-1254">selected="selected"</TMPL_IF>>windows-1254 (터키어)</option>
+  <option value="windows-1255" <TMPL_IF NAME="override charset windows-1255">selected="selected"</TMPL_IF>>windows-1255 (히브리어)</option>
+  <option value="windows-1256" <TMPL_IF NAME="override charset windows-1256">selected="selected"</TMPL_IF>>windows-1256 (Arabic)</option>
+  <option value="windows-1257" <TMPL_IF NAME="override charset windows-1257">selected="selected"</TMPL_IF>>windows-1257 (Baltic Rim)</option>
+</select>

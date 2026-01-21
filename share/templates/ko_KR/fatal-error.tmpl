@@ -1,0 +1,229 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE name="jumpbar.tmpl">
+
+      <TMPL_INCLUDE NAME="table.tmpl">
+
+      <TMPL_IF NAME="have_warnings">
+        <TMPL_INCLUDE NAME="warnings.tmpl">
+      </TMPL_IF>
+
+<ol id="fatal-errors">
+<TMPL_IF NAME="fatal_no_checker">
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
+    <span class="msg">외부 검사기가 불가능 합니다.</span>
+    <p>
+      이 문서의 문서 형식을 검사하는데 validator는 외부 도구의 도움이 필요하지만, 이 도구가 validator 에서 활성화
+      되어 있지 않거나, 현재 사용을 할 수 없습니다. validator 의 시스템 설정에서
+      <TMPL_IF NAME="fatal_missing_checker"><TMPL_VAR NAME="fatal_missing_checker">이 기능이 활성화 되어 있는지<TMPL_ELSE>모든 외부 검사기가 활성화 되어 있고, 외부 검사기가 응담을 하는지</TMPL_IF> 확인해 보십시오.
+    </p>
+    <TMPL_IF NAME="fatal_checker_error">
+    <p>
+      에러 내용:
+      <code><TMPL_VAR NAME="fatal_checker_error" ESCAPE="HTML"></code>
+    </p>
+    </TMPL_IF>
+</li>
+</TMPL_IF>
+<TMPL_IF NAME="fatal_transcode_error">
+  <li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
+      <p>
+        문서의 문자 인코딩을 변환하도록 시도하는 도중에 심각한 오류가 발생했습니다.
+        저희는 이 문자 ("<TMPL_VAR NAME="fatal_transcode_charset" ESCAPE="HTML">")
+        인코딩을 지원하지 않거나, 여러분이 존재하지 않은 문자 인코딩을 지정했을 수도
+        있습니다. (대부분 오타에 의한 것입니다.)
+      </p>
+      <p>오류 : <TMPL_IF NAME="fatal_transcode_errmsg"><TMPL_VAR NAME="fatal_transcode_errmsg">
+      <TMPL_VAR NAME="fatal_transcode_errmsg"><TMPL_ELSE>(주어진 오류가 없습니다.)</TMPL_IF></P>
+      <p>
+        만약 여러분이 문자 인코딩이 유효하도록 그 문자 인코딩에 대한 요청을 전송할 수 있다면,
+        (더 자세한 내용은 <a href="feedback.html">피드백 페이지</a>를 보십시오.)
+        여러분은 후에 그것을 지원하는 것을 보실 수 있으실 것입니다.
+      </p>
+  <TMPL_INCLUDE NAME="iana_charset_blurb.tmpl">
+  </li>
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_byte_error">
+  <li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
+      <p>
+        죄송합니다. line <strong><TMPL_VAR NAME="fatal_byte_lines"></strong> 에
+        <code><TMPL_VAR NAME="fatal_byte_charset" ESCAPE="HTML"></code> (으)로 해석을
+        할 수 없는 하나 또는 그 이상의 byte 가 포함이 되어 있어 이 문서를 검사할 수
+        없습니다. (다시말해, 지정된 문자셋에서는 유효하지 않은 byte 가 발견이 된 것
+        입니다.) 파일 컨덴츠와 문자셋 지시자를 확인하신 후에 다시 시도해 주십시오.
+      </p>
+      <p>The error was: 
+        <TMPL_VAR NAME="fatal_byte_error_msg">
+      </p>
+      </li>
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_decode_error">
+  <li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
+      <p>
+        <TMPL_VAR NAME="fatal_decode_uri" ESCAPE="HTML">의 본문을 디코드 하는 중
+        에러가 발생 하였습니다. 지정된 컨텐츠 인코딩 ("<TMPL_VAR NAME="fatal_decode_cenc" ESCAPE="HTML">")을
+        지원하지 않거나 디코딩을 하는 중에 에러가 발생하였습니다.
+      </p>
+      <p>에러 내용:
+        <TMPL_VAR NAME="fatal_decode_errmsg" DEFAULT="(주어진 에러 메시지 없음)" ESCAPE="HTML">
+      </p>
+  </li>
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_uri_error">
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
+      <p>
+        이 <a href="http://www.w3.org/Addressing/">URL</a>
+        <a href="http://www.iana.org/assignments/uri-schemes.html">scheme</a>
+        (<q><TMPL_VAR NAME="fatal_uri_scheme" ESCAPE="HTML"></q>) 형식은
+        이 서비스에서 지원하지 않습니다. 입력하신 URL 을 확인 하십시오.
+      </p>
+      <p>URL은 다음의 형식을 따라야 합니다: <code>https://validator.w3.org/</code></p>
+      <p>
+        지원하는 형식의 유효한 URL 을 입력 하였다면, <a href="feedback.html">Feedback 페이지</a>를
+        통하여 우리가 알수 있도록 해당 내용을 알려 주시기 바랍니다. 될 수 있으면
+        우리가 알 수 있도록 지정한 URL 을 알려 주시고, 이 질의에 대한 URL 스키마
+        와 관련된 레퍼런스를 알려 주십시오.
+      </p>
+      <p class="tip">
+        디스크에 페이지를 저장할 수 있고, <a href="./#validate-by-upload">파일 업로드 인터페이스</a>를 이용해서 언제나
+        검사를 할 수 있음을 기억 하십시오.
+      </p>
+</li>
+</TMPL_IF>
+<TMPL_IF NAME="fatal_no_content">
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
+      <p>
+        검사를 하기 위한 어떤 컨텐츠도 찾지 못했습니다. 아마도 검사를 하기 위한
+        URL 을 지정하지 않았거나, 문서 파일이나 내용을 넣지 않고 "check" 를 클릭한
+        것 같습니다.
+      </p>
+      <p>
+        이 validator 를 이용하기 위한 빠른 안내를 위해서 <a href="docs/users.html">User's
+        guide</a> 를 읽어 보십시오.
+      </p>
+</li>
+</TMPL_IF>
+
+
+
+<TMPL_IF NAME="fatal_ip_error">
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
+      <p>
+        <TMPL_IF NAME="fatal_ip_hostname"><TMPL_VAR NAME="fatal_ip_host">의 IP 주소는
+        <TMPL_ELSE>IP 주소 <TMPL_VAR NAME="fatal_ip_host"> 은</TMPL_IF>
+        <a href="http://www.ietf.org/rfc/rfc1918.txt">공인 주소</a>가
+        아닙니다.
+        보안상, 사설 IP 에 위치한 validate 리소스는 이 서비스를 이용할
+        수 없습니다.
+      </p>
+</li>
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_port_error">
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
+      <p>
+        보안상의 이유로, 이 서비스에서 1024보다 낮은 대부분의 예약된
+        포트에 위치한 리소스의 검증을 할 수 없습니다.
+      </p>
+</li>
+</TMPL_IF>
+
+
+<TMPL_IF NAME="fatal_http_error">
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
+  <p>
+    &lt;<a href="<TMPL_VAR NAME="fatal_http_uri" ESCAPE="HTML">">
+    <TMPL_VAR NAME="fatal_http_uri" ESCAPE="HTML"></a>&gt;을(를) 검색하려고
+    시도하는 동안 다음과 같은 예상치못한 응답을 얻었습니다.
+  </p>
+  <blockquote>
+    <p><code><TMPL_VAR NAME="fatal_http_code" ESCAPE="HTML"> <TMPL_VAR NAME="fatal_http_msg" ESCAPE="HTML"></code></p>
+  </blockquote>
+  <TMPL_IF NAME="fatal_http_dns">
+  <p>
+    만약 여러분이 도메인 네임 설정에 변경된 내용을 작성했다면, 여러분은
+    <a href="http://www.squish.net/dnscheck/">여러분의 도메인 기록이 올바른지
+    확인</a>하기 원하거나, 여러분의 호스팅 회사에 그러한지 물어봐야 할 것입니다.
+  </p>
+  </TMPL_IF>
+  <TMPL_IF NAME="fatal_http_warn">
+  <p>
+    왜 이런 문제가 발생하는지에 대한 추가 정보는 validator의 HTTP (그리고 다른
+    프로토콜) 클라이언트 라이브러리에 의해서 보고된 경고들로 부터 참고할 수 있습니다:
+  </p>
+  <blockquote>
+    <p><code><TMPL_VAR NAME="fatal_http_warn" ESCAPE="HTML"></code></p>
+  </blockquote>
+  </TMPL_IF>
+  <TMPL_IF NAME="fatal_http_no200">
+  <p>
+    You can choose to
+    <a href="<TMPL_VAR NAME="fatal_http_no200" ESCAPE="HTML">">validate
+    the received error document</a> for example if the URL intentionally
+    points to one (there is also a "Validate error pages" option in the
+    options view for this purpose).
+  </p>
+  </TMPL_IF>
+</li>
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_mime_error">
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
+      <p>
+        문서 형식 <code><TMPL_VAR NAME="fatal_mime_ct" ESCAPE="HTML"></code> 은
+        현재 이 서비스에서 지원하지 않기 때문에 이 문서에 대하여 검사를 할 수
+        없습니다.
+      </p>
+      <p>
+        Content-Type 헤더는 웹서버에 의해서 보내지며 (또는 파일 업로드 페이지를
+        이용했을 경우, 웹브라우저에 의해 보내집니다.), 이의 설정에 의존 합니다.
+        일반적으로 웹서버는 (<code>text/html</code> 와 같은) <abbr
+          title="Multipurpose Internet Mail Extensions">MIME</abbr>
+        <code>Content-Type</code> 의 값과 파일의 확장자를 매핑합니다.
+      </p>
+      <p>
+        이 메시지를 보고 있다면, 웹서버 설정에 문제가 있거나, 파일 확장자가 잘못
+        되어 있거나, 또는 지원하지 않는 형식의 파일을 검사 하려고 시도한 것입니다.
+        지원이 필요한 내용 형식이 있다면 <a href="feedback.html">Feedback 페이지</a>를
+        통하여, 관련된 상내 내용을 알려 주십시오. 해당 형식이 정의 되어 있는 표준 문서의
+        URL 을 같이 첨부 해 주십시오.
+      </p>
+</li>
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_parse_extid_error">
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
+      <h3>Fatal Error: <TMPL_VAR NAME="fatal_parse_extid_msg" ESCAPE="HTML"></h3>
+      <p>
+        이 문서는 markup 를 사용하는 형식에 잘 알려진 일반 식별자를 사용하지 않고
+        특정 시스템 정의 파일을 참조하도록 만들어져 있으므로 분석할 수 없습니다.
+      </p>
+      <TMPL_INCLUDE NAME="doctype_spiel.tmpl">
+</li>
+</TMPL_IF>
+
+<TMPL_IF NAME="fatal_referer_error">
+<li class="msg_err"><span class="err_type"><img src="images/info_icons/error.png" alt="Error" title="Error" /></span>
+        <h3><strong>Referer 헤더를 발견하지 못했습니다.!</strong></h3>
+        <p>
+          referer 페이지를 검사하도록 요청하였지만, 브라우저가 HTTP "Referer"
+          헤더를 전송하지 않았습니다. 여러가지 이유가 있을 수 있지만, 대부분
+          사용하는 브라우저가 이 헤더를 지원하지 않거나 브라우저에서 이 헤더를
+          전송하도록 설정하지 않았거나, 문서가 https와 같은 보안 프로토콜을
+          언급 하고 있지만, 보안 프로토콜이 아닌 일반 프로토콜로 검사를 하고
+          있거나, 또는 validator 에 도착하기 전에 프락시나 방화벽을 거치기
+          때문입니다.
+        </p>
+        <p>referer 페이지를 검사할 경우 이것은 에러는 <em>아닙니다</em>.</p>
+        <p>
+          <a href="./">Validator 홈페이지</a>의 폼 인터페이스를 이용해 주십시오.
+          (또는 "URL 을 이용한 검사"의 <a href="detailed.html">확장 인터페이즈</a>를
+          이용 하십시오.)
+        </p>
+</li>
+</TMPL_IF>
+</ol>
+
+<TMPL_INCLUDE NAME="footer.tmpl">
